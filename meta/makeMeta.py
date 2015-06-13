@@ -4,9 +4,7 @@
 # June, 12 2015
 
 import os
-from getMeta import getDBSInfo, formatJson
-
-
+from getMeta import getDBSInfo, formatJson, getNumberOfFiles, getEventCount
 
 samples = {'DYJets': '/DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM', 
 			'TT' : '/TT_Tune4C_13TeV-pythia8-tauola/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM',
@@ -25,6 +23,28 @@ ofile = open('data.json', 'w')
 ofile.write('')
 ofile.close()
 for k, v in samples.iteritems() :
-	info = getDBSInfo( k, v )
-	print info
-	formatJson( k, v, info )
+	# Get the DAS info from DBS
+	infoDAS = getDBSInfo( k, v )
+	print infoDAS
+
+	# Get the Ntuple info that FSA created
+	numFiles = getNumberOfFiles( k)
+	eventCountEM = 0
+	eventCountTT = 0
+	inFiles = open('NtupleInputs/%s.txt' % k, 'r')
+	for fileName in inFiles :
+		eventCountEM += getEventCount( fileName.strip(), 'em' )
+		eventCountTT += getEventCount( fileName.strip(), 'tt' )
+	inFiles.close()
+
+	# Check that DAS and FSA events and file numbers match
+	status = "Error"
+	if infoDAS[0] == numFiles and infoDAS[2] == eventCountEM and eventCountEM == eventCountTT:
+		status = "Good to Go!"
+
+	infoNtup = [numFiles, int(eventCountEM), int(eventCountTT), status]
+	print infoNtup
+
+	# Send outputs to be JSONed and saved as data.json
+	formatJson( k, v, infoDAS, infoNtup )
+
