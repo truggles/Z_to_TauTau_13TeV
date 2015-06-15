@@ -4,7 +4,27 @@ from array import array
 
 ROOT.gROOT.Reset()
 
-maxT = ROOT.TTree().GetMaxTreeSize()
+def dZCut( sample, channel ) :
+	if channel == 'em': zProd = ['e', 'm']
+	if channel == 'tt': zProd = ['t1', 't2']
+	treeFile = ROOT.TFile('%s.root' % sample, 'update')
+	dir_ = treeFile.Get( '%s' % channel )	
+	tree = dir_.Get( 'Ntuple' )
+
+	# Make a channel specific directory and cd() to it for future writting
+	dzCutTight = array('i', [ 0 ] )
+	dzCutB = tree.Branch('dzCutTight', dzCutTight, 'dzCutTight/I')
+
+	treeFile.cd( '%s' % channel )
+#	for row in outTree :
+	for i in range( tree.GetEntries() ):
+		tree.GetEntry( i )
+		if abs( getattr(tree, '%s_%s_Mass' % (zProd[0], zProd[1]) ) - 90 ) < 10:
+			dzCutTight[0] = 1
+		else:
+			dzCutTight[0] = 0
+		dzCutB.Fill()
+	tree.Write('', ROOT.TObject.kOverwrite)
 
 #channel = 'em'
 channels = {'em' : ['ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'abs(e_m_Mass-90) < 30'],
@@ -13,11 +33,9 @@ channels = {'em' : ['ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1'
 
 sample = 'QCD'
 
-
 outFile = ROOT.TFile('%s.root' % sample, 'RECREATE')
 # Try adding a branch
 #file2 = ROOT.TFile('%s_fr.root' % sample, 'RECREATE')
-
 
 for channel in channels.keys() :
 	if channel == 'em': zProd = ['e', 'm']
@@ -27,7 +45,6 @@ for channel in channels.keys() :
 	
 	chain = makeTChain( sampleList, path )
 	numEntries = chain.GetEntries('1')
-	
 	print numEntries
 	
 	# Copy and make some cuts while doing it
@@ -39,35 +56,8 @@ for channel in channels.keys() :
 	outDir = outFile.mkdir( path.split('/')[0] )
 	outDir.cd()
 	outTree.Write()
-
-	# Make a channel specific directory and cd() to it for future writting
-#	outDir2 = file2.mkdir( path.split('/')[0] )
-#	outDir2.cd()
-#	tree2 = ROOT.TTree('treeFriend', 'a friend tree')
-	dzCutTight = array('i', [ 0 ] )
-	dzCutB = outTree.Branch('dzCutTight', dzCutTight, 'dzCutTight/I')
-
-#	for row in outTree :
-	for i in range( outTree.GetEntries() ):
-		outTree.GetEntry( i )
-		#if abs( getattr(i, '%s_%s_Mass' % (zProd[0], zProd[1]) ) - 90 ) < 10:
-		dzCutTight[0] = 1
-			#print "1 : %f" % row.Mass
-		#else:
-		#	dzCutTight[0] = 0
-			#print "0 : %f" % row.Mass
-		dzCutB.Fill()
-
-#	count2 = 0
-#	for row2 in tree2 :
-#		setattr( row2, "dzCutTight", dzCutTight[ count2 ] )
-#		count2 += 1
-
-#	tree2.Fill()
-#	tree2.Write()
-
-
 outFile.Write()
 outFile.Close()
 
+dZCut( sample, 'em' )
 
