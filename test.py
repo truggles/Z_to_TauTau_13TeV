@@ -26,12 +26,16 @@ def dZCut( sample, channel ) :
 		dzCutB.Fill()
 	tree.Write('', ROOT.TObject.kOverwrite)
 
-#channel = 'em'
-channels = {'em' : ['ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'abs(e_m_Mass-90) < 30'],
-		    'tt' : ['t1Pt > 45', 'abs(t1Eta) < 2.1', 't2Pt > 45', 'abs(t2Eta) < 2.1', 'abs(t1_t2_Mass-90) < 30']
+channels = {'em' : ( ['e', 'm'],
+					 ['abs(e_m_Mass-90) < 30', 'e_m_SS == 0', 'ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'ePVDZ < 0.2', 'ePVDXY < 0.045', 'mPVDZ < 0.2', 'mPVDXY < 0.045', 'eRelPFIsoDB < 0.15', 'mRelPFIsoDBDefault < 0.15', 'mIsGlobal == 1', 'mNormTrkChi2 < 3.0' ] ),
+		    'tt' : ( ['t1', 't2'],
+					 ['abs(t1_t2_Mass-90) < 30', 't1_t2_SS == 0', 't1Pt > 40', 'abs(t1Eta) < 2.1', 't2Pt > 40', 'abs(t2Eta) < 2.1', 't1AgainstElectronVLooseMVA5 > 0.5', 't1AgainstMuonLoose3 > 0.5', 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0', 't2AgainstElectronVLooseMVA5 > 0.5', 't2AgainstMuonLoose3 > 0.5', 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0' ] )
 }
+#channels = {'em' : ['abs(e_m_Mass-90) < 30'],
+#		    'tt' : ['abs(t1_t2_Mass-90) < 30']
+#}
 
-sample = 'QCD'
+sample = 'DYJets'
 
 outFile = ROOT.TFile('%s.root' % sample, 'RECREATE')
 # Try adding a branch
@@ -48,7 +52,8 @@ for channel in channels.keys() :
 	print numEntries
 	
 	# Copy and make some cuts while doing it
-	outTree = chain.CopyTree("&&".join( channels[ channel ] ) )
+	#print ROOT.TString("&&".join( channels[ channel ][1] ) )
+	outTree = chain.CopyTree("&&".join( channels[ channel ][1] ) )
 	numEntries = outTree.GetEntries('1')
 	print numEntries
 
@@ -59,5 +64,5 @@ for channel in channels.keys() :
 outFile.Write()
 outFile.Close()
 
-dZCut( sample, 'em' )
+#dZCut( sample, 'em' )
 
