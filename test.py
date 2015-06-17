@@ -1,13 +1,18 @@
 from util.buildTChain import makeTChain
 import ROOT
 from array import array
+from ROOT import TProof
+from time import gmtime, strftime
+
+begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+print begin
 
 ROOT.gROOT.Reset()
 
 def dZCut( sample, channel ) :
 	if channel == 'em': zProd = ['e', 'm']
 	if channel == 'tt': zProd = ['t1', 't2']
-	treeFile = ROOT.TFile('%s.root' % sample, 'update')
+	treeFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'update')
 	dir_ = treeFile.Get( '%s' % channel )	
 	tree = dir_.Get( 'Ntuple' )
 
@@ -35,34 +40,51 @@ channels = {'em' : ( ['e', 'm'],
 #		    'tt' : ['abs(t1_t2_Mass-90) < 30']
 #}
 
-sample = 'DYJets'
+samples = ['DYJets', 'TT']#, 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
 
-outFile = ROOT.TFile('%s.root' % sample, 'RECREATE')
-# Try adding a branch
-#file2 = ROOT.TFile('%s_fr.root' % sample, 'RECREATE')
+for sample in samples :
+	print "###   %s   ###" % sample
 
-for channel in channels.keys() :
-	if channel == 'em': zProd = ['e', 'm']
-	if channel == 'tt': zProd = ['t1', 't2']
-	path = '%s/final/Ntuple' % channel
-	sampleList = 'meta/NtupleInputs/%s.txt' % sample
+	# Start fresh ROOT session with Proof
+	ROOT.gROOT.Reset()
+	#ROOT.TProof.Open('workers=6')
+	#proof = ROOT.gProof
+
+	outFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'RECREATE')
+	# Try adding a branch
+	#file2 = ROOT.TFile('%s_fr.root' % sample, 'RECREATE')
 	
-	chain = makeTChain( sampleList, path )
-	numEntries = chain.GetEntries('1')
-	print numEntries
-	
-	# Copy and make some cuts while doing it
-	#print ROOT.TString("&&".join( channels[ channel ][1] ) )
-	outTree = chain.CopyTree("&&".join( channels[ channel ][1] ) )
-	numEntries = outTree.GetEntries('1')
-	print numEntries
+	for channel in channels.keys() :
+		print "Channel:  %s" % channel
+		if channel == 'em': zProd = ['e', 'm']
+		if channel == 'tt': zProd = ['t1', 't2']
+		path = '%s/final/Ntuple' % channel
+		sampleList = 'meta/NtupleInputs/%s.txt' % sample
+		
+		#chain = ROOT.TChain( path )
+		#chain.SetProof(True)
+		#files = open( sampleList, 'r' )	
 
-	# Make a channel specific directory and write the tree to it
-	outDir = outFile.mkdir( path.split('/')[0] )
-	outDir.cd()
-	outTree.Write()
-outFile.Write()
-outFile.Close()
+
+		chain = makeTChain( sampleList, path )
+		#chain.SetProof(True)
+
+		numEntries = chain.GetEntries('1')
+		print numEntries
+		
+		# Copy and make some cuts while doing it
+		#print ROOT.TString("&&".join( channels[ channel ][1] ) )
+		outTree = chain.CopyTree("&&".join( channels[ channel ][1] ) )
+		numEntries = outTree.GetEntries('1')
+		print numEntries
+	
+		# Make a channel specific directory and write the tree to it
+		outDir = outFile.mkdir( path.split('/')[0] )
+		outDir.cd()
+		outTree.Write()
+	outFile.Write()
+	outFile.Close()
 
 #dZCut( sample, 'em' )
-
+print "Start Time: %s" % str( begin )
+print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
