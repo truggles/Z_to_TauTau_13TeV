@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-# Provides a method for building a json file from our samples
+# A script for building a JSON file containg relevant info for each sample
 # June, 12 2015
 
 import os
-from getMeta import getDBSInfo, formatJson, getNumberOfFiles, getEventCount
+from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson
 
-samples = {'DYJets': '/DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM', 
+samples = { 'DYJets': '/DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM', 
 			'TT' : '/TT_Tune4C_13TeV-pythia8-tauola/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM',
 			'TTJets' : '/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
 			'QCD' : '/QCD_Pt-15to3000_Tune4C_Flat_13TeV_pythia8/Phys14DR-PU20bx25_trkalmb_PHYS14_25_V1-v1/MINIAODSIM', 
@@ -19,16 +19,16 @@ samples = {'DYJets': '/DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_
 			'WZJets' : '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
 }
 
-ofile = open('data.json', 'w')
-ofile.write('')
-ofile.close()
+# A dictionary to store each samples info
+jDict = {}
+
 for k, v in samples.iteritems() :
 	# Get the DAS info from DBS
 	infoDAS = getDBSInfo( k, v )
 	print infoDAS
 
 	# Get the Ntuple info that FSA created
-	numFiles = getNumberOfFiles( k)
+	numFiles = getNumberOfFiles( k )
 	eventCountEM = 0
 	eventCountTT = 0
 	inFiles = open('NtupleInputs/%s.txt' % k, 'r')
@@ -45,6 +45,8 @@ for k, v in samples.iteritems() :
 	infoNtup = [numFiles, int(eventCountEM), int(eventCountTT), status]
 	print infoNtup
 
-	# Send outputs to be JSONed and saved as data.json
-	formatJson( k, v, infoDAS, infoNtup )
+	# Append each samples info to our dictionary jDict
+	jDict[ k ] = {'DAS Path' : v, 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEventsEM' : infoNtup[1], 'nEventsTT' : infoNtup[2], 'STATUS' : infoNtup[3] }
 
+# Print the dictionary to a JSON file
+printJson( jDict )	

@@ -39,8 +39,8 @@ def getEventCount( fileName, channel ) :
 	ifile.Close()
 	return eventCount
 
-def formatJson( name, DASpath, info = [], info2 = []) :
-	with open('data.json', 'a') as outfile:
-		json.dump( { name : {'DAS Path' : DASpath, 'nfiles' : info[0], 'nblocks' : info[1], 'nevents' : info[2], 'nlumis' : info[3], 'DAS status' : info[4], 'nNtupleFiles' : info2[0], 'nEventsEM' : info2[1], 'nEventsTT' : info2[2], 'STATUS' : info2[3] } }, outfile, indent=2 )
-		outfile.close()
+def printJson( jDict ) :
+	with open('data.json', 'w') as outFile :
+		json.dump( jDict, outFile, indent=2 )
+		outFile.close()
 
