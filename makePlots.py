@@ -4,46 +4,44 @@ import json
 
 ROOT.gROOT.SetBatch(True)
 
-with open('meta/data.json') as xSecFile :
-	xSecs = json.load( xSecFile )
-print xSecs['TT']['nevents']
-#print xSecs
+with open('meta/data.json') as sampFile :
+	sampDict = json.load( sampFile )
 
 prodMap = { 'em' : ('e', 'm'),
 			 'tt' : ('t1', 't2')
 }
 				# Sample : Color , Cross Section in (pb) XXX Check these
-sampleColors = { 'DYJets': ('kBlack', 6025),
-			'TT' : ('kBlue-8', 832),
-			'TTJets' : ('kBlue-2', 832),
-			'QCD' : ('kMagenta-10', 125000000000),
-			'Tbar_tW': ('kYellow-2', 35.6),
-			'T_tW': ('kYellow+2', 35.6),
-			'HtoTauTau': ('kRed+2', 43.9),
-			'VBF_HtoTauTau': ('kRed-2', 3.7),
-			'WJets' : ('kAzure+2', 20509),
-			'WW' : ('kAzure+10', 110.8),
-			'WZJets': ('kAzure-4', 1.634),
+sampleColors = { 'DYJets': 'kBlack',
+			'TT' : 'kBlue-8',
+			'TTJets' : 'kBlue-2',
+			'QCD' : 'kMagenta-10',
+			'Tbar_tW' : 'kYellow-2',
+			'T_tW': 'kYellow+2',
+			'HtoTauTau': 'kRed+2',
+			'VBF_HtoTauTau': 'kRed-2',
+			'WJets' : 'kAzure+2',
+			'WW' : 'kAzure+10',
+			'WZJets': 'kAzure-4',
 }
 
-varMapEM = {"Z Pt" : ('e_m_Pt', 10, 200),
-			"Z Mass" : ('e_m_Mass', 10, 200),
-			"L1 Pt" : ('ePt', 10, 200),
-			"L1 Eta" : ('eEta', 10, 200),
-			"L2 Pt" : ('mPt', 10, 200),
-			"L2 Eta" : ('mEta', 10, 200),
-			"PF Met" : ('PFMet', 10, 200),
-			"Jet Multiplicity" : ('jetVeto30_DR05', 1, 10),
+varMapEM = {"Z Pt" : ('e_m_Pt', 10, 200, 0),
+#			"Z Mass" : ('e_m_Mass', 8, 130, 50),
+#			"Electron Pt" : ('ePt', 10, 200, 0),
+#			"Electron Eta" : ('eEta', 12, 3., -3),
+#			"Muon Pt" : ('mPt', 10, 200, 0),
+#			"Muon Eta" : ('mEta', 12, 3., -3.),
+#			"PF Met" : ('pfMetEt', 10, 200, 0),
+#			"Jet Multiplicity" : ('jetVeto30_DR05', 10, 10, 0),
 }		
 
-varMapTT = {"Z Pt" : ('t1_t2_Pt', 10, 200),
-			"Z Mass" : ('t1_t2_Mass', 10, 200),
-			"L1 Pt" : ('t1Pt', 10, 200),
-			"L1 Eta" : ('t1Eta', 10, 200),
-			"L2 Pt" : ('t2Pt', 10, 200),
-			"L2 Eta" : ('t2Eta', 10, 200),
-			"PF Met" : ('PFMet', 10, 200),
-			"Jet Multiplicity" : ('jetVeto30_DR05', 1, 10),
+varMapTT = {"Z Pt" : ('t1_t2_Pt', 10, 200, 0),
+#			"Z Mass" : ('t1_t2_Mass', 8, 130, 50),
+#			"#tau_{h1} Pt" : ('t1Pt', 10, 200, 0),
+#			"#tau_{h1} Eta" : ('t1Eta', 30, 3., -3.),
+#			"#tau_{h2} Pt" : ('t2Pt', 10, 200, 0),
+#			"#tau_{h2} Eta" : ('t2Eta', 30, 3., -3),
+#			"PF Met" : ('pfMetEt', 10, 200, 0),
+#			"Jet Multiplicity" : ('jetVeto30_DR05', 10, 10, 0),
 }		
 samples = ['Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'QCD']
 #samples = ['TT', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
@@ -58,31 +56,32 @@ for channel in prodMap.keys() :
 		print varBin
 		varRange = varMap[ var ][2]
 		print varRange
-		stack = ROOT.THStack("All Backgrounds", "title Stack")
+		varMin = varMap[ var ][3]
+		stack = ROOT.THStack("All Backgrounds", "%s, %s" % (channel, var) )
 		print varMap[ var ][0]
 
 		for sample in samples:
 			print sample
-			hist = ROOT.TH1F("%s_%s_%s" % (channel, sample, var), "%s %s %s" % (channel, sample, var), varBin, 0, varRange)
+			hist = ROOT.TH1F("%s_%s_%s" % (channel, sample, var), "%s %s %s" % (channel, sample, var), varBin, varMin, varRange)
 
 			tFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'READ')
 			tree = tFile.Get('%s/Ntuple' % channel)
 			for row in tree :
 				hist.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
-			color = "ROOT.%s" % sampleColors[ sample ][0]
+			color = "ROOT.%s" % sampleColors[ sample ]
 			hist.SetFillColor( eval( color ) )
 			hist.SetLineColor( ROOT.kBlack )
 			#hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
 			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data )
 			if hist.Integral() != 0:
-				hist.Scale( ( hist.Integral() / xSecs[ sample ]['nevents']  ) * 1000 * sampleColors[ sample ][1] / hist.Integral() )
+				hist.Scale( ( hist.Integral() / sampDict[ sample ]['nevents']  ) * 1000 * sampDict[ sample ]['Cross Section (pb)'] / hist.Integral() )
 
 			print hist.Integral()
 			stack.Add( hist )
 			tFile.Close()
 		#stack.SaveAs('plots/%s/stack.root' % channel )
-		signal = ROOT.TH1F("DYJets_%s_%s" % (channel, var), "%s DYJets %s" % (channel, var), varBin, 0, varRange)
+		signal = ROOT.TH1F("DYJets_%s_%s" % (channel, var), "%s DYJets %s" % (channel, var), varBin, varMin, varRange)
 		sigFile = ROOT.TFile('baseSelectionRoot/DYJets.root', 'READ')
 		tree = sigFile.Get('%s/Ntuple' % channel)
 		for row in tree :
@@ -100,7 +99,7 @@ for channel in prodMap.keys() :
 
 		stack.Draw('hist')
 		stack.GetXaxis().SetTitle("%s (GeV)" % var)
-		stack.GetYaxis().SetTitle("Events / %i (GeV)" % ( varRange / varBin ) )
+		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( round(varRange / varBin,1) ) ) )
 		stack.SetMinimum( 0.1 )
 
 		signal.Draw('hist same')
