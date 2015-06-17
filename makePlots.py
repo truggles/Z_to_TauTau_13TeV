@@ -10,7 +10,7 @@ with open('meta/data.json') as sampFile :
 prodMap = { 'em' : ('e', 'm'),
 			 'tt' : ('t1', 't2')
 }
-				# Sample : Color , Cross Section in (pb) XXX Check these
+				# Sample : Color
 sampleColors = { 'DYJets': 'kBlack',
 			'TT' : 'kBlue-8',
 			'TTJets' : 'kBlue-2',
@@ -43,7 +43,7 @@ varMapTT = {"Z Pt" : ('t1_t2_Pt', 10, 200, 0),
 #			"PF Met" : ('pfMetEt', 10, 200, 0),
 #			"Jet Multiplicity" : ('jetVeto30_DR05', 10, 10, 0),
 }		
-samples = ['Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'QCD']
+samples = ['Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'DYJets', 'QCD']
 #samples = ['TT', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
 
 for channel in prodMap.keys() :
@@ -80,16 +80,6 @@ for channel in prodMap.keys() :
 			print hist.Integral()
 			stack.Add( hist )
 			tFile.Close()
-		#stack.SaveAs('plots/%s/stack.root' % channel )
-		signal = ROOT.TH1F("DYJets_%s_%s" % (channel, var), "%s DYJets %s" % (channel, var), varBin, varMin, varRange)
-		sigFile = ROOT.TFile('baseSelectionRoot/DYJets.root', 'READ')
-		tree = sigFile.Get('%s/Ntuple' % channel)
-		for row in tree :
-			signal.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
-		signal.SetLineColor( ROOT.kGreen )
-		signal.SetLineWidth( 2 )
-		#signal.SaveAs('plots/%s/DYJets.root' % channel )
-		sigFile.Close()
 		
 		#finalPlot = ROOT.TH1F("final_plot", "Z -> #tau#tau, %s, %s" % (channel, var), varBin, 0, varRange)
 		c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
@@ -101,8 +91,6 @@ for channel in prodMap.keys() :
 		stack.GetXaxis().SetTitle("%s (GeV)" % var)
 		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( round(varRange / varBin,1) ) ) )
 		stack.SetMinimum( 0.1 )
-
-		signal.Draw('hist same')
 
 		# Set axis and viewing area
 		pad1.SetLogy()
@@ -130,3 +118,15 @@ for channel in prodMap.keys() :
 #WJets = ROOT.TH1F("%s_WJets_%s" % (channel, var), "%s WJets %s" % (channel, var), varBin, 0, varRange)
 #WW = ROOT.TH1F("%s_WW_%s" % (channel, var), "%s WW %s" % (channel, var), varBin, 0, varRange)
 #WZJets = ROOT.TH1F("%s_WZJets_%s" % (channel, var), "%s WZJets %s" % (channel, var), varBin, 0, varRange)
+		##stack.SaveAs('plots/%s/stack.root' % channel )
+		#signal = ROOT.TH1F("DYJets_%s_%s" % (channel, var), "%s DYJets %s" % (channel, var), varBin, varMin, varRange)
+		#sigFile = ROOT.TFile('baseSelectionRoot/DYJets.root', 'READ')
+		#tree = sigFile.Get('%s/Ntuple' % channel)
+		#for row in tree :
+		#	signal.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
+		#signal.SetLineColor( ROOT.kGreen )
+		#signal.SetLineWidth( 2 )
+		##signal.SaveAs('plots/%s/DYJets.root' % channel )
+		#sigFile.Close()
+		#signal.Draw('hist same')
+
