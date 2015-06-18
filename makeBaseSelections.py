@@ -1,7 +1,7 @@
 from util.buildTChain import makeTChain
 import ROOT
 from array import array
-from ROOT import TProof
+#from ROOT import TProof
 from time import gmtime, strftime
 
 begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -31,18 +31,23 @@ def dZCut( sample, channel ) :
 		dzCutB.Fill()
 	tree.Write('', ROOT.TObject.kOverwrite)
 
-channels = {'em' : ( ['e', 'm'],
-					 ['abs(e_m_Mass-90) < 30', 'e_m_SS == 0', 'ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'ePVDZ < 0.2', 'ePVDXY < 0.045', 'mPVDZ < 0.2', 'mPVDXY < 0.045', 'eRelPFIsoDB < 0.15', 'mRelPFIsoDBDefault < 0.15', 'mIsGlobal == 1', 'mNormTrkChi2 < 3.0' ] ),
-		    'tt' : ( ['t1', 't2'],
-					 ['abs(t1_t2_Mass-90) < 30', 't1_t2_SS == 0', 't1Pt > 40', 'abs(t1Eta) < 2.1', 't2Pt > 40', 'abs(t2Eta) < 2.1', 't1AgainstElectronVLooseMVA5 > 0.5', 't1AgainstMuonLoose3 > 0.5', 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0', 't2AgainstElectronVLooseMVA5 > 0.5', 't2AgainstMuonLoose3 > 0.5', 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0' ] )
-}
-#channels = {'em' : ['abs(e_m_Mass-90) < 30'],
-#		    'tt' : ['abs(t1_t2_Mass-90) < 30']
+#channels = {'em' : ( ['e', 'm'],
+#					 ['abs(e_m_Mass-90) < 30', 'e_m_SS == 0', 'ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'ePVDZ < 0.2', 'ePVDXY < 0.045', 'mPVDZ < 0.2', 'mPVDXY < 0.045', 'eRelPFIsoDB < 0.15', 'mRelPFIsoDBDefault < 0.15', 'mIsGlobal == 1', 'mNormTrkChi2 < 3.0' ] ),
+#		    'tt' : ( ['t1', 't2'],
+#					 ['abs(t1_t2_Mass-90) < 30', 't1_t2_SS == 0', 't1Pt > 40', 'abs(t1Eta) < 2.1', 't2Pt > 40', 'abs(t2Eta) < 2.1', 't1AgainstElectronVLooseMVA5 > 0.5', 't1AgainstMuonLoose3 > 0.5', 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0', 't2AgainstElectronVLooseMVA5 > 0.5', 't2AgainstMuonLoose3 > 0.5', 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0' ] )
 #}
+#channels = {'em' : ( ['e', 'm'],
+#					 ['abs(e_m_Mass-90) < 30', 'e_m_SS == 0', 'ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'ePVDZ < 0.2', 'ePVDXY < 0.045', 'mPVDZ < 0.2', 'mPVDXY < 0.045', 'eRelPFIsoDB < 0.15', 'mRelPFIsoDBDefault < 0.15', 'mIsGlobal == 1', 'mNormTrkChi2 < 3.0' ] ),
+#		    'tt' : ( ['t1', 't2'],
+#					 ['abs(t1_t2_Mass-90) < 30', 't1_t2_SS == 0', 't1Pt > 40', 'abs(t1Eta) < 2.1', 't2Pt > 40', 'abs(t2Eta) < 2.1', 't1AgainstElectronVLooseMVA5 > 0.5', 't1AgainstMuonLoose3 > 0.5', 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0', 't2AgainstElectronVLooseMVA5 > 0.5', 't2AgainstMuonLoose3 > 0.5', 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0' ] )
+#}
+channels = {'em' : (['e', 'm'], ['abs(e_m_Mass-90) < 30']),
+		    'tt' : (['t1', 't2'], ['abs(t1_t2_Mass-90) < 30'])
+}
 
-samples = ['DYJets', 'TT', 'TTJets']#, 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
+samples = ['DYJets', 'TT']#,, 'TTJets']#, 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
 
-ROOT.TProof.Open('workers=6')
+#ROOT.TProof.Open('workers=6')
 for sample in samples :
 	print "###   %s   ###" % sample
 
@@ -67,7 +72,7 @@ for sample in samples :
 
 
 		chain = makeTChain( sampleList, path )
-		chain.SetProof( True )
+		#chain.SetProof( True )
 
 		numEntries = chain.GetEntries()
 		print numEntries
@@ -77,7 +82,7 @@ for sample in samples :
 		outTree = chain.CopyTree("&&".join( channels[ channel ][1] ) )
 		
 		# New
-		chain.SetProof(0)
+		#chain.SetProof(0)
 
 		numEntries = outTree.GetEntries()
 		print numEntries
