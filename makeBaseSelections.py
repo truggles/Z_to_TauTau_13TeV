@@ -54,29 +54,36 @@ for channel in channels.keys() :
 	numEntries = chain.GetEntries()
 	print numEntries
 	
-	# Copy and make some cuts while doing it
+	''' Copy and make some cuts while doing it '''
 	#print ROOT.TString("&&".join( channels[ channel ][1] ) )
 	#outTree = chain.CopyTree("&&".join( channels[ channel ][1] ) )
+	treeOutDir = outFile.mkdir( path.split('/')[0] )
 	tree1 = bc.makeZCut( chain, channels[ channel ][0][0], channels[ channel ][0][1] )
+	treeOutDir.cd()
+	tree1.Write()
 	numEntries = tree1.GetEntries()
 	print numEntries
-	hist = bc.makeHistos( tree1, sample, channel, "Z_Mass_Window", "%sPt" % channels[ channel ][0][0], 300, 0, 1500 )
-#	saveHisto( hist, channel, 
-		
-	
+
+	# Making cut histos
+	cutName = "ZMass"
+	cutDir = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
+	cutDir.cd()
+
+	varMap = {
+		'Z_Pt' : ('%s_%s_Pt' % (channels[ channel ][0][0], channels[ channel ][0][1]), 300, 0, 1500),
+		'Z_Mass' : ('%s_%s_Mass' % (channels[ channel ][0][0], channels[ channel ][0][1]), 80, 50, 130),
+}
+
+	for cn, cv in varMap.iteritems() :
+		print cn
+		print cv
+		hist = bc.makeHisto( tree1, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+		hist.Write()
 	
 	# New
 	#chain.SetProof(0)
 
-	#numEntries = outTree.GetEntries()
-	#print numEntries
-
 	# Make a channel specific directory and write the tree to it
-	treeOutDir = outFile.mkdir( path.split('/')[0] )
-	treeOutDir.cd()
-	#outTree.Write()
-	tree1.Write()
-	hist.Write()
 outFile.Write()
 outFile.Close()
 
