@@ -61,8 +61,27 @@ def getTTHistoDict() :
 		'Z_SS' : ('t1_t2_SS', 21, -1, 1),
 		't1Pt' : ('t1Pt', 500, 0, 500),
 		't1Eta' : ('t1Eta', 101, -5, 5),
+#		't1AgainstElectronVLooseMVA5' : ('t1AgainstElectronVLooseMVA5', 11, -1, 1),
+#		't1AgainstMuonLoose3' : ('t1AgainstMuonLoose3', 11, -1, 1),
+		't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : ('t1ByCombinedIsolationDeltaBetaCorrRaw3Hits', 100, 0, 10),
 		't2Pt' : ('t2Pt', 500, 0, 500),
 		't2Eta' : ('t2Eta', 101, -5, 5),
+#		't2AgainstElectronVLooseMVA5' : ('t2AgainstElectronVLooseMVA5', 11, -1, 1),
+#		't2AgainstMuonLoose3' : ('t2AgainstMuonLoose3', 11, -1, 1),
+		't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : ('t2ByCombinedIsolationDeltaBetaCorrRaw3Hits', 100, 0, 10),
 	}
 	return chanVarMap
+
+def getCutMap( ch, l1, l2 ) :
+	cutMap = OrderedDict()
+	cutMap['ZMass'] = 'abs( %s_%s_Mass - 90 ) < 30' % (l1, l2)
+	if ch == 'em': cutMap['l1Pt'] = 'ePt > 50'
+	if ch == 'tt': cutMap['l1Pt'] = 't1Pt > 75'
+	return cutMap
+
+#channels = {'em' : ( ['e', 'm'],
+#					 ['abs(e_m_Mass-90) < 30', 'e_m_SS == 0', 'ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'ePVDZ < 0.2', 'ePVDXY < 0.045', 'mPVDZ < 0.2', 'mPVDXY < 0.045', 'eRelPFIsoDB < 0.15', 'mRelPFIsoDBDefault < 0.15', 'mIsGlobal == 1', 'mNormTrkChi2 < 3.0' ] ),
+#		    'tt' : ( ['t1', 't2'],
+#					 ['abs(t1_t2_Mass-90) < 30', 't1_t2_SS == 0', 't1Pt > 40', 'abs(t1Eta) < 2.1', 't2Pt > 40', 'abs(t2Eta) < 2.1', 't1AgainstElectronVLooseMVA5 > 0.5', 't1AgainstMuonLoose3 > 0.5', 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0', 't2AgainstElectronVLooseMVA5 > 0.5', 't2AgainstMuonLoose3 > 0.5', 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0' ] )
+#}
 

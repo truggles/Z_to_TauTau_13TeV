@@ -39,60 +39,63 @@ for channel in channels :
 	''' Get channel specific general cuts '''
 	cutMap = bc.getCutMap( channel, l1, l2 )
 	#print cutMap
-	#for cName, cString in cutMap.items() :
-		
-	''' Copy and make some cuts while doing it '''
 	treeOutDir = outFile.mkdir( path.split('/')[0] )
-	#tree1 = bc.makeZCut( chain, l1, l2 )
-	tree1 = bc.makeGenCut( chain, cutMap[ 'ZMass' ] )
+
+	lenCutMap = len( cutMap )
+	count = 0
+	for cutName, cutString in cutMap.items() :
+			
+		''' Copy and make some cuts while doing it '''
+		ROOT.gROOT.cd()
+		#treeOutDir.cd()
+
+		''' This count thing is so we don't have to copy TTrees extra times '''
+		count += 1
+		#print "count: %i" % count
+		if count % 2 == 1 :
+			chainNew = bc.makeGenCut( chain, cutString )
+			numEntries = chainNew.GetEntries()
+		if count % 2 == 0 :
+			chain = bc.makeGenCut( chainNew, cutString )
+			numEntries = chain.GetEntries()
+		print "%15s : %10i" % (cutName, numEntries)
+
+		''' Making cut histos '''
+		cutDir = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
+		cutDir.cd()
+
+		''' Fill histos of general variables '''
+		genVarMap = bc.getGeneralHistoDict()
+		for cn, cv in genVarMap.iteritems() :
+			if count % 2 == 1 :
+				hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+			if count % 2 == 0 :
+				hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+			hist.Write()
+
+		''' Fill channel specific histos '''
+		if channel == 'em' :
+			chanVarMap = bc.getEMHistoDict()
+		if channel == 'tt' :
+			chanVarMap = bc.getTTHistoDict()
+		for cn, cv in chanVarMap.iteritems() :
+			if count % 2 == 1 :
+				hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+			if count % 2 == 0 :
+				hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+			hist.Write()
+
+		if count == lenCutMap : continue
+		elif count % 2 == 1 :
+			chain.IsA().Destructor( chain )
+		elif count % 2 == 0 :
+			chainNew.IsA().Destructor( chainNew )
+	
 	treeOutDir.cd()
-	numEntries = tree1.GetEntries()
-	print "Z Cut: %10i" % numEntries
-
-	# Making cut histos
-	cutName = "ZMass"
-	cutDir = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
-	cutDir.cd()
-
-	''' Fill histos of general variables '''
-	genVarMap = bc.getGeneralHistoDict()
-	for cn, cv in genVarMap.iteritems() :
-		hist = bc.makeHisto( tree1, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-		hist.Write()
-
-	''' Fill EM specific histos '''
-	if channel == 'em' :
-		chanVarMap = bc.getEMHistoDict()
-	if channel == 'tt' :
-		chanVarMap = bc.getTTHistoDict()
-	for cn, cv in chanVarMap.iteritems() :
-		hist = bc.makeHisto( tree1, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-		hist.Write()
-
-	cutName = "L1Pt"
-	if channel == 'em': cutString = 'ePt > 50'
-	if channel == 'tt': cutString = 't1Pt > 75'
-	treeOutDir.cd()
-	tree2 = bc.makeGenCut( tree1, cutString )
-	numEntries = tree2.GetEntries()
-	print "%s: %10i" % (cutName, numEntries)
-	cutDir2 = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
-	cutDir2.cd()
-
-	''' Fill histos of general variables '''
-	genVarMap = bc.getGeneralHistoDict()
-	for cn, cv in genVarMap.iteritems() :
-		hist = bc.makeHisto( tree2, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-		hist.Write()
-
-	''' Fill EM specific histos '''
-	if channel == 'em' :
-		chanVarMap = bc.getEMHistoDict()
-	if channel == 'tt' :
-		chanVarMap = bc.getTTHistoDict()
-	for cn, cv in chanVarMap.iteritems() :
-		hist = bc.makeHisto( tree2, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-		hist.Write()
+	if count % 2 == 1 :
+		chain.Write()
+	if count % 2 == 0 :
+		chainNew.Write()
 
 outFile.Write()
 outFile.Close()
