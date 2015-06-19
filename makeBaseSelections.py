@@ -70,13 +70,25 @@ for channel in channels.keys() :
 	cutDir.cd()
 
 	varMap = {
-		'Z_Pt' : ('%s_%s_Pt' % (channels[ channel ][0][0], channels[ channel ][0][1]), 300, 0, 1500),
+		'Z_Pt' : ('%s_%s_Pt' % (channels[ channel ][0][0], channels[ channel ][0][1]), 500, 0, 500),
 		'Z_Mass' : ('%s_%s_Mass' % (channels[ channel ][0][0], channels[ channel ][0][1]), 80, 50, 130),
+		'Z_SS' : ('%s_%s_SS' % (channels[ channel ][0][0], channels[ channel ][0][1]), 21, -1, 1),
+		'LT' : ('LT', 500, 0, 500),
+		'Mt' : ('Mt', 500, 0, 500),
+		'pfMetEt' : ('pfMetEt', 500, 0, 500),
+		'bjetCISVVeto20' : ('bjetCISVVeto20', 60, 0, 5),
+		'jetVeto30' : ('jetVeto30', 100, 0, 10),
+		'l1_Pt' : ('%sPt' % channels[ channel ][0][0], 500, 0, 500),
+		'l1_Eta' : ('%sEta' % channels[ channel ][0][0], 101, -5, 5),
+		#'l1_RelPFIsoDB' : ('%sRelPFIsoDB' % channels[ channel ][0][0], 100, 0, 100),
+		'l2_Pt' : ('%sPt' % channels[ channel ][0][1], 500, 0, 500),
+		'l2_Eta' : ('%sEta' % channels[ channel ][0][1], 101, -5, 5),
+		#'l2_RelPFIsoDB' : ('%sRelPFIsoDB' % channels[ channel ][0][2], 100, 0, 100),
 }
 
 	for cn, cv in varMap.iteritems() :
-		print cn
-		print cv
+		#print cn
+		#print cv
 		hist = bc.makeHisto( tree1, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
 		hist.Write()
 	

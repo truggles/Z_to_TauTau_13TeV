@@ -1,9 +1,5 @@
-
-
-
-
 import ROOT
-from array import array
+#from array import array
 
 def makeZCut( chain, l1, l2 ) :
 	print "l1 %s, l2 %s" % (l1, l2)
@@ -12,7 +8,7 @@ def makeZCut( chain, l1, l2 ) :
 
 def makeHisto( tree, sample, channel, cutName, var, varBins, varMin, varMax ) :
 	name = "%s%s%s" % ( sample, channel, cutName )
-	hist = ROOT.TH1F( name, name, varBins, varMin, varMax )
+	hist = ROOT.TH1F( var, var, varBins, varMin, varMax )
 
 	for i in range( tree.GetEntries() ):
 		tree.GetEntry( i )
@@ -20,4 +16,5 @@ def makeHisto( tree, sample, channel, cutName, var, varBins, varMin, varMax ) :
 		hist.Fill( num )
 	return hist
 			
-	
+#def getGeneralHistoDict()
+		
