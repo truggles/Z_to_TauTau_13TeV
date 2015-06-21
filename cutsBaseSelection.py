@@ -15,10 +15,15 @@ def makeHisto( tree, sample, channel, cutName, var, varBins, varMin, varMax ) :
 	name = "%s%s%s" % ( sample, channel, cutName )
 	hist = ROOT.TH1F( var, var, varBins, varMin, varMax )
 
+	eventSet = set()
 	for i in range( tree.GetEntries() ):
 		tree.GetEntry( i )
-		num = getattr( tree, var )
-		hist.Fill( num )
+		eventTup = ( tree.run, tree.lumi, tree.evt )
+		if eventTup not in eventSet:
+			num = getattr( tree, var )
+			hist.Fill( num )
+			eventSet.add( eventTup )
+		#else: print "Found dup: %i, %i, %i" % eventTup
 	return hist
 			
 # Provides a list of histos to create for both channels
@@ -48,7 +53,7 @@ def getEMHistoDict() :
 		'mRelPFIsoDBDefault' : ('mRelPFIsoDBDefault', 200, 0, 2),
 		'mPVDZ' : ('mPVDZ', 101, -1, 1),
 		'mPVDXY' : ('mPVDXY', 101, -.2, .2),
-		'mIsGlobal' : ('mPVDXY', 10, -1, 1),
+		'mIsGlobal' : ('mIsGlobal', 101, -1, 1),
 		'mNormTrkChi2' : ('mNormTrkChi2', 40, 0, 10),
 	}
 	return chanVarMap
