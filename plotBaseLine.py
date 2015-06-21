@@ -11,10 +11,18 @@ genHistos = bc.getGeneralHistoDict()
 eeHistos = bc.getEMHistoDict() 
 ttHistos = bc.getTTHistoDict()
 
-samples = ['Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'DYJets', 'QCD']
+samples = ['DYJets', 'Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'QCD']
 
 channels = ['em', 'tt']
 
+
+#def getHisto( sample, channel, cut, var ) :
+#	tFile = ROOT.TFile('baseSelectionRootSolstice/%s.root' % sample, 'READ')
+#	dic = tFile.Get('%s_%s' % ( channel, cut ) )
+#	hist = dic.Get('%s' % var )
+#	hist.SetTitle("%s" % sample )
+#	hist.SetFillColor( ROOT.kBlue )
+#	return hist	
 
 for channel in channels :
 	print channel
@@ -30,18 +38,19 @@ for channel in channels :
 			pad1.Update()
 
 			count = 1
-			for sample in samples :
+			for sample, hist in samples.iteritems() :
 				print sample
+				#h = getHisto( sample, channel, cut, var )
 				tFile = ROOT.TFile('baseSelectionRootSolstice/%s.root' % sample, 'READ')
 				dic = tFile.Get('%s_%s' % ( channel, cut ) )
 				hist = dic.Get('%s' % var )
 				hist.SetTitle("%s" % sample )
 
 				pad1.cd( count )	
-				hist.Draw()
 				hist.SetFillColor( ROOT.kBlue )
-				pad1.cd()
-				pad1.Update()
+				hist.Draw()
+				#pad1.cd()
+				#pad1.Update()
 				count += 1
 
 			c1.SaveAs('basePlots/%s/%s_%s.png' % (channel, cut, var) )
