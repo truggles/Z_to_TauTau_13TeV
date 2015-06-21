@@ -9,7 +9,8 @@ print begin
 
 ROOT.gROOT.Reset()
 channels = ['em', 'tt']
-samples = ['DYJets', 'TT', 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
+#samples = ['DYJets', 'TT', 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
+samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TT', 'TTJets', 'WW', 'WZJets']
 #samples = ['HtoTauTau', 'WZJets']
 
 for sample in samples :
@@ -24,17 +25,35 @@ for sample in samples :
 		l1 = zProd[0]
 		l2 = zProd[1]
 		
+
 		''' Get initial chain '''
 		path = '%s/final/Ntuple' % channel
 		sampleList = 'meta/NtupleInputs/%s.txt' % sample
-		chain = makeTChain( sampleList, path )
+		chain = makeTChain( sampleList, path, 21 )
 		numEntries = chain.GetEntries()
-		print "%15s : %10i" % ('Initial', numEntries)
+		print "%25s : %10i" % ('Initial', numEntries)
+		treeOutDir = outFile.mkdir( path.split('/')[0] )
+
+
+		''' Make a set of Initial Conditions plots '''
+		initialHistosDir = outFile.mkdir( "%s_Initial" % channel )
+		initialHistosDir.cd()
+		genVarMap = bc.getGeneralHistoDict()
+		for cn, cv in genVarMap.iteritems() :
+			hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+			hist.Write()
+		if channel == 'em' :
+			chanVarMap = bc.getEMHistoDict()
+		if channel == 'tt' :
+			chanVarMap = bc.getTTHistoDict()
+		for cn, cv in chanVarMap.iteritems() :
+			hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+			hist.Write()
+		
 		
 		''' Get channel specific general cuts '''
 		cutMap = bc.getCutMap( channel, l1, l2 )
 		#print cutMap
-		treeOutDir = outFile.mkdir( path.split('/')[0] )
 	
 		lenCutMap = len( cutMap )
 		count = 0
@@ -52,7 +71,7 @@ for sample in samples :
 			if count % 2 == 0 :
 				chain = bc.makeGenCut( chainNew, cutString )
 				numEntries = chain.GetEntries()
-			print "%15s : %10i" % (cutName, numEntries)
+			print "%25s : %10i" % (cutName, numEntries)
 	
 			''' Making cut histos '''
 			cutDir = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
