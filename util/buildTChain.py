@@ -9,13 +9,15 @@ def makeTChain( sampleList, treePath, maxFiles=0 ) :
 	count = 0
 	
 	for file_ in files :
-		currentFile = ROOT.TFile( file_.strip(), 'r' )
-		fileTree =  currentFile.Get( 'em/final/Ntuple' )
+		#currentFile = ROOT.TFile( file_.strip(), 'r' )
+		#fileTree =  currentFile.Get( treePath )
 		tree.Add( file_.strip() )
 		
 		# Just in case we want to debug with a limited amount of files
 		count += 1
-		if count > maxFiles and maxFiles != 0: break
-	
+		if count >= maxFiles and maxFiles != 0:
+			print "Loaded %i Files" % count
+			break
+			
 	files.close()
 	return tree
