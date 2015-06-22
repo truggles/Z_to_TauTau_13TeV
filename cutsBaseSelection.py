@@ -77,19 +77,17 @@ def getTTHistoDict() :
 	}
 	return chanVarMap
 
-def getCutMap( ch, l1, l2 ) :
+def getCutMap( ch ) :
 	cutMap = OrderedDict()
 	if ch == 'em':
-		cutMap['l1_l2_Pt_Eta'] = 'ePt > 20 && eAbsEta < 2.3 && mPt > 10 && mAbsEta < 2.1'
+		cutMap['l1_l2_Pt_Eta'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4'
 		#cutMap['ZMass'] = 'abs( e_m_Mass - 60 ) < 45'
-		cutMap['ZMass'] = 'e_m_Mass < 120'
 		cutMap['l1_l2_Iso'] = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15'
 		cutMap['muonCuts'] = 'mIsGlobal == 1 && mNormTrkChi2 < 3.0'
 		cutMap['l1_l2_dz_dxy'] = 'ePVDZ < 0.2 && ePVDXY < 0.045 && mPVDZ < 0.2 && mPVDXY < 0.045'
 	if ch == 'tt':
 		cutMap['l1_l2_Pt_Eta'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
-		cutMap['ZMass'] = 'abs( t1_t2_Mass - 90 ) < 30'
-		cutMap['l1_l2_Iso'] = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.5 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.5'
+		cutMap['l1_l2_Iso'] = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0'
 		cutMap['TauAntiCuts'] = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 	return cutMap
 
