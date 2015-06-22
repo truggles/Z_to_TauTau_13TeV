@@ -77,11 +77,11 @@ def getTTHistoDict() :
 	}
 	return chanVarMap
 
+# Apply cuts one at a time
 def getCutMap( ch ) :
 	cutMap = OrderedDict()
 	if ch == 'em':
 		cutMap['l1_l2_Pt_Eta'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4'
-		#cutMap['ZMass'] = 'abs( e_m_Mass - 60 ) < 45'
 		cutMap['l1_l2_Iso'] = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15'
 		cutMap['muonCuts'] = 'mIsGlobal == 1 && mNormTrkChi2 < 3.0'
 		cutMap['l1_l2_dz_dxy'] = 'ePVDZ < 0.2 && ePVDXY < 0.045 && mPVDZ < 0.2 && mPVDXY < 0.045'
@@ -90,6 +90,16 @@ def getCutMap( ch ) :
 		cutMap['l1_l2_Iso'] = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0'
 		cutMap['TauAntiCuts'] = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 	return cutMap
+
+# A version which applies all cuts at once
+def quickCutMap( ch ) :
+	cutMap = OrderedDict()
+	if ch == 'em':
+		cutMap['BaseLine'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4 && eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && mIsGlobal == 1 && mNormTrkChi2 < 3.0 && ePVDZ < 0.2 && ePVDXY < 0.045 && mPVDZ < 0.2 && mPVDXY < 0.045'
+	if ch == 'tt':
+		cutMap['BaseLine'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
+	return cutMap
+	
 
 #channels = {'em' : ( ['e', 'm'],
 #					 ['abs(e_m_Mass-90) < 30', 'e_m_SS == 0', 'ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'ePVDZ < 0.2', 'ePVDXY < 0.045', 'mPVDZ < 0.2', 'mPVDXY < 0.045', 'eRelPFIsoDB < 0.15', 'mRelPFIsoDBDefault < 0.15', 'mIsGlobal == 1', 'mNormTrkChi2 < 3.0' ] ),

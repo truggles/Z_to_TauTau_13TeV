@@ -4,6 +4,15 @@ from array import array
 from time import gmtime, strftime
 import cutsBaseSelection as bc
 
+# Configuration
+skipMiddlePlots = True
+#skipMiddlePlots = False
+
+if skipMiddlePlots :
+	maxFiles = 0
+elif not skipMiddlePlots :
+	maxFiles = 21
+
 begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print begin
 
@@ -16,7 +25,10 @@ samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJ
 for sample in samples :
 #sample = 'HtoTauTau'
 	print "###   %s   ###" % sample
-	outFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'RECREATE')
+	if skipMiddlePlots :
+		outFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'RECREATE')
+	elif not skipMiddlePlots :
+		outFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'RECREATE')
 	
 	for channel in channels :
 		print "Channel:  %s" % channel
@@ -29,30 +41,34 @@ for sample in samples :
 		''' Get initial chain '''
 		path = '%s/final/Ntuple' % channel
 		sampleList = 'meta/NtupleInputs/%s.txt' % sample
-		chain = makeTChain( sampleList, path, 21 )
+		chain = makeTChain( sampleList, path, maxFiles )
 		numEntries = chain.GetEntries()
 		print "%25s : %10i" % ('Initial', numEntries)
 		treeOutDir = outFile.mkdir( path.split('/')[0] )
 
 
 		''' Make a set of Initial Conditions plots '''
-		initialHistosDir = outFile.mkdir( "%s_Initial" % channel )
-		initialHistosDir.cd()
-		genVarMap = bc.getGeneralHistoDict()
-		for cn, cv in genVarMap.iteritems() :
-			hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-			hist.Write()
-		if channel == 'em' :
-			chanVarMap = bc.getEMHistoDict()
-		if channel == 'tt' :
-			chanVarMap = bc.getTTHistoDict()
-		for cn, cv in chanVarMap.iteritems() :
-			hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-			hist.Write()
+		if not skipMiddlePlots :
+			initialHistosDir = outFile.mkdir( "%s_Initial" % channel )
+			initialHistosDir.cd()
+			genVarMap = bc.getGeneralHistoDict()
+			for cn, cv in genVarMap.iteritems() :
+				hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+				hist.Write()
+			if channel == 'em' :
+				chanVarMap = bc.getEMHistoDict()
+			if channel == 'tt' :
+				chanVarMap = bc.getTTHistoDict()
+			for cn, cv in chanVarMap.iteritems() :
+				hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+				hist.Write()
 		
 		
 		''' Get channel specific general cuts '''
-		cutMap = bc.getCutMap( channel )
+		if skipMiddlePlots :
+			cutMap = bc.quickCutMap( channel )
+		elif not skipMiddlePlots :
+			cutMap = bc.getCutMap( channel )
 		#print cutMap
 	
 		lenCutMap = len( cutMap )
