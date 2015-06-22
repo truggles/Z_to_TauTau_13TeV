@@ -52,7 +52,7 @@ for sample in samples :
 		
 		
 		''' Get channel specific general cuts '''
-		cutMap = bc.getCutMap( channel, l1, l2 )
+		cutMap = bc.getCutMap( channel )
 		#print cutMap
 	
 		lenCutMap = len( cutMap )
