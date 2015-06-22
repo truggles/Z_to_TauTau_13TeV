@@ -1,6 +1,8 @@
 from util.buildTChain import makeTChain
 import ROOT
 import json
+from collections import OrderedDict
+import cutsBaseSelection as bc
 
 ROOT.gROOT.SetBatch(True)
 
@@ -11,20 +13,21 @@ prodMap = { 'em' : ('e', 'm'),
 			 'tt' : ('t1', 't2')
 }
 				# Sample : Color
-sampleColors = { 'DYJets': 'kBlack',
-			'TT' : 'kBlue-8',
-			'TTJets' : 'kBlue-2',
-			'QCD' : 'kMagenta-10',
-			'Tbar_tW' : 'kYellow-2',
-			'T_tW': 'kYellow+2',
-			'HtoTauTau': 'kRed+2',
-			'VBF_HtoTauTau': 'kRed-2',
-			'WJets' : 'kAzure+2',
-			'WW' : 'kAzure+10',
-			'WZJets': 'kAzure-4',
-}
+samples = OrderedDict()
+samples['DYJets']	= ('kBlack', 'dyj')
+samples['TT']		= ('kBlue-8', 'top')
+samples['TTJets']	= ('kBlue-2', 'top')
+#samples['QCD']		= ('kMagenta-10', 'qcd')
+samples['Tbar_tW']	= ('kYellow-2', 'top')
+samples['T_tW']		= ('kYellow+2', 'top')
+samples['HtoTauTau']		= ('kRed+2', 'higgs')
+samples['VBF_HtoTauTau']	= ('kRed-2', 'higgs')
+samples['WJets']	= ('kAzure+2', 'ewk')
+samples['WW']		= ('kAzure+10', 'ewk')
+samples['WZJets']	= ('kAzure-4', 'ewk')
 
-varMapEM = {"Z Pt" : ('e_m_Pt', 10, 200, 0),
+
+#varMapEM = {"Z Pt" : ('e_m_Pt', 10, 200, 0),
 #			"Z Mass" : ('e_m_Mass', 8, 130, 50),
 #			"Electron Pt" : ('ePt', 10, 200, 0),
 #			"Electron Eta" : ('eEta', 12, 3., -3),
@@ -32,9 +35,9 @@ varMapEM = {"Z Pt" : ('e_m_Pt', 10, 200, 0),
 #			"Muon Eta" : ('mEta', 12, 3., -3.),
 #			"PF Met" : ('pfMetEt', 10, 200, 0),
 #			"Jet Multiplicity" : ('jetVeto30_DR05', 10, 10, 0),
-}		
+#}		
 
-varMapTT = {"Z Pt" : ('t1_t2_Pt', 10, 200, 0),
+#varMapTT = {"Z Pt" : ('t1_t2_Pt', 10, 200, 0),
 #			"Z Mass" : ('t1_t2_Mass', 8, 130, 50),
 #			"#tau_{h1} Pt" : ('t1Pt', 10, 200, 0),
 #			"#tau_{h1} Eta" : ('t1Eta', 30, 3., -3.),
@@ -42,35 +45,46 @@ varMapTT = {"Z Pt" : ('t1_t2_Pt', 10, 200, 0),
 #			"#tau_{h2} Eta" : ('t2Eta', 30, 3., -3),
 #			"PF Met" : ('pfMetEt', 10, 200, 0),
 #			"Jet Multiplicity" : ('jetVeto30_DR05', 10, 10, 0),
-}		
-samples = ['Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'DYJets', 'QCD']
+#}		
+
+# Cut out QCD for the moment and merge like backgrounds
+#samples = ['Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'DYJets']#, 'QCD']
 #samples = ['TT', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
 
 for channel in prodMap.keys() :
 	print channel
-	if channel == 'em': varMap = varMapEM
-	if channel == 'tt': varMap = varMapTT
+	if channel == 'em': varMap = bc.getEMHistoDict()
+	if channel == 'tt': varMap = bc.getTTHistoDict()
 	for var in varMap :
 		print var
-		varBin = varMap[ var ][1]
-		print varBin
-		varRange = varMap[ var ][2]
-		print varRange
-		varMin = varMap[ var ][3]
-		stack = ROOT.THStack("All Backgrounds", "%s, %s" % (channel, var) )
-		print varMap[ var ][0]
+#		varBin = varMap[ var ][1]
+#		print varBin
+#		varRange = varMap[ var ][2]
+#		print varRange
+#		varMin = varMap[ var ][3]
+		stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
+		dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
+		ewk = ROOT.THStack("All Backgrounds ewk", "ewk" )
+		top = ROOT.THStack("All Backgrounds top", "top" )
+		higgs = ROOT.THStack("All Backgrounds higgs", "higgs" )
+		qcd = ROOT.THStack("All Backgrounds qcd", "qcd" )
+#		print varMap[ var ][0]
 
 		for sample in samples:
 			print sample
-			hist = ROOT.TH1F("%s_%s_%s" % (channel, sample, var), "%s %s %s" % (channel, sample, var), varBin, varMin, varRange)
+#			hist = ROOT.TH1F("%s_%s_%s" % (channel, sample, var), "%s %s %s" % (channel, sample, var), varBin, varMin, varRange)
 
-			tFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'READ')
-			tree = tFile.Get('%s/Ntuple' % channel)
-			for row in tree :
-				hist.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
-			color = "ROOT.%s" % sampleColors[ sample ]
+			tFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
+			dic = tFile.Get("%s_BaseLine" % channel )
+			hist = dic.Get( "%s" % varMap[ var ][0] )
+			hist.SetDirectory( 0 )
+#			tree = tFile.Get('%s/Ntuple' % channel)
+#			for row in tree :
+#				hist.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
+			color = "ROOT.%s" % samples[ sample ][0]
 			hist.SetFillColor( eval( color ) )
 			hist.SetLineColor( ROOT.kBlack )
+			hist.SetLineWidth( 2 )
 			#hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
 			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data )
@@ -78,9 +92,27 @@ for channel in prodMap.keys() :
 				hist.Scale( ( hist.Integral() * 1000 * sampDict[ sample ]['Cross Section (pb)'] ) / ( hist.Integral() * sampDict[ sample ]['nevents'] ) )
 
 			print hist.Integral()
-			stack.Add( hist )
+			if samples[ sample ][1] == 'dyj' :
+				hist.SetTitle('Z #rightarrow #tau#tau')
+				dyj.Add( hist )
+			#if samples[ sample ][1] == 'qcd' :
+			#	qcd.Add( hist )
+			if samples[ sample ][1] == 'top' :
+				hist.SetTitle('Single & Double Top')
+				top.Add( hist )
+			if samples[ sample ][1] == 'ewk' :
+				hist.SetTitle('Electroweak')
+				ewk.Add( hist )
+			if samples[ sample ][1] == 'higgs' :
+				hist.SetTitle('SM Higgs(125)')
+				higgs.Add( hist )
 			tFile.Close()
+
 		
+		stack.Add( top.GetStack().Last() )
+		stack.Add( ewk.GetStack().Last() )
+		#stack.Add( qcd.GetStack().Last() )
+		stack.Add( dyj.GetStack().Last() )
 		#finalPlot = ROOT.TH1F("final_plot", "Z -> #tau#tau, %s, %s" % (channel, var), varBin, 0, varRange)
 		c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
 		pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
@@ -88,8 +120,9 @@ for channel in prodMap.keys() :
 		pad1.cd()
 
 		stack.Draw('hist')
+		higgs.Draw('hist same')
 		stack.GetXaxis().SetTitle("%s (GeV)" % var)
-		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( round(varRange / varBin,1) ) ) )
+		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( round(hist.GetBinWidth(1),1 ) ) ) )
 		stack.SetMinimum( 0.1 )
 
 		# Set axis and viewing area
@@ -97,36 +130,6 @@ for channel in prodMap.keys() :
 		pad1.BuildLegend()
 
 		pad1.Update()
-		c1.SaveAs('plots/%s/%s.png' % (channel, varMap[ var ][0] ) )
+		c1.SaveAs('plots/%s/%s.png' % (channel, var ) )
 		c1.Close()
-
-# Get histos from samples
-
-
-# Scale histos
-
-
-# Plot histos
-
-#TT = ROOT.TH1F("%s_TT_%s" % (channel, var), "%s TT %s" % (channel, var), varBin, 0, varRange)
-#TTJets = ROOT.TH1F("%s_TTJets_%s" % (channel, var), "%s TTJets %s" % (channel, var), varBin, 0, varRange)
-#QCD = ROOT.TH1F("%s_QCD_%s" % (channel, var), "%s QCD %s" % (channel, var), varBin, 0, varRange)
-#Tbar_tW = ROOT.TH1F("%s_Tbar_tW_%s" % (channel, var), "%s Tbar_tW %s" % (channel, var), varBin, 0, varRange)
-#T_tW = ROOT.TH1F("%s_T_tW_%s" % (channel, var), "%s T_tW %s" % (channel, var), varBin, 0, varRange)
-#HtoTauTau = ROOT.TH1F("%s_HtoTauTau_%s" % (channel, var), "%s HtoTauTau %s" % (channel, var), varBin, 0, varRange)
-#VBF_HtoTauTau = ROOT.TH1F("%s_VBF_HtoTauTau_%s" % (channel, var), "%s VBF_HtoTauTau %s" % (channel, var), varBin, 0, varRange)
-#WJets = ROOT.TH1F("%s_WJets_%s" % (channel, var), "%s WJets %s" % (channel, var), varBin, 0, varRange)
-#WW = ROOT.TH1F("%s_WW_%s" % (channel, var), "%s WW %s" % (channel, var), varBin, 0, varRange)
-#WZJets = ROOT.TH1F("%s_WZJets_%s" % (channel, var), "%s WZJets %s" % (channel, var), varBin, 0, varRange)
-		##stack.SaveAs('plots/%s/stack.root' % channel )
-		#signal = ROOT.TH1F("DYJets_%s_%s" % (channel, var), "%s DYJets %s" % (channel, var), varBin, varMin, varRange)
-		#sigFile = ROOT.TFile('baseSelectionRoot/DYJets.root', 'READ')
-		#tree = sigFile.Get('%s/Ntuple' % channel)
-		#for row in tree :
-		#	signal.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
-		#signal.SetLineColor( ROOT.kGreen )
-		#signal.SetLineWidth( 2 )
-		##signal.SaveAs('plots/%s/DYJets.root' % channel )
-		#sigFile.Close()
-		#signal.Draw('hist same')
 
