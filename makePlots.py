@@ -75,7 +75,7 @@ for channel in prodMap.keys() :
 
 			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data )
 			if hist.Integral() != 0:
-				hist.Scale( ( hist.Integral() / sampDict[ sample ]['nevents']  ) * 1000 * sampDict[ sample ]['Cross Section (pb)'] / hist.Integral() )
+				hist.Scale( ( hist.Integral() * 1000 * sampDict[ sample ]['Cross Section (pb)'] ) / ( hist.Integral() * sampDict[ sample ]['nevents'] ) )
 
 			print hist.Integral()
 			stack.Add( hist )
