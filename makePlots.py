@@ -82,9 +82,10 @@ for channel in prodMap.keys() :
 #			for row in tree :
 #				hist.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
 			color = "ROOT.%s" % samples[ sample ][0]
-			hist.SetFillColor( eval( color ) )
-			hist.SetLineColor( ROOT.kBlack )
-			hist.SetLineWidth( 2 )
+			if samples[ sample ][1] != 'higgs':
+				hist.SetFillColor( eval( color ) )
+				hist.SetLineColor( ROOT.kBlack )
+				hist.SetLineWidth( 2 )
 			#hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
 			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data )
@@ -122,7 +123,14 @@ for channel in prodMap.keys() :
 		stack.Draw('hist')
 		higgs.Draw('hist same')
 		stack.GetXaxis().SetTitle("%s (GeV)" % var)
-		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( round(hist.GetBinWidth(1),1 ) ) ) )
+		if hist.GetBinWidth(1) < .05 :
+			binWidth = round( hist.GetBinWidth(1), 2)
+		elif hist.GetBinWidth(1) < .5 :
+			binWidth = round( hist.GetBinWidth(1), 1)
+		else:
+			binWidth = round( hist.GetBinWidth(1), 0)
+		
+		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( binWidth ) ) )
 		stack.SetMinimum( 0.1 )
 
 		# Set axis and viewing area
