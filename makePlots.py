@@ -26,30 +26,36 @@ samples['WJets']	= ('kAzure+2', 'ewk')
 samples['WW']		= ('kAzure+10', 'ewk')
 samples['WZJets']	= ('kAzure-4', 'ewk')
 
+higgsColors = {
+	'ewk' : 'kRed+2',
+	'top' : 'kBlue-8',
+	'qcd' : 'kMagenta-10',
+	'dyj' : 'kOrange-4',
+}
 
-#varMapEM = {"Z Pt" : ('e_m_Pt', 10, 200, 0),
-#			"Z Mass" : ('e_m_Mass', 8, 130, 50),
-#			"Electron Pt" : ('ePt', 10, 200, 0),
-#			"Electron Eta" : ('eEta', 12, 3., -3),
-#			"Muon Pt" : ('mPt', 10, 200, 0),
-#			"Muon Eta" : ('mEta', 12, 3., -3.),
-#			"PF Met" : ('pfMetEt', 10, 200, 0),
-#			"Jet Multiplicity" : ('jetVeto30_DR05', 10, 10, 0),
-#}		
-
-#varMapTT = {"Z Pt" : ('t1_t2_Pt', 10, 200, 0),
-#			"Z Mass" : ('t1_t2_Mass', 8, 130, 50),
-#			"#tau_{h1} Pt" : ('t1Pt', 10, 200, 0),
-#			"#tau_{h1} Eta" : ('t1Eta', 30, 3., -3.),
-#			"#tau_{h2} Pt" : ('t2Pt', 10, 200, 0),
-#			"#tau_{h2} Eta" : ('t2Eta', 30, 3., -3),
-#			"PF Met" : ('pfMetEt', 10, 200, 0),
-#			"Jet Multiplicity" : ('jetVeto30_DR05', 10, 10, 0),
-#}		
-
-# Cut out QCD for the moment and merge like backgrounds
-#samples = ['Tbar_tW', 'T_tW', 'WW', 'WJets', 'TT', 'TTJets', 'HtoTauTau', 'VBF_HtoTauTau', 'WZJets', 'DYJets']#, 'QCD']
-#samples = ['TT', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
+plotDetails = {
+	'eEta' : (-3, 3, 2),
+	'ePt' : (0, 200, 2),
+	'ePVDXY' : (-.6, .6, 2),
+	'ePVDZ' : (-.25, .25, 1),
+	'eRelPFIsoDB' : (0, 0.2, 1),
+	'mEta' : (-3, 3, 1),
+	'mIsGlobal' : (-1, 1, 1),
+	'mNormTrkChi2' : (0, 4, 1),
+	'mPt' : (0, 200, 1),
+	'mPVDXY' : (-.6, .6, 2),
+	'mPVDZ' : (-.25, .25, 1),
+	'mRelPFIsoDBDefault' : (0, 0.2, 1),
+	'Z_Mass' : (0, 300, 2),
+	'Z_Pt' : (0, 200, 2),
+	'Z_SS' : (-1, 1, 1),
+	't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1),
+	't1Eta' : ( -3, 3, 4),
+	't1Pt' : (0, 200, 2),
+	't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1),
+	't2Eta' : ( -3, 3, 4),
+	't2Pt' : (0, 200, 2),
+}	
 
 for channel in prodMap.keys() :
 	print channel
@@ -57,11 +63,8 @@ for channel in prodMap.keys() :
 	if channel == 'tt': varMap = bc.getTTHistoDict()
 	for var in varMap :
 		print var
-#		varBin = varMap[ var ][1]
-#		print varBin
-#		varRange = varMap[ var ][2]
-#		print varRange
-#		varMin = varMap[ var ][3]
+		varMin = plotDetails[ var ][0]
+		varMax = plotDetails[ var ][1]
 		stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
 		dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
 		ewk = ROOT.THStack("All Backgrounds ewk", "ewk" )
@@ -73,19 +76,28 @@ for channel in prodMap.keys() :
 		for sample in samples:
 			print sample
 #			hist = ROOT.TH1F("%s_%s_%s" % (channel, sample, var), "%s %s %s" % (channel, sample, var), varBin, varMin, varRange)
+#			print "Sample: %s, min: %f, max: %f, rebin: %i" % (sample, plotDetails[ var ][0], plotDetails[ var ][1], plotDetails[ var ][2])
 
+			hist = ROOT.TH1F( "%s" % sample, sample, varMap[ var ][1]/plotDetails[ var ][2], plotDetails[ var ][0], plotDetails[ var ][1])
 			tFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
 			dic = tFile.Get("%s_BaseLine" % channel )
 			hist = dic.Get( "%s" % varMap[ var ][0] )
 			hist.SetDirectory( 0 )
+			hist.Rebin( plotDetails[ var ][2] )
+#			hist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+#			hist.SaveAs("plots/%s_%s.root" % (var, sample) )
 #			tree = tFile.Get('%s/Ntuple' % channel)
 #			for row in tree :
 #				hist.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
-			color = "ROOT.%s" % samples[ sample ][0]
 			if samples[ sample ][1] != 'higgs':
+				color = "ROOT.%s" % higgsColors[ samples[ sample ][1] ]
 				hist.SetFillColor( eval( color ) )
 				hist.SetLineColor( ROOT.kBlack )
 				hist.SetLineWidth( 2 )
+			else : 
+				hist.SetLineColor( ROOT.kBlue )
+				hist.SetLineWidth( 4 )
+				hist.SetLineStyle( 7 )
 			#hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
 			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data )
@@ -119,9 +131,13 @@ for channel in prodMap.keys() :
 		pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
 		pad1.Draw()
 		pad1.cd()
+#		stack.GetStack().Last().Rebin( plotDetails [ var ][2] )
+#		stack.GetStack().Last().GetXaxis().SetLimits( plotDetails[ var ][0], plotDetails[ var ][1] )
+#		higgs.GetStack().Last().GetXaxis().SetLimits( plotDetails[ var ][0], plotDetails[ var ][1] )
+#		stack.GetStack().Last().GetXaxis().SetRange( 0, 20 )
 
 		stack.Draw('hist')
-		higgs.Draw('hist same')
+		higgs.GetStack().Last().Draw('hist same')
 		stack.GetXaxis().SetTitle("%s (GeV)" % var)
 		if hist.GetBinWidth(1) < .05 :
 			binWidth = round( hist.GetBinWidth(1), 2)
@@ -131,10 +147,10 @@ for channel in prodMap.keys() :
 			binWidth = round( hist.GetBinWidth(1), 0)
 		
 		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( binWidth ) ) )
-		stack.SetMinimum( 0.1 )
+		#stack.SetMinimum( 0.1 )
 
 		# Set axis and viewing area
-		pad1.SetLogy()
+		#pad1.SetLogy()
 		pad1.BuildLegend()
 
 		pad1.Update()
