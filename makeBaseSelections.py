@@ -18,8 +18,8 @@ print begin
 
 ROOT.gROOT.Reset()
 channels = ['em', 'tt']
-#samples = ['DYJets', 'TT', 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets']
-samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TT', 'TTJets', 'WW', 'WZJets']
+#samples = ['DYJets', 'TT', 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets', 'ZZ']
+samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
 #samples = ['HtoTauTau', 'WZJets']
 
 for sample in samples :

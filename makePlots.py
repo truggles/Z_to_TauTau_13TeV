@@ -15,9 +15,9 @@ prodMap = { 'em' : ('e', 'm'),
 				# Sample : Color
 samples = OrderedDict()
 samples['DYJets']	= ('kBlack', 'dyj')
-samples['TT']		= ('kBlue-8', 'top')
+#samples['TT']		= ('kBlue-8', 'top')
 samples['TTJets']	= ('kBlue-2', 'top')
-#samples['QCD']		= ('kMagenta-10', 'qcd')
+samples['QCD']		= ('kMagenta-10', 'qcd')
 samples['Tbar_tW']	= ('kYellow-2', 'top')
 samples['T_tW']		= ('kYellow+2', 'top')
 samples['HtoTauTau']		= ('kRed+2', 'higgs')
@@ -25,6 +25,7 @@ samples['VBF_HtoTauTau']	= ('kRed-2', 'higgs')
 samples['WJets']	= ('kAzure+2', 'ewk')
 samples['WW']		= ('kAzure+10', 'ewk')
 samples['WZJets']	= ('kAzure-4', 'ewk')
+samples['ZZ']	= ('kAzure-8', 'ewk')
 
 higgsColors = {
 	'ewk' : 'kRed+2',
