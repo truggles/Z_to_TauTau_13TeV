@@ -1,0 +1,11 @@
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-147B369C-9F77-E411-B99D-00266CF9B184.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-2C7186B3-4877-E411-9D7A-00266CF9B630.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-2CAA359C-9F77-E411-B655-00266CF9B184.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-36E1BC25-4977-E411-A04F-848F69FD294F.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-52B2B080-4977-E411-B781-7845C4FC3C23.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-6617651C-4977-E411-9156-3417EBE2F493.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-66E71D9C-9F77-E411-BFE9-00266CF9B184.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-CE7A1D9C-9F77-E411-BEB3-00266CF9B184.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-D20C1E9C-9F77-E411-B8A7-00266CF9B184.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-D4C91D9C-9F77-E411-BBF7-00266CF9B184.root
+/data/truggles/ZtoTauTauNtuples_v3/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/make_ntuples_cfg-E4A2C52C-6F77-E411-BAC3-00266CFADF54.root
