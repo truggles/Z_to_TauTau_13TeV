@@ -36,14 +36,14 @@ higgsColors = {
 plotDetails = {
 	'eEta' : (-3, 3, 2),
 	'ePt' : (0, 200, 2),
-	'ePVDXY' : (-.6, .6, 2),
+	'ePVDXY' : (-.1, .1, 2),
 	'ePVDZ' : (-.25, .25, 1),
 	'eRelPFIsoDB' : (0, 0.2, 1),
 	'mEta' : (-3, 3, 1),
 	'mIsGlobal' : (-1, 1, 1),
 	'mNormTrkChi2' : (0, 4, 1),
 	'mPt' : (0, 200, 1),
-	'mPVDXY' : (-.6, .6, 2),
+	'mPVDXY' : (-.1, .1, 2),
 	'mPVDZ' : (-.25, .25, 1),
 	'mRelPFIsoDBDefault' : (0, 0.2, 1),
 	'Z_Mass' : (0, 300, 2),
@@ -55,40 +55,45 @@ plotDetails = {
 	't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1),
 	't2Eta' : ( -3, 3, 4),
 	't2Pt' : (0, 200, 2),
+	'pfMetEt' : (0, 400, 2),
+	'LT' : (0, 400, 2),
+	'Mt' : (0, 400, 2),
+	'bjetCISVVeto20' : (0, 5, 12),
+	'jetVeto30' : (0, 10, 10),
 }	
 
 for channel in prodMap.keys() :
 	print channel
 	if channel == 'em': varMap = bc.getEMHistoDict()
 	if channel == 'tt': varMap = bc.getTTHistoDict()
-	for var in varMap :
+	genVar = bc.getGeneralHistoDict()
+	newVarMap = {}
+	for var, name in varMap.iteritems() :
+		newVarMap[ var ] = name[0]
+	for var, name in genVar.iteritems() :
+		newVarMap[ var ] = name[0]
+	print newVarMap
+
+
+	for var, name in newVarMap.iteritems() :
 		print var
-		varMin = plotDetails[ var ][0]
-		varMax = plotDetails[ var ][1]
 		stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
 		dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
 		ewk = ROOT.THStack("All Backgrounds ewk", "ewk" )
 		top = ROOT.THStack("All Backgrounds top", "top" )
 		higgs = ROOT.THStack("All Backgrounds higgs", "higgs" )
 		qcd = ROOT.THStack("All Backgrounds qcd", "qcd" )
-#		print varMap[ var ][0]
 
 		for sample in samples:
 			print sample
-#			hist = ROOT.TH1F("%s_%s_%s" % (channel, sample, var), "%s %s %s" % (channel, sample, var), varBin, varMin, varRange)
-#			print "Sample: %s, min: %f, max: %f, rebin: %i" % (sample, plotDetails[ var ][0], plotDetails[ var ][1], plotDetails[ var ][2])
 
-			hist = ROOT.TH1F( "%s" % sample, sample, varMap[ var ][1]/plotDetails[ var ][2], plotDetails[ var ][0], plotDetails[ var ][1])
+			#hist = ROOT.TH1F( "%s" % sample, sample, varMap[ var ][1]/plotDetails[ var ][2], plotDetails[ var ][0], plotDetails[ var ][1])
 			tFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
 			dic = tFile.Get("%s_BaseLine" % channel )
-			hist = dic.Get( "%s" % varMap[ var ][0] )
+			#hist = dic.Get( "%s" % varMap[ var ][0] )
+			hist = dic.Get( "%s" % name )
 			hist.SetDirectory( 0 )
 			hist.Rebin( plotDetails[ var ][2] )
-#			hist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
-#			hist.SaveAs("plots/%s_%s.root" % (var, sample) )
-#			tree = tFile.Get('%s/Ntuple' % channel)
-#			for row in tree :
-#				hist.Fill( getattr( row, '%s' % varMap[ var ][0] ) )
 			if samples[ sample ][1] != 'higgs':
 				color = "ROOT.%s" % higgsColors[ samples[ sample ][1] ]
 				hist.SetFillColor( eval( color ) )
@@ -131,14 +136,18 @@ for channel in prodMap.keys() :
 		pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
 		pad1.Draw()
 		pad1.cd()
-#		stack.GetStack().Last().Rebin( plotDetails [ var ][2] )
-#		stack.GetStack().Last().GetXaxis().SetLimits( plotDetails[ var ][0], plotDetails[ var ][1] )
-#		higgs.GetStack().Last().GetXaxis().SetLimits( plotDetails[ var ][0], plotDetails[ var ][1] )
-#		stack.GetStack().Last().GetXaxis().SetRange( 0, 20 )
 
 		stack.Draw('hist')
 		higgs.GetStack().Last().Draw('hist same')
-		stack.GetXaxis().SetTitle("%s (GeV)" % var)
+		if var == 'Mt' :
+			print "!!!!!!!! MT !!!!!!!!"
+			stack.GetXaxis().SetTitle("M_{T} (GeV")
+		if var == 'Z_Mass' :
+			stack.GetXaxis().SetTitle("Visible Mass M_{ll} (GeV)")
+		else :
+			stack.GetXaxis().SetTitle("%s (GeV)" % var)
+
+
 		if hist.GetBinWidth(1) < .05 :
 			binWidth = round( hist.GetBinWidth(1), 2)
 		elif hist.GetBinWidth(1) < .5 :
@@ -154,6 +163,7 @@ for channel in prodMap.keys() :
 		pad1.BuildLegend()
 
 		pad1.Update()
+		stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
 		c1.SaveAs('plots/%s/%s.png' % (channel, var ) )
 		c1.Close()
 
