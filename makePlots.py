@@ -42,7 +42,6 @@ plotDetails = {
 	'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
 	'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
 	'mEta' : (-3, 3, 1, 'm Eta', ''),
-	'mIsGlobal' : (-1, 1, 1, 'm IsGlobal', ''),
 	'mNormTrkChi2' : (0, 4, 1, 'm NormTrkChi2', ''),
 	'mPt' : (0, 200, 1, 'm p_{T} [GeV]', ' GeV'),
 	'mMtToPFMET' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),

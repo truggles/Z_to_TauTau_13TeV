@@ -63,7 +63,6 @@ def getEMHistoDict() :
 		'mPVDXY' : ('mPVDXY', 100, -.2, .2),
 		'eMtToPFMET' : ('eMtToPFMET', 100, 0, 400),
 		'mMtToPFMET' : ('mMtToPFMET', 100, 0, 400),
-		'mIsGlobal' : ('mIsGlobal', 100, -1, 1),
 		'mNormTrkChi2' : ('mNormTrkChi2', 40, 0, 10),
 	}
 	return chanVarMap
