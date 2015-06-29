@@ -12,8 +12,7 @@ def makeGenCut( inTree, cutString ) :
 	return outTree
 
 def makeHisto( tree, sample, channel, cutName, var, varBins, varMin, varMax ) :
-	name = "%s%s%s" % ( sample, channel, cutName )
-	hist = ROOT.TH1F( var, var, varBins, varMin, varMax )
+	hist = ROOT.TH1F( cutName, cutName, varBins, varMin, varMax )
 
 	eventSet = set()
 	for i in range( tree.GetEntries() ):
@@ -32,7 +31,16 @@ def getGeneralHistoDict() :
 		'LT' : ('LT', 100, 0, 400),
 		'Mt' : ('Mt', 100, 0, 400),
 		'pfMetEt' : ('pfMetEt', 100, 0, 400),
-		'bjetCISVVeto20' : ('bjetCISVVeto20', 60, 0, 5),
+		'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
+		'jetVeto30' : ('jetVeto30', 100, 0, 10),
+	}
+	return genVarMap
+def getGeneralHistoDictPhys14() :
+	genVarMap = {
+		'LT' : ('LT', 100, 0, 400),
+		'Mt' : ('Mt', 100, 0, 400),
+		'pfMetEt' : ('pfMetEt', 100, 0, 400),
+		'bjetCISVVeto20Medium' : ('bjetCISVVeto20', 60, 0, 5),
 		'jetVeto30' : ('jetVeto30', 100, 0, 10),
 	}
 	return genVarMap
@@ -53,6 +61,8 @@ def getEMHistoDict() :
 		'mRelPFIsoDBDefault' : ('mRelPFIsoDBDefault', 200, 0, 2),
 		'mPVDZ' : ('mPVDZ', 100, -1, 1),
 		'mPVDXY' : ('mPVDXY', 100, -.2, .2),
+		'eMtToPFMET' : ('eMtToPFMET', 100, 0, 400),
+		'mMtToPFMET' : ('mMtToPFMET', 100, 0, 400),
 		'mIsGlobal' : ('mIsGlobal', 100, -1, 1),
 		'mNormTrkChi2' : ('mNormTrkChi2', 40, 0, 10),
 	}
@@ -74,6 +84,8 @@ def getTTHistoDict() :
 #		't2AgainstElectronVLooseMVA5' : ('t2AgainstElectronVLooseMVA5', 11, -1, 1),
 #		't2AgainstMuonLoose3' : ('t2AgainstMuonLoose3', 11, -1, 1),
 		't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : ('t2ByCombinedIsolationDeltaBetaCorrRaw3Hits', 100, 0, 10),
+		't1MtToPFMET' : ('t1MtToPFMET', 100, 0, 400),
+		't2MtToPFMET' : ('t2MtToPFMET', 100, 0, 400),
 	}
 	return chanVarMap
 
