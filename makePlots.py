@@ -35,32 +35,36 @@ higgsColors = {
 }
 
 plotDetails = {
-	'eEta' : (-3, 3, 2),
-	'ePt' : (0, 200, 2),
-	'ePVDXY' : (-.1, .1, 2),
-	'ePVDZ' : (-.25, .25, 1),
-	'eRelPFIsoDB' : (0, 0.2, 1),
-	'mEta' : (-3, 3, 1),
-	'mIsGlobal' : (-1, 1, 1),
-	'mNormTrkChi2' : (0, 4, 1),
-	'mPt' : (0, 200, 1),
-	'mPVDXY' : (-.1, .1, 2),
-	'mPVDZ' : (-.25, .25, 1),
-	'mRelPFIsoDBDefault' : (0, 0.2, 1),
-	'Z_Mass' : (0, 300, 2),
-	'Z_Pt' : (0, 200, 2),
-	'Z_SS' : (-1, 1, 1),
-	't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1),
-	't1Eta' : ( -3, 3, 4),
-	't1Pt' : (0, 200, 2),
-	't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1),
-	't2Eta' : ( -3, 3, 4),
-	't2Pt' : (0, 200, 2),
-	'pfMetEt' : (0, 400, 2),
-	'LT' : (0, 400, 2),
-	'Mt' : (0, 400, 2),
-	'bjetCISVVeto20' : (0, 5, 12),
-	'jetVeto30' : (0, 10, 10),
+	'eEta' : (-3, 3, 2, 'e Eta', ''),
+	'ePt' : (0, 200, 2, 'e p_{T} [GeV]', ' GeV'),
+	'eMtToPFMET' : (0, 200, 2, 'e m_{T} [GeV]', ' GeV'),
+	'ePVDXY' : (-.1, .1, 2, "e PVDXY [cm]", " cm"),
+	'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
+	'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
+	'mEta' : (-3, 3, 1, 'm Eta', ''),
+	'mIsGlobal' : (-1, 1, 1, 'm IsGlobal', ''),
+	'mNormTrkChi2' : (0, 4, 1, 'm NormTrkChi2', ''),
+	'mPt' : (0, 200, 1, 'm p_{T} [GeV]', ' GeV'),
+	'mMtToPFMET' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),
+	'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
+	'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
+	'mRelPFIsoDBDefault' : (0, 0.2, 1, 'm RelPFIsoDB', ''),
+	'Z_Mass' : (0, 300, 2, 'Z Mass [GeV]', ' GeV'),
+	'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
+	'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
+	't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
+	't1Eta' : ( -3, 3, 4, '#tau_{1} Eta', ''),
+	't1Pt' : (0, 200, 2, '#tau_{1} p_{T} [GeV]', ' GeV'),
+	't1MtToPFMET' : (0, 200, 2, '#tau_{1} m_{T} [GeV]', ' GeV'),
+	't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
+	't2Eta' : ( -3, 3, 4, '#tau_{2} Eta', ''),
+	't2Pt' : (0, 200, 2, '#tau_{2} p_{T} [GeV]', ' GeV'),
+	't2MtToPFMET' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),
+	'pfMetEt' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
+	'LT' : (0, 400, 2, 'Total LT [GeV]', ' GeV'),
+	'Mt' : (0, 400, 2, 'Total m_{T} [GeV]', ' GeV'),
+	'bjetCISVVeto20Medium' : (0, 5, 12, 'bJetCISVVeto20Medium', ''),
+	'jetVeto30' : (0, 10, 10, 'jetVeto30', ''),
 }	
 
 for channel in prodMap.keys() :
@@ -77,7 +81,7 @@ for channel in prodMap.keys() :
 
 
 	for var, name in newVarMap.iteritems() :
-		print var
+		print "Var: %s		Name: %s" % (var, name)
 		stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
 		dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
 		ewk = ROOT.THStack("All Backgrounds ewk", "ewk" )
@@ -92,7 +96,8 @@ for channel in prodMap.keys() :
 			tFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
 			dic = tFile.Get("%s_BaseLine" % channel )
 			#hist = dic.Get( "%s" % varMap[ var ][0] )
-			hist = dic.Get( "%s" % name )
+			#hist = dic.Get( "%s" % name )
+			hist = dic.Get( "%s" % var )
 			hist.SetDirectory( 0 )
 			hist.Rebin( plotDetails[ var ][2] )
 			if samples[ sample ][1] != 'higgs':
@@ -140,23 +145,22 @@ for channel in prodMap.keys() :
 
 		stack.Draw('hist')
 		higgs.GetStack().Last().Draw('hist same')
-		if var == 'Mt' :
-			print "!!!!!!!! MT !!!!!!!!"
-			stack.GetXaxis().SetTitle("M_{T} (GeV")
-		if var == 'Z_Mass' :
-			stack.GetXaxis().SetTitle("Visible Mass M_{ll} (GeV)")
-		else :
-			stack.GetXaxis().SetTitle("%s (GeV)" % var)
 
+		# X Axis!
+		stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
 
+		
+		# Set Y axis titles appropriately
 		if hist.GetBinWidth(1) < .05 :
 			binWidth = round( hist.GetBinWidth(1), 2)
 		elif hist.GetBinWidth(1) < .5 :
 			binWidth = round( hist.GetBinWidth(1), 1)
 		else:
 			binWidth = round( hist.GetBinWidth(1), 0)
-		
-		stack.GetYaxis().SetTitle("Events / %s (GeV)" % ( str( binWidth ) ) )
+		if plotDetails[ var ][ 4 ] == '' :
+			stack.GetYaxis().SetTitle("Events")
+		else :
+			stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
 		#stack.SetMinimum( 0.1 )
 
 		# Set axis and viewing area
