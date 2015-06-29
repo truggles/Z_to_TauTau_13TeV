@@ -5,13 +5,14 @@ from time import gmtime, strftime
 import cutsBaseSelection as bc
 
 # Configuration
-skipMiddlePlots = True
-#skipMiddlePlots = False
+#skipMiddlePlots = True
+skipMiddlePlots = False
 
 if skipMiddlePlots :
 	maxFiles = 0
 elif not skipMiddlePlots :
-	maxFiles = 21
+#	maxFiles = 21
+	maxFiles = 0
 
 begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print begin
@@ -23,6 +24,7 @@ samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJ
 #samples = ['HtoTauTau', 'WZJets']
 
 for sample in samples :
+	#if skipMiddlePlots == False and sample != 'HtoTauTau' : continue
 #sample = 'HtoTauTau'
 	print "###   %s   ###" % sample
 	if skipMiddlePlots :
@@ -37,6 +39,17 @@ for sample in samples :
 		l1 = zProd[0]
 		l2 = zProd[1]
 		
+		if channel == 'em': varMap = bc.getEMHistoDict()
+		if channel == 'tt': varMap = bc.getTTHistoDict()
+		genVar = bc.getGeneralHistoDict()
+		if 'HtoTauTau' in sample :
+			genVar = bc.getGeneralHistoDictPhys14()
+		newVarMap = {}
+		for var, details in varMap.iteritems() :
+		    newVarMap[ var ] = details
+		for var, name in genVar.iteritems() :
+		    newVarMap[ var ] = details
+
 
 		''' Get initial chain '''
 		path = '%s/final/Ntuple' % channel
@@ -51,19 +64,23 @@ for sample in samples :
 		if not skipMiddlePlots :
 			initialHistosDir = outFile.mkdir( "%s_Initial" % channel )
 			initialHistosDir.cd()
-			genVarMap = bc.getGeneralHistoDict()
-			if 'HtoTauTau' in sample :
-				genVarMap = bc.getGeneralHistoDictPhys14()
-			for cn, cv in genVarMap.iteritems() :
-				hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-				hist.Write()
-			if channel == 'em' :
-				chanVarMap = bc.getEMHistoDict()
-			if channel == 'tt' :
-				chanVarMap = bc.getTTHistoDict()
-			for cn, cv in chanVarMap.iteritems() :
-				hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-				hist.Write()
+			''' Combine Gen and Chan specific into one fill section '''
+			histos = {}
+			for var, cv in newVarMap.iteritems() :
+				histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
+
+			eventSet = set()
+			for i in range( chain.GetEntries() ):
+			    chain.GetEntry( i )
+			    eventTup = ( chain.run, chain.lumi, chain.evt )
+			    if eventTup not in eventSet :
+					for var, histo in histos.iteritems() :
+						num = getattr( chain, newVarMap[ var ][0] )
+						histo.Fill( num )
+					eventSet.add( eventTup )
+			for var, histo in histos.iteritems() :
+				histo.Write()
+			
 		
 		
 		''' Get channel specific general cuts '''
@@ -95,28 +112,59 @@ for sample in samples :
 			cutDir = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
 			cutDir.cd()
 	
-			''' Fill histos of general variables '''
-			genVarMap = bc.getGeneralHistoDict()
-			if 'HtoTauTau' in sample :
-				genVarMap = bc.getGeneralHistoDictPhys14()
-			for cn, cv in genVarMap.iteritems() :
-				if count % 2 == 1 :
-					hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-				if count % 2 == 0 :
-					hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-				hist.Write()
-	
-			''' Fill channel specific histos '''
-			if channel == 'em' :
-				chanVarMap = bc.getEMHistoDict()
-			if channel == 'tt' :
-				chanVarMap = bc.getTTHistoDict()
-			for cn, cv in chanVarMap.iteritems() :
-				if count % 2 == 1 :
-					hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-				if count % 2 == 0 :
-					hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-				hist.Write()
+			''' Combine Gen and Chan specific into one fill section '''
+			histos = {}
+			for var, cv in newVarMap.iteritems() :
+				histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
+
+			if count % 2 == 0 :
+				eventSet = set()
+				for i in range( chain.GetEntries() ):
+				    chain.GetEntry( i )
+				    eventTup = ( chain.run, chain.lumi, chain.evt )
+				    if eventTup not in eventSet :
+						for var, histo in histos.iteritems() :
+							num = getattr( chain, newVarMap[ var ][0] )
+							histo.Fill( num )
+						eventSet.add( eventTup )
+				for var, histo in histos.iteritems() :
+					histo.Write()
+
+			if count % 2 == 1 :
+				eventSet = set()
+				for i in range( chainNew.GetEntries() ):
+				    chainNew.GetEntry( i )
+				    eventTup = ( chainNew.run, chainNew.lumi, chainNew.evt )
+				    if eventTup not in eventSet :
+						for var, histo in histos.iteritems() :
+							num = getattr( chainNew, newVarMap[ var ][0] )
+							histo.Fill( num )
+						eventSet.add( eventTup )
+				for var, histo in histos.iteritems() :
+					histo.Write()
+
+#			''' Fill histos of general variables '''
+#			genVarMap = bc.getGeneralHistoDict()
+#			if 'HtoTauTau' in sample :
+#				genVarMap = bc.getGeneralHistoDictPhys14()
+#			for cn, cv in genVarMap.iteritems() :
+#				if count % 2 == 1 :
+#					hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+#				if count % 2 == 0 :
+#					hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+#				hist.Write()
+#	
+#			''' Fill channel specific histos '''
+#			if channel == 'em' :
+#				chanVarMap = bc.getEMHistoDict()
+#			if channel == 'tt' :
+#				chanVarMap = bc.getTTHistoDict()
+#			for cn, cv in chanVarMap.iteritems() :
+#				if count % 2 == 1 :
+#					hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+#				if count % 2 == 0 :
+#					hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
+#				hist.Write()
 	
 			if count == lenCutMap : continue
 			elif count % 2 == 1 :

@@ -11,18 +11,9 @@ def makeGenCut( inTree, cutString ) :
 	outTree = inTree.CopyTree( cutString )
 	return outTree
 
-def makeHisto( tree, sample, channel, cutName, var, varBins, varMin, varMax ) :
+# Make a histo, but fill it later so we can keep track of events for ALL histos at once
+def makeHisto( cutName, varBins, varMin, varMax ) :
 	hist = ROOT.TH1F( cutName, cutName, varBins, varMin, varMax )
-
-	eventSet = set()
-	for i in range( tree.GetEntries() ):
-		tree.GetEntry( i )
-		eventTup = ( tree.run, tree.lumi, tree.evt )
-		if eventTup not in eventSet:
-			num = getattr( tree, var )
-			hist.Fill( num )
-			eventSet.add( eventTup )
-		#else: print "Found dup: %i, %i, %i" % eventTup
 	return hist
 			
 # Provides a list of histos to create for both channels
