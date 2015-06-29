@@ -52,6 +52,8 @@ for sample in samples :
 			initialHistosDir = outFile.mkdir( "%s_Initial" % channel )
 			initialHistosDir.cd()
 			genVarMap = bc.getGeneralHistoDict()
+			if 'HtoTauTau' in sample :
+				genVarMap = bc.getGeneralHistoDictPhys14()
 			for cn, cv in genVarMap.iteritems() :
 				hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
 				hist.Write()
@@ -95,6 +97,8 @@ for sample in samples :
 	
 			''' Fill histos of general variables '''
 			genVarMap = bc.getGeneralHistoDict()
+			if 'HtoTauTau' in sample :
+				genVarMap = bc.getGeneralHistoDictPhys14()
 			for cn, cv in genVarMap.iteritems() :
 				if count % 2 == 1 :
 					hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
