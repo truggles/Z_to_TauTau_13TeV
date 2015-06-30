@@ -1,4 +1,17 @@
 {
+  "TTJets": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 1052, 
+    "nblocks": 120, 
+    "nEventsTT": 42730273, 
+    "Cross Section (pb)": 832, 
+    "nEventsEM": 42730273, 
+    "nevents": 42730273, 
+    "nNtupleFiles": 1052, 
+    "nlumis": 535125
+  }, 
   "HtoTauTau": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
@@ -25,6 +38,32 @@
     "nNtupleFiles": 15, 
     "nlumis": 5000
   }, 
+  "QCD120-170": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 233, 
+    "nblocks": 57, 
+    "nEventsTT": 8499194, 
+    "Cross Section (pb)": 477000, 
+    "nEventsEM": 8499194, 
+    "nevents": 8499194, 
+    "nNtupleFiles": 233, 
+    "nlumis": 43858
+  }, 
+  "QCD30-50": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 135, 
+    "nblocks": 37, 
+    "nEventsTT": 4695884, 
+    "Cross Section (pb)": 136000000, 
+    "nEventsEM": 4695884, 
+    "nevents": 4695884, 
+    "nNtupleFiles": 135, 
+    "nlumis": 82642
+  }, 
   "WZJets": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
@@ -38,18 +77,44 @@
     "nNtupleFiles": 45, 
     "nlumis": 5163
   }, 
-  "TTJets": {
+  "QCD300-Inf": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
-    "DAS Path": "/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
-    "nfiles": 1052, 
-    "nblocks": 120, 
-    "nEventsTT": 42730273, 
-    "Cross Section (pb)": 832, 
-    "nEventsEM": 42730273, 
-    "nevents": 42730273, 
-    "nNtupleFiles": 1052, 
-    "nlumis": 535125
+    "DAS Path": "/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM", 
+    "nfiles": 114, 
+    "nblocks": 22, 
+    "nEventsTT": 3696716, 
+    "Cross Section (pb)": 9000, 
+    "nEventsEM": 3696716, 
+    "nevents": 3696716, 
+    "nNtupleFiles": 114, 
+    "nlumis": 58627
+  }, 
+  "QCD50-80": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 145, 
+    "nblocks": 24, 
+    "nEventsTT": 5226884, 
+    "Cross Section (pb)": 19800000, 
+    "nEventsEM": 5226884, 
+    "nevents": 5226884, 
+    "nNtupleFiles": 145, 
+    "nlumis": 38648
+  }, 
+  "QCD80-120": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM", 
+    "nfiles": 201, 
+    "nblocks": 36, 
+    "nEventsTT": 8130424, 
+    "Cross Section (pb)": 2800000, 
+    "nEventsEM": 8130424, 
+    "nevents": 8130424, 
+    "nNtupleFiles": 201, 
+    "nlumis": 42366
   }, 
   "WW": {
     "STATUS": "Good to Go!", 
@@ -64,18 +129,18 @@
     "nNtupleFiles": 44, 
     "nlumis": 5180
   }, 
-  "VBF_HtoTauTau": {
-    "STATUS": "Good to Go!", 
+  "QCD15-20": {
+    "STATUS": "Error", 
     "DAS status": "ok", 
-    "DAS Path": "/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v2/MINIAODSIM", 
-    "nfiles": 11, 
-    "nblocks": 3, 
-    "nEventsTT": 464755, 
-    "Cross Section (pb)": 3.7, 
-    "nEventsEM": 464755, 
-    "nevents": 464755, 
-    "nNtupleFiles": 11, 
-    "nlumis": 4658
+    "DAS Path": "/QCD_Pt-15to20_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 69, 
+    "nblocks": 26, 
+    "nEventsTT": 2072122, 
+    "Cross Section (pb)": 1273000000, 
+    "nEventsEM": 2072122, 
+    "nevents": 2121805, 
+    "nNtupleFiles": 68, 
+    "nlumis": 17542
   }, 
   "Tbar_tW": {
     "STATUS": "Good to Go!", 
@@ -90,19 +155,6 @@
     "nNtupleFiles": 18, 
     "nlumis": 5000
   }, 
-  "ZZ": {
-    "STATUS": "Good to Go!", 
-    "DAS status": "ok", 
-    "DAS Path": "/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM", 
-    "nfiles": 36, 
-    "nblocks": 19, 
-    "nEventsTT": 996168, 
-    "Cross Section (pb)": 15.4, 
-    "nEventsEM": 996168, 
-    "nevents": 996168, 
-    "nNtupleFiles": 36, 
-    "nlumis": 5189
-  }, 
   "QCD": {
     "STATUS": "Error", 
     "DAS status": "ok", 
@@ -116,6 +168,45 @@
     "nNtupleFiles": 277, 
     "nlumis": 95237
   }, 
+  "QCD20-30": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 261, 
+    "nblocks": 46, 
+    "nEventsTT": 9175903, 
+    "Cross Section (pb)": 557600000, 
+    "nEventsEM": 9175903, 
+    "nevents": 9175903, 
+    "nNtupleFiles": 261, 
+    "nlumis": 44516
+  }, 
+  "VBF_HtoTauTau": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v2/MINIAODSIM", 
+    "nfiles": 11, 
+    "nblocks": 3, 
+    "nEventsTT": 464755, 
+    "Cross Section (pb)": 3.7, 
+    "nEventsEM": 464755, 
+    "nevents": 464755, 
+    "nNtupleFiles": 11, 
+    "nlumis": 4658
+  }, 
+  "ZZ": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM", 
+    "nfiles": 36, 
+    "nblocks": 19, 
+    "nEventsTT": 996168, 
+    "Cross Section (pb)": 15.4, 
+    "nEventsEM": 996168, 
+    "nevents": 996168, 
+    "nNtupleFiles": 36, 
+    "nlumis": 5189
+  }, 
   "DYJets": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
@@ -128,6 +219,19 @@
     "nevents": 28825132, 
     "nNtupleFiles": 671, 
     "nlumis": 300703
+  }, 
+  "QCD170-300": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 130, 
+    "nblocks": 20, 
+    "nEventsTT": 5735584, 
+    "Cross Section (pb)": 114000, 
+    "nEventsEM": 5735584, 
+    "nevents": 5735584, 
+    "nNtupleFiles": 130, 
+    "nlumis": 33873
   }, 
   "WJets": {
     "STATUS": "Good to Go!", 
