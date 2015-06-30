@@ -5,8 +5,17 @@ from time import gmtime, strftime
 import cutsBaseSelection as bc
 
 # Configuration
-#skipMiddlePlots = True
-skipMiddlePlots = False
+skipMiddlePlots = True
+#skipMiddlePlots = False
+#justShape = True
+justShape = False
+#qcd = True
+qcd = False
+
+if justShape :
+	maxEvents = 100000
+elif not justShape :
+	maxEvents = 0
 
 if skipMiddlePlots :
 	maxFiles = 0
@@ -21,10 +30,11 @@ ROOT.gROOT.Reset()
 channels = ['em', 'tt']
 #samples = ['DYJets', 'TT', 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets', 'ZZ']
 samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
-#samples = ['HtoTauTau', 'WZJets']
+#samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
+#samples = ['HtoTauTau', 'VBF_HtoTauTau']
 
 for sample in samples :
-	#if skipMiddlePlots == False and sample != 'HtoTauTau' : continue
+	if skipMiddlePlots == False and sample != 'QCD' : continue
 #sample = 'HtoTauTau'
 	print "###   %s   ###" % sample
 	if skipMiddlePlots :
@@ -70,21 +80,29 @@ for sample in samples :
 				histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
 
 			eventSet = set()
+			evtNum = 0
 			for i in range( chain.GetEntries() ):
-			    chain.GetEntry( i )
-			    eventTup = ( chain.run, chain.lumi, chain.evt )
-			    if eventTup not in eventSet :
+				evtNum += 1
+				chain.GetEntry( i )
+				eventTup = ( chain.run, chain.lumi, chain.evt )
+				if eventTup not in eventSet :
 					for var, histo in histos.iteritems() :
 						num = getattr( chain, newVarMap[ var ][0] )
 						histo.Fill( num )
 					eventSet.add( eventTup )
+				if evtNum == maxEvents :
+					break
 			for var, histo in histos.iteritems() :
 				histo.Write()
 			
 		
 		
 		''' Get channel specific general cuts '''
-		if skipMiddlePlots :
+		if qcd :
+			cutMap = bc.getCutMapQCD( channel ) 
+		elif 'HtoTauTau' in sample :
+			cutMap = bc.quickCutMapHiggs( channel )
+		elif skipMiddlePlots :
 			cutMap = bc.quickCutMap( channel )
 		elif not skipMiddlePlots :
 			cutMap = bc.getCutMap( channel )
@@ -100,12 +118,14 @@ for sample in samples :
 			''' This count thing is so we don't have to copy TTrees extra times '''
 			count += 1
 			#print "count: %i" % count
+			#print "Starting Cut!"
 			if count % 2 == 1 :
 				chainNew = bc.makeGenCut( chain, cutString )
 				numEntries = chainNew.GetEntries()
 			if count % 2 == 0 :
 				chain = bc.makeGenCut( chainNew, cutString )
 				numEntries = chain.GetEntries()
+			#print "Finishing Cut!"
 			print "%25s : %10i" % (cutName, numEntries)
 	
 			''' Making cut histos '''
@@ -119,64 +139,50 @@ for sample in samples :
 
 			if count % 2 == 0 :
 				eventSet = set()
+				evtNum = 0
 				for i in range( chain.GetEntries() ):
-				    chain.GetEntry( i )
-				    eventTup = ( chain.run, chain.lumi, chain.evt )
-				    if eventTup not in eventSet :
+					evtNum += 1
+					chain.GetEntry( i )
+					eventTup = ( chain.run, chain.lumi, chain.evt )
+					if eventTup not in eventSet :
 						for var, histo in histos.iteritems() :
 							num = getattr( chain, newVarMap[ var ][0] )
 							histo.Fill( num )
 						eventSet.add( eventTup )
+					if evtNum == maxEvents : 
+						break
 				for var, histo in histos.iteritems() :
 					histo.Write()
 
 			if count % 2 == 1 :
 				eventSet = set()
+				evtNum = 0
 				for i in range( chainNew.GetEntries() ):
-				    chainNew.GetEntry( i )
-				    eventTup = ( chainNew.run, chainNew.lumi, chainNew.evt )
-				    if eventTup not in eventSet :
+					evtNum += 1
+					chainNew.GetEntry( i )
+					eventTup = ( chainNew.run, chainNew.lumi, chainNew.evt )
+					if eventTup not in eventSet :
 						for var, histo in histos.iteritems() :
 							num = getattr( chainNew, newVarMap[ var ][0] )
 							histo.Fill( num )
 						eventSet.add( eventTup )
+					if evtNum == maxEvents :
+						break
 				for var, histo in histos.iteritems() :
 					histo.Write()
-
-#			''' Fill histos of general variables '''
-#			genVarMap = bc.getGeneralHistoDict()
-#			if 'HtoTauTau' in sample :
-#				genVarMap = bc.getGeneralHistoDictPhys14()
-#			for cn, cv in genVarMap.iteritems() :
-#				if count % 2 == 1 :
-#					hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-#				if count % 2 == 0 :
-#					hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-#				hist.Write()
-#	
-#			''' Fill channel specific histos '''
-#			if channel == 'em' :
-#				chanVarMap = bc.getEMHistoDict()
-#			if channel == 'tt' :
-#				chanVarMap = bc.getTTHistoDict()
-#			for cn, cv in chanVarMap.iteritems() :
-#				if count % 2 == 1 :
-#					hist = bc.makeHisto( chainNew, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-#				if count % 2 == 0 :
-#					hist = bc.makeHisto( chain, sample, channel, cn, cv[0], cv[1], cv[2], cv[3] )
-#				hist.Write()
 	
 			if count == lenCutMap : continue
 			elif count % 2 == 1 :
 				chain.IsA().Destructor( chain )
 			elif count % 2 == 0 :
 				chainNew.IsA().Destructor( chainNew )
+			print "repeat!"
 		
 		treeOutDir.cd()
 		if count % 2 == 1 :
-			chain.Write()
-		if count % 2 == 0 :
 			chainNew.Write()
+		if count % 2 == 0 :
+			chain.Write()
 	
 	outFile.Write()
 	outFile.Close()

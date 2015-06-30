@@ -87,21 +87,23 @@ def getCutMap( ch ) :
 		cutMap['l1_l2_Iso'] = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15'
 		cutMap['MuElecCuts'] = 'mPFIDMedium == 1 && eCBIDMedium == 1'
 		cutMap['l1_l2_dz_dxy'] = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
+		cutMap['lepton_veto'] = 'eVetoZTT10 == 0 && muVetoZTT10 == 0'
 	if ch == 'tt':
 		cutMap['l1_l2_Pt_Eta'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
 		cutMap['l1_l2_Iso'] = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0'
 		cutMap['TauVertex'] = 'abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2'
 		cutMap['TauAntiCuts'] = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
+		cutMap['lepton_veto'] = 'eVetoZTT10 == 0 && muVetoZTT10 == 0'
 	return cutMap
 
 # Apply cuts one at a time
 def getCutMapQCD( ch ) :
 	cutMap = OrderedDict()
 	if ch == 'em':
-		cutMap['qcd_pre'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4 && mPFIDLoose == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY)'
+		cutMap['qcd_pre'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4 && mPFIDLoose == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) && eVetoZTT10 == 0 && muVetoZTT10 == 0'
 		cutMap['qcd_post'] = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && eCBIDMedium == 1 && mPFIDMedium == 1'
 	if ch == 'tt':
-		cutMap['qcd_pre'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2'
+		cutMap['qcd_pre'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
 		cutMap['qcd_post'] = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0'
 	return cutMap
 
@@ -109,11 +111,19 @@ def getCutMapQCD( ch ) :
 def quickCutMap( ch ) :
 	cutMap = OrderedDict()
 	if ch == 'em':
-		cutMap['BaseLine'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4 && eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && mPFIDMedium == 1 && eCBIDMedium == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
+		cutMap['BaseLine'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4 && eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && mPFIDMedium == 1 && eCBIDMedium == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
+	if ch == 'tt':
+		cutMap['BaseLine'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
+	return cutMap
+	
+# A version which applies all cuts at once
+def quickCutMapHiggs( ch ) :
+	cutMap = OrderedDict()
+	if ch == 'em':
+		cutMap['BaseLine'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4 && eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && mPFIDLoose == 1 && eCBIDMedium == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
 	if ch == 'tt':
 		cutMap['BaseLine'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2'
 	return cutMap
-	
 
 #channels = {'em' : ( ['e', 'm'],
 #					 ['abs(e_m_Mass-90) < 30', 'e_m_SS == 0', 'ePt > 20', 'abs(eEta) < 2.3', 'mPt > 10', 'abs(mEta) < 2.1', 'ePVDZ < 0.2', 'ePVDXY < 0.045', 'mPVDZ < 0.2', 'mPVDXY < 0.045', 'eRelPFIsoDB < 0.15', 'mRelPFIsoDBDefault < 0.15', 'mIsGlobal == 1', 'mNormTrkChi2 < 3.0' ] ),
