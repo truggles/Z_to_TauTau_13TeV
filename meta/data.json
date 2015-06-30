@@ -104,16 +104,16 @@
     "nlumis": 5189
   }, 
   "QCD": {
-    "STATUS": "Good to Go!", 
+    "STATUS": "Error", 
     "DAS status": "ok", 
     "DAS Path": "/QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8/RunIISpring15DR74-Asympt25nsRaw_MCRUN2_74_V9-v3/MINIAODSIM", 
     "nfiles": 278, 
     "nblocks": 66, 
-    "nEventsTT": 9858314, 
+    "nEventsTT": 9847557, 
     "Cross Section (pb)": 2022100000, 
-    "nEventsEM": 9858314, 
+    "nEventsEM": 9847557, 
     "nevents": 9858314, 
-    "nNtupleFiles": 278, 
+    "nNtupleFiles": 277, 
     "nlumis": 95237
   }, 
   "DYJets": {
