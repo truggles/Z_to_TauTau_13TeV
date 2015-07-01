@@ -22,7 +22,7 @@ samples = OrderedDict()
 samples['DYJets']	= ('kBlack', 'dyj')
 #samples['TT']		= ('kBlue-8', 'top')
 samples['TTJets']	= ('kBlue-2', 'top')
-#$samples['QCD']		= ('kMagenta-10', 'qcd')
+samples['QCD']		= ('kMagenta-10', 'qcd')
 samples['Tbar_tW']	= ('kYellow-2', 'top')
 samples['T_tW']		= ('kYellow+2', 'top')
 samples['HtoTauTau']		= ('kRed+2', 'higgs')
@@ -139,9 +139,9 @@ for channel in prodMap.keys() :
 
 			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ), QCD gets special scaling from bkg estimation
 			scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEventsEM'] )
-#$			if sample == 'QCD' :
-#$				#print "QCD pre: %f" % scaler
-#$				scaler = scaler * ( qcdYield / hist.Integral() )
+			if sample == 'QCD' :
+				#print "QCD pre: %f" % scaler
+				scaler = scaler * ( qcdYield / hist.Integral() )
 				#print "QCD post: %f" % scaler
 			if hist.Integral() != 0:
 				hist.Scale( scaler )
@@ -150,9 +150,9 @@ for channel in prodMap.keys() :
 			if samples[ sample ][1] == 'dyj' :
 				hist.SetTitle('Z #rightarrow #tau#tau')
 				dyj.Add( hist )
-#$			if samples[ sample ][1] == 'qcd' :
-#$				hist.SetTitle('QCD')
-#$				qcd.Add( hist )
+			if samples[ sample ][1] == 'qcd' :
+				hist.SetTitle('QCD')
+				qcd.Add( hist )
 			if samples[ sample ][1] == 'top' :
 				hist.SetTitle('Single & Double Top')
 				top.Add( hist )
@@ -168,8 +168,8 @@ for channel in prodMap.keys() :
 		stack.Add( top.GetStack().Last() )
 		stack.Add( ewk.GetStack().Last() )
 		stack.Add( dyj.GetStack().Last() )
-#$		print "Qcd Yield %f" % qcd.GetStack().Last().Integral()
-#$		stack.Add( qcd.GetStack().Last() )
+		print "Qcd Yield %f" % qcd.GetStack().Last().Integral()
+		stack.Add( qcd.GetStack().Last() )
 		c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
 		pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
 		pad1.Draw()
