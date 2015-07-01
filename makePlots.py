@@ -3,8 +3,13 @@ import ROOT
 import json
 from collections import OrderedDict
 import cutsBaseSelection as bc
+import pyplotter.plot_functions as pyplotter #import setTDRStyle, getCanvas
+import pyplotter.tdrstyle as tdr
 
 ROOT.gROOT.SetBatch(True)
+tdr.setTDRStyle()
+
+luminosity = 1000.0 # (pb)
 
 with open('meta/data.json') as sampFile :
 	sampDict = json.load( sampFile )
@@ -91,13 +96,29 @@ for channel in prodMap.keys() :
 		for sample in samples:
 			print sample
 
-			#hist = ROOT.TH1F( "%s" % sample, sample, varMap[ var ][1]/plotDetails[ var ][2], plotDetails[ var ][0], plotDetails[ var ][1])
-			tFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
-			dic = tFile.Get("%s_BaseLine" % channel )
-			#hist = dic.Get( "%s" % varMap[ var ][0] )
-			#hist = dic.Get( "%s" % name )
-			hist = dic.Get( "%s" % var )
-			hist.SetDirectory( 0 )
+			# Temporary QCD method of using a relaxed cut to get stats and having tighter for yield
+			qcdYield = 0
+			if sample == 'QCD' :
+				# Shape
+				tFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'READ')
+				dic = tFile.Get("%s_qcd_pre" % channel )
+				hist = dic.Get( "%s" % var )
+				hist.SetDirectory( 0 )
+				print "QCD int: %f" % hist.Integral()
+				# Yield
+				tFileY = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
+				dicY = tFileY.Get("%s_BaseLine" % channel )
+				histY = dicY.Get( "%s" % var )
+				qcdYield = histY.Integral()				
+				print "QCD int: %f" % qcdYield
+			# All other samples
+			else :
+				tFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
+				dic = tFile.Get("%s_BaseLine" % channel )
+				hist = dic.Get( "%s" % var )
+				hist.SetDirectory( 0 )
+
+
 			hist.Rebin( plotDetails[ var ][2] )
 			if samples[ sample ][1] != 'higgs':
 				color = "ROOT.%s" % higgsColors[ samples[ sample ][1] ]
@@ -110,16 +131,22 @@ for channel in prodMap.keys() :
 				hist.SetLineStyle( 7 )
 			#hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
-			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data )
+			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ), QCD gets special scaling from bkg estimation
+			scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEventsEM'] )
+			if sample == 'QCD' :
+				print "QCD pre: %f" % scaler
+				scaler = scaler * ( qcdYield / hist.Integral() )
+				print "QCD post: %f" % scaler
 			if hist.Integral() != 0:
-				hist.Scale( ( hist.Integral() * 1000 * sampDict[ sample ]['Cross Section (pb)'] ) / ( hist.Integral() * sampDict[ sample ]['nevents'] ) )
+				hist.Scale( scaler )
 
 			print hist.Integral()
 			if samples[ sample ][1] == 'dyj' :
 				hist.SetTitle('Z #rightarrow #tau#tau')
 				dyj.Add( hist )
-			#if samples[ sample ][1] == 'qcd' :
-			#	qcd.Add( hist )
+			if samples[ sample ][1] == 'qcd' :
+				hist.SetTitle('QCD')
+				qcd.Add( hist )
 			if samples[ sample ][1] == 'top' :
 				hist.SetTitle('Single & Double Top')
 				top.Add( hist )
@@ -134,20 +161,17 @@ for channel in prodMap.keys() :
 		
 		stack.Add( top.GetStack().Last() )
 		stack.Add( ewk.GetStack().Last() )
-		#stack.Add( qcd.GetStack().Last() )
 		stack.Add( dyj.GetStack().Last() )
-		#finalPlot = ROOT.TH1F("final_plot", "Z -> #tau#tau, %s, %s" % (channel, var), varBin, 0, varRange)
+		stack.Add( qcd.GetStack().Last() )
 		c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
 		pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
 		pad1.Draw()
 		pad1.cd()
-
 		stack.Draw('hist')
 		higgs.GetStack().Last().Draw('hist same')
 
 		# X Axis!
 		stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
-
 		
 		# Set Y axis titles appropriately
 		if hist.GetBinWidth(1) < .05 :
@@ -160,10 +184,11 @@ for channel in prodMap.keys() :
 			stack.GetYaxis().SetTitle("Events")
 		else :
 			stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
-		#stack.SetMinimum( 0.1 )
 
 		# Set axis and viewing area
-		#pad1.SetLogy()
+		pad1.SetLogy()
+		higgsMax = higgs.GetMaximum()
+		stack.SetMinimum( higgsMax * 0.1 )
 		pad1.BuildLegend()
 
 		pad1.Update()

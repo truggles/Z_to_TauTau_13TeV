@@ -32,6 +32,7 @@ channels = ['em', 'tt']
 samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
 #samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
 #samples = ['HtoTauTau', 'VBF_HtoTauTau']
+#samples = ['HtoTauTau', 'T_tW']
 
 for sample in samples :
 	if skipMiddlePlots == False and sample != 'QCD' : continue
@@ -54,11 +55,14 @@ for sample in samples :
 		genVar = bc.getGeneralHistoDict()
 		if 'HtoTauTau' in sample :
 			genVar = bc.getGeneralHistoDictPhys14()
-		newVarMap = {}
+		newVarMap = genVar
 		for var, details in varMap.iteritems() :
-		    newVarMap[ var ] = details
-		for var, name in genVar.iteritems() :
-		    newVarMap[ var ] = details
+			newVarMap[ var ] = details
+			#print var, details
+		#for var, name in genVar.iteritems() :
+		#	newVarMap[ var ] = details
+		#	print var, details
+		#print newVarMap
 
 
 		''' Get initial chain '''
@@ -78,6 +82,8 @@ for sample in samples :
 			histos = {}
 			for var, cv in newVarMap.iteritems() :
 				histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
+			print "Initial:"
+			#print histos
 
 			eventSet = set()
 			evtNum = 0
@@ -136,6 +142,8 @@ for sample in samples :
 			histos = {}
 			for var, cv in newVarMap.iteritems() :
 				histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
+			print "Combined Gen and Chan:"
+			#print histos
 
 			if count % 2 == 0 :
 				eventSet = set()
