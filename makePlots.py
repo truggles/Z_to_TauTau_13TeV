@@ -97,20 +97,29 @@ for channel in prodMap.keys() :
 			print sample
 
 			# Temporary QCD method of using a relaxed cut to get stats and having tighter for yield
-			qcdYield = 0
+			#qcdYield = 0
 			if sample == 'QCD' :
 				# Shape
 				tFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'READ')
 				dic = tFile.Get("%s_qcd_pre" % channel )
 				hist = dic.Get( "%s" % var )
 				hist.SetDirectory( 0 )
-				print "QCD int: %f" % hist.Integral()
+				print "QCD int loose: %f" % hist.Integral()
 				# Yield
 				tFileY = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
-				dicY = tFileY.Get("%s_BaseLine" % channel )
-				histY = dicY.Get( "%s" % var )
-				qcdYield = histY.Integral()				
-				print "QCD int: %f" % qcdYield
+				dicY = tFileY.Get("%s" % channel )
+				treeY = dicY.Get("Ntuple")
+				qcdYield = 0
+				evtS = set()
+				for row in treeY :
+					evtT = (row.run, row.lumi, row.evt)
+					if evtT not in evtS :
+						qcdYield += 1
+						evtS.add( evtT )
+				#histY = dicY.Get( "%s" % var )
+				#qcdYield = histY.Integral()				
+				#qcdYield = len( treeY )
+				print "QCD int tight: %f" % qcdYield
 			# All other samples
 			else :
 				tFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'READ')
@@ -134,13 +143,13 @@ for channel in prodMap.keys() :
 			# Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ), QCD gets special scaling from bkg estimation
 			scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEventsEM'] )
 			if sample == 'QCD' :
-				print "QCD pre: %f" % scaler
+				#print "QCD pre: %f" % scaler
 				scaler = scaler * ( qcdYield / hist.Integral() )
-				print "QCD post: %f" % scaler
+				#print "QCD post: %f" % scaler
 			if hist.Integral() != 0:
 				hist.Scale( scaler )
 
-			print hist.Integral()
+			#print hist.Integral()
 			if samples[ sample ][1] == 'dyj' :
 				hist.SetTitle('Z #rightarrow #tau#tau')
 				dyj.Add( hist )
@@ -162,6 +171,7 @@ for channel in prodMap.keys() :
 		stack.Add( top.GetStack().Last() )
 		stack.Add( ewk.GetStack().Last() )
 		stack.Add( dyj.GetStack().Last() )
+		print "Qcd Yield %f" % qcd.GetStack().Last().Integral()
 		stack.Add( qcd.GetStack().Last() )
 		c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
 		pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
@@ -189,7 +199,17 @@ for channel in prodMap.keys() :
 		pad1.SetLogy()
 		higgsMax = higgs.GetMaximum()
 		stack.SetMinimum( higgsMax * 0.1 )
-		pad1.BuildLegend()
+		#pad1.BuildLegend()
+
+		''' Build the legend explicitly so we can specify marker styles '''
+		legend = ROOT.TLegend(0.60, 0.65, 0.95, 0.93)
+		legend.SetMargin(0.3)
+		legend.SetBorderSize(0)
+		legend.AddEntry( higgs.GetStack().Last(), "SM Higgs (125)", 'l')
+		for j in range(0, stack.GetStack().GetLast() + 1) :
+		    last = stack.GetStack().GetLast()
+		    legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')
+		legend.Draw()
 
 		pad1.Update()
 		stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
