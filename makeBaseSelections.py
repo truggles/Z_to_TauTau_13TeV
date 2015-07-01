@@ -5,8 +5,8 @@ from time import gmtime, strftime
 import cutsBaseSelection as bc
 
 # Configuration
-skipMiddlePlots = True
-#skipMiddlePlots = False
+#skipMiddlePlots = True
+skipMiddlePlots = False
 #justShape = True
 justShape = False
 #qcd = True
@@ -31,11 +31,11 @@ channels = ['em', 'tt']
 #samples = ['DYJets', 'TT', 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets', 'ZZ']
 samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
 #samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
-#samples = ['HtoTauTau', 'VBF_HtoTauTau']
+samples = ['HtoTauTau', 'VBF_HtoTauTau']
 #samples = ['HtoTauTau', 'T_tW']
 
 for sample in samples :
-	if skipMiddlePlots == False and sample != 'QCD' : continue
+#	if skipMiddlePlots == False and sample != 'QCD' : continue
 #sample = 'HtoTauTau'
 	print "###   %s   ###" % sample
 	if skipMiddlePlots :
@@ -82,7 +82,7 @@ for sample in samples :
 			histos = {}
 			for var, cv in newVarMap.iteritems() :
 				histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
-			print "Initial:"
+			#print "Initial:"
 			#print histos
 
 			eventSet = set()
@@ -104,10 +104,12 @@ for sample in samples :
 		
 		
 		''' Get channel specific general cuts '''
-		if qcd :
-			cutMap = bc.getCutMapQCD( channel ) 
-		elif 'HtoTauTau' in sample :
-			cutMap = bc.quickCutMapHiggs( channel )
+		if qcd and skipMiddlePlots :
+			cutMap = bc.getCutMapQuickQCD( channel ) 
+		elif 'HtoTauTau' in sample and skipMiddlePlots :
+			cutMap = bc.quickCutMapPhys14( channel )
+		elif 'HtoTauTau' in sample and not skipMiddlePlots :
+			cutMap = bc.getCutMapPhys14( channel )
 		elif skipMiddlePlots :
 			cutMap = bc.quickCutMap( channel )
 		elif not skipMiddlePlots :
@@ -142,7 +144,7 @@ for sample in samples :
 			histos = {}
 			for var, cv in newVarMap.iteritems() :
 				histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
-			print "Combined Gen and Chan:"
+			#print "Combined Gen and Chan:"
 			#print histos
 
 			if count % 2 == 0 :
@@ -184,7 +186,7 @@ for sample in samples :
 				chain.IsA().Destructor( chain )
 			elif count % 2 == 0 :
 				chainNew.IsA().Destructor( chainNew )
-			print "repeat!"
+			#print "repeat!"
 		
 		treeOutDir.cd()
 		if count % 2 == 1 :
