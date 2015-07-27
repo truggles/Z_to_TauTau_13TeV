@@ -23,8 +23,8 @@ def getDBSInfo( key, name ) :
 	infoVect = [ nfiles, nblocks, nevents, nlumis, status ]
 	return infoVect
 
-def getNumberOfFiles( name ) :
-	ifile = open('NtupleInputs/%s.txt' % name, 'r')
+def getNumberOfFiles( name, sampPrefix ) :
+	ifile = open('NtupleInputs_%s/%s.txt' % (sampPrefix, name), 'r')
 	fileCount = 0
 	for line in ifile:
 		fileCount += 1
@@ -39,8 +39,8 @@ def getEventCount( fileName, channel ) :
 	ifile.Close()
 	return eventCount
 
-def printJson( jDict ) :
-	with open('data.json', 'w') as outFile :
+def printJson( jDict, sampPrefix ) :
+	with open('NtupleInputs_%s/data.json' % sampPrefix, 'w') as outFile :
 		json.dump( jDict, outFile, indent=2 )
 		outFile.close()
 

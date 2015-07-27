@@ -21,18 +21,18 @@ sampPrefix = results.sampleName
 samplesSync = { 'Sync': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 999)
 }
 
-samples50ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 6025 ),
+samples50ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 6025 ),
             #'DYJets1050' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 9999 ),
-            'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 832 ),
-            #'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 9999 ),
-            'HtoTauTau' : ('/GluGluToHToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM', 43.9 ),
-            'VBF_HtoTauTau' : ('/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v2/MINIAODSIM', 3.7  ),
-            'Tbar_tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 35.6 ),
-            'T_tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 35.6),
-            'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 20509 ),
-            'WW' : ('/WW_TuneCUETP8M1_13TeV-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 110.8 ),
-            'WZJets' : ('/WZ_TuneCUETP8M1_13TeV-pythia8/Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 1.634 ),
-            'ZZ' : ('/ZZ_TuneCUETP8M1_13TeV-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 15.4 ),
+            'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 832 ),
+            'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v4/MINIAODSIM', 9999 ),
+            #'HtoTauTau' : ('/GluGluToHToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM', 43.9 ),
+            #'VBF_HtoTauTau' : ('/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v2/MINIAODSIM', 3.7  ),
+            'Tbar_tW' : ('/ST_tW_antitop_5f_mtop1755_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v3/MINIAODSIM', 35.6 ),
+            'T_tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 35.6),
+            'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 20509 ),
+            'WW' : ('/WW_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 110.8 ),
+            'WZJets' : ('/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 1.634 ),
+            'ZZ' : ('/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 15.4 ),
             'QCD15-20' : ('/QCD_Pt-15to20_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 1273000000*0.0002 ),
             'QCD20-30' : ('/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 557600000*0.0096 ),
             'QCD30-50' : ('/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 136000000*0.073 ),
@@ -65,7 +65,7 @@ samples25ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pyt
             'QCD300-Inf' : ('/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM', 9000*0.15 ),
 }
 
-if sampPrefix == 'sync': samples = samplesSync
+if sampPrefix == 'Sync': samples = samplesSync
 if sampPrefix == '25ns': samples = samples25ns
 if sampPrefix == '50ns': samples = samples50ns
  
@@ -82,7 +82,7 @@ for k, v in samples.iteritems() :
     numFiles = getNumberOfFiles( k, sampPrefix )
     eventCountEM = 0
     eventCountTT = 0
-    inFiles = open('NtupleInputs/%s_%s.txt' % (sampPrefix, k), 'r')
+    inFiles = open('NtupleInputs_%s/%s.txt' % (sampPrefix, k), 'r')
     for fileName in inFiles :
         eventCountEM += getEventCount( fileName.strip(), 'em' )
         eventCountTT += getEventCount( fileName.strip(), 'tt' )
