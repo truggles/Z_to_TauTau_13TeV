@@ -5,58 +5,99 @@
 
 import os
 from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson
+import argparse
 
 ### Excellent Source: https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
 ### See Kenneth's Log Book for how to find this stuff on MCM: https://twiki.cern.ch/twiki/bin/view/Main/KDLLogBook#LogDay20150106
-samples = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 6025 ), 
-			'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 832 ),
-			'QCD' : ('/QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8/RunIISpring15DR74-Asympt25nsRaw_MCRUN2_74_V9-v3/MINIAODSIM', 2022100000 ), # MCM
-			'Tbar_tW' : ('/ST_tW_antitop_5f_mtop1755_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 35.6 ),
-			'T_tW' : ('/ST_tW_top_5f_mtop1755_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 35.6 ),
-			'HtoTauTau' : ('/GluGluToHToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM', 43.9 ),
-			'VBF_HtoTauTau' : ('/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v2/MINIAODSIM', 3.7 ),
-			'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 20509 ),
-			'WW' : ('/WW_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 110.8 ),
-			'WZJets' : ('/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 1.634 ),
-			'ZZ' : ('/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 15.4 ),
-			'QCD15-20' : ('/QCD_Pt-15to20_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 1273000000 ),
-			'QCD20-30' : ('/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 557600000 ),
-			'QCD30-50' : ('/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 136000000 ),
-			'QCD50-80' : ('/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 19800000 ),
-			'QCD80-120' : ('/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 2800000 ),
-			'QCD120-170' : ('/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 477000),
-			'QCD170-300' : ('/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 114000 ),
-			'QCD300-Inf' : ('/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM', 9000 ),
+
+p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
+p.add_argument('--samples', action='store', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, sync")
+#args = p.parse_args()
+#filename = args.file[0]
+results = p.parse_args()
+
+sampPrefix = results.sampleName
+
+samplesSync = { 'Sync': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 999)
 }
+
+samples50ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 6025 ),
+            #'DYJets1050' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 9999 ),
+            'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 832 ),
+            #'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 9999 ),
+            'HtoTauTau' : ('/GluGluToHToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM', 43.9 ),
+            'VBF_HtoTauTau' : ('/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v2/MINIAODSIM', 3.7  ),
+            'Tbar_tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 35.6 ),
+            'T_tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 35.6),
+            'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 20509 ),
+            'WW' : ('/WW_TuneCUETP8M1_13TeV-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 110.8 ),
+            'WZJets' : ('/WZ_TuneCUETP8M1_13TeV-pythia8/Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 1.634 ),
+            'ZZ' : ('/ZZ_TuneCUETP8M1_13TeV-pythia8/Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM', 15.4 ),
+            'QCD15-20' : ('/QCD_Pt-15to20_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 1273000000*0.0002 ),
+            'QCD20-30' : ('/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 557600000*0.0096 ),
+            'QCD30-50' : ('/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 136000000*0.073 ),
+            'QCD50-80' : ('/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 19800000*0.146 ),
+            'QCD80-120' : ('/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 2800000*0.125 ),
+            'QCD120-170' : ('/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 477000*0.132),
+            'QCD170-300' : ('/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 114000*0.165 ),
+            'QCD300-Inf' : ('/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM', 9000*0.15 ),
+}
+
+# em enriched QCD has a filter efficiency applied to their cross sections
+samples25ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 6025 ), 
+            'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 832 ),
+            'QCD' : ('/QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8/RunIISpring15DR74-Asympt25nsRaw_MCRUN2_74_V9-v3/MINIAODSIM', 2022100000 ), # MCM
+            'Tbar_tW' : ('/ST_tW_antitop_5f_mtop1755_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 35.6 ),
+            'T_tW' : ('/ST_tW_top_5f_mtop1755_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 35.6 ),
+            'HtoTauTau' : ('/GluGluToHToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM', 43.9 ),
+            'VBF_HtoTauTau' : ('/VBF_HToTauTau_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v2/MINIAODSIM', 3.7 ),
+            'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 20509 ),
+            'WW' : ('/WW_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 110.8 ),
+            'WZJets' : ('/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 1.634 ),
+            'ZZ' : ('/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 15.4 ),
+            'QCD15-20' : ('/QCD_Pt-15to20_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 1273000000*0.0002 ),
+            'QCD20-30' : ('/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 557600000*0.0096 ),
+            'QCD30-50' : ('/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 136000000*0.073 ),
+            'QCD50-80' : ('/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 19800000*0.146 ),
+            'QCD80-120' : ('/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 2800000*0.125 ),
+            'QCD120-170' : ('/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 477000*0.132),
+            'QCD170-300' : ('/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 114000*0.165 ),
+            'QCD300-Inf' : ('/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM', 9000*0.15 ),
+}
+
+if sampPrefix == 'sync': samples = samplesSync
+if sampPrefix == '25ns': samples = samples25ns
+if sampPrefix == '50ns': samples = samples50ns
+ 
 
 # A dictionary to store each samples info
 jDict = {}
 
 for k, v in samples.iteritems() :
-	# Get the DAS info from DBS
-	infoDAS = getDBSInfo( k, v[0] )
-	print infoDAS
+    # Get the DAS info from DBS
+    infoDAS = getDBSInfo( k, v[0] )
+    print infoDAS
 
-	# Get the Ntuple info that FSA created
-	numFiles = getNumberOfFiles( k )
-	eventCountEM = 0
-	eventCountTT = 0
-	inFiles = open('NtupleInputs/%s.txt' % k, 'r')
-	for fileName in inFiles :
-		eventCountEM += getEventCount( fileName.strip(), 'em' )
-		eventCountTT += getEventCount( fileName.strip(), 'tt' )
-	inFiles.close()
+    # Get the Ntuple info that FSA created
+    numFiles = getNumberOfFiles( k, sampPrefix )
+    eventCountEM = 0
+    eventCountTT = 0
+    inFiles = open('NtupleInputs/%s_%s.txt' % (sampPrefix, k), 'r')
+    for fileName in inFiles :
+        eventCountEM += getEventCount( fileName.strip(), 'em' )
+        eventCountTT += getEventCount( fileName.strip(), 'tt' )
+    inFiles.close()
 
-	# Check that DAS and FSA events and file numbers match
-	status = "Error"
-	if infoDAS[0] == numFiles and infoDAS[2] == eventCountEM and eventCountEM == eventCountTT:
-		status = "Good to Go!"
+    # Check that DAS and FSA events and file numbers match
+    status = "Error"
+    if infoDAS[0] == numFiles and infoDAS[2] == eventCountEM and eventCountEM == eventCountTT:
+        status = "Good to Go!"
 
-	infoNtup = [numFiles, int(eventCountEM), int(eventCountTT), status]
-	print infoNtup
+    infoNtup = [numFiles, int(eventCountEM), int(eventCountTT), status]
+    print infoNtup
 
-	# Append each samples info to our dictionary jDict
-	jDict[ k ] = {'DAS Path' : v[0], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEventsEM' : infoNtup[1], 'nEventsTT' : infoNtup[2], 'STATUS' : infoNtup[3], 'Cross Section (pb)' : v[1] }
+    # Append each samples info to our dictionary jDict
+    jDict[ k ] = {'DAS Path' : v[0], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEventsEM' : infoNtup[1], 'nEventsTT' : infoNtup[2], 'STATUS' : infoNtup[3], 'Cross Section (pb)' : v[1] }
 
 # Print the dictionary to a JSON file
-printJson( jDict )	
+printJson( jDict, sampPrefix )
