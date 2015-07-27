@@ -3,10 +3,18 @@ import ROOT
 from array import array
 from time import gmtime, strftime
 import cutsBaseSelection as bc
+import argparse
 
-# Configuration
-#skipMiddlePlots = True
-skipMiddlePlots = False
+p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
+p.add_argument('--samples', action='store', default='50ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+results = p.parse_args()
+pre_ = results.sampleName
+
+print "Running over %s samples" % pre_
+
+''' Configuration '''
+skipMiddlePlots = True
+#skipMiddlePlots = False
 #justShape = True
 justShape = False
 #qcd = True
@@ -28,20 +36,26 @@ print begin
 
 ROOT.gROOT.Reset()
 channels = ['em', 'tt']
-#samples = ['DYJets', 'TT', 'TTJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'WW', 'WZJets', 'ZZ']
-samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
-#samples = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']#, 'TT']
-samples = ['HtoTauTau', 'VBF_HtoTauTau']
-#samples = ['HtoTauTau', 'T_tW']
+
+''' Preset samples '''
+SamplesSync = ['Sync_HtoTauTau']
+Samples50ns = ['DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TT', 'data_em', 'data_tt']
+Samples25ns = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']
+
+if pre_ == 'Sync' : samples = SamplesSync
+if pre_ == '50ns' : samples = Samples50ns
+if pre_ == '25ns' : samples = Samples25ns
+
+
 
 for sample in samples :
 #	if skipMiddlePlots == False and sample != 'QCD' : continue
 #sample = 'HtoTauTau'
 	print "###   %s   ###" % sample
 	if skipMiddlePlots :
-		outFile = ROOT.TFile('baseSelectionRootQuick/%s.root' % sample, 'RECREATE')
+		outFile = ROOT.TFile('%sBaseRootsQuick/%s.root' % (pre_, sample), 'RECREATE')
 	elif not skipMiddlePlots :
-		outFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'RECREATE')
+		outFile = ROOT.TFile('%sBaseRoots/%s.root' % (pre_, sample), 'RECREATE')
 	
 	for channel in channels :
 		print "Channel:  %s" % channel
@@ -67,7 +81,7 @@ for sample in samples :
 
 		''' Get initial chain '''
 		path = '%s/final/Ntuple' % channel
-		sampleList = 'meta/NtupleInputs/%s.txt' % sample
+		sampleList = 'meta/NtupleInputs_%s/%s.txt' % (pre_, sample)
 		chain = makeTChain( sampleList, path, maxFiles )
 		numEntries = chain.GetEntries()
 		print "%25s : %10i" % ('Initial', numEntries)
