@@ -1,16 +1,16 @@
 {
-  "TTJets": {
-    "STATUS": "Good to Go!", 
+  "data_tt": {
+    "STATUS": "Files Match", 
     "DAS status": "ok", 
-    "DAS Path": "/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM", 
-    "nfiles": 123, 
-    "nblocks": 30, 
-    "nEventsTT": 4994250, 
-    "Cross Section (pb)": 832, 
-    "nEventsEM": 4994250, 
-    "nevents": 4994250, 
-    "nNtupleFiles": 123, 
-    "nlumis": 62552
+    "DAS Path": "/Tau/Run2015B-PromptReco-v1/MINIAOD", 
+    "nfiles": 33, 
+    "nblocks": 28, 
+    "nEventsTT": 183285, 
+    "Cross Section (pb)": -999, 
+    "nEventsEM": 183285, 
+    "nevents": 226198, 
+    "nNtupleFiles": 33, 
+    "nlumis": 5129
   }, 
   "T_tW": {
     "STATUS": "Good to Go!", 
@@ -25,18 +25,18 @@
     "nNtupleFiles": 31, 
     "nlumis": 4992
   }, 
-  "QCD120-170": {
+  "TTJets": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
-    "DAS Path": "/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
-    "nfiles": 233, 
-    "nblocks": 57, 
-    "nEventsTT": 8499194, 
-    "Cross Section (pb)": 62964.0, 
-    "nEventsEM": 8499194, 
-    "nevents": 8499194, 
-    "nNtupleFiles": 233, 
-    "nlumis": 43858
+    "DAS Path": "/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/MINIAODSIM", 
+    "nfiles": 123, 
+    "nblocks": 30, 
+    "nEventsTT": 4994250, 
+    "Cross Section (pb)": 832, 
+    "nEventsEM": 4994250, 
+    "nevents": 4994250, 
+    "nNtupleFiles": 123, 
+    "nlumis": 62552
   }, 
   "WZJets": {
     "STATUS": "Good to Go!", 
@@ -142,6 +142,19 @@
     "nNtupleFiles": 17, 
     "nlumis": 5000
   }, 
+  "QCD120-170": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "DAS Path": "/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 233, 
+    "nblocks": 57, 
+    "nEventsTT": 8499194, 
+    "Cross Section (pb)": 62964.0, 
+    "nEventsEM": 8499194, 
+    "nevents": 8499194, 
+    "nNtupleFiles": 233, 
+    "nlumis": 43858
+  }, 
   "QCD20-30": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
@@ -193,6 +206,19 @@
     "nevents": 19925500, 
     "nNtupleFiles": 491, 
     "nlumis": 207904
+  }, 
+  "data_em": {
+    "STATUS": "Files Match", 
+    "DAS status": "ok", 
+    "DAS Path": "/MuonEG/Run2015B-PromptReco-v1/MINIAOD", 
+    "nfiles": 30, 
+    "nblocks": 26, 
+    "nEventsTT": 172143, 
+    "Cross Section (pb)": -999, 
+    "nEventsEM": 172143, 
+    "nevents": 219680, 
+    "nNtupleFiles": 30, 
+    "nlumis": 5165
   }, 
   "QCD170-300": {
     "STATUS": "Good to Go!", 
