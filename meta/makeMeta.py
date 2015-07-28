@@ -15,7 +15,7 @@ p.add_argument('--samples', action='store', dest='sampleName', help="Which sampl
 results = p.parse_args()
 sampPrefix = results.sampleName
 
-samplesSync = { 'Sync_HtoTauTau': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 999)
+samplesSync = { 'Sync_HtoTT': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 999)
 }
 
 samples50ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 6025 ),
