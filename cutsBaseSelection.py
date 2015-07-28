@@ -124,12 +124,14 @@ def getCutMapQuickQCD( ch ) :
 
 # A version which applies all cuts at once RunII
 def quickCutMap( ch ) :
-	cutMap = OrderedDict()
-	if ch == 'em':
-		cutMap['BaseLine'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4 && eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && mPFIDMedium == 1 && mNormTrkChi2 < 3 && eCBIDMedium == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
-	if ch == 'tt':
-		cutMap['BaseLine'] = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
-	return cutMap
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['BaseLine'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4 && e_m_DR > 0.3 && eMVANonTrigWP80 == 1 && ePassesConversionVeto == 1 && eMissingHits <= 1 && mPFIDMedium == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && ( singleESingleMuPass + singleMuSingleEPass ) > 0'
+        cutMap['PostSync'] = 'e_m_SS == 0 && eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
+    if ch == 'tt':
+        cutMap['BaseLine'] = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1 && t1_t2_DR > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2 && eVetoZTT10 == 0 && muVetoZTT10 == 0 && abs( t1Charge ) == 1 && abs( t2Charge ) == 1 && doubleTauPass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1'
+        cutMap['PostSync'] = 't1_t2_SS == 0 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
+    return cutMap
 	
 # A version which applies all cuts at once Phys14
 def quickCutMapPhys14( ch ) :

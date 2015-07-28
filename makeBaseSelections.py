@@ -38,8 +38,8 @@ ROOT.gROOT.Reset()
 channels = ['em', 'tt']
 
 ''' Preset samples '''
-SamplesSync = ['Sync_HtoTauTau']
-Samples50ns = ['DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TT', 'data_em', 'data_tt']
+SamplesSync = ['Sync_HtoTT']
+Samples50ns = ['DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TT', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf', 'data_em', 'data_tt']
 Samples25ns = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']
 
 if pre_ == 'Sync' : samples = SamplesSync
