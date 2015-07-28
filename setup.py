@@ -4,8 +4,8 @@
 
 import os
 
-dirs = ['baseRoots',
-        'baseRootsQuick',
+dirs = ['BaseRoots',
+        'BaseRootsQuick',
         'Plots',
 ]        
 
