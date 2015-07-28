@@ -40,7 +40,7 @@ def getEventCount( fileName, channel ) :
 	return eventCount
 
 def printJson( jDict, sampPrefix ) :
-	with open('NtupleInputs_%s/data.json' % sampPrefix, 'w') as outFile :
+	with open('NtupleInputs_%s/samples.json' % sampPrefix, 'w') as outFile :
 		json.dump( jDict, outFile, indent=2 )
 		outFile.close()
 

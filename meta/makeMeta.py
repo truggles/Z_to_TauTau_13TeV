@@ -11,14 +11,11 @@ import argparse
 ### See Kenneth's Log Book for how to find this stuff on MCM: https://twiki.cern.ch/twiki/bin/view/Main/KDLLogBook#LogDay20150106
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
-p.add_argument('--samples', action='store', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, sync")
-#args = p.parse_args()
-#filename = args.file[0]
+p.add_argument('--samples', action='store', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 results = p.parse_args()
-
 sampPrefix = results.sampleName
 
-samplesSync = { 'Sync': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 999)
+samplesSync = { 'Sync_HtoTauTau': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 999)
 }
 
 samples50ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM', 6025 ),
@@ -41,6 +38,8 @@ samples50ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pyt
             'QCD120-170' : ('/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 477000*0.132),
             'QCD170-300' : ('/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 114000*0.165 ),
             'QCD300-Inf' : ('/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM', 9000*0.15 ),
+            'data_tt' : ('/Tau/Run2015B-PromptReco-v1/MINIAOD', -999),
+            'data_em' : ('/MuonEG/Run2015B-PromptReco-v1/MINIAOD', -999),
 }
 
 # em enriched QCD has a filter efficiency applied to their cross sections
@@ -90,7 +89,8 @@ for k, v in samples.iteritems() :
 
     # Check that DAS and FSA events and file numbers match
     status = "Error"
-    if infoDAS[0] == numFiles and infoDAS[2] == eventCountEM and eventCountEM == eventCountTT:
+    if infoDAS[0] == numFiles : status = "Files Match"
+    if infoDAS[2] == eventCountEM and eventCountEM == eventCountTT:
         status = "Good to Go!"
 
     infoNtup = [numFiles, int(eventCountEM), int(eventCountTT), status]
