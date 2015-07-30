@@ -8,6 +8,7 @@ dirs = ['BaseRoots',
         'BaseRootsQuick',
         'Plots',
         'QCD',
+        'Invert',
 ]        
 
 prefixes = ['50ns', '25ns', 'Sync']
