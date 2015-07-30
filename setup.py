@@ -7,6 +7,7 @@ import os
 dirs = ['BaseRoots',
         'BaseRootsQuick',
         'Plots',
+        'QCD',
 ]        
 
 prefixes = ['50ns', '25ns', 'Sync']
