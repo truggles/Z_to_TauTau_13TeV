@@ -9,8 +9,10 @@ import argparse
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='50ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+p.add_argument('--includeHiggs', action='store', default=False, dest='includeHiggs', help="Include 25ns Higgs samples?")
 results = p.parse_args()
 pre_ = results.sampleName
+includeHiggs = results.includeHiggs
 
 print "Running over %s samples" % pre_
 
@@ -18,6 +20,9 @@ ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
 luminosity = 40.0 # (pb)
+qcdTTScaleFactor = 1.09 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
+#qcdEMScaleFactor = 3.50
+qcdEMScaleFactor = 1.0
 qcdYieldTT = 0
 qcdYieldEM = 0
 
@@ -66,14 +71,14 @@ plotDetails = {
 	'ePVDXY' : (-.1, .1, 2, "e PVDXY [cm]", " cm"),
 	'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
 	'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
-	'mEta' : (-3, 3, 1, 'm Eta', ''),
+	'mEta' : (-3, 3, 2, 'm Eta', ''),
 	'mNormTrkChi2' : (0, 4, 1, 'm NormTrkChi2', ''),
 	'mPt' : (0, 200, 1, 'm p_{T} [GeV]', ' GeV'),
 	'mMtToPFMET' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),
 	'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
 	'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
 	'mRelPFIsoDBDefault' : (0, 0.2, 1, 'm RelPFIsoDB', ''),
-	'Z_Mass' : (0, 300, 2, 'Z Mass [GeV]', ' GeV'),
+	'Z_Mass' : (0, 300, 4, 'Z Mass [GeV]', ' GeV'),
 	'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
 	'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
 	't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
@@ -85,8 +90,8 @@ plotDetails = {
 	't2Pt' : (0, 200, 2, '#tau_{2} p_{T} [GeV]', ' GeV'),
 	't2MtToPFMET' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),
 	'pfMetEt' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
-	'LT' : (0, 400, 2, 'Total LT [GeV]', ' GeV'),
-	'Mt' : (0, 400, 2, 'Total m_{T} [GeV]', ' GeV'),
+	'LT' : (0, 400, 4, 'Total LT [GeV]', ' GeV'),
+	'Mt' : (0, 400, 4, 'Total m_{T} [GeV]', ' GeV'),
 	'bjetCISVVeto20Medium' : (0, 5, 12, 'bJetCISVVeto20Medium', ''),
 	'jetVeto30' : (0, 10, 10, 'jetVeto30', ''),
 }	
@@ -115,6 +120,7 @@ for channel in prodMap.keys() :
         data = ROOT.THStack("All Backgrounds data", "data" )
         
         for sample in samples:
+            if not includeHiggs and 'HtoTauTau' in sample : continue
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
             print sample
@@ -138,8 +144,8 @@ for channel in prodMap.keys() :
                 #qcdYield = qcdYield1 + qcdYield2
 
                 ### REALLY BAD HARDCODE
-                if channel == 'tt' : qcdYield = 50
-                if channel == 'em' : qcdYield = 62
+                if channel == 'tt' : qcdYield = 50 # These numbers calculated by looking at data SS yield via "python makeBaseSelections.py --qcd=True"
+                if channel == 'em' : qcdYield = 62 # only data from Tau files contributes to 'tt' and opposite for 'em'
             	#evtS = set()
             	#for row in treeY1 :
             	#	evtT = (row.run, row.lumi, row.evt)
@@ -216,7 +222,9 @@ for channel in prodMap.keys() :
         # Scale QCD shape to Data Driven Yield            
         qcdInt = qcd.GetStack().Last().Integral()
         print "qcdInt: %f" % qcdInt
-        qcd.GetStack().Last().Scale( qcdYield / qcdInt )
+        if channel == 'tt' : qcdScaleFactor = qcdTTScaleFactor
+        if channel == 'em' : qcdScaleFactor = qcdEMScaleFactor
+        qcd.GetStack().Last().Scale( qcdScaleFactor * qcdYield / qcdInt )
         qcdInt = qcd.GetStack().Last().Integral()
         print "New qcdInt: %f" % qcdInt
 
@@ -230,7 +238,7 @@ for channel in prodMap.keys() :
         pad1.Draw()
         pad1.cd()
         stack.Draw('hist')
-        higgs.GetStack().Last().Draw('hist same')
+        if includeHiggs : higgs.GetStack().Last().Draw('hist same')
         data.GetStack().Last().Draw('esamex0')
         
         # X Axis!
@@ -268,12 +276,25 @@ for channel in prodMap.keys() :
         legend = ROOT.TLegend(0.60, 0.65, 0.95, 0.93)
         legend.SetMargin(0.3)
         legend.SetBorderSize(0)
-        legend.AddEntry( higgs.GetStack().Last(), "SM Higgs (125)", 'l')
+        if includeHiggs : legend.AddEntry( higgs.GetStack().Last(), "SM Higgs (125)", 'l')
         legend.AddEntry( data.GetStack().Last(), "Data", 'lep')
         for j in range(0, stack.GetStack().GetLast() + 1) :
             last = stack.GetStack().GetLast()
             legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')
         legend.Draw()
+
+        # Set CMS Styles Stuff
+        logo = ROOT.TText(.2, .88,"CMS Preliminary")
+        logo.SetTextSize(0.03)
+        logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+
+        chan = ROOT.TText(.2, .80,"x")
+        chan.SetTextSize(0.05)
+        chan.DrawTextNDC(.2, .84,"Channel: %s" % channel.upper() )
+
+        lumi = ROOT.TText(.7,1.05,"%i pb^{-1} (13 TeV)" % luminosity)
+        lumi.SetTextSize(0.03)
+        lumi.DrawTextNDC(.7,.96,"%i / pb (13 TeV)" % luminosity)
         
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
