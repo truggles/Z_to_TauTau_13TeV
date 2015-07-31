@@ -3,14 +3,14 @@
     "STATUS": "Files Match", 
     "DAS status": "ok", 
     "DAS Path": "/Tau/Run2015B-PromptReco-v1/MINIAOD", 
-    "nfiles": 33, 
-    "nblocks": 28, 
+    "nfiles": 37, 
+    "nblocks": 30, 
     "nEventsTT": 183285, 
     "Cross Section (pb)": -999, 
     "nEventsEM": 183285, 
     "nevents": 226198, 
-    "nNtupleFiles": 33, 
-    "nlumis": 5129
+    "nNtupleFiles": 37, 
+    "nlumis": 7541
   }, 
   "T_tW": {
     "STATUS": "Good to Go!", 
