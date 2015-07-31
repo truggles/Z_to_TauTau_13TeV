@@ -8,9 +8,11 @@ import argparse
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='50ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 p.add_argument('--qcd', action='store', default=False, dest='qcd', help="Should we only run over QCD and Data?")
+p.add_argument('--invert', action='store', default=False, dest='invert', help="Invert data Isolation values to model QCD?")
 results = p.parse_args()
 pre_ = results.sampleName
 qcd = results.qcd
+invert = results.invert
 
 print "Running over %s samples" % pre_
 
@@ -41,12 +43,14 @@ channels = ['em', 'tt']
 SamplesSync = ['Sync_HtoTT']
 Samples50ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TT', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 SamplesQCDData = ['data_em', 'data_tt', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
+SamplesData = ['data_em', 'data_tt']
 #Samples25ns = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']
 Samples25ns = ['HtoTauTau', 'VBF_HtoTauTau']
 
 if pre_ == 'Sync' : samples = SamplesSync
 if pre_ == '50ns' :
     if qcd : samples = SamplesQCDData
+    elif invert : samples = SamplesData
     else : samples = Samples50ns
 if pre_ == '25ns' : samples = Samples25ns
 
@@ -58,6 +62,8 @@ for sample in samples :
     if skipMiddlePlots :
         if qcd :
             outFile = ROOT.TFile('%sQCD/%s.root' % (pre_, sample), 'RECREATE')
+        elif invert :
+            outFile = ROOT.TFile('%sInvert/%s.root' % (pre_, sample), 'RECREATE')
         else :
             outFile = ROOT.TFile('%sBaseRootsQuick/%s.root' % (pre_, sample), 'RECREATE')
     elif not skipMiddlePlots :
@@ -65,13 +71,15 @@ for sample in samples :
     
     for channel in channels :
     	print "Channel:  %s" % channel
-    	if channel == 'em': zProd = ['e', 'm']
-    	if channel == 'tt': zProd = ['t1', 't2']
+    	if channel == 'em':
+            zProd = ['e', 'm']
+            varMap = bc.getEMHistoDict()
+    	if channel == 'tt':
+            zProd = ['t1', 't2']
+            varMap = bc.getTTHistoDict()
     	l1 = zProd[0]
     	l2 = zProd[1]
     	
-    	if channel == 'em': varMap = bc.getEMHistoDict()
-    	if channel == 'tt': varMap = bc.getTTHistoDict()
     	genVar = bc.getGeneralHistoDict()
     	if 'HtoTauTau' in sample :
     		genVar = bc.getGeneralHistoDictPhys14()
@@ -128,6 +136,8 @@ for sample in samples :
             cutMap = bc.getCutMapQuickQCD( channel ) 
             if 'data' in sample :
                 cutMap = bc.quickCutMapDataSS( channel ) 
+        elif invert :
+            cutMap = bc.quickCutMapDataInversion( channel )
     	elif 'HtoTauTau' in sample and skipMiddlePlots :
     		cutMap = bc.quickCutMapPhys14( channel )
     	elif 'HtoTauTau' in sample and not skipMiddlePlots :
