@@ -11,7 +11,7 @@ import argparse
 ### See Kenneth's Log Book for how to find this stuff on MCM: https://twiki.cern.ch/twiki/bin/view/Main/KDLLogBook#LogDay20150106
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
-p.add_argument('--samples', action='store', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+p.add_argument('--samples', action='store', dest='sampleName', default='50ns', help="Which samples should we run over? : 25ns, 50ns, Sync")
 results = p.parse_args()
 sampPrefix = results.sampleName
 
