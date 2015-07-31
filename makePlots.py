@@ -65,35 +65,51 @@ sampColors = {
 }
 
 plotDetails = {
-	'eEta' : (-3, 3, 2, 'e Eta', ''),
-	'ePt' : (0, 200, 2, 'e p_{T} [GeV]', ' GeV'),
-	'eMtToPFMET' : (0, 200, 2, 'e m_{T} [GeV]', ' GeV'),
-	'ePVDXY' : (-.1, .1, 2, "e PVDXY [cm]", " cm"),
-	'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
-	'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
-	'mEta' : (-3, 3, 2, 'm Eta', ''),
-	'mNormTrkChi2' : (0, 4, 1, 'm NormTrkChi2', ''),
-	'mPt' : (0, 200, 1, 'm p_{T} [GeV]', ' GeV'),
-	'mMtToPFMET' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),
-	'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
-	'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
-	'mRelPFIsoDBDefault' : (0, 0.2, 1, 'm RelPFIsoDB', ''),
-	'Z_Mass' : (0, 300, 4, 'Z Mass [GeV]', ' GeV'),
-	'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
-	'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
-	't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
-	't1Eta' : ( -3, 3, 4, '#tau_{1} Eta', ''),
-	't1Pt' : (0, 200, 2, '#tau_{1} p_{T} [GeV]', ' GeV'),
-	't1MtToPFMET' : (0, 200, 2, '#tau_{1} m_{T} [GeV]', ' GeV'),
-	't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
-	't2Eta' : ( -3, 3, 4, '#tau_{2} Eta', ''),
-	't2Pt' : (0, 200, 2, '#tau_{2} p_{T} [GeV]', ' GeV'),
-	't2MtToPFMET' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),
-	'pfMetEt' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
-	'LT' : (0, 400, 4, 'Total LT [GeV]', ' GeV'),
-	'Mt' : (0, 400, 4, 'Total m_{T} [GeV]', ' GeV'),
-	'bjetCISVVeto20Medium' : (0, 5, 12, 'bJetCISVVeto20Medium', ''),
-	'jetVeto30' : (0, 10, 10, 'jetVeto30', ''),
+    'eEta' : (-3, 3, 2, 'e Eta', ''),
+    'ePt' : (0, 200, 2, 'e p_{T} [GeV]', ' GeV'),
+    'eMtToPFMET' : (0, 200, 2, 'e m_{T} [GeV]', ' GeV'),
+    'ePVDXY' : (-.1, .1, 2, "e PVDXY [cm]", " cm"),
+    'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
+    'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
+    'eJetPt' : (0, 200, 2, 'e Overlapping Jet Pt', ' GeV'),
+    'mEta' : (-3, 3, 2, 'm Eta', ''),
+    'mNormTrkChi2' : (0, 4, 1, 'm NormTrkChi2', ''),
+    'mPt' : (0, 200, 1, 'm p_{T} [GeV]', ' GeV'),
+    'mMtToPFMET' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),
+    'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
+    'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
+    'mRelPFIsoDBDefault' : (0, 0.2, 1, 'm RelPFIsoDB', ''),
+    'mJetPt' : (0, 200, 2, 'm Overlapping Jet Pt', ' GeV'),
+    'Z_Mass' : (0, 300, 4, 'Z Mass [GeV]', ' GeV'),
+    'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
+    'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
+    't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
+    't1Eta' : ( -3, 3, 4, '#tau_{1} Eta', ''),
+    't1Pt' : (0, 200, 2, '#tau_{1} p_{T} [GeV]', ' GeV'),
+    't1MtToPFMET' : (0, 200, 2, '#tau_{1} m_{T} [GeV]', ' GeV'),
+    't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
+    't2Eta' : ( -3, 3, 4, '#tau_{2} Eta', ''),
+    't2Pt' : (0, 200, 2, '#tau_{2} p_{T} [GeV]', ' GeV'),
+    't2MtToPFMET' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),
+    'pfMetEt' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
+    'LT' : (0, 400, 4, 'Total LT [GeV]', ' GeV'),
+    'Mt' : (0, 400, 4, 'Total m_{T} [GeV]', ' GeV'),
+    'bjetCISVVeto20Medium' : (0, 5, 12, 'bJetCISVVeto20Medium', ''),
+    'jetVeto30' : (0, 10, 10, 'jetVeto30', ''),
+    'jet1Pt' : (0, 200, 2, 'Leading Jet Pt', ' GeV'),
+    'jet1Eta' : (-5, 5, 2, 'Leading Jet Eta', ''),
+    'jet2Pt' : (0, 200, 2, 'Second Jet Pt', ' GeV'),
+    'jet2Eta' : (-5, 5, 2, 'Second Jet Eta', ''),
+    'eVetoZTT10' : (0, 2, 1, 'Extra Electron Veto', ''),
+    'mVetoZTT10' : (0, 2, 1, 'Extra Muon Veto', ''),
+    'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),
+    'nvtx' : (0, 50, 1, 'Number of Vertices', ''),
+    't1DecayMode' : (0, 15, 1, 't1 Decay Mode', ''),
+    't2DecayMode' : (0, 15, 1, 't2 Decay Mode', ''),
+    't1Mass' : (0, 2, 8, 't1 Mass', ' GeV'),
+    't2Mass' : (0, 2, 8, 't2 Mass', ' GeV'),
+    't1JetPt' : (0, 400, 2, 't1 Overlapping Jet Pt', ' GeV'),
+    't2JetPt' : (0, 400, 2, 't2 Overlapping Jet Pt', ' GeV'),
 }	
 
 for channel in prodMap.keys() :
@@ -228,11 +244,10 @@ for channel in prodMap.keys() :
         qcdInt = qcd.GetStack().Last().Integral()
         print "New qcdInt: %f" % qcdInt
 
+        stack.Add( qcd.GetStack().Last() )
         stack.Add( top.GetStack().Last() )
         stack.Add( ewk.GetStack().Last() )
         stack.Add( dyj.GetStack().Last() )
-        print "Qcd Yield %f" % qcd.GetStack().Last().Integral()
-        stack.Add( qcd.GetStack().Last() )
         c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
         pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
         pad1.Draw()
