@@ -24,6 +24,12 @@ def getGeneralHistoDict() :
 		'pfMetEt' : ('pfMetEt', 100, 0, 400),
 		'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
 		'jetVeto30' : ('jetVeto30', 100, 0, 10),
+        'eVetoZTT10' : ('eVetoZTT10', 20, 0, 2),
+        'mVetoZTT10' : ('eVetoZTT10', 20, 0, 2),
+		#'j1Pt' : ('j1Pt', 100, 0, 400),
+		#'j1Eta' : ('j1Eta', 100, -5, 5),
+		#'j2Pt' : ('j2Pt', 100, 0, 400),
+		#'j2Eta' : ('j2Eta', 100, -5, 5),
 	}
 	return genVarMap
 def getGeneralHistoDictPhys14() :
@@ -41,7 +47,7 @@ def getEMHistoDict() :
 	chanVarMap = {
 		'Z_Pt' : ('e_m_Pt', 100, 0, 400),
 		'Z_Mass' : ('e_m_Mass', 100, 0, 400),
-		'Z_SS' : ('e_m_SS', 20, -1, 1),
+		'Z_SS' : ('e_m_SS', 20, 0, 2),
 		'ePt' : ('ePt', 100, 0, 400),
 		'eEta' : ('eEta', 100, -5, 5),
 		'mPt' : ('mPt', 100, 0, 400),
@@ -63,7 +69,7 @@ def getTTHistoDict() :
 	chanVarMap = {
 		'Z_Pt' : ('t1_t2_Pt', 100, 0, 400),
 		'Z_Mass' : ('t1_t2_Mass', 100, 0, 400),
-		'Z_SS' : ('t1_t2_SS', 20, -1, 1),
+		'Z_SS' : ('t1_t2_SS', 20, 0, 2),
 		't1Pt' : ('t1Pt', 100, 0, 400),
 		't1Eta' : ('t1Eta', 100, -5, 5),
 #		't1AgainstElectronVLooseMVA5' : ('t1AgainstElectronVLooseMVA5', 11, -1, 1),
@@ -115,10 +121,10 @@ def getCutMapPhys14( ch ) :
 def getCutMapQuickQCD( ch ) :
 	cutMap = OrderedDict()
 	if ch == 'em':
-		cutMap['qcd_pre'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4 && mPFIDLoose == 1 && mNormTrkChi2 < 3 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
+		cutMap['qcd_pre'] = 'e_m_SS == 0 && ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4 && mPFIDLoose == 1 && mNormTrkChi2 < 3 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && eVetoZTT10 == 0 && muVetoZTT10 == 0 && eRelPFIsoDB < 0.2 && mRelPFIsoDBDefault < 1.0'
 		cutMap['qcd_post'] = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15 && eCBIDMedium == 1 && mPFIDMedium == 1'
 	if ch == 'tt':
-		cutMap['qcd_pre'] = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
+		cutMap['qcd_pre'] = 't1_t2_SS == 0 && t1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2 && eVetoZTT10 == 0 && muVetoZTT10 == 0 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
 		cutMap['qcd_post'] = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0'
 	return cutMap
 
@@ -144,6 +150,18 @@ def quickCutMapDataSS( ch ) :
         cutMap['SS_DATA'] = 't1_t2_SS == 1 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
     return cutMap
 	
+# QCD DATA DRIVEN MODELING RunII - JULY 30 2015
+def quickCutMapDataInversion( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['BaseLine'] = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4 && e_m_DR > 0.3 && ePassesConversionVeto == 1 && eMissingHits <= 1 && mPFIDMedium == 1 && abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && ( (singleESingleMuPass > 0 && eMatchesMu8Ele23Path == 1 && mMatchesMu8Ele23Path == 1) || (singleMuSingleEPass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu23Ele12Path == 1) ) && eCBIDTight == 1' #  && eMVANonTrigWP80 == 1
+        #cutMap['Invert_DATA'] = 'e_m_SS == 0 && eRelPFIsoDB > 0.15 && mRelPFIsoDBDefault > 0.15 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
+        cutMap['Invert_DATA'] = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault > 0.15 && eVetoZTT10 == 0 && muVetoZTT10 == 0'
+    if ch == 'tt':
+        cutMap['BaseLine'] = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1 && t1_t2_DR > 0.5 && abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2 && eVetoZTT10 == 0 && muVetoZTT10 == 0 && abs( t1Charge ) == 1 && abs( t2Charge ) == 1 && doubleTauPass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1'
+        #cutMap['Invert_DATA'] = 't1_t2_SS == 0 && t1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
+        cutMap['Invert_DATA'] = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 1.0 && t1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
+    return cutMap
 # A version which applies all cuts at once Phys14
 def quickCutMapPhys14( ch ) :
 	cutMap = OrderedDict()
