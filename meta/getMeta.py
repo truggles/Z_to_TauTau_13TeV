@@ -7,6 +7,7 @@ import os
 from das_query import das_query
 import ROOT
 from ROOT import TFile
+import time
 
 
 def getDBSInfo( key, name ) :
@@ -24,11 +25,19 @@ def getDBSInfo( key, name ) :
 	return infoVect
 
 def getNumberOfFiles( name, sampPrefix ) :
-	ifile = open('NtupleInputs_%s/%s.txt' % (sampPrefix, name), 'r')
-	fileCount = 0
-	for line in ifile:
-		fileCount += 1
-	return fileCount
+    try:
+        ifile = open('NtupleInputs_%s/%s.txt' % (sampPrefix, name), 'r')
+        fileCount = 0
+        for line in ifile:
+        	fileCount += 1
+    except IOError :
+        time.sleep( 10 )
+        ifile = open('NtupleInputs_%s/%s.txt' % (sampPrefix, name), 'r')
+        fileCount = 0
+        for line in ifile:
+        	fileCount += 1
+        
+    return fileCount
 
 def getEventCount( fileName, channel ) :
 	ifile = ROOT.TFile('%s' % fileName, 'r')
