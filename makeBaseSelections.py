@@ -9,14 +9,17 @@ p = argparse.ArgumentParser(description="A script to set up json files with nece
 p.add_argument('--samples', action='store', default='50ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 p.add_argument('--qcd', action='store', default=False, dest='qcd', help="Should we only run over QCD and Data?")
 p.add_argument('--invert', action='store', default=False, dest='invert', help="Invert data Isolation values to model QCD?")
+p.add_argument('--weight', action='store', default=True, dest='applyWeights', help="Apply GenWeight to mc samples?")
 results = p.parse_args()
 pre_ = results.sampleName
 qcd = results.qcd
 invert = results.invert
+applyWeights = results.applyWeights
 
 print "Running over %s samples" % pre_
 
 ''' Configuration '''
+weight = 1
 skipMiddlePlots = True
 #skipMiddlePlots = False
 #justShape = True
@@ -70,164 +73,185 @@ for sample in samples :
     	outFile = ROOT.TFile('%sBaseRoots/%s.root' % (pre_, sample), 'RECREATE')
     
     for channel in channels :
-    	print "Channel:  %s" % channel
-    	if channel == 'em':
+        print "Channel:  %s" % channel
+        if channel == 'em':
             zProd = ['e', 'm']
             varMap = bc.getEMHistoDict()
-    	if channel == 'tt':
+        if channel == 'tt':
             zProd = ['t1', 't2']
             varMap = bc.getTTHistoDict()
-    	l1 = zProd[0]
-    	l2 = zProd[1]
-    	
-    	genVar = bc.getGeneralHistoDict()
-    	if 'HtoTauTau' in sample :
-    		genVar = bc.getGeneralHistoDictPhys14()
-    	newVarMap = genVar
-    	for var, details in varMap.iteritems() :
-    		newVarMap[ var ] = details
-    		#print var, details
-    	#for var, name in genVar.iteritems() :
-    	#	newVarMap[ var ] = details
-    	#	print var, details
-    	#print newVarMap
-    
-    
-    	''' Get initial chain '''
-    	path = '%s/final/Ntuple' % channel
-    	sampleList = 'meta/NtupleInputs_%s/%s.txt' % (pre_, sample)
-    	chain = makeTChain( sampleList, path, maxFiles )
-    	numEntries = chain.GetEntries()
-    	print "%25s : %10i" % ('Initial', numEntries)
-    	treeOutDir = outFile.mkdir( path.split('/')[0] )
-    
-    
-    	''' Make a set of Initial Conditions plots '''
-    	if not skipMiddlePlots :
-    		initialHistosDir = outFile.mkdir( "%s_Initial" % channel )
-    		initialHistosDir.cd()
-    		''' Combine Gen and Chan specific into one fill section '''
-    		histos = {}
-    		for var, cv in newVarMap.iteritems() :
-    			histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
-    		#print "Initial:"
-    		#print histos
-    
-    		eventSet = set()
-    		evtNum = 0
-    		for i in range( chain.GetEntries() ):
-    			evtNum += 1
-    			chain.GetEntry( i )
-    			eventTup = ( chain.run, chain.lumi, chain.evt )
-    			if eventTup not in eventSet :
-    				for var, histo in histos.iteritems() :
-    					num = getattr( chain, newVarMap[ var ][0] )
-    					histo.Fill( num )
-    				eventSet.add( eventTup )
-    			if evtNum == maxEvents :
-    				break
-    		for var, histo in histos.iteritems() :
-    			histo.Write()
-    		
-    	
-    	
-    	''' Get channel specific general cuts '''
-    	if qcd and skipMiddlePlots :
+        l1 = zProd[0]
+        l2 = zProd[1]
+        
+        genVar = bc.getGeneralHistoDict()
+        if 'HtoTauTau' in sample :
+        	genVar = bc.getGeneralHistoDictPhys14()
+        newVarMap = genVar
+        for var, details in varMap.iteritems() :
+        	newVarMap[ var ] = details
+        	#print var, details
+        #for var, name in genVar.iteritems() :
+        #	newVarMap[ var ] = details
+        #	print var, details
+        #print newVarMap
+        
+        
+        ''' Get initial chain '''
+        path = '%s/final/Ntuple' % channel
+        sampleList = 'meta/NtupleInputs_%s/%s.txt' % (pre_, sample)
+        chain = makeTChain( sampleList, path, maxFiles )
+        numEntries = chain.GetEntries()
+        print "%25s : %10i" % ('Initial', numEntries)
+        treeOutDir = outFile.mkdir( path.split('/')[0] )
+        
+        
+        ''' Make a set of Initial Conditions plots '''
+        if not skipMiddlePlots :
+            initialHistosDir = outFile.mkdir( "%s_Initial" % channel )
+            initialHistosDir.cd()
+            ''' Combine Gen and Chan specific into one fill section '''
+            histos = {}
+            for var, cv in newVarMap.iteritems() :
+            	histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
+            #print "Initial:"
+            #print histos
+            
+            eventSet = set()
+            evtNum = 0
+            for i in range( chain.GetEntries() ):
+                evtNum += 1
+                chain.GetEntry( i )
+                
+                # Apply Generator weights, speficially for DY Jets
+                if applyWeights : 
+                    if chain.GenWeight >= 0 : weight = 1
+                    if chain.GenWeight < 0 : weight = -1
+                else : weight = 1
+                
+                eventTup = ( chain.run, chain.lumi, chain.evt )
+                if eventTup not in eventSet :
+                    for var, histo in histos.iteritems() :
+                        num = getattr( chain, newVarMap[ var ][0] )
+                        histo.Fill( num, weight )
+                    eventSet.add( eventTup )
+                if evtNum == maxEvents :
+                	break
+            for var, histo in histos.iteritems() :
+            	histo.Write()
+        
+        
+        
+        ''' Get channel specific general cuts '''
+        if qcd and skipMiddlePlots :
             cutMap = bc.getCutMapQuickQCD( channel ) 
             if 'data' in sample :
                 cutMap = bc.quickCutMapDataSS( channel ) 
         elif invert :
             cutMap = bc.quickCutMapDataInversion( channel )
-    	elif 'HtoTauTau' in sample and skipMiddlePlots :
-    		cutMap = bc.quickCutMapPhys14( channel )
-    	elif 'HtoTauTau' in sample and not skipMiddlePlots :
-    		cutMap = bc.getCutMapPhys14( channel )
-    	elif skipMiddlePlots :
-    		cutMap = bc.quickCutMap( channel )
-    	elif not skipMiddlePlots :
-    		cutMap = bc.getCutMap( channel )
-    	#print cutMap
-    
-    	lenCutMap = len( cutMap )
-    	count = 0
-    	for cutName, cutString in cutMap.items() :
-    			
-    		''' Copy and make some cuts while doing it '''
-    		ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
-    
-    		''' This count thing is so we don't have to copy TTrees extra times '''
-    		count += 1
-    		#print "count: %i" % count
-    		#print "Starting Cut!"
-    		if count % 2 == 1 :
-    			chainNew = bc.makeGenCut( chain, cutString )
-    			numEntries = chainNew.GetEntries()
-    		if count % 2 == 0 :
-    			chain = bc.makeGenCut( chainNew, cutString )
-    			numEntries = chain.GetEntries()
-    		#print "Finishing Cut!"
-    		print "%25s : %10i" % (cutName, numEntries)
-    
-    		''' Making cut histos '''
-    		cutDir = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
-    		cutDir.cd()
-    
-    		''' Combine Gen and Chan specific into one fill section '''
-    		histos = {}
-    		for var, cv in newVarMap.iteritems() :
-    			histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
-    		#print "Combined Gen and Chan:"
-    		#print histos
-    
-    		if count % 2 == 0 :
-    			eventSet = set()
-    			evtNum = 0
-    			for i in range( chain.GetEntries() ):
-    				evtNum += 1
-    				chain.GetEntry( i )
-    				eventTup = ( chain.run, chain.lumi, chain.evt )
-    				if eventTup not in eventSet :
-    					for var, histo in histos.iteritems() :
-    						num = getattr( chain, newVarMap[ var ][0] )
-    						histo.Fill( num )
-    					eventSet.add( eventTup )
-    				if evtNum == maxEvents : 
-    					break
-    			for var, histo in histos.iteritems() :
-    				histo.Write()
-    
-    		if count % 2 == 1 :
-    			eventSet = set()
-    			evtNum = 0
-    			for i in range( chainNew.GetEntries() ):
-    				evtNum += 1
-    				chainNew.GetEntry( i )
-    				eventTup = ( chainNew.run, chainNew.lumi, chainNew.evt )
-    				if eventTup not in eventSet :
-    					for var, histo in histos.iteritems() :
-    						num = getattr( chainNew, newVarMap[ var ][0] )
-    						histo.Fill( num )
-    					eventSet.add( eventTup )
-    				if evtNum == maxEvents :
-    					break
-    			for var, histo in histos.iteritems() :
-    				histo.Write()
-    
-    		if count == lenCutMap : continue
-    		elif count % 2 == 1 :
-    			chain.IsA().Destructor( chain )
-    		elif count % 2 == 0 :
-    			chainNew.IsA().Destructor( chainNew )
-    		#print "repeat!"
-    	
-    	treeOutDir.cd()
-    	if count % 2 == 1 :
-    		chainNew.Write()
-    	if count % 2 == 0 :
-    		chain.Write()
-    
-    outFile.Write()
-    outFile.Close()
+        elif 'HtoTauTau' in sample and skipMiddlePlots :
+        	cutMap = bc.quickCutMapPhys14( channel )
+        elif 'HtoTauTau' in sample and not skipMiddlePlots :
+        	cutMap = bc.getCutMapPhys14( channel )
+        elif skipMiddlePlots :
+        	cutMap = bc.quickCutMap( channel )
+        elif not skipMiddlePlots :
+        	cutMap = bc.getCutMap( channel )
+        #print cutMap
+        
+        lenCutMap = len( cutMap )
+        count = 0
+        for cutName, cutString in cutMap.items() :
+            	
+            ''' Copy and make some cuts while doing it '''
+            ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
+            
+            ''' This count thing is so we don't have to copy TTrees extra times '''
+            count += 1
+            #print "count: %i" % count
+            #print "Starting Cut!"
+            if count % 2 == 1 :
+            	chainNew = bc.makeGenCut( chain, cutString )
+            	numEntries = chainNew.GetEntries()
+            if count % 2 == 0 :
+            	chain = bc.makeGenCut( chainNew, cutString )
+            	numEntries = chain.GetEntries()
+            #print "Finishing Cut!"
+            print "%25s : %10i" % (cutName, numEntries)
+            
+            ''' Making cut histos '''
+            cutDir = outFile.mkdir( "%s_%s" % ( channel, cutName ) )
+            cutDir.cd()
+            
+            ''' Combine Gen and Chan specific into one fill section '''
+            histos = {}
+            for var, cv in newVarMap.iteritems() :
+            	histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
+            #print "Combined Gen and Chan:"
+            #print histos
+            
+            if count % 2 == 0 :
+            	eventSet = set()
+            	evtNum = 0
+            	for i in range( chain.GetEntries() ):
+                    evtNum += 1
+                    chain.GetEntry( i )
+            
+                    # Apply Generator weights, speficially for DY Jets
+                    if applyWeights : 
+                        if chain.GenWeight >= 0 : weight = 1
+                        if chain.GenWeight < 0 : weight = -1
+                    else : weight = 1
+            
+                    eventTup = ( chain.run, chain.lumi, chain.evt )
+                    if eventTup not in eventSet :
+                    	for var, histo in histos.iteritems() :
+                            num = getattr( chain, newVarMap[ var ][0] )
+                            histo.Fill( num, weight )
+                    	eventSet.add( eventTup )
+                    if evtNum == maxEvents : 
+                    	break
+            	for var, histo in histos.iteritems() :
+            		histo.Write()
+            
+            if count % 2 == 1 :
+            	eventSet = set()
+            	evtNum = 0
+            	for i in range( chainNew.GetEntries() ):
+                    evtNum += 1
+                    chainNew.GetEntry( i )
+            
+                    # Apply Generator weights, speficially for DY Jets
+                    if applyWeights : 
+                        if chain.GenWeight >= 0 : weight = 1
+                        if chain.GenWeight < 0 : weight = -1
+                    else : weight = 1
+            
+                    eventTup = ( chainNew.run, chainNew.lumi, chainNew.evt )
+                    if eventTup not in eventSet :
+                        for var, histo in histos.iteritems() :
+                            num = getattr( chainNew, newVarMap[ var ][0] )
+                            histo.Fill( num, weight )
+                        eventSet.add( eventTup )
+                    if evtNum == maxEvents :
+                    	break
+            	for var, histo in histos.iteritems() :
+            		histo.Write()
+            
+            if count == lenCutMap : continue
+            elif count % 2 == 1 :
+            	chain.IsA().Destructor( chain )
+            elif count % 2 == 0 :
+            	chainNew.IsA().Destructor( chainNew )
+            #print "repeat!"
+        
+        treeOutDir.cd()
+        if count % 2 == 1 :
+        	chainNew.Write()
+        if count % 2 == 0 :
+        	chain.Write()
+
+outFile.Write()
+outFile.Close()
 
 print "Start Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
