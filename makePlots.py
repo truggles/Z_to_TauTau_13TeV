@@ -10,9 +10,11 @@ import argparse
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='50ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 p.add_argument('--includeHiggs', action='store', default=False, dest='includeHiggs', help="Include 25ns Higgs samples?")
+p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Include ratio plots? Defaul = False")
 results = p.parse_args()
 pre_ = results.sampleName
 includeHiggs = results.includeHiggs
+ratio = results.ratio
 
 print "Running over %s samples" % pre_
 
@@ -35,8 +37,8 @@ prodMap = { 'em' : ('e', 'm'),
 				# Sample : Color
 samples = OrderedDict()
 samples['DYJets']	= ('kOrange-4', 'dyj')
-#samples['TT']		= ('kBlue-8', 'top')
-samples['TTJets']	= ('kBlue-2', 'top')
+samples['TT']		= ('kBlue-8', 'top')
+#samples['TTJets']	= ('kBlue-2', 'top')
 samples['QCD15-20']		= ('kMagenta-10', 'qcd')
 samples['QCD20-30']		= ('kMagenta-10', 'qcd')
 samples['QCD30-50']		= ('kMagenta-10', 'qcd')
@@ -47,12 +49,17 @@ samples['QCD170-300']		= ('kMagenta-10', 'qcd')
 samples['QCD300-Inf']		= ('kMagenta-10', 'qcd')
 samples['Tbar_tW']	= ('kYellow-2', 'top')
 samples['T_tW']		= ('kYellow+2', 'top')
-samples['HtoTauTau']		= ('kRed+2', 'higgs')
-samples['VBF_HtoTauTau']	= ('kRed-2', 'higgs')
+#samples['HtoTauTau']		= ('kRed+2', 'higgs')
+#samples['VBF_HtoTauTau']	= ('kRed-2', 'higgs')
 samples['WJets']	= ('kAzure+2', 'ewk')
 samples['WW']		= ('kAzure+10', 'ewk')
+samples['WW2l2n']		= ('kAzure+8', 'ewk')
+samples['WW4q']		= ('kAzure+6', 'ewk')
+samples['WW1l1n2q']		= ('kAzure+4', 'ewk')
 samples['WZJets']	= ('kAzure-4', 'ewk')
+samples['WZ1l1n2q']	= ('kAzure-6', 'ewk')
 samples['ZZ']	= ('kAzure-8', 'ewk')
+samples['ZZ4l']	= ('kAzure-12', 'ewk')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
 
@@ -78,16 +85,16 @@ plotDetails = {
     'mMtToPFMET' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),
     'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
     'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
-    'mRelPFIsoDBDefault' : (0, 0.2, 1, 'm RelPFIsoDB', ''),
+    'mRelPFIsoDBDefault' : (0, 0.3, 1, 'm RelPFIsoDB', ''),
     'mJetPt' : (0, 200, 2, 'm Overlapping Jet Pt', ' GeV'),
     'Z_Mass' : (0, 300, 4, 'Z Mass [GeV]', ' GeV'),
     'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
     'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
-    't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
+    't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 5, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
     't1Eta' : ( -3, 3, 4, '#tau_{1} Eta', ''),
     't1Pt' : (0, 200, 2, '#tau_{1} p_{T} [GeV]', ' GeV'),
     't1MtToPFMET' : (0, 200, 2, '#tau_{1} m_{T} [GeV]', ' GeV'),
-    't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 2, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
+    't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 5, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
     't2Eta' : ( -3, 3, 4, '#tau_{2} Eta', ''),
     't2Pt' : (0, 200, 2, '#tau_{2} p_{T} [GeV]', ' GeV'),
     't2MtToPFMET' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),
@@ -139,7 +146,7 @@ for channel in prodMap.keys() :
             if not includeHiggs and 'HtoTauTau' in sample : continue
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
-            print sample
+            #print sample
             
             # Temporary QCD method of using a relaxed cut to get stats and having tighter for yield
             #qcdYield = 0
@@ -149,7 +156,7 @@ for channel in prodMap.keys() :
             	dic = tFile.Get("%s_qcd_pre" % channel )
             	hist = dic.Get( "%s" % var )
             	hist.SetDirectory( 0 )
-            	print "QCD int loose: %f" % hist.Integral()
+            	#print "QCD int loose: %f" % hist.Integral()
             	# Yield
             	#tFileY1 = ROOT.TFile('50nsQCD/data_tt.root', 'READ')
             	#dicY1 = tFileY1.Get("%s_SS_DATA" % channel )
@@ -169,7 +176,7 @@ for channel in prodMap.keys() :
             	#		qcdYield += 1
             	#		evtS.add( evtT )
             	#print "Data SS: tt=%f em=%f" % (qcdYieldTT, qcdYieldEM)
-                print "Data SS: %f" % qcdYield
+                #print "Data SS: %f" % qcdYield
             # All other samples
             elif 'HtoTauTau' in sample :
             	tFile = ROOT.TFile('25nsBaseRootsQuick/%s.root' % sample, 'READ')
