@@ -10,11 +10,13 @@ p.add_argument('--samples', action='store', default='50ns', dest='sampleName', h
 p.add_argument('--qcd', action='store', default=False, dest='qcd', help="Should we only run over QCD and Data?")
 p.add_argument('--invert', action='store', default=False, dest='invert', help="Invert data Isolation values to model QCD?")
 p.add_argument('--weight', action='store', default=True, dest='applyWeights', help="Apply GenWeight to mc samples?")
+p.add_argument('--singleCut', action='store', default=True, dest='cuts', help="Single cut?")
 results = p.parse_args()
 pre_ = results.sampleName
 qcd = results.qcd
 invert = results.invert
 applyWeights = results.applyWeights
+singleCut = results.cuts
 
 print "Running over %s samples" % pre_
 
@@ -44,7 +46,8 @@ channels = ['em', 'tt']
 
 ''' Preset samples '''
 SamplesSync = ['Sync_HtoTT']
-Samples50ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TT', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
+Samples50ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'TT', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
+#Samples50ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TT', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 SamplesQCDData = ['data_em', 'data_tt', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 SamplesData = ['data_em', 'data_tt']
 #Samples25ns = ['DYJets', 'QCD', 'Tbar_tW', 'T_tW', 'HtoTauTau', 'VBF_HtoTauTau', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ']
@@ -148,6 +151,10 @@ for sample in samples :
                 cutMap = bc.quickCutMapDataSS( channel ) 
         elif invert :
             cutMap = bc.quickCutMapDataInversion( channel )
+        elif pre_ == 'Sync' :
+            cutMap = bc.quickCutMapSync( channel )
+        elif singleCut :
+            cutMap = bc.quickCutMapSingleCut( channel )
         elif 'HtoTauTau' in sample and skipMiddlePlots :
         	cutMap = bc.quickCutMapPhys14( channel )
         elif 'HtoTauTau' in sample and not skipMiddlePlots :
