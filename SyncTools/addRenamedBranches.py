@@ -52,8 +52,40 @@ def addBranches( dir_, sample, channel, leg ) :
         dZB = tree.Branch('dZ%s' % legMap[ lep ], dZ, 'dZ/F')
 
     if channel == 'tt' :
-        d0 = array('f', [ 0 ] )
-        d0B = tree.Branch('d0%s' % legMap[ lep ], d0, 'd0/F')
+        dZ = array('f', [ 0 ] )
+        dZB = tree.Branch('dZ%s' % legMap[ lep ], dZ, 'dZ/F')
+        iso = array('f', [ 0 ] )
+        isoB = tree.Branch('iso%s' % legMap[ lep ], iso, 'iso/F')
+        againstElectronVLooseMVA5 = array('f', [ 0 ] )
+        againstElectronVLooseMVA5B = tree.Branch('againstElectronVLooseMVA5%s' % legMap[ lep ], againstElectronVLooseMVA5, 'againstElectronVLooseMVA5/F')
+        againstElectronLooseMVA5 = array('f', [ 0 ] )
+        againstElectronLooseMVA5B = tree.Branch('againstElectronLooseMVA5%s' % legMap[ lep ], againstElectronLooseMVA5, 'againstElectronLooseMVA5/F')
+        againstElectronMediumMVA5 = array('f', [ 0 ] )
+        againstElectronMediumMVA5B = tree.Branch('againstElectronMediumMVA5%s' % legMap[ lep ], againstElectronMediumMVA5, 'againstElectronMediumMVA5/F')
+        againstElectronTightMVA5 = array('f', [ 0 ] )
+        againstElectronTightMVA5B = tree.Branch('againstElectronTightMVA5%s' % legMap[ lep ], againstElectronTightMVA5, 'againstElectronTightMVA5/F')
+        againstElectronVTightMVA5 = array('f', [ 0 ] )
+        againstElectronVTightMVA5B = tree.Branch('againstElectronVTightMVA5%s' % legMap[ lep ], againstElectronVTightMVA5, 'againstElectronVTightMVA5/F')
+        againstMuonLoose3 = array('f', [ 0 ] )
+        againstMuonLoose3B = tree.Branch('againstMuonLoose3%s' % legMap[ lep ], againstMuonLoose3, 'againstMuonLoose3/F')
+        againstMuonLoose = array('f', [ 0 ] )
+        againstMuonLooseB = tree.Branch('againstMuonLoose%s' % legMap[ lep ], againstMuonLoose, 'againstMuonLoose/F')
+        chargedIsoPtSum = array('f', [ 0 ] )
+        chargedIsoPtSumB = tree.Branch('chargedIsoPtSum%s' % legMap[ lep ], chargedIsoPtSum, 'chargedIsoPtSum/F')
+        neutralIsoPtSum = array('f', [ 0 ] )
+        neutralIsoPtSumB = tree.Branch('neutralIsoPtSum%s' % legMap[ lep ], neutralIsoPtSum, 'neutralIsoPtSum/F')
+        puCorrPtSum = array('f', [ 0 ] )
+        puCorrPtSumB = tree.Branch('puCorrPtSum%s' % legMap[ lep ], puCorrPtSum, 'puCorrPtSum/F')
+        decayModeFindingOldDMs = array('f', [ 0 ] )
+        decayModeFindingOldDMsB = tree.Branch('decayModeFindingOldDMs%s' % legMap[ lep ], decayModeFindingOldDMs, 'decayModeFindingOldDMs/F')
+        byIsolationMVA3newDMwoLTraw = array('f', [ 0 ] )
+        byIsolationMVA3newDMwoLTrawB = tree.Branch('byIsolationMVA3newDMwoLTraw%s' % legMap[ lep ], byIsolationMVA3newDMwoLTraw, 'byIsolationMVA3newDMwoLTraw/F')
+        byIsolationMVA3newDMwLTraw = array('f', [ 0 ] )
+        byIsolationMVA3newDMwLTrawB = tree.Branch('byIsolationMVA3newDMwLTraw%s' % legMap[ lep ], byIsolationMVA3newDMwLTraw, 'byIsolationMVA3newDMwLTraw/F')
+        byIsolationMVA3oldDMwoLTraw = array('f', [ 0 ] )
+        byIsolationMVA3oldDMwoLTrawB = tree.Branch('byIsolationMVA3oldDMwoLTraw%s' % legMap[ lep ], byIsolationMVA3oldDMwoLTraw, 'byIsolationMVA3oldDMwoLTraw/F')
+        byIsolationMVA3oldDMwLTraw = array('f', [ 0 ] )
+        byIsolationMVA3oldDMwLTrawB = tree.Branch('byIsolationMVA3oldDMwLTraw%s' % legMap[ lep ], byIsolationMVA3oldDMwLTraw, 'byIsolationMVA3oldDMwLTraw/F')
     
     treeFile.cd( '%s' % channel )
     for i in range( tree.GetEntries() ):
@@ -75,6 +107,43 @@ def addBranches( dir_, sample, channel, leg ) :
         if channel == 'em' :
             dZ[0] = getattr(tree, '%sPVDZ' % lep)
             dZB.Fill()
+        if channel == 'tt' :
+            dZ[0] = getattr(tree, '%sVZ' % lep)
+            dZB.Fill()
+            iso[0] = getattr(tree, '%sByCombinedIsolationDeltaBetaCorrRaw3Hits' % lep)
+            isoB.Fill()
+            againstElectronVLooseMVA5[0] = getattr(tree, '%sAgainstElectronVLooseMVA5' % lep)
+            againstElectronVLooseMVA5B.Fill()
+            againstElectronLooseMVA5[0] = getattr(tree, '%sAgainstElectronLooseMVA5' % lep)
+            againstElectronLooseMVA5B.Fill()
+            againstElectronMediumMVA5[0] = getattr(tree, '%sAgainstElectronMediumMVA5' % lep)
+            againstElectronMediumMVA5B.Fill()
+            againstElectronTightMVA5[0] = getattr(tree, '%sAgainstElectronTightMVA5' % lep)
+            againstElectronTightMVA5B.Fill()
+            againstElectronVTightMVA5[0] = getattr(tree, '%sAgainstElectronVTightMVA5' % lep)
+            againstElectronVTightMVA5B.Fill()
+            againstMuonLoose3[0] = getattr(tree, '%sAgainstMuonLoose3' % lep)
+            againstMuonLoose3B.Fill()
+            againstMuonLoose[0] = getattr(tree, '%sAgainstMuonLoose' % lep)
+            againstMuonLooseB.Fill()
+            chargedIsoPtSum[0] = getattr(tree, '%sChargedIsoPtSum' % lep)
+            chargedIsoPtSumB.Fill()
+            neutralIsoPtSum[0] = getattr(tree, '%sNeutralIsoPtSum' % lep)
+            neutralIsoPtSumB.Fill()
+            puCorrPtSum[0] = getattr(tree, '%sPuCorrPtSum' % lep)
+            puCorrPtSumB.Fill()
+            decayModeFindingOldDMs[0] = getattr(tree, '%sDecayModeFindingNewDMs' % lep)
+            decayModeFindingOldDMsB.Fill()
+            byIsolationMVA3newDMwoLTraw[0] = getattr(tree, '%sByIsolationMVA3newDMwoLTraw' % lep)
+            byIsolationMVA3newDMwoLTrawB.Fill()
+            byIsolationMVA3newDMwLTraw[0] = getattr(tree, '%sByIsolationMVA3newDMwLTraw' % lep)
+            byIsolationMVA3newDMwLTrawB.Fill()
+            byIsolationMVA3oldDMwoLTraw[0] = getattr(tree, '%sByIsolationMVA3oldDMwoLTraw' % lep)
+            byIsolationMVA3oldDMwoLTrawB.Fill()
+            byIsolationMVA3oldDMwLTraw[0] = getattr(tree, '%sByIsolationMVA3oldDMwLTraw' % lep)
+            byIsolationMVA3oldDMwLTrawB.Fill()
+
+
     tree.Write('', ROOT.TObject.kOverwrite)
 
 
@@ -163,7 +232,7 @@ def addBranchesGen( dir_, sample, channel ) :
     tree.Write('', ROOT.TObject.kOverwrite)
 
 
-chan = 'em'
+chan = 'tt'
 if chan == 'em': zProd = ['e', 'm']
 if chan == 'tt': zProd = ['t1', 't2']
 makeNewTree( 'tuples', 'Sync_HtoTT', chan )
