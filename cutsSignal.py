@@ -11,7 +11,8 @@ from array import array
 def dZCut( sample, channel ) :
 	if channel == 'em': zProd = ['e', 'm']
 	if channel == 'tt': zProd = ['t1', 't2']
-	treeFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'update')
+	#treeFile = ROOT.TFile('baseSelectionRoot/%s.root' % sample, 'update')
+	treeFile = ROOT.TFile('%s.root' % sample, 'update')
 	dir_ = treeFile.Get( '%s' % channel )	
 	tree = dir_.Get( 'Ntuple' )
 

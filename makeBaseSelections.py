@@ -18,6 +18,7 @@ invert = results.invert
 applyWeights = results.applyWeights
 singleCut = results.cuts
 
+print "Single Cut == %s" % singleCut
 print "Running over %s samples" % pre_
 
 ''' Configuration '''
@@ -149,11 +150,11 @@ for sample in samples :
             cutMap = bc.getCutMapQuickQCD( channel ) 
             if 'data' in sample :
                 cutMap = bc.quickCutMapDataSS( channel ) 
-        elif invert :
+        elif invert == True :
             cutMap = bc.quickCutMapDataInversion( channel )
         elif pre_ == 'Sync' :
             cutMap = bc.quickCutMapSync( channel )
-        elif singleCut :
+        elif singleCut == True :
             cutMap = bc.quickCutMapSingleCut( channel )
         elif 'HtoTauTau' in sample and skipMiddlePlots :
         	cutMap = bc.quickCutMapPhys14( channel )

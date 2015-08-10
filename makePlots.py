@@ -6,6 +6,7 @@ import cutsBaseSelection as bc
 import pyplotter.plot_functions as pyplotter #import setTDRStyle, getCanvas
 import pyplotter.tdrstyle as tdr
 import argparse
+from util.ratioPlot import ratioPlot 
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='50ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -255,14 +256,25 @@ for channel in prodMap.keys() :
         stack.Add( top.GetStack().Last() )
         stack.Add( ewk.GetStack().Last() )
         stack.Add( dyj.GetStack().Last() )
+
+        # Maybe make ratio hist
         c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
-        pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
-        pad1.Draw()
-        pad1.cd()
+
+        if ratio == False :
+            pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
+            pad1.Draw()
+            pad1.cd()
+        if ratio == True :
+            pads = ratioPlot( c1 )
+            pad1 = pads[0]
+            ratioPad = pads[1]
+            varMin_ = dyj.GetStack().Last().
+            ratioHist = ROOT.TH1('ratio plot' + var, 'ratio', 
+
         stack.Draw('hist')
         if includeHiggs : higgs.GetStack().Last().Draw('hist same')
         data.GetStack().Last().Draw('esamex0')
-        
+
         # X Axis!
         stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
         

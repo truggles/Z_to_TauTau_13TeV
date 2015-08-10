@@ -103,7 +103,9 @@ emIsoInvertM    = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault > 0.15'
 ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
-ttVtx   = 'abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2'
+#ttVtx   = 'abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2'
+ttVtx   = 't1VZ > -999'
+#ttVtx   = 'abs(t1ZVertex) < 0.2 && abs(t2ZVertex) < 0.2'
 tt40    = 'doubleTauPass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1'
 # TT PostSync
 ttOS    = 't1_t2_SS == 0'
@@ -120,7 +122,7 @@ def quickCutMapSingleCut( ch ) :
     if ch == 'em':
         cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS + ' && ' + emIso + ' && ' + extraVeto
     if ch == 'tt':
-        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto
+        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
     return cutMap
 
 # 2 stage RunII
@@ -140,7 +142,8 @@ def quickCutMapSync( ch ) :
     if ch == 'em':
         cutMap['BaseLine'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ')'
     if ch == 'tt':
-        cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx
+        cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && '  + ttVtx + ' && ' + tt40
+        #cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' tt40
     return cutMap
     
 
