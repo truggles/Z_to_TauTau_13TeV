@@ -11,7 +11,7 @@ def makeNewTree( dir_, sample, channel ) :
     d1 = ifile.Get( channel )
     inTree = d1.Get( 'Ntuple' )
     
-    ofile = ROOT.TFile('%s/SYNCFILE_SYSYGluGluToHToTauTau_M-160_%s_spring15.root' % (dir_, channel), 'RECREATE')
+    ofile = ROOT.TFile('%s/SYNCFILE_SUSYGluGluToHToTauTau_M-160_%s_spring15.root' % (dir_, channel), 'RECREATE')
     directory = ofile.mkdir( channel )
     directory.cd()
     
@@ -28,7 +28,7 @@ def addBranches( dir_, sample, channel, leg ) :
     lep = leg
     if channel == 'em': zProd = ['e', 'm']
     if channel == 'tt': zProd = ['t1', 't2']
-    treeFile = ROOT.TFile('%s/SYNCFILE_SYSYGluGluToHToTauTau_M-160_%s_spring15.root' % (dir_, channel), 'update')
+    treeFile = ROOT.TFile('%s/SYNCFILE_SUSYGluGluToHToTauTau_M-160_%s_spring15.root' % (dir_, channel), 'update')
     d1 = treeFile.Get( '%s' % channel )	
     tree = d1.Get( 'Ntuple' )
     
@@ -192,50 +192,80 @@ def addBranchesGen( dir_, sample, channel ) :
         iso_2B = tree.Branch('iso_2', iso_2, 'iso_2/F')
 
     treeFile.cd( '%s' % channel )
-    for i in range( tree.GetEntries() ):
+
+    # evt tracker [leg1iso,leg1pt,leg2iso,leg2pt,evtID,index]
+    prevEvt = [999, 0, 999, 0, 0, 0]
+    #for i in range( tree.GetEntries() ):
+    for i in range( 1 ):
         tree.GetEntry( i )
-        jpt_1[0] = getattr(tree, 'jet1Pt')
-        jpt_1B.Fill()
-        jphi_1[0] = getattr(tree, 'jet1Phi')
-        jphi_1B.Fill()
-        jeta_1[0] = getattr(tree, 'jet2Eta')
-        jeta_1B.Fill()
-        jpt_2[0] = getattr(tree, 'jet2Pt')
-        jpt_2B.Fill()
-        jphi_2[0] = getattr(tree, 'jet2Phi')
-        jphi_2B.Fill()
-        jeta_2[0] = getattr(tree, 'jet2Eta')
-        jeta_2B.Fill()
-        extramuon_veto[0] = int( getattr(tree, 'muVetoZTT10') )
-        extramuon_vetoB.Fill()
-        extraelec_veto[0] = int( getattr(tree, 'eVetoZTT10') )
-        extraelec_vetoB.Fill()
-        m_vis[0] = getattr(tree, 'Mass')
-        m_visB.Fill()
-        met[0] = getattr(tree, 'pfMetEt')
-        metB.Fill()
-        metphi[0] = getattr(tree, 'pfMetPhi')
-        metphiB.Fill()
-        weight[0] = getattr(tree, 'GenWeight')
-        weightB.Fill()
-        nbtag[0] = int( getattr(tree, 'bjetCISVVeto20Loose') )
-        nbtagB.Fill()
-        njetspt20[0] = int( getattr(tree, 'jetVeto20') )
-        njetspt20B.Fill()
-
+        # Select 'best' Z candidates
+        evtID = getattr( tree, 'evt' )
         if channel == 'em' :
-            iso_1[0] = getattr(tree, 'eRelPFIsoDB')
-            iso_1B.Fill()
-            iso_2[0] = getattr(tree, 'mRelPFIsoDBDefault')
-            iso_2B.Fill()
+            leg1Iso = getattr(tree, 'eRelPFIsoDB' )
+            leg1Pt = getattr(tree, 'ePt' )
+            leg2Iso = getattr(tree, 'mRelPFIsoDBDefault' )
+            leg2Pt = getattr(tree, 'mPt' )
+        if channel == 'tt' :
+            leg1Iso = getattr(tree, 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
+            leg1Pt = getattr(tree, 't1Pt' )
+            leg2Iso = getattr(tree, 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
+            leg2Pt = getattr(tree, 't2Pt' )
 
+        currentEvt = [ leg1Iso, leg1Pt, leg2Iso, leg2Pt, evtID, i ]
+
+        # Fill once we've run through all versions of a single event
+        #if currentEvt[4] != prevEvt[4] and i < 100 :
+        if i < 100 :
+            print "made it to fill, index %i" % i
+            tree.GetEntry( prevEvt[ 5 ] )
+            jpt_1[0] = getattr(tree, 'jet1Pt')
+            jpt_1B.Fill()
+            jphi_1[0] = getattr(tree, 'jet1Phi')
+            jphi_1B.Fill()
+            jeta_1[0] = getattr(tree, 'jet2Eta')
+            jeta_1B.Fill()
+            jpt_2[0] = getattr(tree, 'jet2Pt')
+            jpt_2B.Fill()
+            jphi_2[0] = getattr(tree, 'jet2Phi')
+            jphi_2B.Fill()
+            jeta_2[0] = getattr(tree, 'jet2Eta')
+            jeta_2B.Fill()
+            extramuon_veto[0] = int( getattr(tree, 'muVetoZTT10') )
+            extramuon_vetoB.Fill()
+            extraelec_veto[0] = int( getattr(tree, 'eVetoZTT10') )
+            extraelec_vetoB.Fill()
+            m_vis[0] = getattr(tree, 'Mass')
+            m_visB.Fill()
+            met[0] = getattr(tree, 'pfMetEt')
+            metB.Fill()
+            metphi[0] = getattr(tree, 'pfMetPhi')
+            metphiB.Fill()
+            weight[0] = getattr(tree, 'GenWeight')
+            weightB.Fill()
+            nbtag[0] = int( getattr(tree, 'bjetCISVVeto20Loose') )
+            nbtagB.Fill()
+            njetspt20[0] = int( getattr(tree, 'jetVeto20') )
+            njetspt20B.Fill()
+        
+            if channel == 'em' :
+                iso_1[0] = getattr(tree, 'eRelPFIsoDB')
+                iso_1B.Fill()
+                iso_2[0] = getattr(tree, 'mRelPFIsoDBDefault')
+                iso_2B.Fill()
+
+        elif currentEvt[ 0 ] < prevEvt[ 0 ] : prevEvt = currentEvt
+        elif currentEvt[ 1 ] > prevEvt[ 1 ] : prevEvt = currentEvt
+        elif currentEvt[ 2 ] < prevEvt[ 2 ] : prevEvt = currentEvt
+        elif currentEvt[ 3 ] > prevEvt[ 3 ] : prevEvt = currentEvt
+
+        #currentEvt = [ leg1Iso, leg1Pt, leg2Iso, leg2Pt, i ]
     tree.Write('', ROOT.TObject.kOverwrite)
 
 
-chan = 'tt'
+chan = 'em'
 if chan == 'em': zProd = ['e', 'm']
 if chan == 'tt': zProd = ['t1', 't2']
 makeNewTree( 'tuples', 'Sync_HtoTT', chan )
 addBranchesGen( 'tuples', 'Sync_HtoTT', chan )
-addBranches( 'tuples', 'Sync_HtoTT', chan, zProd[0] )
-addBranches( 'tuples', 'Sync_HtoTT', chan, zProd[1] )
+#addBranches( 'tuples', 'Sync_HtoTT', chan, zProd[0] )
+#addBranches( 'tuples', 'Sync_HtoTT', chan, zProd[1] )
