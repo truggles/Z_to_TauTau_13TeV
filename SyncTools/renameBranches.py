@@ -114,7 +114,7 @@ def renameBranches( sample, channel ) :
     if channel == 'em' : branchMapping = branchMappingEM
     if channel == 'tt' : branchMapping = branchMappingTT
 
-    oldFileName = '%s.root' % sample
+    oldFileName = '../SyncBaseRootsQuick/%s.root' % sample
     if sample == 'Sync_HtoTT' :
         newFileName = 'tuples/SYNCFILE_SUSYGluGluToHToTauTau_M-160_%s_spring15.root' % channel
     else : newFileName = 'tuples/%s_%s.root' % (sample, channel)
