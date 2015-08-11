@@ -116,16 +116,18 @@ def renameBranches( sample, channel ) :
 
     oldFileName = '../SyncBaseRootsQuick/%s.root' % sample
     if sample == 'Sync_HtoTT' :
-        newFileName = 'tuples/SYNCFILE_SUSYGluGluToHToTauTau_M-160_%s_spring15.root' % channel
+        #newFileName = 'tuples/SYNCFILE_SUSYGluGluToHToTauTau_M-160_%s_spring15.root' % channel
+        newFileName = 'tuples/sync_fix_%s.root' % channel
     else : newFileName = 'tuples/%s_%s.root' % (sample, channel)
     dirName = channel
     treeName = 'Ntuple'
     
     # A few branches are ints instead of floats and must be treated specially
     # I think these are all the ones in FSA ntuples, but add more if you find them
-    intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake', 'muVetoZTT10',
-        'eVetoZTT10', 'GenWeight', 'bjetCISVVeto20Loose', 'jetVeto20'])
-    
+    #intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake', 'muVetoZTT10',
+    #    'eVetoZTT10', 'GenWeight', 'bjetCISVVeto20Loose', 'jetVeto20'])
+    intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake',
+        'GenWeight'])
     
     ##############################################################################
     # Shouldn't need to modify anything below here                               #
