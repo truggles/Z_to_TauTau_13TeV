@@ -167,14 +167,18 @@ def renameBranches( sample, channel ) :
         tnew.SetBranchAddress(new, told._buffer[old])
         tnew._buffer[new] = told._buffer[old]
     
+    ''' Select the version of each even we want to keep '''
     # fill new tree
     # evt tracker [leg1iso,leg1pt,leg2iso,leg2pt,evtID,index]
-    prevEvt = [999, 0, 999, 0, 0, 0]
-    prevRow = 0
+    prevEvt = (999, 0, 999, 0)
+    prevRunLumiEvt = (0, 0, 0)
+    toFillMap = {}
     count = 0
     for row in told:
-        evtID = row.evt
-        #print "EvtID: %i" % evtID
+        run = int( row.run )
+        lumi = int( row.lumi )
+        evt = int( row.evt )
+        
         if channel == 'em' :
             leg1Iso = row.eRelPFIsoDB
             leg1Pt = row.ePt
@@ -186,39 +190,78 @@ def renameBranches( sample, channel ) :
             leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
             leg2Pt = row.t2Pt
 
-        currentEvt = [ leg1Iso, leg1Pt, leg2Iso, leg2Pt, evtID, count ]
-        #print "Current: "
-        #print currentEvt
-        #print "Previous: "
-        #print prevEvt
+        currentRunLumiEvt = (run, lumi, evt)
+        if count == 0 : prevRunLumiEvt = currentRunLumiEvt
 
-        if currentEvt[4] != prevEvt[4] and count != 0 :
-            row = prevRow
-            tnew.Fill()
-            prevEvt = currentEvt
-
-        elif currentEvt[ 0 ] < prevEvt[ 0 ] :
-            prevEvt = currentEvt
-            prevRow = row
-        elif currentEvt[ 1 ] > prevEvt[ 1 ] :
-            prevEvt = currentEvt
-            prevRow = row
-        elif currentEvt[ 2 ] < prevEvt[ 2 ] :
-            prevEvt = currentEvt
-            prevRow = row
-        elif currentEvt[ 3 ] > prevEvt[ 3 ] :
-            prevEvt = currentEvt
-            prevRow = row
+        currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
         count += 1
-        # Make sure we get the last event!
-        if count == told.GetEntries() :
-            tnew.Fill()
+        
+
+        if currentRunLumiEvt != prevRunLumiEvt :
+            #print "check Fill"
+            toFillMap[ prevRunLumiEvt ] = prevEvt
+            #print "FILLING:",prevRunLumiEvt, prevEvt
+            prevRunLumiEvt = currentRunLumiEvt
+            prevEvt = currentEvt
+            #print currentRunLumiEvt, currentEvt
+            continue
+
+        #print currentRunLumiEvt, currentEvt
+        # lowest iso_1
+        if currentEvt[ 0 ] < prevEvt[ 0 ] :
+            #print "check 0"
+            prevEvt = currentEvt
+        # iso_1 equal
+        elif currentEvt[ 0 ] == prevEvt[ 0 ] :
+            # highest pt_1
+            if currentEvt[ 1 ] > prevEvt[ 1 ] :
+                #print "check 1"
+                prevEvt = currentEvt
+            # pt_1 equal
+            if currentEvt[ 1 ] == prevEvt[ 1 ] :
+                # lowest iso_2
+                if currentEvt[ 2 ] < prevEvt[ 2 ] :
+                    #print "check 2"
+                    prevEvt = currentEvt
+                # iso_2 equal
+                if currentEvt[ 2 ] == prevEvt[ 2 ] :
+                    # highest pt_2
+                    if currentEvt[ 3 ] > prevEvt[ 3 ] :
+                        #print "check 3"
+                        prevEvt = currentEvt
     
+    ''' Now actually fill that instance of an evt '''
+    count2 = 0
+    for row in told:
+        run = int( row.run )
+        lumi = int( row.lumi )
+        evt = int( row.evt )
+        
+        if channel == 'em' :
+            leg1Iso = row.eRelPFIsoDB
+            leg1Pt = row.ePt
+            leg2Iso = row.mRelPFIsoDBDefault
+            leg2Pt = row.mPt
+        if channel == 'tt' :
+            leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
+            leg1Pt = row.t1Pt
+            leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
+            leg2Pt = row.t2Pt
+
+        currentRunLumiEvt = (run, lumi, evt)
+        currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+        
+        if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
+            #print "Fill choice:",currentRunLumiEvt, currentEvt
+            tnew.Fill()
+            count2 += 1
+
+
+    print "Count: %i count2: %i" % (count, count2)
     # write to disk
     tnew.write()
     fnew.close()
 
-WW = 'WW'
 #Sync = 'Sync_HtoTT_aug4'
 #Sync = 'Sync_HtoTT_noDZ'
 Sync = 'Sync_HtoTT'
