@@ -36,9 +36,8 @@ tauIso = {
     #'ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
 }
 
-            setattr( row, 'run', count2 )
 def isoOrder( channel, row ) :
-    if channel != 'tt' : continue
+    if channel != 'tt' : return
     iso1 = getattr( row, 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
     iso2 = getattr( row, 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
     pt1 = getattr( row, 't1Pt' )
@@ -47,8 +46,8 @@ def isoOrder( channel, row ) :
         for uw in tauIso.keys() :
             tmp1 = getattr( row, 't1%s' % uw )
             tmp2 = getattr( row, 't2%s' % uw )
-            setattr( row, 't1%s', tmp2 )
-            setattr( row, 't2%s', tmp1 )
+            setattr( row, 't1%s' % uw, tmp2 )
+            setattr( row, 't2%s' % uw, tmp1 )
 
 def renameBranches( sample, channel ) :
     branchMappingEM = {
@@ -303,7 +302,7 @@ def renameBranches( sample, channel ) :
         
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
-            setattr( row, 'run', count2 )
+            isoOrder( channel, row )
             tnew.Fill()
             count2 += 1
 
@@ -316,5 +315,5 @@ def renameBranches( sample, channel ) :
 #Sync = 'Sync_HtoTT_aug4'
 #Sync = 'Sync_HtoTT_noDZ'
 Sync = 'Sync_HtoTT'
-#renameBranches( Sync, 'tt' )
-renameBranches( Sync, 'em' )
+renameBranches( Sync, 'tt' )
+#renameBranches( Sync, 'em' )
