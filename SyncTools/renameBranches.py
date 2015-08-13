@@ -9,6 +9,47 @@
 #                                                                           #
 #############################################################################
 
+tauIso = {
+    'Pt' : 'pt',
+    'Eta' : 'eta',
+    'Phi' : 'phi',
+    'Mass' : 'm',
+    'Charge' : 'q',
+    #'PVDXY' : 'd0',
+    'ZTT_PVDZ' : 'dZ',
+    'MtToMET' : 'mt',
+    'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
+    'AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5',
+    'AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5',
+    'AgainstElectronTightMVA5' : 'againstElectronTightMVA5',
+    'AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5',
+    'AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5',
+    'AgainstMuonLoose3' : 'againstMuonLoose3',
+    'AgainstMuonLoose' : 'againstMuonLoose',
+    'ChargedIsoPtSum' : 'chargedIsoPtSum',
+    'DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
+    'NeutralIsoPtSum' : 'neutralIsoPtSum',
+    'PuCorrPtSum' : 'puCorrPtSum',
+    #'ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
+    #'ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
+    #'ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
+    #'ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
+}
+
+            setattr( row, 'run', count2 )
+def isoOrder( channel, row ) :
+    if channel != 'tt' : continue
+    iso1 = getattr( row, 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
+    iso2 = getattr( row, 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
+    pt1 = getattr( row, 't1Pt' )
+    pt2 = getattr( row, 't2Pt' )
+    if iso2 < iso1 :
+        for uw in tauIso.keys() :
+            tmp1 = getattr( row, 't1%s' % uw )
+            tmp2 = getattr( row, 't2%s' % uw )
+            setattr( row, 't1%s', tmp2 )
+            setattr( row, 't2%s', tmp1 )
+
 def renameBranches( sample, channel ) :
     branchMappingEM = {
         'ePt' : 'pt_1', # rename ePt to pt_1
@@ -60,12 +101,12 @@ def renameBranches( sample, channel ) :
         't1AgainstElectronTightMVA5' : 'againstElectronTightMVA5_1',
         't1AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5_1',
         't1AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5_1',
-        't1AgainstMuonLoose3' : 'againstMuonLoose3',
-        't1AgainstMuonLoose' : 'againstMuonLoose',
-        't1ChargedIsoPtSum' : 'chargedIsoPtSum',
-        't1DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
-        't1NeutralIsoPtSum' : 'neutralIsoPtSum',
-        't1PuCorrPtSum' : 'puCorrPtSum',
+        't1AgainstMuonLoose3' : 'againstMuonLoose3_1',
+        't1AgainstMuonLoose' : 'againstMuonLoose_1',
+        't1ChargedIsoPtSum' : 'chargedIsoPtSum_1',
+        't1DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_1',
+        't1NeutralIsoPtSum' : 'neutralIsoPtSum_1',
+        't1PuCorrPtSum' : 'puCorrPtSum_1',
         #'t1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
         #'t1ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_1',
         #'t1ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_1',
@@ -84,12 +125,12 @@ def renameBranches( sample, channel ) :
         't2AgainstElectronTightMVA5' : 'againstElectronTightMVA5_2',
         't2AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5_2',
         't2AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5_2',
-        't2AgainstMuonLoose3' : 'againstMuonLoose3',
-        't2AgainstMuonLoose' : 'againstMuonLoose',
-        't2ChargedIsoPtSum' : 'chargedIsoPtSum',
-        't2DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
-        't2NeutralIsoPtSum' : 'neutralIsoPtSum',
-        't2PuCorrPtSum' : 'puCorrPtSum',
+        't2AgainstMuonLoose3' : 'againstMuonLoose3_2',
+        't2AgainstMuonLoose' : 'againstMuonLoose_2',
+        't2ChargedIsoPtSum' : 'chargedIsoPtSum_2',
+        't2DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_2',
+        't2NeutralIsoPtSum' : 'neutralIsoPtSum_2',
+        't2PuCorrPtSum' : 'puCorrPtSum_2',
         #'t2ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_2',
         #'t2ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_2',
         #'t2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
@@ -262,6 +303,7 @@ def renameBranches( sample, channel ) :
         
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
+            setattr( row, 'run', count2 )
             tnew.Fill()
             count2 += 1
 
@@ -274,5 +316,5 @@ def renameBranches( sample, channel ) :
 #Sync = 'Sync_HtoTT_aug4'
 #Sync = 'Sync_HtoTT_noDZ'
 Sync = 'Sync_HtoTT'
-renameBranches( Sync, 'tt' )
+#renameBranches( Sync, 'tt' )
 renameBranches( Sync, 'em' )
