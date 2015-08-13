@@ -19,7 +19,7 @@ def renameBranches( sample, channel ) :
         'ePVDXY' : 'd0_1',
         'ePVDZ' : 'dZ_1',
         'eMtToMET' : 'mt_1',
-        'eRelPFIsoDB' : 'iso_1',
+        'eRelPFIsoDBZTT' : 'iso_1',
         'mPt' : 'pt_2',
         'mEta' : 'eta_2',
         'mPhi' : 'phi_2',
@@ -51,8 +51,8 @@ def renameBranches( sample, channel ) :
         't1Phi' : 'phi_1',
         't1Mass' : 'm_1',
         't1Charge' : 'q_1',
-        't1PVDXY' : 'd0_1',
-        't1VZ' : 'dZ_1',
+        #'t1PVDXY' : 'd0_1',
+        't1ZTT_PVDZ' : 'dZ_1',
         't1MtToMET' : 'mt_1',
         't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_1',
         't1AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_1',
@@ -66,17 +66,17 @@ def renameBranches( sample, channel ) :
         't1DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
         't1NeutralIsoPtSum' : 'neutralIsoPtSum',
         't1PuCorrPtSum' : 'puCorrPtSum',
-        't1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
-        't1ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_1',
-        't1ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_1',
-        't1ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_1',
+        #'t1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
+        #'t1ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_1',
+        #'t1ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_1',
+        #'t1ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_1',
         't2Pt' : 'pt_2',
         't2Eta' : 'eta_2',
         't2Phi' : 'phi_2',
         't2Mass' : 'm_2',
         't2Charge' : 'q_2',
-        't2PVDXY' : 'd0_2',
-        't2VZ' : 'dZ_2',
+        #'t2PVDXY' : 'd0_2',
+        't2ZTT_PVDZ' : 'dZ_2',
         't2MtToMET' : 'mt_2',
         't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_2',
         't2AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_2',
@@ -90,10 +90,10 @@ def renameBranches( sample, channel ) :
         't2DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
         't2NeutralIsoPtSum' : 'neutralIsoPtSum',
         't2PuCorrPtSum' : 'puCorrPtSum',
-        't2ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_2',
-        't2ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_2',
-        't2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
-        't2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
+        #'t2ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_2',
+        #'t2ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_2',
+        #'t2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
+        #'t2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
         'jet1Pt' : 'jpt_1',
         'jet1Phi' : 'jphi_1',
         'jet1Eta' : 'jeta_1',
@@ -168,6 +168,8 @@ def renameBranches( sample, channel ) :
         tnew._buffer[new] = told._buffer[old]
     
     ''' Select the version of each even we want to keep '''
+    numRows = told.GetEntries()
+    print "Num rows %i" % numRows
     # fill new tree
     # evt tracker [leg1iso,leg1pt,leg2iso,leg2pt,evtID,index]
     prevEvt = (999, 0, 999, 0)
@@ -180,7 +182,7 @@ def renameBranches( sample, channel ) :
         evt = int( row.evt )
         
         if channel == 'em' :
-            leg1Iso = row.eRelPFIsoDB
+            leg1Iso = row.eRelPFIsoDBZTT
             leg1Pt = row.ePt
             leg2Iso = row.mRelPFIsoDBDefault
             leg2Pt = row.mPt
@@ -229,6 +231,13 @@ def renameBranches( sample, channel ) :
                     if currentEvt[ 3 ] > prevEvt[ 3 ] :
                         #print "check 3"
                         prevEvt = currentEvt
+
+        # Make sure we get the last event
+        if count == numRows :
+            print "LastRow:",prevRunLumiEvt, prevEvt
+            prevRunLumiEvt = currentRunLumiEvt
+            prevEvt = currentEvt
+            toFillMap[ prevRunLumiEvt ] = prevEvt
     
     ''' Now actually fill that instance of an evt '''
     count2 = 0
@@ -238,7 +247,7 @@ def renameBranches( sample, channel ) :
         evt = int( row.evt )
         
         if channel == 'em' :
-            leg1Iso = row.eRelPFIsoDB
+            leg1Iso = row.eRelPFIsoDBZTT
             leg1Pt = row.ePt
             leg2Iso = row.mRelPFIsoDBDefault
             leg2Pt = row.mPt
@@ -266,4 +275,4 @@ def renameBranches( sample, channel ) :
 #Sync = 'Sync_HtoTT_noDZ'
 Sync = 'Sync_HtoTT'
 renameBranches( Sync, 'tt' )
-#renameBranches( Sync, 'em' )
+renameBranches( Sync, 'em' )
