@@ -104,7 +104,7 @@ ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
 #ttVtx   = 'abs(t1VZ - pvZ) < 0.2 && abs(t2VZ - pvZ) < 0.2'
-ttVtx   = 't1VZ > -999'
+ttVtx   = 'abs( t1ZTT_PVDZ ) < 0.2 && abs( t2ZTT_PVDZ ) < 0.2'
 #ttVtx   = 'abs(t1ZVertex) < 0.2 && abs(t2ZVertex) < 0.2'
 tt40    = 'doubleTauPass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1'
 # TT PostSync
