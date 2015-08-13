@@ -51,6 +51,10 @@ def isoOrder( channel, row ) :
 
 def renameBranches( sample, channel ) :
     branchMappingEM = {
+        'run' : 'run',
+        'lumi' : 'lumi',
+        'evt' : 'evt',
+        'charge' : 'charge',
         'ePt' : 'pt_1', # rename ePt to pt_1
         'eEta' : 'eta_1',
         'ePhi' : 'phi_1',
@@ -80,12 +84,16 @@ def renameBranches( sample, channel ) :
         'e_m_Mass' : 'm_vis',
         'pfMetEt' : 'met',
         'pfMetPhi' : 'metphi',
-        'GenWeight' : 'weight',
+        #'GenWeight' : 'weight',
         'bjetCISVVeto20Loose' : 'nbtag',
         'jetVeto20' : 'njetspt20',
         }
     
     branchMappingTT = {
+        'run' : 'run',
+        'lumi' : 'lumi',
+        'evt' : 'evt',
+        'charge' : 'charge',
         't1Pt' : 'pt_1',
         't1Eta' : 'eta_1',
         't1Phi' : 'phi_1',
@@ -145,7 +153,7 @@ def renameBranches( sample, channel ) :
         't1_t2_Mass' : 'm_vis',
         'pfMetEt' : 'met',
         'pfMetPhi' : 'metphi',
-        'GenWeight' : 'weight',
+        #'GenWeight' : 'weight',
         'bjetCISVVeto20Loose' : 'nbtag',
         'jetVeto20' : 'njetspt20',
         }
@@ -190,10 +198,14 @@ def renameBranches( sample, channel ) :
     # get list of branches for new tree
     newBranches = {}
     for old in told.branchnames:
-        name = branchMapping[old] if old in branchMapping else old
-        branchType = IntCol() if old in intBranches else FloatCol()
+        #name = branchMapping[old] if old in branchMapping else old
+        #branchType = IntCol() if old in intBranches else FloatCol()
+        if old in branchMapping.keys() :
+            name = branchMapping[old]
+            branchType = IntCol() if old in intBranches else FloatCol()
+            newBranches[name] = branchType
     
-        newBranches[name] = branchType
+        #newBranches[name] = branchType
     
     NewTreeModel = type("NewTreeModel", (TreeModel,), newBranches)
     
@@ -316,4 +328,4 @@ def renameBranches( sample, channel ) :
 #Sync = 'Sync_HtoTT_noDZ'
 Sync = 'Sync_HtoTT'
 renameBranches( Sync, 'tt' )
-#renameBranches( Sync, 'em' )
+renameBranches( Sync, 'em' )
