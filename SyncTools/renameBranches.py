@@ -198,14 +198,14 @@ def renameBranches( sample, channel ) :
     # get list of branches for new tree
     newBranches = {}
     for old in told.branchnames:
-        #name = branchMapping[old] if old in branchMapping else old
-        #branchType = IntCol() if old in intBranches else FloatCol()
-        if old in branchMapping.keys() :
-            name = branchMapping[old]
-            branchType = IntCol() if old in intBranches else FloatCol()
-            newBranches[name] = branchType
+        name = branchMapping[old] if old in branchMapping else old
+        branchType = IntCol() if old in intBranches else FloatCol()
+        ###if old in branchMapping.keys() :
+        ###    name = branchMapping[old]
+        ###    branchType = IntCol() if old in intBranches else FloatCol()
+        ###    newBranches[name] = branchType
     
-        #newBranches[name] = branchType
+        newBranches[name] = branchType
     
     NewTreeModel = type("NewTreeModel", (TreeModel,), newBranches)
     
@@ -258,6 +258,12 @@ def renameBranches( sample, channel ) :
             prevRunLumiEvt = currentRunLumiEvt
             prevEvt = currentEvt
             #print currentRunLumiEvt, currentEvt
+            # Make sure that the last event is filled!
+            if count == numRows :
+                print "LastRow:",prevRunLumiEvt, prevEvt
+                prevRunLumiEvt = currentRunLumiEvt
+                prevEvt = currentEvt
+                toFillMap[ prevRunLumiEvt ] = prevEvt
             continue
 
         #print currentRunLumiEvt, currentEvt
@@ -284,6 +290,7 @@ def renameBranches( sample, channel ) :
                         #print "check 3"
                         prevEvt = currentEvt
 
+        #print "Count: %i, NumRows: %i" % (count, numRows)
         # Make sure we get the last event
         if count == numRows :
             print "LastRow:",prevRunLumiEvt, prevEvt
@@ -291,6 +298,8 @@ def renameBranches( sample, channel ) :
             prevEvt = currentEvt
             toFillMap[ prevRunLumiEvt ] = prevEvt
     
+
+
     ''' Now actually fill that instance of an evt '''
     count2 = 0
     for row in told:
