@@ -84,7 +84,7 @@ def getTTHistoDict() :
 
 # EM Baseline
 emKin   = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4'
-eID     = 'ePassesConversionVeto == 1 && eMissingHits <= 1 && eCBIDMedium == 1' #eMVANonTrigWP80 == 1'
+eID     = 'ePassesConversionVeto == 1 && eMissingHits <= 1 && eMVANonTrigWP80 == 1' #eCBIDMedium == 1
 mID     = 'mPFIDMedium == 1'
 emDR    = 'e_m_DR > 0.3'
 emVtx   = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
