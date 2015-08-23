@@ -6,7 +6,7 @@ import cutsBaseSelection as bc
 import argparse
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
-p.add_argument('--samples', action='store', default='50ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+p.add_argument('--samples', action='store', default='Sync', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 p.add_argument('--qcd', action='store', default=False, dest='qcd', help="Should we only run over QCD and Data?")
 p.add_argument('--invert', action='store', default=False, dest='invert', help="Invert data Isolation values to model QCD?")
 p.add_argument('--weight', action='store', default=True, dest='applyWeights', help="Apply GenWeight to mc samples?")
