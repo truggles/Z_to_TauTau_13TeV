@@ -15,7 +15,7 @@ tauIso = {
     'Phi' : 'phi',
     'Mass' : 'm',
     'Charge' : 'q',
-    #'PVDXY' : 'd0',
+    'PVDXY' : 'd0',
     'PVDZ' : 'dZ',
     'MtToMET' : 'mt',
     'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
@@ -30,10 +30,53 @@ tauIso = {
     'DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
     'NeutralIsoPtSum' : 'neutralIsoPtSum',
     'PuCorrPtSum' : 'puCorrPtSum',
-    #'ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
-    #'ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
-    #'ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
-    #'ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
+    'ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
+    'ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
+    'ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
+    'ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
+    'AbsEta' : '',
+    'AgainstElectronLoose' : '',
+    'AgainstElectronMVA5category' : '',
+    'AgainstElectronMVA5raw' : '',
+    'AgainstElectronMedium' : '',
+    'AgainstElectronTight' : '',
+    'AgainstMuonLoose2' : '',
+    'DecayMode' : '',
+    'DecayModeFinding' : '',
+    'DoubleTau40Filter' : '',
+    'ElecOverlap' : '',
+    'ElectronPt10IdIsoVtxOverlap' : '',
+    'ElectronPt10IdVtxOverlap' : '',
+    'ElectronPt15IdIsoVtxOverlap' : '',
+    'ElectronPt15IdVtxOverlap' : '',
+    'GenDecayMode' : '',
+    'GlobalMuonVtxOverlap' : '',
+    'JetArea' : '',
+    'JetBtag' : '',
+    'JetEtaEtaMoment' : '',
+    'JetEtaPhiMoment' : '',
+    'JetPFCISVBtag' : '',
+    'JetPartonFlavour' : '',
+    'JetPhiPhiMoment' : '',
+    'JetPt' : '',
+    'LeadTrackPt' : '',
+    'LowestMll' : '',
+    'MatchesDoubleTau40Path' : '',
+    'MtToPFMET' : '',
+    'MtToPfMet_Ty1' : '',
+    'MtToPfMet_jes' : '',
+    'MtToPfMet_mes' : '',
+    'MtToPfMet_tes' : '',
+    'MtToPfMet_ues' : '',
+    'MuOverlap' : '',
+    'MuonIdIsoStdVtxOverlap' : '',
+    'MuonIdIsoVtxOverlap' : '',
+    'MuonIdVtxOverlap' : '',
+    'NearestZMass' : '',
+    'Rank' : '',
+    'TNPId' : '',
+    'ToMETDPhi' : '',
+    'VZ' : '',
 }
 
 def isoOrder( channel, row ) :
@@ -63,7 +106,7 @@ def renameBranches( sample, channel ) :
         'ePVDXY' : 'd0_1',
         'ePVDZ' : 'dZ_1',
         'eMtToMET' : 'mt_1',
-        'eRelPFIsoDBZTT' : 'iso_1',
+        'eRelPFIsoDB' : 'iso_1',
         'mPt' : 'pt_2',
         'mEta' : 'eta_2',
         'mPhi' : 'phi_2',
@@ -219,6 +262,29 @@ def renameBranches( sample, channel ) :
         tnew.SetBranchAddress(new, told._buffer[old])
         tnew._buffer[new] = told._buffer[old]
     
+
+    #''' Isolation order the Taus '''
+    #if channel == 'tt' :
+    #    for row in told :
+    #        run = int( row.run )
+    #        lumi = int( row.lumi )
+    #        evt = int( row.evt )
+    #        leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
+    #        leg1Pt = row.t1Pt
+    #        leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
+    #        leg2Pt = row.t2Pt
+    #        if lumi == 474 and evt == 92419 :
+    #            print "Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
+    #        isoOrder( channel, row )
+    #        leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
+    #        leg1Pt = row.t1Pt
+    #        leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
+    #        leg2Pt = row.t2Pt
+    #        if lumi == 474 and evt == 92419 :
+    #            print "POST"
+    #            print "Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
+            
+
     ''' Select the version of each even we want to keep '''
     numRows = told.GetEntries()
     print "Num rows %i" % numRows
@@ -234,7 +300,7 @@ def renameBranches( sample, channel ) :
         evt = int( row.evt )
         
         if channel == 'em' :
-            leg1Iso = row.eRelPFIsoDBZTT
+            leg1Iso = row.eRelPFIsoDB
             leg1Pt = row.ePt
             leg2Iso = row.mRelPFIsoDBDefault
             leg2Pt = row.mPt
@@ -250,6 +316,9 @@ def renameBranches( sample, channel ) :
         currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
         count += 1
         
+        #if lumi == 175 and evt == 34094 :
+        if lumi == 474 and evt == 92419 :
+            print "Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
 
         if currentRunLumiEvt != prevRunLumiEvt :
             #print "check Fill"
@@ -308,7 +377,7 @@ def renameBranches( sample, channel ) :
         evt = int( row.evt )
         
         if channel == 'em' :
-            leg1Iso = row.eRelPFIsoDBZTT
+            leg1Iso = row.eRelPFIsoDB
             leg1Pt = row.ePt
             leg2Iso = row.mRelPFIsoDBDefault
             leg2Pt = row.mPt
@@ -324,6 +393,8 @@ def renameBranches( sample, channel ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
             isoOrder( channel, row )
+            if lumi == 474 and evt == 92419 :
+                print "Actually Filled: Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
             tnew.Fill()
             count2 += 1
 
@@ -335,6 +406,7 @@ def renameBranches( sample, channel ) :
 
 #Sync = 'Sync_HtoTT_aug4'
 #Sync = 'Sync_HtoTT_noDZ'
-Sync = 'Sync_HtoTT'
+#Sync = 'Sync_HtoTT_aug25'
+Sync = 'Sync_HtoTT_aug28'
 renameBranches( Sync, 'tt' )
-renameBranches( Sync, 'em' )
+#renameBranches( Sync, 'em' )
