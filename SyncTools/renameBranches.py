@@ -142,7 +142,7 @@ def renameBranches( sample, channel ) :
         't1Phi' : 'phi_1',
         't1Mass' : 'm_1',
         't1Charge' : 'q_1',
-        #'t1PVDXY' : 'd0_1',
+        't1PVDXY' : 'd0_1',
         't1PVDZ' : 'dZ_1',
         't1MtToMET' : 'mt_1',
         't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_1',
@@ -157,16 +157,16 @@ def renameBranches( sample, channel ) :
         't1DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_1',
         't1NeutralIsoPtSum' : 'neutralIsoPtSum_1',
         't1PuCorrPtSum' : 'puCorrPtSum_1',
-        #'t1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
-        #'t1ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_1',
-        #'t1ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_1',
-        #'t1ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_1',
+        't1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
+        't1ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_1',
+        't1ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_1',
+        't1ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_1',
         't2Pt' : 'pt_2',
         't2Eta' : 'eta_2',
         't2Phi' : 'phi_2',
         't2Mass' : 'm_2',
         't2Charge' : 'q_2',
-        #'t2PVDXY' : 'd0_2',
+        't2PVDXY' : 'd0_2',
         't2PVDZ' : 'dZ_2',
         't2MtToMET' : 'mt_2',
         't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_2',
@@ -181,10 +181,10 @@ def renameBranches( sample, channel ) :
         't2DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_2',
         't2NeutralIsoPtSum' : 'neutralIsoPtSum_2',
         't2PuCorrPtSum' : 'puCorrPtSum_2',
-        #'t2ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_2',
-        #'t2ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_2',
-        #'t2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
-        #'t2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
+        't2ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_2',
+        't2ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_2',
+        't2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
+        't2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
         'jet1Pt' : 'jpt_1',
         'jet1Phi' : 'jphi_1',
         'jet1Eta' : 'jeta_1',
@@ -215,8 +215,6 @@ def renameBranches( sample, channel ) :
     
     # A few branches are ints instead of floats and must be treated specially
     # I think these are all the ones in FSA ntuples, but add more if you find them
-    #intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake', 'muVetoZTT10',
-    #    'eVetoZTT10', 'GenWeight', 'bjetCISVVeto20Loose', 'jetVeto20'])
     intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake',
         'GenWeight'])
     
@@ -263,33 +261,9 @@ def renameBranches( sample, channel ) :
         tnew._buffer[new] = told._buffer[old]
     
 
-    #''' Isolation order the Taus '''
-    #if channel == 'tt' :
-    #    for row in told :
-    #        run = int( row.run )
-    #        lumi = int( row.lumi )
-    #        evt = int( row.evt )
-    #        leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
-    #        leg1Pt = row.t1Pt
-    #        leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
-    #        leg2Pt = row.t2Pt
-    #        if lumi == 474 and evt == 92419 :
-    #            print "Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
-    #        isoOrder( channel, row )
-    #        leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
-    #        leg1Pt = row.t1Pt
-    #        leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
-    #        leg2Pt = row.t2Pt
-    #        if lumi == 474 and evt == 92419 :
-    #            print "POST"
-    #            print "Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
-            
-
     ''' Select the version of each even we want to keep '''
     numRows = told.GetEntries()
     print "Num rows %i" % numRows
-    # fill new tree
-    # evt tracker [leg1iso,leg1pt,leg2iso,leg2pt,evtID,index]
     prevEvt = (999, 0, 999, 0)
     prevRunLumiEvt = (0, 0, 0)
     toFillMap = {}
@@ -304,29 +278,35 @@ def renameBranches( sample, channel ) :
             leg1Pt = row.ePt
             leg2Iso = row.mRelPFIsoDBDefault
             leg2Pt = row.mPt
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+
         if channel == 'tt' :
+            ''' Get our Iso ordering for TT right for the get go '''
             leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
             leg1Pt = row.t1Pt
             leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
             leg2Pt = row.t2Pt
+            if leg1Iso < leg2Iso :
+                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            elif leg1Iso > leg2Iso :
+                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            elif leg1Pt > leg2Pt :
+                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            elif leg1Pt < leg2Pt :
+                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            else : print "XXXX"
+
 
         currentRunLumiEvt = (run, lumi, evt)
         if count == 0 : prevRunLumiEvt = currentRunLumiEvt
 
-        currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
         count += 1
         
-        #if lumi == 175 and evt == 34094 :
-        if lumi == 474 and evt == 92419 :
-            print "Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
-
         if currentRunLumiEvt != prevRunLumiEvt :
-            #print "check Fill"
             toFillMap[ prevRunLumiEvt ] = prevEvt
-            #print "FILLING:",prevRunLumiEvt, prevEvt
             prevRunLumiEvt = currentRunLumiEvt
             prevEvt = currentEvt
-            #print currentRunLumiEvt, currentEvt
+
             # Make sure that the last event is filled!
             if count == numRows :
                 print "LastRow:",prevRunLumiEvt, prevEvt
@@ -338,28 +318,23 @@ def renameBranches( sample, channel ) :
         #print currentRunLumiEvt, currentEvt
         # lowest iso_1
         if currentEvt[ 0 ] < prevEvt[ 0 ] :
-            #print "check 0"
             prevEvt = currentEvt
         # iso_1 equal
         elif currentEvt[ 0 ] == prevEvt[ 0 ] :
             # highest pt_1
             if currentEvt[ 1 ] > prevEvt[ 1 ] :
-                #print "check 1"
                 prevEvt = currentEvt
             # pt_1 equal
             if currentEvt[ 1 ] == prevEvt[ 1 ] :
                 # lowest iso_2
                 if currentEvt[ 2 ] < prevEvt[ 2 ] :
-                    #print "check 2"
                     prevEvt = currentEvt
                 # iso_2 equal
                 if currentEvt[ 2 ] == prevEvt[ 2 ] :
                     # highest pt_2
                     if currentEvt[ 3 ] > prevEvt[ 3 ] :
-                        #print "check 3"
                         prevEvt = currentEvt
 
-        #print "Count: %i, NumRows: %i" % (count, numRows)
         # Make sure we get the last event
         if count == numRows :
             print "LastRow:",prevRunLumiEvt, prevEvt
@@ -381,20 +356,28 @@ def renameBranches( sample, channel ) :
             leg1Pt = row.ePt
             leg2Iso = row.mRelPFIsoDBDefault
             leg2Pt = row.mPt
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+
         if channel == 'tt' :
             leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
             leg1Pt = row.t1Pt
             leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
             leg2Pt = row.t2Pt
+            if leg1Iso < leg2Iso :
+                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            elif leg1Iso > leg2Iso :
+                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            elif leg1Pt > leg2Pt :
+                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            elif leg1Pt < leg2Pt :
+                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            else : print "XXXX"
 
         currentRunLumiEvt = (run, lumi, evt)
-        currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
         
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
             isoOrder( channel, row )
-            if lumi == 474 and evt == 92419 :
-                print "Actually Filled: Pt1, Iso1, Pt2, Iso2",leg1Pt,leg1Iso,leg2Pt,leg2Iso
             tnew.Fill()
             count2 += 1
 
@@ -409,4 +392,4 @@ def renameBranches( sample, channel ) :
 #Sync = 'Sync_HtoTT_aug25'
 Sync = 'Sync_HtoTT_aug28'
 renameBranches( Sync, 'tt' )
-#renameBranches( Sync, 'em' )
+renameBranches( Sync, 'em' )
