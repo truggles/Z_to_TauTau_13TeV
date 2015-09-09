@@ -106,7 +106,7 @@ def renameBranches( sample, channel ) :
         'ePVDXY' : 'd0_1',
         'ePVDZ' : 'dZ_1',
         'eMtToMET' : 'mt_1',
-        'eRelPFIsoDB' : 'iso_1',
+        'eIsoDB03' : 'iso_1',
         'mPt' : 'pt_2',
         'mEta' : 'eta_2',
         'mPhi' : 'phi_2',
@@ -115,21 +115,23 @@ def renameBranches( sample, channel ) :
         'mPVDXY' : 'd0_2',
         'mPVDZ' : 'dZ_2',
         'mMtToMET' : 'mt_2',
-        'mRelPFIsoDBDefault' : 'iso_2',
+        'mIsoDB03' : 'iso_2',
         'jet1Pt' : 'jpt_1',
         'jet1Phi' : 'jphi_1',
         'jet1Eta' : 'jeta_1',
         'jet2Pt' : 'jpt_2',
         'jet2Phi' : 'jphi_2',
         'jet2Eta' : 'jeta_2',
-        'muVetoZTT10' : 'extramuon_veto',
-        'eVetoZTT10' : 'extraelec_veto',
+        'muVetoZTT10new2' : 'extramuon_veto',
+        'eVetoZTT10new2' : 'extraelec_veto',
         'e_m_Mass' : 'm_vis',
         'pfMetEt' : 'met',
         'pfMetPhi' : 'metphi',
+        'mvaMetEt' : 'mvamet',
+        'mvaMetPhi' : 'mvametphi',
         #'GenWeight' : 'weight',
-        'bjetCISVVeto20Loose' : 'nbtag',
-        'jetVeto20' : 'njetspt20',
+        'bjetCISVVeto20MediumZTT' : 'nbtag',
+        'jetVeto20ZTT' : 'njetspt20',
         }
     
     branchMappingTT = {
@@ -191,14 +193,16 @@ def renameBranches( sample, channel ) :
         'jet2Pt' : 'jpt_2',
         'jet2Phi' : 'jphi_2',
         'jet2Eta' : 'jeta_2',
-        'muVetoZTT10' : 'extramuon_veto',
-        'eVetoZTT10' : 'extraelec_veto',
+        'muVetoZTT10new2' : 'extramuon_veto',
+        'eVetoZTT10new2' : 'extraelec_veto',
         't1_t2_Mass' : 'm_vis',
         'pfMetEt' : 'met',
         'pfMetPhi' : 'metphi',
+        'mvaMetEt' : 'mvamet',
+        'mvaMetPhi' : 'mvametphi',
         #'GenWeight' : 'weight',
-        'bjetCISVVeto20Loose' : 'nbtag',
-        'jetVeto20' : 'njetspt20',
+        'bjetCISVVeto20MediumZTT' : 'nbtag',
+        'jetVeto20ZTT' : 'njetspt20',
         }
 
 
@@ -390,6 +394,7 @@ def renameBranches( sample, channel ) :
 #Sync = 'Sync_HtoTT_aug4'
 #Sync = 'Sync_HtoTT_noDZ'
 #Sync = 'Sync_HtoTT_aug25'
-Sync = 'Sync_HtoTT_aug28'
+#Sync = 'Sync_HtoTT_sept4'
+Sync = 'Sync_HtoTT_sept7'
 renameBranches( Sync, 'tt' )
 renameBranches( Sync, 'em' )

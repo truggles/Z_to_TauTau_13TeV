@@ -11,7 +11,7 @@ dirs = ['BaseRoots',
         'Invert',
 ]        
 
-prefixes = ['50ns', '25ns', 'Sync']
+prefixes = ['Sync', '25ns']#'50ns', '25ns', 'Sync']
 
 for pre_ in prefixes :
     for dir_ in dirs :
