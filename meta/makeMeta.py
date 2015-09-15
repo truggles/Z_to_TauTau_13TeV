@@ -23,7 +23,10 @@ samplesSync = { 'Sync_HtoTT': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-
 #            'data_em' : ('/MuonEG/Run2015B-PromptReco-v1/MINIAOD', -999),
 
 # em enriched QCD has a filter efficiency applied to their cross sections
-samples25ns = { 'DYJets': ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 6025 ), 
+samples25ns = { 
+            'data_em' : ('/DoubleEG/Run2015C-PromptReco-v1/MINIAOD', -999),
+            'data_tt' : ('/Tau/Run2015C-PromptReco-v1/MINIAOD', -999),
+            'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 6025 ), 
             #'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 832 ),
             #'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM', 831.76 ),
             'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext3-v1/MINIAODSIM', 831.76 ),
