@@ -87,8 +87,6 @@ for sample in samples :
         l2 = zProd[1]
         
         genVar = bc.getGeneralHistoDict()
-        if 'HtoTauTau' in sample :
-        	genVar = bc.getGeneralHistoDictPhys14()
         newVarMap = genVar
         for var, details in varMap.iteritems() :
         	newVarMap[ var ] = details
@@ -155,10 +153,6 @@ for sample in samples :
             cutMap = bc.quickCutMapSync( channel )
         elif singleCut == True :
             cutMap = bc.quickCutMapSingleCut( channel )
-        elif 'HtoTauTau' in sample and skipMiddlePlots :
-        	cutMap = bc.quickCutMapPhys14( channel )
-        elif 'HtoTauTau' in sample and not skipMiddlePlots :
-        	cutMap = bc.getCutMapPhys14( channel )
         elif skipMiddlePlots :
         	cutMap = bc.quickCutMap( channel )
         elif not skipMiddlePlots :

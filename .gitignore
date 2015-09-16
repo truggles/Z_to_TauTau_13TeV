@@ -6,3 +6,4 @@ baseSelectionRootQuick/
 50ns*
 Sync*
 *_old
+meta/*/arch*
