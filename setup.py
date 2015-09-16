@@ -9,6 +9,7 @@ dirs = ['BaseRoots',
         'Plots',
         'QCD',
         'Invert',
+        'Cut',
 ]        
 
 prefixes = ['Sync', '25ns']#'50ns', '25ns', 'Sync']
