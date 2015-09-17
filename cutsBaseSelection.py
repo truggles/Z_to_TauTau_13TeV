@@ -25,7 +25,7 @@ def getGeneralHistoDict() :
 		'pfMetPhi' : ('pfMetPhi', 100, -5, 5),
 		'mvaMetEt' : ('mvaMetEt', 100, 0, 400),
 		'mvaMetPhi' : ('mvaMetPhi', 100, -5, 5),
-		'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
+		#'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
 		'njetspt20' : ('jetVeto20ZTT', 100, 0, 10),
 		'nbtag' : ('bjetCISVVeto20MediumZTT', 100, 0, 10),
         'eVetoZTT10' : ('eVetoZTT10new2', 20, 0, 2),
