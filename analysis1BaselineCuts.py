@@ -29,9 +29,7 @@ channels = ['em', 'tt']
 ''' Preset samples '''
 SamplesSync = ['Sync_HtoTT']
 SamplesData = ['data_em', 'data_tt']
-#Samples25ns = ['DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
-#Samples25ns = ['TT', 'DYJets']#, 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
-Samples25ns = ['Tbar_tW', 'T_tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
+Samples25ns = ['DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 
 if pre_ == 'Sync' : samples = SamplesSync
 if pre_ == '25ns' : samples = Samples25ns
@@ -48,9 +46,9 @@ for sample in samples :
     while not done :
         ROOT.gROOT.Reset()
         if sample == 'TT' :
-            outFile = ROOT.TFile('%sBaseCut/%s_%i.root' % (pre_, sample, count), 'RECREATE')
+            outFile = ROOT.TFile('%s1BaseCut/%s_%i.root' % (pre_, sample, count), 'RECREATE')
         else :
-            outFile = ROOT.TFile('%sBaseCut/%s.root' % (pre_, sample), 'RECREATE')
+            outFile = ROOT.TFile('%s1BaseCut/%s.root' % (pre_, sample), 'RECREATE')
         print "###   %s %i  ###" % (sample, count)
         for channel in channels :
             print "Channel:  %s" % channel
