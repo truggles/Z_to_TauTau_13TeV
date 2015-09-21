@@ -1,11 +1,11 @@
 from util.buildTChain import makeTChain
 from util.fileLength import file_len
-from util.isoOrder import isoOrder, getTauIsoDic
 from analysis2IsoJetsAndDups import renameBranches
 import ROOT
 from array import array
 from time import gmtime, strftime
 import analysisCuts as bc
+import analysisPlots
 import argparse
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
@@ -78,10 +78,10 @@ def initialCut( outFile, grouping, sample, channel, fileMin=0, fileMax=9999 ) :
 
 def plotHistos( outFile, chain, channel ) :
     ''' Make a channel specific selection of desired histos and fill them '''
-    if channel == 'em' : varMap = bc.getEMHistoDict()
-    if channel == 'tt' : varMap = bc.getTTHistoDict()
+    if channel == 'em' : varMap = analysisPlots.getEMHistoDict()
+    if channel == 'tt' : varMap = analysisPlots.getTTHistoDict()
     
-    genVar = bc.getGeneralHistoDict()
+    genVar = analysisPlots.getGeneralHistoDict()
     newVarMap = genVar
     for var, details in varMap.iteritems() :
     	newVarMap[ var ] = details
@@ -91,7 +91,7 @@ def plotHistos( outFile, chain, channel ) :
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
     for var, cv in newVarMap.iteritems() :
-    	histos[ var ] = bc.makeHisto( var, cv[1], cv[2], cv[3])
+    	histos[ var ] = analysisPlots.makeHisto( var, cv[1], cv[2], cv[3])
     #print "Initial:"
     #print histos
     
@@ -123,7 +123,7 @@ def plotHistos( outFile, chain, channel ) :
         #else : print "Skipped Dup"
     for var, histo in histos.iteritems() :
     	histo.Write()
-    print "%25s : %10i" % ('Event Selection', fillCount)
+    print "%25s : %10i" % ('Events Plotted', fillCount)
 
     outFile.Write()
     return outFile
@@ -147,7 +147,8 @@ for sample in samples :
     count = 0
     while go :
         print " ====>  Loop Count %i  <==== " % count
-        save = '%s_%i' % (sample, count)
+        if sample == 'TT' : save = '%s_%i' % (sample, count)
+        else : save = sample
         outFile = makeFile( grouping, save)
         outputs = initialCut( outFile, grouping, sample, 'em', count * maxTTfiles, (count + 1) * maxTTfiles-1 )
         dir1 = outputs[0].mkdir( 'em' )
@@ -161,11 +162,19 @@ for sample in samples :
         #outFile = plotHistos( outputs[0], outputs[1], 'tt' )
         closeFile( outFile )
         
-        renameBranches( grouping, save, 'tt')
-        renameBranches( grouping, save, 'em')
+
+        ''' 1. Rename branches, Tau and Iso order legs '''
+        ''' 2. Make the histos '''
+        for channel in channels :
+            renameBranches( grouping, save, channel)
+            outFile = ROOT.TFile('%s2IsoOrderAndDups/%s_%s.root' % (grouping, save, channel), 'UPDATE')
+            ifile = ROOT.TFile('%s2IsoOrderAndDups/%s_%s.root' % (grouping, save, channel), 'r')
+            tree = ifile.Get('Ntuple')
+            plotHistos( outFile, tree, channel )
+            outFile.Close()
+
         count += 1
         if count * maxTTfiles >= fileLen : go = False
-
 
 print "Start Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
