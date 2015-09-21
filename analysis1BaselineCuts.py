@@ -1,5 +1,6 @@
 from util.buildTChain import makeTChain
 from util.fileLength import file_len
+import util.pileUpVertexCorrections
 from analysis2IsoJetsAndDups import renameBranches
 import ROOT
 from array import array
@@ -17,7 +18,6 @@ maxTTfiles = 100
 print "Running over %s samples" % grouping
 
 ''' Configuration '''
-weight = 1
 maxFiles = 0
 
 #begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -94,36 +94,48 @@ def plotHistos( outFile, chain, channel ) :
     	histos[ var ] = analysisPlots.makeHisto( var, cv[1], cv[2], cv[3])
     #print "Initial:"
     #print histos
-    
+
+    # Get Pile Up reweight Dictionary
+    if 'data' not in sample :
+        puDict = util.pileUpVertexCorrections.PUreweight( chain, '%s_%s' % (grouping, channel) ) 
+        #print puDict
+        histosDir.cd()
+
     # Skip the EvtSet approach for now, as it takes too long
     # And FSA events are USUALLY never out of order
     # Does it actually take longer?!
     #eventSet = set()
-    previousEvt = (0, 0, 0)
-    evtNum = 0
-    fillCount = 0
+    #previousEvt = (0, 0, 0)
+    #evtNum = 0
+    #fillCount = 0
     for i in range( chain.GetEntries() ):
-        evtNum += 1
+        #evtNum += 1
         chain.GetEntry( i )
         
         # Apply Generator weights, speficially for DY Jets
-        if chain.GenWeight >= 0 : weight = 1
-        if chain.GenWeight < 0 : weight = -1
+        weight = 1
+        if chain.GenWeight >= 0 : genWeight = 1
+        if chain.GenWeight < 0 : genWeight = -1
+
+        # Apply PU correction reweighting
+        puWeight = 1
+        if 'data' not in sample :
+            puWeight = puDict[ chain.nvtx ]
         
         #eventTup = ( chain.run, chain.lumi, chain.evt )
-        currentEvt = ( chain.run, chain.lumi, chain.evt )
+        #currentEvt = ( chain.run, chain.lumi, chain.evt )
         #if eventTup not in eventSet :
-        if currentEvt != previousEvt :
-            fillCount += 1
-            for var, histo in histos.iteritems() :
-                num = getattr( chain, newVarMap[ var ][0] )
-                histo.Fill( num, weight )
-            previousEvt = currentEvt
+        #if currentEvt != previousEvt :
+        #    fillCount += 1
+        for var, histo in histos.iteritems() :
+            num = getattr( chain, newVarMap[ var ][0] )
+            histo.Fill( num, (genWeight * puWeight) )
+        #    previousEvt = currentEvt
             #eventSet.add( eventTup )
         #else : print "Skipped Dup"
     for var, histo in histos.iteritems() :
     	histo.Write()
-    print "%25s : %10i" % ('Events Plotted', fillCount)
+    #print "%25s : %10i" % ('Events Plotted', fillCount)
 
     outFile.Write()
     return outFile
@@ -136,7 +148,8 @@ ROOT.gROOT.Reset()
 
 grouping = '25ns'
 
-samples = ['data_em', 'data_tt']# 'TT']
+#samples = ['data_em', 'data_tt', 'T_tW', 'Tbar_tW']# 'TT']
+samples = ['T_tW',]# 'Tbar_tW']# 'TT']
 #samples = ['TT',]
 #save = 'T_tWTester4'
 
@@ -147,34 +160,43 @@ for sample in samples :
     count = 0
     while go :
         print " ====>  Loop Count %i  <==== " % count
-        if sample == 'TT' : save = '%s_%i' % (sample, count)
-        else : save = sample
-        outFile = makeFile( grouping, save)
-        outputs = initialCut( outFile, grouping, sample, 'em', count * maxTTfiles, (count + 1) * maxTTfiles-1 )
-        dir1 = outputs[0].mkdir( 'em' )
-        dir1.cd()
-        outputs[1].Write()
-        #outFile = plotHistos( outputs[0], outputs[1], 'em' )
-        outputs = initialCut( outFile, grouping, sample, 'tt', count * maxTTfiles, (count + 1) * maxTTfiles-1 )
-        dir1 = outputs[0].mkdir( 'tt' )
-        dir1.cd()
-        outputs[1].Write()
-        #outFile = plotHistos( outputs[0], outputs[1], 'tt' )
-        closeFile( outFile )
-        
-
-        ''' 1. Rename branches, Tau and Iso order legs '''
-        ''' 2. Make the histos '''
         for channel in channels :
+            if channel == 'em' and sample == 'data_tt' : continue
+            if channel == 'tt' and sample == 'data_em' : continue
+            if sample == 'TT' : save = '%s_%i_%s' % (sample, count, channel)
+            if 'data' in sample : save = sample
+            else : save = '%s_%s' % (sample, channel)
+            print "save",save
+
+            ''' 1. Make cuts and save '''
+            outFile1 = makeFile( grouping, save)
+            outputs = initialCut( outFile1, grouping, sample, channel, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
+            dir1 = outputs[0].mkdir( channel )
+            dir1.cd()
+            outputs[1].Write()
+            outFile1.Close()
+
+            ''' 2. Rename branches, Tau and Iso order legs '''
             renameBranches( grouping, save, channel)
-            outFile = ROOT.TFile('%s2IsoOrderAndDups/%s_%s.root' % (grouping, save, channel), 'UPDATE')
-            ifile = ROOT.TFile('%s2IsoOrderAndDups/%s_%s.root' % (grouping, save, channel), 'r')
+
+            ''' 3. Make the histos '''
+            outFile2 = ROOT.TFile('%s2IsoOrderAndDups/%s.root' % (grouping, save), 'UPDATE')
+            ifile = ROOT.TFile('%s2IsoOrderAndDups/%s.root' % (grouping, save), 'r')
+            print '%s2IsoOrderAndDups/%s.root' % (grouping, save)
             tree = ifile.Get('Ntuple')
-            plotHistos( outFile, tree, channel )
-            outFile.Close()
+            plotHistos( outFile2, tree, channel )
+
+            ''' 4. If this is data, make the PU template '''
+            if (sample == 'data_em' and channel == 'em') or (sample == 'data_tt' and channel == 'tt') :
+                print "making PU template",sample,channel
+                util.pileUpVertexCorrections.makeDataPUTemplate( grouping, tree, channel ) 
+
+            # Close
+            outFile2.Close()
 
         count += 1
-        if count * maxTTfiles >= fileLen : go = False
+        if sample != 'TT' : go = False
+        elif count * maxTTfiles >= fileLen : go = False
 
 print "Start Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
