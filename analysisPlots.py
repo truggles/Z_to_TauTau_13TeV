@@ -12,9 +12,9 @@ def getGeneralHistoDict() :
 		'LT' : ('LT', 600, 0, 600),
 		'Mt' : ('Mt', 600, 0, 600),
 		'met' : ('met', 100, 0, 400),
-		'metPhi' : ('metPhi', 100, -5, 5),
-		'mvaMetEt' : ('mvaMetEt', 100, 0, 400),
-		'mvaMetPhi' : ('mvaMetPhi', 100, -5, 5),
+		'metPhi' : ('metphi', 100, -5, 5),
+		'mvaMetEt' : ('mvamet', 100, 0, 400),
+		'mvaMetPhi' : ('mvametphi', 100, -5, 5),
 		#'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
 		'njetspt20' : ('njetspt20', 100, 0, 10),
 		'nbtag' : ('nbtag', 100, 0, 10),
@@ -88,4 +88,79 @@ def getTTHistoDict() :
         'm_2' : ('m_2', 60, 0, 3),
 	}
 	return chanVarMap
+
+
+def getPlotDetails( channel ) :
+    plotDetail = {
+        'Z_Mass' : (0, 300, 4, 'Z Mass [GeV]', ' GeV'),
+        'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
+        'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
+        'pfMetEt' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
+        'pfMetPhi' : (-5, 5, 2, 'pfMetPhi', ''),
+        'mvaMetEt' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+        'mvaMetPhi' : (-5, 5, 2, 'mvaMetPhi', ''),
+        'LT' : (0, 600, 6, 'Total LT [GeV]', ' GeV'),
+        'Mt' : (0, 600, 6, 'Total m_{T} [GeV]', ' GeV'),
+        'nbtag' : (0, 5, 10, 'nBTag', ''),
+        'njetspt20' : (0, 10, 10, 'nJetPt20', ''),
+        'jet1Pt' : (0, 200, 2, 'Leading Jet Pt', ' GeV'),
+        'jet1Eta' : (-5, 5, 2, 'Leading Jet Eta', ''),
+        'jet2Pt' : (0, 200, 2, 'Second Jet Pt', ' GeV'),
+        'jet2Eta' : (-5, 5, 2, 'Second Jet Eta', ''),
+        'eVetoZTT10' : (0, 2, 1, 'Extra Electron Veto', ''),
+        'mVetoZTT10' : (0, 2, 1, 'Extra Muon Veto', ''),
+        'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),
+        'nvtx' : (0, 50, 1, 'Number of Vertices', ''),
+        }
+        
+
+    if channel == 'em' :
+        plotDetailsEM  = {
+        'eta_1' : (-3, 3, 2, 'e Eta', ''),
+        'pt_1' : (0, 200, 2, 'e p_{T} [GeV]', ' GeV'),
+        'mt_1' : (0, 200, 2, 'e m_{T} [GeV]', ' GeV'),
+        'ePVDXY' : (-.1, .1, 2, "e PVDXY [cm]", " cm"),
+        'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
+        'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
+        'iso_1' : (0, 0.2, 1, 'e RelIsoDB03', ''),
+        'eJetPt' : (0, 200, 2, 'e Overlapping Jet Pt', ' GeV'),
+        'eta_2' : (-3, 3, 2, 'm Eta', ''),
+        'pt_2' : (0, 200, 1, 'm p_{T} [GeV]', ' GeV'),
+        'mt_2' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),
+        'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
+        'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
+        'mRelPFIsoDBDefault' : (0, 0.3, 1, 'm RelPFIsoDB', ''),
+        'iso_2' : (0, 0.3, 1, 'm RelIsoDB03', ''),
+        'mJetPt' : (0, 200, 2, 'm Overlapping Jet Pt', ' GeV'),
+        }	
+        for key in plotDetailsEM.keys() :
+            plotDetails[ key ] = plotDetailsEM [ key ]
+        return plotDetailsEM
+
+    if channel == 'tt' :
+        plotDetailsTT = {
+        'iso_1' : (0, 5, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
+        'eta_1' : ( -3, 3, 4, '#tau_{1} Eta', ''),
+        'pt_1' : (0, 200, 2, '#tau_{1} p_{T} [GeV]', ' GeV'),
+        'mt_1' : (0, 200, 2, '#tau_{1} m_{T} [GeV]', ' GeV'),
+        'm_1' : (0, 3, 2, 't1 Mass', ' GeV'),
+        'decayModeFindingOldDMs_1' : (0, 15, 1, 't1 Decay Mode', ''),
+        'iso_2' : (0, 5, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
+        'eta_2' : ( -3, 3, 4, '#tau_{2} Eta', ''),
+        'pt_2' : (0, 200, 2, '#tau_{2} p_{T} [GeV]', ' GeV'),
+        'mt_2' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),
+        'm_2' : (0, 3, 2, 't2 Mass', ' GeV'),
+        'decayModeFindingOldDMs_2' : (0, 15, 1, 't2 Decay Mode', ''),
+        't1JetPt' : (0, 400, 2, 't1 Overlapping Jet Pt', ' GeV'),
+        't2JetPt' : (0, 400, 2, 't2 Overlapping Jet Pt', ' GeV'),
+        't1ChargedIsoPtSum' : (0, 10, 4, 't1 ChargedIsoPtSum', ' GeV'),
+        't1NeutralIsoPtSum' : (0, 10, 4, 't1 NeutralIsoPtSum', ' GeV'),
+        't1PuCorrPtSum' : (0, 40, 2, 't1 PuCorrPtSum', ' GeV'),
+        't2ChargedIsoPtSum' : (0, 10, 4, 't2 ChargedIsoPtSum', ' GeV'),
+        't2NeutralIsoPtSum' : (0, 10, 4, 't2 NeutralIsoPtSum', ' GeV'),
+        't2PuCorrPtSum' : (0, 40, 2, 't2 PuCorrPtSum', ' GeV'),
+        }	
+        for key in plotDetailsTT.keys() :
+            plotDetails[ key ] = plotDetailsEM [ key ]
+        return plotDetailsTT
 

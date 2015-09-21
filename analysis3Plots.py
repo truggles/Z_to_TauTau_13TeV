@@ -7,11 +7,12 @@ import pyplotter.plot_functions as pyplotter #import setTDRStyle, getCanvas
 import pyplotter.tdrstyle as tdr
 import argparse
 from util.ratioPlot import ratioPlot 
+import analysisPlots
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='25ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Include ratio plots? Defaul = False")
-p.add_argument('--numTT', action='store', default=9, dest='numTT', help="How many TT files are there?")
+p.add_argument('--numTT', action='store', default=21, dest='numTT', help="How many TT files are there?")
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
 options = p.parse_args()
 pre_ = options.sampleName
@@ -38,17 +39,9 @@ prodMap = { 'em' : ('e', 'm'),
 				# Sample : Color
 samples = OrderedDict()
 samples['DYJets']	= ('kOrange-4', 'dyj')
-#samples['TT']		= ('kBlue-8', 'top')
-#samples['TT_0']		= ('kBlue-8', 'top')
-#samples['TT_1']		= ('kBlue-8', 'top')
-#samples['TT_2']		= ('kBlue-8', 'top')
-#samples['TT_3']		= ('kBlue-8', 'top')
-#samples['TT_4']		= ('kBlue-8', 'top')
-#samples['TT_5']		= ('kBlue-8', 'top')
-#samples['TT_6']		= ('kBlue-8', 'top')
-#samples['TT_7']		= ('kBlue-8', 'top')
-#samples['TT_8']		= ('kBlue-8', 'top')
-#samples['TT_9']		= ('kBlue-8', 'top')
+samples['TT']		= ('kBlue-8', 'top')
+for i in range( 0, numTT + 1 ) :
+    samples['TT_%i' % i ] = ('kBlue-8', 'top')
 samples['QCD15-20']		= ('kMagenta-10', 'qcd')
 samples['QCD20-30']		= ('kMagenta-10', 'qcd')
 samples['QCD30-50']		= ('kMagenta-10', 'qcd')
@@ -79,65 +72,6 @@ sampColors = {
     'data' : 'kBlack',
 }
 
-plotDetails = {
-    'eEta' : (-3, 3, 2, 'e Eta', ''),
-    'ePt' : (0, 200, 2, 'e p_{T} [GeV]', ' GeV'),
-    'eMtToMET' : (0, 200, 2, 'e m_{T} [GeV]', ' GeV'),
-    'ePVDXY' : (-.1, .1, 2, "e PVDXY [cm]", " cm"),
-    'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
-    'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
-    'eRelIsoDB03' : (0, 0.2, 1, 'e RelIsoDB03', ''),
-    'eJetPt' : (0, 200, 2, 'e Overlapping Jet Pt', ' GeV'),
-    'mEta' : (-3, 3, 2, 'm Eta', ''),
-    'mNormTrkChi2' : (0, 4, 1, 'm NormTrkChi2', ''),
-    'mPt' : (0, 200, 1, 'm p_{T} [GeV]', ' GeV'),
-    'mMtToMET' : (0, 200, 2, 'm m_{T} [GeV]', ' GeV'),
-    'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
-    'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
-    'mRelPFIsoDBDefault' : (0, 0.3, 1, 'm RelPFIsoDB', ''),
-    'mRelIsoDB03' : (0, 0.3, 1, 'm RelIsoDB03', ''),
-    'mJetPt' : (0, 200, 2, 'm Overlapping Jet Pt', ' GeV'),
-    'Z_Mass' : (0, 300, 4, 'Z Mass [GeV]', ' GeV'),
-    'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
-    'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
-    't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 5, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
-    't1Eta' : ( -3, 3, 4, '#tau_{1} Eta', ''),
-    't1Pt' : (0, 200, 2, '#tau_{1} p_{T} [GeV]', ' GeV'),
-    't1MtToPFMET' : (0, 200, 2, '#tau_{1} m_{T} [GeV]', ' GeV'),
-    't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : (0, 5, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
-    't2Eta' : ( -3, 3, 4, '#tau_{2} Eta', ''),
-    't2Pt' : (0, 200, 2, '#tau_{2} p_{T} [GeV]', ' GeV'),
-    't2MtToPFMET' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),
-    'pfMetEt' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
-    'pfMetPhi' : (-5, 5, 2, 'pfMetPhi', ''),
-    'mvaMetEt' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-    'mvaMetPhi' : (-5, 5, 2, 'mvaMetPhi', ''),
-    'LT' : (0, 600, 6, 'Total LT [GeV]', ' GeV'),
-    'Mt' : (0, 600, 6, 'Total m_{T} [GeV]', ' GeV'),
-    'nbtag' : (0, 5, 10, 'nBTag', ''),
-    'njetspt20' : (0, 10, 10, 'nJetPt20', ''),
-    'jet1Pt' : (0, 200, 2, 'Leading Jet Pt', ' GeV'),
-    'jet1Eta' : (-5, 5, 2, 'Leading Jet Eta', ''),
-    'jet2Pt' : (0, 200, 2, 'Second Jet Pt', ' GeV'),
-    'jet2Eta' : (-5, 5, 2, 'Second Jet Eta', ''),
-    'eVetoZTT10' : (0, 2, 1, 'Extra Electron Veto', ''),
-    'mVetoZTT10' : (0, 2, 1, 'Extra Muon Veto', ''),
-    'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),
-    'nvtx' : (0, 50, 1, 'Number of Vertices', ''),
-    't1DecayMode' : (0, 15, 1, 't1 Decay Mode', ''),
-    't2DecayMode' : (0, 15, 1, 't2 Decay Mode', ''),
-    't1Mass' : (0, 3, 2, 't1 Mass', ' GeV'),
-    't2Mass' : (0, 3, 2, 't2 Mass', ' GeV'),
-    't1JetPt' : (0, 400, 2, 't1 Overlapping Jet Pt', ' GeV'),
-    't2JetPt' : (0, 400, 2, 't2 Overlapping Jet Pt', ' GeV'),
-    't1ChargedIsoPtSum' : (0, 10, 4, 't1 ChargedIsoPtSum', ' GeV'),
-    't1NeutralIsoPtSum' : (0, 10, 4, 't1 NeutralIsoPtSum', ' GeV'),
-    't1PuCorrPtSum' : (0, 40, 2, 't1 PuCorrPtSum', ' GeV'),
-    't2ChargedIsoPtSum' : (0, 10, 4, 't2 ChargedIsoPtSum', ' GeV'),
-    't2NeutralIsoPtSum' : (0, 10, 4, 't2 NeutralIsoPtSum', ' GeV'),
-    't2PuCorrPtSum' : (0, 40, 2, 't2 PuCorrPtSum', ' GeV'),
-}	
-
 
 for channel in prodMap.keys() :
     # Make an index file for web viewing
@@ -157,6 +91,7 @@ for channel in prodMap.keys() :
     for var, name in genVar.iteritems() :
     	newVarMap[ var ] = name[0]
     #print newVarMap
+    plotDetails = analysisPlots.getPlotDetails( channel )
     
     for var, name in newVarMap.iteritems() :
         print "Var: %s		Name: %s" % (var, name)
