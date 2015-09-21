@@ -5,7 +5,7 @@ from analysis2IsoJetsAndDups import renameBranches
 import ROOT
 from array import array
 from time import gmtime, strftime
-import cutsBaseSelection as bc
+import analysisCuts as bc
 import argparse
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
@@ -43,7 +43,7 @@ def closeFile( outFile ) :
     
 
 #for sample in samples :
-def initialCut( outFile, grouping, sample, channel, count=0, maxTTfiles=999 ) :
+def initialCut( outFile, grouping, sample, channel, fileMin=0, fileMax=9999 ) :
     path = '%s/final/Ntuple' % channel
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -52,7 +52,7 @@ def initialCut( outFile, grouping, sample, channel, count=0, maxTTfiles=999 ) :
     print "Channel:  %s" % channel
     sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
     # This should allow us to run over sections of files
-    chain = makeTChain( sampleList, path, maxFiles, count * maxTTfiles, (count + 1) * maxTTfiles )
+    chain = makeTChain( sampleList, path, maxFiles, fileMin, fileMax )
     numEntries = chain.GetEntries()
     print "%25s : %10i" % ('Initial', numEntries)
     
@@ -136,55 +136,36 @@ ROOT.gROOT.Reset()
 
 grouping = '25ns'
 
-#samples = ['data_em', 'ZZ']
+samples = ['data_em', 'data_tt']# 'TT']
 #samples = ['TT',]
 #save = 'T_tWTester4'
 
 for sample in samples :
-    if sample == 'TT' : continue
+    #if sample == 'TT' : continue
     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
     go = True
     count = 0
-    #while go :
-    #    print " ====>  Loop Count %i  <==== " % count
-    #    save = '%s_%i' % (sample, count)
-    #    outFile = makeFile( grouping, save)
-    #    outputs = initialCut( outFile, grouping, sample, 'em', count * maxTTfiles, (count + 1) * maxTTfiles )
-    #    dir1 = outputs[0].mkdir( 'em' )
-    #    dir1.cd()
-    #    outputs[1].Write()
-    #    #outFile = plotHistos( outputs[0], outputs[1], 'em' )
-    #    outputs = initialCut( outFile, grouping, sample, 'tt', count * maxTTfiles, (count + 1) * maxTTfiles )
-    #    dir1 = outputs[0].mkdir( 'tt' )
-    #    dir1.cd()
-    #    outputs[1].Write()
-    #    #outFile = plotHistos( outputs[0], outputs[1], 'tt' )
-    #    closeFile( outFile )
-    #    
-    #    renameBranches( grouping, save, 'tt')
-    #    renameBranches( grouping, save, 'em')
-    #    count += 1
-    #    if count * maxTTfiles >= fileLen : go = False
+    while go :
+        print " ====>  Loop Count %i  <==== " % count
+        save = '%s_%i' % (sample, count)
+        outFile = makeFile( grouping, save)
+        outputs = initialCut( outFile, grouping, sample, 'em', count * maxTTfiles, (count + 1) * maxTTfiles-1 )
+        dir1 = outputs[0].mkdir( 'em' )
+        dir1.cd()
+        outputs[1].Write()
+        #outFile = plotHistos( outputs[0], outputs[1], 'em' )
+        outputs = initialCut( outFile, grouping, sample, 'tt', count * maxTTfiles, (count + 1) * maxTTfiles-1 )
+        dir1 = outputs[0].mkdir( 'tt' )
+        dir1.cd()
+        outputs[1].Write()
+        #outFile = plotHistos( outputs[0], outputs[1], 'tt' )
+        closeFile( outFile )
+        
+        renameBranches( grouping, save, 'tt')
+        renameBranches( grouping, save, 'em')
+        count += 1
+        if count * maxTTfiles >= fileLen : go = False
 
-    #else :
-    save = sample
-    outFile = makeFile( grouping, save)
-    outputs = initialCut( outFile, grouping, sample, 'em', count=0, maxTTfiles=999 )
-    dir1 = outputs[0].mkdir( 'em' )
-    dir1.cd()
-    outputs[1].Write()
-    #outFile = plotHistos( outputs[0], outputs[1], 'em' )
-    outputs = initialCut( outFile, grouping, sample, 'tt', count=0, maxTTfiles=999 )
-    dir1 = outputs[0].mkdir( 'tt' )
-    dir1.cd()
-    outputs[1].Write()
-    #outFile = plotHistos( outputs[0], outputs[1], 'tt' )
-    closeFile( outFile )
-    
-    renameBranches( grouping, save, 'tt')
-    renameBranches( grouping, save, 'em')
-    #renameBranches( 'Sync', 'tmp', 'tt')
-    #renameBranches( 'Sync', 'tmp', 'em')
 
 print "Start Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
