@@ -4,12 +4,11 @@
 
 import os
 
-dirs = ['BaseRoots',
-        'BaseRootsQuick',
+dirs = ['1BaseCut',
+        '2IsoOrderAndDups',
+        '1Single',
+        '2SingleIOAD',
         'Plots',
-        'QCD',
-        'Invert',
-        'Cut',
 ]        
 
 prefixes = ['Sync', '25ns']#'50ns', '25ns', 'Sync']
