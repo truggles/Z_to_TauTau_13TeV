@@ -13,17 +13,19 @@ p.add_argument('--samples', action='store', default='25ns', dest='sampleName', h
 p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Include ratio plots? Defaul = False")
 p.add_argument('--numTT', action='store', default=21, dest='numTT', help="How many TT files are there?")
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
+p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 options = p.parse_args()
 pre_ = options.sampleName
 ratio = options.ratio
 numTT = options.numTT
+folderDetails = options.folderDetails
 
 print "Running over %s samples" % pre_
 
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 16.1 # (pb) 25ns
+luminosity = 166.37 # (pb) 25ns - Sept 25th certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.0
 qcdYieldTT = 0
@@ -51,7 +53,7 @@ for i in range( 0, numTT + 1 ) :
 #samples['QCD300-Inf']      = ('kMagenta-10', 'qcd')
 samples['Tbar_tW']  = ('kYellow-2', 'top')
 samples['T_tW']     = ('kYellow+2', 'top')
-samples['WJets']    = ('kAzure+2', 'ewk')
+samples['WJets']    = ('kAzure+2', 'wjets')
 samples['WW']       = ('kAzure+10', 'ewk')
 samples['WW2l2n']       = ('kAzure+8', 'ewk')
 samples['WW4q']     = ('kAzure+6', 'ewk')
@@ -68,12 +70,13 @@ sampColors = {
     'top' : 'kBlue-8',
     'qcd' : 'kMagenta-10',
     'dyj' : 'kOrange-4',
+    'wjets' : 'kAzure+2',
     'data' : 'kBlack',
 }
 
 
 for channel in prodMap.keys() :
-    if channel == 'tt' : continue
+    #if channel == 'tt' : continue
     # Make an index file for web viewing
     htmlFile = open('%sPlots/%s/index.html' % (pre_, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
@@ -82,18 +85,11 @@ for channel in prodMap.keys() :
 
 
     print channel
-    if channel == 'em': varMap = analysisPlots.getEMHistoDict()
-    if channel == 'tt': varMap = analysisPlots.getTTHistoDict()
-    genVar = analysisPlots.getGeneralHistoDict()
-    newVarMap = {}
-    for var, name in varMap.iteritems() :
-        newVarMap[ var ] = name[0]
-    for var, name in genVar.iteritems() :
-        newVarMap[ var ] = name[0]
-    #print newVarMap
+    newVarMap = analysisPlots.getHistoDict( channel )
     plotDetails = analysisPlots.getPlotDetails( channel )
 
-    for var, name in newVarMap.iteritems() :
+    for var, info in newVarMap.iteritems() :
+        name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
         dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
@@ -101,6 +97,7 @@ for channel in prodMap.keys() :
         top = ROOT.THStack("All Backgrounds top", "top" )
         higgs = ROOT.THStack("All Backgrounds higgs", "higgs" )
         qcd = ROOT.THStack("All Backgrounds qcd", "qcd" )
+        wjets = ROOT.THStack("All Backgrounds wjets", "wjets" )
         data = ROOT.THStack("All Backgrounds data", "data" )
 
 
@@ -120,17 +117,17 @@ for channel in prodMap.keys() :
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
-            if 'TT' in sample : continue
+            if 'TT' == sample : continue
 
-            print sample
+            #print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (pre_, sample, channel)
 
             if sample == 'data_em' :
-                tFile = ROOT.TFile('%s2IsoOrderAndDups/%s.root' % (pre_, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (pre_, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
-                tFile = ROOT.TFile('%s2IsoOrderAndDups/%s.root' % (pre_, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (pre_, folderDetails, sample), 'READ')
             else :
-                tFile = ROOT.TFile('%s2IsoOrderAndDups/%s_%s.root' % (pre_, sample, channel), 'READ')
+                tFile = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
 
             # Make sure we can still read TT variables
             if 'TT' in sample : sample = 'TT'
@@ -157,9 +154,18 @@ for channel in prodMap.keys() :
             #hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
             # Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ), QCD gets special scaling from bkg estimation
-            scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEventsEM'] )
+            scalerOld = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEvents'] )
+            #print "-- Old scaler: %f" % scaler
+            #print "-- lumi:%i    xsec:%f    events:%i" % (luminosity, sampDict[ sample]['Cross Section (pb)'], sampDict[ sample ]['nEvents'])
+            scalerNew = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
+            #print "-- New scaler: %f" % scaler
+            #print "-- lumi:%i    xsec:%f    summedWNorm:%i" % (luminosity, sampDict[ sample]['Cross Section (pb)'], sampDict[ sample ]['summedWeightsNorm'])
+            #print "-- events / summedWNorm = %f" % (sampDict[ sample ]['nEvents'] / sampDict[ sample ]['summedWeightsNorm'])
+            print "%10s %10f %10f" % (sample, scalerOld, scalerNew)
+
             if 'data' not in sample and hist.Integral() != 0:
-                hist.Scale( scaler )
+                hist.Scale( scalerNew )
+            #print "\n"
 
             #print hist.Integral()
             if samples[ sample ][1] == 'dyj' :
@@ -174,6 +180,9 @@ for channel in prodMap.keys() :
             if samples[ sample ][1] == 'ewk' :
                 hist.SetTitle('Electroweak')
                 ewk.Add( hist )
+            if samples[ sample ][1] == 'wjets' :
+                hist.SetTitle('WJets')
+                wjets.Add( hist )
             if samples[ sample ][1] == 'higgs' :
                 hist.SetTitle('SM Higgs(125)')
                 higgs.Add( hist )
@@ -201,6 +210,7 @@ for channel in prodMap.keys() :
         #stack.Add( qcd.GetStack().Last() )
         stack.Add( top.GetStack().Last() )
         stack.Add( ewk.GetStack().Last() )
+        stack.Add( wjets.GetStack().Last() )
         stack.Add( dyj.GetStack().Last() )
 
         # Maybe make ratio hist
