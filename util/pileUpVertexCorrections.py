@@ -19,7 +19,9 @@ def PUreweight(sampleTree, dataFile) :
         if row.GenWeight >= 0 : genWeight = 1
         if row.GenWeight < 0 : genWeight = -1
         sHist.Fill( row.nvtx * genWeight )
-    sHist.Scale( 1 / sHist.Integral() )
+
+    if sHist.Integral() > 0 :
+        sHist.Scale( 1 / sHist.Integral() )
     
     reweightDict = {}
     for i in range( 1, 101 ) :

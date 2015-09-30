@@ -19,11 +19,11 @@ m23e12  = '(singleMuSingleEPass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu2
 # EM PostSync
 emOS    = 'e_m_SS == 0'
 emSS    = 'e_m_SS == 1'
-emIso   = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault < 0.15'
+emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.15'
 extraVeto   = 'eVetoZTT10 == 0 && muVetoZTT10 == 0'
 # EM Studies
-emQCDPreIso = 'eRelPFIsoDB < 0.2 && mRelPFIsoDBDefault < 1.0'
-emIsoInvertM    = 'eRelPFIsoDB < 0.15 && mRelPFIsoDBDefault > 0.15'
+emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
+emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
 
 # TT Baseline
 ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'

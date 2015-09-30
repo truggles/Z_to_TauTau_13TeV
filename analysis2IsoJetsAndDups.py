@@ -152,7 +152,7 @@ def jetCleaning( channel, row, DR ) :
         setattr( row, 'jet%iPUMVA' % i, jetDict['jet%i' % i][4] )
 
 
-def renameBranches( grouping, sample, channel ) :
+def renameBranches( grouping, mid1, mid2, sample, channel ) :
     branchMappingEM = {
         'run' : 'run',
         'lumi' : 'lumi',
@@ -269,8 +269,8 @@ def renameBranches( grouping, sample, channel ) :
     if channel == 'em' : branchMapping = branchMappingEM
     if channel == 'tt' : branchMapping = branchMappingTT
 
-    oldFileName = '%s1BaseCut/%s.root' % (grouping, sample)
-    newFileName = '%s2IsoOrderAndDups/%s.root' % (grouping, sample)
+    oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
+    newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
     dirName = channel
     treeName = 'Ntuple'
     
@@ -398,7 +398,7 @@ def renameBranches( grouping, sample, channel ) :
 
         # Make sure we get the last event
         if count == numRows :
-            print "LastRow:",prevRunLumiEvt, prevEvt
+            #print "LastRow:",prevRunLumiEvt, prevEvt
             prevRunLumiEvt = currentRunLumiEvt
             prevEvt = currentEvt
             toFillMap[ prevRunLumiEvt ] = prevEvt
