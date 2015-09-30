@@ -61,7 +61,10 @@ def getSummedWeights( fileName, channel ) :
     tree2.GetEntry( 1 )
     weight = abs( tree2.GenWeight )
     #print "weight: ",weight
-    weightedSum = summedWeights/weight
+    if weight != 0 :
+        weightedSum = summedWeights/weight
+    else :
+        weightedSum = -999
     #print "summed w/w: ",weightedSum
     ifile.Close()
     return (summedWeights,weightedSum)

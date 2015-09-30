@@ -8,7 +8,7 @@ from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson, getS
 import argparse
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
-p.add_argument('--samples', action='store', dest='sampleName', default='50ns', help="Which samples should we run over? : 25ns, Sync")
+p.add_argument('--samples', action='store', dest='sampleName', default='25ns', help="Which samples should we run over? : 25ns, Sync")
 results = p.parse_args()
 sampPrefix = results.sampleName
 
@@ -24,9 +24,9 @@ samplesSync = { 'Sync_HtoTT': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-
 
 # em enriched QCD has a filter efficiency applied to their cross sections
 samples25ns = { 
-            'data_em' : ('/DoubleEG/Run2015C-PromptReco-v1/MINIAOD', -999),
-            'data_tt' : ('/Tau/Run2015C-PromptReco-v1/MINIAOD', -999),
-            'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 6025 ), 
+            'data_em' : ('', -999.0),
+            'data_tt' : ('', -999.0),
+            'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/MINIAODSIM', 6025.0 ), 
             #'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 832 ),
             #'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM', 831.76 ),
             'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext3-v1/MINIAODSIM', 831.76 ),
@@ -60,13 +60,30 @@ if sampPrefix == 'Sync': samples = samplesSync
 if sampPrefix == '25ns': samples = samples25ns
 if sampPrefix == '50ns': samples = samples50ns
  
+dataSamples = {
+            'data_em' : ['/DoubleEG/Run2015C-PromptReco-v1/MINIAOD', '/DoubleEG/Run2015D-PromptReco-v3/MINIAOD'],
+            'data_tt' : ['/Tau/Run2015C-PromptReco-v1/MINIAOD', '/Tau/Run2015D-PromptReco-v3/MINIAOD'],
+}
 
 # A dictionary to store each samples info
 jDict = {}
 
 for k, v in samples.iteritems() :
     # Get the DAS info from DBS
-    infoDAS = getDBSInfo( k, v[0] )
+    # Sum up data sets by channels
+    if 'data' in k :
+        dataSamps = dataSamples[ k ]
+        infoDAS = [0, 0, 0, 0, u'ok']
+        for samp in dataSamps :
+            infoDAStmp = getDBSInfo( k, samp )
+            infoDAS[0] += infoDAStmp[0]
+            infoDAS[1] += infoDAStmp[1]
+            infoDAS[2] += infoDAStmp[2]
+            infoDAS[3] += infoDAStmp[3]
+            if infoDAStmp[4] != u'ok' :
+                infoDAS[4] = 'error'
+            print "Data: ", infoDAStmp
+    else : infoDAS = getDBSInfo( k, v[0] )
     print infoDAS
 
     # Get the Ntuple info that FSA created
