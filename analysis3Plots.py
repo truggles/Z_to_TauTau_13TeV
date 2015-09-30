@@ -120,7 +120,7 @@ for channel in prodMap.keys() :
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
-            #if 'TT' in sample : continue
+            if 'TT' in sample : continue
 
             print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (pre_, sample, channel)

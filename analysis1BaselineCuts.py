@@ -5,7 +5,7 @@ from analysis2IsoJetsAndDups import renameBranches
 import ROOT
 from array import array
 from time import gmtime, strftime
-import analysisCuts as bc
+import analysisCuts
 import analysisPlots
 import argparse
 
@@ -28,14 +28,15 @@ channels = ['em', 'tt']
 ''' Preset samples '''
 SamplesSync = ['Sync_HtoTT']
 SamplesData = ['data_em', 'data_tt']
-Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
+Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
+Samples25nsQCD = ['QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 #Samples25ns = ['Tbar_tW',]# 'T_tW']#, 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 
 if grouping == 'Sync' : samples = SamplesSync
 if grouping == '25ns' : samples = Samples25ns
 
-def makeFile( grouping, save) :
-    outFile = ROOT.TFile('%s1BaseCut/%s.root' % (grouping, save), 'RECREATE')
+def makeFile( grouping, mid, save) :
+    outFile = ROOT.TFile('%s%s/%s.root' % (grouping, mid, save), 'RECREATE')
     return outFile
 
 def closeFile( outFile ) :
@@ -43,7 +44,7 @@ def closeFile( outFile ) :
     
 
 #for sample in samples :
-def initialCut( outFile, grouping, sample, channel, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=0, fileMax=9999 ) :
     path = '%s/final/Ntuple' % channel
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -58,15 +59,13 @@ def initialCut( outFile, grouping, sample, channel, fileMin=0, fileMax=9999 ) :
     
     
     ''' Get channel specific general cuts '''
-    cutMap = bc.quickCutMapSync( channel )
-    
+    exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
     	
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
     
-    cutName = 'BaseLine'
     cutString = cutMap[ cutName ]
-    chainNew = bc.makeGenCut( chain, cutString )
+    chainNew = analysisCuts.makeGenCut( chain, cutString )
     numEntries = chainNew.GetEntries()
     print "%25s : %10i" % (cutName, numEntries)
     
@@ -78,13 +77,7 @@ def initialCut( outFile, grouping, sample, channel, fileMin=0, fileMax=9999 ) :
 
 def plotHistos( outFile, chain, channel ) :
     ''' Make a channel specific selection of desired histos and fill them '''
-    if channel == 'em' : varMap = analysisPlots.getEMHistoDict()
-    if channel == 'tt' : varMap = analysisPlots.getTTHistoDict()
-    
-    genVar = analysisPlots.getGeneralHistoDict()
-    newVarMap = genVar
-    for var, details in varMap.iteritems() :
-    	newVarMap[ var ] = details
+    newVarMap = analysisPlots.getHistoDict( channel )
 
     histosDir = outFile.mkdir( "%s_Histos" % channel )
     histosDir.cd()
@@ -148,10 +141,20 @@ ROOT.gROOT.Reset()
 
 grouping = '25ns'
 
-#samples = ['data_em', 'data_tt', 'T_tW', 'Tbar_tW']# 'TT']
-samples = ['T_tW',]# 'Tbar_tW']# 'TT']
+samples = ['data_em', 'data_tt', 'DYJets', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
+#samples = ['data_em', 'data_tt',]# 'T_tW', 'Tbar_tW']# 'TT']
+#samples = ['T_tW',]# 'Tbar_tW']# 'TT']
 #samples = ['TT',]
-#save = 'T_tWTester4'
+
+# Locations to save files:
+#mid1 = '1BaseCut'
+#mid2 = '2IsoOrderAndDups'
+mid1 = '1Single'
+mid2 = '2SingleIOAD'
+cutMapper = 'quickCutMapSingleCut'
+cutName = 'PostSync'
+#cutMapper = 'quickCutMapSync'
+#cutName = 'BaseLine'
 
 for sample in samples :
     #if sample == 'TT' : continue
@@ -161,29 +164,32 @@ for sample in samples :
     while go :
         print " ====>  Loop Count %i  <==== " % count
         for channel in channels :
+
             if channel == 'em' and sample == 'data_tt' : continue
             if channel == 'tt' and sample == 'data_em' : continue
+
             if sample == 'TT' : save = '%s_%i_%s' % (sample, count, channel)
-            if 'data' in sample : save = sample
+            elif 'data' in sample : save = sample
             else : save = '%s_%s' % (sample, channel)
             print "save",save
 
             ''' 1. Make cuts and save '''
-            outFile1 = makeFile( grouping, save)
-            outputs = initialCut( outFile1, grouping, sample, channel, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
+            outFile1 = makeFile( grouping, mid1, save)
+            outputs = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
             dir1 = outputs[0].mkdir( channel )
             dir1.cd()
             outputs[1].Write()
             outFile1.Close()
 
             ''' 2. Rename branches, Tau and Iso order legs '''
-            renameBranches( grouping, save, channel)
+            renameBranches( grouping, mid1, mid2, save, channel)
 
             ''' 3. Make the histos '''
-            outFile2 = ROOT.TFile('%s2IsoOrderAndDups/%s.root' % (grouping, save), 'UPDATE')
-            ifile = ROOT.TFile('%s2IsoOrderAndDups/%s.root' % (grouping, save), 'r')
-            print '%s2IsoOrderAndDups/%s.root' % (grouping, save)
-            tree = ifile.Get('Ntuple')
+            outFile2 = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'UPDATE')
+            #ifile = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'r')
+            print '%s%s/%s.root' % (grouping, mid2, save)
+            #tree = ifile.Get('Ntuple')
+            tree = outFile2.Get('Ntuple')
             plotHistos( outFile2, tree, channel )
 
             ''' 4. If this is data, make the PU template '''
