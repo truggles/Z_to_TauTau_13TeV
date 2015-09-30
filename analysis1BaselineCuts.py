@@ -89,7 +89,7 @@ def plotHistos( outFile, chain, channel ) :
     #print histos
 
     # Get Pile Up reweight Dictionary
-    if 'data' not in sample :
+    if 'data' not in sample and grouping != 'Sync':
         puDict = util.pileUpVertexCorrections.PUreweight( chain, '%s_%s' % (grouping, channel) ) 
         #print puDict
         histosDir.cd()
@@ -112,7 +112,7 @@ def plotHistos( outFile, chain, channel ) :
 
         # Apply PU correction reweighting
         puWeight = 1
-        if 'data' not in sample :
+        if 'data' not in sample and grouping != 'Sync':
             puWeight = puDict[ chain.nvtx ]
         
         #eventTup = ( chain.run, chain.lumi, chain.evt )
@@ -139,22 +139,22 @@ begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print begin
 ROOT.gROOT.Reset()
 
-grouping = '25ns'
+#grouping = '25ns'
 
-samples = ['data_em', 'data_tt', 'DYJets', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
+#samples = ['data_em', 'data_tt', 'DYJets', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
 #samples = ['data_em', 'data_tt',]# 'T_tW', 'Tbar_tW']# 'TT']
 #samples = ['T_tW',]# 'Tbar_tW']# 'TT']
 #samples = ['TT',]
 
 # Locations to save files:
-#mid1 = '1BaseCut'
-#mid2 = '2IsoOrderAndDups'
-mid1 = '1Single'
-mid2 = '2SingleIOAD'
-cutMapper = 'quickCutMapSingleCut'
-cutName = 'PostSync'
-#cutMapper = 'quickCutMapSync'
-#cutName = 'BaseLine'
+mid1 = '1BaseCut'
+mid2 = '2IsoOrderAndDups'
+#mid1 = '1Single'
+#mid2 = '2SingleIOAD'
+#cutMapper = 'quickCutMapSingleCut'
+#cutName = 'PostSync'
+cutMapper = 'quickCutMapSync'
+cutName = 'BaseLine'
 
 for sample in samples :
     #if sample == 'TT' : continue
