@@ -4,7 +4,7 @@
 # June, 12 2015
 
 import os
-from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson
+from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson, getSummedWeights
 import argparse
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
@@ -71,25 +71,28 @@ for k, v in samples.iteritems() :
 
     # Get the Ntuple info that FSA created
     numFiles = getNumberOfFiles( k, sampPrefix )
-    eventCountEM = 0
-    eventCountTT = 0
+    eventCount = 0
+    summedWeights = 0
+    summedWeightsNorm = 0
     inFiles = open('NtupleInputs_%s/%s.txt' % (sampPrefix, k), 'r')
     for fileName in inFiles :
-        eventCountEM += getEventCount( fileName.strip(), 'em' )
-        eventCountTT += getEventCount( fileName.strip(), 'tt' )
+        eventCount += getEventCount( fileName.strip(), 'em' )
+        w = getSummedWeights( fileName.strip(), 'em' )
+        summedWeights += w[0]
+        summedWeightsNorm += w[1]
     inFiles.close()
 
     # Check that DAS and FSA events and file numbers match
     status = "Error"
     if infoDAS[0] == numFiles : status = "Files Match"
-    if infoDAS[2] == eventCountEM and eventCountEM == eventCountTT:
+    if infoDAS[2] == eventCount :
         status = "Good to Go!"
 
-    infoNtup = [numFiles, int(eventCountEM), int(eventCountTT), status]
+    infoNtup = [numFiles, int(eventCount), summedWeights, summedWeightsNorm, status]
     print infoNtup
 
     # Append each samples info to our dictionary jDict
-    jDict[ k ] = {'DAS Path' : v[0], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEventsEM' : infoNtup[1], 'nEventsTT' : infoNtup[2], 'STATUS' : infoNtup[3], 'Cross Section (pb)' : v[1] }
+    jDict[ k ] = {'DAS Path' : v[0], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEvents' : infoNtup[1], 'summedWeights' : infoNtup[2], 'summedWeightsNorm' : infoNtup[3], 'STATUS' : infoNtup[4], 'Cross Section (pb)' : v[1] }
 
 # Print the dictionary to a JSON file
 printJson( jDict, sampPrefix )

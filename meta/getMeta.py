@@ -48,6 +48,24 @@ def getEventCount( fileName, channel ) :
 	ifile.Close()
 	return eventCount
 
+def getSummedWeights( fileName, channel ) :
+    ifile = ROOT.TFile('%s' % fileName, 'r')
+    summedWeights = 0
+    tree = ifile.Get( '%s/metaInfo' % channel )
+    for row in tree :
+        summedWeights += row.summedWeights
+    #print "summed weights: ",summedWeights
+
+    # Normalize summedWeights by GenWeight value
+    tree2 = ifile.Get( '%s/final/Ntuple' % channel )
+    tree2.GetEntry( 1 )
+    weight = abs( tree2.GenWeight )
+    #print "weight: ",weight
+    weightedSum = summedWeights/weight
+    #print "summed w/w: ",weightedSum
+    ifile.Close()
+    return (summedWeights,weightedSum)
+
 def printJson( jDict, sampPrefix ) :
 	with open('NtupleInputs_%s/samples.json' % sampPrefix, 'w') as outFile :
 		json.dump( jDict, outFile, indent=2 )
