@@ -86,6 +86,7 @@
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-0C902838-3064-E511-B14A-02163E013447/make_ntuples_cfg-0C902838-3064-E511-B14A-02163E013447.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-0CAB7D83-4B65-E511-9112-02163E0142FB/make_ntuples_cfg-0CAB7D83-4B65-E511-9112-02163E0142FB.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-182BA93B-FD61-E511-8D6A-02163E011870/make_ntuples_cfg-182BA93B-FD61-E511-8D6A-02163E011870.root
+/data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-18952DCC-AC60-E511-BAB5-02163E0135AC/make_ntuples_cfg-18952DCC-AC60-E511-BAB5-02163E0135AC.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-1C9F43B9-2360-E511-93FD-02163E01338B/make_ntuples_cfg-1C9F43B9-2360-E511-93FD-02163E01338B.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-24F810E0-335F-E511-94F4-02163E011C61/make_ntuples_cfg-24F810E0-335F-E511-94F4-02163E011C61.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-268A7325-6466-E511-8762-02163E014271/make_ntuples_cfg-268A7325-6466-E511-8762-02163E014271.root
@@ -93,6 +94,7 @@
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-36BB4C92-6461-E511-9E0C-02163E01364B/make_ntuples_cfg-36BB4C92-6461-E511-9E0C-02163E01364B.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-40DD7627-AD5F-E511-A969-02163E013930/make_ntuples_cfg-40DD7627-AD5F-E511-A969-02163E013930.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-544475AF-2360-E511-90B3-02163E0137CA/make_ntuples_cfg-544475AF-2360-E511-90B3-02163E0137CA.root
+/data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-549B45C9-C360-E511-99AA-02163E014488/make_ntuples_cfg-549B45C9-C360-E511-99AA-02163E014488.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-5657BA20-3065-E511-BAA0-02163E014315/make_ntuples_cfg-5657BA20-3065-E511-BAA0-02163E014315.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-5861A233-0F61-E511-ADAD-02163E011E08/make_ntuples_cfg-5861A233-0F61-E511-ADAD-02163E011E08.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-5C301645-FA5E-E511-B37C-02163E011A4C/make_ntuples_cfg-5C301645-FA5E-E511-B37C-02163E011A4C.root
@@ -101,6 +103,7 @@
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-6C29DBF4-ED60-E511-A00F-02163E0133F4/make_ntuples_cfg-6C29DBF4-ED60-E511-A00F-02163E0133F4.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-744F68D7-3062-E511-8A02-02163E013759/make_ntuples_cfg-744F68D7-3062-E511-8A02-02163E013759.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-7AA43B02-3A5F-E511-81D6-02163E0143A4/make_ntuples_cfg-7AA43B02-3A5F-E511-81D6-02163E0143A4.root
+/data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-80D565B1-C360-E511-ADCF-02163E012685/make_ntuples_cfg-80D565B1-C360-E511-ADCF-02163E012685.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-84750903-865F-E511-B193-02163E0140D8/make_ntuples_cfg-84750903-865F-E511-B193-02163E0140D8.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-869C6A0F-3065-E511-922E-02163E014315/make_ntuples_cfg-869C6A0F-3065-E511-922E-02163E014315.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-8C0905AF-2360-E511-9E81-02163E014526/make_ntuples_cfg-8C0905AF-2360-E511-9E81-02163E014526.root
@@ -108,6 +111,7 @@
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-922FA611-3065-E511-BD98-02163E01238D/make_ntuples_cfg-922FA611-3065-E511-BD98-02163E01238D.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-9EE6885E-0160-E511-BD01-02163E0144BE/make_ntuples_cfg-9EE6885E-0160-E511-BD01-02163E0144BE.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-A097FB77-F05E-E511-996A-02163E0141B5/make_ntuples_cfg-A097FB77-F05E-E511-996A-02163E0141B5.root
+/data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-A80E8DC0-1C61-E511-B64C-02163E014219/make_ntuples_cfg-A80E8DC0-1C61-E511-B64C-02163E014219.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-A8ED6552-6164-E511-AE1F-02163E011D19/make_ntuples_cfg-A8ED6552-6164-E511-AE1F-02163E011D19.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-AAE48753-DB64-E511-90E0-02163E0143A9/make_ntuples_cfg-AAE48753-DB64-E511-90E0-02163E0143A9.root
 /data/truggles/sept29_data_1/data_MuonEG_Run2015D_PromptReco_25ns/submit/make_ntuples_cfg-AC39646E-065F-E511-966A-02163E01396C/make_ntuples_cfg-AC39646E-065F-E511-966A-02163E01396C.root
