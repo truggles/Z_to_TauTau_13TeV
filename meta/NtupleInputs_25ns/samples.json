@@ -30,16 +30,16 @@
   "data_em": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 610106, 
+    "nEvents": 814884, 
     "DAS Path": "", 
-    "nfiles": 501, 
-    "nblocks": 47, 
+    "nfiles": 635, 
+    "nblocks": 54, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -131868, 
+    "summedWeightsNorm": -135864, 
     "summedWeights": 0.0, 
-    "nevents": 31914557, 
-    "nNtupleFiles": 132, 
-    "nlumis": 31119
+    "nevents": 43697421, 
+    "nNtupleFiles": 136, 
+    "nlumis": 36676
   }, 
   "QCD50-80": {
     "STATUS": "Good to Go!", 
@@ -72,16 +72,16 @@
   "data_tt": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 1106670, 
+    "nEvents": 1262718, 
     "DAS Path": "", 
-    "nfiles": 169, 
-    "nblocks": 50, 
+    "nfiles": 193, 
+    "nblocks": 55, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -154845, 
+    "summedWeightsNorm": -157842, 
     "summedWeights": 0.0, 
-    "nevents": 4584585, 
-    "nNtupleFiles": 155, 
-    "nlumis": 25359
+    "nevents": 5831106, 
+    "nNtupleFiles": 158, 
+    "nlumis": 28990
   }, 
   "TT": {
     "STATUS": "Good to Go!", 
