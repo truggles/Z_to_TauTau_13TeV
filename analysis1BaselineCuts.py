@@ -130,7 +130,6 @@ def plotHistos( outFile, chain, channel ) :
     	histo.Write()
     #print "%25s : %10i" % ('Events Plotted', fillCount)
 
-    outFile.Write()
     return outFile
 
 
