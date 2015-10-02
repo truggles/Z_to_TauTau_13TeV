@@ -13,8 +13,8 @@ def getHistoDict( channel ) :
         'Mt' : ('Mt', 600, 0, 600),
         'met' : ('met', 100, 0, 400),
         'metPhi' : ('metphi', 100, -5, 5),
-        'mvaMetEt' : ('mvamet', 100, 0, 400),
-        'mvaMetPhi' : ('mvametphi', 100, -5, 5),
+        #'mvaMetEt' : ('mvamet', 100, 0, 400),
+        #'mvaMetPhi' : ('mvametphi', 100, -5, 5),
         #'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
         'njetspt20' : ('njetspt20', 100, 0, 10),
         'nbtag' : ('nbtag', 100, 0, 10),
@@ -100,8 +100,8 @@ def getPlotDetails( channel ) :
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
         'met' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
         'metPhi' : (-5, 5, 2, 'pfMetPhi', ''),
-        'mvaMetEt' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-        'mvaMetPhi' : (-5, 5, 2, 'mvaMetPhi', ''),
+        #'mvaMetEt' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+        #'mvaMetPhi' : (-5, 5, 2, 'mvaMetPhi', ''),
         'LT' : (0, 600, 6, 'Total LT [GeV]', ' GeV'),
         'Mt' : (0, 600, 6, 'Total m_{T} [GeV]', ' GeV'),
         'nbtag' : (0, 5, 10, 'nBTag', ''),
@@ -163,6 +163,6 @@ def getPlotDetails( channel ) :
         't2PuCorrPtSum' : (0, 40, 2, 't2 PuCorrPtSum', ' GeV'),
         }
         for key in plotDetailsTT.keys() :
-            plotDetails[ key ] = plotDetailsEM [ key ]
+            plotDetails[ key ] = plotDetailsTT [ key ]
         return plotDetails
 

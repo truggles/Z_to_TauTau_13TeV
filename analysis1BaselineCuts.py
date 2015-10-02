@@ -90,7 +90,7 @@ def plotHistos( outFile, chain, channel ) :
 
     # Get Pile Up reweight Dictionary
     if 'data' not in sample and grouping != 'Sync':
-        puDict = util.pileUpVertexCorrections.PUreweight( chain, '%s_%s' % (grouping, channel) ) 
+        puDict = util.pileUpVertexCorrections.PUreweight( grouping, sample, channel ) 
         #print puDict
         histosDir.cd()
 
@@ -145,16 +145,25 @@ ROOT.gROOT.Reset()
 #samples = ['data_em', 'data_tt',]# 'T_tW', 'Tbar_tW']# 'TT']
 #samples = ['T_tW',]# 'Tbar_tW']# 'TT']
 #samples = ['TT',]
+#samples = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
+samples = ['WJets',]
 
-# Locations to save files:
-mid1 = '1BaseCut'
-mid2 = '2IsoOrderAndDups'
-#mid1 = '1Single'
-#mid2 = '2SingleIOAD'
-#cutMapper = 'quickCutMapSingleCut'
-#cutName = 'PostSync'
+''' Cut configuration and location to save files: '''
+### option 1 = Sync level cuts
 cutMapper = 'quickCutMapSync'
 cutName = 'BaseLine'
+mid1 = '1BaseCut'
+mid2 = '2IsoOrderAndDups'
+
+### option 2 = Signal level cuts
+#cutMapper = 'quickCutMapSingleCut'
+#cutName = 'PostSync'
+#mid1 = '1Single'
+#mid2 = '2SingleIOAD'
+#mid1 = '1PUTest'
+#mid2 = '2PUTest'
+#mid1 = '1noPU'
+#mid2 = '2noPU'
 
 for sample in samples :
     #if sample == 'TT' : continue
@@ -192,10 +201,10 @@ for sample in samples :
             tree = outFile2.Get('Ntuple')
             plotHistos( outFile2, tree, channel )
 
-            ''' 4. If this is data, make the PU template '''
-            if (sample == 'data_em' and channel == 'em') or (sample == 'data_tt' and channel == 'tt') :
-                print "making PU template",sample,channel
-                util.pileUpVertexCorrections.makeDataPUTemplate( grouping, tree, channel ) 
+            #''' 4. If this is data, make the PU template '''
+            #if (sample == 'data_em' and channel == 'em') or (sample == 'data_tt' and channel == 'tt') :
+            #    print "making PU template",sample,channel
+            #    util.pileUpVertexCorrections.makeDataPUTemplate( grouping, tree, channel ) 
 
             # Close
             outFile2.Close()
