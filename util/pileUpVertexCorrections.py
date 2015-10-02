@@ -7,22 +7,33 @@ def makeDataPUTemplate( grouping, dataTree, channel ) :
     dHist.Scale( 1 / dHist.Integral() )
     dHist.SaveAs('meta/PileUpInfo/%s_%s.root' % (grouping, channel) )
 
+def makePUTemplate( grouping, sample, channel, dataTree ) :
+    dHist = ROOT.TH1F('nvtx', 'dhist', 100, 0, 100)
+    prevEvt = (0,0,0)
+    for row in dataTree :
+        currentEvt = (row.lumi, row.run, row.evt)
+        if currentEvt != prevEvt :
+            if row.GenWeight >= 0 :
+                genW = 1
+            else : # this is for data
+                genW = -1
+            #print "Filling - nvtx:%i    genW:%i" % (row.nvtx, genW)
+            dHist.Fill( row.nvtx * genW )
+            prevEvt = currentEvt
+    dHist.Scale( 1 / dHist.Integral() )
+    if 'data' in sample :
+        dHist.SaveAs('meta/PileUpInfo/%s_%s.root' % (grouping, sample) )
+    else :
+        dHist.SaveAs('meta/PileUpInfo/%s_%s_%s.root' % (grouping, sample, channel) )
 
-def PUreweight(sampleTree, dataFile) :
-    datafile = ROOT.TFile('meta/PileUpInfo/%s.root' % dataFile, 'READ')
+
+def PUreweight( grouping, sample, channel ) :
+    datafile = ROOT.TFile('meta/PileUpInfo/%s_data_%s.root' % (grouping, channel), 'READ')
     dHist = datafile.Get('nvtx')
 
+    samplefile = ROOT.TFile('meta/PileUpInfo/%s_%s_%s.root' % (grouping, sample, channel), 'READ')
+    sHist = samplefile.Get('nvtx')
 
-    sHist = ROOT.TH1F('samp hist', 'shist', 100, 0, 100)
-    for row in sampleTree :
-        # Do Gen Weighting here too
-        if row.GenWeight >= 0 : genWeight = 1
-        if row.GenWeight < 0 : genWeight = -1
-        sHist.Fill( row.nvtx * genWeight )
-
-    if sHist.Integral() > 0 :
-        sHist.Scale( 1 / sHist.Integral() )
-    
     reweightDict = {}
     for i in range( 1, 101 ) :
         if sHist.GetBinContent( i ) > 0 :
@@ -39,4 +50,5 @@ def PUreweight(sampleTree, dataFile) :
     #sHist.Draw('same')
     #c1.SaveAs('test.root')
 
+    print reweightDict
     return reweightDict
