@@ -94,15 +94,16 @@ def plotHistos( outFile, chain, channel ) :
         #print puDict
         histosDir.cd()
 
-    # Skip the EvtSet approach for now, as it takes too long
-    # And FSA events are USUALLY never out of order
-    # Does it actually take longer?!
-    #eventSet = set()
-    #previousEvt = (0, 0, 0)
-    #evtNum = 0
-    #fillCount = 0
+    
+    ''' Scale the histo taking into account events which are 1) out of range and 2) GenWeights '''
+    # Parameters to track the number of positive and negative GenWeight events
+    # so that we  can reweight the histo at the end
+    # Order is : pos, neg
+    scalingDict = {}
+    for var in histos.keys() :
+        scalingDict[ var ] = [0, 0]
+
     for i in range( chain.GetEntries() ):
-        #evtNum += 1
         chain.GetEntry( i )
         
         # Apply Generator weights, speficially for DY Jets
@@ -115,20 +116,22 @@ def plotHistos( outFile, chain, channel ) :
         if 'data' not in sample and grouping != 'Sync':
             puWeight = puDict[ chain.nvtx ]
         
-        #eventTup = ( chain.run, chain.lumi, chain.evt )
-        #currentEvt = ( chain.run, chain.lumi, chain.evt )
-        #if eventTup not in eventSet :
-        #if currentEvt != previousEvt :
-        #    fillCount += 1
+        w = chain.GenWeight
         for var, histo in histos.iteritems() :
             num = getattr( chain, newVarMap[ var ][0] )
-            histo.Fill( num, (genWeight * puWeight) )
-        #    previousEvt = currentEvt
-            #eventSet.add( eventTup )
-        #else : print "Skipped Dup"
+            ret = histo.Fill( num, (genWeight * puWeight) )
+            if ret > 0 and not 'data' in sample :
+                if w > 0 : scalingDict[ var ][0] += 1
+                elif w < 0 : scalingDict[ var ][1] += 1
+    #print scalingDict
+
     for var, histo in histos.iteritems() :
+        # Add in scaling for GenWeight!
+        #print "Var: %s    Integral Pre: %f" % (var, histo.Integral() )
+        if not 'data' in sample :
+            histo.Scale( ( scalingDict[ var ][0] - scalingDict[ var ][1] ) / histo.Integral() )
+        #print "Var: %s    Integral Pre: %f" % (var, histo.Integral() )
     	histo.Write()
-    #print "%25s : %10i" % ('Events Plotted', fillCount)
 
     return outFile
 
@@ -146,6 +149,7 @@ ROOT.gROOT.Reset()
 #samples = ['TT',]
 #samples = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
 #samples = ['WJets',]
+#samples = ['Tbar_tW',]
 
 ''' Cut configuration and location to save files: '''
 ### option 1 = Sync level cuts
