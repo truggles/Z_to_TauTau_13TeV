@@ -145,25 +145,32 @@ ROOT.gROOT.Reset()
 #samples = ['T_tW',]# 'Tbar_tW']# 'TT']
 #samples = ['TT',]
 #samples = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
-samples = ['WJets',]
+#samples = ['WJets',]
 
 ''' Cut configuration and location to save files: '''
 ### option 1 = Sync level cuts
-cutMapper = 'quickCutMapSync'
-cutName = 'BaseLine'
-mid1 = '1BaseCut'
-mid2 = '2IsoOrderAndDups'
+#cutMapper = 'quickCutMapSync'
+#cutName = 'BaseLine'
+#mid1 = '1BaseCut'
+#mid2 = '2IsoOrderAndDups'
+#mid3 = '3BaseCut'
 
 ### option 2 = Signal level cuts
-#cutMapper = 'quickCutMapSingleCut'
-#cutName = 'PostSync'
+cutMapper = 'quickCutMapSingleCut'
+cutName = 'PostSync'
 #mid1 = '1Single'
 #mid2 = '2SingleIOAD'
 #mid1 = '1PUTest'
 #mid2 = '2PUTest'
 #mid1 = '1noPU'
 #mid2 = '2noPU'
+mid1 = '1Test' 
+mid2 = '2Test'
+mid3 = '3Test'
 
+doCuts = True
+doOrdering = True
+doPlots = True
 for sample in samples :
     #if sample == 'TT' : continue
     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
@@ -182,31 +189,30 @@ for sample in samples :
             print "save",save
 
             ''' 1. Make cuts and save '''
-            outFile1 = makeFile( grouping, mid1, save)
-            outputs = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
-            dir1 = outputs[0].mkdir( channel )
-            dir1.cd()
-            outputs[1].Write()
-            outFile1.Close()
+            if doCuts :
+                outFile1 = makeFile( grouping, mid1, save)
+                outputs = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
+                dir1 = outputs[0].mkdir( channel )
+                dir1.cd()
+                outputs[1].Write()
+                outFile1.Close()
 
             ''' 2. Rename branches, Tau and Iso order legs '''
-            renameBranches( grouping, mid1, mid2, save, channel)
+            if doOrdering :
+                renameBranches( grouping, mid1, mid2, save, channel)
+                print '%s%s/%s.root' % (grouping, mid2, save)
 
             ''' 3. Make the histos '''
-            outFile2 = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'UPDATE')
-            #ifile = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'r')
-            print '%s%s/%s.root' % (grouping, mid2, save)
-            #tree = ifile.Get('Ntuple')
-            tree = outFile2.Get('Ntuple')
-            plotHistos( outFile2, tree, channel )
+            if doPlots :
+                outFile2 = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'READ')
+                #ifile = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'r')
+                #tree = ifile.Get('Ntuple')
+                tree = outFile2.Get('Ntuple')
 
-            #''' 4. If this is data, make the PU template '''
-            #if (sample == 'data_em' and channel == 'em') or (sample == 'data_tt' and channel == 'tt') :
-            #    print "making PU template",sample,channel
-            #    util.pileUpVertexCorrections.makeDataPUTemplate( grouping, tree, channel ) 
-
-            # Close
-            outFile2.Close()
+                outFile3 = makeFile( grouping, mid3, save)
+                plotHistos( outFile3, tree, channel )
+                outFile2.Close()
+                outFile3.Close()
 
         count += 1
         if sample != 'TT' : go = False
