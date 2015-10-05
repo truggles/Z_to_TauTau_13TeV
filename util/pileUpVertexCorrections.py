@@ -41,14 +41,5 @@ def PUreweight( grouping, sample, channel ) :
         else : ratio = 0
         reweightDict[ i ] = ratio
 
-    #for j in range( 1, 101 ) :
-    #    prev = sHist.GetBinContent( j )
-    #    sHist.SetBinContent( j, prev * reweightDict[ i ] )
-
-    #c1 = ROOT.TCanvas('c1', 'c1', 800, 800)
-    #dHist.Draw()
-    #sHist.Draw('same')
-    #c1.SaveAs('test.root')
-
     #print reweightDict
     return reweightDict
