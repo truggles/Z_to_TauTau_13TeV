@@ -34,6 +34,10 @@ Samples25nsQCD = ['QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', '
 
 if grouping == 'Sync' : samples = SamplesSync
 if grouping == '25ns' : samples = Samples25ns
+if grouping == 'data' :
+    samples = SamplesData
+    grouping = '25ns'
+
 
 def makeFile( grouping, mid, save) :
     outFile = ROOT.TFile('%s%s/%s.root' % (grouping, mid, save), 'RECREATE')
@@ -128,7 +132,7 @@ def plotHistos( outFile, chain, channel ) :
     for var, histo in histos.iteritems() :
         # Add in scaling for GenWeight!
         #print "Var: %s    Integral Pre: %f" % (var, histo.Integral() )
-        if not 'data' in sample :
+        if not 'data' in sample and histo.Integral() > 0 :
             histo.Scale( ( scalingDict[ var ][0] - scalingDict[ var ][1] ) / histo.Integral() )
         #print "Var: %s    Integral Pre: %f" % (var, histo.Integral() )
     	histo.Write()
@@ -175,6 +179,9 @@ mid3 = '3Test'
 doCuts = True
 doOrdering = True
 doPlots = True
+#doCuts = False
+#doOrdering = False
+#doPlots = False
 for sample in samples :
     #if sample == 'TT' : continue
     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )

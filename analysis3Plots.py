@@ -25,7 +25,7 @@ print "Running over %s samples" % pre_
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 166.37 # (pb) 25ns - Sept 25th certification
+luminosity = 225.57 # (pb) 25ns - Sept 25th certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.0
 qcdYieldTT = 0
@@ -84,11 +84,14 @@ for channel in prodMap.keys() :
     htmlFile.write( '<body>\n' )
 
 
+    if channel == 'tt' : continue
     print channel
+
     newVarMap = analysisPlots.getHistoDict( channel )
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     for var, info in newVarMap.iteritems() :
+        if not (var == 'nvtx' or var == 'm_vis') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
@@ -102,18 +105,6 @@ for channel in prodMap.keys() :
 
 
         for sample in samples:
-            # allow looping over TT sample
-#       count = 0
-#       done = False
-#       while not done :
-#           if sample == 'TT' :
-#               tFile = ROOT.TFile('%s1BaseCut/%s_%i.root' % (pre_, sample, count), 'READ')
-#               print sample,' ',count
-#               count += 1
-#           else :
-#               print sample
-#               tFile = ROOT.TFile('%s1BaseCut/%s.root' % (pre_, sample), 'READ')
-            #if sample == 'TT' : continue
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
@@ -162,9 +153,15 @@ for channel in prodMap.keys() :
             #print "-- lumi:%i    xsec:%f    summedWNorm:%i" % (luminosity, sampDict[ sample]['Cross Section (pb)'], sampDict[ sample ]['summedWeightsNorm'])
             #print "-- events / summedWNorm = %f" % (sampDict[ sample ]['nEvents'] / sampDict[ sample ]['summedWeightsNorm'])
             print "%10s %10f %10f" % (sample, scalerOld, scalerNew)
+            print "SOld: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['nEvents']) )
+            print "SNew: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['summedWeightsNorm']) )
+            print "Var:%10s   Integral:%15f" % (var, hist.Integral() )
 
             if 'data' not in sample and hist.Integral() != 0:
-                hist.Scale( scalerNew )
+                hist.Scale( scalerNew )#* hist.Integral() )
+            #else : # This made data align with was I thought would be our projects.  
+            #    hist.Scale( 2.4/1.4 )
+            print "Var:%10s   Integral Post:%15f" % (var, hist.Integral() )
             #print "\n"
 
             #print hist.Integral()

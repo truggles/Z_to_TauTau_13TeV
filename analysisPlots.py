@@ -95,7 +95,7 @@ def getHistoDict( channel ) :
 
 def getPlotDetails( channel ) :
     plotDetails = {
-        'm_vis' : (0, 300, 4, 'Z Vis Mass [GeV]', ' GeV'),
+        'm_vis' : (0, 300, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'Z_Pt' : (0, 200, 2, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
         'met' : (0, 400, 2, 'pfMet [GeV]', ' GeV'),
@@ -113,7 +113,7 @@ def getPlotDetails( channel ) :
         'extraelec_veto' : (0, 2, 1, 'Extra Electron Veto', ''),
         'extramuon_veto' : (0, 2, 1, 'Extra Muon Veto', ''),
         'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),
-        'nvtx' : (0, 50, 1, 'Number of Vertices', ''),
+        'nvtx' : (0, 35, 1, 'Number of Vertices', ''),
         }
 
     if channel == 'em' :

@@ -50,5 +50,5 @@ def PUreweight( grouping, sample, channel ) :
     #sHist.Draw('same')
     #c1.SaveAs('test.root')
 
-    print reweightDict
+    #print reweightDict
     return reweightDict
