@@ -41,8 +41,9 @@ prodMap = { 'em' : ('e', 'm'),
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', 'dyj')
 samples['TT']       = ('kBlue-8', 'top')
-for i in range( 0, numTT + 1 ) :
-    samples['TT_%i' % i ] = ('kBlue-8', 'top')
+###for i in range( 0, numTT + 1 ) :
+###    samples['TT_%i' % i ] = ('kBlue-8', 'top')
+samples['TTJets']       = ('kBlue-8', 'top')
 #samples['QCD15-20']        = ('kMagenta-10', 'qcd')
 #samples['QCD20-30']        = ('kMagenta-10', 'qcd')
 #samples['QCD30-50']        = ('kMagenta-10', 'qcd')
@@ -91,7 +92,7 @@ for channel in prodMap.keys() :
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     for var, info in newVarMap.iteritems() :
-        if not (var == 'nvtx' or var == 'm_vis') : continue
+        #if not (var == 'nvtx' or var == 'm_vis') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
