@@ -85,7 +85,7 @@ for channel in prodMap.keys() :
     htmlFile.write( '<body>\n' )
 
 
-    if channel == 'tt' : continue
+    #if channel == 'tt' : continue
     print channel
 
     newVarMap = analysisPlots.getHistoDict( channel )
@@ -106,6 +106,7 @@ for channel in prodMap.keys() :
 
 
         for sample in samples:
+            #print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
@@ -146,23 +147,23 @@ for channel in prodMap.keys() :
             #hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
             # Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ), QCD gets special scaling from bkg estimation
-            scalerOld = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEvents'] )
+            #scalerOld = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEvents'] )
             #print "-- Old scaler: %f" % scaler
             #print "-- lumi:%i    xsec:%f    events:%i" % (luminosity, sampDict[ sample]['Cross Section (pb)'], sampDict[ sample ]['nEvents'])
             scalerNew = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
             #print "-- New scaler: %f" % scaler
             #print "-- lumi:%i    xsec:%f    summedWNorm:%i" % (luminosity, sampDict[ sample]['Cross Section (pb)'], sampDict[ sample ]['summedWeightsNorm'])
             #print "-- events / summedWNorm = %f" % (sampDict[ sample ]['nEvents'] / sampDict[ sample ]['summedWeightsNorm'])
-            print "%10s %10f %10f" % (sample, scalerOld, scalerNew)
-            print "SOld: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['nEvents']) )
-            print "SNew: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['summedWeightsNorm']) )
-            print "Var:%10s   Integral:%15f" % (var, hist.Integral() )
+            #print "%10s %10f %10f" % (sample, scalerOld, scalerNew)
+            #print "SOld: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['nEvents']) )
+            #print "SNew: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['summedWeightsNorm']) )
+            #print "Var:%10s   Integral:%15f" % (var, hist.Integral() )
 
             if 'data' not in sample and hist.Integral() != 0:
                 hist.Scale( scalerNew )#* hist.Integral() )
             #else : # This made data align with was I thought would be our projects.  
             #    hist.Scale( 2.4/1.4 )
-            print "Var:%10s   Integral Post:%15f" % (var, hist.Integral() )
+            #print "Var:%10s   Integral Post:%15f" % (var, hist.Integral() )
             #print "\n"
 
             #print hist.Integral()
@@ -234,15 +235,18 @@ for channel in prodMap.keys() :
 
         # Set Y axis titles appropriately
         if hist.GetBinWidth(1) < .05 :
-            binWidth = round( hist.GetBinWidth(1), 2)
+            binWidth = str( round( hist.GetBinWidth(1), 2) )
         elif hist.GetBinWidth(1) < .5 :
-            binWidth = round( hist.GetBinWidth(1), 1)
+            binWidth = str( round( hist.GetBinWidth(1), 1) )
         else:
             binWidth = round( hist.GetBinWidth(1), 0)
         if plotDetails[ var ][ 4 ] == '' :
             stack.GetYaxis().SetTitle("Events")
         else :
-            stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
+            if hist.GetBinWidth(1) < .5 :
+                stack.GetYaxis().SetTitle("Events / %s%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
+            else :
+                stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
 
         stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % luminosity )
 

@@ -28,7 +28,7 @@ channels = ['em', 'tt']
 ''' Preset samples '''
 SamplesSync = ['Sync_HtoTT']
 SamplesData = ['data_em', 'data_tt']
-Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
+Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
 Samples25nsQCD = ['QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 #Samples25ns = ['Tbar_tW',]# 'T_tW']#, 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 
@@ -154,6 +154,7 @@ ROOT.gROOT.Reset()
 #samples = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
 #samples = ['WJets',]
 #samples = ['Tbar_tW',]
+#samples = ['TTJets', 'TTPow']
 
 ''' Cut configuration and location to save files: '''
 ### option 1 = Sync level cuts
@@ -176,11 +177,11 @@ mid1 = '1Test'
 mid2 = '2Test'
 mid3 = '3Test'
 
-doCuts = True
-doOrdering = True
+#doCuts = True
+#doOrdering = True
 doPlots = True
-#doCuts = False
-#doOrdering = False
+doCuts = False
+doOrdering = False
 #doPlots = False
 for sample in samples :
     #if sample == 'TT' : continue
