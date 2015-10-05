@@ -111,7 +111,6 @@ def plotHistos( outFile, chain, channel ) :
         chain.GetEntry( i )
         
         # Apply Generator weights, speficially for DY Jets
-        weight = 1
         if chain.GenWeight >= 0 : genWeight = 1
         if chain.GenWeight < 0 : genWeight = -1
 
@@ -175,7 +174,7 @@ cutName = 'PostSync'
 #mid2 = '2noPU'
 mid1 = '1Test' 
 mid2 = '2Test'
-mid3 = '3Test'
+mid3 = '3oct05'
 
 #doCuts = True
 #doOrdering = True

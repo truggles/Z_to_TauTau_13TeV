@@ -288,6 +288,13 @@ for channel in prodMap.keys() :
         lumi.SetTextSize(0.03)
         lumi.DrawTextNDC(.7,.96,"%i / pb (13 TeV)" % luminosity)
 
+        #mean1 = ROOT.TText(.4,.6,"Data Mean: %f" % data.GetStack().Last().GetMean() )
+        #mean1.SetTextSize(0.04)
+        #mean1.DrawTextNDC(.65,.6,"Data Mean: %s" % str( round( data.GetStack().Last().GetMean(), 1) ) )
+        #mean2 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+        #mean2.SetTextSize(0.04)
+        #mean2.DrawTextNDC(.65,.55,"MC Mean: %s" % str( round( stack.GetStack().Last().GetMean(), 1) ) )
+
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         c1.SaveAs('%sPlots/%s/%s.png' % (pre_, channel, var ) )
