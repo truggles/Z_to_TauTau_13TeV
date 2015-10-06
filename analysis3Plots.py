@@ -55,19 +55,19 @@ samples['TTJets']       = ('kBlue-8', 'top')
 samples['Tbar_tW']  = ('kYellow-2', 'top')
 samples['T_tW']     = ('kYellow+2', 'top')
 samples['WJets']    = ('kAzure+2', 'wjets')
-samples['WW']       = ('kAzure+10', 'ewk')
-samples['WW2l2n']       = ('kAzure+8', 'ewk')
-samples['WW4q']     = ('kAzure+6', 'ewk')
-samples['WW1l1n2q']     = ('kAzure+4', 'ewk')
-samples['WZJets']   = ('kAzure-4', 'ewk')
-samples['WZ1l1n2q'] = ('kAzure-6', 'ewk')
-samples['ZZ']   = ('kAzure-8', 'ewk')
-samples['ZZ4l'] = ('kAzure-12', 'ewk')
+samples['WW']       = ('kAzure+10', 'dib')
+samples['WW2l2n']       = ('kAzure+8', 'dib')
+samples['WW4q']     = ('kAzure+6', 'dib')
+samples['WW1l1n2q']     = ('kAzure+4', 'dib')
+samples['WZJets']   = ('kAzure-4', 'dib')
+samples['WZ1l1n2q'] = ('kAzure-6', 'dib')
+samples['ZZ']   = ('kAzure-8', 'dib')
+samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
 
 sampColors = {
-    'ewk' : 'kRed+2',
+    'dib' : 'kRed+2',
     'top' : 'kBlue-8',
     'qcd' : 'kMagenta-10',
     'dyj' : 'kOrange-4',
@@ -97,7 +97,7 @@ for channel in prodMap.keys() :
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
         dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
-        ewk = ROOT.THStack("All Backgrounds ewk", "ewk" )
+        dib = ROOT.THStack("All Backgrounds dib", "dib" )
         top = ROOT.THStack("All Backgrounds top", "top" )
         higgs = ROOT.THStack("All Backgrounds higgs", "higgs" )
         qcd = ROOT.THStack("All Backgrounds qcd", "qcd" )
@@ -176,9 +176,9 @@ for channel in prodMap.keys() :
             if samples[ sample ][1] == 'top' :
                 hist.SetTitle('Single & Double Top')
                 top.Add( hist )
-            if samples[ sample ][1] == 'ewk' :
-                hist.SetTitle('Electroweak')
-                ewk.Add( hist )
+            if samples[ sample ][1] == 'dib' :
+                hist.SetTitle('Di-Boson')
+                dib.Add( hist )
             if samples[ sample ][1] == 'wjets' :
                 hist.SetTitle('WJets')
                 wjets.Add( hist )
@@ -208,7 +208,7 @@ for channel in prodMap.keys() :
 
         #stack.Add( qcd.GetStack().Last() )
         stack.Add( top.GetStack().Last() )
-        stack.Add( ewk.GetStack().Last() )
+        stack.Add( dib.GetStack().Last() )
         stack.Add( wjets.GetStack().Last() )
         stack.Add( dyj.GetStack().Last() )
 
