@@ -119,6 +119,12 @@ for channel in prodMap.keys() :
                 tFile = ROOT.TFile('%s%s/%s.root' % (pre_, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (pre_, folderDetails, sample), 'READ')
+            elif sample == 'WJets' :
+                tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/%s_%s.root' % (pre_, sample, channel), 'READ')
+                tFileScale = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
+                dicScale = tFileScale.Get("%s_Histos" % channel )
+                histScale = dicScale.Get( "%s" % var )
+                wJetsInt = histScale.Integral()
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
 
@@ -159,8 +165,10 @@ for channel in prodMap.keys() :
             #print "SNew: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['summedWeightsNorm']) )
             #print "Var:%10s   Integral:%15f" % (var, hist.Integral() )
 
-            if 'data' not in sample and hist.Integral() != 0:
-                hist.Scale( scalerNew )#* hist.Integral() )
+            if sample == 'WJets' :
+                hist.Scale( scalerNew * wJetsInt / hist.Integral() )
+            elif 'data' not in sample and hist.Integral() != 0:
+                hist.Scale( scalerNew )
             #else : # This made data align with was I thought would be our projects.  
             #    hist.Scale( 2.4/1.4 )
             #print "Var:%10s   Integral Post:%15f" % (var, hist.Integral() )

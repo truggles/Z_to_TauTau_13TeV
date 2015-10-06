@@ -11,8 +11,10 @@ import argparse
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='25ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+p.add_argument('--bkgs', action='store', default='None', dest='bkgs', help="Run a specific background with specific cuts?")
 results = p.parse_args()
 grouping = results.sampleName
+bkgs = results.bkgs
 
 maxTTfiles = 100
 print "Running over %s samples" % grouping
@@ -32,11 +34,18 @@ Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJe
 Samples25nsQCD = ['QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 #Samples25ns = ['Tbar_tW',]# 'T_tW']#, 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 
+bkgMap = {
+            # cutMapper,    cutName       samples     save file
+    'WJets' : ['wJetsCuts', 'wJetsShape', ['WJets',], 'wJetsShape'],
+    'None'  : ['', '', '', '']
+    }
+
 if grouping == 'Sync' : samples = SamplesSync
 if grouping == '25ns' : samples = Samples25ns
 if grouping == 'data' :
     samples = SamplesData
     grouping = '25ns'
+if bkgs != 'None' : samples = bkgMap[ bkgs ][2]
 
 
 def makeFile( grouping, mid, save) :
@@ -146,6 +155,7 @@ ROOT.gROOT.Reset()
 
 #grouping = '25ns'
 
+
 #samples = ['data_em', 'data_tt', 'DYJets', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
 #samples = ['data_em', 'data_tt',]# 'T_tW', 'Tbar_tW']# 'TT']
 #samples = ['T_tW',]# 'Tbar_tW']# 'TT']
@@ -172,15 +182,20 @@ cutName = 'PostSync'
 #mid2 = '2PUTest'
 #mid1 = '1noPU'
 #mid2 = '2noPU'
-mid1 = '1Test' 
-mid2 = '2Test'
-mid3 = '3oct05'
+mid1 = '1oct06' 
+mid2 = '2oct06'
+mid3 = '3oct06'
 
-#doCuts = True
-#doOrdering = True
+if bkgs != 'None' :
+    cutMapper = bkgMap[ bkgs ][0]
+    cutName = bkgMap[ bkgs ][1]
+
+
+doCuts = True
+doOrdering = True
 doPlots = True
-doCuts = False
-doOrdering = False
+#doCuts = False
+#doOrdering = False
 #doPlots = False
 for sample in samples :
     #if sample == 'TT' : continue
@@ -201,7 +216,10 @@ for sample in samples :
 
             ''' 1. Make cuts and save '''
             if doCuts :
-                outFile1 = makeFile( grouping, mid1, save)
+                if bkgs != 'None' :
+                    outFile1 = ROOT.TFile('meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgMap[ bkgs ][3], save), 'RECREATE')
+                else :
+                    outFile1 = makeFile( grouping, mid1, save)
                 outputs = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
                 dir1 = outputs[0].mkdir( channel )
                 dir1.cd()
@@ -210,17 +228,21 @@ for sample in samples :
 
             ''' 2. Rename branches, Tau and Iso order legs '''
             if doOrdering :
-                renameBranches( grouping, mid1, mid2, save, channel)
+                renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][3])
                 print '%s%s/%s.root' % (grouping, mid2, save)
 
             ''' 3. Make the histos '''
             if doPlots :
-                outFile2 = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'READ')
+                if bkgs != 'None' :
+                    outFile2 = ROOT.TFile('meta/%sBackgrounds/%s/iso/%s.root' % (grouping, bkgMap[ bkgs ][3], save), 'READ')
+                    outFile3 = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s.root' % (grouping, bkgMap[ bkgs ][3], save), 'RECREATE')
+                else :
+                    outFile2 = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'READ')
+                    outFile3 = makeFile( grouping, mid3, save)
                 #ifile = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'r')
                 #tree = ifile.Get('Ntuple')
                 tree = outFile2.Get('Ntuple')
 
-                outFile3 = makeFile( grouping, mid3, save)
                 plotHistos( outFile3, tree, channel )
                 outFile2.Close()
                 outFile3.Close()

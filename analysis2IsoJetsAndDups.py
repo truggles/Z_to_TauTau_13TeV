@@ -152,7 +152,7 @@ def jetCleaning( channel, row, DR ) :
         setattr( row, 'jet%iPUMVA' % i, jetDict['jet%i' % i][4] )
 
 
-def renameBranches( grouping, mid1, mid2, sample, channel ) :
+def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     branchMappingEM = {
         'run' : 'run',
         'lumi' : 'lumi',
@@ -269,8 +269,13 @@ def renameBranches( grouping, mid1, mid2, sample, channel ) :
     if channel == 'em' : branchMapping = branchMappingEM
     if channel == 'tt' : branchMapping = branchMappingTT
 
-    oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
-    newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
+    if bkgFlag == '' :
+        oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
+        newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
+    else :
+        oldFileName = 'meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgFlag, sample)
+        newFileName = 'meta/%sBackgrounds/%s/iso/%s.root' % (grouping, bkgFlag, sample)
+
     dirName = channel
     treeName = 'Ntuple'
     

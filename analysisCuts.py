@@ -9,7 +9,9 @@ def makeGenCut( inTree, cutString ) :
 # EM Baseline
 emKin   = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4'
 eID     = 'ePassesConversionVeto == 1 && eMissingHits <= 1 && eMVANonTrigWP80 == 1' #eCBIDMedium == 1
+eIDLoose     = 'eMVANonTrigWP90 == 1'
 mID     = 'mPFIDMedium == 1'
+mIDLoose     = 'mPFIDLoose == 1'
 emDR    = 'e_m_DR > 0.3'
 emVtx   = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
 #e23m8   = '(singleESingleMuPass > 0 && eMatchesMu8Ele23Path == 1 && mMatchesMu8Ele23Path == 1 && eMu8Ele23Filter == 1 && mMu8Ele23Filter == 1 && ePt > 24)'
@@ -20,6 +22,7 @@ m23e12  = '(singleMuSingleEPass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu2
 emOS    = 'e_m_SS == 0'
 emSS    = 'e_m_SS == 1'
 emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.15'
+emIsoLoose   = 'eIsoDB03 < 0.3 && mIsoDB03 < 0.3'
 extraVeto   = 'eVetoZTT10 == 0 && muVetoZTT10 == 0'
 # EM Studies
 emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
@@ -35,6 +38,7 @@ tt40    = 'doubleTauPass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubl
 ttOS    = 't1_t2_SS == 0'
 ttSS    = 't1_t2_SS == 1'
 ttIso   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0'
+ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 2.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 2.0'
 ttDisc  = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
 ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 2.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 2.0'
@@ -47,6 +51,15 @@ def quickCutMapSingleCut( ch ) :
         cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS + ' && ' + emIso + ' && ' + extraVeto
     if ch == 'tt':
         cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
+    return cutMap
+
+# A version which applies all cuts at once RunII
+def wJetsCuts( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['wJetsShape'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && ' + emOS# + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS# + ' && ' + emIsoLoose
+    if ch == 'tt':
+        cutMap['wJetsShape'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttDisc# + ' && ' + tt40# + ' && ' + ttIsoLoose
     return cutMap
 
 # 2 stage RunII
