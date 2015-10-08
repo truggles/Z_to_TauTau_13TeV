@@ -20,4 +20,6 @@ The analysis relies on flat Ntuple output from UW's Final State Analysis: https:
 
 8. TT...
 
+9. Use the haddShapes.sh script to combine all histo files pre plotting, samples and folder will need to be modified
+
 9. Plot your histos with analysis3Plots.py
