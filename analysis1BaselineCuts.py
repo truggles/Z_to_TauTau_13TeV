@@ -30,13 +30,17 @@ channels = ['em', 'tt']
 ''' Preset samples '''
 SamplesSync = ['Sync_HtoTT']
 SamplesData = ['data_em', 'data_tt']
-Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
+#Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TTPow']
+Samples25ns = ['data_em', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ4l', 'TT']
 Samples25nsQCD = ['QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 #Samples25ns = ['Tbar_tW',]# 'T_tW']#, 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 
+#Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TTPow'] # Intended good one
+
 bkgMap = {
-            # cutMapper,    cutName       samples     save file
-    'WJets' : ['wJetsCuts', 'wJetsShape', ['WJets',], 'wJetsShape'],
+            # cutMapper       samples
+    'WJets' : ['wJetsShape', ['WJets',]],
+    'QCD'   : ['QCDShape', ['data_em', 'data_tt',]],
     'None'  : ['', '', '', '']
     }
 
@@ -45,7 +49,7 @@ if grouping == '25ns' : samples = Samples25ns
 if grouping == 'data' :
     samples = SamplesData
     grouping = '25ns'
-if bkgs != 'None' : samples = bkgMap[ bkgs ][2]
+if bkgs != 'None' : samples = bkgMap[ bkgs ][1]
 
 
 def makeFile( grouping, mid, save) :
@@ -163,7 +167,9 @@ ROOT.gROOT.Reset()
 #samples = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
 #samples = ['WJets',]
 #samples = ['Tbar_tW',]
-#samples = ['TTJets', 'TTPow']
+#samples = ['TTPow']
+#samples = ['WZ3l1nu',]
+#samples = ['DYJets',]
 
 ''' Cut configuration and location to save files: '''
 ### option 1 = Sync level cuts
@@ -176,26 +182,31 @@ ROOT.gROOT.Reset()
 ### option 2 = Signal level cuts
 cutMapper = 'quickCutMapSingleCut'
 cutName = 'PostSync'
+#cutMapper = 'QCDYieldOS'
+#cutName = 'QCDYield'
 #mid1 = '1Single'
 #mid2 = '2SingleIOAD'
 #mid1 = '1PUTest'
 #mid2 = '2PUTest'
 #mid1 = '1noPU'
 #mid2 = '2noPU'
-mid1 = '1oct06' 
-mid2 = '2oct06'
-mid3 = '3oct06'
+mid1 = '1oct07' 
+mid2 = '2oct07'
+mid3 = '3oct07'
+#mid1 = '1Test' 
+#mid2 = '2Test'
+#mid3 = '3Test'
 
 if bkgs != 'None' :
     cutMapper = bkgMap[ bkgs ][0]
-    cutName = bkgMap[ bkgs ][1]
+    cutName = bkgMap[ bkgs ][0]
 
 
-doCuts = True
-doOrdering = True
+#doCuts = True
+#doOrdering = True
 doPlots = True
-#doCuts = False
-#doOrdering = False
+doCuts = False
+doOrdering = False
 #doPlots = False
 for sample in samples :
     #if sample == 'TT' : continue
@@ -209,15 +220,17 @@ for sample in samples :
             if channel == 'em' and sample == 'data_tt' : continue
             if channel == 'tt' and sample == 'data_em' : continue
 
-            if sample == 'TT' : save = '%s_%i_%s' % (sample, count, channel)
-            elif 'data' in sample : save = sample
-            else : save = '%s_%s' % (sample, channel)
+            #if sample == 'TT' : save = '%s_%i_%s' % (sample, count, channel)
+            #elif 'data' in sample : save = sample
+            if 'data' in sample : save = 'data_%i_%s' % (count, channel)
+            #else : save = '%s_%s' % (sample, channel)
+            else : save = '%s_%i_%s' % (sample, count, channel)
             print "save",save
 
             ''' 1. Make cuts and save '''
             if doCuts :
                 if bkgs != 'None' :
-                    outFile1 = ROOT.TFile('meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgMap[ bkgs ][3], save), 'RECREATE')
+                    outFile1 = ROOT.TFile('meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'RECREATE')
                 else :
                     outFile1 = makeFile( grouping, mid1, save)
                 outputs = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
@@ -228,14 +241,14 @@ for sample in samples :
 
             ''' 2. Rename branches, Tau and Iso order legs '''
             if doOrdering :
-                renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][3])
+                renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0])
                 print '%s%s/%s.root' % (grouping, mid2, save)
 
             ''' 3. Make the histos '''
             if doPlots :
                 if bkgs != 'None' :
-                    outFile2 = ROOT.TFile('meta/%sBackgrounds/%s/iso/%s.root' % (grouping, bkgMap[ bkgs ][3], save), 'READ')
-                    outFile3 = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s.root' % (grouping, bkgMap[ bkgs ][3], save), 'RECREATE')
+                    outFile2 = ROOT.TFile('meta/%sBackgrounds/%s/iso/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'READ')
+                    outFile3 = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'RECREATE')
                 else :
                     outFile2 = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'READ')
                     outFile3 = makeFile( grouping, mid3, save)
@@ -248,8 +261,8 @@ for sample in samples :
                 outFile3.Close()
 
         count += 1
-        if sample != 'TT' : go = False
-        elif count * maxTTfiles >= fileLen : go = False
+        #if sample != 'TT' : go = False
+        if count * maxTTfiles >= fileLen : go = False
 
 print "Start Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )

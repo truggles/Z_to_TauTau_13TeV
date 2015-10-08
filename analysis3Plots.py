@@ -14,6 +14,7 @@ p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Inc
 p.add_argument('--numTT', action='store', default=21, dest='numTT', help="How many TT files are there?")
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
+p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 options = p.parse_args()
 pre_ = options.sampleName
 ratio = options.ratio
@@ -28,8 +29,8 @@ tdr.setTDRStyle()
 luminosity = 225.57 # (pb) 25ns - Sept 25th certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.0
-qcdYieldTT = 0
-qcdYieldEM = 0
+qcdYieldTT = 314.1 # From data - MC in OS region, see plots in ZtoTauTau/FinalPlots/[tt/em]_OS_mVis_QCD_Yield.png
+qcdYieldEM = 32.7 # same as TT
 
 with open('meta/NtupleInputs_%s/samples.json' % pre_) as sampFile :
     sampDict = json.load( sampFile )
@@ -41,9 +42,11 @@ prodMap = { 'em' : ('e', 'm'),
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', 'dyj')
 samples['TT']       = ('kBlue-8', 'top')
-###for i in range( 0, numTT + 1 ) :
-###    samples['TT_%i' % i ] = ('kBlue-8', 'top')
-samples['TTJets']       = ('kBlue-8', 'top')
+for i in range( 0, numTT + 1 ) :
+    samples['TT_%i' % i ] = ('kBlue-8', 'top')
+#samples['TTJets']       = ('kBlue-8', 'top')
+#samples['TTPow']       = ('kBlue-8', 'top')
+samples['QCD']        = ('kMagenta-10', 'qcd')
 #samples['QCD15-20']        = ('kMagenta-10', 'qcd')
 #samples['QCD20-30']        = ('kMagenta-10', 'qcd')
 #samples['QCD30-50']        = ('kMagenta-10', 'qcd')
@@ -56,13 +59,14 @@ samples['Tbar_tW']  = ('kYellow-2', 'top')
 samples['T_tW']     = ('kYellow+2', 'top')
 samples['WJets']    = ('kAzure+2', 'wjets')
 samples['WW']       = ('kAzure+10', 'dib')
-samples['WW2l2n']       = ('kAzure+8', 'dib')
-samples['WW4q']     = ('kAzure+6', 'dib')
-samples['WW1l1n2q']     = ('kAzure+4', 'dib')
+#samples['WW2l2n']       = ('kAzure+8', 'dib')
+#samples['WW4q']     = ('kAzure+6', 'dib')
+#samples['WW1l1n2q']     = ('kAzure+4', 'dib')
 samples['WZJets']   = ('kAzure-4', 'dib')
-samples['WZ1l1n2q'] = ('kAzure-6', 'dib')
+#samples['WZ1l1n2q'] = ('kAzure-6', 'dib')
+#samples['WZ3l1nu'] = ('kAzure-6', 'dib')
 samples['ZZ']   = ('kAzure-8', 'dib')
-samples['ZZ4l'] = ('kAzure-12', 'dib')
+#samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
 
@@ -77,7 +81,7 @@ sampColors = {
 
 
 for channel in prodMap.keys() :
-    #if channel == 'tt' : continue
+    if channel == 'tt' : continue
     # Make an index file for web viewing
     htmlFile = open('%sPlots/%s/index.html' % (pre_, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
@@ -92,7 +96,10 @@ for channel in prodMap.keys() :
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     for var, info in newVarMap.iteritems() :
-        #if not (var == 'nvtx' or var == 'm_vis') : continue
+
+        ttEvents = 0.0
+
+        if not (var == 'nbtag' or var == 'm_vis') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
@@ -106,7 +113,7 @@ for channel in prodMap.keys() :
 
 
         for sample in samples:
-            #print sample
+            print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
@@ -120,11 +127,13 @@ for channel in prodMap.keys() :
             elif sample == 'data_tt' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (pre_, folderDetails, sample), 'READ')
             elif sample == 'WJets' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/%s_%s.root' % (pre_, sample, channel), 'READ')
+                tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/WJets_%s.root' % (pre_, channel), 'READ')
                 tFileScale = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
                 dicScale = tFileScale.Get("%s_Histos" % channel )
                 histScale = dicScale.Get( "%s" % var )
                 wJetsInt = histScale.Integral()
+            elif sample == 'QCD' :
+                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape/shape/data_%s.root' % (pre_, channel), 'READ')
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
 
@@ -152,29 +161,24 @@ for channel in prodMap.keys() :
                 hist.SetMarkerStyle( 21 )
             #hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
-            # Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ), QCD gets special scaling from bkg estimation
-            #scalerOld = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['nEvents'] )
-            #print "-- Old scaler: %f" % scaler
-            #print "-- lumi:%i    xsec:%f    events:%i" % (luminosity, sampDict[ sample]['Cross Section (pb)'], sampDict[ sample ]['nEvents'])
-            scalerNew = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
-            #print "-- New scaler: %f" % scaler
-            #print "-- lumi:%i    xsec:%f    summedWNorm:%i" % (luminosity, sampDict[ sample]['Cross Section (pb)'], sampDict[ sample ]['summedWeightsNorm'])
-            #print "-- events / summedWNorm = %f" % (sampDict[ sample ]['nEvents'] / sampDict[ sample ]['summedWeightsNorm'])
-            #print "%10s %10f %10f" % (sample, scalerOld, scalerNew)
-            #print "SOld: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['nEvents']) )
-            #print "SNew: xsec: %f    nEvents: %i" % (sampDict[ sample ]['Cross Section (pb)'], ( sampDict[ sample ]['summedWeightsNorm']) )
-            #print "Var:%10s   Integral:%15f" % (var, hist.Integral() )
-
-            if sample == 'WJets' :
-                hist.Scale( scalerNew * wJetsInt / hist.Integral() )
+            ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
+            QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
+            if sample == 'QCD' and hist.Integral() != 0 :
+                if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
+                if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
+            elif sample == 'WJets' and hist.Integral() != 0 :
+                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
+                hist.Scale( scaler * wJetsInt / hist.Integral() )
+            #elif sample == 'TT' : ### REMOVE THIS ONCE TT FINISHES!!!!!!!!!!!!
+            #    hist.Scale( 1000 / hist.Integral() )
             elif 'data' not in sample and hist.Integral() != 0:
-                hist.Scale( scalerNew )
-            #else : # This made data align with was I thought would be our projects.  
-            #    hist.Scale( 2.4/1.4 )
-            #print "Var:%10s   Integral Post:%15f" % (var, hist.Integral() )
-            #print "\n"
+                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
+                hist.Scale( scaler )
 
-            #print hist.Integral()
+            print "Sample: %s      Int: %f" % (sample, hist.Integral() )
+            if sample == 'TT' :
+                ttEvents += hist.Integral()
+
             if samples[ sample ][1] == 'dyj' :
                 hist.SetTitle('Z #rightarrow #tau#tau')
                 dyj.Add( hist )
@@ -214,7 +218,8 @@ for channel in prodMap.keys() :
         #qcdInt = qcd.GetStack().Last().Integral()
         #print "New qcdInt: %f" % qcdInt
 
-        #stack.Add( qcd.GetStack().Last() )
+        if options.plotQCD == True :
+            stack.Add( qcd.GetStack().Last() )
         stack.Add( top.GetStack().Last() )
         stack.Add( dib.GetStack().Last() )
         stack.Add( wjets.GetStack().Last() )
@@ -296,12 +301,16 @@ for channel in prodMap.keys() :
         lumi.SetTextSize(0.03)
         lumi.DrawTextNDC(.7,.96,"%i / pb (13 TeV)" % luminosity)
 
-        #mean1 = ROOT.TText(.4,.6,"Data Mean: %f" % data.GetStack().Last().GetMean() )
-        #mean1.SetTextSize(0.04)
-        #mean1.DrawTextNDC(.65,.6,"Data Mean: %s" % str( round( data.GetStack().Last().GetMean(), 1) ) )
+        ''' Random print outs on plots '''
+        mean1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
+        mean1.SetTextSize(0.04)
+        mean1.DrawTextNDC(.65,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
         #mean2 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
         #mean2.SetTextSize(0.04)
-        #mean2.DrawTextNDC(.65,.55,"MC Mean: %s" % str( round( stack.GetStack().Last().GetMean(), 1) ) )
+        #mean2.DrawTextNDC(.65,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
+        #mean3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+        #mean3.SetTextSize(0.04)
+        #mean3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
@@ -311,5 +320,6 @@ for channel in prodMap.keys() :
 
         htmlFile.write( '<img src="%s.png">\n' % var )
         htmlFile.write( '<br>\n' )
+        print "TT Total = %f" % ttEvents
     htmlFile.write( '</body></html>' )
     htmlFile.close()
