@@ -18,15 +18,18 @@ def dZCut( sample, channel ) :
 
 	# Make a channel specific directory and cd() to it for future writting
 	dzCutTight = array('i', [ 0 ] )
-	dzCutB = tree.Branch('dzCutTight', dzCutTight, 'dzCutTight/I')
+	dzCutB = tree.Branch('dzCutLoose', dzCutTight, 'dzCutLoose/I')
 
 	treeFile.cd( '%s' % channel )
 #	for row in outTree :
 	for i in range( tree.GetEntries() ):
 		tree.GetEntry( i )
-		if abs( getattr(tree, '%s_%s_Mass' % (zProd[0], zProd[1]) ) - 90 ) < 10:
+		if abs( getattr(tree, '%s_%s_Mass' % (zProd[0], zProd[1]) ) - 90 ) < 30:
 			dzCutTight[0] = 1
 		else:
 			dzCutTight[0] = 0
 		dzCutB.Fill()
 	tree.Write('', ROOT.TObject.kOverwrite)
+
+
+dZCut( 'DYJets_em', 'em')

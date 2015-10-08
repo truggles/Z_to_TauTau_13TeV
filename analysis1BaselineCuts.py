@@ -30,12 +30,10 @@ channels = ['em', 'tt']
 ''' Preset samples '''
 SamplesSync = ['Sync_HtoTT']
 SamplesData = ['data_em', 'data_tt']
-#Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TTPow']
-Samples25ns = ['data_em', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ4l', 'TT']
+#Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TTPow', 'TT']
 Samples25nsQCD = ['QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
-#Samples25ns = ['Tbar_tW',]# 'T_tW']#, 'WJets', 'TT', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 
-#Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WZJets', 'ZZ', 'TTPow'] # Intended good one
+Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WZJets', 'ZZ'] # Intended good one
 
 bkgMap = {
             # cutMapper       samples
@@ -175,24 +173,15 @@ ROOT.gROOT.Reset()
 ### option 1 = Sync level cuts
 #cutMapper = 'quickCutMapSync'
 #cutName = 'BaseLine'
-#mid1 = '1BaseCut'
-#mid2 = '2IsoOrderAndDups'
-#mid3 = '3BaseCut'
 
 ### option 2 = Signal level cuts
-cutMapper = 'quickCutMapSingleCut'
-cutName = 'PostSync'
-#cutMapper = 'QCDYieldOS'
-#cutName = 'QCDYield'
-#mid1 = '1Single'
-#mid2 = '2SingleIOAD'
-#mid1 = '1PUTest'
-#mid2 = '2PUTest'
-#mid1 = '1noPU'
-#mid2 = '2noPU'
-mid1 = '1oct07' 
-mid2 = '2oct07'
-mid3 = '3oct07'
+#cutMapper = 'quickCutMapSingleCut'
+#cutName = 'PostSync'
+cutMapper = 'QCDYieldOS'
+cutName = 'QCDYield'
+mid1 = '1oct08QCD' 
+mid2 = '2oct08QCD'
+mid3 = '3oct08QCD'
 #mid1 = '1Test' 
 #mid2 = '2Test'
 #mid3 = '3Test'
@@ -202,11 +191,11 @@ if bkgs != 'None' :
     cutName = bkgMap[ bkgs ][0]
 
 
-#doCuts = True
-#doOrdering = True
+doCuts = True
+doOrdering = True
 doPlots = True
-doCuts = False
-doOrdering = False
+#doCuts = False
+#doOrdering = False
 #doPlots = False
 for sample in samples :
     #if sample == 'TT' : continue

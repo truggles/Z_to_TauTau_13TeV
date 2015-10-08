@@ -27,8 +27,8 @@ tdr.setTDRStyle()
 luminosity = 225.57 # (pb) 25ns - Sept 25th certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.0
-qcdYieldTT = 314.1 # From data - MC in OS region, see plots in ZtoTauTau/FinalPlots/[tt/em]_OS_mVis_QCD_Yield.png
-qcdYieldEM = 32.7 # same as TT
+qcdYieldTT = 2610.0 # From data - MC in OS region, see plots in ZtoTauTau/FinalPlots/[tt/em]_OS_mVis_QCD_Yield.png
+qcdYieldEM = 114.9 # same as TT
 
 with open('meta/NtupleInputs_%s/samples.json' % pre_) as sampFile :
     sampDict = json.load( sampFile )
@@ -43,14 +43,6 @@ samples['TT']       = ('kBlue-8', 'top')
 #samples['TTJets']       = ('kBlue-8', 'top')
 #samples['TTPow']       = ('kBlue-8', 'top')
 samples['QCD']        = ('kMagenta-10', 'qcd')
-#samples['QCD15-20']        = ('kMagenta-10', 'qcd')
-#samples['QCD20-30']        = ('kMagenta-10', 'qcd')
-#samples['QCD30-50']        = ('kMagenta-10', 'qcd')
-#samples['QCD50-80']        = ('kMagenta-10', 'qcd')
-#samples['QCD80-120']       = ('kMagenta-10', 'qcd')
-#samples['QCD120-170']      = ('kMagenta-10', 'qcd')
-#samples['QCD170-300']      = ('kMagenta-10', 'qcd')
-#samples['QCD300-Inf']      = ('kMagenta-10', 'qcd')
 samples['Tbar_tW']  = ('kYellow-2', 'top')
 samples['T_tW']     = ('kYellow+2', 'top')
 samples['WJets']    = ('kAzure+2', 'wjets')
@@ -193,16 +185,6 @@ for channel in prodMap.keys() :
             tFile.Close()
 
 
-
-        ## Scale QCD shape to Data Driven Yield
-        #qcdInt = qcd.GetStack().Last().Integral()
-        #print "qcdInt: %f" % qcdInt
-        #if channel == 'tt' : qcdScaleFactor = qcdTTScaleFactor
-        #if channel == 'em' : qcdScaleFactor = qcdEMScaleFactor
-        #qcd.GetStack().Last().Scale( qcdScaleFactor * qcdYield / qcdInt )
-        #qcdInt = qcd.GetStack().Last().Integral()
-        #print "New qcdInt: %f" % qcdInt
-
         if options.plotQCD == True :
             stack.Add( qcd.GetStack().Last() )
         stack.Add( top.GetStack().Last() )
@@ -290,12 +272,15 @@ for channel in prodMap.keys() :
         #mean1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
         #mean1.SetTextSize(0.04)
         #mean1.DrawTextNDC(.65,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
-        #mean2 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+        #mean2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
         #mean2.SetTextSize(0.04)
         #mean2.DrawTextNDC(.65,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
         #mean3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
         #mean3.SetTextSize(0.04)
         #mean3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+        #mean4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+        #mean4.SetTextSize(0.05)
+        #mean4.DrawTextNDC(.65,.45,"SS Selection" )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )

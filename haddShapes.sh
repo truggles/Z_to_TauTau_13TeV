@@ -1,4 +1,5 @@
 folder=25ns3oct08QCD
+folder=25nsGOODSamples/25ns3oct07/
 
 pushd ${folder}
 
