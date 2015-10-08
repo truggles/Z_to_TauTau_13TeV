@@ -11,14 +11,12 @@ import analysisPlots
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='25ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Include ratio plots? Defaul = False")
-p.add_argument('--numTT', action='store', default=21, dest='numTT', help="How many TT files are there?")
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 options = p.parse_args()
 pre_ = options.sampleName
 ratio = options.ratio
-numTT = options.numTT
 folderDetails = options.folderDetails
 
 print "Running over %s samples" % pre_
@@ -42,8 +40,6 @@ prodMap = { 'em' : ('e', 'm'),
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', 'dyj')
 samples['TT']       = ('kBlue-8', 'top')
-for i in range( 0, numTT + 1 ) :
-    samples['TT_%i' % i ] = ('kBlue-8', 'top')
 #samples['TTJets']       = ('kBlue-8', 'top')
 #samples['TTPow']       = ('kBlue-8', 'top')
 samples['QCD']        = ('kMagenta-10', 'qcd')
@@ -81,7 +77,9 @@ sampColors = {
 
 
 for channel in prodMap.keys() :
+
     if channel == 'tt' : continue
+
     # Make an index file for web viewing
     htmlFile = open('%sPlots/%s/index.html' % (pre_, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
@@ -89,7 +87,6 @@ for channel in prodMap.keys() :
     htmlFile.write( '<body>\n' )
 
 
-    #if channel == 'tt' : continue
     print channel
 
     newVarMap = analysisPlots.getHistoDict( channel )
@@ -99,7 +96,7 @@ for channel in prodMap.keys() :
 
         ttEvents = 0.0
 
-        if not (var == 'nbtag' or var == 'm_vis') : continue
+        #if not (var == 'nbtag' or var == 'm_vis') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
@@ -117,7 +114,6 @@ for channel in prodMap.keys() :
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
-            if 'TT' == sample : continue
 
             #print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (pre_, sample, channel)
@@ -137,8 +133,6 @@ for channel in prodMap.keys() :
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
 
-            # Make sure we can still read TT variables
-            if 'TT' in sample : sample = 'TT'
 
             dic = tFile.Get("%s_Histos" % channel )
             hist = dic.Get( "%s" % var )
@@ -169,15 +163,11 @@ for channel in prodMap.keys() :
             elif sample == 'WJets' and hist.Integral() != 0 :
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 hist.Scale( scaler * wJetsInt / hist.Integral() )
-            #elif sample == 'TT' : ### REMOVE THIS ONCE TT FINISHES!!!!!!!!!!!!
-            #    hist.Scale( 1000 / hist.Integral() )
             elif 'data' not in sample and hist.Integral() != 0:
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 hist.Scale( scaler )
 
             print "Sample: %s      Int: %f" % (sample, hist.Integral() )
-            if sample == 'TT' :
-                ttEvents += hist.Integral()
 
             if samples[ sample ][1] == 'dyj' :
                 hist.SetTitle('Z #rightarrow #tau#tau')
@@ -202,11 +192,6 @@ for channel in prodMap.keys() :
                 data.Add( hist )
             tFile.Close()
 
-#           if 'data' in sample : done = True
-#           if sample not in 'TT' :
-#               done = True
-#           elif sample == 'TT' and count > numTT :
-#               done = True
 
 
         ## Scale QCD shape to Data Driven Yield
@@ -302,9 +287,9 @@ for channel in prodMap.keys() :
         lumi.DrawTextNDC(.7,.96,"%i / pb (13 TeV)" % luminosity)
 
         ''' Random print outs on plots '''
-        mean1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
-        mean1.SetTextSize(0.04)
-        mean1.DrawTextNDC(.65,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
+        #mean1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
+        #mean1.SetTextSize(0.04)
+        #mean1.DrawTextNDC(.65,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
         #mean2 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
         #mean2.SetTextSize(0.04)
         #mean2.DrawTextNDC(.65,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
@@ -320,6 +305,5 @@ for channel in prodMap.keys() :
 
         htmlFile.write( '<img src="%s.png">\n' % var )
         htmlFile.write( '<br>\n' )
-        print "TT Total = %f" % ttEvents
     htmlFile.write( '</body></html>' )
     htmlFile.close()
