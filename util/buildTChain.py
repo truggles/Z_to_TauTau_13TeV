@@ -13,6 +13,7 @@ def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
         #currentFile = ROOT.TFile( file_.strip(), 'r' )
         #fileTree =  currentFile.Get( treePath )
         if count >= startFile and count <= maxFile :
+            #print "count %3i  %s" % (count, file_)
             tree.Add( file_.strip() )
         
         # Just in case we want to debug with a limited amount of files
@@ -21,8 +22,9 @@ def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
             print "Loaded %i Files" % count
             break
         if count > maxFile :
-            #print "reached maxFile = %i" % maxFile
+            print "reached maxFile = %i" % maxFile
             break
-    
+
+    print "Loaded Files up to = %i" % (count-1)
     files.close()
     return tree
