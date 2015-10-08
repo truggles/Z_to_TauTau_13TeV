@@ -27,6 +27,7 @@ extraVeto   = 'eVetoZTT10 == 0 && muVetoZTT10 == 0'
 # EM Studies
 emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
 emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
+emIsoInvert    = 'eIsoDB03 > 0.2 && mIsoDB03 > 0.2'
 
 # TT Baseline
 ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
@@ -41,7 +42,7 @@ ttIso   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsola
 ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 2.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 2.0'
 ttDisc  = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
-ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 2.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 2.0'
+ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0'
 ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
 
 # A version which applies all cuts at once RunII
@@ -53,13 +54,31 @@ def quickCutMapSingleCut( ch ) :
         cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
     return cutMap
 
-# A version which applies all cuts at once RunII
-def wJetsCuts( ch ) :
+# Cuts to select a high statistics WJets shape from MC
+def wJetsShape( ch ) :
     cutMap = OrderedDict()
     if ch == 'em':
         cutMap['wJetsShape'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && ' + emOS# + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS# + ' && ' + emIsoLoose
     if ch == 'tt':
         cutMap['wJetsShape'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttDisc# + ' && ' + tt40# + ' && ' + ttIsoLoose
+    return cutMap
+
+# Cuts to calculate QCD yield from Data - MC
+def QCDYieldOS( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['QCDYield'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emSS + ' && ' + emIso + ' && ' + extraVeto
+    if ch == 'tt':
+        cutMap['QCDYield'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttSS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
+    return cutMap
+
+# Cuts to calculate QCD yield from Data - MC
+def QCDShape( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['QCDShape'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS + ' && ' + emIsoInvert + ' && ' + extraVeto
+    if ch == 'tt':
+        cutMap['QCDShape'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIsoInvert + ' && ' + extraVeto + ' && ' + tt40
     return cutMap
 
 # 2 stage RunII
@@ -82,37 +101,4 @@ def quickCutMapSync( ch ) :
         cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && '  + ttVtx + ' && ' + tt40
     return cutMap
     
-
-# QCD DATA DRIVEN MODELING RunII - JULY 28 2015
-def quickCutMapDataSS( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['BaseLine'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ')'
-        cutMap['PostSync'] = emSS + ' && ' + emIso + ' && ' + extraVeto
-    if ch == 'tt':
-        cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx
-        cutMap['PostSync'] = ttSS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto
-    return cutMap
-	
-# QCD DATA DRIVEN MODELING RunII - JULY 30 2015
-def quickCutMapDataInversion( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['BaseLine'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ')'
-        cutMap['Invert_DATA'] = emIsoInvertM + ' && ' + extraVeto
-    if ch == 'tt':
-        cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx
-        cutMap['PostSync'] = ttIsoInvert + ' && ' + ttDisc + ' && ' + extraVeto
-    return cutMap
-
-# Apply QCD estimation cuts one at a time
-def getCutMapQuickQCD( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['qcd_pre'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS + ' && ' + extraVeto + ' && ' + emQCDPreIso
-        cutMap['qcd_post'] = emIso + ' && ' + eID + ' && ' + mID
-    if ch == 'tt':
-        cutMap['qcd_pre'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + ttQCDPreIso
-        cutMap['qcd_post'] = ttIso
-    return cutMap
 
