@@ -407,6 +407,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             prevEvt = currentEvt
             toFillMap[ prevRunLumiEvt ] = prevEvt
     
+    ''' Add a nvtx Pile UP weighting variable to the new tree
+    see util.pileUpVertexCorrections.addNvtxWeight for inspiration '''
+    from util.pileUpVertexCorrections import PUreweight
+    from array import array
+    baseName = sample.split('_')[0]
+    puDict = PUreweight( grouping, baseName, channel )
+    nvtxWeight = array('f', [ 0 ] )
+    nvtxWeightB = tnew.Branch('nvtxWeight', nvtxWeight, 'nvtxWeight/F')
 
 
     ''' Now actually fill that instance of an evt '''
@@ -439,11 +447,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             else : print "XXXX"
 
         currentRunLumiEvt = (run, lumi, evt)
+
         
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
             isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
+            nvtxWeight[0] = puDict[ row.nvtx ]
+            #nvtxWeightB.Fill()
             tnew.Fill()
             count2 += 1
 

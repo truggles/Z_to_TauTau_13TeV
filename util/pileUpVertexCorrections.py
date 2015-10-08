@@ -1,4 +1,5 @@
 import ROOT
+from array import array
 
 def makeDataPUTemplate( grouping, dataTree, channel ) :
     dHist = ROOT.TH1F('nvtx', 'dhist', 100, 0, 100)
@@ -43,3 +44,25 @@ def PUreweight( grouping, sample, channel ) :
 
     #print reweightDict
     return reweightDict
+
+
+def addNvtxWeight( grouping, sample, fileName, channel ) :
+    
+    tfile = ROOT.TFile('%s.root' % fileName, 'update')
+    tree = tfile.Get('%s/Ntuple' % channel )
+
+    puDict = PUreweight( grouping, sample, channel )
+
+    nvtxWeight = array('f', [ 0 ] )
+    nvtxWeightB = tree.Branch('nvtxWeight', nvtxWeight, 'nvtxWeight/F')
+
+    # Need to cd to the tree's directory
+    tfile.cd( '%s' % channel )
+    
+    for i in range( tree.GetEntries() ):
+        tree.GetEntry( i )
+        nvtxWeight[0] = puDict[ tree.nvtx ]
+        nvtxWeightB.Fill()
+        #print "%10i %10i %10i %4f" % (tree.run, tree.lumi, tree.evt, puDict[ tree.nvtx ])
+    tree.Write('', ROOT.TObject.kOverwrite)
+    tfile.Close()
