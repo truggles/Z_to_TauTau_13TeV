@@ -31,10 +31,10 @@ channels = ['em', 'tt']
 ''' Preset samples '''
 SamplesSync = ['Sync_HtoTT']
 SamplesData = ['data_em', 'data_tt']
-#Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TTPow', 'TT']
+#Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TTPow', 'TT']
 Samples25nsQCD = ['QCD15-20', 'QCD20-30', 'QCD30-50', 'QCD50-80', 'QCD80-120', 'QCD120-170', 'QCD170-300', 'QCD300-Inf']
 
-Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'TT', 'WW', 'WZJets', 'ZZ'] # Intended good one
+Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TT', 'WW', 'WZJets', 'ZZ'] # Intended good one
 
 bkgMap = {
             # cutMapper       samples
@@ -204,12 +204,12 @@ ROOT.gROOT.Reset()
 
 
 #samples = ['data_em', 'data_tt', 'DYJets', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
-#samples = ['data_em', 'data_tt',]# 'T_tW', 'Tbar_tW']# 'TT']
-#samples = ['T_tW',]# 'Tbar_tW']# 'TT']
+#samples = ['data_em', 'data_tt',]# 'T-tW', 'Tbar-tW']# 'TT']
+#samples = ['T-tW',]# 'Tbar-tW']# 'TT']
 #samples = ['TT',]
-#samples = ['data_em', 'data_tt', 'DYJets', 'Tbar_tW', 'T_tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
+#samples = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
 #samples = ['WJets',]
-#samples = ['Tbar_tW',]
+#samples = ['Tbar-tW',]
 #samples = ['TTPow']
 #samples = ['WZ3l1nu',]
 #samples = ['DYJets',]

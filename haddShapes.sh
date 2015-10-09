@@ -3,7 +3,7 @@ folder=25nsGOODSamples/25ns3oct07/
 
 pushd ${folder}
 
-for shape in DYJets TT Tbar_tW T_tW WJets WW WZJets ZZ data
+for shape in DYJets TT Tbar-tW T-tW WJets WW WZJets ZZ data
 do
     for channel in em tt
     do
