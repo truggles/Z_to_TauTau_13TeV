@@ -17,7 +17,7 @@ results = p.parse_args()
 grouping = results.sampleName
 bkgs = results.bkgs
 
-maxTTfiles = 100
+numFilesPerCycle = 100
 print "Running over %s samples" % grouping
 
 ''' Configuration '''
@@ -65,13 +65,14 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
     ''' Get initial chain '''
-    print "###   %s  ###" % sample
-    print "Channel:  %s" % channel
+    #print "###   %s  ###" % sample
+    #print "Channel:  %s" % channel
     sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
     # This should allow us to run over sections of files
     chain = makeTChain( sampleList, path, maxFiles, fileMin, fileMax )
     numEntries = chain.GetEntries()
-    print "%25s : %10i" % ('Initial', numEntries)
+    #print "%25s : %10i" % ('Initial', numEntries)
+    initialQty = "%25s : %10i" % ('Initial', numEntries)
     
     
     ''' Get channel specific general cuts '''
@@ -83,11 +84,12 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
     cutString = cutMap[ cutName ]
     chainNew = analysisCuts.makeGenCut( chain, cutString )
     numEntries = chainNew.GetEntries()
-    print "%25s : %10i" % (cutName, numEntries)
+    #print "%25s : %10i" % (cutName, numEntries)
+    postCutQty = "%25s : %10i" % (cutName, numEntries)
     
     #treeOutDir.cd()
     #chainNew.Write()
-    return (outFile, chainNew)
+    return (outFile, chainNew, initialQty, postCutQty)
 
 
 
@@ -150,35 +152,36 @@ def plotHistos( outFile, chain, channel ) :
 
     return outFile
 
-def runCode(grouping, sample, channel, count, output) :
-    if channel == 'em' and sample == 'data_tt' : return
-    if channel == 'tt' and sample == 'data_em' : return
+def runCode(grouping, sample, channel, count, num, output) :
 
-    #if sample == 'TT' : save = '%s_%i_%s' % (sample, count, channel)
-    #elif 'data' in sample : save = sample
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
-    #else : save = '%s_%s' % (sample, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
-    output.put("save %s" % save )
+    print "%5i %20s %10s %3i: ====>>> START <<<====" % (num, sample, channel, count)
 
     ''' 1. Make cuts and save '''
     if doCuts :
+        print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
         if bkgs != 'None' :
             outFile1 = ROOT.TFile('meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'RECREATE')
         else :
             outFile1 = makeFile( grouping, mid1, save)
-        outputs = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * maxTTfiles, (count + 1) * maxTTfiles-1 )
-        dir1 = outputs[0].mkdir( channel )
+        cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * numFilesPerCycle, (count + 1) * numFilesPerCycle-1 )
+        dir1 = cutOut[0].mkdir( channel )
         dir1.cd()
-        outputs[1].Write()
+        cutOut[1].Write()
         outFile1.Close()
+        initialQty = cutOut[2]
+        postCutQty = cutOut[3]
+        print "%5i %20s %10s %3i: Finished Cuts" % (num, sample, channel, count)
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     if doOrdering :
-        renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0])
+        print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
+        isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0])
         #print '%s%s/%s.root' % (grouping, mid2, save)
-        output.put( '%s%s/%s.root' % (grouping, mid2, save) )
+        #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
+        print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
     ''' 3. Make the histos '''
     if doPlots :
@@ -195,6 +198,8 @@ def runCode(grouping, sample, channel, count, output) :
         plotHistos( outFile3, tree, channel )
         outFile2.Close()
         outFile3.Close()
+    output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
+    print "%5i %20s %10s %3i: ====>>> DONE <<<====" % (num, sample, channel, count)
 
 begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print begin
@@ -204,7 +209,7 @@ ROOT.gROOT.Reset()
 
 
 #samples = ['data_em', 'data_tt', 'DYJets', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
-#samples = ['data_em', 'data_tt',]# 'T-tW', 'Tbar-tW']# 'TT']
+samples = ['data_em', 'data_tt', 'T-tW', 'Tbar-tW']# 'TT']
 #samples = ['T-tW',]# 'Tbar-tW']# 'TT']
 #samples = ['TT',]
 #samples = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
@@ -244,24 +249,27 @@ doPlots = False
 ''' Start multiprocessing tests '''
 output = multiprocessing.Queue()
 
-w = 0
+num = 0
 processes = []
 for sample in samples :
-    #if sample == 'TT' : continue
+
     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
     go = True
     count = 0
     while go :
-        print " ====>  Loop Count %i  <==== " % count
         for channel in channels :
 
-            processes.append(multiprocessing.Process(target=runCode, args=(grouping, sample, channel, count, output)) )
-            w +=  1
-            #if j > 10 : break
+            if channel == 'em' and sample == 'data_tt' : continue
+            if channel == 'tt' and sample == 'data_em' : continue
+            print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
+
+            processes.append(multiprocessing.Process(target=runCode, args=(grouping, sample, channel, count, num, output)) )
+            num +=  1
 
         count += 1
-        #if sample != 'TT' : go = False
-        if count * maxTTfiles >= fileLen : go = False
+        
+        # Make sure we look over large samples to get all files
+        if count * numFilesPerCycle >= fileLen : go = False
 
 for p in processes :
     p.start()
@@ -271,7 +279,32 @@ for p in processes :
 
 mpResults = [output.get() for p in processes]
 
-print(mpResults)
+#print(mpResults)
+print "#################################################################"
+print "###               Finished, summary below                     ###"
+print "#################################################################"
+
+print "\nStart Time: %s" % str( begin )
+print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+print "\n"
+
+print " --- CutTable used: %s" % cutMapper
+print " --- Cut used: %s" % cutName
+print " --- Grouping: %s" % grouping
+print " --- Cut folder: %s%s" % (grouping, mid1)
+print " --- Iso folder: %s%s" % (grouping, mid2)
+print " --- Hist folder: %s%s" % (grouping, mid3)
+print " --- do Cuts? %s" % doCuts
+print " --- do Iso/Ordering? %s" % doOrdering
+print " --- do Histos? %s" % doPlots
+print "\n"
+
+mpResults.sort()
+for item in mpResults :
+    print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+    print item[4]
+    print item[5]
+    print item[6]
 
 print "Start Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )

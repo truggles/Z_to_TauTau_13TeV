@@ -27,7 +27,7 @@
     "nNtupleFiles": 44, 
     "nlumis": 5180
   }, 
-  "T_tW": {
+  "T-tW": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
     "nEvents": 995600, 
@@ -125,19 +125,19 @@
     "nNtupleFiles": 171, 
     "nlumis": 34410
   }, 
-  "Tbar_tW": {
+  "WJets": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
-    "nEvents": 1000000, 
-    "DAS Path": "/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
-    "nfiles": 32, 
-    "nblocks": 9, 
-    "Cross Section (pb)": 35.6, 
-    "summedWeightsNorm": 1000000.0, 
-    "summedWeights": 1000000.0, 
-    "nevents": 1000000, 
-    "nNtupleFiles": 32, 
-    "nlumis": 10001
+    "nEvents": 24151270, 
+    "DAS Path": "/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 569, 
+    "nblocks": 59, 
+    "Cross Section (pb)": 61526.7, 
+    "summedWeightsNorm": 16518217.98048837, 
+    "summedWeights": 3731340780866.0, 
+    "nevents": 24151270, 
+    "nNtupleFiles": 569, 
+    "nlumis": 249064
   }, 
   "WW4q": {
     "STATUS": "Good to Go!", 
@@ -195,6 +195,20 @@
     "nNtupleFiles": 493, 
     "nlumis": 199267
   }, 
+  "Tbar-tW": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 1000000, 
+    "DAS Path": "/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
+    "nfiles": 32, 
+    "nblocks": 9, 
+    "Cross Section (pb)": 35.6, 
+    "summedWeightsNorm": 1000000.0, 
+    "summedWeights": 1000000.0, 
+    "nevents": 1000000, 
+    "nNtupleFiles": 32, 
+    "nlumis": 10001
+  }, 
   "DYJets": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
@@ -236,19 +250,5 @@
     "nevents": 24711046, 
     "nNtupleFiles": 587, 
     "nlumis": 120325
-  }, 
-  "WJets": {
-    "STATUS": "Good to Go!", 
-    "DAS status": "ok", 
-    "nEvents": 24151270, 
-    "DAS Path": "/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM", 
-    "nfiles": 569, 
-    "nblocks": 59, 
-    "Cross Section (pb)": 61526.7, 
-    "summedWeightsNorm": 16518217.98048837, 
-    "summedWeights": 3731340780866.0, 
-    "nevents": 24151270, 
-    "nNtupleFiles": 569, 
-    "nlumis": 249064
   }
 }

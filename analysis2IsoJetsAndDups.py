@@ -460,8 +460,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
 
 
     #print "Count: %i count2: %i" % (count, count2)
-    print "%25s : %10i" % ('Iso Selected', count2)
+    #print "%25s : %10i" % ('Iso Selected', count2)
+    isoQty = "%25s : %10i" % ('Iso Selected', count2)
     # write to disk
     tnew.write()
     fnew.close()
+    return isoQty
 
