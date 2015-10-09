@@ -152,7 +152,8 @@ def plotHistos( outFile, chain, channel ) :
 
     return outFile
 
-def runCode(grouping, sample, channel, count, num, output) :
+#def runCode(grouping, sample, channel, count, num, output) :
+def runCode(grouping, sample, channel, count, num) :
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
@@ -198,8 +199,9 @@ def runCode(grouping, sample, channel, count, num, output) :
         plotHistos( outFile3, tree, channel )
         outFile2.Close()
         outFile3.Close()
-    output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
+    #output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
     print "%5i %20s %10s %3i: ====>>> DONE <<<====" % (num, sample, channel, count)
+    return (num, sample, channel, count, initialQty, postCutQty, isoQty )
 
 begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print begin
@@ -247,7 +249,9 @@ doOrdering = True
 doPlots = False
 
 ''' Start multiprocessing tests '''
-output = multiprocessing.Queue()
+#output = multiprocessing.Queue()
+pool = multiprocessing.Pool(processes=4)
+multiprocessingOutputs = []
 
 num = 0
 processes = []
@@ -263,7 +267,8 @@ for sample in samples :
             if channel == 'tt' and sample == 'data_em' : continue
             print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
 
-            processes.append(multiprocessing.Process(target=runCode, args=(grouping, sample, channel, count, num, output)) )
+            #processes.append(multiprocessing.Process(target=runCode, args=(grouping, sample, channel, count, num, output)) )
+            multiprocessingOutputs.append( pool.apply_async(runCode, args=(grouping, sample, channel, count, num)) )
             num +=  1
 
         count += 1
@@ -271,13 +276,13 @@ for sample in samples :
         # Make sure we look over large samples to get all files
         if count * numFilesPerCycle >= fileLen : go = False
 
-for p in processes :
-    p.start()
+#for p in processes :
+#    p.start()
+#
+#for p in processes :
+#    p.join()
 
-for p in processes :
-    p.join()
-
-mpResults = [output.get() for p in processes]
+mpResults = [p.get() for p in multiprocessingOutputs]
 
 #print(mpResults)
 print "#################################################################"
