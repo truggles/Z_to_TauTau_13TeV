@@ -1,10 +1,32 @@
 import ROOT
 from collections import OrderedDict
+from ROOT import gPad
 
 # Make a histo, but fill it later so we can keep track of events for ALL histos at once
 def makeHisto( cutName, varBins, varMin, varMax ) :
     hist = ROOT.TH1F( cutName, cutName, varBins, varMin, varMax )
     return hist
+
+
+# Plot histos using TTree::Draw which works very well with Proof
+def plotHistosProof( outFile, chain, channel ) :
+    ''' Make a channel specific selection of desired histos and fill them '''
+    newVarMap = getHistoDict( channel )
+
+    histosDir = outFile.mkdir( "%s_Histos" % channel )
+    histosDir.cd()
+    ''' Combine Gen and Chan specific into one fill section '''
+    histos = {}
+    for var, cv in newVarMap.iteritems() :
+    	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
+        # the >> sends the output to a predefined histo
+        chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight' )
+        histos[ var ] = gPad.GetPrimitive( "%s" % var )
+        histos[ var ].Write()
+
+    #outFile.Write()
+    return outFile
+
 
 # Provides a list of histos to create for both channels
 def getHistoDict( channel ) :

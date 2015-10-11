@@ -9,6 +9,8 @@ import analysisCuts
 import analysisPlots
 import argparse
 import multiprocessing
+import math
+from ROOT import gPad, gROOT
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='25ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -152,7 +154,6 @@ def plotHistos( outFile, chain, channel ) :
 
     return outFile
 
-#def runCode(grouping, sample, channel, count, num, output) :
 def runCode(grouping, sample, channel, count, num) :
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
@@ -184,21 +185,6 @@ def runCode(grouping, sample, channel, count, num) :
         #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
         print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
-    ''' 3. Make the histos '''
-    if doPlots :
-        if bkgs != 'None' :
-            outFile2 = ROOT.TFile('meta/%sBackgrounds/%s/iso/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'READ')
-            outFile3 = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'RECREATE')
-        else :
-            outFile2 = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'READ')
-            outFile3 = makeFile( grouping, mid3, save)
-        #ifile = ROOT.TFile('%s%s/%s.root' % (grouping, mid2, save), 'r')
-        #tree = ifile.Get('Ntuple')
-        tree = outFile2.Get('Ntuple')
-
-        plotHistos( outFile3, tree, channel )
-        outFile2.Close()
-        outFile3.Close()
     #output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
     print "%5i %20s %10s %3i: ====>>> DONE <<<====" % (num, sample, channel, count)
     return (num, sample, channel, count, initialQty, postCutQty, isoQty )
@@ -211,7 +197,7 @@ ROOT.gROOT.Reset()
 
 
 #samples = ['data_em', 'data_tt', 'DYJets', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
-samples = ['data_em', 'data_tt', 'T-tW', 'Tbar-tW']# 'TT']
+#samples = ['data_em', 'data_tt', 'T-tW', 'Tbar-tW']# 'TT']
 #samples = ['T-tW',]# 'Tbar-tW']# 'TT']
 #samples = ['TT',]
 #samples = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'ZZ', 'ZZ4l']
@@ -231,9 +217,9 @@ cutMapper = 'quickCutMapSingleCut'
 cutName = 'PostSync'
 #cutMapper = 'QCDYieldOS'
 #cutName = 'QCDYield'
-mid1 = '1oct08mp' 
-mid2 = '2oct08mp'
-mid3= 'xxx'
+mid1 = '1oct09' 
+mid2 = '2oct09'
+mid3= '3oct09'
 #mid3 = '3oct08QCD'
 
 if bkgs != 'None' :
@@ -247,69 +233,99 @@ doOrdering = True
 #doCuts = False
 #doOrdering = False
 doPlots = False
+numCores = 20
 
-''' Start multiprocessing tests '''
-#output = multiprocessing.Queue()
-pool = multiprocessing.Pool(processes=4)
-multiprocessingOutputs = []
+def doMP() :
+    ''' Start multiprocessing tests '''
+    #output = multiprocessing.Queue()
+    pool = multiprocessing.Pool(processes= numCores )
+    multiprocessingOutputs = []
+    
+    num = 0
+    for sample in samples :
+    
+        fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+        go = True
+        count = 0
+        while go :
+            for channel in channels :
+    
+                if channel == 'em' and sample == 'data_tt' : continue
+                if channel == 'tt' and sample == 'data_em' : continue
+                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
+    
+                multiprocessingOutputs.append( pool.apply_async(runCode, args=(grouping, sample, channel, count, num)) )
+                num +=  1
+    
+            count += 1
+            
+            # Make sure we look over large samples to get all files
+            if count * numFilesPerCycle >= fileLen : go = False
+    
+    
+    mpResults = [p.get() for p in multiprocessingOutputs]
+    
+    #print(mpResults)
+    print "#################################################################"
+    print "###               Finished, summary below                     ###"
+    print "#################################################################"
+    
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    print "\n"
+    
+    print " --- CutTable used: %s" % cutMapper
+    print " --- Cut used: %s" % cutName
+    print " --- Grouping: %s" % grouping
+    print " --- Cut folder: %s%s" % (grouping, mid1)
+    print " --- Iso folder: %s%s" % (grouping, mid2)
+    print " --- Hist folder: %s%s" % (grouping, mid3)
+    print " --- do Cuts? %s" % doCuts
+    print " --- do Iso/Ordering? %s" % doOrdering
+    print " --- do Histos? %s" % doPlots
+    print "\n"
+    
+    mpResults.sort()
+    for item in mpResults :
+        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+        print item[4]
+        print item[5]
+        print item[6]
+    
+    print "Start Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
-num = 0
-processes = []
-for sample in samples :
-
-    fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
-    go = True
-    count = 0
-    while go :
+def drawHistos() : 
+    ''' Start PROOF multiprocessing Draw '''
+    ROOT.TProof.Open('workers=%s' % str(numCores/2) )
+    gROOT.SetBatch(True)
+    
+    for sample in samples :
+    
+        fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+        print "File len: %i" % fileLen
+        numIters = int( math.ceil( fileLen / numFilesPerCycle ) )
+        print "Num Iters: %i" % numIters
+    
         for channel in channels :
-
+    
             if channel == 'em' and sample == 'data_tt' : continue
             if channel == 'tt' and sample == 'data_em' : continue
-            print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
-
-            #processes.append(multiprocessing.Process(target=runCode, args=(grouping, sample, channel, count, num, output)) )
-            multiprocessingOutputs.append( pool.apply_async(runCode, args=(grouping, sample, channel, count, num)) )
-            num +=  1
-
-        count += 1
+            print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
+    
+            chain = ROOT.TChain('Ntuple')
+            if bkgs != 'None' :
+                outFile = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s_%s.root' % (grouping, bkgMap[ bkgs ][0], sample.split('_')[0], channel), 'RECREATE')
+                for i in range( numIters+1 ) :
+                    print "%s_%i" % ( sample, i)
+                    chain.Add('meta/%sBackgrounds/%s/iso/%s_%i_%s.root' % (grouping, bkgMap[ bkgs ][0], sample.split('_')[0], i, channel) )
+            else :
+                outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, mid3, sample.split('_')[0], channel), 'RECREATE')
+                for i in range( numIters+1 ) :
+                    print "%s_%i" % ( sample, i)
+                    chain.Add('%s%s/%s_%i_%s.root' % (grouping, mid2, sample.split('_')[0], i, channel) )
+            analysisPlots.plotHistosProof( outFile, chain, channel )
+            outFile.Close()
         
-        # Make sure we look over large samples to get all files
-        if count * numFilesPerCycle >= fileLen : go = False
-
-#for p in processes :
-#    p.start()
-#
-#for p in processes :
-#    p.join()
-
-mpResults = [p.get() for p in multiprocessingOutputs]
-
-#print(mpResults)
-print "#################################################################"
-print "###               Finished, summary below                     ###"
-print "#################################################################"
-
-print "\nStart Time: %s" % str( begin )
-print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-print "\n"
-
-print " --- CutTable used: %s" % cutMapper
-print " --- Cut used: %s" % cutName
-print " --- Grouping: %s" % grouping
-print " --- Cut folder: %s%s" % (grouping, mid1)
-print " --- Iso folder: %s%s" % (grouping, mid2)
-print " --- Hist folder: %s%s" % (grouping, mid3)
-print " --- do Cuts? %s" % doCuts
-print " --- do Iso/Ordering? %s" % doOrdering
-print " --- do Histos? %s" % doPlots
-print "\n"
-
-mpResults.sort()
-for item in mpResults :
-    print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-    print item[4]
-    print item[5]
-    print item[6]
-
-print "Start Time: %s" % str( begin )
-print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+drawHistos()
+#doMP()
