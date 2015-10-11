@@ -217,9 +217,9 @@ cutMapper = 'quickCutMapSingleCut'
 cutName = 'PostSync'
 #cutMapper = 'QCDYieldOS'
 #cutName = 'QCDYield'
-mid1 = '1oct09' 
-mid2 = '2oct09'
-mid3= '3oct09'
+mid1 = '1oct12' 
+mid2 = '2oct12'
+mid3= '3oct12'
 #mid3 = '3oct08QCD'
 
 if bkgs != 'None' :
@@ -327,5 +327,5 @@ def drawHistos() :
             analysisPlots.plotHistosProof( outFile, chain, channel )
             outFile.Close()
         
-drawHistos()
-#doMP()
+#drawHistos()
+doMP()
