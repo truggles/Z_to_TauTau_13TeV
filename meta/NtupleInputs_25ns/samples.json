@@ -1,16 +1,16 @@
 {
   "data_tt": {
-    "STATUS": "Error", 
+    "STATUS": "Files Match", 
     "DAS status": "ok", 
-    "nEvents": 1704281, 
+    "nEvents": 4257010, 
     "DAS Path": "", 
     "nfiles": 225, 
     "nblocks": 66, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -194805, 
+    "summedWeightsNorm": -224775, 
     "summedWeights": 0.0, 
     "nevents": 7393569, 
-    "nNtupleFiles": 195, 
+    "nNtupleFiles": 225, 
     "nlumis": 34114
   }, 
   "WW": {
@@ -72,15 +72,15 @@
   "data_em": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 1122826, 
+    "nEvents": 3254550, 
     "DAS Path": "", 
     "nfiles": 760, 
     "nblocks": 66, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -169830, 
+    "summedWeightsNorm": -192807, 
     "summedWeights": 0.0, 
     "nevents": 54337505, 
-    "nNtupleFiles": 170, 
+    "nNtupleFiles": 193, 
     "nlumis": 42066
   }, 
   "TTJets": {
