@@ -23,6 +23,8 @@ def plotHistosProof( outFile, chain, channel, isData ) :
         if isData : # Data has no GenWeight and by def has nvtxWeight = 1
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var) )
         else :
+            #print "Not DATA! and Drawing!"
+            #chain.Draw( '%s>>%s,nvtxWeight * GenWeight' % (newVarMap[ var ][0], var) )
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight' )
         histos[ var ] = gPad.GetPrimitive( "%s" % var )
         histos[ var ].Write()

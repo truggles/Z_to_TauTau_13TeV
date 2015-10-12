@@ -34,34 +34,32 @@ Samples25nsFinal = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 
 #from util.pileUpVertexCorrections import buildAllPUTemplates
 #buildAllPUTemplates( Samples25ns, numCores )
 
-import analysis1BaselineCuts
 
 ROOT.gROOT.Reset()
 
 params = {
-    'bkgs' : 'WJets',
+    'bkgs' : 'None',
     'numCores' : 18,
     'numFilesPerCycle' : 100,
-    'cutMapper' : 'quickCutMapSingleCut',
-    'cutName' : 'PostSync',
+    #'cutMapper' : 'quickCutMapSingleCut',
+    #'cutName' : 'PostSync',
+    'cutMapper' : 'QCDYieldOS',
+    'cutName' : 'QCDYield',
     'mid1' : '1oct12',
-    'mid2' : '2oct12',
-    'mid3' : '3oct12',
+    'mid2' : 'Oct12MCandData/25ns2oct12',
+    'mid3' : 'Oct12MCandData/25ns3oct12',
 }
 
 ### option 2 = Signal level cuts
-#cutMapper = 'QCDYieldOS'
-#cutName = 'QCDYield'
+#samples = ['data_em', 'data_tt', 'Tbar-tW', 'T-tW',]
 samples = Samples25nsFinal
 
+import analysis1BaselineCuts
 bkgMap = analysis1BaselineCuts.getBkgMap()
 if params[ 'bkgs' ] != 'None' :
     params[ 'cutMapper' ] = bkgMap[ params[ 'bkgs' ] ][0]
     params[ 'cutName' ] = bkgMap[ params[ 'bkgs' ] ][0]
     samples = bkgMap[ params [ 'bkgs' ] ][1]
 
-#samples = ['data_em', 'data_tt', 'Tbar-tW', 'T-tW',]
-#analysis1BaselineCuts.drawHistos( grouping, Samples25nsFinal, bkgs, numFilesPerCycle, mid2, mid3 )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, mid1, mid2, bkgs, cutMapper, cutName, numFilesPerCycle, numCores)
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )

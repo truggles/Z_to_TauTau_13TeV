@@ -261,6 +261,7 @@ def drawHistos(grouping, samples, **fargs ) :
                 for i in range( numIters+1 ) :
                     print "%s_%i" % ( sample, i)
                     chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
+            print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
             if 'data' in sample : isData = True
             else : isData = False
             analysisPlots.plotHistosProof( outFile, chain, channel, isData )

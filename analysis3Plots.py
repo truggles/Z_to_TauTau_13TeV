@@ -25,6 +25,7 @@ ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
 luminosity = 592.27 # (pb) 25ns - Sept 25th certification
+#luminosity = 1000.0 # (pb) 25ns - Sept 25th certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.0
 qcdYieldTT = 2610.0 # From data - MC in OS region, see plots in ZtoTauTau/FinalPlots/[tt/em]_OS_mVis_QCD_Yield.png
@@ -70,7 +71,7 @@ sampColors = {
 
 for channel in prodMap.keys() :
 
-    #if channel == 'tt' : continue
+    if channel == 'tt' : continue
 
     # Make an index file for web viewing
     htmlFile = open('%sPlots/%s/index.html' % (pre_, channel), 'w')
@@ -149,17 +150,18 @@ for channel in prodMap.keys() :
 
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
+            print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
                 if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
                 if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
             elif sample == 'WJets' and hist.Integral() != 0 :
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
+                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeights'] )
                 hist.Scale( scaler * wJetsInt / hist.Integral() )
             elif 'data' not in sample and hist.Integral() != 0:
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
+                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeights'] )
                 hist.Scale( scaler )
 
-            print "Sample: %s      Int: %f" % (sample, hist.Integral() )
+            print " --- Sample: %s      Int: %f" % (sample, hist.Integral() )
 
             if samples[ sample ][1] == 'dyj' :
                 hist.SetTitle('Z #rightarrow #tau#tau')
