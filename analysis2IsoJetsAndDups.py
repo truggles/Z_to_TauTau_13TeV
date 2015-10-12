@@ -410,11 +410,19 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     ''' Add a nvtx Pile UP weighting variable to the new tree
     see util.pileUpVertexCorrections.addNvtxWeight for inspiration '''
     from util.pileUpVertexCorrections import PUreweight
+    from util.pZeta import compZeta
     from array import array
     baseName = sample.split('_')[0]
     puDict = PUreweight( grouping, baseName, channel )
+
+    ''' We are calculating and adding these below variables to our new tree
+    nvtx pile up reweighting, pZetaVis, pZeta '''
     nvtxWeight = array('f', [ 0 ] )
     nvtxWeightB = tnew.Branch('nvtxWeight', nvtxWeight, 'nvtxWeight/F')
+    pZetaVis = array('f', [ 0 ] )
+    pZetaVisB = tnew.Branch('pZetaVis', pZetaVis, 'pZetaVis/F')
+    pZeta = array('f', [ 0 ] )
+    pZetaB = tnew.Branch('pZeta', pZeta, 'pZeta/F')
 
 
     ''' Now actually fill that instance of an evt '''
@@ -427,15 +435,19 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         if channel == 'em' :
             leg1Iso = row.eRelPFIsoDB
             leg1Pt = row.ePt
+            leg1Phi = row.ePhi
             leg2Iso = row.mRelPFIsoDBDefault
             leg2Pt = row.mPt
+            leg2Phi = row.mPhi
             currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
 
         if channel == 'tt' :
             leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
             leg1Pt = row.t1Pt
+            leg1Phi = row.t1Phi
             leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
             leg2Pt = row.t2Pt
+            leg2Phi = row.t2Phi
             if leg1Iso < leg2Iso :
                 currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
             elif leg1Iso > leg2Iso :
@@ -454,7 +466,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
             nvtxWeight[0] = puDict[ row.nvtx ]
-            #nvtxWeightB.Fill()
+            pZetas = compZeta( leg1Pt, leg1Phi, leg2Pt, leg2Phi, row.pfMetEt, row.pfMetPhi ) 
+            pZetaVis[0] = pZetas[0]
+            pZeta[0] = pZetas[1]
             tnew.Fill()
             count2 += 1
 

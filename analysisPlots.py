@@ -9,7 +9,7 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( outFile, chain, channel ) :
+def plotHistosProof( outFile, chain, channel, isData ) :
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMap = getHistoDict( channel )
 
@@ -20,7 +20,10 @@ def plotHistosProof( outFile, chain, channel ) :
     for var, cv in newVarMap.iteritems() :
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
         # the >> sends the output to a predefined histo
-        chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight' )
+        if isData : # Data has no GenWeight and by def has nvtxWeight = 1
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var) )
+        else :
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight' )
         histos[ var ] = gPad.GetPrimitive( "%s" % var )
         histos[ var ].Write()
 
@@ -57,6 +60,8 @@ def getHistoDict( channel ) :
         'eta_2' : ('eta_2', 80, -4, 4),
         'iso_2' : ('iso_2', 100, 0, 1),
         'mt_2' : ('mt_2', 400, 0, 400),
+        'pZetaVis' : ('pZetaVis', 1000, -100, 900),
+        'pZeta' : ('pZeta', 1000, -400, 600),
     }
 
     if channel == 'em' :
@@ -136,6 +141,8 @@ def getPlotDetails( channel ) :
         'extramuon_veto' : (0, 2, 1, 'Extra Muon Veto', ''),
         'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),
         'nvtx' : (0, 35, 1, 'Number of Vertices', ''),
+        'pZetaVis' : (0, 300, 10, 'pZetaVis', ' GeV'),
+        'pZeta' : (-200, 300, 10, 'pZeta', ' GeV'),
         }
 
     if channel == 'em' :

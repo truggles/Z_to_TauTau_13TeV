@@ -24,7 +24,7 @@ print "Running over %s samples" % pre_
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 225.57 # (pb) 25ns - Sept 25th certification
+luminosity = 592.27 # (pb) 25ns - Sept 25th certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.0
 qcdYieldTT = 2610.0 # From data - MC in OS region, see plots in ZtoTauTau/FinalPlots/[tt/em]_OS_mVis_QCD_Yield.png
@@ -70,7 +70,7 @@ sampColors = {
 
 for channel in prodMap.keys() :
 
-    if channel == 'tt' : continue
+    #if channel == 'tt' : continue
 
     # Make an index file for web viewing
     htmlFile = open('%sPlots/%s/index.html' % (pre_, channel), 'w')
