@@ -465,7 +465,15 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
             isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
+            
+            #nvtxW = puDict[ row.nvtx ]
+            #if nvtxW == 0 :
+            #    print " --- Zero Weight --- "
+            #    nvtxWeight[0] = 0.001
+            #else :
+            #    nvtxWeight[0] = puDict[ row.nvtx ]
             nvtxWeight[0] = puDict[ row.nvtx ]
+
             pZetas = compZeta( leg1Pt, leg1Phi, leg2Pt, leg2Phi, row.pfMetEt, row.pfMetPhi ) 
             pZetaVis[0] = pZetas[0]
             pZeta[0] = pZetas[1]

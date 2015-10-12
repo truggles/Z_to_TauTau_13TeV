@@ -155,10 +155,10 @@ for channel in prodMap.keys() :
                 if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
                 if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
             elif sample == 'WJets' and hist.Integral() != 0 :
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeights'] )
+                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 hist.Scale( scaler * wJetsInt / hist.Integral() )
             elif 'data' not in sample and hist.Integral() != 0:
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeights'] )
+                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 hist.Scale( scaler )
 
             print " --- Sample: %s      Int: %f" % (sample, hist.Integral() )
