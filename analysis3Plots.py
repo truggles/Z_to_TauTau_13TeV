@@ -89,7 +89,7 @@ for channel in prodMap.keys() :
 
         ttEvents = 0.0
 
-        #if not (var == 'nbtag' or var == 'm_vis') : continue
+        if not (var == 'nbtag' or var == 'm_vis') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
@@ -197,23 +197,39 @@ for channel in prodMap.keys() :
         # Maybe make ratio hist
         c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
 
-        if ratio == False :
+        if not options.ratio :
+            print "Ratio = False!"
             pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
             pad1.Draw()
             pad1.cd()
-        if ratio == True :
+            stack.Draw('hist')
+            data.GetStack().Last().Draw('esamex0')
+            # X Axis!
+            stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
+
+        if options.ratio :
+            print "Ratio = True!"
             pads = ratioPlot( c1 )
             pad1 = pads[0]
             ratioPad = pads[1]
+            ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', ( info[1] / plotDetails[ var ][2] ), info[2], info[3])
+            for bin_ in range( 0, (ratioHist.GetXaxis().GetNbins()-2) ) :
+                if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
+                    num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
+                    ratioHist.SetBinContent( bin_, num )
+            ratioPad.cd()
+            ratioHist.Draw('ex0')
+            line = ROOT.TLine( info[2], 1, info[3], 1 )
+            line.SetLineColor(ROOT.kRed)
+            line.SetLineWidth( 2 )
+            line.Draw('same')
+            # X Axis!
+            ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
             pad1.cd()
-            #varMin_ = dyj.GetStack().Last()
-            #ratioHist = ROOT.TH1('ratio plot' + var, 'ratio',
+            stack.Draw('hist')
+            data.GetStack().Last().Draw('esamex0')
+            
 
-        stack.Draw('hist')
-        data.GetStack().Last().Draw('esamex0')
-
-        # X Axis!
-        stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
 
         # Set Y axis titles appropriately
         if hist.GetBinWidth(1) < .05 :
