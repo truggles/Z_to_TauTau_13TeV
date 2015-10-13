@@ -25,14 +25,21 @@ def plotHistosProof( outFile, chain, channel, isData ) :
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
         else :
             # The Pre and Post integral scaling is to keep the total area the same
-            chain.Draw( '%s' % newVarMap[ var ][0] )
+            chain.Draw( '%s' % newVarMap[ var ][0], 'GenWeight/abs( GenWeight )' )
+            #chain.Draw( 'GenWeight' )
             h1 = gPad.GetPrimitive( 'htemp' )
             integralPre = h1.Integral()
+            #print "intPre: %f" % integralPre
+            #integralPreR = h1.Integral(0, cv[1]-1)
+            #print "intPreR: %f" % integralPreR
+
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight' )
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
             integralPost = histos[ var ].Integral()
+            #print "tmpIntPost: %f" % integralPost
             if integralPost > 0 :
                 histos[ var ].Scale( integralPre / integralPost )
+                #print "FinalIntPost: %f" % histos[ var ].Integral()
 
         histos[ var ].Write()
 
