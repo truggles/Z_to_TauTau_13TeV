@@ -251,7 +251,10 @@ for channel in prodMap.keys() :
             # X Axis!
             ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
             ratioHist.GetYaxis().SetTitle("Data / MC")
-            ratioHist.GetYaxis().SetTitleSize(0.04)
+            yAxis = ratioHist.GetYaxis()
+            xAxis = ratioHist.GetXaxis()
+            fixFontSize( yAxis )
+            fixFontSize( xAxis )
 
             pad1.cd()
             stack.Draw('hist')

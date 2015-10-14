@@ -2,10 +2,10 @@
 
 import ROOT
 
-def ratioPlot( canvas ) :
-    plotPad = ROOT.TPad("pad1", "plot", 0., .15, 1., 1.)
+def ratioPlot( canvas, topSize ) :
+    plotPad = ROOT.TPad("pad1", "plot", 0., (1-topSize), 1., 1.)
     plotPad.Draw()
-    ratioPad = ROOT.TPad("pad2", "ratio", 0., 0., 1., 0.25)
+    ratioPad = ROOT.TPad("pad2", "ratio", 0., 0., 1., (1-topSize))
     ratioPad.Draw()
     plotPad.cd()
 
