@@ -1,0 +1,35 @@
+Oct 13, 2015
+Var: pZeta      Name: pZeta
+ --- Sample: DYJets     Int below -50: 18.415364
+ --- Sample: TT     Int below -50: 570.581487
+ --- Sample: QCD     Int below -50: 1.692103
+ --- Sample: Tbar-tW     Int below -50: 22.591815
+ --- Sample: T-tW     Int below -50: 23.595203
+ --- Sample: WJets     Int below -50: 26.814286
+ --- Sample: WW     Int below -50: 14.980545
+ --- Sample: WZJets     Int below -50: 0.410616
+ --- Sample: ZZ     Int below -50: 0.044155
+ --- Sample: data_em     Int below -50: 678.000000
+
+
+ --- Sample: DYJets     Int below -20: 426.007790
+ --- Sample: TT     Int below -20: 1207.473501
+ --- Sample: QCD     Int below -20: 50.916918
+ --- Sample: Tbar-tW     Int below -20: 53.423240
+ --- Sample: T-tW     Int below -20: 54.928613
+ --- Sample: WJets     Int below -20: 113.435789
+ --- Sample: WW     Int below -20: 89.646606
+ --- Sample: WZJets     Int below -20: 2.237371
+ --- Sample: ZZ     Int below -20: 0.292463
+ --- Sample: data_em     Int below -20: 2088.00000
+
+ --- Sample: DYJets     Int above 100: 152.909155
+ --- Sample: TT     Int above 100: 1145.407991
+ --- Sample: QCD     Int above 100: 10.306446
+ --- Sample: Tbar-tW     Int above 100: 47.829772
+ --- Sample: T-tW     Int above 100: 49.036012
+ --- Sample: WJets     Int above 100: 14.238687
+ --- Sample: WW     Int above 100: 20.831001
+ --- Sample: WZJets     Int above 100: 1.763803
+ --- Sample: ZZ     Int above 100: 0.515160
+ --- Sample: data_em     Int above 100: 1573.000000
