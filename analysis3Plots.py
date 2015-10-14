@@ -7,6 +7,7 @@ import pyplotter.tdrstyle as tdr
 import argparse
 from util.ratioPlot import ratioPlot
 import analysisPlots
+from util.splitCanvas import fixFontSize
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='25ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -27,9 +28,11 @@ tdr.setTDRStyle()
 luminosity = 592.27 # (pb) 25ns - Sept 25th certification
 #luminosity = 1000.0 # (pb) 25ns - Sept 25th certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
-qcdEMScaleFactor = 1.0
-qcdYieldTT = 2610.0 # From data - MC in OS region, see plots in ZtoTauTau/FinalPlots/[tt/em]_OS_mVis_QCD_Yield.png
-qcdYieldEM = 114.9 # same as TT
+qcdEMScaleFactor = 1.06
+bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
+qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
+                    # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
+qcdYieldEM = 400. * qcdEMScaleFactor   # same as TT
 
 with open('meta/NtupleInputs_%s/samples.json' % pre_) as sampFile :
     sampDict = json.load( sampFile )
@@ -88,8 +91,10 @@ for channel in prodMap.keys() :
     for var, info in newVarMap.iteritems() :
 
         ttEvents = 0.0
+        lowerRange = -1
+        upperRange = -1
 
-        if not (var == 'nbtag' or var == 'm_vis') : continue
+        if not (var == 'pZeta') : continue# or var == 'm_vis') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
@@ -103,7 +108,7 @@ for channel in prodMap.keys() :
 
 
         for sample in samples:
-            print sample
+            #print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
@@ -133,6 +138,8 @@ for channel in prodMap.keys() :
 
 
             hist.Rebin( plotDetails[ var ][2] )
+            lowerRange = hist.GetXaxis().FindBin( plotDetails[ var ][0] )
+            upperRange = hist.GetXaxis().FindBin( plotDetails[ var ][1] )
             if 'data' not in sample and samples[ sample ][1] != 'higgs' :
                 color = "ROOT.%s" % sampColors[ samples[ sample ][1] ]
                 hist.SetFillColor( eval( color ) )
@@ -150,7 +157,7 @@ for channel in prodMap.keys() :
 
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
-            print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
+            #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
                 if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
                 if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
@@ -159,9 +166,17 @@ for channel in prodMap.keys() :
                 hist.Scale( scaler * wJetsInt / hist.Integral() )
             elif 'data' not in sample and hist.Integral() != 0:
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
-                hist.Scale( scaler )
+                if 'TT' in sample :
+                    hist.Scale( scaler * bkgsTTScaleFactor )
+                else :
+                    hist.Scale( scaler )
 
-            print " --- Sample: %s      Int: %f" % (sample, hist.Integral() )
+            #if var == 'pZeta' :
+            #    lower = hist.GetXaxis().FindBin( 100. )
+            #    upper = hist.GetXaxis().FindBin( 600. )
+            #    #print " --- Sample: %s      Int: %f" % (sample, hist.Integral() )
+            #    print " --- Sample: %s     Int above 100: %f" % (sample, hist.Integral( lower, upper) )
+            #    #hist.GetXaxis().SetRangeUser( 11, upper )
 
             if samples[ sample ][1] == 'dyj' :
                 hist.SetTitle('Z #rightarrow #tau#tau')
@@ -194,11 +209,11 @@ for channel in prodMap.keys() :
         stack.Add( wjets.GetStack().Last() )
         stack.Add( dyj.GetStack().Last() )
 
+
         # Maybe make ratio hist
         c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
 
         if not options.ratio :
-            print "Ratio = False!"
             pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
             pad1.Draw()
             pad1.cd()
@@ -208,23 +223,36 @@ for channel in prodMap.keys() :
             stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
 
         if options.ratio :
-            print "Ratio = True!"
-            pads = ratioPlot( c1 )
+            pads = ratioPlot( c1, 0.8 )
             pad1 = pads[0]
             ratioPad = pads[1]
-            ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', ( info[1] / plotDetails[ var ][2] ), info[2], info[3])
-            for bin_ in range( 0, (ratioHist.GetXaxis().GetNbins()-2) ) :
-                if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
-                    num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
-                    ratioHist.SetBinContent( bin_, num )
+            ratioPad.SetTopMargin(0.05)
+            pad1.SetBottomMargin(0.05)
+            ratioPad.SetGridy()
+            ratioHist = ROOT.TH1F()#'ratio %s' % info[0], 'ratio', ( info[1] / (plotDetails[ var ][2] * 2) ), info[2], info[3])
+            ratioHist.Add( data.GetStack().Last() )
+            ratioHist.Sumw2()
+            ratioHist.Divide( stack.GetStack().Last() )
+            #lower = hist.GetXaxis().FindBin( 100. )
+            #for bin_ in range( 0, (ratioHist.GetXaxis().GetNbins()+1) ) :
+            #    if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
+            #        num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
+            #        ratioHist.SetBinContent( bin_, num )
+            ratioHist.SetMaximum( 3 )
+            ratioHist.SetMinimum( 0 )
+            ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
-            line = ROOT.TLine( info[2], 1, info[3], 1 )
-            line.SetLineColor(ROOT.kRed)
+            line = ROOT.TLine( plotDetails[ var ][0], 1, plotDetails[ var ][1], 1 )
+            line.SetLineColor(ROOT.kBlack)
             line.SetLineWidth( 2 )
-            line.Draw('same')
+            line.Draw()
+            ratioHist.Draw('esamex0')
             # X Axis!
             ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
+            ratioHist.GetYaxis().SetTitle("Data / MC")
+            ratioHist.GetYaxis().SetTitleSize(0.04)
+
             pad1.cd()
             stack.Draw('hist')
             data.GetStack().Last().Draw('esamex0')
@@ -302,8 +330,15 @@ for channel in prodMap.keys() :
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+        if options.ratio :
+            ratioHist.GetXaxis().SetRange( lowerRange, upperRange )
         c1.SaveAs('%sPlots/%s/%s.png' % (pre_, channel, var ) )
         c1.SaveAs('%sPlotsList/%s/%s.png' % (pre_, channel, var ) )
+        #if options.ratio :
+        #    import util.splitCanvas
+        #    c2 = util.splitCanvas.splitCanvas(c1)
+        #    c2.SaveAs('%sPlotsList/%s/%sratio.png' % (pre_, channel, var ) )
+        #    c2.Close()
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
