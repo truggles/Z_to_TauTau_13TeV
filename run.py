@@ -22,6 +22,7 @@ SamplesData = ['data_em', 'data_tt']
 Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow'] # extra TT samples on stand by
 Samples25nsFinal = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TT', 'WW', 'WZJets', 'ZZ'] # Intended good one
 #samples = ['data_em', 'data_tt', 'Tbar-tW', 'T-tW',]
+#samples = ['DYJets',]# 'Tbar-tW', 'T-tW',]
 
 samples = Samples25nsFinal
 params = {
@@ -36,7 +37,9 @@ params = {
     #'mid2' : 'Oct12MCandData/25ns2oct12',
     #'mid3' : 'Oct12MCandData/25ns3oct12',
     'mid2' : '2oct12',
-    'mid3' : '3oct12',
+    'mid3' : '3oct14muonMT',
+    'additionalCut' : '',
+    #'additionalCut' : '*(nbtag<1)*(mt_2<80)',
 }
 
 
@@ -59,5 +62,5 @@ if params[ 'bkgs' ] != 'None' :
     params[ 'cutName' ] = bkgMap[ params[ 'bkgs' ] ][0]
     samples = bkgMap[ params [ 'bkgs' ] ][1]
 
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )

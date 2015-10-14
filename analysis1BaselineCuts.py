@@ -264,6 +264,7 @@ def drawHistos(grouping, samples, **fargs ) :
             print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
             if 'data' in sample : isData = True
             else : isData = False
-            analysisPlots.plotHistosProof( outFile, chain, channel, isData )
+            additionalCut = fargs['additionalCut']
+            analysisPlots.plotHistosProof( outFile, chain, channel, isData, additionalCut )
             outFile.Close()
          

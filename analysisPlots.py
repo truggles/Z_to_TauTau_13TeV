@@ -9,7 +9,7 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( outFile, chain, channel, isData ) :
+def plotHistosProof( outFile, chain, channel, isData, additionalCut ) :
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMap = getHistoDict( channel )
 
@@ -21,11 +21,11 @@ def plotHistosProof( outFile, chain, channel, isData ) :
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
         # the >> sends the output to a predefined histo
         if isData : # Data has no GenWeight and by def has nvtxWeight = 1
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var) )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
         else :
             # The Pre and Post integral scaling is to keep the total area the same
-            chain.Draw( '%s' % newVarMap[ var ][0], 'GenWeight/abs( GenWeight )' )
+            chain.Draw( '%s' % newVarMap[ var ][0], 'GenWeight/abs( GenWeight )%s' % additionalCut )
             #chain.Draw( 'GenWeight' )
             h1 = gPad.GetPrimitive( 'htemp' )
             integralPre = h1.Integral()
@@ -33,7 +33,7 @@ def plotHistosProof( outFile, chain, channel, isData ) :
             #integralPreR = h1.Integral(0, cv[1]-1)
             #print "intPreR: %f" % integralPreR
 
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight' )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
             integralPost = histos[ var ].Integral()
             #print "tmpIntPost: %f" % integralPost
