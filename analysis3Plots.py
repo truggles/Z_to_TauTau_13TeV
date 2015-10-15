@@ -8,6 +8,7 @@ import argparse
 from util.ratioPlot import ratioPlot
 import analysisPlots
 from util.splitCanvas import fixFontSize
+import os
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='25ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -16,11 +17,11 @@ p.add_argument('--log', action='store', default=False, dest='log', help="Plot Lo
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 options = p.parse_args()
-pre_ = options.sampleName
+grouping = options.sampleName
 ratio = options.ratio
 folderDetails = options.folderDetails
 
-print "Running over %s samples" % pre_
+print "Running over %s samples" % grouping
 
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
@@ -35,7 +36,7 @@ qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots:
 #qcdYieldEM = 382.2 * qcdEMScaleFactor   # same as TT
 qcdYieldEM = 975.0 * qcdEMScaleFactor   # For Loose Trigger Selection
 
-with open('meta/NtupleInputs_%s/samples.json' % pre_) as sampFile :
+with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
 
 prodMap = { 'em' : ('e', 'm'),
@@ -75,10 +76,12 @@ sampColors = {
 
 for channel in prodMap.keys() :
 
-    if channel == 'tt' : continue
+    #if channel == 'tt' : continue
 
     # Make an index file for web viewing
-    htmlFile = open('%sPlots/%s/index.html' % (pre_, channel), 'w')
+    if not os.path.exists( '%sPlots' % grouping ) : os.makedirs( '%sPlots/%s' % (grouping, channel) )
+    if not os.path.exists( '%sPlotsList' % grouping ) : os.makedirs( '%sPlotsList/%s' % (grouping, channel) )
+    htmlFile = open('%sPlots/%s/index.html' % (grouping, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
     htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
     htmlFile.write( '<body>\n' )
@@ -91,7 +94,7 @@ for channel in prodMap.keys() :
 
     for var, info in newVarMap.iteritems() :
 
-        ttEvents = 0.0
+        # Defined out here for large scope
         lowerRange = -1
         upperRange = -1
 
@@ -115,22 +118,22 @@ for channel in prodMap.keys() :
             if channel == 'em' and sample == 'data_tt' : continue
 
             #print sample
-            #print '%s2IsoOrderAndDups/%s_%s.root' % (pre_, sample, channel)
+            #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
-                tFile = ROOT.TFile('%s%s/%s.root' % (pre_, folderDetails, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
-                tFile = ROOT.TFile('%s%s/%s.root' % (pre_, folderDetails, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif sample == 'WJets' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/WJets_%s.root' % (pre_, channel), 'READ')
-                tFileScale = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
+                tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/WJets_%s.root' % (grouping, channel), 'READ')
+                tFileScale = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
                 dicScale = tFileScale.Get("%s_Histos" % channel )
                 histScale = dicScale.Get( "%s" % var )
                 wJetsInt = histScale.Integral()
             elif sample == 'QCD' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape/shape/data_%s.root' % (pre_, channel), 'READ')
+                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape/shape/data_%s.root' % (grouping, channel), 'READ')
             else :
-                tFile = ROOT.TFile('%s%s/%s_%s.root' % (pre_, folderDetails, sample, channel), 'READ')
+                tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
 
             dic = tFile.Get("%s_Histos" % channel )
@@ -332,25 +335,25 @@ for channel in prodMap.keys() :
         lumi.DrawTextNDC(.7,.96,"%i / pb (13 TeV)" % luminosity)
 
         ''' Random print outs on plots '''
-        #mean1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
-        #mean1.SetTextSize(0.04)
-        #mean1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
-        #mean2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-        #mean2.SetTextSize(0.04)
-        #mean2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-        #mean3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
-        #mean3.SetTextSize(0.04)
-        #mean3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-        #mean4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-        #mean4.SetTextSize(0.05)
-        #mean4.DrawTextNDC(.65,.45,"SS Selection" )
+        #text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
+        #text1.SetTextSize(0.04)
+        #text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
+        #text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+        #text2.SetTextSize(0.04)
+        #text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
+        #text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+        #text3.SetTextSize(0.04)
+        #text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+        #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+        #text4.SetTextSize(0.05)
+        #text4.DrawTextNDC(.65,.45,"SS Selection" )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.ratio :
             ratioHist.GetXaxis().SetRange( lowerRange, upperRange-1 )
-        c1.SaveAs('%sPlots/%s/%s.png' % (pre_, channel, var ) )
-        c1.SaveAs('%sPlotsList/%s/%s.png' % (pre_, channel, var ) )
+        c1.SaveAs('%sPlots/%s/%s.png' % (grouping, channel, var ) )
+        c1.SaveAs('%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
