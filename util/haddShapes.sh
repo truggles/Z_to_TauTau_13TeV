@@ -1,9 +1,8 @@
-folder=25ns3oct08QCD
-folder=25nsGOODSamples/25ns3oct07/
+#folder=25ns3oct14
 
-pushd ${folder}
+pushd ${1}
 
-for shape in DYJets TT Tbar-tW T-tW WJets WW WZJets ZZ data
+for shape in DYJets TTJets Tbar-tW T-tW WJets WW WZJets ZZ data VBFHtoTauTau ggHtoTauTau
 do
     for channel in em tt
     do
