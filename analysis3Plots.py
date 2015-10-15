@@ -32,7 +32,7 @@ qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
                     # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
-qcdYieldEM = 400. * qcdEMScaleFactor   # same as TT
+qcdYieldEM = 382.2 * qcdEMScaleFactor   # same as TT
 
 with open('meta/NtupleInputs_%s/samples.json' % pre_) as sampFile :
     sampDict = json.load( sampFile )
@@ -43,8 +43,8 @@ prodMap = { 'em' : ('e', 'm'),
                 # Sample : Color
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', 'dyj')
-samples['TT']       = ('kBlue-8', 'top')
-#samples['TTJets']       = ('kBlue-8', 'top')
+#samples['TT']       = ('kBlue-8', 'top')
+samples['TTJets']       = ('kBlue-8', 'top')
 #samples['TTPow']       = ('kBlue-8', 'top')
 samples['QCD']        = ('kMagenta-10', 'qcd')
 samples['Tbar-tW']  = ('kYellow-2', 'top')
@@ -94,7 +94,7 @@ for channel in prodMap.keys() :
         lowerRange = -1
         upperRange = -1
 
-        if not (var == 'pZeta') : continue# or var == 'm_vis') : continue
+        #if not (var == 'pZeta' or var == 'm_vis') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
@@ -178,6 +178,7 @@ for channel in prodMap.keys() :
             #    print " --- Sample: %s     Int above 100: %f" % (sample, hist.Integral( lower, upper) )
             #    #hist.GetXaxis().SetRangeUser( 11, upper )
 
+            #print "Hist int: %s %f" % (sample, hist.Integral() )
             if samples[ sample ][1] == 'dyj' :
                 hist.SetTitle('Z #rightarrow #tau#tau')
                 dyj.Add( hist )
@@ -223,13 +224,15 @@ for channel in prodMap.keys() :
             stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
 
         if options.ratio :
-            pads = ratioPlot( c1, 0.8 )
+            smlPadSize = .25
+            pads = ratioPlot( c1, 1-smlPadSize )
             pad1 = pads[0]
             ratioPad = pads[1]
-            ratioPad.SetTopMargin(0.05)
-            pad1.SetBottomMargin(0.05)
+            ratioPad.SetTopMargin(0.00)
+            ratioPad.SetBottomMargin(0.3)
+            pad1.SetBottomMargin(0.00)
             ratioPad.SetGridy()
-            ratioHist = ROOT.TH1F()#'ratio %s' % info[0], 'ratio', ( info[1] / (plotDetails[ var ][2] * 2) ), info[2], info[3])
+            ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
             ratioHist.Add( data.GetStack().Last() )
             ratioHist.Sumw2()
             ratioHist.Divide( stack.GetStack().Last() )
@@ -238,23 +241,32 @@ for channel in prodMap.keys() :
             #    if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
             #        num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
             #        ratioHist.SetBinContent( bin_, num )
-            ratioHist.SetMaximum( 3 )
-            ratioHist.SetMinimum( 0 )
+            ratioHist.SetMaximum( 1.5 )
+            ratioHist.SetMinimum( 0.5 )
             ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
             line = ROOT.TLine( plotDetails[ var ][0], 1, plotDetails[ var ][1], 1 )
             line.SetLineColor(ROOT.kBlack)
-            line.SetLineWidth( 2 )
+            line.SetLineWidth( 1 )
             line.Draw()
             ratioHist.Draw('esamex0')
             # X Axis!
             ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
             ratioHist.GetYaxis().SetTitle("Data / MC")
-            yAxis = ratioHist.GetYaxis()
-            xAxis = ratioHist.GetXaxis()
-            fixFontSize( yAxis )
-            fixFontSize( xAxis )
+            #yAxis = ratioHist.GetYaxis()
+            #xAxis = ratioHist.GetXaxis()
+            #fixFontSize( yAxis, (1-.8))
+            #fixFontSize( xAxis  (1-.8))
+            ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
+            #ratioHist.GetYaxis().SetTextSize( ratioHist.GetYaxis().GetTextSize()*( 1/smlPadSize) )
+            ratioHist.GetYaxis().SetNdivisions( 5, True )
+            #ratioHist.GetYaxis().SetTitleSize( ratioHist.GetYaxis().GetTitleSize()*( 1/smlPadSize/2) )
+            ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
+            ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
+            #ratioHist.GetXaxis().SetTitleOffset( ratioHist.GetXaxis().GetTitleOffset()*( 1/smlPadSize/2.5) )
+            #ratioHist.GetYaxis().SetTickSize( .25 )
+            #ratioHist.GetYaxis().SetTickLength( .03 )
 
             pad1.cd()
             stack.Draw('hist')
