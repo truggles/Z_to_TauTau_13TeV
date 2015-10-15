@@ -410,7 +410,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     ''' Add a nvtx Pile UP weighting variable to the new tree
     see util.pileUpVertexCorrections.addNvtxWeight for inspiration '''
     from util.pileUpVertexCorrections import PUreweight
-    from util.pZeta import compZeta
+    #from util.pZeta import compZeta
     from array import array
     baseName = sample.split('_')[0]
     puDict = PUreweight( grouping, baseName, channel )
@@ -419,10 +419,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     nvtx pile up reweighting, pZetaVis, pZeta '''
     nvtxWeight = array('f', [ 0 ] )
     nvtxWeightB = tnew.Branch('nvtxWeight', nvtxWeight, 'nvtxWeight/F')
-    pZetaVis = array('f', [ 0 ] )
-    pZetaVisB = tnew.Branch('pZetaVis', pZetaVis, 'pZetaVis/F')
-    pZeta = array('f', [ 0 ] )
-    pZetaB = tnew.Branch('pZeta', pZeta, 'pZeta/F')
+    #pZetaVis = array('f', [ 0 ] )
+    #pZetaVisB = tnew.Branch('pZetaVis', pZetaVis, 'pZetaVis/F')
+    #pZeta = array('f', [ 0 ] )
+    #pZetaB = tnew.Branch('pZeta', pZeta, 'pZeta/F')
 
 
     ''' Now actually fill that instance of an evt '''
@@ -474,9 +474,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             #    nvtxWeight[0] = puDict[ row.nvtx ]
             nvtxWeight[0] = puDict[ row.nvtx ]
 
-            pZetas = compZeta( leg1Pt, leg1Phi, leg2Pt, leg2Phi, row.pfMetEt, row.pfMetPhi ) 
-            pZetaVis[0] = pZetas[0]
-            pZeta[0] = pZetas[1]
+            #pZetas = compZeta( leg1Pt, leg1Phi, leg2Pt, leg2Phi, row.pfMetEt, row.pfMetPhi ) 
+            #pZetaVis[0] = pZetas[0]
+            #pZeta[0] = pZetas[1]
             tnew.Fill()
             count2 += 1
 

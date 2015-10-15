@@ -17,18 +17,20 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut ) :
     histosDir.cd()
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
+    histos2 = {}
     for var, cv in newVarMap.iteritems() :
+        var2 = '%s%i' % (var, 2)
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
+    	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
         # the >> sends the output to a predefined histo
         if isData : # Data has no GenWeight and by def has nvtxWeight = 1
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
         else :
             # The Pre and Post integral scaling is to keep the total area the same
-            chain.Draw( '%s' % newVarMap[ var ][0], 'GenWeight/abs( GenWeight )%s' % additionalCut )
-            #chain.Draw( 'GenWeight' )
-            h1 = gPad.GetPrimitive( 'htemp' )
-            integralPre = h1.Integral()
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s' % additionalCut )
+            histos2[ var ] = gPad.GetPrimitive( var2 )
+            integralPre = histos2[ var ].Integral()
             #print "intPre: %f" % integralPre
             #integralPreR = h1.Integral(0, cv[1]-1)
             #print "intPreR: %f" % integralPreR
@@ -37,9 +39,10 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut ) :
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
             integralPost = histos[ var ].Integral()
             #print "tmpIntPost: %f" % integralPost
-            if integralPost > 0 :
+            if integralPost != 0 :
                 histos[ var ].Scale( integralPre / integralPost )
-                #print "FinalIntPost: %f" % histos[ var ].Integral()
+            #print histos[ var ].GetBinContent( 10 )
+            #print "FinalIntPost: %f" % histos[ var ].Integral()
 
         histos[ var ].Write()
 
@@ -76,8 +79,8 @@ def getHistoDict( channel ) :
         'eta_2' : ('eta_2', 80, -4, 4),
         'iso_2' : ('iso_2', 100, 0, 1),
         'mt_2' : ('mt_2', 400, 0, 400),
-        'pZetaVis' : ('pZetaVis', 1000, -100, 900),
-        'pZeta' : ('pZeta', 1000, -400, 600),
+        #'pZetaVis' : ('pZetaVis', 1000, -100, 900),
+        #'pZeta' : ('pZeta', 1000, -400, 600),
     }
 
     if channel == 'em' :
@@ -87,6 +90,8 @@ def getHistoDict( channel ) :
             'Z_SS' : ('e_m_SS', 20, 0, 2),
             'eJetPt' : ('eJetPt', 400, 0, 400),
             'mJetPt' : ('mJetPt', 400, 0, 400),
+            'pZetaVis' : ('e_m_PZetaVis', 1000, -100, 900),
+            'pZeta' : ('e_m_PZeta', 1000, -400, 600),
             #'ePVDZ' : ('ePVDZ', 100, -1, 1),
             #'ePVDXY' : ('ePVDXY', 100, -.2, .2),
             #'mPVDZ' : ('mPVDZ', 100, -1, 1),
@@ -102,6 +107,8 @@ def getHistoDict( channel ) :
             'Z_Pt' : ('t1_t2_Pt', 400, 0, 400),
             #'m_vis' : ('m_vis', 600, 0, 600),
             'Z_SS' : ('t1_t2_SS', 20, 0, 2),
+            'pZetaVis' : ('t1_t2_PZetaVis', 1000, -100, 900),
+            'pZeta' : ('t1_t2_PZeta', 1000, -400, 600),
             #'t1Pt' : ('t1Pt', 100, 0, 400),
             #'t1Eta' : ('t1Eta', 100, -5, 5),
             #'t1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : ('t1ByCombinedIsolationDeltaBetaCorrRaw3Hits', 100, 0, 5),
