@@ -85,6 +85,15 @@ def QCDYieldOS( ch ) :
     return cutMap
 
 # Cuts to calculate QCD yield from Data - MC
+def QCDYieldOSTrigLoose( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['QCDYield'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + emSS + ' && ' + emIso + ' && ' + extraVeto
+    if ch == 'tt':
+        cutMap['QCDYield'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttSS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
+    return cutMap
+
+# Cuts to calculate QCD yield from Data - MC
 def QCDShape( ch ) :
     cutMap = OrderedDict()
     if ch == 'em':
