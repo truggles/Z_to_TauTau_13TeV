@@ -32,7 +32,8 @@ qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
                     # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
-qcdYieldEM = 382.2 * qcdEMScaleFactor   # same as TT
+#qcdYieldEM = 382.2 * qcdEMScaleFactor   # same as TT
+qcdYieldEM = 975.0 * qcdEMScaleFactor   # For Loose Trigger Selection
 
 with open('meta/NtupleInputs_%s/samples.json' % pre_) as sampFile :
     sampDict = json.load( sampFile )
@@ -140,6 +141,7 @@ for channel in prodMap.keys() :
             hist.Rebin( plotDetails[ var ][2] )
             lowerRange = hist.GetXaxis().FindBin( plotDetails[ var ][0] )
             upperRange = hist.GetXaxis().FindBin( plotDetails[ var ][1] )
+            #print "upper and lower",upperRange,lowerRange
             if 'data' not in sample and samples[ sample ][1] != 'higgs' :
                 color = "ROOT.%s" % sampColors[ samples[ sample ][1] ]
                 hist.SetFillColor( eval( color ) )
@@ -332,10 +334,10 @@ for channel in prodMap.keys() :
         ''' Random print outs on plots '''
         #mean1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
         #mean1.SetTextSize(0.04)
-        #mean1.DrawTextNDC(.65,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
+        #mean1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
         #mean2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
         #mean2.SetTextSize(0.04)
-        #mean2.DrawTextNDC(.65,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
+        #mean2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
         #mean3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
         #mean3.SetTextSize(0.04)
         #mean3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
@@ -346,14 +348,9 @@ for channel in prodMap.keys() :
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.ratio :
-            ratioHist.GetXaxis().SetRange( lowerRange, upperRange )
+            ratioHist.GetXaxis().SetRange( lowerRange, upperRange-1 )
         c1.SaveAs('%sPlots/%s/%s.png' % (pre_, channel, var ) )
         c1.SaveAs('%sPlotsList/%s/%s.png' % (pre_, channel, var ) )
-        #if options.ratio :
-        #    import util.splitCanvas
-        #    c2 = util.splitCanvas.splitCanvas(c1)
-        #    c2.SaveAs('%sPlotsList/%s/%sratio.png' % (pre_, channel, var ) )
-        #    c2.Close()
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
