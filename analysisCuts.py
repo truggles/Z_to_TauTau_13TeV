@@ -29,7 +29,7 @@ extraVeto   = 'eVetoZTT10 == 0 && muVetoZTT10 == 0'
 # EM Studies
 emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
 emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
-emIsoInvert    = 'eIsoDB03 > 0.2 && mIsoDB03 > 0.2'
+emIsoInvert    = 'eIsoDB03 > 0.5 && mIsoDB03 > 0.25'
 
 # TT Baseline
 ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
