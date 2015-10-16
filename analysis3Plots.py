@@ -16,6 +16,7 @@ p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Inc
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
+p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -33,8 +34,8 @@ qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
                     # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
-#qcdYieldEM = 382.2 * qcdEMScaleFactor   # same as TT
-qcdYieldEM = 975.0 * qcdEMScaleFactor   # For Loose Trigger Selection
+qcdYieldEM = 382.2 * qcdEMScaleFactor   # same as TT
+#qcdYieldEM = 975.0 * qcdEMScaleFactor   # For Loose Trigger Selection
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
@@ -339,18 +340,19 @@ for channel in prodMap.keys() :
         lumi.DrawTextNDC(.7,.96,"%i / pb (13 TeV)" % luminosity)
 
         ''' Random print outs on plots '''
-        text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
-        text1.SetTextSize(0.04)
-        text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
-        text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-        text2.SetTextSize(0.04)
-        text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-        text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
-        text3.SetTextSize(0.04)
-        text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-        text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-        text4.SetTextSize(0.05)
-        text4.DrawTextNDC(.65,.45,"SS Selection" )
+        if options.text :
+            text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
+            text1.SetTextSize(0.04)
+            text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
+            text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            text2.SetTextSize(0.04)
+            text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
+            #text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+            #text3.SetTextSize(0.04)
+            #text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+            #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            #text4.SetTextSize(0.05)
+            #text4.DrawTextNDC(.65,.45,"SS Selection" )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
