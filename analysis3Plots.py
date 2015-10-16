@@ -79,8 +79,12 @@ for channel in prodMap.keys() :
     #if channel == 'tt' : continue
 
     # Make an index file for web viewing
-    if not os.path.exists( '%sPlots' % grouping ) : os.makedirs( '%sPlots/%s' % (grouping, channel) )
-    if not os.path.exists( '%sPlotsList' % grouping ) : os.makedirs( '%sPlotsList/%s' % (grouping, channel) )
+    if not os.path.exists( '%sPlots' % grouping ) :
+        os.makedirs( '%sPlots/em' % grouping )
+        os.makedirs( '%sPlots/tt' % grouping )
+    if not os.path.exists( '%sPlotsList' % grouping ) :
+        os.makedirs( '%sPlotsList/em' % grouping )
+        os.makedirs( '%sPlotsList/tt' % grouping )
     htmlFile = open('%sPlots/%s/index.html' % (grouping, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
     htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
@@ -335,18 +339,18 @@ for channel in prodMap.keys() :
         lumi.DrawTextNDC(.7,.96,"%i / pb (13 TeV)" % luminosity)
 
         ''' Random print outs on plots '''
-        #text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
-        #text1.SetTextSize(0.04)
-        #text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
-        #text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-        #text2.SetTextSize(0.04)
-        #text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-        #text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
-        #text3.SetTextSize(0.04)
-        #text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-        #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-        #text4.SetTextSize(0.05)
-        #text4.DrawTextNDC(.65,.45,"SS Selection" )
+        text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
+        text1.SetTextSize(0.04)
+        text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
+        text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+        text2.SetTextSize(0.04)
+        text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
+        text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+        text3.SetTextSize(0.04)
+        text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+        text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+        text4.SetTextSize(0.05)
+        text4.DrawTextNDC(.65,.45,"SS Selection" )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
