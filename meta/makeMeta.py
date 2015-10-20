@@ -28,6 +28,7 @@ def makeMetaJSON( grouping ) :
                 'ggHtoTauTau' : ('/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 43.92 * 0.0632 ),
                 'VBFHtoTauTau' : ('/VBFHToTauTau_M125_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 3.748 * 0.0632 ),
                 'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 6025.0 ), 
+                'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 18610.0 ), 
                 'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv3/MINIAODSIM' % campaign, 831.76 ),
                 'T-tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv2/MINIAODSIM' % campaign, 35.6 ),
                 'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv1/MINIAODSIM' % campaign, 35.6),

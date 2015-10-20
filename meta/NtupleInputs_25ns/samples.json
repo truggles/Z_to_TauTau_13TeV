@@ -13,6 +13,20 @@
     "nNtupleFiles": 139, 
     "nlumis": 22537
   }, 
+  "DYJetsLow": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 30021559, 
+    "DAS Path": "/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 731, 
+    "nblocks": 31, 
+    "Cross Section (pb)": 18610.0, 
+    "summedWeightsNorm": 21843371.25542618, 
+    "summedWeights": 905281029919.0, 
+    "nevents": 30021559, 
+    "nNtupleFiles": 731, 
+    "nlumis": 148789
+  }, 
   "TTJets": {
     "STATUS": "Error", 
     "DAS status": "ok", 
