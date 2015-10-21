@@ -35,19 +35,17 @@ qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
                     # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
-qcdYieldEM = 899.4 * qcdEMScaleFactor   # Sync trigs all, L=1280.23, Oct21
-qcdYieldEM = 749.4 * qcdEMScaleFactor   # Sync trigs e23m8, L=1280.23, Oct21
-qcdYieldEM = 305.9 * qcdEMScaleFactor   # Sync trigs e12m23, L=1280.23, Oct21
-qcdYieldEM = 2057.7 * qcdEMScaleFactor   # Loose trigs all, L=1280.23, Oct21
-qcdYieldEM = 1717.0 * qcdEMScaleFactor   # Loose trigs e17m8, L=1280.23, Oct21
-qcdYieldEM = 812.6 * qcdEMScaleFactor   # Loose trigs e12m17, L=1280.23, Oct21
+#qcdYieldEM = 899.4 * qcdEMScaleFactor   # Sync trigs all, L=1280.23, Oct21
+#qcdYieldEM = 749.4 * qcdEMScaleFactor   # Sync trigs e23m8, L=1280.23, Oct21
+#qcdYieldEM = 305.9 * qcdEMScaleFactor   # Sync trigs e12m23, L=1280.23, Oct21
+''' Yikes, scale factor of "2" between SS/OS would make this all aligh PERFECTLY '''
+qcdYieldEM = 2057.7 * qcdEMScaleFactor * .67 *2   # Loose trigs all, L=1280.23, Oct21
+#qcdYieldEM = 1717.0 * qcdEMScaleFactor   # Loose trigs e17m8, L=1280.23, Oct21
+#qcdYieldEM = 812.6 * qcdEMScaleFactor   # Loose trigs e12m17, L=1280.23, Oct21
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
 
-prodMap = { 'em' : ('e', 'm'),
-             'tt' : ('t1', 't2')
-}
                 # Sample : Color
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', 'dyj')
@@ -80,7 +78,7 @@ sampColors = {
 }
 
 
-for channel in prodMap.keys() :
+for channel in ['em', 'tt'] :
 
     if channel == 'tt' : continue
 
@@ -230,7 +228,7 @@ for channel in prodMap.keys() :
 
 
         # Maybe make ratio hist
-        c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 600, 600)
+        c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 550, 550)
 
         if not options.ratio :
             pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
@@ -259,8 +257,8 @@ for channel in prodMap.keys() :
             #    if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
             #        num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
             #        ratioHist.SetBinContent( bin_, num )
-            ratioHist.SetMaximum( 2. )
-            ratioHist.SetMinimum( 0. )
+            ratioHist.SetMaximum( 1.5 )
+            ratioHist.SetMinimum( 0.5 )
             ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
@@ -355,12 +353,12 @@ for channel in prodMap.keys() :
             text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
             text2.SetTextSize(0.04)
             text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-            text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
-            text3.SetTextSize(0.04)
-            text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-            text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-            text4.SetTextSize(0.05)
-            text4.DrawTextNDC(.65,.45,"SS Selection" )
+            #text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+            #text3.SetTextSize(0.04)
+            #text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+            #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            #text4.SetTextSize(0.05)
+            #text4.DrawTextNDC(.65,.45,"SS Selection" )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
@@ -375,6 +373,6 @@ for channel in prodMap.keys() :
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
-        htmlFile.write( '<br>\n' )
+        #htmlFile.write( '<br>\n' )
     htmlFile.write( '</body></html>' )
     htmlFile.close()
