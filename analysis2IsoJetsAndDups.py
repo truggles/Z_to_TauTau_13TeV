@@ -192,7 +192,20 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         #'GenWeight' : 'weight',
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
+        'eMtToMET' : 'mt_1',
+        'mMtToMET' : 'mt_2',
+        'pfMetEt' : 'met',
+        'pfMetPhi' : 'metphi',
         }
+    if ('data' in sample) or ('WJets' in sample) : 
+        del branchMappingEM['eMtToMET']
+        del branchMappingEM['mMtToMET']
+        del branchMappingEM['pfMetEt']
+        del branchMappingEM['pfMetPhi']
+        branchMappingEM['eMtToPfMet_Raw'] = 'mt_1'
+        branchMappingEM['mMtToPfMet_Raw'] = 'mt_2'
+        branchMappingEM['type1_pfMetEt'] = 'met'
+        branchMappingEM['type1_pfMetPhi'] = 'metphi'
     
     branchMappingTT = {
         'run' : 'run',
@@ -264,6 +277,15 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
         }
+    if 'data' or 'WJets' in sample : 
+        del branchMappingTT['t1MtToMET']
+        del branchMappingTT['t2MtToMET']
+        del branchMappingTT['pfMetEt']
+        del branchMappingTT['pfMetPhi']
+        branchMappingTT['t1MtToPfMet_Raw'] = 'mt_1'
+        branchMappingTT['t2MtToPfMet_Raw'] = 'mt_2'
+        branchMappingTT['type1_pfMetEt'] = 'met'
+        branchMappingTT['type1_pfMetPhi'] = 'metphi'
 
 
     if channel == 'em' : branchMapping = branchMappingEM
