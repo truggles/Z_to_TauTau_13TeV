@@ -1,17 +1,17 @@
 {
   "data_tt": {
-    "STATUS": "Files Match", 
+    "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 4168703, 
+    "nEvents": 7864940, 
     "DAS Path": "", 
-    "nfiles": 139, 
-    "nblocks": 31, 
+    "nfiles": 231, 
+    "nblocks": 33, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -138861, 
+    "summedWeightsNorm": -227772, 
     "summedWeights": 0.0, 
-    "nevents": 6349491, 
-    "nNtupleFiles": 139, 
-    "nlumis": 22537
+    "nevents": 11130768, 
+    "nNtupleFiles": 228, 
+    "nlumis": 35317
   }, 
   "DYJetsLow": {
     "STATUS": "Good to Go!", 
@@ -72,16 +72,16 @@
   "data_em": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 3221607, 
+    "nEvents": 6513727, 
     "DAS Path": "", 
-    "nfiles": 492, 
-    "nblocks": 33, 
+    "nfiles": 186, 
+    "nblocks": 28, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -112887, 
+    "summedWeightsNorm": -182817, 
     "summedWeights": 0.0, 
-    "nevents": 39200814, 
-    "nNtupleFiles": 113, 
-    "nlumis": 22719
+    "nevents": 9097807, 
+    "nNtupleFiles": 183, 
+    "nlumis": 35210
   }, 
   "VBFHtoTauTau": {
     "STATUS": "Good to Go!", 
@@ -126,18 +126,18 @@
     "nlumis": 5180
   }, 
   "WJets": {
-    "STATUS": "Good to Go!", 
+    "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 24184766, 
-    "DAS Path": "/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
-    "nfiles": 565, 
-    "nblocks": 16, 
+    "nEvents": 67296345, 
+    "DAS Path": "/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 1615, 
+    "nblocks": 49, 
     "Cross Section (pb)": 61526.7, 
-    "summedWeightsNorm": 16541247.980481865, 
-    "summedWeights": 3736543084060.0, 
-    "nevents": 24184766, 
-    "nNtupleFiles": 565, 
-    "nlumis": 249411
+    "summedWeightsNorm": 67296345.0, 
+    "summedWeights": 67296345.0, 
+    "nevents": 72207128, 
+    "nNtupleFiles": 1503, 
+    "nlumis": 364023
   }, 
   "ZZ": {
     "STATUS": "Good to Go!", 

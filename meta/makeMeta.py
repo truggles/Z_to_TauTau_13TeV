@@ -32,7 +32,8 @@ def makeMetaJSON( grouping ) :
                 'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv3/MINIAODSIM' % campaign, 831.76 ),
                 'T-tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv2/MINIAODSIM' % campaign, 35.6 ),
                 'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv1/MINIAODSIM' % campaign, 35.6),
-                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 61526.7 ),
+                #'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 61526.7 ),
+                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 61526.7 ),
                 'WW' : ('/WW_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % old, 63.21 ),
                 #'WW2l2n' : ('/WWTo2L2Nu_13TeV-powheg/%sv1/MINIAODSIM' % campaign, 10.481 ),
                 #'WW4q' : ('/WWTo4Q_13TeV-powheg/%sv2/MINIAODSIM' % campaign, 45.2 ),
@@ -53,8 +54,8 @@ def makeMetaJSON( grouping ) :
     if grouping == '50ns': samples = samples50ns
      
     dataSamples = {
-                'data_em' : ['/DoubleEG/Run2015C-23Sep2015-v1/MINIAOD', '/DoubleEG/Run2015D-PromptReco-v3/MINIAOD'],
-                'data_tt' : ['/Tau/Run2015C-23Sep2015-v1/MINIAOD', '/Tau/Run2015D-PromptReco-v3/MINIAOD'],
+                'data_em' : ['/MuonEG/Run2015C-23Sep2015-v1/MINIAOD', '/MuonEG/Run2015D-05Oct2015-v2/MINIAOD', '/MuonEG/Run2015D-PromptReco-v4/MINIAOD'],
+                'data_tt' : ['/Tau/Run2015C-23Sep2015-v1/MINIAOD', '/Tau/Run2015D-05Oct2015-v1/MINIAOD', '/Tau/Run2015D-PromptReco-v4/MINIAOD'],
     }
     
     # A dictionary to store each samples info
