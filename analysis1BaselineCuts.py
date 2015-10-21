@@ -15,7 +15,8 @@ def getBkgMap() :
     bkgMap = {
                 # cutMapper       samples
         'WJets' : ['wJetsShape', ['WJets',]],
-        'QCD'   : ['QCDShape', ['data_em', 'data_tt',]],
+        'QCDSync'   : ['QCDShapeSync', ['data_em', 'data_tt',]],
+        'QCDLoose'   : ['QCDShapeLoose', ['data_em', 'data_tt',]],
         'None'  : ['', '', '', '']
         }
     return bkgMap
@@ -175,7 +176,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         while go :
             for channel in channels :
     
-                #if channel == 'tt' : continue
+                if channel == 'tt' : continue
                 if channel == 'em' and sample == 'data_tt' : continue
                 if channel == 'tt' and sample == 'data_em' : continue
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
@@ -247,7 +248,7 @@ def drawHistos(grouping, samples, **fargs ) :
     
         for channel in channels :
     
-            #if channel == 'tt' : continue
+            if channel == 'tt' : continue
             if channel == 'em' and sample == 'data_tt' : continue
             if channel == 'tt' and sample == 'data_em' : continue
             print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
