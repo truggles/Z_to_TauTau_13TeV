@@ -24,8 +24,12 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut ) :
     	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
         # the >> sends the output to a predefined histo
         if isData : # Data has no GenWeight and by def has nvtxWeight = 1
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
-            histos[ var ] = gPad.GetPrimitive( "%s" % var )
+            if var == 'm_vis' :
+                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
+                histos[ var ] = gPad.GetPrimitive( "%s" % var )
+            else :
+                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
+                histos[ var ] = gPad.GetPrimitive( "%s" % var )
         else :
             # The Pre and Post integral scaling is to keep the total area the same
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s' % additionalCut )
