@@ -93,13 +93,22 @@ def QCDYieldOSTrigLoose( ch ) :
         cutMap['QCDYield'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttSS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
     return cutMap
 
-# Cuts to calculate QCD yield from Data - MC
-def QCDShape( ch ) :
+# Cuts to produce high yield QCD shape from Data - Sync Triggers
+def QCDShapeSync( ch ) :
     cutMap = OrderedDict()
     if ch == 'em':
-        cutMap['QCDShape'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS + ' && ' + emIsoInvert + ' && ' + extraVeto
+        cutMap['QCDShapeSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS + ' && ' + emIsoInvert + ' && ' + extraVeto
     if ch == 'tt':
-        cutMap['QCDShape'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIsoInvert + ' && ' + extraVeto + ' && ' + tt40
+        cutMap['QCDShapeSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIsoInvert + ' && ' + extraVeto + ' && ' + tt40
+    return cutMap
+
+# Cuts to produce high yield QCD shape from Data - Sync Looser
+def QCDShapeLoose( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['QCDShapeLoose'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + emOS + ' && ' + emIsoInvert + ' && ' + extraVeto
+    if ch == 'tt':
+        cutMap['QCDShapeLoose'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIsoInvert + ' && ' + extraVeto + ' && ' + tt40
     return cutMap
 
 # 2 stage RunII
