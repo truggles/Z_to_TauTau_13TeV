@@ -35,8 +35,12 @@ qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
                     # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
-qcdYieldEM = 899.4 * qcdEMScaleFactor   # Sync trigs, L=1280.23, Oct21
-#qcdYieldEM = 2057.7 * qcdEMScaleFactor   # Loose trigs, L=1280.23, Oct21
+qcdYieldEM = 899.4 * qcdEMScaleFactor   # Sync trigs all, L=1280.23, Oct21
+qcdYieldEM = 749.4 * qcdEMScaleFactor   # Sync trigs e23m8, L=1280.23, Oct21
+qcdYieldEM = 305.9 * qcdEMScaleFactor   # Sync trigs e12m23, L=1280.23, Oct21
+qcdYieldEM = 2057.7 * qcdEMScaleFactor   # Loose trigs all, L=1280.23, Oct21
+qcdYieldEM = 1717.0 * qcdEMScaleFactor   # Loose trigs e17m8, L=1280.23, Oct21
+qcdYieldEM = 812.6 * qcdEMScaleFactor   # Loose trigs e12m17, L=1280.23, Oct21
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
@@ -351,12 +355,12 @@ for channel in prodMap.keys() :
             text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
             text2.SetTextSize(0.04)
             text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-            #text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
-            #text3.SetTextSize(0.04)
-            #text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-            #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-            #text4.SetTextSize(0.05)
-            #text4.DrawTextNDC(.65,.45,"SS Selection" )
+            text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+            text3.SetTextSize(0.04)
+            text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+            text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            text4.SetTextSize(0.05)
+            text4.DrawTextNDC(.65,.45,"SS Selection" )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
