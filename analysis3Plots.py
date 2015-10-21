@@ -17,6 +17,8 @@ p.add_argument('--log', action='store', default=False, dest='log', help="Plot Lo
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
+p.add_argument('--www', action='store', default=True, dest='www', help="Save to Tyler's public 'www' space?")
+p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -27,15 +29,14 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 592.27 # (pb) 25ns - Sept 25th certification
-#luminosity = 1000.0 # (pb) 25ns - Sept 25th certification
+luminosity = 1280.23 # (pb) 25ns - Oct 21 certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
                     # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
-qcdYieldEM = 382.2 * qcdEMScaleFactor   # same as TT
-#qcdYieldEM = 975.0 * qcdEMScaleFactor   # For Loose Trigger Selection
+qcdYieldEM = 899.4 * qcdEMScaleFactor   # Sync trigs, L=1280.23, Oct21
+#qcdYieldEM = 2057.7 * qcdEMScaleFactor   # Loose trigs, L=1280.23, Oct21
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
@@ -77,7 +78,7 @@ sampColors = {
 
 for channel in prodMap.keys() :
 
-    #if channel == 'tt' : continue
+    if channel == 'tt' : continue
 
     # Make an index file for web viewing
     if not os.path.exists( '%sPlots' % grouping ) :
@@ -86,7 +87,10 @@ for channel in prodMap.keys() :
     if not os.path.exists( '%sPlotsList' % grouping ) :
         os.makedirs( '%sPlotsList/em' % grouping )
         os.makedirs( '%sPlotsList/tt' % grouping )
-    htmlFile = open('%sPlots/%s/index.html' % (grouping, channel), 'w')
+    if options.www :
+        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (grouping, channel), 'w')
+    else :
+        htmlFile = open('%sPlots/%s/index.html' % (grouping, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
     htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
     htmlFile.write( '<body>\n' )
@@ -129,14 +133,14 @@ for channel in prodMap.keys() :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
-            elif sample == 'WJets' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/WJets_%s.root' % (grouping, channel), 'READ')
-                tFileScale = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
-                dicScale = tFileScale.Get("%s_Histos" % channel )
-                histScale = dicScale.Get( "%s" % var )
-                wJetsInt = histScale.Integral()
+            #elif sample == 'WJets' :
+            #    tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/WJets_%s.root' % (grouping, channel), 'READ')
+            #    tFileScale = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
+            #    dicScale = tFileScale.Get("%s_Histos" % channel )
+            #    histScale = dicScale.Get( "%s" % var )
+            #    wJetsInt = histScale.Integral()
             elif sample == 'QCD' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape/shape/data_%s.root' % (grouping, channel), 'READ')
+                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
@@ -171,9 +175,9 @@ for channel in prodMap.keys() :
             if sample == 'QCD' and hist.Integral() != 0 :
                 if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
                 if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
-            elif sample == 'WJets' and hist.Integral() != 0 :
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
-                hist.Scale( scaler * wJetsInt / hist.Integral() )
+            #elif sample == 'WJets' and hist.Integral() != 0 :
+            #    scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
+            #    hist.Scale( scaler * wJetsInt / hist.Integral() )
             elif 'data' not in sample and hist.Integral() != 0:
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
@@ -251,8 +255,8 @@ for channel in prodMap.keys() :
             #    if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
             #        num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
             #        ratioHist.SetBinContent( bin_, num )
-            ratioHist.SetMaximum( 1.5 )
-            ratioHist.SetMinimum( 0.5 )
+            ratioHist.SetMaximum( 2. )
+            ratioHist.SetMinimum( 0. )
             ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
@@ -358,8 +362,12 @@ for channel in prodMap.keys() :
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.ratio :
             ratioHist.GetXaxis().SetRange( lowerRange, upperRange-1 )
-        c1.SaveAs('%sPlots/%s/%s.png' % (grouping, channel, var ) )
-        c1.SaveAs('%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
+        if options.www :
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
+        else :
+            c1.SaveAs('%sPlots/%s/%s.png' % (grouping, channel, var ) )
+            c1.SaveAs('%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
