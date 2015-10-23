@@ -53,9 +53,20 @@ Text outputs onto the TCanvas, search 'text1' to find them and uncomment/
 edit.  The samples that are plotted are all listed in the samples ordered
 dictionary ~ line 50.  Run similar to this:
 ```bash
-    python analysis3Plots.py --folder=Oct16NeatCuts --ratio=True --qcd=False
+    python analysis3Plots.py --folder=Oct16NeatCuts --ratio=True --qcd=False --qcdShape=[Sync/Loose]
 ```
 analysis3Plots.py makes a niffty html viewing template for smooth web viewing
 of plots, consider symlinking your output folder to a web directory.
+I added a qcdShape option that has a default of using the 'Sync' triggers for
+creating the QCD shape.
+
+Newest Addition:
+A draft script to create the 'shape' files for making data cards is now
+implemented.  It requires the same --folder=XXX to locate which set of
+histos to make the shapes file with.  Note, that, like the analysis3Plots.py
+script, there is again a default qcdShape option.
+```bash
+    python analysisShapesROOT.py --folder=3oct21Sync --qcdShape=Sync
+```
 
 :-)

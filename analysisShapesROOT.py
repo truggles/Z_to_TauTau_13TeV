@@ -66,6 +66,8 @@ samples['data_em']  = ('kBlack', '_data_obs_')
 samples['VBFHtoTauTau'] = ('kGreen', '_ggH125_')
 samples['ggHtoTauTau'] = ('kGreen', '_vbfH125_')
 
+nameArray = ['_data_obs_','_ggH125_','_vbfH125_','_ZTT_','_TT_','_QCD_','_VV_','_W_']
+
 channels = { 'em' : 'EMu',
              'tt' : 'TauTau',}
 
@@ -90,14 +92,13 @@ for channel in channels.keys() :
         # Defined out here for large scope
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
-        _ZTT_ = ROOT.THStack("All Backgrounds _ZTT_", "_ZTT_" )
-        _VV_ = ROOT.THStack("All Backgrounds _VV_", "_VV_" )
-        _TT_ = ROOT.THStack("All Backgrounds _TT_", "_TT_" )
-        _ggH125_ = ROOT.THStack("All Backgrounds _ggH125_", "_ggH125_" )
-        _vbfH125_ = ROOT.THStack("All Backgrounds _vbfH125_", "_vbfH125_" )
-        _QCD_ = ROOT.THStack("All Backgrounds _QCD_", "_QCD_" )
-        _W_ = ROOT.THStack("All Backgrounds _W_", "_W_" )
-        _data_obs_ = ROOT.THStack("All Backgrounds _data_obs_", "_data_obs_" )
+
+
+        binArray = array.array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,450,500,550,600] )
+        histos = {}
+        for name in nameArray :
+            title = name.strip('_')
+            histos[ name ] = ROOT.TH1F( name, name, 18, binArray )
 
 
         for sample in samples:
@@ -135,40 +136,14 @@ for channel in channels.keys() :
                     hist.Scale( scaler )
 
 
-            hist.SetName( samples[sample][1].strip('_') )
-            hist.SetTitle( samples[sample][1].strip('_') )
-
-
-            hist.Rebin( 20 )
-            rebinArray = array.array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,450,500,550,600] )
-            histNew = hist.Rebin( 18, 'rebinned', rebinArray )
-
-            #print "Hist int: %s %f" % (sample, hist.Integral() )
-            if samples[ sample ][1] == '_ZTT_' :
-                _ZTT_.Add( hist )
-            if samples[ sample ][1] == '_QCD_' :
-                _QCD_.Add( hist )
-            if samples[ sample ][1] == '_TT_' :
-                _TT_.Add( hist )
-            if samples[ sample ][1] == '_VV_' :
-                _VV_.Add( hist )
-            if samples[ sample ][1] == '_W_' :
-                _W_.Add( hist )
-            if samples[ sample ][1] == '_ggH125_' :
-                _ggH125_.Add( hist )
-            if samples[ sample ][1] == '_vbfH125_' :
-                _vbfH125_.Add( hist )
-            if samples[ sample ][1] == '_data_obs_' :
-                _data_obs_.Add( hist )
+            hist2 = hist.Rebin( 18, 'rebinned', binArray )
+            histos[ samples[ sample ][1] ].Add( hist2 )
             tFile.Close()
-        shapeDir.cd()
-        _data_obs_.GetStack().Last().Write()
-        _ZTT_.GetStack().Last().Write()
-        _QCD_.GetStack().Last().Write()
-        _TT_.GetStack().Last().Write()
-        _W_.GetStack().Last().Write()
-        _VV_.GetStack().Last().Write()
-        _ggH125_.GetStack().Last().Write()
-        _vbfH125_.GetStack().Last().Write()
-        shapeFile.Close()
 
+
+        shapeDir.cd()
+        for name in histos :
+            histos[ name ].SetTitle( name.strip('_') )
+            histos[ name ].SetName( name.strip('_') )
+            histos[ name ].Write()
+        shapeFile.Close()
