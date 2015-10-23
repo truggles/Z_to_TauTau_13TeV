@@ -30,7 +30,7 @@ def makePUTemplate( grouping, sample, channel, dataTree ) :
 
 
 def PUreweight( grouping, sample, channel ) :
-    datafile = ROOT.TFile('meta/PileUpInfo/%s_data_%s.root' % (grouping, channel), 'READ')
+    datafile = ROOT.TFile('meta/PileUpInfo/25ns_data_%s.root' % channel, 'READ')
     dHist = datafile.Get('nvtx')
 
     samplefile = ROOT.TFile('meta/PileUpInfo/%s_%s_%s.root' % (grouping, sample, channel), 'READ')

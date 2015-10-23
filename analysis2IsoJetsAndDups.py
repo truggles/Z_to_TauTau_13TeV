@@ -64,12 +64,6 @@ tauIso = {
     'LeadTrackPt' : '',
     'LowestMll' : '',
     'MatchesDoubleTau40Path' : '',
-    'MtToPFMET' : '',
-    'MtToPfMet_Ty1' : '',
-    'MtToPfMet_jes' : '',
-    'MtToPfMet_mes' : '',
-    'MtToPfMet_tes' : '',
-    'MtToPfMet_ues' : '',
     'MuOverlap' : '',
     'MuonIdIsoStdVtxOverlap' : '',
     'MuonIdIsoVtxOverlap' : '',
@@ -165,7 +159,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'eCharge' : 'q_1',
         'ePVDXY' : 'd0_1',
         'ePVDZ' : 'dZ_1',
-        'eMtToMET' : 'mt_1',
         'eIsoDB03' : 'iso_1',
         'mPt' : 'pt_2',
         'mEta' : 'eta_2',
@@ -174,7 +167,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'mCharge' : 'q_2',
         'mPVDXY' : 'd0_2',
         'mPVDZ' : 'dZ_2',
-        'mMtToMET' : 'mt_2',
         'mIsoDB03' : 'iso_2',
         'jet1Pt' : 'jpt_1',
         'jet1Phi' : 'jphi_1',
@@ -197,7 +189,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'pfMetEt' : 'met',
         'pfMetPhi' : 'metphi',
         }
-    if ('data' in sample) or ('WJets' in sample) : 
+    if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
         del branchMappingEM['eMtToMET']
         del branchMappingEM['mMtToMET']
         del branchMappingEM['pfMetEt']
@@ -277,7 +269,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
         }
-    if 'data' or 'WJets' in sample : 
+    if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
         del branchMappingTT['t1MtToMET']
         del branchMappingTT['t2MtToMET']
         del branchMappingTT['pfMetEt']
@@ -446,6 +438,26 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     #pZeta = array('f', [ 0 ] )
     #pZetaB = tnew.Branch('pZeta', pZeta, 'pZeta/F')
 
+    ''' TEMPORARY !!! XXX '''
+    if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
+        print "Boo yeah!"
+        del tauIso['MtToMET']
+        tauIso['MtToPfMet_Raw'] = 'mt'
+        tauIso['MtToPfMet_type1'] = ''
+        tauIso['MtToPfMet_JetEnDown'] = ''
+        tauIso['MtToPfMet_JetEnUp'] = ''
+        tauIso['MtToPfMet_JetResDown'] = ''
+        tauIso['MtToPfMet_JetResUp'] = ''
+        tauIso['MtToPfMet_ElectronEnDown'] = ''
+        tauIso['MtToPfMet_ElectronEnUp'] = ''
+        tauIso['MtToPfMet_MuonEnDown'] = ''
+        tauIso['MtToPfMet_MuonEnUp'] = ''
+        tauIso['MtToPfMet_PhotonEnDown'] = ''
+        tauIso['MtToPfMet_PhotonEnUp'] = ''
+        tauIso['MtToPfMet_TauEnDown'] = ''
+        tauIso['MtToPfMet_TauEnUp'] = ''
+        tauIso['MtToPfMet_UnclusteredEnDown'] = ''
+        tauIso['MtToPfMet_UnclusteredEnUp'] = ''
 
     ''' Now actually fill that instance of an evt '''
     count2 = 0
@@ -485,6 +497,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
+
             isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
             
