@@ -83,6 +83,7 @@ def getHistoDict( channel ) :
         'eta_2' : ('eta_2', 80, -4, 4),
         'iso_2' : ('iso_2', 100, 0, 1),
         'mt_2' : ('mt_2', 400, 0, 400),
+        'Z_DEta' : ('eta_1 - eta_2', 1000, -5, 5),
         #'pZetaVis' : ('pZetaVis', 1000, -100, 900),
         #'pZeta' : ('pZeta', 1000, -400, 600),
     }
@@ -96,6 +97,9 @@ def getHistoDict( channel ) :
             'mJetPt' : ('mJetPt', 400, 0, 400),
             'pZetaVis' : ('e_m_PZetaVis', 1000, -100, 900),
             'pZeta' : ('e_m_PZeta', 1000, -400, 600),
+            'pZeta-0.85pZetaVis' : ('e_m_PZeta - 0.85 * e_m_PZetaVis', 1000, -500, 500),
+            'Z_DR' : ('e_m_DR', 500, 0, 5),
+            'Z_DPhi' : ('e_m_DPhi', 800, -4, 4),
             #'ePVDZ' : ('ePVDZ', 100, -1, 1),
             #'ePVDXY' : ('ePVDXY', 100, -.2, .2),
             #'mPVDZ' : ('mPVDZ', 100, -1, 1),
@@ -113,6 +117,9 @@ def getHistoDict( channel ) :
             'Z_SS' : ('t1_t2_SS', 20, 0, 2),
             'pZetaVis' : ('t1_t2_PZetaVis', 1000, -100, 900),
             'pZeta' : ('t1_t2_PZeta', 1000, -400, 600),
+            'pZeta-0.85pZetaVis' : ('t1_t2_PZeta - 0.85 * t1_t2_PZetaVis', 1000, -500, 500),
+            'Z_DR' : ('t1_t2_DR', 500, 0, 5),
+            'Z_DPhi' : ('t1_t2_DPhi', 800, -4, 4),
             #'t1Pt' : ('t1Pt', 100, 0, 400),
             #'t1Eta' : ('t1Eta', 100, -5, 5),
             #'t1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : ('t1ByCombinedIsolationDeltaBetaCorrRaw3Hits', 100, 0, 5),
@@ -170,6 +177,10 @@ def getPlotDetails( channel ) :
         'nvtx' : (0, 35, 1, 'Number of Vertices', ''),
         'pZetaVis' : (0, 300, 10, 'pZetaVis', ' GeV'),
         'pZeta' : (-200, 300, 10, 'pZeta', ' GeV'),
+        'pZeta-0.85pZetaVis' : (-500, 500, 10, 'pZetaMis - 0.85 x pZetaVis', ' GeV'),
+        'Z_DR' : (0, 5, 10, 'Z dR', ' dR'),
+        'Z_DPhi' : (-4, 4, 10, 'Z dPhi', ' dPhi'),
+        'Z_DEta' : (-5, 5, 10, 'Z dEta', ' dEta'),
         }
 
     if channel == 'em' :

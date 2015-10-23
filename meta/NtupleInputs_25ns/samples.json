@@ -74,14 +74,14 @@
     "DAS status": "ok", 
     "nEvents": 6513727, 
     "DAS Path": "", 
-    "nfiles": 186, 
-    "nblocks": 28, 
+    "nfiles": 187, 
+    "nblocks": 29, 
     "Cross Section (pb)": -999.0, 
     "summedWeightsNorm": -182817, 
     "summedWeights": 0.0, 
     "nevents": 9097807, 
     "nNtupleFiles": 183, 
-    "nlumis": 35210
+    "nlumis": 35211
   }, 
   "VBFHtoTauTau": {
     "STATUS": "Good to Go!", 

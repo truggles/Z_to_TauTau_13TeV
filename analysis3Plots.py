@@ -49,6 +49,7 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
                 # Sample : Color
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', 'dyj')
+samples['DYJetsLow']   = ('kOrange-4', 'dyj')
 #samples['TT']       = ('kBlue-8', 'top')
 samples['TTJets']       = ('kBlue-8', 'top')
 #samples['TTPow']       = ('kBlue-8', 'top')
