@@ -17,6 +17,7 @@ p.add_argument('--log', action='store', default=False, dest='log', help="Plot Lo
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
+p.add_argument('--textMore', action='store', default=False, dest='textMore', help="Add text?")
 p.add_argument('--www', action='store', default=True, dest='www', help="Save to Tyler's public 'www' space?")
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 options = p.parse_args()
@@ -33,7 +34,7 @@ luminosity = 1280.23 # (pb) 25ns - Oct 21 certification
 qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
 qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
-qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
+qcdYieldTT = 1636.5 * qcdTTScaleFactor  # From data - MC in OS region, see plots: 1.3fb-1
                     # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
 #qcdYieldEM = 899.4 * qcdEMScaleFactor   # Sync trigs all, L=1280.23, Oct21
 #qcdYieldEM = 749.4 * qcdEMScaleFactor   # Sync trigs e23m8, L=1280.23, Oct21
@@ -81,7 +82,7 @@ sampColors = {
 
 for channel in ['em', 'tt'] :
 
-    if channel == 'tt' : continue
+    if channel == 'em' : continue
 
     # Make an index file for web viewing
     if not os.path.exists( '%sPlots' % grouping ) :
@@ -354,12 +355,13 @@ for channel in ['em', 'tt'] :
             text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
             text2.SetTextSize(0.04)
             text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-            #text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
-            #text3.SetTextSize(0.04)
-            #text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-            #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-            #text4.SetTextSize(0.05)
-            #text4.DrawTextNDC(.65,.45,"SS Selection" )
+        if options.textMore :
+            text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+            text3.SetTextSize(0.04)
+            text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+            text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            text4.SetTextSize(0.05)
+            text4.DrawTextNDC(.65,.45,"SS Selection" )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
