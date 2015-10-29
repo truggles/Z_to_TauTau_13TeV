@@ -9,7 +9,7 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( outFile, chain, channel, isData, additionalCut ) :
+def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMap = getHistoDict( channel )
 
@@ -24,7 +24,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut ) :
     	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
         # the >> sends the output to a predefined histo
         if isData : # Data has no GenWeight and by def has nvtxWeight = 1
-            if var == 'm_vis' :
+            if var == 'm_vis' and blind :
                 chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
                 histos[ var ] = gPad.GetPrimitive( "%s" % var )
             else :
