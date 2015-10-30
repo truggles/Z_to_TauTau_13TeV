@@ -32,7 +32,12 @@ def checkBkgs( samples, params, bkgMap ) :
 ''' Set grouping (25ns or Sync) '''
 grouping = '25ns'
 #grouping = 'Sync'
+zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
+print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
+os.environ['_ZHOME_'] = zHome
+lumiCert = 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
+puJson = 'pileup_JSON_10-23-2015.txt'
 
 ''' Preset samples '''
 SamplesSync = ['Sync-HtoTT']
@@ -107,8 +112,9 @@ params = {
 
 
 ''' Uncomment to make pile up vertex templates! '''
-#from util.pileUpVertexCorrections import buildAllPUTemplates
-#buildAllPUTemplates( samples, params['numCores'] )
+#from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate
+#makeMCPUTemplate()
+#makeDataPUTemplate( lumiCert, puJson ) 
 
 
 
