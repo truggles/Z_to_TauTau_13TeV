@@ -25,13 +25,14 @@ emOS    = 'e_m_SS == 0'
 emSS    = 'e_m_SS == 1'
 emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.15'
 emIsoLoose   = 'eIsoDB03 < 0.3 && mIsoDB03 < 0.3'
-extraVeto   = 'eVetoZTT10 == 0 && muVetoZTT10 == 0'
+extraVeto   = 'eVetoZTT10new2 == 0 && muVetoZTT10new2 == 0'
 # EM Studies
 emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
 emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
 emIsoInvert    = 'eIsoDB03 > 0.5 && mIsoDB03 > 0.25'
 
 # TT Baseline
+DecayMode = '(t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10)'
 ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
@@ -42,11 +43,20 @@ tt35    = 'doubleTau35Pass == 1 && t1MatchesDoubleTau35Path == 1 && t2MatchesDou
 ttOS    = 't1_t2_SS == 0'
 ttSS    = 't1_t2_SS == 1'
 ttIso   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 1.0'
-ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 2.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 2.0'
+ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
 ttDisc  = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
 ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0'
 ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
+
+# QCD shape test 
+def qcdShapeScale( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + extraVeto
+    if ch == 'tt':
+        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode
+    return cutMap
 
 # A version which applies all cuts at once RunII
 def quickCutMapSingleCut( ch ) :
@@ -97,9 +107,9 @@ def QCDYieldOSTrigLoose( ch ) :
 def QCDShapeSync( ch ) :
     cutMap = OrderedDict()
     if ch == 'em':
-        cutMap['QCDShapeSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emOS + ' && ' + emIsoInvert + ' && ' + extraVeto
+        cutMap['QCDShapeSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emSS + ' && ' + emIsoInvert + ' && ' + extraVeto
     if ch == 'tt':
-        cutMap['QCDShapeSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIsoInvert + ' && ' + extraVeto + ' && ' + tt40
+        cutMap['QCDShapeSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttSS + ' && ' + ttIsoLoose + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + ttDisc 
     return cutMap
 
 # Cuts to produce high yield QCD shape from Data - Sync Looser
@@ -108,7 +118,7 @@ def QCDShapeLoose( ch ) :
     if ch == 'em':
         cutMap['QCDShapeLoose'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eIDLoose + ' && ' + mIDLoose + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + emOS + ' && ' + emIsoInvert + ' && ' + extraVeto
     if ch == 'tt':
-        cutMap['QCDShapeLoose'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIsoInvert + ' && ' + extraVeto + ' && ' + tt40
+        cutMap['QCDShapeLoose'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIsoLoose + ' && ' + extraVeto + ' && ' + tt40
     return cutMap
 
 # 2 stage RunII

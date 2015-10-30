@@ -268,8 +268,9 @@ def drawHistos(grouping, samples, **fargs ) :
             if 'data' in sample : isData = True
             else : isData = False
             additionalCut = fargs['additionalCut']
-            if fargs['bkgs'] != 'None' : blind = False
-            else : blind = True
+            #if fargs['bkgs'] != 'None' : blind = False
+            #else : blind = True
+            blind = False
             analysisPlots.plotHistosProof( outFile, chain, channel, isData, additionalCut, blind )
             outFile.Close()
          

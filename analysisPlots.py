@@ -35,18 +35,22 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s' % additionalCut )
             histos2[ var ] = gPad.GetPrimitive( var2 )
             integralPre = histos2[ var ].Integral()
-            #print "intPre: %f" % integralPre
+            print "intPre: %f" % integralPre
             #integralPreR = h1.Integral(0, cv[1]-1)
             #print "intPreR: %f" % integralPreR
 
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
             integralPost = histos[ var ].Integral()
-            #print "tmpIntPost: %f" % integralPost
+            chain.GetEntry( 1 )
+            xxWeight = abs( chain.GenWeight )
+            print "tmpIntPost: %f" % integralPost
+            print " - proposed Post Int: %f" % ( integralPost / xxWeight )
             if integralPost != 0 :
                 histos[ var ].Scale( integralPre / integralPost )
             #print histos[ var ].GetBinContent( 10 )
-            #print "FinalIntPost: %f" % histos[ var ].Integral()
+            print " - FinalIntPost: %f" % histos[ var ].Integral()
+            print " --- percent increase %f" % ( integralPost / ( xxWeight * integralPre ) )
 
         histos[ var ].Write()
 
@@ -208,13 +212,13 @@ def getPlotDetails( channel ) :
 
     if channel == 'tt' :
         plotDetailsTT = {
-        'iso_1' : (0, 5, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
+        'iso_1' : (0, 10, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
         'eta_1' : ( -3, 3, 4, '#tau_{1} Eta', ' Eta'),
         'pt_1' : (0, 200, 10, '#tau_{1} p_{T} [GeV]', ' GeV'),
         'mt_1' : (0, 200, 10, '#tau_{1} m_{T} [GeV]', ' GeV'),
         'm_1' : (0, 3, 2, 't1 Mass', ' GeV'),
         't1DecayMode' : (0, 15, 1, 't1 Decay Mode', ''),
-        'iso_2' : (0, 5, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
+        'iso_2' : (0, 10, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
         'eta_2' : ( -3, 3, 4, '#tau_{2} Eta', ' Eta'),
         'pt_2' : (0, 200, 10, '#tau_{2} p_{T} [GeV]', ' GeV'),
         'mt_2' : (0, 200, 2, '#tau_{2} m_{T} [GeV]', ' GeV'),

@@ -190,6 +190,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'pfMetPhi' : 'metphi',
         }
     if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
+        #print "\n\n     _________ Sample: %s _______ \n\n" % sample
         del branchMappingEM['eMtToMET']
         del branchMappingEM['mMtToMET']
         del branchMappingEM['pfMetEt']
@@ -270,6 +271,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'jetVeto20ZTT' : 'njetspt20',
         }
     if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
+        #print "\n\n     _________ Sample: %s _______ \n\n" % sample
         del branchMappingTT['t1MtToMET']
         del branchMappingTT['t2MtToMET']
         del branchMappingTT['pfMetEt']
@@ -278,7 +280,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         branchMappingTT['t2MtToPfMet_Raw'] = 'mt_2'
         branchMappingTT['type1_pfMetEt'] = 'met'
         branchMappingTT['type1_pfMetPhi'] = 'metphi'
-
 
     if channel == 'em' : branchMapping = branchMappingEM
     if channel == 'tt' : branchMapping = branchMappingTT
@@ -439,25 +440,26 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     #pZetaB = tnew.Branch('pZeta', pZeta, 'pZeta/F')
 
     ''' TEMPORARY !!! XXX '''
-    if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
-        print "Boo yeah!"
-        del tauIso['MtToMET']
+    if ('data' in sample) or ('WJets' in sample)  or ('Sync' in sample) : 
+        #print "\n\n     _________ Sample: %s _______ \n\n" % sample
+        if 'MtToMET' in tauIso.keys() :
+            del tauIso['MtToMET']
         tauIso['MtToPfMet_Raw'] = 'mt'
         tauIso['MtToPfMet_type1'] = ''
-        tauIso['MtToPfMet_JetEnDown'] = ''
-        tauIso['MtToPfMet_JetEnUp'] = ''
-        tauIso['MtToPfMet_JetResDown'] = ''
-        tauIso['MtToPfMet_JetResUp'] = ''
-        tauIso['MtToPfMet_ElectronEnDown'] = ''
-        tauIso['MtToPfMet_ElectronEnUp'] = ''
-        tauIso['MtToPfMet_MuonEnDown'] = ''
-        tauIso['MtToPfMet_MuonEnUp'] = ''
-        tauIso['MtToPfMet_PhotonEnDown'] = ''
-        tauIso['MtToPfMet_PhotonEnUp'] = ''
-        tauIso['MtToPfMet_TauEnDown'] = ''
-        tauIso['MtToPfMet_TauEnUp'] = ''
-        tauIso['MtToPfMet_UnclusteredEnDown'] = ''
-        tauIso['MtToPfMet_UnclusteredEnUp'] = ''
+        #tauIso['MtToPfMet_JetEnDown'] = ''
+        #tauIso['MtToPfMet_JetEnUp'] = ''
+        #tauIso['MtToPfMet_JetResDown'] = ''
+        #tauIso['MtToPfMet_JetResUp'] = ''
+        #tauIso['MtToPfMet_ElectronEnDown'] = ''
+        #tauIso['MtToPfMet_ElectronEnUp'] = ''
+        #tauIso['MtToPfMet_MuonEnDown'] = ''
+        #tauIso['MtToPfMet_MuonEnUp'] = ''
+        #tauIso['MtToPfMet_PhotonEnDown'] = ''
+        #tauIso['MtToPfMet_PhotonEnUp'] = ''
+        #tauIso['MtToPfMet_TauEnDown'] = ''
+        #tauIso['MtToPfMet_TauEnUp'] = ''
+        #tauIso['MtToPfMet_UnclusteredEnDown'] = ''
+        #tauIso['MtToPfMet_UnclusteredEnUp'] = ''
 
     ''' Now actually fill that instance of an evt '''
     count2 = 0

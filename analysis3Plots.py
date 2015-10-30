@@ -31,7 +31,7 @@ ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
 luminosity = 1280.23 # (pb) 25ns - Oct 21 certification
-qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
+qcdTTScaleFactor = 1.07 # see http://truggles.web.cern.ch/truggles/Oct29/
 qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 qcdYieldTT = 1636.5 * qcdTTScaleFactor  # From data - MC in OS region, see plots: 1.3fb-1
