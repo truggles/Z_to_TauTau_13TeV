@@ -87,15 +87,15 @@ def makeMCPUTemplate( ) :
     dHist.SaveAs('meta/PileUpInfo/MCTemplate.root')
 
 
-def PUreweight( grouping, sample, channel ) :
-    datafile = ROOT.TFile('meta/PileUpInfo/25ns_data_%s.root' % channel, 'READ')
-    dHist = datafile.Get('nvtx')
+def PUreweight( ) :
+    datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
+    dHist = datafile.Get('pileup')
 
-    samplefile = ROOT.TFile('meta/PileUpInfo/%s_%s_%s.root' % (grouping, sample, channel), 'READ')
-    sHist = samplefile.Get('nvtx')
+    samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
+    sHist = samplefile.Get('nTruePU')
 
     reweightDict = {}
-    for i in range( 1, 101 ) :
+    for i in range( 1, 52 ) :
         if sHist.GetBinContent( i ) > 0 :
             ratio = dHist.GetBinContent( i ) / sHist.GetBinContent( i )
         else : ratio = 0

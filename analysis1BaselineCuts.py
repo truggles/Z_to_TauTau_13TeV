@@ -56,64 +56,6 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
 
 
 
-def plotHistos( outFile, chain, channel ) :
-    ''' Make a channel specific selection of desired histos and fill them '''
-    newVarMap = analysisPlots.getHistoDict( channel )
-
-    histosDir = outFile.mkdir( "%s_Histos" % channel )
-    histosDir.cd()
-    ''' Combine Gen and Chan specific into one fill section '''
-    histos = {}
-    for var, cv in newVarMap.iteritems() :
-    	histos[ var ] = analysisPlots.makeHisto( var, cv[1], cv[2], cv[3])
-    #print "Initial:"
-    #print histos
-
-    # Get Pile Up reweight Dictionary
-    if 'data' not in sample and grouping != 'Sync':
-        puDict = util.pileUpVertexCorrections.PUreweight( grouping, sample, channel ) 
-        #print puDict
-        histosDir.cd()
-
-    
-    ''' Scale the histo taking into account events which are 1) out of range and 2) GenWeights '''
-    # Parameters to track the number of positive and negative GenWeight events
-    # so that we  can reweight the histo at the end
-    # Order is : pos, neg
-    scalingDict = {}
-    for var in histos.keys() :
-        scalingDict[ var ] = [0, 0]
-
-    for i in range( chain.GetEntries() ):
-        chain.GetEntry( i )
-        
-        # Apply Generator weights, speficially for DY Jets
-        if chain.GenWeight >= 0 : genWeight = 1
-        if chain.GenWeight < 0 : genWeight = -1
-
-        # Apply PU correction reweighting
-        puWeight = 1
-        if 'data' not in sample and grouping != 'Sync':
-            puWeight = puDict[ chain.nvtx ]
-        
-        w = chain.GenWeight
-        for var, histo in histos.iteritems() :
-            num = getattr( chain, newVarMap[ var ][0] )
-            ret = histo.Fill( num, (genWeight * puWeight) )
-            if ret > 0 and not 'data' in sample :
-                if w > 0 : scalingDict[ var ][0] += 1
-                elif w < 0 : scalingDict[ var ][1] += 1
-    #print scalingDict
-
-    for var, histo in histos.iteritems() :
-        # Add in scaling for GenWeight!
-        #print "Var: %s    Integral Pre: %f" % (var, histo.Integral() )
-        if not 'data' in sample and histo.Integral() > 0 :
-            histo.Scale( ( scalingDict[ var ][0] - scalingDict[ var ][1] ) / histo.Integral() )
-        #print "Var: %s    Integral Pre: %f" % (var, histo.Integral() )
-    	histo.Write()
-
-    return outFile
 
 def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
 

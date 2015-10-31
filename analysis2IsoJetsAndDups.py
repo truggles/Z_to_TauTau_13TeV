@@ -427,8 +427,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     from util.pileUpVertexCorrections import PUreweight
     #from util.pZeta import compZeta
     from array import array
-    baseName = sample.split('_')[0]
-    puDict = PUreweight( grouping, baseName, channel )
+    puDict = PUreweight( )
 
     ''' We are calculating and adding these below variables to our new tree
     nvtx pile up reweighting, pZetaVis, pZeta '''

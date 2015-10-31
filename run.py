@@ -105,27 +105,29 @@ params = {
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-#from meta.makeMeta import makeMetaJSON
-#os.chdir('meta')
-#makeMetaJSON( grouping )
-#os.chdir('..')
+from meta.makeMeta import makeMetaJSON
+os.chdir('meta')
+makeMetaJSON( grouping )
+os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
-#from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate
-#makeMCPUTemplate()
-#makeDataPUTemplate( lumiCert, puJson ) 
+from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate
+if not os.path.exists( 'meta/PileUpInfo' ) : 
+    os.makedirs( 'meta/PileUpInfo' )
+makeMCPUTemplate()
+makeDataPUTemplate( lumiCert, puJson ) 
 
 
 
-samples = checkBkgs( samples, params, bkgMap )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-samples = Samples25nsFinalOld
-samples = checkBkgs( samples, params, bkgMap )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#samples = checkBkgs( samples, params, bkgMap )
+##analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#samples = Samples25nsFinalOld
+#samples = checkBkgs( samples, params, bkgMap )
+##analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 ''' for WJets and QCD shapes 
 uncomment and run each time you change cuts '''
