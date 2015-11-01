@@ -23,7 +23,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
     	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
         # the >> sends the output to a predefined histo
-        if isData : # Data has no GenWeight and by def has nvtxWeight = 1
+        if isData : # Data has no GenWeight and by def has PUWeight = 1
             if var == 'm_vis' and blind :
                 chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
                 histos[ var ] = gPad.GetPrimitive( "%s" % var )
@@ -39,7 +39,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
             #integralPreR = h1.Integral(0, cv[1]-1)
             #print "intPreR: %f" % integralPreR
 
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'nvtxWeight * GenWeight%s' % additionalCut )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * GenWeight%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
             integralPost = histos[ var ].Integral()
             chain.GetEntry( 1 )
@@ -77,8 +77,8 @@ def getHistoDict( channel ) :
         'jpt_2' : ('jpt_2', 400, 0, 400),
         'jeta_2' : ('jeta_2', 100, -5, 5),
         'GenWeight' : ('GenWeight', 1000, -300000, 300000),
-        'nvtx' : ('nvtx', 50, 0, 50),
-        'nTruePU' : ('nTruePU', 50, 0, 50),
+        'npv' : ('npv', 50, 0, 50),
+        'npu' : ('npu', 50, 0, 50),
         'm_vis' : ('m_vis', 600, 0, 600),
         'pt_1' : ('pt_1', 400, 0, 400),
         'eta_1' : ('eta_1', 80, -4, 4),
@@ -89,6 +89,9 @@ def getHistoDict( channel ) :
         'iso_2' : ('iso_2', 100, 0, 1),
         'mt_2' : ('mt_2', 400, 0, 400),
         'Z_DEta' : ('eta_1 - eta_2', 1000, -5, 5),
+        'pzetavis' : ('pzetavis', 1000, -100, 900),
+        'pzetamis' : ('pzetamis', 1000, -400, 600),
+        'pZeta-0.85pZetaVis' : ('pzetamis - 0.85 * pzetavis', 1000, -500, 500),
     }
 
     if channel == 'em' :
@@ -98,9 +101,6 @@ def getHistoDict( channel ) :
             'Z_SS' : ('e_m_SS', 20, 0, 2),
             'eJetPt' : ('eJetPt', 400, 0, 400),
             'mJetPt' : ('mJetPt', 400, 0, 400),
-            'pZetaVis' : ('e_m_PZetaVis', 1000, -100, 900),
-            'pZeta' : ('e_m_PZeta', 1000, -400, 600),
-            'pZeta-0.85pZetaVis' : ('e_m_PZeta - 0.85 * e_m_PZetaVis', 1000, -500, 500),
             'Z_DR' : ('e_m_DR', 500, 0, 5),
             'Z_DPhi' : ('e_m_DPhi', 800, -4, 4),
             'Z_svFitMass' : ('m_sv', 1000, 0, 1000),
@@ -120,9 +120,6 @@ def getHistoDict( channel ) :
             'Z_Pt' : ('t1_t2_Pt', 400, 0, 400),
             #'m_vis' : ('m_vis', 600, 0, 600),
             'Z_SS' : ('t1_t2_SS', 20, 0, 2),
-            'pZetaVis' : ('t1_t2_PZetaVis', 1000, -100, 900),
-            'pZeta' : ('t1_t2_PZeta', 1000, -400, 600),
-            'pZeta-0.85pZetaVis' : ('t1_t2_PZeta - 0.85 * t1_t2_PZetaVis', 1000, -500, 500),
             'Z_DR' : ('t1_t2_DR', 500, 0, 5),
             'Z_DPhi' : ('t1_t2_DPhi', 800, -4, 4),
             'Z_svFitMass' : ('m_sv', 1000, 0, 1000),
@@ -159,10 +156,10 @@ def getPlotDetails( channel ) :
         'extraelec_veto' : (0, 2, 1, 'Extra Electron Veto', ''),
         'extramuon_veto' : (0, 2, 1, 'Extra Muon Veto', ''),
         'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),
-        'nvtx' : (0, 35, 1, 'Number of Vertices', ''),
-        'nTruePU' : (0, 35, 1, 'Number of True PU Vertices', ''),
-        'pZetaVis' : (0, 300, 10, 'pZetaVis', ' GeV'),
-        'pZeta' : (-200, 300, 10, 'pZeta', ' GeV'),
+        'npv' : (0, 35, 1, 'Number of Vertices', ''),
+        'npu' : (0, 35, 1, 'Number of True PU Vertices', ''),
+        'pzetavis' : (0, 300, 10, 'pZetaVis', ' GeV'),
+        'pzetamis' : (-200, 300, 10, 'pZetaMis', ' GeV'),
         'pZeta-0.85pZetaVis' : (-500, 500, 10, 'pZetaMis - 0.85 x pZetaVis', ' GeV'),
         'Z_DR' : (0, 5, 10, 'Z dR', ' dR'),
         'Z_DPhi' : (-4, 4, 10, 'Z dPhi', ' dPhi'),

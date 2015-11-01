@@ -19,7 +19,8 @@ tauIso = {
     'Charge' : 'q',
     'PVDXY' : 'd0',
     'PVDZ' : 'dZ',
-    'MtToMET' : 'mt',
+    'MtToPfMet_Raw' : 'mt',
+    'MtToPfMet_type1' : '',
     'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
     'AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5',
     'AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5',
@@ -29,7 +30,7 @@ tauIso = {
     'AgainstMuonLoose3' : 'againstMuonLoose3',
     #'AgainstMuonLoose' : 'againstMuonLoose',
     'ChargedIsoPtSum' : 'chargedIsoPtSum',
-    'DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
+    #'DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
     'NeutralIsoPtSum' : 'neutralIsoPtSum',
     'PuCorrPtSum' : 'puCorrPtSum',
     #'ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
@@ -147,27 +148,13 @@ def jetCleaning( channel, row, DR ) :
 
 
 def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
-    branchMappingEM = {
+    branchMapping = {
         'run' : 'run',
         'lumi' : 'lumi',
         'evt' : 'evt',
+        'nvtx' : 'npv',
+        'nTruePU' : 'npu',
         'charge' : 'charge',
-        'ePt' : 'pt_1', # rename ePt to pt_1
-        'eEta' : 'eta_1',
-        'ePhi' : 'phi_1',
-        'eMass' : 'm_1',
-        'eCharge' : 'q_1',
-        'ePVDXY' : 'd0_1',
-        'ePVDZ' : 'dZ_1',
-        'eIsoDB03' : 'iso_1',
-        'mPt' : 'pt_2',
-        'mEta' : 'eta_2',
-        'mPhi' : 'phi_2',
-        'mMass' : 'm_2',
-        'mCharge' : 'q_2',
-        'mPVDXY' : 'd0_2',
-        'mPVDZ' : 'dZ_2',
-        'mIsoDB03' : 'iso_2',
         'jet1Pt' : 'jpt_1',
         'jet1Phi' : 'jphi_1',
         'jet1Eta' : 'jeta_1',
@@ -176,35 +163,43 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'jet2Eta' : 'jeta_2',
         'muVetoZTT10new2' : 'extramuon_veto',
         'eVetoZTT10new2' : 'extraelec_veto',
-        'e_m_Mass' : 'm_vis',
-        'pfMetEt' : 'met',
-        'pfMetPhi' : 'metphi',
-        #'mvaMetEt' : 'mvamet',
-        #'mvaMetPhi' : 'mvametphi',
-        #'GenWeight' : 'weight',
+        'mvaMetEt' : 'mvamet',
+        'mvaMetPhi' : 'mvametphi',
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
-        'eMtToMET' : 'mt_1',
-        'mMtToMET' : 'mt_2',
-        'pfMetEt' : 'met',
-        'pfMetPhi' : 'metphi',
+        'type1_pfMetEt' : 'met',
+        'type1_pfMetPhi' : 'metphi',
+        #'GenWeight' : 'weight',
         }
-    if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
-        #print "\n\n     _________ Sample: %s _______ \n\n" % sample
-        del branchMappingEM['eMtToMET']
-        del branchMappingEM['mMtToMET']
-        del branchMappingEM['pfMetEt']
-        del branchMappingEM['pfMetPhi']
-        branchMappingEM['eMtToPfMet_Raw'] = 'mt_1'
-        branchMappingEM['mMtToPfMet_Raw'] = 'mt_2'
-        branchMappingEM['type1_pfMetEt'] = 'met'
-        branchMappingEM['type1_pfMetPhi'] = 'metphi'
+    branchMappingEM = {
+        'ePt' : 'pt_1', # rename ePt to pt_1
+        'eEta' : 'eta_1',
+        'ePhi' : 'phi_1',
+        'eMass' : 'm_1',
+        'eCharge' : 'q_1',
+        'ePVDXY' : 'd0_1',
+        'ePVDZ' : 'dZ_1',
+        'eIsoDB03' : 'iso_1',
+        'eMVANonTrigWP90' : 'id_e_mva_nt_loose_1',
+        'eGenPdgId' : 'gen_match_1',
+        'mGenPdgId' : 'gen_match_2',
+        'mPt' : 'pt_2',
+        'mEta' : 'eta_2',
+        'mPhi' : 'phi_2',
+        'mMass' : 'm_2',
+        'mCharge' : 'q_2',
+        'mPVDXY' : 'd0_2',
+        'mPVDZ' : 'dZ_2',
+        'mIsoDB03' : 'iso_2',
+        'e_m_Mass' : 'm_vis',
+        'e_m_SVfitMass' : 'm_sv',
+        'e_m_PZeta' : 'pzetamiss',
+        'e_m_PZetaVis' : 'pzetavis',
+        'eMtToPfMet_Raw' : 'mt_1',
+        'mMtToPfMet_Raw' : 'mt_2',
+        }
     
     branchMappingTT = {
-        'run' : 'run',
-        'lumi' : 'lumi',
-        'evt' : 'evt',
-        'charge' : 'charge',
         't1Pt' : 'pt_1',
         't1Eta' : 'eta_1',
         't1Phi' : 'phi_1',
@@ -212,7 +207,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         't1Charge' : 'q_1',
         't1PVDXY' : 'd0_1',
         't1PVDZ' : 'dZ_1',
-        't1MtToMET' : 'mt_1',
+        't1GenPdgId' : 'gen_match_1',
         't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_1',
         't1AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_1',
         't1AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5_1',
@@ -222,7 +217,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         't1AgainstMuonLoose3' : 'againstMuonLoose3_1',
         #'t1AgainstMuonLoose' : 'againstMuonLoose_1',
         't1ChargedIsoPtSum' : 'chargedIsoPtSum_1',
-        't1DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_1',
+        #'t1DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_1',
         't1NeutralIsoPtSum' : 'neutralIsoPtSum_1',
         't1PuCorrPtSum' : 'puCorrPtSum_1',
         #'t1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
@@ -236,7 +231,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         't2Charge' : 'q_2',
         't2PVDXY' : 'd0_2',
         't2PVDZ' : 'dZ_2',
-        't2MtToMET' : 'mt_2',
+        't2GenPdgId' : 'gen_match_1',
         't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_2',
         't2AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_2',
         't2AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5_2',
@@ -253,36 +248,20 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         #'t2ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_2',
         #'t2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
         #'t2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
-        'jet1Pt' : 'jpt_1',
-        'jet1Phi' : 'jphi_1',
-        'jet1Eta' : 'jeta_1',
-        'jet2Pt' : 'jpt_2',
-        'jet2Phi' : 'jphi_2',
-        'jet2Eta' : 'jeta_2',
-        'muVetoZTT10new2' : 'extramuon_veto',
-        'eVetoZTT10new2' : 'extraelec_veto',
         't1_t2_Mass' : 'm_vis',
-        'pfMetEt' : 'met',
-        'pfMetPhi' : 'metphi',
-        #'mvaMetEt' : 'mvamet',
-        #'mvaMetPhi' : 'mvametphi',
-        #'GenWeight' : 'weight',
-        'bjetCISVVeto20MediumZTT' : 'nbtag',
-        'jetVeto20ZTT' : 'njetspt20',
+        't1_t2_SVfitMass' : 'm_sv',
+        't1_t2_PZeta' : 'pzetamiss',
+        't1_t2_PZetaVis' : 'pzetavis',
+        't1MtToPfMet_Raw' : 'mt_1',
+        't2MtToPfMet_Raw' : 'mt_2',
         }
-    if ('data' in sample) or ('WJets' in sample) or ('Sync' in sample) : 
-        #print "\n\n     _________ Sample: %s _______ \n\n" % sample
-        del branchMappingTT['t1MtToMET']
-        del branchMappingTT['t2MtToMET']
-        del branchMappingTT['pfMetEt']
-        del branchMappingTT['pfMetPhi']
-        branchMappingTT['t1MtToPfMet_Raw'] = 'mt_1'
-        branchMappingTT['t2MtToPfMet_Raw'] = 'mt_2'
-        branchMappingTT['type1_pfMetEt'] = 'met'
-        branchMappingTT['type1_pfMetPhi'] = 'metphi'
 
-    if channel == 'em' : branchMapping = branchMappingEM
-    if channel == 'tt' : branchMapping = branchMappingTT
+    if channel == 'em' :
+        for key in branchMappingEM.keys() :
+            branchMapping[ key ] = branchMappingEM[ key ]
+    if channel == 'tt' :
+        for key in branchMappingTT.keys() :
+            branchMapping[ key ] = branchMappingTT[ key ]
 
     if bkgFlag == '' :
         oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
@@ -425,40 +404,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     ''' Add a nvtx Pile UP weighting variable to the new tree
     see util.pileUpVertexCorrections.addNvtxWeight for inspiration '''
     from util.pileUpVertexCorrections import PUreweight
-    #from util.pZeta import compZeta
     from array import array
     puDict = PUreweight( )
 
     ''' We are calculating and adding these below variables to our new tree
-    nvtx pile up reweighting, pZetaVis, pZeta '''
-    nvtxWeight = array('f', [ 0 ] )
-    nvtxWeightB = tnew.Branch('nvtxWeight', nvtxWeight, 'nvtxWeight/F')
-    #pZetaVis = array('f', [ 0 ] )
-    #pZetaVisB = tnew.Branch('pZetaVis', pZetaVis, 'pZetaVis/F')
-    #pZeta = array('f', [ 0 ] )
-    #pZetaB = tnew.Branch('pZeta', pZeta, 'pZeta/F')
+    PU Weighting '''
+    PUWeight = array('f', [ 0 ] )
+    PUWeightB = tnew.Branch('PUWeight', PUWeight, 'PUWeight/F')
 
-    ''' TEMPORARY !!! XXX '''
-    if ('data' in sample) or ('WJets' in sample)  or ('Sync' in sample) : 
-        #print "\n\n     _________ Sample: %s _______ \n\n" % sample
-        if 'MtToMET' in tauIso.keys() :
-            del tauIso['MtToMET']
-        tauIso['MtToPfMet_Raw'] = 'mt'
-        tauIso['MtToPfMet_type1'] = ''
-        #tauIso['MtToPfMet_JetEnDown'] = ''
-        #tauIso['MtToPfMet_JetEnUp'] = ''
-        #tauIso['MtToPfMet_JetResDown'] = ''
-        #tauIso['MtToPfMet_JetResUp'] = ''
-        #tauIso['MtToPfMet_ElectronEnDown'] = ''
-        #tauIso['MtToPfMet_ElectronEnUp'] = ''
-        #tauIso['MtToPfMet_MuonEnDown'] = ''
-        #tauIso['MtToPfMet_MuonEnUp'] = ''
-        #tauIso['MtToPfMet_PhotonEnDown'] = ''
-        #tauIso['MtToPfMet_PhotonEnUp'] = ''
-        #tauIso['MtToPfMet_TauEnDown'] = ''
-        #tauIso['MtToPfMet_TauEnUp'] = ''
-        #tauIso['MtToPfMet_UnclusteredEnDown'] = ''
-        #tauIso['MtToPfMet_UnclusteredEnUp'] = ''
 
     ''' Now actually fill that instance of an evt '''
     count2 = 0
@@ -505,14 +458,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             #nvtxW = puDict[ row.nvtx ]
             #if nvtxW == 0 :
             #    print " --- Zero Weight --- "
-            #    nvtxWeight[0] = 0.001
+            #    PUWeight[0] = 0.001
             #else :
-            #    nvtxWeight[0] = puDict[ row.nvtx ]
-            nvtxWeight[0] = puDict[ row.nvtx ]
+            #    PUWeight[0] = puDict[ row.nvtx ]
+            PUWeight[0] = puDict[ int(row.nTruePU) ]
 
-            #pZetas = compZeta( leg1Pt, leg1Phi, leg2Pt, leg2Phi, row.pfMetEt, row.pfMetPhi ) 
-            #pZetaVis[0] = pZetas[0]
-            #pZeta[0] = pZetas[1]
             tnew.Fill()
             count2 += 1
 
