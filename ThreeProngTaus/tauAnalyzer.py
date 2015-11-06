@@ -48,14 +48,17 @@ varMap[4] = 'numTaus'
 varMap[5] = 'numTausThreeProng'
 varMap[6] = 'numJets10'
 varMap[7] = 'numJets20'
+varMap[8] = 'nvtxCleaned'
+varMap[9] = 'orbitNumber'
+varMap[10] = 'bunchCrossing'
 
 # Add Jets to tree
 count = 0
 for i in range(1, 31, 3):
     count += 1
-    varMap[9+i] = 'j%iPt' % count
-    varMap[9+i+1] = 'j%iEta' % count
-    varMap[9+i+2] = 'j%iPhi' % count
+    varMap[19+i] = 'j%iPt' % count
+    varMap[19+i+1] = 'j%iEta' % count
+    varMap[19+i+2] = 'j%iPhi' % count
 
 # Add Taus to tree
 # Only keey 3 prong taus!!!
@@ -77,7 +80,6 @@ branches = []
 # Make branches in TTree for all our variables in the varMap
 for key in varMap.keys() :
     vals[key] = array('f', [0] )
-    #branches.append( tTree.Branch('%s' % varMap[key][0].strip('_'), vals[key], '%s/%s' % (varMap[key][0].strip('_'), varMap[key][1].capitalize() ) ) )
     branches.append( tTree.Branch('%s' % varMap[key].strip('_'), vals[key], '%s/F' % varMap[key].strip('_') ) )
 
 # To track the value of each var before it's filled
@@ -99,10 +101,13 @@ for iev,event in enumerate(events):
     tally['run'] = event.eventAuxiliary().run()
     tally['lumi'] = event.eventAuxiliary().luminosityBlock()
     tally['evt'] = event.eventAuxiliary().event()
+    tally['orbitNumber'] = event.eventAuxiliary().orbitNumber()
+    tally['bunchCrossing'] = event.eventAuxiliary().bunchCrossing()
     
 
     # Vertices
     tally['nvtx'] = 0
+    tally['nvtxCleaned'] = 0
     if len(vertices.product()) == 0 or vertices.product()[0].ndof() < 4:
         print "Event has no good primary vertex."
         continue
@@ -110,23 +115,26 @@ for iev,event in enumerate(events):
         PV = vertices.product()[0]
         #print "PV at x,y,z = %+5.3f, %+5.3f, %+6.3f, ndof: %.1f, score: (pt2 of clustered objects) %.1f" % (PV.x(), PV.y(), PV.z(), PV.ndof(),verticesScore.product().get(0))
         for vtx in vertices.product() :
-            if not vtx.isFake() : tally['nvtx'] += 1
+            if not vtx.isFake() : tally['nvtxCleaned'] += 1
+    tally['nvtx'] = vertices.product().size()
 
 
     # Tau
     tally['numTaus'] = 0
     tally['numTausThreeProng'] = 0
+    cnt = 0
     for i,tau in enumerate(taus.product()):
         if tau.pt() < 20: continue
         if abs( tau.eta() ) > 2.5: continue
         tally['numTaus'] += 1
         if tau.decayMode() != 10: continue
+        cnt += 1
         tally['numTausThreeProng'] += 1
-        tally['t%iPt' % i] = tau.pt()
+        tally['t%iPt' % cnt] = tau.pt()
         tEta = tau.eta()
         tPhi = tau.phi()
-        tally['t%iEta' % i] = tEta
-        tally['t%iPhi' % i] = tPhi
+        tally['t%iEta' % cnt] = tEta
+        tally['t%iPhi' % cnt] = tPhi
         # Find the JetPt and dR of our matching Jet
         jetDRAndPt = []
         for k,jet in enumerate(jets.product()) :
@@ -140,25 +148,27 @@ for iev,event in enumerate(events):
         jetDRAndPt.sort()
         #print jetDRAndPt
         #print "Closest DR: %f   JPt: %f" % (jetDRAndPt[0][0], jetDRAndPt[0][1])
-        tally['t%iJetDR' % i] = jetDRAndPt[0][0]
-        tally['t%iJetPt' % i] = jetDRAndPt[0][1]
+        tally['t%iJetDR' % cnt] = jetDRAndPt[0][0]
+        tally['t%iJetPt' % cnt] = jetDRAndPt[0][1]
         
 
     # Jets (standard AK4)
     tally['numJets10'] = 0
     tally['numJets20'] = 0
+    cnt = 0
     for i,j in enumerate(jets.product()):
         if j.pt() < 10: continue
         if abs( j.eta() ) > 2.5: continue
         tally['numJets10'] += 1
         if j.pt() > 20: continue
+        cnt += 1
         tally['numJets20'] += 1
         jPt = j.pt()
         jEta = j.eta()
         jPhi = j.phi()
-        tally['j%iPt' % i] = jPt
-        tally['j%iEta' % i] = jEta
-        tally['j%iPhi' % i] = jPhi
+        tally['j%iPt' % cnt] = jPt
+        tally['j%iEta' % cnt] = jEta
+        tally['j%iPhi' % cnt] = jPhi
 
 
 
@@ -168,7 +178,7 @@ for iev,event in enumerate(events):
 
 
     tTree.Fill()
-    #if iev > 998: break
+    if iev > 998: break
 tDir.cd()
 tTree.Write()
 tFile.Close() 
