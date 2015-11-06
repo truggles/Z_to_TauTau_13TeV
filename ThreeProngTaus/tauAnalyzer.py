@@ -33,6 +33,7 @@ tDir = tFile.mkdir('tauEvents')
 tDir.cd()
 tTree = ROOT.TTree('Ntuple','Ntuple')
 
+# Our tree of vars to fill
 from collections import OrderedDict
 varMap = OrderedDict()
 varMap[0] = 'run'
@@ -44,14 +45,23 @@ varMap[5] = 'numTausThreeProng'
 varMap[6] = 'numJets10'
 varMap[7] = 'numJets20'
 
-
-# Add Jets
+# Add Jets to tree
 count = 0
-for i in range(1, 31, 3):
+for i in range(1, 40, 3):
     count += 1
     varMap[9+i] = 'j%iPt' % count
     varMap[9+i+1] = 'j%iEta' % count
     varMap[9+i+2] = 'j%iPhi' % count
+
+# Add Taus to tree
+count = 0
+for i in range(1, 41, 4):
+    count += 1
+    varMap[99+i] = 't%iPt' % count
+    varMap[99+i+1] = 't%iEta' % count
+    varMap[99+i+2] = 't%iPhi' % count
+    varMap[99+i+3] = 't%iJetPt' % count
+    
 
 vals = {}
 branches = []
@@ -107,8 +117,12 @@ for iev,event in enumerate(events):
         tally['numTaus'] += 1
         if tau.decayMode() != 10: continue
         tally['numTausThreeProng'] += 1
+        tally['t%iPt' % i] = tau.pt()
+        tally['t%iEta' % i] = tau.eta()
+        tally['t%iPhi' % i] = tau.phi()
+        #tally['t%iJetPt' % i] = tau.getJetRef().pt()
+        print "Tau Pt: %f   TauJetPt: %f" % (tau.pt(), tau.pfJetRef().pt() )
 
-        
         
         #print "tau  %2d: pt %4.1f, dxy signif %.1f, ID(byMediumCombinedIsolationDeltaBetaCorr3Hits) %.1f, lead candidate pt %.1f, pdgId %d decayMode=%i" % (i, tau.pt(), tau.dxy_Sig(), tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits"), tau.leadCand().pt(), tau.leadCand().pdgId(), tau.decayMode()) 
 
