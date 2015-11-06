@@ -1,5 +1,7 @@
 
-def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile ) :
+def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
+    print "TAU ANALYZER CALLED:"
+    print "Count: %i    targetRun %i targetFile %s" % (mpCount, targetRun, targetFile)
     
     # import ROOT in batch mode
     import sys
@@ -31,7 +33,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile ) :
     #events = Events("root://eoscms//eos/cms/store/relval/CMSSW_7_4_1/RelValTTbar_13/MINIAODSIM/PU25ns_MCRUN2_74_V9_gensim71X-v1/00000/72C84BA7-F9EC-E411-B875-002618FDA210.root")
     # didn't work! events = Events("edmFileUtil -d /store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root")
     #events = Events("root://eoscms//eos/cms/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root")
-    events = Events("root://eoscms//eos/cms/store%s" % targetFile)
+    events = Events("root://eoscms//eos/cms%s" % targetFile)
     #events = Events("/afs/cern.ch/work/t/truggles/Z_to_tautau/sync_mcRun2.root")
     #events = Events("/afs/cern.ch/work/t/truggles/Z_to_tautau/JetHT.root")
     
@@ -99,8 +101,9 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile ) :
     
     ''' Start looping over event '''
     print "targetRun : %i" % targetRun
-    print "targetLumis : ",targetLumis
+    #print "targetLumis : ",targetLumis
     for iev,event in enumerate(events):
+        if iev > maxEvents: break
         event.getByLabel(tauLabel, taus) 
         event.getByLabel(vertexLabel, vertices)
         event.getByLabel(vertexLabel, verticesScore)
@@ -118,7 +121,9 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile ) :
         tally['evt'] = event.eventAuxiliary().event()
         tally['orbitNumber'] = event.eventAuxiliary().orbitNumber()
         tally['bunchCrossing'] = event.eventAuxiliary().bunchCrossing()
-        print "iev: %d: run %6d, lumi %4d, event %12d" % (iev,event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(),event.eventAuxiliary().event())
+        if iev % 10000 == 0 :
+            print "Run: %i   Count: %i" % (targetRun, mpCount)
+            print " --- iev: %d: run %6d, lumi %4d, event %12d" % (iev,event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(),event.eventAuxiliary().event())
 
         
     
@@ -126,7 +131,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile ) :
         tally['nvtx'] = 0
         tally['nvtxCleaned'] = 0
         if len(vertices.product()) == 0 or vertices.product()[0].ndof() < 4:
-            print "Event has no good primary vertex."
+            #print "Event has no good primary vertex."
             continue
         else:
             PV = vertices.product()[0]
@@ -195,10 +200,10 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile ) :
     
     
         tTree.Fill()
-        #if iev > 9998: break
     tDir.cd()
     tTree.Write()
     tFile.Close() 
+    return( 'FINISHED', targetRun, mpCount )
     
     
     
@@ -206,5 +211,6 @@ if __name__ == '__main__' :
     mpCount = 0
     targetRun = 259721
     targetLumis = [322,335,]
-    targetFile = '/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root'
-    tauAnalyzer( mpCount, targetRun, targetLumis, targetFile )
+    targetFile = '/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root'
+    maxEvents = 999999
+    tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents )
