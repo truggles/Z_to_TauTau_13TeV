@@ -19,6 +19,10 @@ vertices, vertexLabel = Handle("std::vector<reco::Vertex>"), "offlineSlimmedPrim
 verticesScore = Handle("edm::ValueMap<float>")
 jets, jetLabel = Handle("std::vector<pat::Jet>"), "slimmedJets"
 
+import math
+dRCut = 0.4
+def calcDR( eta1, phi1, eta2, phi2 ) :
+    return float(math.sqrt( (eta1-eta2)*(eta1-eta2) + (phi1-phi2)*(phi1-phi2) ))
 
 # open file (you can use 'edmFileUtil -d /store/whatever.root' to get the physical file name)
 #events = Events("root://eoscms//eos/cms/store/relval/CMSSW_7_4_1/RelValTTbar_13/MINIAODSIM/PU25ns_MCRUN2_74_V9_gensim71X-v1/00000/72C84BA7-F9EC-E411-B875-002618FDA210.root")
@@ -47,27 +51,29 @@ varMap[7] = 'numJets20'
 
 # Add Jets to tree
 count = 0
-for i in range(1, 40, 3):
+for i in range(1, 31, 3):
     count += 1
     varMap[9+i] = 'j%iPt' % count
     varMap[9+i+1] = 'j%iEta' % count
     varMap[9+i+2] = 'j%iPhi' % count
 
 # Add Taus to tree
+# Only keey 3 prong taus!!!
 count = 0
-for i in range(1, 41, 4):
+for i in range(1, 51, 5):
     count += 1
     varMap[99+i] = 't%iPt' % count
     varMap[99+i+1] = 't%iEta' % count
     varMap[99+i+2] = 't%iPhi' % count
-    varMap[99+i+3] = 't%iJetPt' % count
+    varMap[99+i+3] = 't%iJetDR' % count
+    varMap[99+i+4] = 't%iJetPt' % count
     
 
 vals = {}
 branches = []
 
-for key in varMap :
-    print "key: %s    var: %s" % (key, varMap[key])
+#for key in varMap :
+#    print "key: %s    var: %s" % (key, varMap[key])
 # Make branches in TTree for all our variables in the varMap
 for key in varMap.keys() :
     vals[key] = array('f', [0] )
@@ -89,7 +95,7 @@ for iev,event in enumerate(events):
     for key in tally.keys() :
         tally[ key ] = -10
 
-    #print "\nEvent %d: run %6d, lumi %4d, event %12d" % (iev,event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(),event.eventAuxiliary().event())
+    print "iev: %d: run %6d, lumi %4d, event %12d" % (iev,event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(),event.eventAuxiliary().event())
     tally['run'] = event.eventAuxiliary().run()
     tally['lumi'] = event.eventAuxiliary().luminosityBlock()
     tally['evt'] = event.eventAuxiliary().event()
@@ -105,7 +111,6 @@ for iev,event in enumerate(events):
         #print "PV at x,y,z = %+5.3f, %+5.3f, %+6.3f, ndof: %.1f, score: (pt2 of clustered objects) %.1f" % (PV.x(), PV.y(), PV.z(), PV.ndof(),verticesScore.product().get(0))
         for vtx in vertices.product() :
             if not vtx.isFake() : tally['nvtx'] += 1
-        #print "\n nvtx? %i \n" % nvtx_
 
 
     # Tau
@@ -118,13 +123,26 @@ for iev,event in enumerate(events):
         if tau.decayMode() != 10: continue
         tally['numTausThreeProng'] += 1
         tally['t%iPt' % i] = tau.pt()
-        tally['t%iEta' % i] = tau.eta()
-        tally['t%iPhi' % i] = tau.phi()
-        #tally['t%iJetPt' % i] = tau.getJetRef().pt()
-        print "Tau Pt: %f   TauJetPt: %f" % (tau.pt(), tau.pfJetRef().pt() )
-
+        tEta = tau.eta()
+        tPhi = tau.phi()
+        tally['t%iEta' % i] = tEta
+        tally['t%iPhi' % i] = tPhi
+        # Find the JetPt and dR of our matching Jet
+        jetDRAndPt = []
+        for k,jet in enumerate(jets.product()) :
+            if jet.pt() < 20: continue
+            if abs( jet.eta() ) > 3: continue
+            jEta = jet.eta()
+            jPhi = jet.phi()
+            dR = calcDR( jEta, jPhi, tEta, tPhi )
+            jetDRAndPt.append( ( dR, jet.pt() ) )
+        #print jetDRAndPt
+        jetDRAndPt.sort()
+        #print jetDRAndPt
+        #print "Closest DR: %f   JPt: %f" % (jetDRAndPt[0][0], jetDRAndPt[0][1])
+        tally['t%iJetDR' % i] = jetDRAndPt[0][0]
+        tally['t%iJetPt' % i] = jetDRAndPt[0][1]
         
-        #print "tau  %2d: pt %4.1f, dxy signif %.1f, ID(byMediumCombinedIsolationDeltaBetaCorr3Hits) %.1f, lead candidate pt %.1f, pdgId %d decayMode=%i" % (i, tau.pt(), tau.dxy_Sig(), tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits"), tau.leadCand().pt(), tau.leadCand().pdgId(), tau.decayMode()) 
 
     # Jets (standard AK4)
     tally['numJets10'] = 0
@@ -133,11 +151,15 @@ for iev,event in enumerate(events):
         if j.pt() < 10: continue
         if abs( j.eta() ) > 2.5: continue
         tally['numJets10'] += 1
-        if j.pt() < 20: continue
+        if j.pt() > 20: continue
         tally['numJets20'] += 1
-        tally['j%iPt' % i] = j.pt()
-        tally['j%iEta' % i] = j.eta()
-        tally['j%iPhi' % i] = j.phi()
+        jPt = j.pt()
+        jEta = j.eta()
+        jPhi = j.phi()
+        tally['j%iPt' % i] = jPt
+        tally['j%iEta' % i] = jEta
+        tally['j%iPhi' % i] = jPhi
+
 
 
 
@@ -146,7 +168,7 @@ for iev,event in enumerate(events):
 
 
     tTree.Fill()
-    if iev > 98: break
+    #if iev > 998: break
 tDir.cd()
 tTree.Write()
 tFile.Close() 
