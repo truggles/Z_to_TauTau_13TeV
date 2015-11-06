@@ -2,16 +2,16 @@
   "data_tt": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 7864940, 
+    "nEvents": 7847799, 
     "DAS Path": "", 
-    "nfiles": 266, 
-    "nblocks": 41, 
+    "nfiles": 276, 
+    "nblocks": 45, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -227772, 
+    "summedWeightsNorm": -262737, 
     "summedWeights": 0.0, 
-    "nevents": 13138138, 
-    "nNtupleFiles": 228, 
-    "nlumis": 40539
+    "nevents": 13241664, 
+    "nNtupleFiles": 263, 
+    "nlumis": 41894
   }, 
   "DYJetsLow": {
     "STATUS": "Good to Go!", 
@@ -72,16 +72,16 @@
   "data_em": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 6513727, 
+    "nEvents": 6371881, 
     "DAS Path": "", 
-    "nfiles": 220, 
-    "nblocks": 38, 
+    "nfiles": 223, 
+    "nblocks": 39, 
     "Cross Section (pb)": -999.0, 
-    "summedWeightsNorm": -182817, 
+    "summedWeightsNorm": -215784, 
     "summedWeights": 0.0, 
-    "nevents": 10766652, 
-    "nNtupleFiles": 183, 
-    "nlumis": 40337
+    "nevents": 10951476, 
+    "nNtupleFiles": 216, 
+    "nlumis": 41045
   }, 
   "VBFHtoTauTau": {
     "STATUS": "Good to Go!", 

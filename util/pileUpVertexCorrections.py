@@ -90,17 +90,24 @@ def makeMCPUTemplate( ) :
 def PUreweight( ) :
     datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
     dHist = datafile.Get('pileup')
+    dHist.Scale( 1 / dHist.Integral() )
 
     samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
     sHist = samplefile.Get('nTruePU')
 
     reweightDict = {}
+    #i_data = 0
+    #i_mc = 0
     for i in range( 1, 52 ) :
         if sHist.GetBinContent( i ) > 0 :
+            #i_data += dHist.GetBinContent( i )
+            #i_mc += sHist.GetBinContent( i )
+            #print "%i data: %f    mc: %f    ratio: %f" % (i, dHist.GetBinContent( i ), sHist.GetBinContent( i ), (dHist.GetBinContent( i ) / sHist.GetBinContent( i )) )
             ratio = dHist.GetBinContent( i ) / sHist.GetBinContent( i )
         else : ratio = 0
         reweightDict[ i ] = ratio
 
+    #print "Data = %f   MC = %f" % (i_data, i_mc)
     #print reweightDict
     return reweightDict
 
@@ -175,8 +182,9 @@ def buildAllPUTemplates( samples, numCores, maxFiles=20 ) :
         print item[3]
 
 if __name__ == '__main__' :
-    zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-    os.environ['_ZHOME_'] = zHome
-    print zHome
-    makeDataPUTemplate( 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt', 'pileup_JSON_10-23-2015.txt' )
-    makeMCPUTemplate()
+    #zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
+    #os.environ['_ZHOME_'] = zHome
+    #print zHome
+    #makeDataPUTemplate( 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt', 'pileup_JSON_10-23-2015.txt' )
+    #makeMCPUTemplate()
+    PUreweight()

@@ -83,7 +83,7 @@ def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMap
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
     isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0])
-    #print '%s%s/%s.root' % (grouping, mid2, save)
+    print '%s%s/%s.root' % (grouping, mid2, save)
     #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
@@ -118,7 +118,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         while go :
             for channel in channels :
     
-                if channel == 'em' : continue
+                #if channel == 'em' : continue
                 if channel == 'em' and sample == 'data_tt' : continue
                 if channel == 'tt' and sample == 'data_em' : continue
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
@@ -190,7 +190,7 @@ def drawHistos(grouping, samples, **fargs ) :
     
         for channel in channels :
     
-            if channel == 'em' : continue
+            #if channel == 'em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
             if channel == 'tt' and sample == 'data_em' : continue
             print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
@@ -199,12 +199,12 @@ def drawHistos(grouping, samples, **fargs ) :
             if fargs['bkgs'] != 'None' :
                 outFile = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], channel), 'RECREATE')
                 for i in range( numIters+1 ) :
-                    print "%s_%i" % ( sample, i)
+                    #print "%s_%i" % ( sample, i)
                     chain.Add('meta/%sBackgrounds/%s/iso/%s_%i_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], i, channel) )
             else :
                 outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], sample.split('_')[0], channel), 'RECREATE')
                 for i in range( numIters+1 ) :
-                    print "%s_%i" % ( sample, i)
+                    #print "%s_%i" % ( sample, i)
                     chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
             print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
             if 'data' in sample : isData = True
@@ -216,3 +216,5 @@ def drawHistos(grouping, samples, **fargs ) :
             analysisPlots.plotHistosProof( outFile, chain, channel, isData, additionalCut, blind )
             outFile.Close()
          
+if __name__ == '__main__' :
+    runCutsAndIso('25ns', 'data_em', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)

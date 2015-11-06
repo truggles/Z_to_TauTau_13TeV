@@ -19,6 +19,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
     histos = {}
     histos2 = {}
     for var, cv in newVarMap.iteritems() :
+        if var != 'npv' : continue
         var2 = '%s%i' % (var, 2)
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
     	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
@@ -39,19 +40,20 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
             #integralPreR = h1.Integral(0, cv[1]-1)
             #print "intPreR: %f" % integralPreR
 
-            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * GenWeight%s' % additionalCut )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
+            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * GenWeight%s' % additionalCut )
+            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( "%s" % var )
             integralPost = histos[ var ].Integral()
-            chain.GetEntry( 1 )
-            xxWeight = abs( chain.GenWeight )
+            #chain.GetEntry( 1 )
+            #xxWeight = abs( chain.GenWeight )
             print "tmpIntPost: %f" % integralPost
-            print " - proposed Post Int: %f" % ( integralPost / xxWeight )
-            if integralPost != 0 :
-                histos[ var ].Scale( integralPre / integralPost )
+            #print " - proposed Post Int: %f" % ( integralPost / xxWeight )
+            #if integralPost != 0 :
+            #    histos[ var ].Scale( integralPre / integralPost )
             #print histos[ var ].GetBinContent( 10 )
-            print " - FinalIntPost: %f" % histos[ var ].Integral()
-            print " --- percent increase %f" % ( integralPost / ( xxWeight * integralPre ) )
+            #print " - FinalIntPost: %f" % histos[ var ].Integral()
+            print " --- percent increase %f" % ( integralPost / ( integralPre ) )
 
         histos[ var ].Write()
 

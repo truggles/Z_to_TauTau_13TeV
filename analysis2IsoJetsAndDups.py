@@ -193,7 +193,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'mIsoDB03' : 'iso_2',
         'e_m_Mass' : 'm_vis',
         'e_m_SVfitMass' : 'm_sv',
-        'e_m_PZeta' : 'pzetamiss',
+        'e_m_PZeta' : 'pzetamis',
         'e_m_PZetaVis' : 'pzetavis',
         'eMtToPfMet_Raw' : 'mt_1',
         'mMtToPfMet_Raw' : 'mt_2',
@@ -250,7 +250,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         #'t2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
         't1_t2_Mass' : 'm_vis',
         't1_t2_SVfitMass' : 'm_sv',
-        't1_t2_PZeta' : 'pzetamiss',
+        't1_t2_PZeta' : 'pzetamis',
         't1_t2_PZetaVis' : 'pzetavis',
         't1MtToPfMet_Raw' : 'mt_1',
         't2MtToPfMet_Raw' : 'mt_2',
@@ -461,7 +461,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             #    PUWeight[0] = 0.001
             #else :
             #    PUWeight[0] = puDict[ row.nvtx ]
-            PUWeight[0] = puDict[ int(row.nTruePU) ]
+            if 'data' in sample :
+                PUWeight[0] = -1
+            else :
+                PUWeight[0] = puDict[ int(row.nTruePU) ]
 
             tnew.Fill()
             count2 += 1

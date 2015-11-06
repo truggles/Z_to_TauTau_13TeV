@@ -48,6 +48,7 @@ def makeMetaJSON( grouping ) :
                 #'ZZ2q2nu' : ('/ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 10.96 ),
                 #'ZZ4q' : ('/ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 1.256 ),
                 #'ZZ4l' : ('/MINIAODSIM' % campaign, 1.256 ),
+#                'QCD' : ('/QCD_Pt-20toInf_MuEnrichedPt15_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 720648000 * 0.00042),
     }
     
     if grouping == 'Sync': samples = samplesSync

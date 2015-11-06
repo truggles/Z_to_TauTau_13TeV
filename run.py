@@ -43,17 +43,19 @@ puJson = 'pileup_JSON_10-23-2015.txt'
 SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
 Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
-#Samples25nsFinal = ['data_em', 'data_tt', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
-Samples25nsFinalNew = ['data_em', 'data_tt', 'WJets',]
-Samples25nsFinalOld = ['TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau']
+Samples25nsFinal = ['data_em', 'data_tt', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
+#Samples25nsFinalNew = ['data_em', 'data_tt', 'WJets',]
+#Samples25nsFinalOld = ['TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau']
 #Samples25nsFinal = [ 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
 #samples = ['data_em', 'data_tt', 'Tbar-tW', 'T-tW',]
 #samples = ['DYJets',]# 'Tbar-tW', 'T-tW',]
 #samples = ['ggHtoTauTau', 'VBFHtoTauTau']
 #samples = ['WJets',]
-samples = Samples25nsFinalNew
+#samples = Samples25nsFinalNew
+#samples = Samples25nsFinal
 #samples = SamplesSync
 #samples = SamplesData
+samples = ['data_tt',]
 #samples = ['DYJetsLow', 'data_em']
 #samples = ['Tbar-tW',]
 #samples = ['WW',]
@@ -67,11 +69,12 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 30,
-    'numFilesPerCycle' : 50,
-    #'cutMapper' : 'quickCutMapSingleCut',
-    #'cutName' : 'PostSync',
-    #'cutMapper' : 'quickCutMapSync',
+    'numCores' : 20,
+    'numFilesPerCycle' : 25,
+    #'cutMapper' : 'signalCuts',
+    'cutMapper' : 'tmp',
+    'cutName' : 'PostSync',
+    #'cutMapper' : 'syncCuts',
     #'cutName' : 'BaseLine',
     #'cutMapper' : 'testLooserTriggers',
     #'cutMapper' : 'QCDYieldOS',
@@ -79,22 +82,18 @@ params = {
     #'cutName' : 'QCDYield',
     #'cutMapper' : 'qcdShapeScale', #!
     #'cutName' : 'PostSync', #!
-    'mid1' : '1oct29baseline',
-    'mid2' : '2oct29baseline',
-    'mid3' : '3oct30baseline',
-    #'mid3' : '3oct21LooseE17M8',
-    #'mid1' : '1oct21Sync',
-    #'mid2' : '2oct21Sync',
-    #'mid3' : '3oct21Synce12m23',
-    #'mid1' : '1oct29QCDScale',
-    #'mid2' : '2oct29QCDScale',
-    #'mid3' : '3oct29QCDScale_OS',
-    #'mid1' : '1phys15run34',
-    #'mid2' : '2phys15run34',
-    #'mid3' : '3phys15run34',
-    #'additionalCut' : '',
+    #'mid1' : '1nov1SyncSample',
+    #'mid2' : '2nov1SyncSample',
+    #'mid3' : '3nov1SyncSample',
+    #'mid1' : '1nov2newNtups',
+    #'mid2' : '2nov2newNtups',
+    #'mid3' : '3nov2newNtups',
+    'mid1' : '1nov4tmp',
+    'mid2' : '2nov4tmp',
+    'mid3' : '3nov4tmp',
+    'additionalCut' : '',
     #'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 5)*(iso_2 > 5)',
-    'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
+    #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
     #'additionalCut' : '*(nbtag<1)*(mt_2<80)',
     #'additionalCut' : '*(pt_2<20)',
     #'additionalCut' : '*(singleE23SingleMu8Pass > 0 && eMatchesMu8Ele23Path == 1 && mMatchesMu8Ele23Path == 1)',
@@ -105,23 +104,23 @@ params = {
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-from meta.makeMeta import makeMetaJSON
-os.chdir('meta')
-makeMetaJSON( grouping )
-os.chdir('..')
+#from meta.makeMeta import makeMetaJSON
+#os.chdir('meta')
+#makeMetaJSON( grouping )
+#os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
-from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate
-if not os.path.exists( 'meta/PileUpInfo' ) : 
-    os.makedirs( 'meta/PileUpInfo' )
-makeMCPUTemplate()
-makeDataPUTemplate( lumiCert, puJson ) 
+#from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate
+#if not os.path.exists( 'meta/PileUpInfo' ) : 
+#    os.makedirs( 'meta/PileUpInfo' )
+#makeMCPUTemplate()
+#makeDataPUTemplate( lumiCert, puJson ) 
 
 
 
-#samples = checkBkgs( samples, params, bkgMap )
-##analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+samples = checkBkgs( samples, params, bkgMap )
+analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #
 #samples = Samples25nsFinalOld

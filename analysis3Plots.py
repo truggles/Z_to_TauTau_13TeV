@@ -82,7 +82,7 @@ sampColors = {
 
 for channel in ['em', 'tt'] :
 
-    if channel == 'em' : continue
+    #if channel == 'em' : continue
 
     # Make an index file for web viewing
     if not os.path.exists( '%sPlots' % grouping ) :
@@ -125,7 +125,7 @@ for channel in ['em', 'tt'] :
 
 
         for sample in samples:
-            #print sample
+            print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
