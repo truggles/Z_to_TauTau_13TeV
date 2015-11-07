@@ -64,7 +64,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     
     # Add Jets to tree
     count = 0
-    for i in range(1, 31, 3):
+    for i in range(1, 37, 3):
         count += 1
         varMap[19+i] = 'j%iPt' % count
         varMap[19+i+1] = 'j%iEta' % count
@@ -112,6 +112,9 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         for key in tally.keys() :
             tally[ key ] = -10
     
+        if iev % 10000 == 0 :
+            print "Run: %i   Count: %i" % (targetRun, mpCount)
+            print " --- iev: %d: run %6d, lumi %4d, event %12d" % (iev,event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(),event.eventAuxiliary().event())
         # Check if this evt is in the Run and Good Lumis we want
         tally['run'] = event.eventAuxiliary().run()
         if targetRun != tally['run'] : continue
@@ -121,9 +124,6 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         tally['evt'] = event.eventAuxiliary().event()
         tally['orbitNumber'] = event.eventAuxiliary().orbitNumber()
         tally['bunchCrossing'] = event.eventAuxiliary().bunchCrossing()
-        if iev % 10000 == 0 :
-            print "Run: %i   Count: %i" % (targetRun, mpCount)
-            print " --- iev: %d: run %6d, lumi %4d, event %12d" % (iev,event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(),event.eventAuxiliary().event())
 
         
     
@@ -170,9 +170,12 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
             jetDRAndPt.sort()
             #print jetDRAndPt
             #print "Closest DR: %f   JPt: %f" % (jetDRAndPt[0][0], jetDRAndPt[0][1])
-            tally['t%iJetDR' % cnt] = jetDRAndPt[0][0]
-            tally['t%iJetPt' % cnt] = jetDRAndPt[0][1]
-            
+            #if len( jetDRAndPt[0] ) > 1 :
+            try :
+                tally['t%iJetDR' % cnt] = jetDRAndPt[0][0]
+                tally['t%iJetPt' % cnt] = jetDRAndPt[0][1]
+            except :
+                print "No Jets were found.  Len jetDRAndPt = %i" % len( jetDRAndPt )
     
         # Jets (standard AK4)
         tally['numJets10'] = 0
@@ -211,6 +214,9 @@ if __name__ == '__main__' :
     mpCount = 0
     targetRun = 259721
     targetLumis = [322,335,]
-    targetFile = '/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root'
+    #targetFile = '/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root'
+    #targetFile = '/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/0406B003-1C7B-E511-AFD3-02163E0138BA.root'
+    targetRun = 254833
+    targetFile = '/store/data/Run2015C_50ns/JetHT/MINIAOD/05Oct2015-v1/50000/02D10C8B-896F-E511-A562-0026189438BA.root'
     maxEvents = 999999
     tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents )

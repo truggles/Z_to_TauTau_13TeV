@@ -6,7 +6,7 @@ import multiprocessing
 
 begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print "\nStart Time: %s" % str( begin )
-with open('targetRunsJSONx.txt') as jsonFile :
+with open('targetRunsJSON.txt') as jsonFile :
     jsonDict = json.load( jsonFile )
 
 # function to mae a dict to hold run vs its good lumiBlocks
@@ -25,11 +25,11 @@ def buildFullLumiList( jsonDict ) :
     return expandedLumis
 
 runAndLumis = buildFullLumiList( jsonDict )
-maxEvents = 99
-numCores = 5
+maxEvents = 999999
+numCores = 10
 
-#pool = multiprocessing.Pool(processes = numCores )
-#multiprocessingOutputs = []
+pool = multiprocessing.Pool(processes = numCores )
+multiprocessingOutputs = []
 
 
 for run in runAndLumis.keys() :
@@ -37,16 +37,16 @@ for run in runAndLumis.keys() :
     cnt = 0
     for file_ in files :
         targetFile = file_.strip()
-        print tauAnalyzer.tauAnalyzer( cnt, run, runAndLumis[ run ], targetFile, maxEvents )
-        #multiprocessingOutputs.append( pool.apply_async(tauAnalyzer.tauAnalyzer, args=( cnt, run, runAndLumis[ run ], targetFile, maxEvents ) ) )
+        #tauAnalyzer.tauAnalyzer( cnt, run, runAndLumis[ run ], targetFile, maxEvents )
+        multiprocessingOutputs.append( pool.apply_async(tauAnalyzer.tauAnalyzer, args=( cnt, run, runAndLumis[ run ], targetFile, maxEvents ) ) )
         cnt += 1
 
 
-#mpResults = [p.get() for p in multiprocessingOutputs]
+mpResults = [p.get() for p in multiprocessingOutputs]
 
-#mpResults.sort()
-#for item in mpResults :
-#    print item
+mpResults.sort()
+for item in mpResults :
+    print item
 
 print "\nStart Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
