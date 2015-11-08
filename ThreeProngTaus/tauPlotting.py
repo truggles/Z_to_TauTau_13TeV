@@ -18,7 +18,7 @@ def finishPlots( histos, plot, plotMap, run, name ) :
     histos[254833].Draw('hist same e0')
     histos[254790].Draw('hist same e0')
     histos[258425].Draw('hist same e0')
-    
+   
     maxi = 0
     for run in runs :
         #print histos[run].GetMaximum()
@@ -27,8 +27,22 @@ def finishPlots( histos, plot, plotMap, run, name ) :
         if histos[run].GetMaximum() > maxi : maxi = histos[run].GetMaximum()
     histos[259721].SetMaximum( maxi * 1.5 )
     histos[259721].GetXaxis().SetTitle( '%s' % plotMap[plot][0] )
-    histos[259721].GetYaxis().SetTitle( '%s' % plot )
+    p1.SetTitle( '%s' % plot.replace('By',' vs. ') )
+    c1.SetTitle( '%s' % plot.replace('By',' vs. ') )
+    if 'threeProng' in name : yaxis = 'Taus / Event'
+    elif 'taus' in name : yaxis = 'Taus / Jet'
+    elif 'jets' in name and not 'taus' : yaxis = 'Jets / Event'
+    else : yaxis = name
+    histos[259721].GetYaxis().SetTitle( yaxis )
 
+    logo = ROOT.TText(.2, .88,"CMS Preliminary")
+    logo.SetTextSize(0.03)
+    logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+
+    lumi = ROOT.TText(.7,1.05,"(13 TeV)")
+    lumi.SetTextSize(0.035)
+    lumi.DrawTextNDC(.4,.96,"%s   (13 TeV)" % plot.replace('By',' vs. ') )
+ 
     p1.BuildLegend( .65, .73, .95, .95 )
     p1.Update()
     c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s.png' % name )
@@ -46,20 +60,22 @@ begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print "\nStart Time: %s" % str( begin )
 
 plotMap = {
-    #'threeProngTausByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng', 'PUWeight', 'div' ),
-    #'threeProngTaus30ByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng30', 'PUWeight', 'div' ),
-    #'threeProngTausIsoPassByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProngIsoPass', 'PUWeight', 'div' ),
-    #'jets20ByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numJets20', 'PUWeight', 'div' ),
-    #'jets30CleanByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numJets30Clean', 'PUWeight', 'div' ),
-    #'tausPerJetByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng', 'PUWeight*numJets20', 'div' ),
-    #'taus30PerJet30CleanByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng30', 'PUWeight*numJets30Clean', 'div' ),
-    #'taus20IsoPassPerJet20ByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProngIsoPass', 'PUWeight*numJets20', 'div' ),
-    #'Nvtx' : ( 'nvtx', '(50,0,50)', '1', '1', 'scale' ),
-    #'ReweightedNvtx' : ( 'nvtx', '(50,0,50)', 'PUWeight', '1', 'scale' ),
-    'threeProngTausByEta' : ( 'Eta', '(30,-3,3)', 'PUWeight', '1', 'scale' ),
-    'threeProngTausByPt' : ( 'Pt', '(20,0,200)', 'PUWeight', '1', 'scale' ),
-    'threeProngTausByPhi' : ( 'Phi', '(40,-4,4)', 'PUWeight', '1', 'scale' ),
-    'threeProngTausByBunchCrossing' : ( 'bunchCrossing', '(350,0,3500)', 'PUWeight', '1', 'scale' ),
+    'threeProngTausByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng', 'PUWeight', 'div' ),
+    'threeProngTaus30ByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng30', 'PUWeight', 'div' ),
+    'threeProngTausIsoPassByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProngIsoPass', 'PUWeight', 'div' ),
+    'threeProngTaus30IsoPassByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng30IsoPass', 'PUWeight', 'div' ),
+    'jets20ByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numJets20', 'PUWeight', 'div' ),
+    'jets30CleanByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numJets30Clean', 'PUWeight', 'div' ),
+    'tausPerJetByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng', 'PUWeight*numJets20', 'div' ),
+    'taus30PerJet30CleanByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng30', 'PUWeight*numJets30Clean', 'div' ),
+    'taus20IsoPassPerJet20ByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProngIsoPass', 'PUWeight*numJets20', 'div' ),
+    'taus30IsoPassPerJet30CleanByNvtx' : ( 'nvtx', '(25,0,25)', 'PUWeight*numTausThreeProng30IsoPass', 'PUWeight*numJets30Clean', 'div' ),
+    'Nvtx' : ( 'nvtx', '(50,0,50)', '1', '1', 'scale' ),
+    'ReweightedNvtx' : ( 'nvtx', '(50,0,50)', 'PUWeight', '1', 'scale' ),
+    #'threeProngTausByEta' : ( 'Eta', '(30,-3,3)', 'PUWeight', '1', 'scale' ),
+    #'threeProngTausByPt' : ( 'Pt', '(20,0,200)', 'PUWeight', '1', 'scale' ),
+    #'threeProngTausByPhi' : ( 'Phi', '(40,-4,4)', 'PUWeight', '1', 'scale' ),
+    #'threeProngTausByBunchCrossing' : ( 'bunchCrossing', '(350,0,3500)', 'PUWeight', '1', 'scale' ),
 }
 
 runs = {
