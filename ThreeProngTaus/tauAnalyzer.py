@@ -64,10 +64,11 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     varMap[11] = 'nvtxCleaned'
     varMap[12] = 'orbitNumber'
     varMap[13] = 'bunchCrossing'
+    varMap[14] = 'numTausThreeProng30IsoPass'
     
     # Add Jets to tree
     count = 0
-    for i in range(1, 73, 6):
+    for i in range(1, 43, 6):
         count += 1
         varMap[19+i] = 'j%iPt' % count
         varMap[19+i+1] = 'j%iEta' % count
@@ -80,7 +81,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     # Add Taus to tree
     # Only keey 3 prong taus!!!
     count = 0
-    for i in range(1, 61, 6):
+    for i in range(1, 31, 6):
         count += 1
         varMap[150+i] = 't%iPt' % count
         varMap[150+i+1] = 't%iEta' % count
@@ -154,6 +155,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         tally['numTausThreeProng'] = 0
         tally['numTausThreeProngIsoPass'] = 0
         tally['numTausThreeProng30'] = 0
+        tally['numTausThreeProng30IsoPass'] = 0
         cnt = 0
         for i,tau in enumerate(taus.product()):
             if tau.pt() < 20: continue
@@ -169,7 +171,10 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
             tIso = tau.tauID('byCombinedIsolationDeltaBetaCorrRaw3Hits')
             #print "tIso: ",tIso
             #if tIso < 1.5 : print "Not FAKE! Iso: ",tIso
-            if tIso < 1.5 : tally['numTausThreeProngIsoPass'] += 1 
+            if tIso < 1.5 :
+                tally['numTausThreeProngIsoPass'] += 1 
+                if tau.pt() > 30 : 
+                    tally['numTausThreeProng30IsoPass'] += 1 
             tally['t%iEta' % cnt] = tEta
             tally['t%iPhi' % cnt] = tPhi
             tally['t%iIso' % cnt] = tIso
