@@ -56,30 +56,38 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     varMap[3] = 'nvtx'
     varMap[4] = 'numTaus'
     varMap[5] = 'numTausThreeProng'
-    varMap[6] = 'numJets10'
-    varMap[7] = 'numJets20'
-    varMap[8] = 'nvtxCleaned'
-    varMap[9] = 'orbitNumber'
-    varMap[10] = 'bunchCrossing'
+    varMap[6] = 'numTausThreeProngIsoPass'
+    varMap[7] = 'numTausThreeProng30'
+    varMap[8] = 'numJets20'
+    varMap[9] = 'numJets30'
+    varMap[10] = 'numJets30Clean'
+    varMap[11] = 'nvtxCleaned'
+    varMap[12] = 'orbitNumber'
+    varMap[13] = 'bunchCrossing'
     
     # Add Jets to tree
     count = 0
-    for i in range(1, 37, 3):
+    for i in range(1, 73, 6):
         count += 1
         varMap[19+i] = 'j%iPt' % count
         varMap[19+i+1] = 'j%iEta' % count
         varMap[19+i+2] = 'j%iPhi' % count
+        varMap[19+i+3] = 'j%iLooseID' % count
+        varMap[19+i+4] = 'j%iPUdisc' % count
+        varMap[19+i+5] = 'j%iPassPU' % count
+
     
     # Add Taus to tree
     # Only keey 3 prong taus!!!
     count = 0
-    for i in range(1, 51, 5):
+    for i in range(1, 61, 6):
         count += 1
-        varMap[99+i] = 't%iPt' % count
-        varMap[99+i+1] = 't%iEta' % count
-        varMap[99+i+2] = 't%iPhi' % count
-        varMap[99+i+3] = 't%iJetDR' % count
-        varMap[99+i+4] = 't%iJetPt' % count
+        varMap[150+i] = 't%iPt' % count
+        varMap[150+i+1] = 't%iEta' % count
+        varMap[150+i+2] = 't%iPhi' % count
+        varMap[150+i+3] = 't%iJetDR' % count
+        varMap[150+i+4] = 't%iJetPt' % count
+        varMap[150+i+5] = 't%iIso' % count
         
     
     vals = {}
@@ -144,6 +152,8 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         # Tau
         tally['numTaus'] = 0
         tally['numTausThreeProng'] = 0
+        tally['numTausThreeProngIsoPass'] = 0
+        tally['numTausThreeProng30'] = 0
         cnt = 0
         for i,tau in enumerate(taus.product()):
             if tau.pt() < 20: continue
@@ -152,15 +162,22 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
             if tau.decayMode() != 10: continue
             cnt += 1
             tally['numTausThreeProng'] += 1
+            if tau.pt() > 30 : tally['numTausThreeProng30'] += 1
             tally['t%iPt' % cnt] = tau.pt()
             tEta = tau.eta()
             tPhi = tau.phi()
+            tIso = tau.tauID('byCombinedIsolationDeltaBetaCorrRaw3Hits')
+            #print "tIso: ",tIso
+            #if tIso < 1.5 : print "Not FAKE! Iso: ",tIso
+            if tIso < 1.5 : tally['numTausThreeProngIsoPass'] += 1 
             tally['t%iEta' % cnt] = tEta
             tally['t%iPhi' % cnt] = tPhi
+            tally['t%iIso' % cnt] = tIso
+
             # Find the JetPt and dR of our matching Jet
             jetDRAndPt = []
             for k,jet in enumerate(jets.product()) :
-                if jet.pt() < 20: continue
+                if jet.pt() < 30: continue
                 if abs( jet.eta() ) > 3: continue
                 jEta = jet.eta()
                 jPhi = jet.phi()
@@ -178,23 +195,44 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
                 print "No Jets were found.  Len jetDRAndPt = %i" % len( jetDRAndPt )
     
         # Jets (standard AK4)
-        tally['numJets10'] = 0
         tally['numJets20'] = 0
+        tally['numJets30'] = 0
+        tally['numJets30Clean'] = 0
         cnt = 0
         for i,j in enumerate(jets.product()):
-            if j.pt() < 10: continue
+            if j.pt() < 20: continue
             if abs( j.eta() ) > 2.5: continue
-            tally['numJets10'] += 1
-            if j.pt() > 20: continue
-            cnt += 1
             tally['numJets20'] += 1
+            if j.pt() < 30: continue
+            cnt += 1
+            tally['numJets30'] += 1
             jPt = j.pt()
             jEta = j.eta()
             jPhi = j.phi()
+            NHF = j.neutralHadronEnergyFraction()
+            NEMF = j.neutralEmEnergyFraction()
+            CHF = j.chargedHadronEnergyFraction()
+            MUF = j.muonEnergyFraction()
+            CEMF = j.chargedEmEnergyFraction()
+            NumConst = j.chargedMultiplicity()+j.neutralMultiplicity()
+            NumNeutralParticles = j.neutralMultiplicity()
+            CHM = j.chargedMultiplicity()
+            looseJetID = 0
+            if ( NHF<0.99 and NEMF<0.99 and NumConst>1 ):
+                if ((abs(jEta)<=2.4 and CHF>0 and CHM>0 and CEMF<0.99) or ( abs(jEta)>2.4 and abs(jEta)<=3.0 ) ): looseJetID = 1
+            jPUval = j.userFloat("pileupJetId:fullDiscriminant")
+            if jPUval <= -0.63 : jPassPU = 0
+            else : jPassPU = 1
+            
             tally['j%iPt' % cnt] = jPt
             tally['j%iEta' % cnt] = jEta
             tally['j%iPhi' % cnt] = jPhi
+            tally['j%iLooseID' % cnt] = looseJetID
+            tally['j%iPUdisc' % cnt] = jPUval
+            tally['j%iPassPU' % cnt] = jPassPU
     
+            if jPassPU>0 and looseJetID>0 :
+                tally['numJets30Clean'] += 1
     
     
     
