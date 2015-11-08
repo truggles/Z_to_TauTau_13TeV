@@ -94,6 +94,7 @@ def PUreweight( ) :
 
     samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
     sHist = samplefile.Get('nTruePU')
+    sHist.Scale( 1 / sHist.Integral() )
 
     reweightDict = {}
     #i_data = 0
