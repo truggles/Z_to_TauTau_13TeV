@@ -5,6 +5,8 @@ import pyplotter.tdrstyle as tdr
 
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
+numT = 10
+numJ = 12
 
 ''' timing... '''
 begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -16,6 +18,7 @@ plotMap = {
     'tausPerJetByNvtx' : ( 'nvtx', '(40,0,40)', 'PUWeight*numTausThreeProng', 'PUWeight*numJets20', 'div' ),
     'Nvtx' : ( 'nvtx', '(50,0,50)', '1', '1', 'scale' ),
     'ReweightedNvtx' : ( 'nvtx', '(50,0,50)', 'PUWeight', '1', 'scale' ),
+    #'jets20ByEta' : ( 'Eta', '(30,-3,3)', 'PUWeight', '1', 'div' )
 }
 
 runs = {
@@ -25,6 +28,16 @@ runs = {
     259721 : ROOT.kGreen
 }
 
+def getHist( histDict, tree, fill, weight, newHist, run ) :
+    print fill
+    print weight
+    print newHist
+    tree.Draw( fill, weight )
+    histDict[ run ] = gPad.GetPrimitive( newHist )
+    histDict[ run ].SetDirectory( 0 )
+    histDict[ run ].SetTitle( str(run) )
+    histDict[ run ].Sumw2()
+    
 for plot in plotMap.keys() :
     hists = {}
     hists2 = {}
@@ -41,34 +54,25 @@ for plot in plotMap.keys() :
         print "Run: %i" % run
         f = ROOT.TFile('%i/%i.root' % (run, run),'r')
         tree = f.Get('tauEvents/Ntuple')
-        #totalEntries = tree.GetEntries()
-        #print totalEntries
-        tree.Draw( '%s>>hist%i%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s*(run == %i)' % (plotMap[plot][2], run) )
-        hists[ run ] = gPad.GetPrimitive( 'hist%i' % run )
-        hists[ run ].SetDirectory( 0 )
-        hists[ run ].SetTitle( str(run) )
-        hists[ run ].Sumw2()
-    
-        tree.Draw( '%s>>hist2%i%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s*(run == %i)' % (plotMap[plot][3], run) )
-        hists2[ run ] = gPad.GetPrimitive( 'hist2%i' % run )
-        hists2[ run ].SetDirectory( 0 )
-        hists2[ run ].Sumw2()
-        if 'div' in plotMap[plot][4] :
-            hists[ run ].Divide( hists2[ run ] )
-        if 'scale' in plotMap[plot][4] :
-            hists[ run ].Scale( 1 / hists[ run ].Integral() )
-    
+        if plotMap[plot][0] == 'nvtx' :
+            getHist( hists, tree, '%s>>hist%i%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s*(run == %i)' % (plotMap[plot][2], run), 'hist%i' % run, run )
+            getHist( hists2, tree, '%s>>hist2%i%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s*(run == %i)' % (plotMap[plot][3], run), 'hist2%i' % run, run )
+
+            if 'div' in plotMap[plot][4] :
+                hists[ run ].Divide( hists2[ run ] )
+            if 'scale' in plotMap[plot][4] :
+                hists[ run ].Scale( 1 / hists[ run ].Integral() )
+        #if plotMap[plot][0] != 'nvtx' :
+        #    thists = {}
+        #    jhists = {}
+        #    for i in range(1, numT + 1) :
+        #        thists[ '%itau%i' % (run, i) ] = ROOT.TH1F()
+        #    for i in range(1, numJ + 1) :
+        #        jhists[ '%ijet%i' % (run, i) ] = ROOT.TH1F()
         
     
         
-        #for row in tree :
-        #    try :
-        #        hist.Fill( row.nvtx, (row.numTausThreeProng * row.PUWeight) )
-        #    except :
-        #        print "ERROR: nvtx: %f       numTaus3P: %f       PUWeight: %f" % (row.nvtx, row.numTausThreeProng, row.PUWeight)
     
-    
-        #hists[run].Scale( 1 / hists[run].Integral() )
         hists[run].SetLineColor( runs[ run ] )
         hists[run].SetLineWidth( 2 )
     
