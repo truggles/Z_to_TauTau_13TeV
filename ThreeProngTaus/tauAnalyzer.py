@@ -23,6 +23,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     vertices, vertexLabel = Handle("std::vector<reco::Vertex>"), "offlineSlimmedPrimaryVertices"
     verticesScore = Handle("edm::ValueMap<float>")
     jets, jetLabel = Handle("std::vector<pat::Jet>"), "slimmedJets"
+    triggerBits, triggerBitLabel = Handle("edm::TriggerResults"), ("TriggerResults","","HLT")
     
     import math
     dRCut = 0.4
@@ -43,6 +44,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     if not os.path.exists( '%i' % targetRun ):
         os.makedirs( '%i' % targetRun )
     tFile = ROOT.TFile('%i/%i_%i_%s.root' % (targetRun, targetRun, mpCount, targetFile.split('/')[-1].split('.')[0]),'RECREATE')
+    #tFile = ROOT.TFile('tmp.root','RECREATE')
     tDir = tFile.mkdir('tauEvents')
     tDir.cd()
     tTree = ROOT.TTree('Ntuple','Ntuple')
@@ -65,6 +67,8 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     varMap[12] = 'orbitNumber'
     varMap[13] = 'bunchCrossing'
     varMap[14] = 'numTausThreeProng30IsoPass'
+    varMap[15] = 'numTausThreeProng30IsoChrgPass'
+    varMap[16] = 'PFJet450Pass'
     
     # Add Jets to tree
     count = 0
@@ -81,7 +85,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     # Add Taus to tree
     # Only keey 3 prong taus!!!
     count = 0
-    for i in range(1, 31, 6):
+    for i in range(1, 36, 7):
         count += 1
         varMap[150+i] = 't%iPt' % count
         varMap[150+i+1] = 't%iEta' % count
@@ -89,6 +93,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         varMap[150+i+3] = 't%iJetDR' % count
         varMap[150+i+4] = 't%iJetPt' % count
         varMap[150+i+5] = 't%iIso' % count
+        varMap[150+i+6] = 't%iIsoChrg' % count
         
     
     vals = {}
@@ -117,6 +122,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         event.getByLabel(vertexLabel, vertices)
         event.getByLabel(vertexLabel, verticesScore)
         event.getByLabel(jetLabel, jets)
+        event.getByLabel(triggerBitLabel, triggerBits)
     
         for key in tally.keys() :
             tally[ key ] = -10
@@ -134,7 +140,14 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         tally['orbitNumber'] = event.eventAuxiliary().orbitNumber()
         tally['bunchCrossing'] = event.eventAuxiliary().bunchCrossing()
 
-        
+        # log the lowest un-prescaled HLT trigger for these 4 runs
+        trignames = event.object().triggerNames(triggerBits.product())
+        for i in xrange(triggerBits.product().size()):
+            #if triggerBits.product().accept(i) : print "PASS trigger: %s" % trignames.triggerName(i) 
+            #if 'HLT_PFJet450' in trignames.triggerName(i) : print "%s %s" % (trignames.triggerName(i), triggerBits.product().accept(i) )
+            if 'HLT_PFJet450' in trignames.triggerName(i) :
+                if triggerBits.product().accept(i) : tally['PFJet450Pass'] = 1
+                else : tally['PFJet450Pass'] = 0
     
         # Vertices
         tally['nvtx'] = 0
@@ -156,28 +169,34 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         tally['numTausThreeProngIsoPass'] = 0
         tally['numTausThreeProng30'] = 0
         tally['numTausThreeProng30IsoPass'] = 0
+        tally['numTausThreeProng30IsoChrgPass'] = 0
         cnt = 0
         for i,tau in enumerate(taus.product()):
             if tau.pt() < 20: continue
             if abs( tau.eta() ) > 2.5: continue
             tally['numTaus'] += 1
             if tau.decayMode() != 10: continue
-            cnt += 1
             tally['numTausThreeProng'] += 1
-            if tau.pt() > 30 : tally['numTausThreeProng30'] += 1
+            if tau.pt() < 30 : continue
+            cnt += 1
+            tally['numTausThreeProng30'] += 1
             tally['t%iPt' % cnt] = tau.pt()
             tEta = tau.eta()
             tPhi = tau.phi()
             tIso = tau.tauID('byCombinedIsolationDeltaBetaCorrRaw3Hits')
+            tIsoChrg = tau.tauID('chargedIsoPtSum')
             #print "tIso: ",tIso
             #if tIso < 1.5 : print "Not FAKE! Iso: ",tIso
             if tIso < 1.5 :
                 tally['numTausThreeProngIsoPass'] += 1 
-                if tau.pt() > 30 : 
-                    tally['numTausThreeProng30IsoPass'] += 1 
+                tally['numTausThreeProng30IsoPass'] += 1 
+            if tIsoChrg < 2 :
+                tally['numTausThreeProng30IsoChrgPass'] += 1 
+                
             tally['t%iEta' % cnt] = tEta
             tally['t%iPhi' % cnt] = tPhi
             tally['t%iIso' % cnt] = tIso
+            tally['t%iIsoChrg' % cnt] = tIsoChrg
 
             # Find the JetPt and dR of our matching Jet
             jetDRAndPt = []
