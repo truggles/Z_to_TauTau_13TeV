@@ -16,7 +16,7 @@ def makeDataPUTemplate( cert, puJson ) :
         '--calcMode',
         'true',
         '--minBiasXsec',
-        '80000',
+        '69000',
         '--maxPileupBin',
         '52',
         '--numPileupBins',
