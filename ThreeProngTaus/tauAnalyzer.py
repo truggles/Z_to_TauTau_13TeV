@@ -68,24 +68,33 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     varMap[13] = 'bunchCrossing'
     varMap[14] = 'numTausThreeProng30IsoPass'
     varMap[15] = 'numTausThreeProng30IsoChrgPass'
-    varMap[16] = 'PFJet450Pass'
+    #varMap[16] = 'PFJet200Pass'
+    #varMap[17] = 'PFJet260Pass'
+    #varMap[18] = 'PFJet320Pass'
+    #varMap[19] = 'PFJet400Pass'
+    #varMap[20] = 'PFJet450Pass'
+    varMap[18] = 'IsoMu17'
+    varMap[19] = 'IsoMu20'
+    varMap[20] = 'IsoMu27'
+    varMap[21] = 'TrigPass'
+    varMap[22] = 'numTauMissingHits'
     
     # Add Jets to tree
     count = 0
     for i in range(1, 43, 6):
         count += 1
-        varMap[19+i] = 'j%iPt' % count
-        varMap[19+i+1] = 'j%iEta' % count
-        varMap[19+i+2] = 'j%iPhi' % count
-        varMap[19+i+3] = 'j%iLooseID' % count
-        varMap[19+i+4] = 'j%iPUdisc' % count
-        varMap[19+i+5] = 'j%iPassPU' % count
+        varMap[39+i] = 'j%iPt' % count
+        varMap[39+i+1] = 'j%iEta' % count
+        varMap[39+i+2] = 'j%iPhi' % count
+        varMap[39+i+3] = 'j%iLooseID' % count
+        varMap[39+i+4] = 'j%iPUdisc' % count
+        varMap[39+i+5] = 'j%iPassPU' % count
 
     
     # Add Taus to tree
     # Only keey 3 prong taus!!!
     count = 0
-    for i in range(1, 36, 7):
+    for i in range(1, 41, 8):
         count += 1
         varMap[150+i] = 't%iPt' % count
         varMap[150+i+1] = 't%iEta' % count
@@ -94,6 +103,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         varMap[150+i+4] = 't%iJetPt' % count
         varMap[150+i+5] = 't%iIso' % count
         varMap[150+i+6] = 't%iIsoChrg' % count
+        varMap[150+i+7] = 't%iMissingHits' % count
         
     
     vals = {}
@@ -142,13 +152,51 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
 
         # log the lowest un-prescaled HLT trigger for these 4 runs
         trignames = event.object().triggerNames(triggerBits.product())
+        tally['TrigPass'] = 0
         for i in xrange(triggerBits.product().size()):
             #if triggerBits.product().accept(i) : print "PASS trigger: %s" % trignames.triggerName(i) 
             #if 'HLT_PFJet450' in trignames.triggerName(i) : print "%s %s" % (trignames.triggerName(i), triggerBits.product().accept(i) )
-            if 'HLT_PFJet450' in trignames.triggerName(i) :
-                if triggerBits.product().accept(i) : tally['PFJet450Pass'] = 1
-                else : tally['PFJet450Pass'] = 0
-    
+            #if 'HLT_PFJet200' in trignames.triggerName(i) :
+            #    if triggerBits.product().accept(i) :
+            #        tally['PFJet200Pass'] = 1
+            #        tally['TrigPass'] += 1
+            #    else : tally['PFJet200Pass'] = 0
+            #if 'HLT_PFJet260' in trignames.triggerName(i) :
+            #    if triggerBits.product().accept(i) :
+            #        tally['PFJet260Pass'] = 1
+            #        tally['TrigPass'] += 1
+            #    else : tally['PFJet260Pass'] = 0
+            #if 'HLT_PFJet320' in trignames.triggerName(i) :
+            #    if triggerBits.product().accept(i) :
+            #        tally['PFJet320Pass'] = 1
+            #        tally['TrigPass'] += 1
+            #    else : tally['PFJet320Pass'] = 0
+            #if 'HLT_PFJet400' in trignames.triggerName(i) :
+            #    if triggerBits.product().accept(i) :
+            #        tally['PFJet400Pass'] = 1
+            #        tally['TrigPass'] += 1
+            #    else : tally['PFJet400Pass'] = 0
+            #if 'HLT_PFJet450' in trignames.triggerName(i) :
+            #    if triggerBits.product().accept(i) :
+            #        tally['PFJet450Pass'] = 1
+            #        tally['TrigPass'] += 1
+            #    else : tally['PFJet450Pass'] = 0
+            if 'HLT_IsoMu17_eta2p1_v' in trignames.triggerName(i) :
+                if triggerBits.product().accept(i) :
+                    tally['IsoMu17'] = 1
+                    tally['TrigPass'] += 1
+                else : tally['IsoMu17'] = 0
+            if 'HLT_IsoMu20_v' in trignames.triggerName(i) :
+                if triggerBits.product().accept(i) :
+                    tally['IsoMu20'] = 1
+                    tally['TrigPass'] += 1
+                else : tally['IsoMu20'] = 0
+            if 'HLT_IsoMu27_v' in trignames.triggerName(i) :
+                if triggerBits.product().accept(i) :
+                    tally['IsoMu27'] = 1
+                    tally['TrigPass'] += 1
+                else : tally['IsoMu27'] = 0
+        if tally['TrigPass'] == 0 : continue
         # Vertices
         tally['nvtx'] = 0
         tally['nvtxCleaned'] = 0
@@ -170,6 +218,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
         tally['numTausThreeProng30'] = 0
         tally['numTausThreeProng30IsoPass'] = 0
         tally['numTausThreeProng30IsoChrgPass'] = 0
+        tally['numTauMissingHits'] = 0
         cnt = 0
         for i,tau in enumerate(taus.product()):
             if tau.pt() < 20: continue
@@ -185,6 +234,13 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
             tPhi = tau.phi()
             tIso = tau.tauID('byCombinedIsolationDeltaBetaCorrRaw3Hits')
             tIsoChrg = tau.tauID('chargedIsoPtSum')
+            tChrgHad = tau.leadChargedHadrCand()
+            tMiss = tChrgHad.lostInnerHits()
+            if tMiss == 18446744073709551615 :
+                tMiss = 0
+            tally['numTauMissingHits'] += tMiss
+            #print "lead chrg had: ",tChrgHad
+            #print "lost hits: ",tChrgHad.lostInnerHits()
             #print "tIso: ",tIso
             #if tIso < 1.5 : print "Not FAKE! Iso: ",tIso
             if tIso < 1.5 :
@@ -197,6 +253,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
             tally['t%iPhi' % cnt] = tPhi
             tally['t%iIso' % cnt] = tIso
             tally['t%iIsoChrg' % cnt] = tIsoChrg
+            tally['t%iMissingHits' % cnt] = tMiss
 
             # Find the JetPt and dR of our matching Jet
             jetDRAndPt = []

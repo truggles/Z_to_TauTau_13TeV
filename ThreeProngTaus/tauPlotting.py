@@ -9,7 +9,7 @@ numT = 5
 numJ = 7
 
 def finishPlots( histos, plot, plotMap, run, name ) :
-    c1 = ROOT.TCanvas(plot,plot,400,400)
+    c1 = ROOT.TCanvas(plot,plot,600,600)
     p1 = ROOT.TPad('p_%s' % plot,'p_%s' % plot,0,0,1,1)
     p1.Draw()
     p1.cd()
@@ -30,7 +30,7 @@ def finishPlots( histos, plot, plotMap, run, name ) :
     #p1.SetTitle( '%s' % plot.replace('By',' vs. ') )
     #c1.SetTitle( '%s' % plot.replace('By',' vs. ') )
     if 'threeProng' in name : yaxis = 'Taus / Event'
-    elif 'taus' in name : yaxis = 'Taus / Jet'
+    elif 'taus' in name : yaxis = 'Taus / Jets Rate'
     elif 'jets' in name : yaxis = 'Jets / Event'
     else : yaxis = name
     histos[259721].GetYaxis().SetTitle( yaxis )
@@ -47,9 +47,16 @@ def finishPlots( histos, plot, plotMap, run, name ) :
     Title.SetTextSize(0.04)
     Title.DrawTextNDC(.15,.96,"%s" % plot.replace('By',' vs. ') )
 
+    if plot == 'threeProngTaus30ByTauMissingHits':
+        p1.SetLogy()
+
     p1.BuildLegend( .65, .73, .95, .95 )
     p1.Update()
     c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s.png' % name )
+    if plot == 'threeProngTaus30ByTauMissingHits':
+        p1.SetLogy()
+        p1.Update()
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s_log.png' % name )
 
 def getHist( histDict, key, tree, fill, weight, histName, run ) :
     tree.Draw( fill, weight )
@@ -71,38 +78,45 @@ plotMap = {
     #'tausPerJetByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*numTausThreeProng', 'PUWeight*numJets20', 'div' ),
 
     #''' With Trigger Matching !!! '''
-    'threeProngTaus30ByTauPt' : ( 't1Pt', '(50,0,500)', 'PUWeight*PFJet450Pass', 'PFJet450Pass', 'div' ),
-    'jets30CleanByJetPt' : ( 'j1Pt', '(50,0,500)', 'PUWeight*PFJet450Pass', 'PFJet450Pass', 'div' ),
-    'threeProngTaus30ByTauPhi' : ( 't1Phi', '(40,-4,4)', 'PUWeight*PFJet450Pass', 'PFJet450Pass', 'div' ),
-    'jets30CleanByJetPhi' : ( 'j1Phi', '(40,-4,4)', 'PUWeight*PFJet450Pass', 'PFJet450Pass', 'div' ),
-    'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', 'PUWeight*PFJet450Pass', 'PFJet450Pass', 'div' ),
-    'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*PFJet450Pass', 'PFJet450Pass', 'div' ),
-    #'threeProngTaus30ByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numTausThreeProng30', 'PUWeight*PFJet450Pass', 'div' ),
-    #'threeProngTaus30TrigByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numTausThreeProng30*PFJet450Pass', 'PUWeight*PFJet450Pass*PFJet450Pass', 'div' ),
-    #'threeProngTaus30IsoPassByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet450Pass', 'div' ),
-    #'threeProngTaus30IsoChrgPassByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet450Pass', 'div' ),
-    #'jets30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numJets30Clean', 'PUWeight*PFJet450Pass', 'div' ),
-    #'taus30PerJet30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numTausThreeProng30', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
-    #'taus30IsoPassPerJet30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
-    #'taus30IsoChrgPassPerJet30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
+    'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,300)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,400)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,200)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'jets30CleanByJetPt' : ( 'j1Pt', '(50,0,1000)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'jets30CleanByJet3Pt' : ( 'j3Pt', '(50,0,500)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'threeProngTaus30ByTauPhi' : ( 't1Phi', '(40,-4,4)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'jets30CleanByJetPhi' : ( 'j1Phi', '(40,-4,4)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'threeProngTaus30ByTauMissingHits' : ( 't1MissingHits', '(5,0,5)', 'PUWeight*PFJet260Pass', 'PFJet260Pass', 'scale' ),
+    'missingHitsPer3ProngTaus30ByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTauMissingHits', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'div' ),
+    'missingHitsPer3ProngTaus30ByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numTauMissingHits', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'div' ),
+    'missingHitsPer3ProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet260Pass*numTauMissingHits', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'div' ),
+    'threeProngTaus30ByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'PUWeight*PFJet260Pass', 'div' ),
+    'threeProngTaus30TrigByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTausThreeProng30*PFJet260Pass', 'PUWeight*PFJet260Pass*PFJet260Pass', 'div' ),
+    'threeProngTaus30IsoPassByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet260Pass', 'div' ),
+    'threeProngTaus30IsoChrgPassByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet260Pass', 'div' ),
+    'jets30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numJets30Clean', 'PUWeight*PFJet260Pass', 'div' ),
+    'taus30PerJet30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
+    'taus30IsoPassPerJet30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
+    'taus30IsoChrgPassPerJet30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
 
-    #'jets30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet450Pass*numJets30Clean', 'PUWeight*PFJet450Pass', 'div' ),
-    #'threeProngTaus30ByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet450Pass*numTausThreeProng30', 'PUWeight*PFJet450Pass', 'div' ),
-    #'threeProngTaus30IsoPassByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet450Pass', 'div' ),
-    #'threeProngTaus30IsoChrgPassByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet450Pass', 'div' ),
-    #'taus30IsoPassPerJet30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
-    #'taus30IsoChrgPassPerJet30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
-    #'taus30PerJet30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet450Pass*numTausThreeProng30', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
+    'jets30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numJets30Clean', 'PUWeight*PFJet260Pass', 'div' ),
+    'threeProngTaus30ByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'PUWeight*PFJet260Pass', 'div' ),
+    'threeProngTaus30IsoPassByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet260Pass', 'div' ),
+    'threeProngTaus30IsoChrgPassByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet260Pass', 'div' ),
+    'taus30IsoPassPerJet30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
+    'taus30IsoChrgPassPerJet30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoChrgPass', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
+    'taus30PerJet30CleanByLumi' : ( 'lumi', '(51,0,1700)', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
 
-    #'jets30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet450Pass*numJets30Clean', 'PUWeight*PFJet450Pass', 'div' ),
-    #'threeProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet450Pass*numTausThreeProng30', 'PUWeight*PFJet450Pass', 'div' ),
-    #'threeProngTaus30IsoPassByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet450Pass', 'div' ),
-    #'taus30IsoPassPerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet450Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
-    #'taus30PerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet450Pass*numTausThreeProng30', 'PUWeight*PFJet450Pass*numJets30Clean', 'div' ),
+    'jets30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet260Pass*numJets30Clean', 'PUWeight*PFJet260Pass', 'div' ),
+    'threeProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'PUWeight*PFJet260Pass', 'div' ),
+    'threeProngTaus30IsoPassByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet260Pass', 'div' ),
+    'taus30IsoPassPerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet260Pass*numTausThreeProng30IsoPass', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
+    'taus30PerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*PFJet260Pass*numTausThreeProng30', 'PUWeight*PFJet260Pass*numJets30Clean', 'div' ),
 
     #''' WithOUT Trigger Matching !!! '''
     #'threeProngTaus30ByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*numTausThreeProng30', 'PUWeight', 'div' ),
-    #'threeProngTaus30TrigByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*numTausThreeProng30*PFJet450Pass', 'PUWeight*PFJet450Pass', 'div' ),
+    #'threeProngTaus30TrigByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*numTausThreeProng30*PFJet260Pass', 'PUWeight*PFJet260Pass', 'div' ),
     #'threeProngTaus30IsoPassByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*numTausThreeProng30IsoPass', 'PUWeight', 'div' ),
     #'threeProngTaus30IsoChrgPassByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*numTausThreeProng30IsoChrgPass', 'PUWeight', 'div' ),
     #'jets30CleanByNvtx' : ( 'nvtx', '(35,0,35)', 'PUWeight*numJets30Clean', 'PUWeight', 'div' ),
@@ -131,11 +145,11 @@ plotMap = {
     #'threeProngTausByPhi' : ( 'Phi', '(40,-4,4)', 'PUWeight', '1', 'scale' ),
     #'threeProngTausByIso' : ( 'Iso', '(20,0,200)', 'PUWeight', '1', 'scale' ),
     #'threeProngTausByIsoChrg' : ( 'IsoChrg', '(20,0,200)', 'PUWeight', '1', 'scale' ),
-    #'threeProngTausByEtaTrig' : ( 'Eta', '(30,-3,3)', 'PUWeight*PFJet450Pass', '1', 'scale' ),
-    #'threeProngTausByPtTrig' : ( 'Pt', '(20,0,200)', 'PUWeight*PFJet450Pass', '1', 'scale' ),
-    #'threeProngTausByPhiTrig' : ( 'Phi', '(40,-4,4)', 'PUWeight*PFJet450Pass', '1', 'scale' ),
-    #'threeProngTausByIsoTrig' : ( 'Iso', '(20,0,200)', 'PUWeight*PFJet450Pass', '1', 'scale' ),
-    #'threeProngTausByIsoChrgTrig' : ( 'IsoChrg', '(20,0,200)', 'PUWeight*PFJet450Pass', '1', 'scale' ),
+    #'threeProngTausByEtaTrig' : ( 'Eta', '(30,-3,3)', 'PUWeight*PFJet260Pass', '1', 'scale' ),
+    #'threeProngTausByPtTrig' : ( 'Pt', '(20,0,200)', 'PUWeight*PFJet260Pass', '1', 'scale' ),
+    #'threeProngTausByPhiTrig' : ( 'Phi', '(40,-4,4)', 'PUWeight*PFJet260Pass', '1', 'scale' ),
+    #'threeProngTausByIsoTrig' : ( 'Iso', '(20,0,200)', 'PUWeight*PFJet260Pass', '1', 'scale' ),
+    #'threeProngTausByIsoChrgTrig' : ( 'IsoChrg', '(20,0,200)', 'PUWeight*PFJet260Pass', '1', 'scale' ),
 }
 
 runs = {
@@ -150,9 +164,9 @@ def plotter( plot ) :
 #for plot in plotMap.keys() :
     numEventsPerRun = {}
     hists = {}
-    jhists = {}
+    #jhists = {}
     hists2 = {}
-    jhists2 = {}
+    #jhists2 = {}
     for run in runs.keys() :
         info = plotMap[plot][1].strip('(').strip(')').split(',')
         #print info
@@ -160,14 +174,15 @@ def plotter( plot ) :
         first = int(info[1])
         last = int(info[2])
         hists[ run ] = ROOT.TH1F( '%i' % run, '%i' % run, numB, first, last)
-        jhists[ run ] = ROOT.TH1F( 'j%i' % run, 'j%i' % run, numB, first, last)
+        #jhists[ run ] = ROOT.TH1F( 'j%i' % run, 'j%i' % run, numB, first, last)
         hists2[ run ] = ROOT.TH1F( '2_%i' % run, '2_%i' % run, numB, first, last)
-        jhists2[ run ] = ROOT.TH1F( 'j2_%i' % run, 'j2_%i' % run, numB, first, last)
+        #jhists2[ run ] = ROOT.TH1F( 'j2_%i' % run, 'j2_%i' % run, numB, first, last)
         
     
     for run in runs.keys() :
         print "Run: %i" % run
         f = ROOT.TFile('%i/%i.root' % (run, run),'r')
+        #f = ROOT.TFile('%i.root' % run,'r')
         tree = f.Get('tauEvents/Ntuple')
         weightedSum = 0
         for row in tree :
@@ -181,6 +196,9 @@ def plotter( plot ) :
             hists[ run ].Divide( hists2[ run ] )
         if 'scale' in plotMap[plot][4] :
             hists[ run ].Scale( 1 / hists[ run ].Integral() )
+        if 'x' in plotMap[plot][4] :
+            print "Scaling by weighted sum: %f" % numEventsPerRun[ run ][1]
+            hists[ run ].Scale( 1 / numEventsPerRun[ run ][1] )
         print "### Done first"
 
 
@@ -247,7 +265,7 @@ def plotter( plot ) :
 
 import multiprocessing
 ## Enable multiprocessing
-numCores = 23
+numCores = 15
 pool = multiprocessing.Pool(processes = numCores )
 multiprocessingOutputs = []
 for plot in plotMap.keys() :
