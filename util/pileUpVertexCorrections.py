@@ -99,14 +99,14 @@ def PUreweight( ) :
     reweightDict = {}
     #i_data = 0
     #i_mc = 0
-    for i in range( 1, 52 ) :
+    for i in range( 1, 53 ) :
         if sHist.GetBinContent( i ) > 0 :
             #i_data += dHist.GetBinContent( i )
             #i_mc += sHist.GetBinContent( i )
             #print "%i data: %f    mc: %f    ratio: %f" % (i, dHist.GetBinContent( i ), sHist.GetBinContent( i ), (dHist.GetBinContent( i ) / sHist.GetBinContent( i )) )
             ratio = dHist.GetBinContent( i ) / sHist.GetBinContent( i )
         else : ratio = 0
-        reweightDict[ i ] = ratio
+        reweightDict[ i-1 ] = ratio
 
     #print "Data = %f   MC = %f" % (i_data, i_mc)
     #print reweightDict
@@ -135,52 +135,7 @@ def addNvtxWeight( grouping, sample, fileName, channel ) :
     tfile.Close()
 
 
-def makeAllPUTemplates( count, grouping, sample, channel, fileMin=0, fileMax=9999 ) :
 
-    ''' Get initial chain '''
-    out1 = "###   %s PU Template   ###" % sample
-    out2 = "Channel:  %s" % channel
-    sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
-    path = '%s/final/Ntuple' % channel
-    # This should allow us to run over sections of files
-    chain = makeTChain( sampleList, path, fileMax, fileMin, fileMax )
-    numEntries = chain.GetEntries()
-    out3 = "%25s : %10i" % ('Initial', numEntries)
-
-    makePUTemplate( grouping, sample, channel, chain )
-    return (count, out1, out2, out3)
-
-
-def buildAllPUTemplates( samples, numCores, maxFiles=20 ) :
-    import multiprocessing
-    import os
-    
-    if not os.path.exists( 'meta/PileUpInfo' ) : os.makedirs( 'meta/PileUpInfo' )
-
-    grouping = os.getenv('_GROUPING_', '25ns') # 25ns is default
-    pool = multiprocessing.Pool(processes= numCores )
-    mpPU = []
-
-    channels = ['em', 'tt']
-    
-    count = 0
-    for sample in samples :
-        if 'data' in sample : tmpMax = 999
-        else : tmpMax = maxFiles
-    
-        for channel in channels :
-            if sample == 'data_em' and channel == 'tt' : continue
-            if sample == 'data_tt' and channel == 'em' : continue
-    
-            mpPU.append( pool.apply_async( makeAllPUTemplates, args=(count, grouping, sample, channel, 0, tmpMax) ) )
-            count += 1
-
-    mpPUResults = [p.get() for p in mpPU]
-    mpPUResults.sort()
-    for item in mpPUResults :
-        print item[1]
-        print item[2]
-        print item[3]
 
 if __name__ == '__main__' :
     #zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'

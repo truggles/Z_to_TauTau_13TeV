@@ -71,4 +71,15 @@ script, there is again a default qcdShape option.
 
 :-)
 
-Fix pile up reweighting like it is in 3ProngTaus, make sure dictionary has right indices
+
+Auxilary Functions:
+Tau Tracking Study tools including an analyzer and plotter can be found in
+Z_to_TauTau_13TeV/ThreeProngTaus
+To run:
+1 - find relevant files and put them in the files labeled 'targetRunXXXX.txt'
+2 - update the 'targetRunsJSON.txt' file for good lumi masks
+3 - make a folder for each run with the run number
+4 - 'python runTauAnalysis.py'
+5 - 'source env.sh'
+6 - 'python tauPlotting.py'
+7 - view plots online

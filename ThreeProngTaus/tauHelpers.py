@@ -24,7 +24,7 @@ def PUreweightDict( templateRun, run ) :
     sHist.Scale( 1 / sHist.Integral() )
 
     reweightDict = {}
-    for i in range( 1, 60 ) :
+    for i in range( 1, 61 ) :
         if sHist.GetBinContent( i ) > 0 :
             ratio = tmpHist.GetBinContent( i ) / sHist.GetBinContent( i )
         else : ratio = 0
