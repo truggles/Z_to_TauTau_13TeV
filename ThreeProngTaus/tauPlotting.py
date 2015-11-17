@@ -49,9 +49,6 @@ def finishPlots( histos, plot, plotMap, run, name ) :
     Title.SetTextSize(0.04)
     Title.DrawTextNDC(.15,.96,"%s" % plot.replace('By',' vs. ') )
 
-    if plot == 'threeProngTaus30ByTauMissingHits':
-        p1.SetLogy()
-
     p1.BuildLegend( .65, .73, .95, .95 )
     p1.Update()
     if plotMap[ plot ][0]  == 'nvtx' :
@@ -75,8 +72,9 @@ def finishPlots( histos, plot, plotMap, run, name ) :
             fits[ run ].Draw('same')
 
     c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s.png' % name )
-    if plot == 'threeProngTaus30ByTauMissingHits':
+    if 'num' in name :
         p1.SetLogy()
+        histos[258425].SetMaximum( 2 )
         p1.Update()
         c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s_log.png' % name )
 
@@ -95,20 +93,25 @@ print "\nStart Time: %s" % str( begin )
 plotMap = {
 
     #''' With Trigger Matching !!! '''
-    'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJet3Pt' : ( 'j3Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauPhi' : ( 't1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJetPhi' : ( 'j1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauMissingHits' : ( 't1MissingHits', '(5,0,5)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'numTausThreeProng' : ( 'numTausThreeProng', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'numJets30Clean' : ( 'numJets30Clean', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'numLeadingTauMissingHits' : ( 't1MissingHits', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+
+    #'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJet3Pt' : ( 'j3Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauPhi' : ( 't1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJetPhi' : ( 'j1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'missingHitsPer3ProngTaus30ByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
     #'missingHitsPer3ProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
     #'missingHitsPer3ProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
@@ -184,6 +187,7 @@ def plotter( plot ) :
         if 'x' in plotMap[plot][4] :
             print "Scaling by weighted sum: %f" % numEventsPerRun[ run ][1]
             hists[ run ].Scale( 1 / numEventsPerRun[ run ][1] )
+            print "New Integral: %f" % hists[ run ].Integral()
         print "### Done first"
 
 
@@ -212,8 +216,8 @@ def plotter( plot ) :
         #                if ( getattr( row, 'j%iLooseID' % j ) > 0 ) and ( getattr( row, 'j%iPassPU' % j ) > 0 ) and ( getattr( row, 'j%iPt' % j) > 30 ) :
         #                    jhists[ run ].Fill( getattr(row, newVar), row.PUWeight )
         #                    jhists2[ run ].Fill( getattr( row, newVar) )
-    for iRun in numEventsPerRun :
-        print "RUN: %i  Evt Stuff:" % iRun, numEventsPerRun[iRun]
+    #for iRun in numEventsPerRun :
+    #    print "RUN: %i  Evt Stuff:" % iRun, numEventsPerRun[iRun]
                 
             
    
@@ -261,15 +265,17 @@ mpResults.sort()
 for item in mpResults :
     print item
 
-#print "Make html.index"
-#htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/index.html', 'w')
-#htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
-#htmlFile.write( '<title>Tau Tracking Study/</title></head>\n' )
-#htmlFile.write( '<body>\n' )
-#for plot in plotMap.keys() :
-#    htmlFile.write( '<img src="%s.png">\n' % plot )
-#htmlFile.write( '</body></html>' )
-#htmlFile.close()
+print "Make html.index"
+htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/index.html', 'w')
+htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
+htmlFile.write( '<title>Tau Tracking Study/</title></head>\n' )
+htmlFile.write( '<body>\n' )
+for plot in plotMap.keys() :
+    htmlFile.write( '<img src="%s.png">\n' % plot )
+    if 'num' in plot: 
+        htmlFile.write( '<img src="%s_log.png">\n' % plot )
+htmlFile.write( '</body></html>' )
+htmlFile.close()
 
 print "\nStart Time: %s" % str( begin )
 print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
