@@ -1,0 +1,45 @@
+Tracking study:
+    Look at 2 diff runs X Y
+    construct # of 3 prong taus
+    normalize nvtx across the two
+    final distribution is # 3P vs. nvtx
+
+Run <PU> Inst. Lumi BX Period FillSchema 
+258425  ~15  ~3.5E+33   25ns    Run2015D    1608/1596 
+259721  ~22  ~1.6E+33 2 5ns     Run2015D    529/517 8b4e 
+254833  ~25      ~8E+32     50ns    Run2015C    296/254 
+254790  ~16      ~7E+32     25ns    Run2015C    315/303 
+
+Switching to SingleMuon dataset
+
+"258425": [[3, 136]], golden
+    file,run,lumi dataset=/JetHT/Run2015D-PromptReco-v4/MINIAOD run=258425 ===>>> 3 files
+"259721": [[73, 99], [102, 408]], D silver
+    file,run,lumi dataset=/JetHT/Run2015D-PromptReco-v4/MINIAOD run=259721
+"254833": [[43, 43], [46, 861], [863, 1582], [1584, 1632]], C muon physics 50ns
+    file,run,lumi dataset=/JetHT/Run2015C_50ns-05Oct2015-v1/MINIAOD run=254833
+"254790": [[90, 90], [93, 630], [633, 697], [701, 715], [719, 784]], C golden
+    file,run,lumi dataset=/JetHT/Run2015C-23Sep2015-v1/MINIAOD run=254790
+
+Dataset: /JetHT/Run2015D-05Oct2015-v1/MINIAOD
+Dataset: /JetHT/Run2015D-PromptReco-v3/MINIAOD
+Dataset: /JetHT/Run2015D-PromptReco-v4/MINIAOD
+
+Dataset: /JetHT/Run2015C_50ns-05Oct2015-v1/MINIAOD
+Dataset: /JetHT/Run2015C-23Sep2015-v1/MINIAOD
+Dataset: /JetHT/Run2015C-PromptReco-v1/MINIAOD
+Dataset: /JetHT/Run2015C_25ns-05Oct2015-v1/MINIAOD
+
+SingleMuon Triggers:
+Run2015C/SingleMuon/MINIAOD/23Sep2015-v1/50000/329E2BDE-5D63-E511-B54C-0025905B858C
+  68 Trigger  HLT_IsoMu17_eta2p1_v2 :  fail (or not run)
+  77 Trigger  HLT_IsoMu20_v2 :  fail (or not run)
+  83 Trigger  HLT_IsoMu27_v2 :  fail (or not run)
+
+
+Run2015D/SingleMuon/MINIAOD/PromptReco-v4/000/258/425/00000/7AE382AE-346E-E511-9FC4-02163E01422D.root
+  77 Trigger  HLT_IsoMu17_eta2p1_v3 :  fail (or not run)
+  83 Trigger  HLT_IsoMu18_v2 :  PASS
+  87 Trigger  HLT_IsoMu20_v3 :  PASS
+  89 Trigger  HLT_IsoMu22_v2 :  PASS
+  92 Trigger  HLT_IsoMu27_v3 :  PASS
