@@ -455,16 +455,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
             
-            #nvtxW = puDict[ row.nvtx ]
-            #if nvtxW == 0 :
-            #    print " --- Zero Weight --- "
-            #    PUWeight[0] = 0.001
-            #else :
-            #    PUWeight[0] = puDict[ row.nvtx ]
             if 'data' in sample :
                 PUWeight[0] = -1
             else :
-                PUWeight[0] = puDict[ int(row.nTruePU) ]
+                PUWeight[0] = puDict[ round(row.nTruePU) ]
 
             tnew.Fill()
             count2 += 1
