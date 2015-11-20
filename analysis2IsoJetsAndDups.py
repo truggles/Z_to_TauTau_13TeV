@@ -181,8 +181,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'ePVDZ' : 'dZ_1',
         'eIsoDB03' : 'iso_1',
         'eMVANonTrigWP90' : 'id_e_mva_nt_loose_1',
-        'eGenPdgId' : 'gen_match_1',
-        'mGenPdgId' : 'gen_match_2',
         'mPt' : 'pt_2',
         'mEta' : 'eta_2',
         'mPhi' : 'phi_2',
@@ -207,7 +205,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         't1Charge' : 'q_1',
         't1PVDXY' : 'd0_1',
         't1PVDZ' : 'dZ_1',
-        't1GenPdgId' : 'gen_match_1',
         't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_1',
         't1AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_1',
         't1AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5_1',
@@ -231,7 +228,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         't2Charge' : 'q_2',
         't2PVDXY' : 'd0_2',
         't2PVDZ' : 'dZ_2',
-        't2GenPdgId' : 'gen_match_1',
         't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_2',
         't2AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_2',
         't2AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5_2',
@@ -411,6 +407,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     PU Weighting '''
     PUWeight = array('f', [ 0 ] )
     PUWeightB = tnew.Branch('PUWeight', PUWeight, 'PUWeight/F')
+    gen_match_1 = array('f', [ 0 ] )
+    gen_match_1B = tnew.Branch('gen_match_1', gen_match_1, 'gen_match_1/F')
+    gen_match_2 = array('f', [ 0 ] )
+    gen_match_2B = tnew.Branch('gen_match_2', gen_match_2, 'gen_match_2/F')
 
 
     ''' Now actually fill that instance of an evt '''
@@ -457,8 +457,16 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             
             if 'data' in sample :
                 PUWeight[0] = -1
+                gen_match_1[0] = -1
+                gen_match_2[0] = -1
             else :
                 PUWeight[0] = puDict[ round(row.nTruePU) ]
+                if row.eGenPrompt == 1 : gen_match_1[0] = 1
+                elif row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
+                else : gen_match_1[0] = 6
+                if row.eGenPrompt == 1 : gen_match_1[0] = 1
+                elif row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
+                else : gen_match_1[0] = 6
 
             tnew.Fill()
             count2 += 1
