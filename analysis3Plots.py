@@ -82,7 +82,7 @@ sampColors = {
 
 for channel in ['em', 'tt'] :
 
-    #if channel == 'em' : continue
+    if channel == 'em' : continue
 
     # Make an index file for web viewing
     if not os.path.exists( '%sPlots' % grouping ) :
@@ -143,8 +143,8 @@ for channel in ['em', 'tt'] :
             #    dicScale = tFileScale.Get("%s_Histos" % channel )
             #    histScale = dicScale.Get( "%s" % var )
             #    wJetsInt = histScale.Integral()
-            elif sample == 'QCD' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
+#            elif sample == 'QCD' :
+#                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
@@ -176,13 +176,14 @@ for channel in ['em', 'tt'] :
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
-            if sample == 'QCD' and hist.Integral() != 0 :
-                if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
-                if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
+#            if sample == 'QCD' and hist.Integral() != 0 :
+#                if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
+#                if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
             #elif sample == 'WJets' and hist.Integral() != 0 :
             #    scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
             #    hist.Scale( scaler * wJetsInt / hist.Integral() )
-            elif 'data' not in sample and hist.Integral() != 0:
+            if 'data' not in sample and hist.Integral() != 0:
+            #elif 'data' not in sample and hist.Integral() != 0:
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
                     hist.Scale( scaler * bkgsTTScaleFactor )

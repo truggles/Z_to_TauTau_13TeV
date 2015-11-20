@@ -19,7 +19,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
     histos = {}
     histos2 = {}
     for var, cv in newVarMap.iteritems() :
-        if var != 'npv' : continue
+        #if var != 'npv' : continue
         var2 = '%s%i' % (var, 2)
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
     	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
@@ -32,28 +32,19 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                 chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
                 histos[ var ] = gPad.GetPrimitive( "%s" % var )
         else :
-            # The Pre and Post integral scaling is to keep the total area the same
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s' % additionalCut )
             histos2[ var ] = gPad.GetPrimitive( var2 )
             integralPre = histos2[ var ].Integral()
-            print "intPre: %f" % integralPre
-            #integralPreR = h1.Integral(0, cv[1]-1)
-            #print "intPreR: %f" % integralPreR
 
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
-            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * GenWeight%s' % additionalCut )
-            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight%s' % additionalCut )
-            histos[ var ] = gPad.GetPrimitive( "%s" % var )
+            histos[ var ] = gPad.GetPrimitive( var )
             integralPost = histos[ var ].Integral()
-            #chain.GetEntry( 1 )
-            #xxWeight = abs( chain.GenWeight )
-            print "tmpIntPost: %f" % integralPost
-            #print " - proposed Post Int: %f" % ( integralPost / xxWeight )
-            #if integralPost != 0 :
-            #    histos[ var ].Scale( integralPre / integralPost )
-            #print histos[ var ].GetBinContent( 10 )
-            #print " - FinalIntPost: %f" % histos[ var ].Integral()
-            print " --- percent increase %f" % ( integralPost / ( integralPre ) )
+            if var == 'm_vis' :
+                print 'm_vis'
+                print "intPre: %f" % integralPre
+                print "tmpIntPost: %f" % integralPost
+                if integralPre != 0 :
+                    print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
 
         histos[ var ].Write()
 
@@ -153,9 +144,9 @@ def getPlotDetails( channel ) :
         'nbtag' : (0, 6, 1, 'nBTag', ''),
         'njetspt20' : (0, 10, 10, 'nJetPt20', ''),
         'jpt_1' : (0, 200, 10, 'Leading Jet Pt', ' GeV'),
-        'jeta_1' : (-5, 5, 8, 'Leading Jet Eta', ' Eta'),
+        'jeta_1' : (-5, 5, 10, 'Leading Jet Eta', ' Eta'),
         'jpt_2' : (0, 200, 10, 'Second Jet Pt', ' GeV'),
-        'jeta_2' : (-5, 5, 8, 'Second Jet Eta', ' Eta'),
+        'jeta_2' : (-5, 5, 10, 'Second Jet Eta', ' Eta'),
         'extraelec_veto' : (0, 2, 1, 'Extra Electron Veto', ''),
         'extramuon_veto' : (0, 2, 1, 'Extra Muon Veto', ''),
         'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),

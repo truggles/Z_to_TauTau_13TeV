@@ -36,14 +36,14 @@ zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
-lumiCert = 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
-puJson = 'pileup_JSON_10-23-2015.txt'
+lumiCert = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2.11/fb - all of 2015 25ns golden
+puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 ''' Preset samples '''
 SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
 Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
-Samples25nsFinal = ['data_em', 'data_tt', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
+Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
 #Samples25nsFinalNew = ['data_em', 'data_tt', 'WJets',]
 #Samples25nsFinalOld = ['TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau']
 #Samples25nsFinal = [ 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
@@ -52,10 +52,10 @@ Samples25nsFinal = ['data_em', 'data_tt', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar
 #samples = ['ggHtoTauTau', 'VBFHtoTauTau']
 #samples = ['WJets',]
 #samples = Samples25nsFinalNew
-#samples = Samples25nsFinal
+samples = Samples25nsFinal
 #samples = SamplesSync
 #samples = SamplesData
-samples = ['data_tt',]
+#samples = ['data_tt',]
 #samples = ['DYJetsLow', 'data_em']
 #samples = ['Tbar-tW',]
 #samples = ['WW',]
@@ -69,30 +69,30 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 20,
+    'numCores' : 15,
     'numFilesPerCycle' : 25,
     #'cutMapper' : 'signalCuts',
-    'cutMapper' : 'tmp',
-    'cutName' : 'PostSync',
+    #'cutName' : 'PostSync',
+    #'cutMapper' : 'tmp',
     #'cutMapper' : 'syncCuts',
     #'cutName' : 'BaseLine',
     #'cutMapper' : 'testLooserTriggers',
     #'cutMapper' : 'QCDYieldOS',
     #'cutMapper' : 'QCDYieldOSTrigLoose',
     #'cutName' : 'QCDYield',
-    #'cutMapper' : 'qcdShapeScale', #!
-    #'cutName' : 'PostSync', #!
+    'cutMapper' : 'qcdShapeScale', #!
+    'cutName' : 'PostSync', #!
     #'mid1' : '1nov1SyncSample',
     #'mid2' : '2nov1SyncSample',
     #'mid3' : '3nov1SyncSample',
     #'mid1' : '1nov2newNtups',
     #'mid2' : '2nov2newNtups',
     #'mid3' : '3nov2newNtups',
-    'mid1' : '1nov4tmp',
-    'mid2' : '2nov4tmp',
-    'mid3' : '3nov4tmp',
+    'mid1' : '1nov16-2',
+    'mid2' : '2nov16-2',
+    'mid3' : '3nov16-OSIso1',
     'additionalCut' : '',
-    #'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 5)*(iso_2 > 5)',
+    'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 1)*(iso_2 > 1)',
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
     #'additionalCut' : '*(nbtag<1)*(mt_2<80)',
     #'additionalCut' : '*(pt_2<20)',
@@ -119,14 +119,11 @@ params = {
 
 
 
-samples = checkBkgs( samples, params, bkgMap )
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-#
-#samples = Samples25nsFinalOld
 #samples = checkBkgs( samples, params, bkgMap )
-##analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+
+
 
 ''' for WJets and QCD shapes 
 uncomment and run each time you change cuts '''

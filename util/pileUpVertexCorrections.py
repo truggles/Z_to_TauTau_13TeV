@@ -143,4 +143,6 @@ if __name__ == '__main__' :
     #print zHome
     #makeDataPUTemplate( 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt', 'pileup_JSON_10-23-2015.txt' )
     #makeMCPUTemplate()
-    PUreweight()
+    ary = PUreweight()
+    for key in ary.keys() :
+        print key, ary[key]
