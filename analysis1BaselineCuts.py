@@ -24,6 +24,7 @@ def getBkgMap() :
 
 #for sample in samples :
 def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=0, fileMax=9999 ) :
+    #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     path = '%s/final/Ntuple' % channel
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -71,7 +72,7 @@ def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMap
         outFile1 = ROOT.TFile('meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
-    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * numFilesPerCycle, (count + 1) * numFilesPerCycle-1 )
+    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
     cutOut[1].Write()
@@ -138,8 +139,8 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
     
             count += 1
             
-            # Make sure we look over large samples to get all files
-            if count * fargs['numFilesPerCycle'] >= fileLen : go = False
+            # Make sure we loop over large samples to get all files
+            if count * fargs['numFilesPerCycle'] > fileLen : go = False
     
     
     mpResults = [p.get() for p in multiprocessingOutputs]

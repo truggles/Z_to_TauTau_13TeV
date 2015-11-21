@@ -4,6 +4,7 @@ import ROOT
 from ROOT import TTree, TFile
 
 def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
+    print "makeTChain: startFile: %i   maxFile: %i" % (startFile, maxFile)
     files = open( sampleList, 'r' )	
     tree = ROOT.TChain( treePath )
     count = 1
@@ -13,13 +14,13 @@ def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
         #currentFile = ROOT.TFile( file_.strip(), 'r' )
         #fileTree =  currentFile.Get( treePath )
         if count >= startFile and count <= maxFile :
-            #print "count %3i  %s" % (count, file_)
+            #print "line %3i  %s" % (count, file_)
             tree.Add( file_.strip() )
         
         # Just in case we want to debug with a limited amount of files
         count += 1
         if count >= maxFiles and maxFiles != 0:
-            print "Loaded %i Files" % count
+            print "Loaded line %i --> line %i" % (startFile, maxFile)
             break
         if count > maxFile :
             print "reached maxFile = %i" % maxFile
