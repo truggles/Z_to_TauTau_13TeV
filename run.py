@@ -30,8 +30,8 @@ def checkBkgs( samples, params, bkgMap ) :
     return samples
 
 ''' Set grouping (25ns or Sync) '''
-grouping = '25ns'
-#grouping = 'Sync'
+#grouping = '25ns'
+grouping = 'Sync'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
@@ -52,8 +52,8 @@ Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow'
 #samples = ['ggHtoTauTau', 'VBFHtoTauTau']
 #samples = ['WJets',]
 #samples = Samples25nsFinalNew
-samples = Samples25nsFinal
-#samples = SamplesSync
+#samples = Samples25nsFinal
+samples = SamplesSync
 #samples = SamplesData
 #samples = ['data_tt',]
 #samples = ['DYJetsLow', 'data_em']
@@ -70,29 +70,23 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
     'numCores' : 15,
-    'numFilesPerCycle' : 25,
+    'numFilesPerCycle' : 50,
     #'cutMapper' : 'signalCuts',
     #'cutName' : 'PostSync',
     #'cutMapper' : 'tmp',
-    #'cutMapper' : 'syncCuts',
-    #'cutName' : 'BaseLine',
+    'cutMapper' : 'syncCuts',
+    'cutName' : 'BaseLine',
     #'cutMapper' : 'testLooserTriggers',
     #'cutMapper' : 'QCDYieldOS',
     #'cutMapper' : 'QCDYieldOSTrigLoose',
     #'cutName' : 'QCDYield',
-    'cutMapper' : 'qcdShapeScale', #!
-    'cutName' : 'PostSync', #!
-    #'mid1' : '1nov1SyncSample',
-    #'mid2' : '2nov1SyncSample',
-    #'mid3' : '3nov1SyncSample',
-    #'mid1' : '1nov2newNtups',
-    #'mid2' : '2nov2newNtups',
-    #'mid3' : '3nov2newNtups',
-    'mid1' : '1nov16-2',
-    'mid2' : '2nov16-2',
-    'mid3' : '3nov16-OSIso1',
+    #'cutMapper' : 'qcdShapeScale', #!
+    #'cutName' : 'PostSync', #!
+    'mid1' : '1nov20',
+    'mid2' : '2nov20',
+    'mid3' : '3nov20',
     'additionalCut' : '',
-    'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 1)*(iso_2 > 1)',
+    #'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 1)*(iso_2 > 1)',
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
     #'additionalCut' : '*(nbtag<1)*(mt_2<80)',
     #'additionalCut' : '*(pt_2<20)',
@@ -119,8 +113,8 @@ params = {
 
 
 
-#samples = checkBkgs( samples, params, bkgMap )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+samples = checkBkgs( samples, params, bkgMap )
+analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 

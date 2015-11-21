@@ -214,7 +214,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         't1AgainstMuonLoose3' : 'againstMuonLoose3_1',
         #'t1AgainstMuonLoose' : 'againstMuonLoose_1',
         't1ChargedIsoPtSum' : 'chargedIsoPtSum_1',
-        #'t1DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_1',
+        't1DecayModeFinding' : 'decayModeFindingOldDMs_1',
         't1NeutralIsoPtSum' : 'neutralIsoPtSum_1',
         't1PuCorrPtSum' : 'puCorrPtSum_1',
         #'t1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
@@ -237,7 +237,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         't2AgainstMuonLoose3' : 'againstMuonLoose3_2',
         #'t2AgainstMuonLoose' : 'againstMuonLoose_2',
         't2ChargedIsoPtSum' : 'chargedIsoPtSum_2',
-        't2DecayModeFindingNewDMs' : 'decayModeFindingOldDMs_2',
+        't2DecayModeFinding' : 'decayModeFindingOldDMs_2',
         't2NeutralIsoPtSum' : 'neutralIsoPtSum_2',
         't2PuCorrPtSum' : 'puCorrPtSum_2',
         #'t2ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_2',
@@ -405,15 +405,35 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
 
     ''' We are calculating and adding these below variables to our new tree
     PU Weighting '''
-    PUWeight = array('f', [ 0 ] )
-    PUWeightB = tnew.Branch('PUWeight', PUWeight, 'PUWeight/F')
+    puweight = array('f', [ 0 ] )
+    puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     gen_match_1 = array('f', [ 0 ] )
     gen_match_1B = tnew.Branch('gen_match_1', gen_match_1, 'gen_match_1/F')
     gen_match_2 = array('f', [ 0 ] )
     gen_match_2B = tnew.Branch('gen_match_2', gen_match_2, 'gen_match_2/F')
+    isZtt = array('f', [ 0 ] )
+    isZttB = tnew.Branch('isZtt', isZtt, 'isZtt/F')
+    isZmt = array('f', [ 0 ] )
+    isZmtB = tnew.Branch('isZmt', isZmt, 'isZmt/F')
+    isZet = array('f', [ 0 ] )
+    isZetB = tnew.Branch('isZet', isZet, 'isZet/F')
+    isZee = array('f', [ 0 ] )
+    isZeeB = tnew.Branch('isZee', isZee, 'isZee/F')
+    isZmm = array('f', [ 0 ] )
+    isZmmB = tnew.Branch('isZmm', isZmm, 'isZmm/F')
+    isZem = array('f', [ 0 ] )
+    isZemB = tnew.Branch('isZem', isZem, 'isZem/F')
+    isZEE = array('f', [ 0 ] )
+    isZEEB = tnew.Branch('isZEE', isZEE, 'isZEE/F')
+    isZMM = array('f', [ 0 ] )
+    isZMMB = tnew.Branch('isZMM', isZMM, 'isZMM/F')
+    isZLL = array('f', [ 0 ] )
+    isZLLB = tnew.Branch('isZLL', isZLL, 'isZLL/F')
+    isFake = array('f', [ 0 ] )
+    isFakeB = tnew.Branch('isFake', isFake, 'isFake/F')
 
 
-    ''' Now actually fill that instance of an evt '''
+    ''' Now actually fill that instance of an evtFake'''
     count2 = 0
     for row in told:
         run = int( row.run )
@@ -455,18 +475,76 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
             
+            isZtt[0] = 0
+            isZmt[0] = 0
+            isZet[0] = 0
+            isZee[0] = 0
+            isZmm[0] = 0
+            isZem[0] = 0
+            isZEE[0] = 0
+            isZMM[0] = 0
+            isZLL[0] = 0
+            isFake[0] = 0
+
+            # Decay final states
+            if channel == 'tt' :
+                isZtt[0] = 1
+            if channel == 'em' :
+                isZem[0] = 1
+            # Generator states, combine Z & sm-H into 1 var
+            if row.isZee == 1 :#or row.isHee == 1 : 
+                isZEE[0] = 1
+            if row.isZmumu == 1 :#or row.isHmumu == 1 : 
+                isZMM[0] = 1
+            if row.isZtautau == 1 :#or row.isHtautau == 1 : 
+                isZTT[0] = 1
+            if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
+
             if 'data' in sample :
-                PUWeight[0] = -1
+                puweight[0] = -1
                 gen_match_1[0] = -1
                 gen_match_2[0] = -1
+                isZEE[0] = -1
+                isZMM[0] = -1
+                isZLL[0] = -1
+                isFake[0] = -1
             else :
-                PUWeight[0] = puDict[ round(row.nTruePU) ]
-                if row.eGenPrompt == 1 : gen_match_1[0] = 1
-                elif row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
-                else : gen_match_1[0] = 6
-                if row.eGenPrompt == 1 : gen_match_1[0] = 1
-                elif row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
-                else : gen_match_1[0] = 6
+                puweight[0] = puDict[ round(row.nTruePU) ]
+                if channel == 'em' :
+                    isZem[0] = 1
+                    if row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
+                    elif row.eGenPrompt == 1 : gen_match_1[0] = 1
+                    else : gen_match_1[0] = 6
+
+                    if row.mGenDirectPromptTauDecayFinalState == 1 : gen_match_2[0] = 4
+                    elif row.mGenPromptFinalState == 1 : gen_match_2[0] = 2
+                    else : gen_match_2[0] = 6
+
+                    # check 'isFake' for EMu
+                    if gen_match_1[0] == 3 and gen_match_2[0] == 4 : isFake[0] = 0
+                    elif gen_match_1[0] == 1 and gen_match_2[0] == 2 and isZLL[0] == 1 : isFake[0] = 1
+                    elif abs(row.eGenPdgId) == 15 and gen_match_2[0] == 4 : isFake[0] = 3
+                    else : isFake[0] = 2
+
+                if channel == 'tt' :
+                    isZtt[0] = 1
+                    if row.t1GenPrompt == 1 and row.t1GenJetPt > 15 : gen_match_1[0] = 5
+                    else : gen_match_1[0] = 6
+
+                    if row.t2GenPrompt == 1 and row.t2GenJetPt > 15 : gen_match_2[0] = 5
+                    else : gen_match_2[0] = 6
+                
+                    # check 'isFake' for TT
+                    if abs(row.t1GenPdgId) == 15 and abs(row.t2GenPdgId) == 15 : isFake[0] = 0
+                    elif row.t1GenPrompt == 1 and \
+                            (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
+                            row.t2GenPrompt == 1 and \
+                            (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) and \
+                            isZLL[0] == 1 : isFake[0] = 1
+                    elif (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
+                            (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) : isFake[0] = 3
+                    else : isFake[0] = 2
+            
 
             tnew.Fill()
             count2 += 1

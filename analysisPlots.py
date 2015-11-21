@@ -24,7 +24,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
     	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
         # the >> sends the output to a predefined histo
-        if isData : # Data has no GenWeight and by def has PUWeight = 1
+        if isData : # Data has no GenWeight and by def has puweight = 1
             if var == 'm_vis' and blind :
                 chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
                 histos[ var ] = gPad.GetPrimitive( "%s" % var )
@@ -36,7 +36,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
             histos2[ var ] = gPad.GetPrimitive( var2 )
             integralPre = histos2[ var ].Integral()
 
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'PUWeight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( var )
             integralPost = histos[ var ].Integral()
             if var == 'm_vis' :
