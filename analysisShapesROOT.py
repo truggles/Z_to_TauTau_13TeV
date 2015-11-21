@@ -24,19 +24,14 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 1280.23 # (pb) 25ns - Oct 21 certification
-qcdTTScaleFactor = 1.00 # from running "python makeBaseSelections.py --invert=True" and checking ration of SS / OS
+luminosity = 2.11 # / fb 25ns - Final 2015 25ns Golden JSON
+
+# Scaling = 1 for data card sync
+qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
-bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
-qcdYieldTT = 7350. * qcdTTScaleFactor  # From data - MC in OS region, see plots: 
-                    # http://truggles.web.cern.ch/truggles/QCD_Yield_Oct13/25nsPlots/ - for 592pb-1
-#qcdYieldEM = 899.4 * qcdEMScaleFactor   # Sync trigs all, L=1280.23, Oct21
-#qcdYieldEM = 749.4 * qcdEMScaleFactor   # Sync trigs e23m8, L=1280.23, Oct21
-#qcdYieldEM = 305.9 * qcdEMScaleFactor   # Sync trigs e12m23, L=1280.23, Oct21
-''' Yikes, scale factor of "2" between SS/OS would make this all aligh PERFECTLY '''
-qcdYieldEM = 2057.7 * qcdEMScaleFactor * .67 *2   # Loose trigs all, L=1280.23, Oct21
-#qcdYieldEM = 1717.0 * qcdEMScaleFactor   # Loose trigs e17m8, L=1280.23, Oct21
-#qcdYieldEM = 812.6 * qcdEMScaleFactor   # Loose trigs e12m17, L=1280.23, Oct21
+bkgsTTScaleFactor = 1.0
+qcdYieldTT = 7350. 
+qcdYieldEM = 2057.7
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
@@ -44,23 +39,23 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
                 # Sample : Color
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', '_ZTT_')
-#samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
-#samples['TT']       = ('kBlue-8', '_TT_')
-samples['TTJets']       = ('kBlue-8', '_TT_')
-#samples['TTPow']       = ('kBlue-8', '_TT_')
-samples['QCD']        = ('kMagenta-10', '_QCD_')
-samples['Tbar-tW']  = ('kYellow-2', '_VV_')
+samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
 samples['T-tW']     = ('kYellow+2', '_VV_')
+samples['T-tchan']     = ('kYellow+2', '_VV_')
+samples['TT']       = ('kBlue-8', '_TT_')
+samples['Tbar-tW']  = ('kYellow-2', '_VV_')
+samples['Tbar-tchan']  = ('kYellow-2', '_VV_')
 samples['WJets']    = ('kAzure+2', '_W_')
-samples['WW']       = ('kAzure+10', '_VV_')
-#samples['WW2l2n']       = ('kAzure+8', '_VV_')
-#samples['WW4q']     = ('kAzure+6', '_VV_')
-#samples['WW1l1n2q']     = ('kAzure+4', '_VV_')
-samples['WZJets']   = ('kAzure-4', '_VV_')
-#samples['WZ1l1n2q'] = ('kAzure-6', '_VV_')
-#samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
-samples['ZZ']   = ('kAzure-8', '_VV_')
-#samples['ZZ4l'] = ('kAzure-12', '_VV_')
+samples['WW1l1nu2q']     = ('kAzure+4', '_VV_')
+samples['WW2l2nu']       = ('kAzure+8', '_VV_')
+samples['WZ1l1nu2q'] = ('kAzure-6', '_VV_')
+samples['WZ1l3nu'] = ('kAzure-6', '_VV_')
+samples['WZ2l2q'] = ('kAzure-6', '_VV_')
+samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
+samples['ZZ2l2nu'] = ('kAzure-12', '_VV_')
+samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
+samples['ZZ4l'] = ('kAzure-12', '_VV_')
+samples['QCD']        = ('kMagenta-10', '_QCD_')
 samples['data_tt']  = ('kBlack', '_data_obs_')
 samples['data_em']  = ('kBlack', '_data_obs_')
 samples['VBFHtoTauTau'] = ('kGreen', '_ggH125_')
@@ -73,7 +68,7 @@ channels = { 'em' : 'EMu',
 
 for channel in channels.keys() :
 
-    if channel == 'tt' : continue
+    #if channel == 'tt' : continue
 
     # Make an index file for web viewing
     if not os.path.exists( '%sShapes' % grouping ) :
@@ -86,19 +81,21 @@ for channel in channels.keys() :
 
     for var, info in newVarMap.iteritems() :
         if not var == 'm_vis' : continue
-        shapeFile = ROOT.TFile('%sShapes/ztt_%s.inputs-sm-13TeV.root' % (grouping, channel), 'RECREATE')
-        shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
+        shapeFile = ROOT.TFile('%sShapes/htt_%s.inputs-sm-13TeV.root' % (grouping, channel), 'RECREATE')
+        #shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
+        shapeDir = shapeFile.mkdir( channel + '_inclusive' )
 
         # Defined out here for large scope
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
 
 
-        binArray = array.array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,450,500,550,600] )
+        #binArray = array.array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,450,500,550,600] )
         histos = {}
         for name in nameArray :
             title = name.strip('_')
-            histos[ name ] = ROOT.TH1F( name, name, 18, binArray )
+            #histos[ name ] = ROOT.TH1F( name, name, 18, binArray )
+            histos[ name ] = ROOT.TH1F( name, name, 35, 0, 350 )
 
 
         for sample in samples:
@@ -106,6 +103,8 @@ for channel in channels.keys() :
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
+            if sample == 'DYJetsLow' : continue
+            if 'HtoTauTau' in sample : continue
 
             if sample == 'data_em' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')

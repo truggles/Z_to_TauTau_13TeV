@@ -95,7 +95,7 @@ def wJetsShape( ch ) :
     return cutMap
 
 # Cuts to calculate QCD yield from Data - MC
-def QCDYieldOS( ch ) :
+def QCDYieldSS( ch ) :
     cutMap = OrderedDict()
     if ch == 'em':
         cutMap['QCDYield'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emSS + ' && ' + emIso + ' && ' + extraVeto

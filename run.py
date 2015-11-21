@@ -45,7 +45,7 @@ SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
 Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
 Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
-SamplesDataCards = [ 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l'] # Set list for Data Card Sync (less DYJetsLow)
+SamplesDataCards = ['data_em', 'data_tt', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l'] # Set list for Data Card Sync (less DYJetsLow)
 #samples = ['data_em', 'data_tt', 'Tbar-tW', 'T-tW',]
 #samples = ['DYJets',]# 'Tbar-tW', 'T-tW',]
 #samples = ['ggHtoTauTau', 'VBFHtoTauTau']
@@ -53,14 +53,15 @@ SamplesDataCards = [ 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 
 #samples = Samples25nsFinalNew
 #samples = Samples25nsFinal
 #samples = SamplesSync
-#samples = SamplesData
-samples = SamplesDataCards
+samples = SamplesData
+#samples = SamplesDataCards
 #samples = ['data_tt',]
 #samples = ['DYJetsLow', 'data_em']
 #samples = ['Tbar-tW',]
 #samples = ['WW',]
 #samples = ['WJets',]
 #samples = ['TTJets',]
+#samples = ['ZZ2l2nu']
 
 ''' These parameters are fed into the 2 main function calls.
 They adjust the cuts you make, number of cores you run in
@@ -69,22 +70,22 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 15,
-    'numFilesPerCycle' : 50,
-    #'cutMapper' : 'signalCuts',
-    #'cutName' : 'PostSync',
+    'numCores' : 20,
+    'numFilesPerCycle' : 25,
+    'cutMapper' : 'signalCuts', #!
+    'cutName' : 'PostSync', #!
     #'cutMapper' : 'tmp',
-    'cutMapper' : 'syncCuts',
-    'cutName' : 'BaseLine',
+    #'cutMapper' : 'syncCuts',
+    #'cutName' : 'BaseLine',
     #'cutMapper' : 'testLooserTriggers',
-    #'cutMapper' : 'QCDYieldOS',
+    #'cutMapper' : 'QCDYieldSS',
     #'cutMapper' : 'QCDYieldOSTrigLoose',
     #'cutName' : 'QCDYield',
     #'cutMapper' : 'qcdShapeScale', #!
     #'cutName' : 'PostSync', #!
-    'mid1' : '1nov20',
-    'mid2' : '2nov20',
-    'mid3' : '3nov20',
+    'mid1' : '1nov21',
+    'mid2' : '2nov21',
+    'mid3' : '3nov21',
     'additionalCut' : '',
     #'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 1)*(iso_2 > 1)',
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
@@ -98,10 +99,10 @@ params = {
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-from meta.makeMeta import makeMetaJSON
-os.chdir('meta')
-makeMetaJSON( grouping )
-os.chdir('..')
+#from meta.makeMeta import makeMetaJSON
+#os.chdir('meta')
+#makeMetaJSON( grouping )
+#os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -113,9 +114,9 @@ os.chdir('..')
 
 
 
-#samples = checkBkgs( samples, params, bkgMap )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+samples = checkBkgs( samples, params, bkgMap )
+analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 
 

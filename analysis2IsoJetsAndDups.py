@@ -190,7 +190,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'mPVDZ' : 'dZ_2',
         'mIsoDB03' : 'iso_2',
         'e_m_Mass' : 'm_vis',
-        'e_m_SVfitMass' : 'm_sv',
+        #'e_m_SVfitMass' : 'm_sv',
         'e_m_PZeta' : 'pzetamis',
         'e_m_PZetaVis' : 'pzetavis',
         'eMtToPfMet_Raw' : 'mt_1',
@@ -245,7 +245,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         #'t2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
         #'t2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
         't1_t2_Mass' : 'm_vis',
-        't1_t2_SVfitMass' : 'm_sv',
+        #'t1_t2_SVfitMass' : 'm_sv',
         't1_t2_PZeta' : 'pzetamis',
         't1_t2_PZetaVis' : 'pzetavis',
         't1MtToPfMet_Raw' : 'mt_1',
@@ -427,6 +427,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     isZEEB = tnew.Branch('isZEE', isZEE, 'isZEE/F')
     isZMM = array('f', [ 0 ] )
     isZMMB = tnew.Branch('isZMM', isZMM, 'isZMM/F')
+    isZTT = array('f', [ 0 ] )
+    isZTTB = tnew.Branch('isZTT', isZTT, 'isZTT/F')
     isZLL = array('f', [ 0 ] )
     isZLLB = tnew.Branch('isZLL', isZLL, 'isZLL/F')
     isFake = array('f', [ 0 ] )
@@ -483,6 +485,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             isZem[0] = 0
             isZEE[0] = 0
             isZMM[0] = 0
+            isZTT[0] = 0
             isZLL[0] = 0
             isFake[0] = 0
 
@@ -512,38 +515,38 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 puweight[0] = puDict[ round(row.nTruePU) ]
                 if channel == 'em' :
                     isZem[0] = 1
-                    if row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
-                    elif row.eGenPrompt == 1 : gen_match_1[0] = 1
-                    else : gen_match_1[0] = 6
+                    #if row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
+                    #elif row.eGenPrompt == 1 : gen_match_1[0] = 1
+                    #else : gen_match_1[0] = 6
 
-                    if row.mGenDirectPromptTauDecayFinalState == 1 : gen_match_2[0] = 4
-                    elif row.mGenPromptFinalState == 1 : gen_match_2[0] = 2
-                    else : gen_match_2[0] = 6
+                    #if row.mGenDirectPromptTauDecayFinalState == 1 : gen_match_2[0] = 4
+                    #elif row.mGenPromptFinalState == 1 : gen_match_2[0] = 2
+                    #else : gen_match_2[0] = 6
 
-                    # check 'isFake' for EMu
-                    if gen_match_1[0] == 3 and gen_match_2[0] == 4 : isFake[0] = 0
-                    elif gen_match_1[0] == 1 and gen_match_2[0] == 2 and isZLL[0] == 1 : isFake[0] = 1
-                    elif abs(row.eGenPdgId) == 15 and gen_match_2[0] == 4 : isFake[0] = 3
-                    else : isFake[0] = 2
+                    ## check 'isFake' for EMu
+                    #if gen_match_1[0] == 3 and gen_match_2[0] == 4 : isFake[0] = 0
+                    #elif gen_match_1[0] == 1 and gen_match_2[0] == 2 and isZLL[0] == 1 : isFake[0] = 1
+                    #elif abs(row.eGenPdgId) == 15 and gen_match_2[0] == 4 : isFake[0] = 3
+                    #else : isFake[0] = 2
 
                 if channel == 'tt' :
                     isZtt[0] = 1
-                    if row.t1GenPrompt == 1 and row.t1GenJetPt > 15 : gen_match_1[0] = 5
-                    else : gen_match_1[0] = 6
+                    #if row.t1GenPrompt == 1 and row.t1GenJetPt > 15 : gen_match_1[0] = 5
+                    #else : gen_match_1[0] = 6
 
-                    if row.t2GenPrompt == 1 and row.t2GenJetPt > 15 : gen_match_2[0] = 5
-                    else : gen_match_2[0] = 6
+                    #if row.t2GenPrompt == 1 and row.t2GenJetPt > 15 : gen_match_2[0] = 5
+                    #else : gen_match_2[0] = 6
                 
-                    # check 'isFake' for TT
-                    if abs(row.t1GenPdgId) == 15 and abs(row.t2GenPdgId) == 15 : isFake[0] = 0
-                    elif row.t1GenPrompt == 1 and \
-                            (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
-                            row.t2GenPrompt == 1 and \
-                            (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) and \
-                            isZLL[0] == 1 : isFake[0] = 1
-                    elif (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
-                            (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) : isFake[0] = 3
-                    else : isFake[0] = 2
+                    ## check 'isFake' for TT
+                    #if abs(row.t1GenPdgId) == 15 and abs(row.t2GenPdgId) == 15 : isFake[0] = 0
+                    #elif row.t1GenPrompt == 1 and \
+                    #        (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
+                    #        row.t2GenPrompt == 1 and \
+                    #        (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) and \
+                    #        isZLL[0] == 1 : isFake[0] = 1
+                    #elif (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
+                    #        (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) : isFake[0] = 3
+                    #else : isFake[0] = 2
             
 
             tnew.Fill()

@@ -34,18 +34,21 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
         else :
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s' % additionalCut )
             histos2[ var ] = gPad.GetPrimitive( var2 )
-            integralPre = histos2[ var ].Integral()
 
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( var )
-            integralPost = histos[ var ].Integral()
-            if var == 'm_vis' :
-                print 'm_vis'
-                print "intPre: %f" % integralPre
-                print "tmpIntPost: %f" % integralPost
-                if integralPre != 0 :
-                    print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
-
+            if chain.GetEntries() > 0 :
+                integralPre = histos2[ var ].Integral()
+                integralPost = histos[ var ].Integral()
+                if var == 'm_vis' :
+                    print 'm_vis'
+                    print "intPre: %f" % integralPre
+                    print "tmpIntPost: %f" % integralPost
+                    if integralPre != 0 :
+                        print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
+            else :
+                print " #### ENTRIES = 0 #### "
+                histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
         histos[ var ].Write()
 
     #outFile.Write()
@@ -97,7 +100,7 @@ def getHistoDict( channel ) :
             'mJetPt' : ('mJetPt', 400, 0, 400),
             'Z_DR' : ('e_m_DR', 500, 0, 5),
             'Z_DPhi' : ('e_m_DPhi', 800, -4, 4),
-            'm_sv' : ('m_sv', 1000, 0, 1000),
+            #'m_sv' : ('m_sv', 1000, 0, 1000),
             'pt_H' : ('e_m_Pt + mvamet', 1000, 0, 1000),
             #'ePVDZ' : ('ePVDZ', 100, -1, 1),
             #'ePVDXY' : ('ePVDXY', 100, -.2, .2),
@@ -116,7 +119,7 @@ def getHistoDict( channel ) :
             'Z_SS' : ('t1_t2_SS', 20, 0, 2),
             'Z_DR' : ('t1_t2_DR', 500, 0, 5),
             'Z_DPhi' : ('t1_t2_DPhi', 800, -4, 4),
-            'm_sv' : ('m_sv', 1000, 0, 1000),
+            #'m_sv' : ('m_sv', 1000, 0, 1000),
             'pt_H' : ('t1_t2_Pt + mvamet', 1000, 0, 1000),
             't1DecayMode' : ('t1DecayMode', 12, 0, 12),
             't1JetPt' : ('t1JetPt', 400, 0, 400),
@@ -132,7 +135,7 @@ def getHistoDict( channel ) :
 
 def getPlotDetails( channel ) :
     plotDetails = {
-        'm_vis' : (0, 300, 10, 'Z Vis Mass [GeV]', ' GeV'),
+        'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'Z_Pt' : (0, 200, 10, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
         'met' : (0, 250, 10, 'pfMet [GeV]', ' GeV'),
@@ -158,7 +161,7 @@ def getPlotDetails( channel ) :
         'Z_DR' : (0, 5, 20, 'Z dR', ' dR'),
         'Z_DPhi' : (-4, 4, 10, 'Z dPhi', ' dPhi'),
         'Z_DEta' : (-5, 5, 40, 'Z dEta', ' dEta'),
-        'm_sv' : (0, 600, 20, 'ditau svFit Mass', ' GeV'),
+        #'m_sv' : (0, 600, 20, 'ditau svFit Mass', ' GeV'),
         'pt_H' : (0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
         }
 
