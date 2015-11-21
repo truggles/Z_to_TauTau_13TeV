@@ -31,7 +31,8 @@ def checkBkgs( samples, params, bkgMap ) :
 
 ''' Set grouping (25ns or Sync) '''
 #grouping = '25ns'
-grouping = 'Sync'
+#grouping = 'Sync'
+grouping = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
@@ -44,17 +45,16 @@ SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
 Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
 Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
-#Samples25nsFinalNew = ['data_em', 'data_tt', 'WJets',]
-#Samples25nsFinalOld = ['TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau']
-#Samples25nsFinal = [ 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
+SamplesDataCards = [ 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l'] # Set list for Data Card Sync (less DYJetsLow)
 #samples = ['data_em', 'data_tt', 'Tbar-tW', 'T-tW',]
 #samples = ['DYJets',]# 'Tbar-tW', 'T-tW',]
 #samples = ['ggHtoTauTau', 'VBFHtoTauTau']
 #samples = ['WJets',]
 #samples = Samples25nsFinalNew
 #samples = Samples25nsFinal
-samples = SamplesSync
+#samples = SamplesSync
 #samples = SamplesData
+samples = SamplesDataCards
 #samples = ['data_tt',]
 #samples = ['DYJetsLow', 'data_em']
 #samples = ['Tbar-tW',]
@@ -98,10 +98,10 @@ params = {
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-#from meta.makeMeta import makeMetaJSON
-#os.chdir('meta')
-#makeMetaJSON( grouping )
-#os.chdir('..')
+from meta.makeMeta import makeMetaJSON
+os.chdir('meta')
+makeMetaJSON( grouping )
+os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -113,8 +113,8 @@ params = {
 
 
 
-samples = checkBkgs( samples, params, bkgMap )
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#samples = checkBkgs( samples, params, bkgMap )
+#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 
