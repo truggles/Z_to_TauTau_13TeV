@@ -84,18 +84,18 @@
     "nlumis": 47830
   }, 
   "TT": {
-    "STATUS": "Good to Go!", 
+    "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 19757190, 
-    "DAS Path": "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
-    "nfiles": 453, 
-    "nblocks": 16, 
+    "nEvents": 96600351, 
+    "DAS Path": "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/MINIAODSIM", 
+    "nfiles": 2114, 
+    "nblocks": 62, 
     "Cross Section (pb)": 831.76, 
-    "summedWeightsNorm": 19757190.0, 
-    "summedWeights": 19757190.0, 
-    "nevents": 19757190, 
-    "nNtupleFiles": 453, 
-    "nlumis": 197839
+    "summedWeightsNorm": 96600351.0, 
+    "summedWeights": 96600351.0, 
+    "nevents": 96834559, 
+    "nNtupleFiles": 2109, 
+    "nlumis": 486171
   }, 
   "ZZ4l": {
     "STATUS": "Good to Go!", 
