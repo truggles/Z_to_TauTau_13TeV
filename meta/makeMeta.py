@@ -33,27 +33,37 @@ def makeMetaJSON( grouping ) :
                 'TTJets' : ('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv3/MINIAODSIM' % campaign, 831.76 ),
                 'T-tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv2/MINIAODSIM' % campaign, 35.6 ),
                 'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv1/MINIAODSIM' % campaign, 35.6),
-                #'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 61526.7 ),
                 'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 61526.7 ),
                 'WW' : ('/WW_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % campaign, 63.21 ),
-                #'WW2l2n' : ('/WWTo2L2Nu_13TeV-powheg/%sv1/MINIAODSIM' % campaign, 10.481 ),
-                #'WW4q' : ('/WWTo4Q_13TeV-powheg/%sv2/MINIAODSIM' % campaign, 45.2 ),
-                #'WW1l1n2q' : ('/WWToLNuQQ_13TeV-powheg/%sv1/MINIAODSIM' % campaign, 43.53 ),
                 'WZJets' : ('/WZ_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % campaign, 22.82 ),
-                #'WZ3l1nu' : ('/MINIAODSIM' % campaign, 4.43 ),
-                #'WZ1l1n2q' : ('/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 10.96 ),
-                #'WZ2l2q' : ('/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 10.96 ),
                 'ZZ' : ('/ZZ_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % campaign, 10.32 ),
-                #'ZZ2l2q' : ('/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 10.96 ),
-                #'ZZ2q2nu' : ('/ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 10.96 ),
-                #'ZZ4q' : ('/ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 1.256 ),
-                #'ZZ4l' : ('/MINIAODSIM' % campaign, 1.256 ),
                 'QCD' : ('/QCD_Pt-20toInf_MuEnrichedPt15_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 720648000 * 0.00042),
     }
     
+    samplesDataCards = { 
+                'data_em' : ('', -999.0),
+                'data_tt' : ('', -999.0),
+                'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 6025.2 ), 
+                'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 18610.0 ), 
+                'T-tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv2/MINIAODSIM' % campaign, 35.6 ),
+                'T-tchan' : ('/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv1/MINIAODSIM' % campaign, 136.02 * 0.108*3 ),
+                'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%sv1/MINIAODSIM' % campaign, 831.76 ),
+                'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv1/MINIAODSIM' % campaign, 35.6),
+                'Tbar-tchan' : ('/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv1/MINIAODSIM' % campaign, 80.95 * 0.108*3 ),
+                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 61526.7 ),
+                'WW1l1nu2q' : ('/WWToLNuQQ_13TeV-powheg/%sv1/MINIAODSIM' % campaign, 49.997 ),
+                'WW2l2nu' : ('/WWTo2L2Nu_13TeV-powheg/%sv1/MINIAODSIM' % campaign, 12.178 ),
+                'WZ1l1nu2q' : ('/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 10.71 ),
+                'WZ1l3nu' : ('/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 3.05 ),
+                'WZ2l2q' : ('/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 5.595 ),
+                'WZ3l1nu' : ('/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%sv1/MINIAODSIM' % campaign, 4.42965 ),
+                'ZZ2l2nu' : ('/ZZTo2L2Nu_13TeV_powheg_pythia8/%sv2/MINIAODSIM' % campaign, 0.564 ),
+                'ZZ2l2q' : ('/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 3.22 ),
+                'ZZ4l' : ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 1.212 ),
+    }
     if grouping == 'Sync': samples = samplesSync
     if grouping == '25ns': samples = samples25ns
-    if grouping == '50ns': samples = samples50ns
+    if grouping == 'dataCards': samples = samplesDataCards
      
     dataSamples = {
                 'data_em' : ['/MuonEG/Run2015C-23Sep2015-v1/MINIAOD', '/MuonEG/Run2015D-05Oct2015-v2/MINIAOD', '/MuonEG/Run2015D-PromptReco-v4/MINIAOD'],
