@@ -513,6 +513,7 @@
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-3A3B581F-CC6E-E511-AF2A-0025905A60A8/make_ntuples_cfg-3A3B581F-CC6E-E511-AF2A-0025905A60A8.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-3A4E749C-A26E-E511-9E0C-002354EF3BD2/make_ntuples_cfg-3A4E749C-A26E-E511-9E0C-002354EF3BD2.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-3A58221D-796E-E511-84E6-0025905B8576/make_ntuples_cfg-3A58221D-796E-E511-84E6-0025905B8576.root
+/data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-3A71A52C-4B6E-E511-A430-0025905A60C6/make_ntuples_cfg-3A71A52C-4B6E-E511-A430-0025905A60C6.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-3A91949B-546E-E511-B6FF-002618943880/make_ntuples_cfg-3A91949B-546E-E511-B6FF-002618943880.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-3AAE3115-846F-E511-BA32-6CC2173D6A70/make_ntuples_cfg-3AAE3115-846F-E511-BA32-6CC2173D6A70.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-3AB23EA4-536E-E511-9D38-002590593920/make_ntuples_cfg-3AB23EA4-536E-E511-9D38-002590593920.root
@@ -1149,6 +1150,7 @@
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-8CC9D178-5A6E-E511-BD5C-0025905A4964/make_ntuples_cfg-8CC9D178-5A6E-E511-BD5C-0025905A4964.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-8CD42D59-816E-E511-9740-0025905A613C/make_ntuples_cfg-8CD42D59-816E-E511-9740-0025905A613C.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-8CD5A38F-746E-E511-A89B-0025905A6138/make_ntuples_cfg-8CD5A38F-746E-E511-A89B-0025905A6138.root
+/data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-8CF61C74-696E-E511-9407-0026189438EB/make_ntuples_cfg-8CF61C74-696E-E511-9407-0026189438EB.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-8E204C94-986E-E511-A13E-0026189438ED/make_ntuples_cfg-8E204C94-986E-E511-A13E-0026189438ED.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-8E36BAFD-466E-E511-ACFF-0025905A60F2/make_ntuples_cfg-8E36BAFD-466E-E511-ACFF-0025905A60F2.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-8E38C0B7-986E-E511-BB86-00261894398A/make_ntuples_cfg-8E38C0B7-986E-E511-BB86-00261894398A.root
@@ -1324,6 +1326,7 @@
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A0AF6531-816F-E511-907E-6CC2173D6140/make_ntuples_cfg-A0AF6531-816F-E511-907E-6CC2173D6140.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A0B8A988-056F-E511-A7E4-001E67A3EAB1/make_ntuples_cfg-A0B8A988-056F-E511-A7E4-001E67A3EAB1.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A0BF6F2C-806F-E511-B4C9-B499BAA67F78/make_ntuples_cfg-A0BF6F2C-806F-E511-B4C9-B499BAA67F78.root
+/data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A0DB4F40-846F-E511-A3E9-00269E95ACFC/make_ntuples_cfg-A0DB4F40-846F-E511-A3E9-00269E95ACFC.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A0F762B9-5A6E-E511-B562-00261894385A/make_ntuples_cfg-A0F762B9-5A6E-E511-B562-00261894385A.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A0FCEBE0-9E6F-E511-A0AE-00269E95B128/make_ntuples_cfg-A0FCEBE0-9E6F-E511-A0AE-00269E95B128.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A207E91E-7A6F-E511-B853-6CC2173D6B10/make_ntuples_cfg-A207E91E-7A6F-E511-B853-6CC2173D6B10.root
@@ -1376,6 +1379,7 @@
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A68A3DD1-C96E-E511-B832-0025905A6066/make_ntuples_cfg-A68A3DD1-C96E-E511-B832-0025905A6066.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A69E9560-BA6E-E511-BFAB-0025905A60BE/make_ntuples_cfg-A69E9560-BA6E-E511-BFAB-0025905A60BE.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A6AF132D-C86E-E511-9DA8-0025905A608E/make_ntuples_cfg-A6AF132D-C86E-E511-9DA8-0025905A608E.root
+/data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A6BAF6B2-546E-E511-9364-0025905A60CA/make_ntuples_cfg-A6BAF6B2-546E-E511-9364-0025905A60CA.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A6CCF732-076F-E511-BE57-D4AE52AAF583/make_ntuples_cfg-A6CCF732-076F-E511-BE57-D4AE52AAF583.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A6DB0FCC-C96E-E511-A858-00261894398D/make_ntuples_cfg-A6DB0FCC-C96E-E511-A858-00261894398D.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-A6E2374B-AD6E-E511-AA42-0025905A4964/make_ntuples_cfg-A6E2374B-AD6E-E511-AA42-0025905A4964.root
@@ -2048,6 +2052,7 @@
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-F8D31828-4D6E-E511-9933-0026189438DD/make_ntuples_cfg-F8D31828-4D6E-E511-9933-0026189438DD.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-F8D825FE-466E-E511-8EFA-0025905964CC/make_ntuples_cfg-F8D825FE-466E-E511-8EFA-0025905964CC.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-F8DA8D5B-796F-E511-81DA-6CC2173D8740/make_ntuples_cfg-F8DA8D5B-796F-E511-81DA-6CC2173D8740.root
+/data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-F8DE85C8-C06E-E511-A3DD-002618943939/make_ntuples_cfg-F8DE85C8-C06E-E511-A3DD-002618943939.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-F8EA5E08-BF6E-E511-AE3E-0025905A608C/make_ntuples_cfg-F8EA5E08-BF6E-E511-AE3E-0025905A608C.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-F8EC2F03-BF6E-E511-88FD-00261894397E/make_ntuples_cfg-F8EC2F03-BF6E-E511-88FD-00261894397E.root
 /data/truggles/nov21_TT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/submit/make_ntuples_cfg-F8F5CE10-776F-E511-ACAD-6CC2173C3E80/make_ntuples_cfg-F8F5CE10-776F-E511-ACAD-6CC2173C3E80.root

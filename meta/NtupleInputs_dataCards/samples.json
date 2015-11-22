@@ -84,17 +84,17 @@
     "nlumis": 47830
   }, 
   "TT": {
-    "STATUS": "Error", 
+    "STATUS": "Good to Go!", 
     "DAS status": "ok", 
-    "nEvents": 96600351, 
+    "nEvents": 96834559, 
     "DAS Path": "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/MINIAODSIM", 
     "nfiles": 2114, 
     "nblocks": 62, 
     "Cross Section (pb)": 831.76, 
-    "summedWeightsNorm": 96600351.0, 
-    "summedWeights": 96600351.0, 
+    "summedWeightsNorm": 96834559.0, 
+    "summedWeights": 96834559.0, 
     "nevents": 96834559, 
-    "nNtupleFiles": 2109, 
+    "nNtupleFiles": 2114, 
     "nlumis": 486171
   }, 
   "ZZ4l": {
