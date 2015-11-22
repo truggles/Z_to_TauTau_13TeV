@@ -21,6 +21,7 @@ p.add_argument('--textMore', action='store', default=False, dest='textMore', hel
 p.add_argument('--www', action='store', default=True, dest='www', help="Save to Tyler's public 'www' space?")
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
+p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -103,8 +104,8 @@ for channel in ['em', 'tt'] :
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     if options.qcdMake :
-        qcdMaker = ROOT.TFile('%s_qcdShape.root' % channel, 'RECREATE')
-        qcdDir = qcdMaker.mkdir('qcdShape')
+        qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
+        qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
 
     for var, info in newVarMap.iteritems() :
 
@@ -145,7 +146,10 @@ for channel in ['em', 'tt'] :
             #    histScale = dicScale.Get( "%s" % var )
             #    wJetsInt = histScale.Integral()
             elif sample == 'QCD' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
+                if options.useQCDMake :
+                    tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                else :
+                    tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
@@ -154,8 +158,11 @@ for channel in ['em', 'tt'] :
             hist = dic.Get( "%s" % var )
             hist.SetDirectory( 0 )
 
+            if sample == 'QCD' and options.useQCDMake :
+                print "Skip rebin"
+            else :
+                hist.Rebin( plotDetails[ var ][2] )
 
-            hist.Rebin( plotDetails[ var ][2] )
             lowerRange = hist.GetXaxis().FindBin( plotDetails[ var ][0] )
             upperRange = hist.GetXaxis().FindBin( plotDetails[ var ][1] )
             #print "upper and lower",upperRange,lowerRange
@@ -178,8 +185,9 @@ for channel in ['em', 'tt'] :
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
-                if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
-                if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
+                if not options.useQCDMake :
+                    if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
+                    if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
             #elif sample == 'WJets' and hist.Integral() != 0 :
             #    scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
             #    hist.Scale( scaler * wJetsInt / hist.Integral() )
@@ -292,9 +300,13 @@ for channel in ['em', 'tt'] :
             data.GetStack().Last().Draw('esamex0')
             
         if options.qcdMake :
-            qcdVar = ROOT.TH1F('qcd %s' % info[0], 'qcd', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
+            qcdVar = ROOT.TH1F( var, 'qcd', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
             qcdVar.Add( data.GetStack().Last() )
             qcdVar.Add( -1 * stack.GetStack().Last() )
+            qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+            if channel == 'em' : qcdVar.Scale( qcdEMScaleFactor )
+            if channel == 'tt' : qcdVar.Scale( qcdTTScaleFactor )
+            print "qcdVar: %f" % qcdVar.Integral()
             qcdDir.cd()
             qcdVar.Write()
             pad1.cd()
