@@ -193,6 +193,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         #'e_m_SVfitMass' : 'm_sv',
         'e_m_PZeta' : 'pzetamis',
         'e_m_PZetaVis' : 'pzetavis',
+        'e_m_SS' : 'Z_SS',
         'eMtToPfMet_Raw' : 'mt_1',
         'mMtToPfMet_Raw' : 'mt_2',
         }
@@ -248,6 +249,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         #'t1_t2_SVfitMass' : 'm_sv',
         't1_t2_PZeta' : 'pzetamis',
         't1_t2_PZetaVis' : 'pzetavis',
+        't1_t2_SS' : 'Z_SS',
         't1MtToPfMet_Raw' : 'mt_1',
         't2MtToPfMet_Raw' : 'mt_2',
         }
@@ -434,6 +436,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     isFake = array('f', [ 0 ] )
     isFakeB = tnew.Branch('isFake', isFake, 'isFake/F')
 
+    # add dummy decaymode vars in to EMu channel for cut strings later
+    if channel == 'em' :
+        t1DecayMode = array('f', [ 0 ] )
+        t1DecayModeB = tnew.Branch('t1DecayMode', t1DecayMode, 't1DecayMode/F')
+        t2DecayMode = array('f', [ 0 ] )
+        t2DecayModeB = tnew.Branch('t2DecayMode', t2DecayMode, 't2DecayMode/F')
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -494,6 +502,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 isZtt[0] = 1
             if channel == 'em' :
                 isZem[0] = 1
+                t1DecayMode[0] = -1
+                t2DecayMode[0] = -1
             # Generator states, combine Z & sm-H into 1 var
             if row.isZee == 1 :#or row.isHee == 1 : 
                 isZEE[0] = 1
@@ -512,7 +522,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 isZLL[0] = -1
                 isFake[0] = -1
             else :
-                puweight[0] = puDict[ round(row.nTruePU) ]
+                puweight[0] = puDict[ int(row.nTruePU) ]
                 if channel == 'em' :
                     isZem[0] = 1
                     #if row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3

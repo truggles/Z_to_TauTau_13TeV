@@ -53,8 +53,8 @@ SamplesDataCards = ['data_em', 'data_tt', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tcha
 #samples = Samples25nsFinalNew
 #samples = Samples25nsFinal
 #samples = SamplesSync
-samples = SamplesData
-#samples = SamplesDataCards
+#samples = SamplesData
+samples = SamplesDataCards
 #samples = ['data_tt',]
 #samples = ['DYJetsLow', 'data_em']
 #samples = ['Tbar-tW',]
@@ -72,7 +72,7 @@ params = {
     'bkgs' : 'None',
     'numCores' : 20,
     'numFilesPerCycle' : 25,
-    'cutMapper' : 'signalCuts', #!
+    'cutMapper' : 'signalCutsX', #!
     'cutName' : 'PostSync', #!
     #'cutMapper' : 'tmp',
     #'cutMapper' : 'syncCuts',
@@ -83,10 +83,11 @@ params = {
     #'cutName' : 'QCDYield',
     #'cutMapper' : 'qcdShapeScale', #!
     #'cutName' : 'PostSync', #!
-    'mid1' : '1nov21',
-    'mid2' : '2nov21',
-    'mid3' : '3nov21',
-    'additionalCut' : '',
+    'mid1' : '1nov22noSignAllDecay',
+    'mid2' : '2nov22noSignAllDecay',
+    'mid3' : '3nov22SSuwRescale',
+    #'additionalCut' : '',
+    'additionalCut' : '*(Z_SS==1)*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
     #'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 1)*(iso_2 > 1)',
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
     #'additionalCut' : '*(nbtag<1)*(mt_2<80)',
@@ -115,7 +116,7 @@ params = {
 
 
 samples = checkBkgs( samples, params, bkgMap )
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 

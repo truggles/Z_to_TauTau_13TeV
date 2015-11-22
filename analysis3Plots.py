@@ -127,7 +127,7 @@ for channel in ['em', 'tt'] :
 
 
         for sample in samples:
-            print sample
+            #print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue

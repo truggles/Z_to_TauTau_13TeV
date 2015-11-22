@@ -76,6 +76,15 @@ def signalCuts( ch ) :
         cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode
     return cutMap
 
+# Data card sync, no Decay Mode cut 
+def signalCutsX( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emIso + ' && ' + extraVeto
+    if ch == 'tt':
+        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
+    return cutMap
+
 # A version which applies all cuts at once RunII
 def testLooserTriggers( ch ) :
     cutMap = OrderedDict()
@@ -101,6 +110,15 @@ def QCDYieldSS( ch ) :
         cutMap['QCDYield'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emSS + ' && ' + emIso + ' && ' + extraVeto
     if ch == 'tt':
         cutMap['QCDYield'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttSS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode
+    return cutMap
+
+# data cards sync, no decay mode cut 
+def QCDYieldSSX( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['QCDYield'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emSS + ' && ' + emIso + ' && ' + extraVeto
+    if ch == 'tt':
+        cutMap['QCDYield'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttSS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
     return cutMap
 
 # Cuts to calculate QCD yield from Data - MC

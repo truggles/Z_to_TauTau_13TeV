@@ -36,6 +36,8 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
             histos2[ var ] = gPad.GetPrimitive( var2 )
 
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
+            ''' No reweighting at the moment! '''
+            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(GenWeight/abs( GenWeight ))%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( var )
             if chain.GetEntries() > 0 :
                 integralPre = histos2[ var ].Integral()
@@ -46,6 +48,9 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                     print "tmpIntPost: %f" % integralPost
                     if integralPre != 0 :
                         print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
+                    #print "  ---!!! UNSCALING !!!--- "
+                #if integralPost != 0 :
+                #    histos[ var ].Scale( integralPre / integralPost )
             else :
                 print " #### ENTRIES = 0 #### "
                 histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
@@ -58,6 +63,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
 # Provides a list of histos to create for both channels
 def getHistoDict( channel ) :
     genVarMap = {
+        'Z_SS' : ('Z_SS', 20, 0, 2),
         'LT' : ('LT', 600, 0, 600),
         'Mt' : ('Mt', 600, 0, 600),
         'met' : ('met', 400, 0, 400),
@@ -95,7 +101,6 @@ def getHistoDict( channel ) :
         # Provides a list of histos to create for 'EM' channel
         chanVarMapEM = {
             'Z_Pt' : ('e_m_Pt', 400, 0, 400),
-            'Z_SS' : ('e_m_SS', 20, 0, 2),
             'eJetPt' : ('eJetPt', 400, 0, 400),
             'mJetPt' : ('mJetPt', 400, 0, 400),
             'Z_DR' : ('e_m_DR', 500, 0, 5),
@@ -116,7 +121,6 @@ def getHistoDict( channel ) :
         chanVarMapTT = {
             'Z_Pt' : ('t1_t2_Pt', 400, 0, 400),
             #'m_vis' : ('m_vis', 600, 0, 600),
-            'Z_SS' : ('t1_t2_SS', 20, 0, 2),
             'Z_DR' : ('t1_t2_DR', 500, 0, 5),
             'Z_DPhi' : ('t1_t2_DPhi', 800, -4, 4),
             #'m_sv' : ('m_sv', 1000, 0, 1000),
