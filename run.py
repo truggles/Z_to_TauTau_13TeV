@@ -40,64 +40,6 @@ os.environ['_ZHOME_'] = zHome
 lumiCert = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2.11/fb - all of 2015 25ns golden
 puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
-''' Preset samples '''
-SamplesSync = ['Sync-HtoTT']
-SamplesData = ['data_em', 'data_tt']
-Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
-Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
-SamplesDataCards = ['data_em', 'data_tt', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l'] # Set list for Data Card Sync (less DYJetsLow)
-#samples = ['data_em', 'data_tt', 'Tbar-tW', 'T-tW',]
-#samples = ['DYJets',]# 'Tbar-tW', 'T-tW',]
-#samples = ['ggHtoTauTau', 'VBFHtoTauTau']
-#samples = ['WJets',]
-#samples = Samples25nsFinalNew
-#samples = Samples25nsFinal
-#samples = SamplesSync
-#samples = SamplesData
-samples = SamplesDataCards
-#samples = ['data_tt',]
-#samples = ['DYJetsLow', 'data_em']
-#samples = ['Tbar-tW',]
-#samples = ['WW',]
-#samples = ['WJets',]
-#samples = ['TTJets',]
-#samples = ['ZZ2l2nu']
-
-''' These parameters are fed into the 2 main function calls.
-They adjust the cuts you make, number of cores you run in
-multiprocessing, and the 'mid' params define the save location
-of your output files.  additionCut can be specified to further
-cut on any 'preselection' made in the initial stages '''
-params = {
-    'bkgs' : 'None',
-    'numCores' : 20,
-    'numFilesPerCycle' : 25,
-    'cutMapper' : 'signalCutsX', #!
-    'cutName' : 'PostSync', #!
-    #'cutMapper' : 'tmp',
-    #'cutMapper' : 'syncCuts',
-    #'cutName' : 'BaseLine',
-    #'cutMapper' : 'testLooserTriggers',
-    #'cutMapper' : 'QCDYieldSS',
-    #'cutMapper' : 'QCDYieldOSTrigLoose',
-    #'cutName' : 'QCDYield',
-    #'cutMapper' : 'qcdShapeScale', #!
-    #'cutName' : 'PostSync', #!
-    'mid1' : '1nov22noSignAllDecay',
-    'mid2' : '2nov22noSignAllDecay',
-    'mid3' : '3nov22SSuwRescale',
-    #'additionalCut' : '',
-    'additionalCut' : '*(Z_SS==1)*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
-    #'additionalCut' : '*(t1_t2_SS==0)*(iso_1 > 1)*(iso_2 > 1)',
-    #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
-    #'additionalCut' : '*(nbtag<1)*(mt_2<80)',
-    #'additionalCut' : '*(pt_2<20)',
-    #'additionalCut' : '*(singleE23SingleMu8Pass > 0 && eMatchesMu8Ele23Path == 1 && mMatchesMu8Ele23Path == 1)',
-    #'additionalCut' : '*(singleMu23SingleE12Pass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu23Ele12Path == 1)'
-    #'additionalCut' : '*(singleE17SingleMu8Pass > 0 && eMatchesMu8Ele17Path == 1 && mMatchesMu8Ele17Path == 1)',
-    #'additionalCut' : '*(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatchesMu17Ele12Path == 1)'
-}
-
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 #from meta.makeMeta import makeMetaJSON
@@ -114,6 +56,45 @@ params = {
 #makeDataPUTemplate( lumiCert, puJson ) 
 
 
+''' Preset samples '''
+SamplesSync = ['Sync-HtoTT']
+SamplesData = ['data_em', 'data_tt']
+Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
+Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
+SamplesDataCards = ['data_em', 'data_tt', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l'] # Set list for Data Card Sync (less DYJetsLow)
+#samples = Samples25nsFinal
+#samples = SamplesSync
+#samples = SamplesData
+samples = SamplesDataCards
+
+''' These parameters are fed into the 2 main function calls.
+They adjust the cuts you make, number of cores you run in
+multiprocessing, and the 'mid' params define the save location
+of your output files.  additionCut can be specified to further
+cut on any 'preselection' made in the initial stages '''
+params = {
+    'bkgs' : 'None',
+    'numCores' : 20,
+    'numFilesPerCycle' : 25,
+    'cutMapper' : 'signalCutsX', #!
+    'cutName' : 'PostSync', #!
+    #'cutMapper' : 'tmp',
+    #'cutMapper' : 'syncCuts',
+    #'cutName' : 'BaseLine',
+    #'cutMapper' : 'QCDYieldSS',
+    #'cutName' : 'QCDYield',
+    #'cutMapper' : 'qcdShapeScale', #!
+    #'cutName' : 'PostSync', #!
+    #'mid1' : '1nov24isoOrderReweightMTfixNoSignNoIso',
+    #'mid2' : '2nov24isoOrderReweightMTfixNoSignNoIso',
+    'mid1' : '1nov22noSignNoIso',
+    'mid2' : '2nov22noSignNoIso',
+    'mid3' : '3nov24OS3to10',
+    #'additionalCut' : '',
+    #'additionalCut' : '*(Z_SS==0)',
+    'additionalCut' : '*(Z_SS==0)*(iso_1 > 3)*(iso_2 >3)*(iso_1 < 10)*(iso_2 < 10)',
+    #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
+}
 
 samples = checkBkgs( samples, params, bkgMap )
 #analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)

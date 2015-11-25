@@ -191,7 +191,7 @@ def drawHistos(grouping, samples, **fargs ) :
     
         for channel in channels :
     
-            #if channel == 'em' : continue
+            if channel == 'em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
             if channel == 'tt' and sample == 'data_em' : continue
             print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
