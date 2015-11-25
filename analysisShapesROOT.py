@@ -11,10 +11,10 @@ import os
 import array
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
-p.add_argument('--samples', action='store', default='25ns', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
-p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="blind data above 150 GeV?")
+p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -24,14 +24,12 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2.11 # / fb 25ns - Final 2015 25ns Golden JSON
+luminosity = 2110 # / fb 25ns - Final 2015 25ns Golden JSON
 
 # Scaling = 1 for data card sync
 qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
 bkgsTTScaleFactor = 1.0
-qcdYieldTT = 7350. 
-qcdYieldEM = 2057.7
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
@@ -61,7 +59,7 @@ samples['data_em']  = ('kBlack', '_data_obs_')
 samples['VBFHtoTauTau'] = ('kGreen', '_ggH125_')
 samples['ggHtoTauTau'] = ('kGreen', '_vbfH125_')
 
-nameArray = ['_data_obs_','_ggH125_','_vbfH125_','_ZTT_','_TT_','_QCD_','_VV_','_W_']
+nameArray = ['_data_obs_','_ZTT_','_TT_','_QCD_','_VV_','_W_']#,'_ggH125_','_vbfH125_']
 
 channels = { 'em' : 'EMu',
              'tt' : 'TauTau',}
@@ -81,6 +79,7 @@ for channel in channels.keys() :
 
     for var, info in newVarMap.iteritems() :
         if not var == 'm_vis' : continue
+        print "\n Output shapes file: %sShapes/htt_%s.inputs-sm-13TeV.root \n" % (grouping, channel)
         shapeFile = ROOT.TFile('%sShapes/htt_%s.inputs-sm-13TeV.root' % (grouping, channel), 'RECREATE')
         #shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
         shapeDir = shapeFile.mkdir( channel + '_inclusive' )
@@ -95,7 +94,7 @@ for channel in channels.keys() :
         for name in nameArray :
             title = name.strip('_')
             #histos[ name ] = ROOT.TH1F( name, name, 18, binArray )
-            histos[ name ] = ROOT.TH1F( name, name, 35, 0, 350 )
+            histos[ name ] = ROOT.TH1F( name, name, 60, 0, 600 )
 
 
         for sample in samples:
@@ -111,7 +110,10 @@ for channel in channels.keys() :
             elif sample == 'data_tt' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif sample == 'QCD' :
-                tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
+                if options.useQCDMake :
+                    tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                else :
+                    print " \n\n ### SPECIFIC A QCD SHAPE ### \n\n"
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
@@ -119,14 +121,16 @@ for channel in channels.keys() :
             dic = tFile.Get("%s_Histos" % channel )
             hist = dic.Get( "%s" % var )
             hist.SetDirectory( 0 )
+            #print "Hist yield before scaling ",hist.Integral()
+
 
 
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
-                if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
-                if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
+                if channel == 'em' : hist.Scale( qcdEMScaleFactor )
+                if channel == 'tt' : hist.Scale( qcdTTScaleFactor )
             elif 'data' not in sample and hist.Integral() != 0:
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
@@ -134,14 +138,20 @@ for channel in channels.keys() :
                 else :
                     hist.Scale( scaler )
 
+            if 'QCD' not in sample :
+                hist.Rebin( 10 )
 
-            hist2 = hist.Rebin( 18, 'rebinned', binArray )
-            histos[ samples[ sample ][1] ].Add( hist2 )
+            #print "Hist yield ",hist.Integral()
+            #hist2 = hist.Rebin( 18, 'rebinned', binArray )
+            #histos[ samples[ sample ][1] ].Add( hist2 )
+            histos[ samples[ sample ][1] ].Add( hist )
             tFile.Close()
 
 
         shapeDir.cd()
         for name in histos :
+            print "name: %s Yield: %f" % (name, histos[ name ].Integral() )
+            histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
             histos[ name ].SetTitle( name.strip('_') )
             histos[ name ].SetName( name.strip('_') )
             histos[ name ].Write()
