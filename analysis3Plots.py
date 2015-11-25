@@ -38,7 +38,8 @@ qcdTTScaleFactor = 1.06 # see http://truggles.web.cern.ch/truggles/Oct29/
 #qcdEMScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
 #bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
-bkgsTTScaleFactor = 1.0 # see pZeta_TT_Control.xlsx 
+#bkgsTTScaleFactor = 1.14 # see pZeta_TT_Control.xlsx 
+bkgsTTScaleFactor = 1.0
 qcdYieldTT = 2670.0 * qcdTTScaleFactor
 qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 
@@ -80,6 +81,7 @@ sampColors = {
 
 for channel in ['em', 'tt'] :
 
+    #if channel == 'tt' : continue
     #if channel == 'em' : continue
 
     # Make an index file for web viewing
@@ -113,7 +115,8 @@ for channel in ['em', 'tt'] :
         lowerRange = -1
         upperRange = -1
 
-        #if not (var == 'pZeta' or var == 'm_vis') : continue
+        #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
+        #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
@@ -126,6 +129,7 @@ for channel in ['em', 'tt'] :
         data = ROOT.THStack("All Backgrounds data", "data" )
 
 
+        pZetaTot = 0
         for sample in samples:
             #print sample
 
@@ -148,6 +152,7 @@ for channel in ['em', 'tt'] :
             elif sample == 'QCD' :
                 if options.useQCDMake :
                     tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                    print "Got QCD make file"
                 else :
                     tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
@@ -159,7 +164,13 @@ for channel in ['em', 'tt'] :
             hist.SetDirectory( 0 )
 
             if sample == 'QCD' and options.useQCDMake :
-                print "Skip rebin"
+                if channel == 'em' :
+                    print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
+                    hist.Scale( qcdEMScaleFactor )
+                if channel == 'tt' :
+                    print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                    hist.Scale( qcdTTScaleFactor )
+                    print "QCD yield: %f" % hist.Integral()
             else :
                 hist.Rebin( plotDetails[ var ][2] )
 
@@ -185,6 +196,8 @@ for channel in ['em', 'tt'] :
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
+                #if options.useQCDMake and channel == 'tt' :
+                #    hist.Scale( 1.3 )
                 if not options.useQCDMake :
                     if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
                     if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
@@ -198,12 +211,16 @@ for channel in ['em', 'tt'] :
                 else :
                     hist.Scale( scaler )
 
-            #if var == 'pZeta' :
-            #    lower = hist.GetXaxis().FindBin( 100. )
-            #    upper = hist.GetXaxis().FindBin( 600. )
+            #if var == 'pZeta-0.85pZetaVis' :
+            #    #print " --- Sample %s Int %f" % ( sample, hist.Integral() )
+            #    lower = hist.GetXaxis().FindBin( -300. )
+            #    upper = hist.GetXaxis().FindBin( -50. )
             #    #print " --- Sample: %s      Int: %f" % (sample, hist.Integral() )
-            #    print " --- Sample: %s     Int above 100: %f" % (sample, hist.Integral( lower, upper) )
+            #    integral = hist.Integral( lower, upper)
+            #    print " --- Sample: %s     Int below -50: %f" % (sample, integral )
             #    #hist.GetXaxis().SetRangeUser( 11, upper )
+            #    pZetaTot += integral
+            #    print " --- pZeta running total = ",pZetaTot
 
             #print "Hist int: %s %f" % (sample, hist.Integral() )
             if samples[ sample ][1] == 'dyj' :
@@ -212,11 +229,12 @@ for channel in ['em', 'tt'] :
             if samples[ sample ][1] == 'qcd' :
                 hist.SetTitle('QCD')
                 qcd.Add( hist )
+                print "qcd Stack yield: %f" % qcd.GetStack().Last().Integral()
             if samples[ sample ][1] == 'top' :
-                hist.SetTitle('Single & Double Top')
+                hist.SetTitle('TT')
                 top.Add( hist )
             if samples[ sample ][1] == 'dib' :
-                hist.SetTitle('Di-Boson')
+                hist.SetTitle('VV')
                 dib.Add( hist )
             if samples[ sample ][1] == 'wjets' :
                 hist.SetTitle('WJets')
@@ -231,11 +249,27 @@ for channel in ['em', 'tt'] :
 
 
         if options.plotQCD == True :
+            print "Adding QCD"
             stack.Add( qcd.GetStack().Last() )
         stack.Add( top.GetStack().Last() )
         stack.Add( dib.GetStack().Last() )
         stack.Add( wjets.GetStack().Last() )
         stack.Add( dyj.GetStack().Last() )
+
+            
+        if options.qcdMake :
+            qcdVar = ROOT.TH1F( var, 'qcd', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
+            qcdVar.Add( data.GetStack().Last() )
+            qcdVar.Add( -1 * stack.GetStack().Last() )
+            qcdVar.SetFillColor( ROOT.kMagenta-10 )
+            qcdVar.SetLineColor( ROOT.kBlack )
+            qcdVar.SetLineWidth( 2 )
+            # Add the shape estimated here to the stack pre-scaling!!!
+            stack.Add( qcdVar ) 
+            qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+            print "qcdVar: %f" % qcdVar.Integral()
+            qcdDir.cd()
+            qcdVar.Write()
 
 
         # Maybe make ratio hist
@@ -298,18 +332,6 @@ for channel in ['em', 'tt'] :
             pad1.cd()
             stack.Draw('hist')
             data.GetStack().Last().Draw('esamex0')
-            
-        if options.qcdMake :
-            qcdVar = ROOT.TH1F( var, 'qcd', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
-            qcdVar.Add( data.GetStack().Last() )
-            qcdVar.Add( -1 * stack.GetStack().Last() )
-            qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
-            if channel == 'em' : qcdVar.Scale( qcdEMScaleFactor )
-            if channel == 'tt' : qcdVar.Scale( qcdTTScaleFactor )
-            print "qcdVar: %f" % qcdVar.Integral()
-            qcdDir.cd()
-            qcdVar.Write()
-            pad1.cd()
 
 
         # Set Y axis titles appropriately
@@ -379,9 +401,13 @@ for channel in ['em', 'tt'] :
             text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
             text3.SetTextSize(0.04)
             text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-            text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
-            text4.SetTextSize(0.05)
-            text4.DrawTextNDC(.65,.45,"SS Selection" )
+            #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            #text4.SetTextSize(0.05)
+            #text4.DrawTextNDC(.65,.45,"SS Selection" )
+
+        if (var == 't1DecayMode' or var == 't2DecayMode') :
+            print var + " DATA: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( data.GetStack().Last().GetBinContent( 1), data.GetStack().Last().GetBinContent( 2), data.GetStack().Last().GetBinContent( 11 ) )
+            print var + " MC: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( stack.GetStack().Last().GetBinContent( 1), stack.GetStack().Last().GetBinContent( 2), stack.GetStack().Last().GetBinContent( 11 ) )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
