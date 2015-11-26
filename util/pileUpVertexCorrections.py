@@ -86,13 +86,40 @@ def makeMCPUTemplate( ) :
         dHist.SetBinContent( i, MCDist[i] )
     dHist.SaveAs('meta/PileUpInfo/MCTemplate.root')
 
+def makeDYJetsPUTemplate( grouping ) :
+    import util.buildTChain as chainer
+    from ROOT import gPad
+    inFiles = 'meta/NtupleInputs_%s/DYJets.txt' % grouping
+    #avgHist = ROOT.TH1F('nTruePU', 'avgHist', 52, 0, 52)
 
-def PUreweight( ) :
+    for channel in ['em', 'tt'] :
+        chain = chainer.makeTChain( inFiles, '%s/final/Ntuple' % channel )
+        prevEvt = (0,0,0)
+        tmpHist = ROOT.TH1F('nTruePU', 'tmpHist', 52, 0, 52)
+        for row in chain :
+            currentEvt = (row.lumi, row.run, row.evt)
+            if currentEvt != prevEvt :
+                if row.GenWeight > 0 :
+                    genW = 1
+                else : # this is for data
+                    genW = -1
+                #print "Filling - nvtx:%i    genW:%i" % (row.nvtx, genW)
+                tmpHist.Fill( row.nTruePU * genW )
+                prevEvt = currentEvt
+        tmpHist.Scale( 1 / tmpHist.Integral() )
+        tmpHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU_%s.root' % channel )
+        #avgHist.Add( tmpHist )
+    #avgHist.Scale( 1 / avgHist.Integral() )
+    #avgHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU.root' % (grouping) )
+
+
+def PUreweight( channel ) :
     datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 
-    samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
+    samplefile = ROOT.TFile('meta/PileUpInfo/DYJetsNTruePU_%s.root' % channel, 'READ')
+    #samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
     sHist = samplefile.Get('nTruePU')
     sHist.Scale( 1 / sHist.Integral() )
 
@@ -143,9 +170,10 @@ if __name__ == '__main__' :
     #print zHome
     #makeDataPUTemplate( 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt', 'pileup_JSON_10-23-2015.txt' )
     #makeMCPUTemplate()
-    ary = PUreweight()
+    ary = PUreweight( 'em' )
     tot = 0
     for key in ary.keys() :
         print key, ary[key]
         tot += ary[key]
     print tot
+    #makeDYJetsPUTemplate( 'dataCards' )

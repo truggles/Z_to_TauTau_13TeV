@@ -48,9 +48,9 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                     print "tmpIntPost: %f" % integralPost
                     if integralPre != 0 :
                         print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
-                    #print "  ---!!! UNSCALING !!!--- "
-                #if integralPost != 0 :
-                #    histos[ var ].Scale( integralPre / integralPost )
+                    print "  ---!!! UNSCALING !!!--- "
+                if integralPost != 0 :
+                    histos[ var ].Scale( integralPre / integralPost )
             else :
                 print " #### ENTRIES = 0 #### "
                 histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])

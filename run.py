@@ -34,9 +34,11 @@ def checkBkgs( samples, params, bkgMap ) :
 #grouping = 'Sync'
 grouping = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
+cmsLumi = '2110.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
+os.environ['_LUMI_'] = cmsLumi
 lumiCert = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2.11/fb - all of 2015 25ns golden
 puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
@@ -49,11 +51,12 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 
 ''' Uncomment to make pile up vertex templates! '''
-#from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate
+#from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate, makeDYJetsPUTemplate
 #if not os.path.exists( 'meta/PileUpInfo' ) : 
 #    os.makedirs( 'meta/PileUpInfo' )
 #makeMCPUTemplate()
 #makeDataPUTemplate( lumiCert, puJson ) 
+#makeDYJetsPUTemplate( grouping )
 
 
 ''' Preset samples '''
@@ -76,7 +79,7 @@ params = {
     'bkgs' : 'None',
     'numCores' : 20,
     'numFilesPerCycle' : 25,
-    'cutMapper' : 'signalCutsY', #!
+    'cutMapper' : 'signalCutsX', #!
     'cutName' : 'PostSync', #!
     #'cutMapper' : 'tmp',
     #'cutMapper' : 'syncCuts',
@@ -99,7 +102,7 @@ params = {
 
 samples = checkBkgs( samples, params, bkgMap )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 
 

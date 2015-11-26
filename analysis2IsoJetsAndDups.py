@@ -10,6 +10,9 @@
 #############################################################################
 
 import math
+import json
+import os
+cmsLumi = float( os.getenv('_LUMI_', '2110.0') ) # 2.11 / fb defalut
 
 tauIso = {
     'Pt' : 'pt',
@@ -261,6 +264,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         for key in branchMappingTT.keys() :
             branchMapping[ key ] = branchMappingTT[ key ]
 
+    with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
+        sampDict = json.load( sampFile )
+
     if bkgFlag == '' :
         oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
         newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
@@ -403,7 +409,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     see util.pileUpVertexCorrections.addNvtxWeight for inspiration '''
     from util.pileUpVertexCorrections import PUreweight
     from array import array
-    puDict = PUreweight( )
+    puDict = PUreweight( channel )
 
     ''' We are calculating and adding these below variables to our new tree
     PU Weighting '''
@@ -516,8 +522,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
 
             if 'data' in sample :
-                puweight[0] = -1
-                XSecLumiWeight[0] = -1
+                puweight[0] = 1
+                XSecLumiWeight[0] = 1
                 gen_match_1[0] = -1
                 gen_match_2[0] = -1
                 isZEE[0] = -1
@@ -525,8 +531,15 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 isZLL[0] = -1
                 isFake[0] = -1
             else :
+                #nTruePU_ = int(row.nTruePU)
+                #if nTruePU_ == 0 :
+                #    print "Found an event with < 1 nTruePU"
+                #    puweight[0] = puDict[ 0 ]
+                #else : puweight[0] = puDict[ nTruePU_ - 1 ]
                 puweight[0] = puDict[ int(row.nTruePU) ]
-                XSecLumiWeight[0] = -1
+                shortName = sample.split('_')[0]
+                scaler = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+                XSecLumiWeight[0] = scaler
                 if channel == 'em' :
                     isZem[0] = 1
                     #if row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
