@@ -61,12 +61,12 @@ def makeMetaJSON( grouping ) :
                 'ZZ2l2nu' : ('/ZZTo2L2Nu_13TeV_powheg_pythia8/%sv2/MINIAODSIM' % campaign, 0.564 ),
                 'ZZ2l2q' : ('/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%sv1/MINIAODSIM' % campaign, 3.22 ),
                 'ZZ4l' : ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 1.212 ),
-                'QCD15-20' : ('/QCD_Pt_15to20_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 1.27298e+09 * 0.00020 ) 
-                'QCD20-30' : ('/QCD_Pt_20to30_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 5.57627e+08 * 0.00059 ) 
-                'QCD30-80' : ('/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 1.59068e+08 * 0.00255 ) 
-                'QCD80-170' : ('/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 3.221e+06 * 0.01183 ) 
-                'QCD170-250' : ('/QCD_Pt_170-250_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 105771 * 0.02492 ) 
-                'QCD250-Inf' : ('/QCD_Pt_250toInf_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 21094.1 * 0.03375 ) 
+                'QCD15-20' : ('/QCD_Pt_15to20_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 1.27298e+09 * 0.00020 ), 
+                'QCD20-30' : ('/QCD_Pt_20to30_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 5.57627e+08 * 0.00059 ),
+                'QCD30-80' : ('/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 1.59068e+08 * 0.00255 ), 
+                'QCD80-170' : ('/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 3.221e+06 * 0.01183 ), 
+                'QCD170-250' : ('/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 105771 * 0.02492 ), 
+                'QCD250-Inf' : ('/QCD_Pt_250toInf_bcToE_TuneCUETP8M1_13TeV_pythia8/%sv1/MINIAODSIM' % campaign, 21094.1 * 0.03375 ), 
     }
     if grouping == 'Sync': samples = samplesSync
     if grouping == '25ns': samples = samples25ns
