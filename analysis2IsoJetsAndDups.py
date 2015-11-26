@@ -409,6 +409,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     PU Weighting '''
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
+    XSecLumiWeight = array('f', [ 0 ] )
+    XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     gen_match_1 = array('f', [ 0 ] )
     gen_match_1B = tnew.Branch('gen_match_1', gen_match_1, 'gen_match_1/F')
     gen_match_2 = array('f', [ 0 ] )
@@ -482,7 +484,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            isoOrder( channel, row )
+            #isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
             
             isZtt[0] = 0
@@ -515,6 +517,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
 
             if 'data' in sample :
                 puweight[0] = -1
+                XSecLumiWeight[0] = -1
                 gen_match_1[0] = -1
                 gen_match_2[0] = -1
                 isZEE[0] = -1
@@ -523,6 +526,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 isFake[0] = -1
             else :
                 puweight[0] = puDict[ int(row.nTruePU) ]
+                XSecLumiWeight[0] = -1
                 if channel == 'em' :
                     isZem[0] = 1
                     #if row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3

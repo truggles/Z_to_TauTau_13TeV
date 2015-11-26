@@ -76,7 +76,7 @@ params = {
     'bkgs' : 'None',
     'numCores' : 20,
     'numFilesPerCycle' : 25,
-    'cutMapper' : 'signalCutsX', #!
+    'cutMapper' : 'signalCutsY', #!
     'cutName' : 'PostSync', #!
     #'cutMapper' : 'tmp',
     #'cutMapper' : 'syncCuts',
@@ -85,19 +85,20 @@ params = {
     #'cutName' : 'QCDYield',
     #'cutMapper' : 'qcdShapeScale', #!
     #'cutName' : 'PostSync', #!
-    #'mid1' : '1nov24isoOrderReweightMTfixNoSignNoIso',
-    #'mid2' : '2nov24isoOrderReweightMTfixNoSignNoIso',
-    'mid1' : '1nov22noSignNoIso',
-    'mid2' : '2nov22noSignNoIso',
-    'mid3' : '3nov24OS3to10',
-    #'additionalCut' : '',
-    #'additionalCut' : '*(Z_SS==0)',
-    'additionalCut' : '*(Z_SS==0)*(iso_1 > 3)*(iso_2 >3)*(iso_1 < 10)*(iso_2 < 10)',
+    #'mid1' : '1nov25PTOnoSignNoIso',
+    #'mid2' : '2nov25PTOnoSignNoIso',
+    #'mid3' : '3nov25SS-Sig',
+    'mid1' : '1nov26_PUTest',
+    'mid2' : '2nov26_PUTest',
+    'mid3' : '3nov26_PUTest',
+    'additionalCut' : '',
+    #'additionalCut' : '*(Z_SS==1)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)',
+    #'additionalCut' : '*(Z_SS==0)*(iso_1 > 3)*(iso_2 >3)*(iso_1 < 10)*(iso_2 < 10)',
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
 }
 
 samples = checkBkgs( samples, params, bkgMap )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 

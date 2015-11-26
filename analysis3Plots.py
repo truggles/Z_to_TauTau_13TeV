@@ -17,7 +17,6 @@ p.add_argument('--log', action='store', default=False, dest='log', help="Plot Lo
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
-p.add_argument('--textMore', action='store', default=False, dest='textMore', help="Add text?")
 p.add_argument('--www', action='store', default=True, dest='www', help="Save to Tyler's public 'www' space?")
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
@@ -82,7 +81,7 @@ sampColors = {
 for channel in ['em', 'tt'] :
 
     #if channel == 'tt' : continue
-    #if channel == 'em' : continue
+    if channel == 'em' : continue
 
     # Make an index file for web viewing
     if not os.path.exists( '%sPlots' % grouping ) :
@@ -397,10 +396,9 @@ for channel in ['em', 'tt'] :
             text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
             text2.SetTextSize(0.04)
             text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-        if options.textMore :
             text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
             text3.SetTextSize(0.04)
-            text3.DrawTextNDC(.65,.50,"Diff = QCD: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
+            text3.DrawTextNDC(.6,.50,"Diff: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
             #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
             #text4.SetTextSize(0.05)
             #text4.DrawTextNDC(.65,.45,"SS Selection" )

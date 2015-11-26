@@ -33,7 +33,7 @@ emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
 emIsoInvert    = 'eIsoDB03 > 0.5 && mIsoDB03 > 0.25'
 
 # TT Baseline
-DecayMode = '(t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10)'
+DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
 ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
@@ -43,7 +43,7 @@ tt35    = 'doubleTau35Pass == 1 && t1MatchesDoubleTau35Path == 1 && t2MatchesDou
 # TT PostSync
 ttOS    = 't1_t2_SS == 0'
 ttSS    = 't1_t2_SS == 1'
-ttIso   = 't1ByTightCombinedIsolationDeltaBetaCorr3Hits < 1.0 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits < 1.0'
+ttIso   = 't1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5'
 ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
 ttDisc  = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 ttMTFix = '( (type1_pfMetEt > 1) || ( t1MtToPfMet_Raw > 5 && t2MtToPfMet_Raw > 5 ) )'
@@ -83,6 +83,15 @@ def signalCutsX( ch ) :
     cutMap = OrderedDict()
     if ch == 'em':
         cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e23m8 + ' || ' + m23e12 + ') && ' + emIso + ' && ' + extraVeto + ' && ' + emMTFix
+    if ch == 'tt':
+        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode + ' && ' + ttMTFix
+    return cutMap
+
+# Data card sync, no Decay Mode cut 
+def signalCutsY( ch ) :
+    cutMap = OrderedDict()
+    if ch == 'em':
+        cutMap['PostSync'] = emDR
     if ch == 'tt':
         cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode + ' && ' + ttMTFix
     return cutMap
