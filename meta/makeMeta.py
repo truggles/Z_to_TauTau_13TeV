@@ -76,6 +76,37 @@ def makeMetaJSON( grouping ) :
                 'data_em' : ['/MuonEG/Run2015C-23Sep2015-v1/MINIAOD', '/MuonEG/Run2015D-05Oct2015-v2/MINIAOD', '/MuonEG/Run2015D-PromptReco-v4/MINIAOD'],
                 'data_tt' : ['/Tau/Run2015C-23Sep2015-v1/MINIAOD', '/Tau/Run2015D-05Oct2015-v1/MINIAOD', '/Tau/Run2015D-PromptReco-v4/MINIAOD'],
     }
+
+    sampleCodes = { # sample name : ( unique code, group ),
+                # Groups are same as data cards: ZTT=1, TT=2, VV=3, WJets=4, QCD=5
+                'data_em' : ( 1, 0),
+                'data_tt' : ( 2, 0),
+                'DYJets' : ( 3, 1),
+                'DYJetsLow' : ( 4, 1),
+                'T-tW' : ( 5, 3),
+                'T-tchan' : ( 6, 3),
+                'TT' : ( 7, 2),
+                'Tbar-tW' : ( 8, 3),
+                'Tbar-tchan' : ( 9, 3),
+                'WJets' : ( 10, 4),
+                'WW1l1nu2q' : ( 11, 3),
+                'WW2l2nu' : ( 12, 3),
+                'WZ1l1nu2q' : ( 13, 3),
+                'WZ1l3nu' : ( 14, 3),
+                'WZ2l2q' : ( 15, 3),
+                'WZ3l1nu' : ( 16, 3),
+                'ZZ2l2nu' : ( 17, 3),
+                'ZZ2l2q' : ( 18, 3),
+                'ZZ4l' : ( 19, 3),
+                'QCD15-20' : ( 20, 5),
+                'QCD20-30' : ( 21, 5),
+                'QCD30-80' : ( 22, 5),
+                'QCD80-170' : ( 23, 5),
+                'QCD170-250' : ( 24, 5),
+                'QCD250-Inf' : ( 25, 5),
+                'Sync-HtoTT' : ( 100, 100),
+    }
+    
     
     # A dictionary to store each samples info
     jDict = {}
@@ -121,7 +152,7 @@ def makeMetaJSON( grouping ) :
         print infoNtup
     
         # Append each samples info to our dictionary jDict
-        jDict[ k ] = {'DAS Path' : v[0], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEvents' : infoNtup[1], 'summedWeights' : infoNtup[2], 'summedWeightsNorm' : infoNtup[3], 'STATUS' : infoNtup[4], 'Cross Section (pb)' : v[1] }
+        jDict[ k ] = {'DAS Path' : v[0], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEvents' : infoNtup[1], 'summedWeights' : infoNtup[2], 'summedWeightsNorm' : infoNtup[3], 'STATUS' : infoNtup[4], 'Cross Section (pb)' : v[1], 'UniqueID' : sampleCodes[k][0], 'BkgGroup' : sampleCodes[k][1] }
     
     # Print the dictionary to a JSON file
     printJson( jDict, grouping )

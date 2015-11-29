@@ -417,6 +417,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
+    UniqueID = array('f', [ 0 ] )
+    UniqueIDB = tnew.Branch('UniqueID', UniqueID, 'UniqueID/F')
+    BkgGroup = array('f', [ 0 ] )
+    BkgGroupB = tnew.Branch('BkgGroup', BkgGroup, 'BkgGroup/F')
     gen_match_1 = array('f', [ 0 ] )
     gen_match_1B = tnew.Branch('gen_match_1', gen_match_1, 'gen_match_1/F')
     gen_match_2 = array('f', [ 0 ] )
@@ -490,7 +494,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            #isoOrder( channel, row )
+            isoOrder( channel, row )
             jetCleaning( channel, row, 0.5 )
             
             isZtt[0] = 0
@@ -521,6 +525,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 isZTT[0] = 1
             if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
 
+            shortName = sample.split('_')[0]
+            UniqueID[0] = sampDict[ shortName ]['UniqueID']
+            BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
             if 'data' in sample :
                 puweight[0] = 1
                 XSecLumiWeight[0] = 1
@@ -537,7 +544,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 #    puweight[0] = puDict[ 0 ]
                 #else : puweight[0] = puDict[ nTruePU_ - 1 ]
                 puweight[0] = puDict[ int(row.nTruePU) ]
-                shortName = sample.split('_')[0]
                 scaler = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
                 XSecLumiWeight[0] = scaler
                 if channel == 'em' :

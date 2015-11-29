@@ -1,12 +1,14 @@
 {
   "Sync-HtoTT": {
     "STATUS": "Good to Go!", 
+    "UniqueID": 100, 
     "DAS status": "ok", 
     "nEvents": 499610, 
     "DAS Path": "/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
     "nfiles": 12, 
     "nblocks": 3, 
     "Cross Section (pb)": 999, 
+    "BkgGroup": 100, 
     "summedWeightsNorm": 499610.0, 
     "summedWeights": 499610.0, 
     "nevents": 499610, 
