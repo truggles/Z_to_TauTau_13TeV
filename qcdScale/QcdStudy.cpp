@@ -16,7 +16,7 @@ double binner[6] = { 0, 1, 3, 4.5, 6.5, 10 };
 //for (auto bin : binner) {
 //    cout << bin << endl;}
 //TH1F *h2 = new TH1F("h2","h2",6,binner);
-T->Draw("iso_1:iso_2>>hN(100,0,10,100,0,10)","(iso_1 > 3 || t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5) && ( iso_2 > 3 || t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)");
+T->Draw("iso_1:iso_2>>hN(20,0,10,20,0,10)","(iso_1 > 3 || t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5) && ( iso_2 > 3 || t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)");
 //T->Draw("iso_1>>h2(20,0,10)","(iso_1 > 3 || t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5) && ( iso_2 > 3 || t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)");
 TH2F *hN = (TH2F*)gDirectory->Get("hN");
 //TH1F *h2 = (TH1F*)gDirectory->Get("h2");
