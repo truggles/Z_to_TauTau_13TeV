@@ -73,8 +73,8 @@ def makeMetaJSON( grouping ) :
     if grouping == 'dataCards': samples = samplesDataCards
      
     dataSamples = {
-                'data_em' : ['/MuonEG/Run2015C-23Sep2015-v1/MINIAOD', '/MuonEG/Run2015D-05Oct2015-v2/MINIAOD', '/MuonEG/Run2015D-PromptReco-v4/MINIAOD'],
-                'data_tt' : ['/Tau/Run2015C-23Sep2015-v1/MINIAOD', '/Tau/Run2015D-05Oct2015-v1/MINIAOD', '/Tau/Run2015D-PromptReco-v4/MINIAOD'],
+                'data_em' : ['/MuonEG/Run2015D-05Oct2015-v2/MINIAOD', '/MuonEG/Run2015D-PromptReco-v4/MINIAOD'],
+                'data_tt' : ['/Tau/Run2015D-05Oct2015-v1/MINIAOD', '/Tau/Run2015D-PromptReco-v4/MINIAOD'],
     }
 
     sampleCodes = { # sample name : ( unique code, group ),

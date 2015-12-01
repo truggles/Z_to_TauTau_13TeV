@@ -12,7 +12,7 @@
 import math
 import json
 import os
-cmsLumi = float( os.getenv('_LUMI_', '2110.0') ) # 2.11 / fb defalut
+cmsLumi = float( os.getenv('_LUMI_', '2090.0') ) # 2.11 / fb defalut
 
 tauIso = {
     'Pt' : 'pt',
@@ -166,8 +166,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'jet2Eta' : 'jeta_2',
         'muVetoZTT10new2' : 'extramuon_veto',
         'eVetoZTT10new2' : 'extraelec_veto',
-        'mvaMetEt' : 'mvamet',
-        'mvaMetPhi' : 'mvametphi',
+        #'mvaMetEt' : 'mvamet',
+        #'mvaMetPhi' : 'mvametphi',
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
         'type1_pfMetEt' : 'met',
@@ -526,6 +526,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
 
             shortName = sample.split('_')[0]
+            if shortName == 'data' : shortName = 'data_%s' % channel
             UniqueID[0] = sampDict[ shortName ]['UniqueID']
             BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
             if 'data' in sample :
@@ -543,7 +544,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 #    print "Found an event with < 1 nTruePU"
                 #    puweight[0] = puDict[ 0 ]
                 #else : puweight[0] = puDict[ nTruePU_ - 1 ]
-                puweight[0] = puDict[ int(row.nTruePU) ]
+                nTrPu = ( math.floor(row.nTruePU * 10))/10
+                puweight[0] = puDict[ nTrPu ]
+                #puweight[0] = puDict[ row.nTruePU ]
+                print "nTruePU: %f, puw: %f nTrPuRnd: %f" % (row.nTruePU, puweight[0], nTrPu)
                 scaler = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
                 XSecLumiWeight[0] = scaler
                 if channel == 'em' :

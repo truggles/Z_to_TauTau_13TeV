@@ -31,7 +31,7 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2110.0 # / fb 25ns - Final 2015 25ns Golden JSON
+luminosity = 2090.0 # / fb 25ns - Final 2015 25ns Golden JSON
 #qcdTTScaleFactor = 1.07 # see http://truggles.web.cern.ch/truggles/Oct29/
 qcdTTScaleFactor = 1.06 # see http://truggles.web.cern.ch/truggles/Oct29/
 #qcdEMScaleFactor = 1.06

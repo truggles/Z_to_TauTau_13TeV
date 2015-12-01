@@ -1,5 +1,3 @@
-/data/truggles/nov16_dataUW/data_MuonEG_Run2015C_23Sep2015_25ns/make_ntuples_cfg-14CA9C58-5A63-E511-A604-00266CF9B878.root
-/data/truggles/nov16_dataUW/data_MuonEG_Run2015C_23Sep2015_25ns/make_ntuples_cfg-929A8D5F-5A63-E511-B218-00A0D1EE8A20.root
 /data/truggles/nov16_dataUW/data_MuonEG_Run2015D_05Oct2015_25ns/make_ntuples_cfg-00D43A12-C573-E511-8F4C-0025905A60E0.root
 /data/truggles/nov16_dataUW/data_MuonEG_Run2015D_05Oct2015_25ns/make_ntuples_cfg-0238D927-BF73-E511-BDD6-0025905A612A.root
 /data/truggles/nov16_dataUW/data_MuonEG_Run2015D_05Oct2015_25ns/make_ntuples_cfg-06782D89-BB73-E511-BCAF-0026189438B1.root

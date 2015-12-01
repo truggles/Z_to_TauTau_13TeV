@@ -31,10 +31,10 @@ def checkBkgs( samples, params, bkgMap ) :
 
 ''' Set grouping (25ns or Sync) '''
 #grouping = '25ns'
-#grouping = 'Sync'
-grouping = 'dataCards'
+grouping = 'Sync'
+#grouping = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-cmsLumi = '2110.0'
+cmsLumi = '2090.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
@@ -64,11 +64,13 @@ SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
 Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
 Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
-SamplesDataCards = ['data_em', 'data_tt', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l'] # Set list for Data Card Sync (less DYJetsLow)
+SamplesDataCards = ['data_em', 'data_tt', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
+SamplesQCD = ['QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf']
 #samples = Samples25nsFinal
-#samples = SamplesSync
+samples = SamplesSync
 #samples = SamplesData
-samples = SamplesDataCards
+#samples = SamplesDataCards
+#samples = SamplesQCD
 
 ''' These parameters are fed into the 2 main function calls.
 They adjust the cuts you make, number of cores you run in
@@ -79,7 +81,8 @@ params = {
     'bkgs' : 'None',
     'numCores' : 20,
     'numFilesPerCycle' : 25,
-    'cutMapper' : 'signalCutsX', #!
+    #'cutMapper' : 'signalCutsX', #!
+    'cutMapper' : 'signalCutsNoSign', #!
     'cutName' : 'PostSync', #!
     #'cutMapper' : 'tmp',
     #'cutMapper' : 'syncCuts',
@@ -88,12 +91,9 @@ params = {
     #'cutName' : 'QCDYield',
     #'cutMapper' : 'qcdShapeScale', #!
     #'cutName' : 'PostSync', #!
-    #'mid1' : '1nov25PTOnoSignNoIso',
-    #'mid2' : '2nov25PTOnoSignNoIso',
-    #'mid3' : '3nov25SS-Sig',
-    'mid1' : '1nov26_PUTest',
-    'mid2' : '2nov26_PUTest',
-    'mid3' : '3nov26_PUTest',
+    'mid1' : '1dec01NoSign',
+    'mid2' : '2dec01NoSign',
+    'mid3' : '3dec01NoSign',
     'additionalCut' : '',
     #'additionalCut' : '*(Z_SS==1)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)',
     #'additionalCut' : '*(Z_SS==0)*(iso_1 > 3)*(iso_2 >3)*(iso_1 < 10)*(iso_2 < 10)',
