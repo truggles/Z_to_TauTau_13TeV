@@ -16,19 +16,19 @@
     "nlumis": 21321
   }, 
   "data_em": {
-    "STATUS": "Error", 
+    "STATUS": "Files Match", 
     "UniqueID": 1, 
     "DAS status": "ok", 
-    "nEvents": 10292757, 
+    "nEvents": 10531604, 
     "DAS Path": "", 
     "nfiles": 269, 
     "nblocks": 58, 
     "Cross Section (pb)": -999.0, 
     "BkgGroup": 0, 
-    "summedWeightsNorm": -265734, 
+    "summedWeightsNorm": -268731, 
     "summedWeights": 0.0, 
     "nevents": 13443455, 
-    "nNtupleFiles": 266, 
+    "nNtupleFiles": 269, 
     "nlumis": 47054
   }, 
   "Tbar-tW": {
@@ -112,19 +112,19 @@
     "nlumis": 9758
   }, 
   "data_tt": {
-    "STATUS": "Error", 
+    "STATUS": "Files Match", 
     "UniqueID": 2, 
     "DAS status": "ok", 
-    "nEvents": 12390331, 
+    "nEvents": 12667495, 
     "DAS Path": "", 
     "nfiles": 328, 
     "nblocks": 68, 
     "Cross Section (pb)": -999.0, 
     "BkgGroup": 0, 
-    "summedWeightsNorm": -321678, 
+    "summedWeightsNorm": -327672, 
     "summedWeights": 0.0, 
     "nevents": 16342573, 
-    "nNtupleFiles": 322, 
+    "nNtupleFiles": 328, 
     "nlumis": 48535
   }, 
   "Tbar-tchan": {
