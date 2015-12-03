@@ -48,9 +48,9 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                     print "tmpIntPost: %f" % integralPost
                     if integralPre != 0 :
                         print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
-                    print "  ---!!! UNSCALING !!!--- "
-                if integralPost != 0 :
-                    histos[ var ].Scale( integralPre / integralPost )
+                #    print "  ---!!! UNSCALING !!!--- "
+                #if integralPost != 0 :
+                #    histos[ var ].Scale( integralPre / integralPost )
             else :
                 print " #### ENTRIES = 0 #### "
                 histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
@@ -68,8 +68,8 @@ def getHistoDict( channel ) :
         'Mt' : ('Mt', 600, 0, 600),
         'met' : ('met', 400, 0, 400),
         'metphi' : ('metphi', 80, -4, 4),
-        'mvamet' : ('mvamet', 100, 0, 400),
-        'mvametphi' : ('mvametphi', 100, -5, 5),
+        #'mvamet' : ('mvamet', 100, 0, 400),
+        #'mvametphi' : ('mvametphi', 100, -5, 5),
         #'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
         'njetspt20' : ('njetspt20', 100, 0, 10),
         'jetVeto30' : ('jetVeto30', 100, 0, 10),
@@ -110,7 +110,7 @@ def getHistoDict( channel ) :
             'Z_DR' : ('e_m_DR', 500, 0, 5),
             'Z_DPhi' : ('e_m_DPhi', 800, -4, 4),
             #'m_sv' : ('m_sv', 1000, 0, 1000),
-            'pt_H' : ('e_m_Pt + mvamet', 1000, 0, 1000),
+            #'pt_H' : ('e_m_Pt + mvamet', 1000, 0, 1000),
             #'ePVDZ' : ('ePVDZ', 100, -1, 1),
             #'ePVDXY' : ('ePVDXY', 100, -.2, .2),
             #'mPVDZ' : ('mPVDZ', 100, -1, 1),
@@ -128,7 +128,7 @@ def getHistoDict( channel ) :
             'Z_DR' : ('t1_t2_DR', 500, 0, 5),
             'Z_DPhi' : ('t1_t2_DPhi', 800, -4, 4),
             #'m_sv' : ('m_sv', 1000, 0, 1000),
-            'pt_H' : ('t1_t2_Pt + mvamet', 1000, 0, 1000),
+            #'pt_H' : ('t1_t2_Pt + mvamet', 1000, 0, 1000),
             't1DecayMode' : ('t1DecayMode', 12, 0, 12),
             't1JetPt' : ('t1JetPt', 400, 0, 400),
             'm_1' : ('m_1', 60, 0, 3),
@@ -148,13 +148,13 @@ def getPlotDetails( channel ) :
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
         'met' : (0, 250, 10, 'pfMet [GeV]', ' GeV'),
         'metphi' : (-4, 4, 2, 'pfMetPhi', ''),
-        'mvamet' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-        'mvametphi' : (-5, 5, 2, 'mvaMetPhi', ''),
+        #'mvamet' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+        #'mvametphi' : (-5, 5, 2, 'mvaMetPhi', ''),
         'LT' : (0, 300, 10, 'Total LT [GeV]', ' GeV'),
         'Mt' : (0, 400, 20, 'Total m_{T} [GeV]', ' GeV'),
         'nbtag' : (0, 6, 1, 'nBTag', ''),
-        'bjetCISVVeto30Medium' : (0, 6, 1, 'nBTag_30Medium'),
-        'bjetCISVVeto30Tight' : (0, 6, 1, 'nBTag_30Tight'),
+        'bjetCISVVeto30Medium' : (0, 6, 1, 'nBTag_30Medium', ''),
+        'bjetCISVVeto30Tight' : (0, 6, 1, 'nBTag_30Tight', ''),
         'njetspt20' : (0, 10, 10, 'nJetPt20', ''),
         'jetVeto30' : (0, 10, 10, 'nJetPt30', ''),
         'jetVeto40' : (0, 10, 10, 'nJetPt40', ''),
@@ -174,7 +174,7 @@ def getPlotDetails( channel ) :
         'Z_DPhi' : (-4, 4, 10, 'Z dPhi', ' dPhi'),
         'Z_DEta' : (-5, 5, 40, 'Z dEta', ' dEta'),
         #'m_sv' : (0, 600, 20, 'ditau svFit Mass', ' GeV'),
-        'pt_H' : (0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
+        #'pt_H' : (0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
         }
 
     if channel == 'em' :
