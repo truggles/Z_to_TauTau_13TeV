@@ -9,6 +9,7 @@ from util.ratioPlot import ratioPlot
 import analysisPlots
 from util.splitCanvas import fixFontSize
 import os
+from array import array
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -21,10 +22,14 @@ p.add_argument('--www', action='store', default=True, dest='www', help="Save to 
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
+p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
 folderDetails = options.folderDetails
+
+xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
+xNum = len( xBins ) - 1
 
 print "Running over %s samples" % grouping
 
@@ -34,12 +39,17 @@ tdr.setTDRStyle()
 luminosity = 2090.0 # / fb 25ns - Final 2015 25ns Golden JSON
 #qcdTTScaleFactor = 1.07 # see http://truggles.web.cern.ch/truggles/Oct29/
 qcdTTScaleFactor = 1.06 # see http://truggles.web.cern.ch/truggles/Oct29/
-#qcdEMScaleFactor = 1.06
+#qcdTTScaleFactor = 1.23 # http://truggles.web.cern.ch/truggles/qcdScale/dec02_singleBinnedQCD/OSvsSS-ddQCD.png
+#qcdTTScaleFactor = 1.27 # dm0
+#qcdTTScaleFactor = 1.26 # dm1
+#qcdTTScaleFactor = 1.18 # dm10
+#qcdTTScaleFactor = 1.38 # http://truggles.web.cern.ch/truggles/qcdScale/dec02_singleBinnedQCD/OSvsSS-ddQCD.png
 qcdEMScaleFactor = 1.06
 #bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
 #bkgsTTScaleFactor = 1.14 # see pZeta_TT_Control.xlsx 
 bkgsTTScaleFactor = 1.0
-qcdYieldTT = 2670.0 * qcdTTScaleFactor
+#bkgsTTScaleFactor = 0.96
+qcdYieldTT = 35.7 * qcdTTScaleFactor
 qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
@@ -110,27 +120,32 @@ for channel in ['em', 'tt'] :
 
     for var, info in newVarMap.iteritems() :
 
-        # Defined out here for large scope
-        lowerRange = -1
-        upperRange = -1
-
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
+        if not var == 'm_vis' : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
-        dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
-        dib = ROOT.THStack("All Backgrounds dib", "dib" )
-        top = ROOT.THStack("All Backgrounds top", "top" )
-        higgs = ROOT.THStack("All Backgrounds higgs", "higgs" )
-        qcd = ROOT.THStack("All Backgrounds qcd", "qcd" )
-        wjets = ROOT.THStack("All Backgrounds wjets", "wjets" )
-        data = ROOT.THStack("All Backgrounds data", "data" )
+        dyj = ROOT.TH1F("All Backgrounds dyj", "dyj", xNum, xBins )
+        dib = ROOT.TH1F("All Backgrounds dib", "dib", xNum, xBins )
+        top = ROOT.TH1F("All Backgrounds top", "top", xNum, xBins )
+        higgs = ROOT.TH1F("All Backgrounds higgs", "higgs", xNum, xBins )
+        qcd = ROOT.TH1F("All Backgrounds qcd", "qcd", xNum, xBins )
+        wjets = ROOT.TH1F("All Backgrounds wjets", "wjets", xNum, xBins )
+        data = ROOT.TH1F("All Backgrounds data", "data", xNum, xBins )
 
+        #stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
+        #dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
+        #dib = ROOT.THStack("All Backgrounds dib", "dib" )
+        #top = ROOT.THStack("All Backgrounds top", "top" )
+        #higgs = ROOT.THStack("All Backgrounds higgs", "higgs" )
+        #qcd = ROOT.THStack("All Backgrounds qcd", "qcd" )
+        #wjets = ROOT.THStack("All Backgrounds wjets", "wjets" )
+        #data = ROOT.THStack("All Backgrounds data", "data" )
 
         pZetaTot = 0
         for sample in samples:
-            #print sample
+            print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
@@ -142,12 +157,6 @@ for channel in ['em', 'tt'] :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
-            #elif sample == 'WJets' :
-            #    tFile = ROOT.TFile('meta/%sBackgrounds/wJetsShape/shape/WJets_%s.root' % (grouping, channel), 'READ')
-            #    tFileScale = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
-            #    dicScale = tFileScale.Get("%s_Histos" % channel )
-            #    histScale = dicScale.Get( "%s" % var )
-            #    wJetsInt = histScale.Integral()
             elif sample == 'QCD' :
                 if options.useQCDMake :
                     tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
@@ -159,50 +168,45 @@ for channel in ['em', 'tt'] :
 
 
             dic = tFile.Get("%s_Histos" % channel )
-            hist = dic.Get( "%s" % var )
-            hist.SetDirectory( 0 )
+            preHist = dic.Get( "%s" % var )
+            preHist.SetDirectory( 0 )
 
             if sample == 'QCD' and options.useQCDMake :
                 if channel == 'em' :
                     print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
-                    hist.Scale( qcdEMScaleFactor )
+                    preHist.Scale( qcdEMScaleFactor )
                 if channel == 'tt' :
                     print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
-                    hist.Scale( qcdTTScaleFactor )
-                    print "QCD yield: %f" % hist.Integral()
+                    preHist.Scale( qcdTTScaleFactor )
+                    print "QCD yield: %f" % preHist.Integral()
+                    hist = ROOT.TH1F( preHist )
             else :
-                hist.Rebin( plotDetails[ var ][2] )
+                #preHist.Rebin( plotDetails[ var ][2] )
+                hist = preHist.Rebin( xNum, "rebinned", xBins )
 
-            lowerRange = hist.GetXaxis().FindBin( plotDetails[ var ][0] )
-            upperRange = hist.GetXaxis().FindBin( plotDetails[ var ][1] )
-            #print "upper and lower",upperRange,lowerRange
-            if 'data' not in sample and samples[ sample ][1] != 'higgs' :
-                color = "ROOT.%s" % sampColors[ samples[ sample ][1] ]
-                hist.SetFillColor( eval( color ) )
-                hist.SetLineColor( ROOT.kBlack )
-                hist.SetLineWidth( 2 )
-            elif samples[ sample ][1] == 'higgs' :
-                hist.SetLineColor( ROOT.kBlue )
-                hist.SetLineWidth( 4 )
-                hist.SetLineStyle( 7 )
-            else :
-                hist.SetLineColor( ROOT.kBlack )
-                hist.SetLineWidth( 2 )
-                hist.SetMarkerStyle( 21 )
+            #if 'data' not in sample and samples[ sample ][1] != 'higgs' :
+            #    color = "ROOT.%s" % sampColors[ samples[ sample ][1] ]
+            #    hist.SetFillColor( eval( color ) )
+            #    hist.SetLineColor( ROOT.kBlack )
+            #    hist.SetLineWidth( 2 )
+            #elif samples[ sample ][1] == 'higgs' :
+            #    hist.SetLineColor( ROOT.kBlue )
+            #    hist.SetLineWidth( 4 )
+            #    hist.SetLineStyle( 7 )
+            #else :
+            #    hist.SetLineColor( ROOT.kBlack )
+            #    hist.SetLineWidth( 2 )
+            #    hist.SetMarkerStyle( 21 )
             #hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
 
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
-                #if options.useQCDMake and channel == 'tt' :
-                #    hist.Scale( 1.3 )
-                if not options.useQCDMake :
+                if not options.useQCDMake or options.QCDYield :
                     if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
                     if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
-            #elif sample == 'WJets' and hist.Integral() != 0 :
-            #    scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
-            #    hist.Scale( scaler * wJetsInt / hist.Integral() )
+                    print "Using QCD Yield numbers from this file, QCD Int: %f" % hist.Integral()
             elif 'data' not in sample and hist.Integral() != 0:
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
@@ -228,7 +232,8 @@ for channel in ['em', 'tt'] :
             if samples[ sample ][1] == 'qcd' :
                 hist.SetTitle('QCD')
                 qcd.Add( hist )
-                print "qcd Stack yield: %f" % qcd.GetStack().Last().Integral()
+                #print "qcd Stack yield: %f" % qcd.GetStack().Last().Integral()
+                print "qcd Stack yield: %f" % qcd.Integral()
             if samples[ sample ][1] == 'top' :
                 hist.SetTitle('TT')
                 top.Add( hist )
@@ -246,20 +251,47 @@ for channel in ['em', 'tt'] :
                 data.Add( hist )
             tFile.Close()
 
+        Ary = { qcd : "qcd", top : "top", dib : "dib", wjets : "wjets", dyj : "dyj", }
+        for h in Ary.keys() :
+            color = "ROOT.%s" % sampColors[ Ary[h] ]
+            h.SetFillColor( eval( color ) )
+            h.SetLineColor( ROOT.kBlack )
+            h.SetLineWidth( 2 )
+        data.SetLineColor( ROOT.kBlack )
+        data.SetLineWidth( 2 )
+        data.SetMarkerStyle( 21 )
+        Ary[ data ] = "data"
+        
+        # With Variable binning, need to set bin content appropriately
+        for h in Ary.keys() :
+            if Ary[h] == "qcd" : continue
+            for bin_ in range( 1, 11 ) :
+                h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( 20 / h.GetBinWidth( bin_ ) ) )
+
+        # Set hist Names
+        Names = { "data" : "Data", "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        for h in Ary.keys() :
+            h.SetTitle( Names[ Ary[h] ] )
+            
 
         if options.plotQCD == True :
             print "Adding QCD"
-            stack.Add( qcd.GetStack().Last() )
-        stack.Add( top.GetStack().Last() )
-        stack.Add( dib.GetStack().Last() )
-        stack.Add( wjets.GetStack().Last() )
-        stack.Add( dyj.GetStack().Last() )
+            stack.Add( qcd )
+        stack.Add( top )
+        stack.Add( dib )
+        stack.Add( wjets )
+        stack.Add( dyj )
 
             
         if options.qcdMake :
-            qcdVar = ROOT.TH1F( var, 'qcd', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
-            qcdVar.Add( data.GetStack().Last() )
+            if var == 'm_vis' :
+                qcdVar = ROOT.TH1F( var, 'qcd', xNum, xBins )
+            else :
+                qcdVar = ROOT.TH1F( var, 'qcd', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
+            print "Pre ratio add"
+            qcdVar.Add( data )
             qcdVar.Add( -1 * stack.GetStack().Last() )
+            print "Post ratio add"
             qcdVar.SetFillColor( ROOT.kMagenta-10 )
             qcdVar.SetLineColor( ROOT.kBlack )
             qcdVar.SetLineWidth( 2 )
@@ -279,7 +311,7 @@ for channel in ['em', 'tt'] :
             pad1.Draw()
             pad1.cd()
             stack.Draw('hist')
-            data.GetStack().Last().Draw('esamex0')
+            data.Draw('esamex0')
             # X Axis!
             stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
 
@@ -292,8 +324,11 @@ for channel in ['em', 'tt'] :
             ratioPad.SetBottomMargin(0.3)
             pad1.SetBottomMargin(0.00)
             ratioPad.SetGridy()
-            ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
-            ratioHist.Add( data.GetStack().Last() )
+            if var == 'm_vis' :
+                ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', xNum, xBins )
+            else :
+                ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
+            ratioHist.Add( data )
             ratioHist.Sumw2()
             ratioHist.Divide( stack.GetStack().Last() )
             #lower = hist.GetXaxis().FindBin( 100. )
@@ -301,8 +336,12 @@ for channel in ['em', 'tt'] :
             #    if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
             #        num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
             #        ratioHist.SetBinContent( bin_, num )
-            ratioHist.SetMaximum( 1.5 )
-            ratioHist.SetMinimum( 0.5 )
+            if channel == 'em' :
+                ratioHist.SetMaximum( 1.5 )
+                ratioHist.SetMinimum( 0.5 )
+            if channel == 'tt' :
+                ratioHist.SetMaximum( 2. )
+                ratioHist.SetMinimum( 0. )
             ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
@@ -330,23 +369,19 @@ for channel in ['em', 'tt'] :
 
             pad1.cd()
             stack.Draw('hist')
-            data.GetStack().Last().Draw('esamex0')
+            data.Draw('esamex0')
 
 
         # Set Y axis titles appropriately
-        if hist.GetBinWidth(1) < .05 :
-            binWidth = str( round( hist.GetBinWidth(1), 2) )
-        elif hist.GetBinWidth(1) < .5 :
-            binWidth = str( round( hist.GetBinWidth(1), 1) )
-        else:
-            binWidth = round( hist.GetBinWidth(1), 0)
-        if plotDetails[ var ][ 4 ] == '' :
-            stack.GetYaxis().SetTitle("Events")
-        else :
-            if hist.GetBinWidth(1) < .5 :
-                stack.GetYaxis().SetTitle("Events / %s%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
-            else :
-                stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
+        #binWidth = str( round( hist.GetBinWidth(1), 0) )
+        stack.GetYaxis().SetTitle("Events / 20 GeV")
+        #if plotDetails[ var ][ 4 ] == '' :
+        #    stack.GetYaxis().SetTitle("Events")
+        #else :
+        #    if hist.GetBinWidth(1) < .5 :
+        #        stack.GetYaxis().SetTitle("Events / %s%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
+        #    else :
+        #        stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
 
         stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % luminosity )
 
@@ -357,7 +392,7 @@ for channel in ['em', 'tt'] :
         #print "stack max: %f" % stackMin
         #stack.SetMinimum( min( higgsMin, stackMin) * 0.3 )
         stackMax = stack.GetStack().Last().GetMaximum()
-        dataMax = data.GetStack().Last().GetMaximum()
+        dataMax = data.GetMaximum()
         stack.SetMaximum( max(dataMax, stackMax) * 1.5 )
         #stack.SetMaximum( stackMax * 1.5 )
         if options.log :
@@ -369,7 +404,7 @@ for channel in ['em', 'tt'] :
         legend = ROOT.TLegend(0.60, 0.65, 0.95, 0.93)
         legend.SetMargin(0.3)
         legend.SetBorderSize(0)
-        legend.AddEntry( data.GetStack().Last(), "Data", 'lep')
+        legend.AddEntry( data, "Data", 'lep')
         for j in range(0, stack.GetStack().GetLast() + 1) :
             last = stack.GetStack().GetLast()
             legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')
@@ -390,27 +425,27 @@ for channel in ['em', 'tt'] :
 
         ''' Random print outs on plots '''
         if options.text :
-            text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetStack().Last().GetMean() )
+            text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetMean() )
             text1.SetTextSize(0.04)
-            text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.GetStack().Last().Integral(), 1) ) )
-            text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.Integral(), 1) ) )
+            text2 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.Integral() ) )
             text2.SetTextSize(0.04)
             text2.DrawTextNDC(.6,.55,"MC Integral: %s" % str( round( stack.GetStack().Last().Integral(), 1) ) )
-            text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetStack().Last().GetMean() ) )
+            text3 = ROOT.TText(.4,.55,"Data Mean: %s" % str( data.GetMean() ) )
             text3.SetTextSize(0.04)
-            text3.DrawTextNDC(.6,.50,"Diff: %s" % str( round( data.GetStack().Last().Integral() - stack.GetStack().Last().Integral(), 1) ) )
-            #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.GetStack().Last().Integral() ) )
+            text3.DrawTextNDC(.6,.50,"Diff: %s" % str( round( data.Integral() - stack.GetStack().Last().Integral(), 1) ) )
+            #text4 = ROOT.TText(.4,.55,"Data Int: %s" % str( data.Integral() ) )
             #text4.SetTextSize(0.05)
             #text4.DrawTextNDC(.65,.45,"SS Selection" )
 
         if (var == 't1DecayMode' or var == 't2DecayMode') :
-            print var + " DATA: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( data.GetStack().Last().GetBinContent( 1), data.GetStack().Last().GetBinContent( 2), data.GetStack().Last().GetBinContent( 11 ) )
+            print var + " DATA: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( data.GetBinContent( 1), data.GetBinContent( 2), data.GetBinContent( 11 ) )
             print var + " MC: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( stack.GetStack().Last().GetBinContent( 1), stack.GetStack().Last().GetBinContent( 2), stack.GetStack().Last().GetBinContent( 11 ) )
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.ratio :
-            ratioHist.GetXaxis().SetRange( lowerRange, upperRange-1 )
+            ratioHist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.www :
             c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
             c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
