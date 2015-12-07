@@ -15,6 +15,7 @@ p.add_argument('--samples', action='store', default='dataCards', dest='sampleNam
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="blind data above 150 GeV?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
+p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -61,6 +62,12 @@ samples['ggHtoTauTau'] = ('kGreen', '_vbfH125_')
 
 nameArray = ['_data_obs_','_ZTT120_','_TT_','_QCD_','_VV_','_W_']#,'_ggH125_','_vbfH125_']
 
+if options.sync :
+    samples['DYJets']   = ('kOrange-4', '_ZTT_')
+    del samples['DYJetsLow']
+    nameArray.remove('_ZTT120_')
+    nameArray.append('_ZTT_')
+
 channels = { 'em' : 'EMu',
              'tt' : 'TauTau',}
 
@@ -89,8 +96,13 @@ for channel in channels.keys() :
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
 
-
-        binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
+        if not options.sync :
+            binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
+        if options.sync :
+            binArray = array.array( 'd', [] )
+            for i in range(0, 61 ) :
+                binArray.append( i * 10 )
+            #binArray.append( 600 )
         numBins = len( binArray ) - 1
         histos = {}
         for name in nameArray :
@@ -100,12 +112,12 @@ for channel in channels.keys() :
 
 
         for sample in samples:
-            print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
             #if sample == 'DYJetsLow' : continue
             if 'HtoTauTau' in sample : continue
+            print sample
 
             if sample == 'data_em' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
