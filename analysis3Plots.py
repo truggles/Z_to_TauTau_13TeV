@@ -28,9 +28,6 @@ grouping = options.sampleName
 ratio = options.ratio
 folderDetails = options.folderDetails
 
-xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
-xNum = len( xBins ) - 1
-
 print "Running over %s samples" % grouping
 
 ROOT.gROOT.SetBatch(True)
@@ -121,18 +118,38 @@ for channel in ['em', 'tt'] :
     for var, info in newVarMap.iteritems() :
 
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
-        if not var == 'm_vis' : continue
+        #if not var == 'm_vis' : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
+
+        if var == 'm_vis' and channel == 'tt' :
+            varBinned = True
+            xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
+        else :
+            varBinned = False
+            first = info[2] * 1.
+            last = info[3] * 1.
+            totBins = ( info[1] / (plotDetails[ var ][2]) ) * 1.
+            binWidth = (last - first)/totBins
+            #print first, last, totBins, binWidth
+            xBins = array('d', []) 
+            for i in range( 0, int(totBins)+1 ) :
+                xBins.append( round(i*binWidth+first,1) )
+        xNum = len( xBins ) - 1
+        #print "Binning scheme: ",xBins
+            
+
+
+
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
-        dyj = ROOT.TH1F("All Backgrounds dyj", "dyj", xNum, xBins )
-        dib = ROOT.TH1F("All Backgrounds dib", "dib", xNum, xBins )
-        top = ROOT.TH1F("All Backgrounds top", "top", xNum, xBins )
-        higgs = ROOT.TH1F("All Backgrounds higgs", "higgs", xNum, xBins )
-        qcd = ROOT.TH1F("All Backgrounds qcd", "qcd", xNum, xBins )
-        wjets = ROOT.TH1F("All Backgrounds wjets", "wjets", xNum, xBins )
-        data = ROOT.TH1F("All Backgrounds data", "data", xNum, xBins )
+        dyj = ROOT.TH1F("All Backgrounds dyj %s" % var, "dyj", xNum, xBins )
+        dib = ROOT.TH1F("All Backgrounds dib %s" % var, "dib", xNum, xBins )
+        top = ROOT.TH1F("All Backgrounds top %s" % var, "top", xNum, xBins )
+        higgs = ROOT.TH1F("All Backgrounds higgs %s" % var, "higgs", xNum, xBins )
+        qcd = ROOT.TH1F("All Backgrounds qcd %s" % var, "qcd", xNum, xBins )
+        wjets = ROOT.TH1F("All Backgrounds wjets %s" % var, "wjets", xNum, xBins )
+        data = ROOT.TH1F("All Backgrounds data %s" % var, "data", xNum, xBins )
 
         #stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
         #dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
@@ -145,7 +162,7 @@ for channel in ['em', 'tt'] :
 
         pZetaTot = 0
         for sample in samples:
-            print sample
+            #print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
@@ -264,9 +281,10 @@ for channel in ['em', 'tt'] :
         
         # With Variable binning, need to set bin content appropriately
         for h in Ary.keys() :
+            if not varBinned : continue
             if Ary[h] == "qcd" : continue
             for bin_ in range( 1, 11 ) :
-                h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( 20 / h.GetBinWidth( bin_ ) ) )
+                h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( h.GetBinWidth(1) / h.GetBinWidth( bin_ ) ) )
 
         # Set hist Names
         Names = { "data" : "Data", "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
@@ -284,14 +302,9 @@ for channel in ['em', 'tt'] :
 
             
         if options.qcdMake :
-            if var == 'm_vis' :
-                qcdVar = ROOT.TH1F( var, 'qcd', xNum, xBins )
-            else :
-                qcdVar = ROOT.TH1F( var, 'qcd', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
-            print "Pre ratio add"
+            qcdVar = ROOT.TH1F( var, 'qcd', xNum, xBins )
             qcdVar.Add( data )
             qcdVar.Add( -1 * stack.GetStack().Last() )
-            print "Post ratio add"
             qcdVar.SetFillColor( ROOT.kMagenta-10 )
             qcdVar.SetLineColor( ROOT.kBlack )
             qcdVar.SetLineWidth( 2 )
@@ -324,18 +337,10 @@ for channel in ['em', 'tt'] :
             ratioPad.SetBottomMargin(0.3)
             pad1.SetBottomMargin(0.00)
             ratioPad.SetGridy()
-            if var == 'm_vis' :
-                ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', xNum, xBins )
-            else :
-                ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', ( info[1] / (plotDetails[ var ][2]) ), info[2], info[3])
+            ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', xNum, xBins )
             ratioHist.Add( data )
             ratioHist.Sumw2()
             ratioHist.Divide( stack.GetStack().Last() )
-            #lower = hist.GetXaxis().FindBin( 100. )
-            #for bin_ in range( 0, (ratioHist.GetXaxis().GetNbins()+1) ) :
-            #    if stack.GetStack().Last().GetBinContent( bin_ ) > 0 :
-            #        num = data.GetStack().Last().GetBinContent( bin_ ) / stack.GetStack().Last().GetBinContent( bin_ )
-            #        ratioHist.SetBinContent( bin_, num )
             if channel == 'em' :
                 ratioHist.SetMaximum( 1.5 )
                 ratioHist.SetMinimum( 0.5 )
@@ -424,7 +429,7 @@ for channel in ['em', 'tt'] :
         lumi.DrawTextNDC(.7,.96,"%f / fb (13 TeV)" % round(luminosity/1000,2) )
 
         ''' Random print outs on plots '''
-        if options.text :
+        if options.text and not varBinned :
             text1 = ROOT.TText(.4,.6,"Data Integral: %f" % data.GetMean() )
             text1.SetTextSize(0.04)
             text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( data.Integral(), 1) ) )
