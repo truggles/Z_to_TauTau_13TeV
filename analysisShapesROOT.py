@@ -36,8 +36,8 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
-samples['DYJets']   = ('kOrange-4', '_ZTT_')
-samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
+samples['DYJets']   = ('kOrange-4', '_ZTT120_')
+samples['DYJetsLow']   = ('kOrange-4', '_ZTT120_')
 samples['T-tW']     = ('kYellow+2', '_VV_')
 samples['T-tchan']     = ('kYellow+2', '_VV_')
 samples['TT']       = ('kBlue-8', '_TT_')
@@ -59,7 +59,7 @@ samples['data_em']  = ('kBlack', '_data_obs_')
 samples['VBFHtoTauTau'] = ('kGreen', '_ggH125_')
 samples['ggHtoTauTau'] = ('kGreen', '_vbfH125_')
 
-nameArray = ['_data_obs_','_ZTT_','_TT_','_QCD_','_VV_','_W_']#,'_ggH125_','_vbfH125_']
+nameArray = ['_data_obs_','_ZTT120_','_TT_','_QCD_','_VV_','_W_']#,'_ggH125_','_vbfH125_']
 
 channels = { 'em' : 'EMu',
              'tt' : 'TauTau',}
@@ -67,6 +67,7 @@ channels = { 'em' : 'EMu',
 for channel in channels.keys() :
 
     #if channel == 'tt' : continue
+    if channel == 'em' : continue
 
     # Make an index file for web viewing
     if not os.path.exists( '%sShapes' % grouping ) :
@@ -89,20 +90,21 @@ for channel in channels.keys() :
         print "Var: %s      Name: %s" % (var, name)
 
 
-        #binArray = array.array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,450,500,550,600] )
+        binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
+        numBins = len( binArray ) - 1
         histos = {}
         for name in nameArray :
             title = name.strip('_')
-            #histos[ name ] = ROOT.TH1F( name, name, 18, binArray )
-            histos[ name ] = ROOT.TH1F( name, name, 60, 0, 600 )
+            histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
+            #histos[ name ] = ROOT.TH1F( name, name, 60, 0, 600 )
 
 
         for sample in samples:
-            #print sample
+            print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
-            if sample == 'DYJetsLow' : continue
+            #if sample == 'DYJetsLow' : continue
             if 'HtoTauTau' in sample : continue
 
             if sample == 'data_em' :
@@ -113,7 +115,7 @@ for channel in channels.keys() :
                 if options.useQCDMake :
                     tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
                 else :
-                    print " \n\n ### SPECIFIC A QCD SHAPE ### \n\n"
+                    print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
@@ -139,18 +141,30 @@ for channel in channels.keys() :
                     hist.Scale( scaler )
 
             if 'QCD' not in sample :
-                hist.Rebin( 10 )
+                #hist.Rebin( 10 )
+                #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
+                hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+                #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
+                histos[ samples[ sample ][1] ].Add( hNew )
+            else :
+                histos[ samples[ sample ][1] ].Add( hist )
 
             #print "Hist yield ",hist.Integral()
             #hist2 = hist.Rebin( 18, 'rebinned', binArray )
             #histos[ samples[ sample ][1] ].Add( hist2 )
-            histos[ samples[ sample ][1] ].Add( hist )
             tFile.Close()
 
 
         shapeDir.cd()
         for name in histos :
-            print "name: %s Yield: %f" % (name, histos[ name ].Integral() )
+            print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
+            # Make sure we have no negative bins
+            for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins() ) :
+                setVal = 0.001
+                if histos[ name ].GetBinContent( bin_ ) < 0 :
+                    histos[ name ].SetBinContent( bin_, setVal )
+                    print "Set bin %i to value: %f" % (bin_, setVal)
+            print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
             histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
             histos[ name ].SetTitle( name.strip('_') )
             histos[ name ].SetName( name.strip('_') )
