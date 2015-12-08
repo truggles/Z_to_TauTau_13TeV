@@ -23,6 +23,7 @@ p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', he
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
+p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -123,7 +124,7 @@ for channel in ['em', 'tt'] :
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
 
-        if var == 'm_vis' and channel == 'tt' :
+        if not options.sync and var == 'm_vis' and channel == 'tt' :
             varBinned = True
             xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
         else :
@@ -141,15 +142,15 @@ for channel in ['em', 'tt'] :
             
 
 
-
+        append = var + channel
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
-        dyj = ROOT.TH1F("All Backgrounds dyj %s" % var, "dyj", xNum, xBins )
-        dib = ROOT.TH1F("All Backgrounds dib %s" % var, "dib", xNum, xBins )
-        top = ROOT.TH1F("All Backgrounds top %s" % var, "top", xNum, xBins )
-        higgs = ROOT.TH1F("All Backgrounds higgs %s" % var, "higgs", xNum, xBins )
-        qcd = ROOT.TH1F("All Backgrounds qcd %s" % var, "qcd", xNum, xBins )
-        wjets = ROOT.TH1F("All Backgrounds wjets %s" % var, "wjets", xNum, xBins )
-        data = ROOT.TH1F("All Backgrounds data %s" % var, "data", xNum, xBins )
+        dyj = ROOT.TH1F("All Backgrounds dyj %s" % append, "dyj", xNum, xBins )
+        dib = ROOT.TH1F("All Backgrounds dib %s" % append, "dib", xNum, xBins )
+        top = ROOT.TH1F("All Backgrounds top %s" % append, "top", xNum, xBins )
+        higgs = ROOT.TH1F("All Backgrounds higgs %s" % append, "higgs", xNum, xBins )
+        qcd = ROOT.TH1F("All Backgrounds qcd %s" % append, "qcd", xNum, xBins )
+        wjets = ROOT.TH1F("All Backgrounds wjets %s" % append, "wjets", xNum, xBins )
+        data = ROOT.TH1F("All Backgrounds data %s" % append, "data", xNum, xBins )
 
         #stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
         #dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
@@ -162,12 +163,11 @@ for channel in ['em', 'tt'] :
 
         pZetaTot = 0
         for sample in samples:
-            #print sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
 
-            #print sample
+            print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
@@ -192,6 +192,8 @@ for channel in ['em', 'tt'] :
                 if channel == 'em' :
                     print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
                     preHist.Scale( qcdEMScaleFactor )
+                    print "QCD yield: %f" % preHist.Integral()
+                    hist = ROOT.TH1F( preHist )
                 if channel == 'tt' :
                     print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
                     preHist.Scale( qcdTTScaleFactor )
@@ -302,7 +304,7 @@ for channel in ['em', 'tt'] :
 
             
         if options.qcdMake :
-            qcdVar = ROOT.TH1F( var, 'qcd', xNum, xBins )
+            qcdVar = ROOT.TH1F( var, 'qcd%s' % append, xNum, xBins )
             qcdVar.Add( data )
             qcdVar.Add( -1 * stack.GetStack().Last() )
             qcdVar.SetFillColor( ROOT.kMagenta-10 )
@@ -337,7 +339,7 @@ for channel in ['em', 'tt'] :
             ratioPad.SetBottomMargin(0.3)
             pad1.SetBottomMargin(0.00)
             ratioPad.SetGridy()
-            ratioHist = ROOT.TH1F('ratio %s' % info[0], 'ratio', xNum, xBins )
+            ratioHist = ROOT.TH1F('ratio %s' % append, 'ratio', xNum, xBins )
             ratioHist.Add( data )
             ratioHist.Sumw2()
             ratioHist.Divide( stack.GetStack().Last() )
@@ -379,10 +381,10 @@ for channel in ['em', 'tt'] :
 
         # Set Y axis titles appropriately
         #binWidth = str( round( hist.GetBinWidth(1), 0) )
-        stack.GetYaxis().SetTitle("Events / 20 GeV")
-        #if plotDetails[ var ][ 4 ] == '' :
-        #    stack.GetYaxis().SetTitle("Events")
-        #else :
+        if plotDetails[ var ][ 4 ] == '' :
+            stack.GetYaxis().SetTitle("Events")
+        else :
+            stack.GetYaxis().SetTitle("Events / %s%s" % (str(round(stack.GetStack().Last().GetBinWidth(1),1)), plotDetails[ var ][ 4 ])  )
         #    if hist.GetBinWidth(1) < .5 :
         #        stack.GetYaxis().SetTitle("Events / %s%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
         #    else :
