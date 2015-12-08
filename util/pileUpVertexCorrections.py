@@ -3,6 +3,7 @@ from array import array
 from util.buildTChain import makeTChain
 import os
 import subprocess
+from collections import OrderedDict
 
 def makeDataPUTemplate( cert, puJson ) :
     zHome = os.getenv('_ZHOME_')
@@ -114,26 +115,27 @@ def makeDYJetsPUTemplate( grouping ) :
 
 
 def PUreweight( channel ) :
-    datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
+    # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2015#PU_reweighting
+    #datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
+    datafile = ROOT.TFile('meta/PileUpInfo/Data_Pileup_2015D_Nov17.root', 'READ') # Made by Adinda
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 
-    samplefile = ROOT.TFile('meta/PileUpInfo/DYJetsNTruePU_%s.root' % channel, 'READ')
+    samplefile = ROOT.TFile('meta/PileUpInfo/MC_Spring15_PU25_Startup.root', 'READ') # Made by Adinda, same as mine but shifter up 1 bin
     #samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
-    sHist = samplefile.Get('nTruePU')
+    #sHist = samplefile.Get('nTruePU')
+    sHist = samplefile.Get('pileup')
     sHist.Scale( 1 / sHist.Integral() )
 
-    reweightDict = {}
+    reweightDict = OrderedDict()
     #i_data = 0
     #i_mc = 0
-    for i in range( 1, 53 ) :
+    for i in range( 1, dHist.GetXaxis().GetNbins()+1 ) :
+        # dHist has exactly 600 bins, not 601 w/ over/underflow
         if sHist.GetBinContent( i ) > 0 :
-            #i_data += dHist.GetBinContent( i )
-            #i_mc += sHist.GetBinContent( i )
-            #print "%i data: %f    mc: %f    ratio: %f" % (i, dHist.GetBinContent( i ), sHist.GetBinContent( i ), (dHist.GetBinContent( i ) / sHist.GetBinContent( i )) )
             ratio = dHist.GetBinContent( i ) / sHist.GetBinContent( i )
         else : ratio = 0
-        reweightDict[ i-1 ] = ratio
+        reweightDict[ (i-1)/10. ] = ratio
 
     #print "Data = %f   MC = %f" % (i_data, i_mc)
     #print reweightDict
