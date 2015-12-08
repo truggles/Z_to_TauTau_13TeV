@@ -12,7 +12,7 @@
 import math
 import json
 import os
-cmsLumi = float( os.getenv('_LUMI_', '2090.0') ) # 2.11 / fb defalut
+cmsLumi = float( os.getenv('_LUMI_', '2170.0') )
 
 tauIso = {
     'Pt' : 'pt',
@@ -547,7 +547,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
                 #puweight[0] = puDict[ row.nTruePU ]
-                print "nTruePU: %f, puw: %f nTrPuRnd: %f" % (row.nTruePU, puweight[0], nTrPu)
+                #print "nTruePU: %f, puw: %f nTrPuRnd: %f" % (row.nTruePU, puweight[0], nTrPu)
                 scaler = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
                 XSecLumiWeight[0] = scaler
                 if channel == 'em' :

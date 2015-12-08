@@ -24,6 +24,7 @@ p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help=
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
 p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
+p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -34,7 +35,7 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2090.0 # / fb 25ns - Final 2015 25ns Golden JSON
+luminosity = 2170.0 # / fb 25ns - Final 2015 25ns Golden JSON, adjusted 4% upwards by https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/544.html
 #qcdTTScaleFactor = 1.07 # see http://truggles.web.cern.ch/truggles/Oct29/
 qcdTTScaleFactor = 1.06 # see http://truggles.web.cern.ch/truggles/Oct29/
 #qcdTTScaleFactor = 1.23 # http://truggles.web.cern.ch/truggles/qcdScale/dec02_singleBinnedQCD/OSvsSS-ddQCD.png
@@ -73,6 +74,12 @@ samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
 samples['ZZ2l2q'] = ('kAzure-12', 'dib')
 samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
+samples['QCD15-20']        = ('kMagenta-10', 'qcd')
+samples['QCD20-30']        = ('kMagenta-10', 'qcd')
+samples['QCD30-80']        = ('kMagenta-10', 'qcd')
+samples['QCD80-170']        = ('kMagenta-10', 'qcd')
+samples['QCD170-250']        = ('kMagenta-10', 'qcd')
+samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
 
@@ -166,6 +173,8 @@ for channel in ['em', 'tt'] :
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
+            if options.qcdMC and sample == 'QCD' : continue
+            if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
             print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
@@ -174,10 +183,15 @@ for channel in ['em', 'tt'] :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
-            elif sample == 'QCD' :
+            elif 'QCD' in sample :
                 if options.useQCDMake :
                     tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
-                    print "Got QCD make file"
+                    print "Got QCD make file:", sample
+                elif options.qcdMC :
+                    print "Got QCD MC file", sample
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
+                    hxx = tFile.Get('%s_Histos/metphi' % channel)
+                    print "QCD MC: %s Integral %f" % (sample, hxx.Integral() )
                 else :
                     tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
@@ -230,6 +244,9 @@ for channel in ['em', 'tt'] :
                 scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
                     hist.Scale( scaler * bkgsTTScaleFactor )
+                if 'QCD' in sample :
+                    if channel == 'em' : hist.Scale( scaler * qcdEMScaleFactor )
+                    if channel == 'tt' : hist.Scale( scaler * qcdTTScaleFactor )
                 else :
                     hist.Scale( scaler )
 

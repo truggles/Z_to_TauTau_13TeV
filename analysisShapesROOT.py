@@ -25,7 +25,7 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2090 # / fb 25ns - Final 2015 25ns Golden JSON
+luminosity = 2170.0 # / fb 25ns - Final 2015 25ns Golden JSON
 
 # Scaling = 1 for data card sync
 qcdTTScaleFactor = 1.06
@@ -90,7 +90,8 @@ for channel in channels.keys() :
         print "\n Output shapes file: %sShapes/htt_%s.inputs-sm-13TeV.root \n" % (grouping, channel)
         shapeFile = ROOT.TFile('%sShapes/htt_%s.inputs-sm-13TeV.root' % (grouping, channel), 'RECREATE')
         #shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
-        shapeDir = shapeFile.mkdir( channel + '_inclusive' )
+        shapeDir = shapeFile.mkdir( channel + '_boostedZ' )
+        #shapeDir = shapeFile.mkdir( channel + '_inclusive' )
 
         # Defined out here for large scope
         name = info[0]

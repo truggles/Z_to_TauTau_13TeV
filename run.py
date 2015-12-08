@@ -27,14 +27,21 @@ def checkBkgs( samples, params, bkgMap ) :
         if not os.path.exists( '%s%s' % (grouping, params['mid1']) ) : os.makedirs( '%s%s' % (grouping, params['mid1']) )
         if not os.path.exists( '%s%s' % (grouping, params['mid2']) ) : os.makedirs( '%s%s' % (grouping, params['mid2']) )
         if not os.path.exists( '%s%s' % (grouping, params['mid3']) ) : os.makedirs( '%s%s' % (grouping, params['mid3']) )
+    ofile = open('%s%s/config.txt' % (grouping, params['mid3']), "w")
+    for sample in samples :
+        ofile.write( "%s " % sample )
+    ofile.write( "\n" )
+    for key in params :
+        ofile.write( "%s : %s\n" % (key, params[key]) )
+    ofile.close() 
     return samples
 
 ''' Set grouping (25ns or Sync) '''
 #grouping = '25ns'
-grouping = 'Sync'
-#grouping = 'dataCards'
+#grouping = 'Sync'
+grouping = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-cmsLumi = '2090.0'
+cmsLumi = '2170.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
@@ -67,9 +74,9 @@ Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow'
 SamplesDataCards = ['data_em', 'data_tt', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
 SamplesQCD = ['QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf']
 #samples = Samples25nsFinal
-samples = SamplesSync
+#samples = SamplesSync
 #samples = SamplesData
-#samples = SamplesDataCards
+samples = SamplesDataCards
 #samples = SamplesQCD
 
 ''' These parameters are fed into the 2 main function calls.
@@ -82,28 +89,42 @@ params = {
     'numCores' : 20,
     'numFilesPerCycle' : 25,
     #'cutMapper' : 'signalCutsX', #!
-    'cutMapper' : 'signalCutsNoSign', #!
-    'cutName' : 'PostSync', #!
+    #'cutMapper' : 'signalCutsNoSign', #!
+    #'cutName' : 'PostSync', #!
     #'cutMapper' : 'tmp',
-    #'cutMapper' : 'syncCuts',
-    #'cutName' : 'BaseLine',
+    'cutMapper' : 'syncCutsDC',
+    'cutName' : 'BaseLine',
     #'cutMapper' : 'QCDYieldSS',
     #'cutName' : 'QCDYield',
     #'cutMapper' : 'qcdShapeScale', #!
     #'cutName' : 'PostSync', #!
-    'mid1' : '1dec01NoSign',
-    'mid2' : '2dec01NoSign',
-    'mid3' : '3dec01NoSign',
-    'additionalCut' : '',
-    #'additionalCut' : '*(Z_SS==1)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)',
+    'mid1' : '1dec07_syncNoSign',
+    'mid2' : '2dec07_syncNoSign',
+    'mid3' : '3dec07_syncSS',
+    #'additionalCut' : '',
+    'additionalCut' : '*(Z_SS==1)',
+    #'additionalCut' : '*(Z_SS==0)*(pzetamis>-20)*(nbtag<1)',
+    #'additionalCut' : '*(Z_SS==1)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_DR < 2.0)',
     #'additionalCut' : '*(Z_SS==0)*(iso_1 > 3)*(iso_2 >3)*(iso_1 < 10)*(iso_2 < 10)',
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
 }
 
 samples = checkBkgs( samples, params, bkgMap )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
+params['mid3'] = '3dec07_syncOS'
+params['additionalCut'] = '*(Z_SS==0)'
+#params['additionalCut'] = '*(Z_SS==1)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
+#params['additionalCut'] = '*(Z_SS==1)*(t1ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
+samples = checkBkgs( samples, params, bkgMap )
+analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#params['mid3'] = '3dec04_OS_ZPtGtr100vMed'
+##params['additionalCut'] = '*(Z_SS==0)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
+#params['additionalCut'] = '*(Z_SS==0)*(t1ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
+#samples = checkBkgs( samples, params, bkgMap )
+#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 
 ''' for WJets and QCD shapes 
@@ -113,10 +134,6 @@ uncomment and run each time you change cuts '''
 ##analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #params[ 'bkgs' ] = 'QCDSync'
-#samples = checkBkgs( samples, params, bkgMap )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-#params[ 'bkgs' ] = 'QCDLoose'
 #samples = checkBkgs( samples, params, bkgMap )
 #analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )

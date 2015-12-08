@@ -31,6 +31,9 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
             else :
                 chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
                 histos[ var ] = gPad.GetPrimitive( "%s" % var )
+                if var == 'm_vis' :
+                    print 'm_vis'
+                    print "Data Count:", histos[ var ].Integral()
         else :
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s' % additionalCut )
             histos2[ var ] = gPad.GetPrimitive( var2 )
@@ -83,7 +86,7 @@ def getHistoDict( channel ) :
         'jeta_1' : ('jeta_1', 100, -5, 5),
         'jpt_2' : ('jpt_2', 400, 0, 400),
         'jeta_2' : ('jeta_2', 100, -5, 5),
-        'GenWeight' : ('GenWeight', 1000, -300000, 300000),
+        'GenWeight' : ('GenWeight', 60, -30, 30),
         'npv' : ('npv', 50, 0, 50),
         'npu' : ('npu', 50, 0, 50),
         'm_vis' : ('m_vis', 600, 0, 600),
@@ -124,7 +127,6 @@ def getHistoDict( channel ) :
     if channel == 'tt' :
         chanVarMapTT = {
             'Z_Pt' : ('t1_t2_Pt', 400, 0, 400),
-            #'m_vis' : ('m_vis', 600, 0, 600),
             'Z_DR' : ('t1_t2_DR', 500, 0, 5),
             'Z_DPhi' : ('t1_t2_DPhi', 800, -4, 4),
             #'m_sv' : ('m_sv', 1000, 0, 1000),
@@ -144,34 +146,34 @@ def getHistoDict( channel ) :
 def getPlotDetails( channel ) :
     plotDetails = {
         'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
-        'Z_Pt' : (0, 200, 10, 'Z p_{T} [GeV]', ' GeV'),
+        'Z_Pt' : (0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
-        'met' : (0, 250, 10, 'pfMet [GeV]', ' GeV'),
-        'metphi' : (-4, 4, 2, 'pfMetPhi', ''),
+        'met' : (0, 250, 20, 'pfMet [GeV]', ' GeV'),
+        'metphi' : (-4, 4, 10, 'pfMetPhi', ''),
         #'mvamet' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
         #'mvametphi' : (-5, 5, 2, 'mvaMetPhi', ''),
-        'LT' : (0, 300, 10, 'Total LT [GeV]', ' GeV'),
-        'Mt' : (0, 400, 20, 'Total m_{T} [GeV]', ' GeV'),
+        'LT' : (0, 300, 20, 'Total LT [GeV]', ' GeV'),
+        'Mt' : (0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
         'nbtag' : (0, 6, 1, 'nBTag', ''),
         'bjetCISVVeto30Medium' : (0, 6, 1, 'nBTag_30Medium', ''),
         'bjetCISVVeto30Tight' : (0, 6, 1, 'nBTag_30Tight', ''),
         'njetspt20' : (0, 10, 10, 'nJetPt20', ''),
         'jetVeto30' : (0, 10, 10, 'nJetPt30', ''),
         'jetVeto40' : (0, 10, 10, 'nJetPt40', ''),
-        'jpt_1' : (0, 200, 10, 'Leading Jet Pt', ' GeV'),
+        'jpt_1' : (0, 200, 20, 'Leading Jet Pt', ' GeV'),
         'jeta_1' : (-5, 5, 10, 'Leading Jet Eta', ' Eta'),
-        'jpt_2' : (0, 200, 10, 'Second Jet Pt', ' GeV'),
+        'jpt_2' : (0, 200, 20, 'Second Jet Pt', ' GeV'),
         'jeta_2' : (-5, 5, 10, 'Second Jet Eta', ' Eta'),
         'extraelec_veto' : (0, 2, 1, 'Extra Electron Veto', ''),
         'extramuon_veto' : (0, 2, 1, 'Extra Muon Veto', ''),
-        'GenWeight' : (-30000, 30000, 1, 'Gen Weight', ''),
-        'npv' : (0, 35, 1, 'Number of Vertices', ''),
-        'npu' : (0, 35, 1, 'Number of True PU Vertices', ''),
-        'pzetavis' : (0, 300, 10, 'pZetaVis', ' GeV'),
-        'pzetamis' : (-200, 300, 10, 'pZetaMis', ' GeV'),
-        'pZeta-0.85pZetaVis' : (-300, 300, 10, 'pZetaMis - 0.85 x pZetaVis', ' GeV'),
+        'GenWeight' : (-30, 30, 1, 'Gen Weight', ''),
+        'npv' : (0, 40, 2, 'Number of Vertices', ''),
+        'npu' : (0, 40, 2, 'Number of True PU Vertices', ''),
+        'pzetavis' : (0, 300, 20, 'pZetaVis', ' GeV'),
+        'pzetamis' : (-200, 300, 20, 'pZetaMis', ' GeV'),
+        'pZeta-0.85pZetaVis' : (-300, 300, 20, 'pZetaMis - 0.85 x pZetaVis', ' GeV'),
         'Z_DR' : (0, 5, 20, 'Z dR', ' dR'),
-        'Z_DPhi' : (-4, 4, 10, 'Z dPhi', ' dPhi'),
+        'Z_DPhi' : (-4, 4, 40, 'Z dPhi', ' dPhi'),
         'Z_DEta' : (-5, 5, 40, 'Z dEta', ' dEta'),
         #'m_sv' : (0, 600, 20, 'ditau svFit Mass', ' GeV'),
         #'pt_H' : (0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
@@ -202,26 +204,26 @@ def getPlotDetails( channel ) :
 
     if channel == 'tt' :
         plotDetailsTT = {
-        'iso_1' : (0, 10, 1, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
+        'iso_1' : (0, 10, 10, '#tau_{1}CombIsoDBCorrRaw3Hits', ''),
         'eta_1' : ( -3, 3, 4, '#tau_{1} Eta', ' Eta'),
-        'pt_1' : (0, 200, 10, '#tau_{1} p_{T} [GeV]', ' GeV'),
-        'mt_1' : (0, 200, 10, '#tau_{1} m_{T} [GeV]', ' GeV'),
-        'm_1' : (0, 3, 2, 't1 Mass', ' GeV'),
+        'pt_1' : (0, 200, 20, '#tau_{1} p_{T} [GeV]', ' GeV'),
+        'mt_1' : (0, 200, 20, '#tau_{1} m_{T} [GeV]', ' GeV'),
+        'm_1' : (0, 3, 4, 't1 Mass', ' GeV'),
         't1DecayMode' : (0, 15, 1, 't1 Decay Mode', ''),
-        'iso_2' : (0, 10, 1, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
+        'iso_2' : (0, 10, 10, '#tau_{2}CombIsoDBCorrRaw3Hits', ''),
         'eta_2' : ( -3, 3, 4, '#tau_{2} Eta', ' Eta'),
-        'pt_2' : (0, 200, 10, '#tau_{2} p_{T} [GeV]', ' GeV'),
-        'mt_2' : (0, 200, 10, '#tau_{2} m_{T} [GeV]', ' GeV'),
-        'm_2' : (0, 3, 2, 't2 Mass', ' GeV'),
+        'pt_2' : (0, 200, 20, '#tau_{2} p_{T} [GeV]', ' GeV'),
+        'mt_2' : (0, 200, 20, '#tau_{2} m_{T} [GeV]', ' GeV'),
+        'm_2' : (0, 3, 4, 't2 Mass', ' GeV'),
         't2DecayMode' : (0, 15, 1, 't2 Decay Mode', ''),
-        't1JetPt' : (0, 400, 10, 't1 Overlapping Jet Pt', ' GeV'),
-        't2JetPt' : (0, 400, 10, 't2 Overlapping Jet Pt', ' GeV'),
-        't1ChargedIsoPtSum' : (0, 10, 4, 't1 ChargedIsoPtSum', ' GeV'),
-        't1NeutralIsoPtSum' : (0, 10, 4, 't1 NeutralIsoPtSum', ' GeV'),
-        't1PuCorrPtSum' : (0, 40, 2, 't1 PuCorrPtSum', ' GeV'),
-        't2ChargedIsoPtSum' : (0, 10, 4, 't2 ChargedIsoPtSum', ' GeV'),
-        't2NeutralIsoPtSum' : (0, 10, 4, 't2 NeutralIsoPtSum', ' GeV'),
-        't2PuCorrPtSum' : (0, 40, 2, 't2 PuCorrPtSum', ' GeV'),
+        't1JetPt' : (0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
+        't2JetPt' : (0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
+        't1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
+        't1NeutralIsoPtSum' : (0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'),
+        't1PuCorrPtSum' : (0, 40, 4, 't1 PuCorrPtSum', ' GeV'),
+        't2ChargedIsoPtSum' : (0, 10, 8, 't2 ChargedIsoPtSum', ' GeV'),
+        't2NeutralIsoPtSum' : (0, 10, 8, 't2 NeutralIsoPtSum', ' GeV'),
+        't2PuCorrPtSum' : (0, 40, 4, 't2 PuCorrPtSum', ' GeV'),
         }
         for key in plotDetailsTT.keys() :
             plotDetails[ key ] = plotDetailsTT [ key ]
