@@ -11,3 +11,5 @@ meta/*/arch*
 ThreeProngTaus/2*
 ThreeProngTaus/arch*
 ThreeProngTaus/JetHT*
+qcdScale/*.root
+qcdScale/roots
