@@ -119,8 +119,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         while go :
             for channel in channels :
     
-                if channel == 'em' : continue
-                #if channel == 'tt' : continue
+                if channel not in fargs['channels'] : continue
                 if channel == 'em' and sample == 'data_tt' : continue
                 if channel == 'tt' and sample == 'data_em' : continue
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
@@ -174,8 +173,6 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
 
 
 
-#def drawHistos() : 
-#def drawHistos(numCores, grouping, samples, bkgs, numFilesPerCycle, mid2, mid3 ) :
 def drawHistos(grouping, samples, **fargs ) :
     channels = ['em', 'tt']
     ''' Start PROOF multiprocessing Draw '''
@@ -192,8 +189,7 @@ def drawHistos(grouping, samples, **fargs ) :
     
         for channel in channels :
     
-            if channel == 'em' : continue
-            #if channel == 'tt' : continue
+            if channel not in fargs['channels'] : continue
             if channel == 'em' and sample == 'data_tt' : continue
             if channel == 'tt' and sample == 'data_em' : continue
             print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
