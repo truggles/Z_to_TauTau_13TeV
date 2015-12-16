@@ -14,6 +14,30 @@ import json
 import os
 cmsLumi = float( os.getenv('_LUMI_', '2170.0') )
 
+def getBJetInfo( row ) :
+    bJetInfo = []
+    jetAttrs = ['Pt', 'Eta', 'Phi', 'PUMVA', 'BJetCISV']
+    bCut = 0.89
+    bJets = 0
+    jet = 1
+    bJetInfo.append( 0 )
+    while bJets < 3 :
+        try :
+            bVal = getattr( row, "jet%iBJetCISV" % jet )
+            bPt = getattr( row, "jet%iPt" % jet )
+            if bVal > bCut and bPt > 20 :
+                bJetInfo[0] += 1
+                bJets += 1
+                for attr in jetAttrs :
+                    bJetInfo.append( getattr( row, "jet%i%s" % (jet, attr) ) )
+            jet += 1
+        except :
+            bJets = 3
+    return bJetInfo
+
+
+
+
 tauIso = {
     'Pt' : 'pt',
     'Eta' : 'eta',
@@ -161,20 +185,24 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'jet1Pt' : 'jpt_1',
         'jet1Phi' : 'jphi_1',
         'jet1Eta' : 'jeta_1',
+        'jet1PUMVA' : 'jmva_1',
         'jet2Pt' : 'jpt_2',
         'jet2Phi' : 'jphi_2',
         'jet2Eta' : 'jeta_2',
+        'jet2PUMVA' : 'jmva_2',
         'muVetoZTT10new2' : 'extramuon_veto',
         'eVetoZTT10new2' : 'extraelec_veto',
         #'mvaMetEt' : 'mvamet',
         #'mvaMetPhi' : 'mvametphi',
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
+        #'jetVeto30ZTT' : 'njets',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
         }
     branchMappingEM = {
+        'eHTTGenMatching' : 'gen_match_1',
         'ePt' : 'pt_1', # rename ePt to pt_1
         'eEta' : 'eta_1',
         'ePhi' : 'phi_1',
@@ -184,6 +212,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'ePVDZ' : 'dZ_1',
         'eIsoDB03' : 'iso_1',
         'eMVANonTrigWP90' : 'id_e_mva_nt_loose_1',
+        'mHTTGenMatching' : 'gen_match_2',
         'mPt' : 'pt_2',
         'mEta' : 'eta_2',
         'mPhi' : 'phi_2',
@@ -202,6 +231,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         }
     
     branchMappingTT = {
+        't1HTTGenMatching' : 'gen_match_1',
         't1Pt' : 'pt_1',
         't1Eta' : 'eta_1',
         't1Phi' : 'phi_1',
@@ -225,6 +255,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         #'t1ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_1',
         #'t1ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_1',
         #'t1ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_1',
+        't2HTTGenMatching' : 'gen_match_2',
         't2Pt' : 'pt_2',
         't2Eta' : 'eta_2',
         't2Phi' : 'phi_2',
@@ -421,10 +452,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     UniqueIDB = tnew.Branch('UniqueID', UniqueID, 'UniqueID/F')
     BkgGroup = array('f', [ 0 ] )
     BkgGroupB = tnew.Branch('BkgGroup', BkgGroup, 'BkgGroup/F')
-    gen_match_1 = array('f', [ 0 ] )
-    gen_match_1B = tnew.Branch('gen_match_1', gen_match_1, 'gen_match_1/F')
-    gen_match_2 = array('f', [ 0 ] )
-    gen_match_2B = tnew.Branch('gen_match_2', gen_match_2, 'gen_match_2/F')
     isZtt = array('f', [ 0 ] )
     isZttB = tnew.Branch('isZtt', isZtt, 'isZtt/F')
     isZmt = array('f', [ 0 ] )
@@ -445,8 +472,28 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     isZTTB = tnew.Branch('isZTT', isZTT, 'isZTT/F')
     isZLL = array('f', [ 0 ] )
     isZLLB = tnew.Branch('isZLL', isZLL, 'isZLL/F')
-    isFake = array('f', [ 0 ] )
-    isFakeB = tnew.Branch('isFake', isFake, 'isFake/F')
+    bpt_1 = array('f', [ 0 ] )
+    bpt_1B = tnew.Branch('bpt_1', bpt_1, 'bpt_1/F')
+    beta_1 = array('f', [ 0 ] )
+    beta_1B = tnew.Branch('beta_1', beta_1, 'beta_1/F')
+    bphi_1 = array('f', [ 0 ] )
+    bphi_1B = tnew.Branch('bphi_1', bphi_1, 'bphi_1/F')
+    bmva_1 = array('f', [ 0 ] )
+    bmva_1B = tnew.Branch('bmva_1', bmva_1, 'bmva_1/F')
+    bcsv_1 = array('f', [ 0 ] )
+    bcsv_1B = tnew.Branch('bcsv_1', bcsv_1, 'bcsv_1/F')
+    bpt_2 = array('f', [ 0 ] )
+    bpt_2B = tnew.Branch('bpt_2', bpt_2, 'bpt_2/F')
+    beta_2 = array('f', [ 0 ] )
+    beta_2B = tnew.Branch('beta_2', beta_2, 'beta_2/F')
+    bphi_2 = array('f', [ 0 ] )
+    bphi_2B = tnew.Branch('bphi_2', bphi_2, 'bphi_2/F')
+    bmva_2 = array('f', [ 0 ] )
+    bmva_2B = tnew.Branch('bmva_2', bmva_2, 'bmva_2/F')
+    bcsv_2 = array('f', [ 0 ] )
+    bcsv_2B = tnew.Branch('bcsv_2', bcsv_2, 'bcsv_2/F')
+    bList = [bpt_1, beta_1, bphi_1, bmva_1, bcsv_1, bpt_2, beta_2, bphi_2, bmva_2, bcsv_2] 
+    bListShort = [bpt_1, beta_1, bphi_1, bmva_1, bcsv_1] 
 
     # add dummy decaymode vars in to EMu channel for cut strings later
     if channel == 'em' :
@@ -454,6 +501,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         t1DecayModeB = tnew.Branch('t1DecayMode', t1DecayMode, 't1DecayMode/F')
         t2DecayMode = array('f', [ 0 ] )
         t2DecayModeB = tnew.Branch('t2DecayMode', t2DecayMode, 't2DecayMode/F')
+    jetAttrs = ['Pt', 'Eta', 'Phi', 'PUMVA', 'BJetCISV']
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -495,8 +543,29 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
             isoOrder( channel, row )
+
+            # Make sure jets don't overlap with FS particles, mainly problem in double hadronic channel
             jetCleaning( channel, row, 0.5 )
+            # Make instances of bjets which derive from our cleaned jets above
+            bJetInfo = getBJetInfo( row )            
+#            jetAttrs = ['Pt', 'Eta', 'Phi', 'PUMVA', 'BJetCISV']
+            #print bJetInfo
+            for bJetVar in bList :
+                bJetVar[0] = -10.0
+            if bJetInfo[0] == 1 :
+                cnt = 1
+                for bVar in bListShort :
+                    bVar[0] = bJetInfo[ cnt ]
+                    cnt += 1
+            elif bJetInfo[0] == 2 :
+                cnt = 1
+                for bVar in bList :
+                    bVar[0] = bJetInfo[ cnt ]
+                    cnt += 1
+                #print bList
             
+
+
             isZtt[0] = 0
             isZmt[0] = 0
             isZet[0] = 0
@@ -507,7 +576,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             isZMM[0] = 0
             isZTT[0] = 0
             isZLL[0] = 0
-            isFake[0] = 0
 
             # Decay final states
             if channel == 'tt' :
@@ -532,58 +600,19 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             if 'data' in sample :
                 puweight[0] = 1
                 XSecLumiWeight[0] = 1
-                gen_match_1[0] = -1
-                gen_match_2[0] = -1
                 isZEE[0] = -1
                 isZMM[0] = -1
                 isZLL[0] = -1
-                isFake[0] = -1
             else :
-                #nTruePU_ = int(row.nTruePU)
-                #if nTruePU_ == 0 :
-                #    print "Found an event with < 1 nTruePU"
-                #    puweight[0] = puDict[ 0 ]
-                #else : puweight[0] = puDict[ nTruePU_ - 1 ]
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
-                #puweight[0] = puDict[ row.nTruePU ]
-                #print "nTruePU: %f, puw: %f nTrPuRnd: %f" % (row.nTruePU, puweight[0], nTrPu)
                 scaler = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
                 XSecLumiWeight[0] = scaler
                 if channel == 'em' :
                     isZem[0] = 1
-                    #if row.eGenDirectPromptTauDecay == 1 : gen_match_1[0] = 3
-                    #elif row.eGenPrompt == 1 : gen_match_1[0] = 1
-                    #else : gen_match_1[0] = 6
-
-                    #if row.mGenDirectPromptTauDecayFinalState == 1 : gen_match_2[0] = 4
-                    #elif row.mGenPromptFinalState == 1 : gen_match_2[0] = 2
-                    #else : gen_match_2[0] = 6
-
-                    ## check 'isFake' for EMu
-                    #if gen_match_1[0] == 3 and gen_match_2[0] == 4 : isFake[0] = 0
-                    #elif gen_match_1[0] == 1 and gen_match_2[0] == 2 and isZLL[0] == 1 : isFake[0] = 1
-                    #elif abs(row.eGenPdgId) == 15 and gen_match_2[0] == 4 : isFake[0] = 3
-                    #else : isFake[0] = 2
 
                 if channel == 'tt' :
                     isZtt[0] = 1
-                    #if row.t1GenPrompt == 1 and row.t1GenJetPt > 15 : gen_match_1[0] = 5
-                    #else : gen_match_1[0] = 6
-
-                    #if row.t2GenPrompt == 1 and row.t2GenJetPt > 15 : gen_match_2[0] = 5
-                    #else : gen_match_2[0] = 6
-                
-                    ## check 'isFake' for TT
-                    #if abs(row.t1GenPdgId) == 15 and abs(row.t2GenPdgId) == 15 : isFake[0] = 0
-                    #elif row.t1GenPrompt == 1 and \
-                    #        (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
-                    #        row.t2GenPrompt == 1 and \
-                    #        (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) and \
-                    #        isZLL[0] == 1 : isFake[0] = 1
-                    #elif (abs(row.t1GenPdgId) == 11 or abs(row.t1GenPdgId) == 13) and \
-                    #        (abs(row.t2GenPdgId) == 11 or abs(row.t2GenPdgId) == 13) : isFake[0] = 3
-                    #else : isFake[0] = 2
             
 
             tnew.Fill()
