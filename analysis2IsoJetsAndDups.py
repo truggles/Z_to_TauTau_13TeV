@@ -14,27 +14,6 @@ import json
 import os
 cmsLumi = float( os.getenv('_LUMI_', '2170.0') )
 
-def getBJetInfo( row ) :
-    bJetInfo = []
-    jetAttrs = ['Pt', 'Eta', 'Phi', 'PUMVA', 'BJetCISV']
-    bCut = 0.89
-    bJets = 0
-    jet = 1
-    bJetInfo.append( 0 )
-    while bJets < 3 :
-        try :
-            bVal = getattr( row, "jet%iBJetCISV" % jet )
-            bPt = getattr( row, "jet%iPt" % jet )
-            if bVal > bCut and bPt > 20 :
-                bJetInfo[0] += 1
-                bJets += 1
-                for attr in jetAttrs :
-                    bJetInfo.append( getattr( row, "jet%i%s" % (jet, attr) ) )
-            jet += 1
-        except :
-            bJets = 3
-    return bJetInfo
-
 
 
 
@@ -119,59 +98,6 @@ def isoOrder( channel, row ) :
 def calcDR( eta1, phi1, eta2, phi2 ) :
     return float(math.sqrt( (eta1-eta2)*(eta1-eta2) + (phi1-phi2)*(phi1-phi2) ))
 
-''' Functions for cleaning jets in DR = X around final state objs '''
-jetVars = ['Pt', 'BJetCISV', 'PUMVA']
-
-def jetCleaning( channel, row, DR ) :
-    if channel == 'em' :
-        l1 = 'e'
-        l2 = 'm'
-    if channel == 'tt' :
-        l1 = 't1'
-        l2 = 't2'
-
-    l1Eta = getattr( row, '%sEta' % l1 )
-    l1Phi = getattr( row, '%sPhi' % l1 )
-    l2Eta = getattr( row, '%sEta' % l2 )
-    l2Phi = getattr( row, '%sPhi' % l2 )
-
-    jetDict = {} # Order this thing Eta, Phi, Pt, BJetCISV, PUMVA
-    for i in range (1, 5) :
-        jEta = getattr( row, 'jet%iEta' % i )
-        jPhi = getattr( row, 'jet%iPhi' % i )
-        jPt = getattr( row, 'jet%iPt' % i )
-        jBJetCISV = getattr( row, 'jet%iBJetCISV' % i )
-        jPUMVA = getattr( row, 'jet%iPUMVA' % i )
-        jetDict['jet%i' % i] = ( jEta, jPhi, jPt, jBJetCISV, jPUMVA )
-
-    jet1okay = False
-    jet2okay = False
-
-    while not jet1okay :
-        # If jet1 overlaps at all remove it, shift other jets up, and give -999 to jet4
-        if ( calcDR( l1Eta, l1Phi, jetDict['jet1'][0], jetDict['jet1'][1] ) < DR ) \
-            or ( calcDR( l2Eta, l2Phi, jetDict['jet1'][0], jetDict['jet1'][1] ) < DR ) :
-            jetDict['jet1'] = jetDict['jet2']
-            jetDict['jet2'] = jetDict['jet3']
-            jetDict['jet3'] = jetDict['jet4']
-            jetDict['jet4'] = (-999, -999, -999, -999, -999)
-        else : jet1okay = True
-
-    while not jet2okay :
-        # If jet2 overlaps at all remove it, shift other jets up, and give -999 to jet4
-        if ( calcDR( l1Eta, l1Phi, jetDict['jet2'][0], jetDict['jet2'][1] ) < DR ) \
-            or ( calcDR( l2Eta, l2Phi, jetDict['jet2'][0], jetDict['jet2'][1] ) < DR ) :
-            jetDict['jet2'] = jetDict['jet3']
-            jetDict['jet3'] = jetDict['jet4']
-            jetDict['jet4'] = (-999, -999, -999, -999, -999)
-        else : jet2okay = True
-
-    for i in range (1, 5) :
-        setattr( row, 'jet%iEta' % i, jetDict['jet%i' % i][0] )
-        setattr( row, 'jet%iPhi' % i, jetDict['jet%i' % i][1] )
-        setattr( row, 'jet%iPt' % i, jetDict['jet%i' % i][2] )
-        setattr( row, 'jet%iBJetCISV' % i, jetDict['jet%i' % i][3] )
-        setattr( row, 'jet%iPUMVA' % i, jetDict['jet%i' % i][4] )
 
 
 def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
@@ -472,28 +398,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     isZTTB = tnew.Branch('isZTT', isZTT, 'isZTT/F')
     isZLL = array('f', [ 0 ] )
     isZLLB = tnew.Branch('isZLL', isZLL, 'isZLL/F')
-    bpt_1 = array('f', [ 0 ] )
-    bpt_1B = tnew.Branch('bpt_1', bpt_1, 'bpt_1/F')
-    beta_1 = array('f', [ 0 ] )
-    beta_1B = tnew.Branch('beta_1', beta_1, 'beta_1/F')
-    bphi_1 = array('f', [ 0 ] )
-    bphi_1B = tnew.Branch('bphi_1', bphi_1, 'bphi_1/F')
-    bmva_1 = array('f', [ 0 ] )
-    bmva_1B = tnew.Branch('bmva_1', bmva_1, 'bmva_1/F')
-    bcsv_1 = array('f', [ 0 ] )
-    bcsv_1B = tnew.Branch('bcsv_1', bcsv_1, 'bcsv_1/F')
-    bpt_2 = array('f', [ 0 ] )
-    bpt_2B = tnew.Branch('bpt_2', bpt_2, 'bpt_2/F')
-    beta_2 = array('f', [ 0 ] )
-    beta_2B = tnew.Branch('beta_2', beta_2, 'beta_2/F')
-    bphi_2 = array('f', [ 0 ] )
-    bphi_2B = tnew.Branch('bphi_2', bphi_2, 'bphi_2/F')
-    bmva_2 = array('f', [ 0 ] )
-    bmva_2B = tnew.Branch('bmva_2', bmva_2, 'bmva_2/F')
-    bcsv_2 = array('f', [ 0 ] )
-    bcsv_2B = tnew.Branch('bcsv_2', bcsv_2, 'bcsv_2/F')
-    bList = [bpt_1, beta_1, bphi_1, bmva_1, bcsv_1, bpt_2, beta_2, bphi_2, bmva_2, bcsv_2] 
-    bListShort = [bpt_1, beta_1, bphi_1, bmva_1, bcsv_1] 
+
 
     # add dummy decaymode vars in to EMu channel for cut strings later
     if channel == 'em' :
@@ -501,7 +406,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         t1DecayModeB = tnew.Branch('t1DecayMode', t1DecayMode, 't1DecayMode/F')
         t2DecayMode = array('f', [ 0 ] )
         t2DecayModeB = tnew.Branch('t2DecayMode', t2DecayMode, 't2DecayMode/F')
-    jetAttrs = ['Pt', 'Eta', 'Phi', 'PUMVA', 'BJetCISV']
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -543,27 +447,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
             isoOrder( channel, row )
-
-            # Make sure jets don't overlap with FS particles, mainly problem in double hadronic channel
-            jetCleaning( channel, row, 0.5 )
-            # Make instances of bjets which derive from our cleaned jets above
-            bJetInfo = getBJetInfo( row )            
-#            jetAttrs = ['Pt', 'Eta', 'Phi', 'PUMVA', 'BJetCISV']
-            #print bJetInfo
-            for bJetVar in bList :
-                bJetVar[0] = -10.0
-            if bJetInfo[0] == 1 :
-                cnt = 1
-                for bVar in bListShort :
-                    bVar[0] = bJetInfo[ cnt ]
-                    cnt += 1
-            elif bJetInfo[0] == 2 :
-                cnt = 1
-                for bVar in bList :
-                    bVar[0] = bJetInfo[ cnt ]
-                    cnt += 1
-                #print bList
-            
 
 
             isZtt[0] = 0
