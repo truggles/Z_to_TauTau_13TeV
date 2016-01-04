@@ -76,7 +76,7 @@ def signalCuts( ch ) :
 def signalCutsNoIsoNoSign( ch ) :
     cutMap = OrderedDict()
     if ch == 'em':
-        cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + emIso + ' && ' + extraVeto + ' && ' + emMTFix
+        cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + extraVeto + ' && ' + emMTFix
     if ch == 'tt':
         cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode + ' && ' + ttMTFix
     return cutMap

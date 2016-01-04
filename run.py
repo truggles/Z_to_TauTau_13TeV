@@ -51,10 +51,10 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-#from meta.makeMeta import makeMetaJSON
-#os.chdir('meta')
-#makeMetaJSON( grouping )
-#os.chdir('..')
+from meta.makeMeta import makeMetaJSON
+os.chdir('meta')
+makeMetaJSON( grouping )
+os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -97,9 +97,9 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1dec14',
-    'mid2' : '2dec14',
-    'mid3' : '3dec14',
+    'mid1' : '1dec18',
+    'mid2' : '2dec18',
+    'mid3' : '3dec18',
     'additionalCut' : '',
     #'additionalCut' : '*(Z_SS==1)',
     #'additionalCut' : '*(Z_SS==0)*(pzetamis>-20)*(nbtag<1)',
