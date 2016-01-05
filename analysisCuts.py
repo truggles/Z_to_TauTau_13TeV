@@ -17,6 +17,9 @@ emVtx   = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mP
 #m23e12  = '(singleMuSingleEPass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu23Ele12Path == 1 && eMu23Ele12Filter == 1 && mMu23Ele12Filter == 1 && mPt > 24)'
 e23m8   = '(singleE23SingleMu8Pass > 0 && eMatchesMu8Ele23Path == 1 && mMatchesMu8Ele23Path == 1  && ePt > 24)'
 m23e12  = '(singleMu23SingleE12Pass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu23Ele12Path == 1  && mPt > 24)'
+### I have MUCH better sync with IC without filters applied in EMu ###
+#e17m8   = '(singleE17SingleMu8Pass > 0 && eMatchesMu8Ele17Path == 1 && mMatchesMu8Ele17Path == 1 && eMu8Ele23Filter > 0 && mMu8Ele23Filter > 0 && ePt > 18)'
+#m17e12  = '(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatchesMu17Ele12Path == 1 && eMu17Ele12Filter > 0 && mMu17Ele12Filter > 0 && mPt > 18)'
 e17m8   = '(singleE17SingleMu8Pass > 0 && eMatchesMu8Ele17Path == 1 && mMatchesMu8Ele17Path == 1 && ePt > 18)'
 m17e12  = '(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatchesMu17Ele12Path == 1 && mPt > 18)'
 # EM PostSync
@@ -35,13 +38,13 @@ emIsoInvert    = 'eIsoDB03 > 0.5 && mIsoDB03 > 0.25'
 mtKin   = 'mPt > 19 && mAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'
 mtDR    = 'm_t_DR > 0.5'
 mtVtx   = 'abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && abs(tPVDZ) < 0.2'
-mtTrig   = '(singleMu18Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && mPt > 18)'
+mtTrig   = '(singleMu18Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && (mIsoMu17Filter > 0 || mIsoMu18Filter > 0) && mPt > 18)'
 
 # ET Baseline
 etKin   = 'ePt > 24 && eAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'
 etDR    = 'e_t_DR > 0.5'
 etVtx   = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(tPVDZ) < 0.2'
-etTrig   = '(singleE23Pass > 0 && (eMatchesEle23Path == 1 || eMatchesEle22Path == 1) && ePt > 23)'
+etTrig   = '(singleE23Pass > 0 && (eMatchesEle23Path == 1 || eMatchesEle22Path == 1) && (eEle22Filter > 0 || eEle23Filter > 0) && ePt > 23)'
 
 # TT Baseline
 DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
