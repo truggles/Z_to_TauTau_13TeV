@@ -13,3 +13,4 @@ ThreeProngTaus/arch*
 ThreeProngTaus/JetHT*
 qcdScale/*.root
 qcdScale/roots
+util/*.txt
