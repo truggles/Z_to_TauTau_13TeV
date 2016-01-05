@@ -45,7 +45,8 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
     
-    cutString = cutMap[ cutName ]
+    cutString = ' && '.join(cutMap[ cutName ])
+    cutString = '('+cutString+')'
     chainNew = analysisCuts.makeGenCut( chain, cutString )
     numEntries = chainNew.GetEntries()
     #print "%25s : %10i" % (cutName, numEntries)
@@ -104,7 +105,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
-    channels = ['em', 'tt']
+    channels = fargs[ 'channels' ]
     ''' Start multiprocessing tests '''
     #output = multiprocessing.Queue()
     pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
@@ -119,9 +120,10 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         while go :
             for channel in channels :
     
-                if channel not in fargs['channels'] : continue
-                if channel == 'em' and sample == 'data_tt' : continue
-                if channel == 'tt' and sample == 'data_em' : continue
+                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
+                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
+                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
+                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
     
                 multiprocessingOutputs.append( pool.apply_async(runCutsAndIso, args=(grouping,
@@ -174,7 +176,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
 
 
 def drawHistos(grouping, samples, **fargs ) :
-    channels = ['em', 'tt']
+    channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
     ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']/2) ) )
     gROOT.SetBatch(True)
@@ -189,9 +191,10 @@ def drawHistos(grouping, samples, **fargs ) :
     
         for channel in channels :
     
-            if channel not in fargs['channels'] : continue
-            if channel == 'em' and sample == 'data_tt' : continue
-            if channel == 'tt' and sample == 'data_em' : continue
+            if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
+            if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
+            if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
+            if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
             print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
     
             chain = ROOT.TChain('Ntuple')

@@ -14,7 +14,42 @@ import json
 import os
 cmsLumi = float( os.getenv('_LUMI_', '2170.0') )
 
+prodMap = {
+    'em' : ('e', 'm'),
+    'et' : ('e', 't'),
+    'mt' : ('m', 't'),
+    'tt' : ('t1', 't2'),
+}
 
+def getIso( cand, row ) :
+    if 'e' in cand :
+        return getattr(row, cand+'RelPFIsoDB')
+    if 'm' in cand :
+        return getattr(row, cand+'RelPFIsoDBDefault')
+    if 't' in cand :
+        return getattr(row, cand+'ByCombinedIsolationDeltaBetaCorrRaw3Hits')
+        
+        
+def getCurrentEvt( channel, row ) :
+    l1 = prodMap[channel][0]
+    l2 = prodMap[channel][1]
+    leg1Iso = getIso( l1, row )
+    leg2Iso = getIso( l2, row )
+    leg1Pt = getattr(row, l1+'Pt')
+    leg2Pt = getattr(row, l2+'Pt')
+
+    if channel == 'tt' :
+        if leg1Iso < leg2Iso :
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+        elif leg1Iso > leg2Iso :
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+        elif leg1Pt > leg2Pt :
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+        elif leg1Pt < leg2Pt :
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+        else : print "Iso1 == Iso2 & Pt1 == Pt2", row.evt
+    else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+    return currentEvt
 
 
 tauIso = {
@@ -95,12 +130,22 @@ def isoOrder( channel, row ) :
             setattr( row, 't1%s' % uw, tmp2 )
             setattr( row, 't2%s' % uw, tmp1 )
 
+def vbfClean( row ) :
+    if row.jetVeto20ZTT < 2 :
+        setattr( row, 'vbfMassZTT', -10000 )
+        setattr( row, 'vbfDetaZTT', -10 )
+        setattr( row, 'vbfDphiZTT', -10 )
+        setattr( row, 'vbfJetVeto30ZTT', -10 )
+        setattr( row, 'vbfJetVeto20ZTT', -10 )
+
 def calcDR( eta1, phi1, eta2, phi2 ) :
     return float(math.sqrt( (eta1-eta2)*(eta1-eta2) + (phi1-phi2)*(phi1-phi2) ))
 
 
 
 def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
+    l1 = prodMap[channel][0]
+    l2 = prodMap[channel][1]
     branchMapping = {
         'run' : 'run',
         'lumi' : 'lumi',
@@ -108,14 +153,24 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'nvtx' : 'npv',
         'nTruePU' : 'npu',
         'charge' : 'charge',
-        'jet1Pt' : 'jpt_1',
-        'jet1Phi' : 'jphi_1',
-        'jet1Eta' : 'jeta_1',
-        'jet1PUMVA' : 'jmva_1',
-        'jet2Pt' : 'jpt_2',
-        'jet2Phi' : 'jphi_2',
-        'jet2Eta' : 'jeta_2',
-        'jet2PUMVA' : 'jmva_2',
+        'j1pt' : 'jpt_1',
+        'j1phi' : 'jphi_1',
+        'j1eta' : 'jeta_1',
+        'j1mva' : 'jmva_1',
+        'j2pt' : 'jpt_2',
+        'j2phi' : 'jphi_2',
+        'j2eta' : 'jeta_2',
+        'j2mva' : 'jmva_2',
+        'jb1pt' : 'bpt_1',
+        'jb1phi' : 'bphi_1',
+        'jb1eta' : 'beta_1',
+        'jb1mva' : 'bmva_1',
+        'jb1csv' : 'bcsv_1',
+        'jb2pt' : 'bpt_2',
+        'jb2phi' : 'bphi_2',
+        'jb2eta' : 'beta_2',
+        'jb2mva' : 'bmva_2',
+        'jb2csv' : 'bcsv_2',
         'muVetoZTT10new2' : 'extramuon_veto',
         'eVetoZTT10new2' : 'extraelec_veto',
         #'mvaMetEt' : 'mvamet',
@@ -126,100 +181,92 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
+        'vbfMassZTT' : 'mjj',
+        'vbfDetaZTT' : 'jdeta',
+        'vbfDphiZTT' : 'jdphi',
+        'vbfJetVeto30ZTT' : 'njetingap',
+        'vbfJetVeto20ZTT' : 'njetingap20',
         }
-    branchMappingEM = {
-        'eHTTGenMatching' : 'gen_match_1',
-        'ePt' : 'pt_1', # rename ePt to pt_1
-        'eEta' : 'eta_1',
-        'ePhi' : 'phi_1',
-        'eMass' : 'm_1',
-        'eCharge' : 'q_1',
-        'ePVDXY' : 'd0_1',
-        'ePVDZ' : 'dZ_1',
-        'eIsoDB03' : 'iso_1',
-        'eMVANonTrigWP90' : 'id_e_mva_nt_loose_1',
-        'mHTTGenMatching' : 'gen_match_2',
-        'mPt' : 'pt_2',
-        'mEta' : 'eta_2',
-        'mPhi' : 'phi_2',
-        'mMass' : 'm_2',
-        'mCharge' : 'q_2',
-        'mPVDXY' : 'd0_2',
-        'mPVDZ' : 'dZ_2',
-        'mIsoDB03' : 'iso_2',
-        'e_m_Mass' : 'm_vis',
-        #'e_m_SVfitMass' : 'm_sv',
-        'e_m_PZeta' : 'pzetamis',
-        'e_m_PZetaVis' : 'pzetavis',
-        'e_m_SS' : 'Z_SS',
-        'eMtToPfMet_Raw' : 'mt_1',
-        'mMtToPfMet_Raw' : 'mt_2',
+    doubleProds = {
+        'Mass' : 'm_vis',
+        #'SVfitMass' : 'm_sv',
+        'PZeta' : 'pzetamis',
+        'PZetaVis' : 'pzetavis',
+        'SS' : 'Z_SS',
         }
-    
-    branchMappingTT = {
-        't1HTTGenMatching' : 'gen_match_1',
-        't1Pt' : 'pt_1',
-        't1Eta' : 'eta_1',
-        't1Phi' : 'phi_1',
-        't1Mass' : 'm_1',
-        't1Charge' : 'q_1',
-        't1PVDXY' : 'd0_1',
-        't1PVDZ' : 'dZ_1',
-        't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_1',
-        't1AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_1',
-        't1AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5_1',
-        't1AgainstElectronTightMVA5' : 'againstElectronTightMVA5_1',
-        't1AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5_1',
-        't1AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5_1',
-        't1AgainstMuonLoose3' : 'againstMuonLoose3_1',
-        #'t1AgainstMuonLoose' : 'againstMuonLoose_1',
-        't1ChargedIsoPtSum' : 'chargedIsoPtSum_1',
-        't1DecayModeFinding' : 'decayModeFindingOldDMs_1',
-        't1NeutralIsoPtSum' : 'neutralIsoPtSum_1',
-        't1PuCorrPtSum' : 'puCorrPtSum_1',
-        #'t1ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_1',
-        #'t1ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_1',
-        #'t1ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_1',
-        #'t1ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_1',
-        't2HTTGenMatching' : 'gen_match_2',
-        't2Pt' : 'pt_2',
-        't2Eta' : 'eta_2',
-        't2Phi' : 'phi_2',
-        't2Mass' : 'm_2',
-        't2Charge' : 'q_2',
-        't2PVDXY' : 'd0_2',
-        't2PVDZ' : 'dZ_2',
-        't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso_2',
-        't2AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5_2',
-        't2AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5_2',
-        't2AgainstElectronTightMVA5' : 'againstElectronTightMVA5_2',
-        't2AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5_2',
-        't2AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5_2',
-        't2AgainstMuonLoose3' : 'againstMuonLoose3_2',
-        #'t2AgainstMuonLoose' : 'againstMuonLoose_2',
-        't2ChargedIsoPtSum' : 'chargedIsoPtSum_2',
-        't2DecayModeFinding' : 'decayModeFindingOldDMs_2',
-        't2NeutralIsoPtSum' : 'neutralIsoPtSum_2',
-        't2PuCorrPtSum' : 'puCorrPtSum_2',
-        #'t2ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw_2',
-        #'t2ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw_2',
-        #'t2ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw_2',
-        #'t2ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw_2',
-        't1_t2_Mass' : 'm_vis',
-        #'t1_t2_SVfitMass' : 'm_sv',
-        't1_t2_PZeta' : 'pzetamis',
-        't1_t2_PZetaVis' : 'pzetavis',
-        't1_t2_SS' : 'Z_SS',
-        't1MtToPfMet_Raw' : 'mt_1',
-        't2MtToPfMet_Raw' : 'mt_2',
+    branchMappingElec = {
+        'cand_HTTGenMatching' : 'gen_match',
+        'cand_Pt' : 'pt', # rename ePt to pt_1
+        'cand_Eta' : 'eta',
+        'cand_Phi' : 'phi',
+        'cand_Mass' : 'm',
+        'cand_Charge' : 'q',
+        'cand_PVDXY' : 'd0',
+        'cand_PVDZ' : 'dZ',
+        'cand_IsoDB03' : 'iso',
+        'cand_MVANonTrigWP90' : 'id_e_mva_nt_loose',
+        'cand_MtToPfMet_Raw' : 'mt',
+        }
+    branchMappingMuon = {
+        'cand_HTTGenMatching' : 'gen_match',
+        'cand_Pt' : 'pt',
+        'cand_Eta' : 'eta',
+        'cand_Phi' : 'phi',
+        'cand_Mass' : 'm',
+        'cand_Charge' : 'q',
+        'cand_PVDXY' : 'd0',
+        'cand_PVDZ' : 'dZ',
+        'cand_IsoDB03' : 'iso',
+        'cand_MtToPfMet_Raw' : 'mt',
+        }
+    branchMappingTau = {
+        'cand_HTTGenMatching' : 'gen_match',
+        'cand_Pt' : 'pt',
+        'cand_Eta' : 'eta',
+        'cand_Phi' : 'phi',
+        'cand_Mass' : 'm',
+        'cand_Charge' : 'q',
+        'cand_PVDXY' : 'd0',
+        'cand_PVDZ' : 'dZ',
+        'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
+        'cand_AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5',
+        'cand_AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5',
+        'cand_AgainstElectronTightMVA5' : 'againstElectronTightMVA5',
+        'cand_AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5',
+        'cand_AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5',
+        'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
+        #cand_AgainstMuonLoose' : 'againstMuonLoose',
+        'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
+        'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
+        'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
+        'cand_PuCorrPtSum' : 'puCorrPtSum',
+        #cand_ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
+        #cand_ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
+        #cand_ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
+        #cand_ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
+        'cand_MtToPfMet_Raw' : 'mt',
         }
 
+    # Generate our mapping for double candidate variables
+    for key in doubleProds :
+        branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
+    # Map all of the variables based on their FSA names to Sync names leg by leg
     if channel == 'em' :
-        for key in branchMappingEM.keys() :
-            branchMapping[ key ] = branchMappingEM[ key ]
-    if channel == 'tt' :
-        for key in branchMappingTT.keys() :
-            branchMapping[ key ] = branchMappingTT[ key ]
+        l1Map = branchMappingElec
+        l2Map = branchMappingMuon
+    elif channel == 'et' :
+        l1Map = branchMappingElec
+        l2Map = branchMappingTau
+    elif channel == 'mt' :
+        l1Map = branchMappingMuon
+        l2Map = branchMappingTau
+    elif channel == 'tt' :
+        l1Map = branchMappingTau
+        l2Map = branchMappingTau
+    for key in l1Map.keys() :
+        branchMapping[ key.replace('cand_', l1) ] = l1Map[ key ]+'_1'
+    for key in l2Map.keys() :
+        branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
 
     with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
         sampDict = json.load( sampFile )
@@ -293,30 +340,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         lumi = int( row.lumi )
         evt = int( row.evt )
         
-        if channel == 'em' :
-            leg1Iso = row.eRelPFIsoDB
-            leg1Pt = row.ePt
-            leg2Iso = row.mRelPFIsoDBDefault
-            leg2Pt = row.mPt
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
-
-        if channel == 'tt' :
-            ''' Get our Iso ordering for TT right for the get go '''
-            leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
-            leg1Pt = row.t1Pt
-            leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
-            leg2Pt = row.t2Pt
-            if leg1Iso < leg2Iso :
-                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
-            elif leg1Iso > leg2Iso :
-                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
-            elif leg1Pt > leg2Pt :
-                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
-            elif leg1Pt < leg2Pt :
-                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
-            else : print "XXXX"
-
-
+        currentEvt = getCurrentEvt( channel, row )
         currentRunLumiEvt = (run, lumi, evt)
         if count == 0 : prevRunLumiEvt = currentRunLumiEvt
 
@@ -401,11 +425,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
 
 
     # add dummy decaymode vars in to EMu channel for cut strings later
-    if channel == 'em' :
+    if channel != 'tt' :
         t1DecayMode = array('f', [ 0 ] )
         t1DecayModeB = tnew.Branch('t1DecayMode', t1DecayMode, 't1DecayMode/F')
         t2DecayMode = array('f', [ 0 ] )
         t2DecayModeB = tnew.Branch('t2DecayMode', t2DecayMode, 't2DecayMode/F')
+    if channel == 'em' or channel == 'tt' :
+        tDecayMode = array('f', [ 0 ] )
+        tDecayModeB = tnew.Branch('tDecayMode', tDecayMode, 'tDecayMode/F')
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -414,32 +441,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         lumi = int( row.lumi )
         evt = int( row.evt )
         
-        if channel == 'em' :
-            leg1Iso = row.eRelPFIsoDB
-            leg1Pt = row.ePt
-            leg1Phi = row.ePhi
-            leg2Iso = row.mRelPFIsoDBDefault
-            leg2Pt = row.mPt
-            leg2Phi = row.mPhi
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
-
-        if channel == 'tt' :
-            leg1Iso = row.t1ByCombinedIsolationDeltaBetaCorrRaw3Hits
-            leg1Pt = row.t1Pt
-            leg1Phi = row.t1Phi
-            leg2Iso = row.t2ByCombinedIsolationDeltaBetaCorrRaw3Hits
-            leg2Pt = row.t2Pt
-            leg2Phi = row.t2Phi
-            if leg1Iso < leg2Iso :
-                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
-            elif leg1Iso > leg2Iso :
-                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
-            elif leg1Pt > leg2Pt :
-                currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
-            elif leg1Pt < leg2Pt :
-                currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
-            else : print "XXXX"
-
+        currentEvt = getCurrentEvt( channel, row )
         currentRunLumiEvt = (run, lumi, evt)
 
         
@@ -447,6 +449,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
             isoOrder( channel, row )
+            vbfClean( row )
 
 
             isZtt[0] = 0
@@ -463,10 +466,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             # Decay final states
             if channel == 'tt' :
                 isZtt[0] = 1
+            if channel == 'et' :
+                isZet[0] = 1
+            if channel == 'mt' :
+                isZmt[0] = 1
             if channel == 'em' :
                 isZem[0] = 1
-                t1DecayMode[0] = -1
-                t2DecayMode[0] = -1
             # Generator states, combine Z & sm-H into 1 var
             if row.isZee == 1 :#or row.isHee == 1 : 
                 isZEE[0] = 1
@@ -491,11 +496,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
                 puweight[0] = puDict[ nTrPu ]
                 scaler = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
                 XSecLumiWeight[0] = scaler
-                if channel == 'em' :
-                    isZem[0] = 1
-
-                if channel == 'tt' :
-                    isZtt[0] = 1
             
 
             tnew.Fill()

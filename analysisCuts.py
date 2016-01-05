@@ -1,5 +1,4 @@
 import ROOT
-from collections import OrderedDict
 
 def makeGenCut( inTree, cutString ) :
 	#print "l1 %s, l2 %s" % (l1, l2)
@@ -32,6 +31,18 @@ emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
 emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
 emIsoInvert    = 'eIsoDB03 > 0.5 && mIsoDB03 > 0.25'
 
+# MT Baseline
+mtKin   = 'mPt > 19 && mAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'
+mtDR    = 'm_t_DR > 0.5'
+mtVtx   = 'abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && abs(tPVDZ) < 0.2'
+mtTrig   = '(singleMu18Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && mPt > 18)'
+
+# ET Baseline
+etKin   = 'ePt > 24 && eAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'
+etDR    = 'e_t_DR > 0.5'
+etVtx   = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(tPVDZ) < 0.2'
+etTrig   = '(singleE23Pass > 0 && (eMatchesEle23Path == 1 || eMatchesEle22Path == 1) && ePt > 23)'
+
 # TT Baseline
 DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
 ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
@@ -54,51 +65,43 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalCutsNoSign( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + emIso + ' && ' + extraVeto + ' && ' + emMTFix
-    if ch == 'tt':
-        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode + ' && ' + ttMTFix
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, emMTFix]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, DecayMode, ttMTFix]
+    cutMap = {'PostSync' : cuts}
     return cutMap
 
 
 # A version which applies all cuts at once RunII
 def signalCuts( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + emOS + ' && ' + emIso + ' && ' + extraVeto + ' && ' + emMTFix
-    if ch == 'tt':
-        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttOS + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode + ' && ' + ttMTFix
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emOS, emIso, extraVeto, emMTFix]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt40, DecayMode, ttMTFix]
+    cutMap = {'PostSync' : cuts}
     return cutMap
 
 
 # Data card sync, no Decay Mode cut 
 def signalCutsNoIsoNoSign( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['PostSync'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + extraVeto + ' && ' + emMTFix
-    if ch == 'tt':
-        cutMap['PostSync'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40 + ' && ' + DecayMode + ' && ' + ttMTFix
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', extraVeto, emMTFix]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt40, DecayMode, ttMTFix]
+    cutMap = {'PostSync' : cuts}
     return cutMap
 
     
 # Selection which only does baseline for sync data cards, NO SIGN for QCD
 def syncCutsDC( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['BaseLine'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ') && ' + emIso + ' && ' + extraVeto
-    if ch == 'tt':
-        cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && ' + ttVtx + ' && ' + ttIso + ' && ' + ttDisc + ' && ' + extraVeto + ' && ' + tt40
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40]
+    cutMap = {'BaseLine' : cuts}
     return cutMap
     
 
 # Selection which only does baseline for sync sample
 def syncCutsNtuple( ch ) :
-    cutMap = OrderedDict()
-    if ch == 'em':
-        cutMap['BaseLine'] = emKin + ' && ' + emDR + ' && ' + emVtx + ' && ' + eID + ' && ' + mID + ' && (' + e17m8 + ' || ' + m17e12 + ')'
-    if ch == 'tt':
-        cutMap['BaseLine'] = ttKin + ' && ' + ttCharge + ' && ' + ttDR + ' && '  + ttVtx + ' && ' + tt40
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')']
+    if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
+    if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt40]
+    cutMap = {'BaseLine' : cuts}
     return cutMap
     
 
