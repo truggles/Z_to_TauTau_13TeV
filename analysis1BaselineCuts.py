@@ -3,7 +3,6 @@ from util.fileLength import file_len
 import util.pileUpVertexCorrections
 from analysis2IsoJetsAndDups import renameBranches
 import ROOT
-from array import array
 from time import gmtime, strftime
 import analysisCuts
 import analysisPlots

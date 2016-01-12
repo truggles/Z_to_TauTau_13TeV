@@ -14,3 +14,5 @@ ThreeProngTaus/JetHT*
 qcdScale/*.root
 qcdScale/roots
 util/*.txt
+lepSFdata/*
+tmp/

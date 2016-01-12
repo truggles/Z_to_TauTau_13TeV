@@ -9,6 +9,10 @@ Additionally, before you get going, make sure that you install the
 ```bash
     recipe/install_python.sh
 ```
+Load from GitHub the measured lepton efficiencies for scale factors
+```bash
+    source setup.py
+```
 
 If any FSA ntuples have been updated, make a list of the backgrounds and data 
 samples in:
