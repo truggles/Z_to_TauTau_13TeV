@@ -9,32 +9,10 @@ import os
 from time import gmtime, strftime
 import ROOT
 from ROOT import gPad, gROOT
+import analysis1BaselineCuts
 ROOT.gROOT.Reset()
 
-import analysis1BaselineCuts
-bkgMap = analysis1BaselineCuts.getBkgMap()
-def checkBkgs( samples, params, bkgMap ) :
-    if params[ 'bkgs' ] != 'None' :
-        bkgs = params[ 'bkgs' ]
-        params[ 'cutMapper' ] = bkgMap[ params[ 'bkgs' ] ][0]
-        params[ 'cutName' ] = bkgMap[ params[ 'bkgs' ] ][0]
-        samples = bkgMap[ params [ 'bkgs' ] ][1]
-        if not os.path.exists( 'meta/%sBackgrounds/%s/cut' % (grouping, bkgMap[ bkgs ][0]) ) : 
-            os.makedirs( 'meta/%sBackgrounds/%s/cut' % (grouping, bkgMap[ bkgs ][0]) )
-            os.makedirs( 'meta/%sBackgrounds/%s/iso' % (grouping, bkgMap[ bkgs ][0]) )
-            os.makedirs( 'meta/%sBackgrounds/%s/shape' % (grouping, bkgMap[ bkgs ][0]) )
-    else :
-        if not os.path.exists( '%s%s' % (grouping, params['mid1']) ) : os.makedirs( '%s%s' % (grouping, params['mid1']) )
-        if not os.path.exists( '%s%s' % (grouping, params['mid2']) ) : os.makedirs( '%s%s' % (grouping, params['mid2']) )
-        if not os.path.exists( '%s%s' % (grouping, params['mid3']) ) : os.makedirs( '%s%s' % (grouping, params['mid3']) )
-    ofile = open('%s%s/config.txt' % (grouping, params['mid3']), "w")
-    for sample in samples :
-        ofile.write( "%s " % sample )
-    ofile.write( "\n" )
-    for key in params :
-        ofile.write( "%s : %s\n" % (key, params[key]) )
-    ofile.close() 
-    return samples
+
 
 ''' Set grouping (25ns or Sync) '''
 #grouping = '25ns'
@@ -109,7 +87,7 @@ params = {
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
 }
 
-samples = checkBkgs( samples, params, bkgMap )
+samples = checkBkgs( samples, params )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
@@ -117,23 +95,23 @@ analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #params['additionalCut'] = '*(Z_SS==0)'
 ##params['additionalCut'] = '*(Z_SS==1)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
 ##params['additionalCut'] = '*(Z_SS==1)*(t1ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
-#samples = checkBkgs( samples, params, bkgMap )
+#samples = checkBkgs( samples, params )
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #
 #params['mid3'] = '3dec04_OS_ZPtGtr100vMed'
 ##params['additionalCut'] = '*(Z_SS==0)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
 #params['additionalCut'] = '*(Z_SS==0)*(t1ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
-#samples = checkBkgs( samples, params, bkgMap )
+#samples = checkBkgs( samples, params )
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 
 ''' for WJets and QCD shapes 
 uncomment and run each time you change cuts '''
 #params[ 'bkgs' ] = 'WJets'
-#samples = checkBkgs( samples, params, bkgMap )
+#samples = checkBkgs( samples, params )
 ##analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #params[ 'bkgs' ] = 'QCDSync'
-#samples = checkBkgs( samples, params, bkgMap )
+#samples = checkBkgs( samples, params )
 #analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
