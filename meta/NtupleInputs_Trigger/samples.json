@@ -1,0 +1,34 @@
+{
+  "data_mt": {
+    "STATUS": "Files Match", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 72452379, 
+    "DAS Path": "", 
+    "nfiles": 1425, 
+    "nblocks": 61, 
+    "Cross Section (pb)": -999.0, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": -1423575, 
+    "summedWeights": 0.0, 
+    "nevents": 92364629, 
+    "nNtupleFiles": 1425, 
+    "nlumis": 47050
+  }, 
+  "ggHtoTauTau": {
+    "STATUS": "Good to Go!", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 1498200, 
+    "DAS Path": "/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 37, 
+    "nblocks": 1, 
+    "Cross Section (pb)": 2.7757440000000004, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": 1498200.0, 
+    "summedWeights": 1498200.0, 
+    "nevents": 1498200, 
+    "nNtupleFiles": 37, 
+    "nlumis": 7499
+  }
+}

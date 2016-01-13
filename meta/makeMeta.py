@@ -8,7 +8,7 @@ from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson, getS
 
 
 
-def makeMetaJSON( grouping ) :
+def makeMetaJSON( grouping, ch = 'em' ) :
     #samplesSync = { 'Sync-HtoTT': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM', 999)
     samplesSync = { 'Sync-HtoTT': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM', 999)
     }
@@ -87,13 +87,21 @@ def makeMetaJSON( grouping ) :
                 'DYJetsLow400-600' : ('/DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 3.581 ), 
                 'DYJetsLow600-Inf' : ('/DYJetsToLL_M-5to50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 1.124 ), 
     }
+
+    samplesTrigger = {
+                'data_mt' : ('', -999.0),
+                'ggHtoTauTau' : ('/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 43.92 * 0.0632 ),
+    }
+
     if grouping == 'Sync': samples = samplesSync
     if grouping == '25ns': samples = samples25ns
     if grouping == 'dataCards': samples = samplesDataCards
+    if grouping == 'Trigger': samples = samplesTrigger
      
     dataSamples = {
                 'data_em' : ['/MuonEG/Run2015D-05Oct2015-v2/MINIAOD', '/MuonEG/Run2015D-PromptReco-v4/MINIAOD'],
                 'data_tt' : ['/Tau/Run2015D-05Oct2015-v1/MINIAOD', '/Tau/Run2015D-PromptReco-v4/MINIAOD'],
+                'data_mt' : ['/SingleMuon/Run2015D-05Oct2015-v1/MINIAOD', '/SingleMuon/Run2015D-PromptReco-v4/MINIAOD'],
     }
 
     sampleCodes = { # sample name : ( unique code, group ),
@@ -124,6 +132,8 @@ def makeMetaJSON( grouping ) :
                 'QCD170-250' : ( 24, 5),
                 'QCD250-Inf' : ( 25, 5),
                 'Sync-HtoTT' : ( 100, 100),
+                'data_mt' : ( 101, 101),
+                'ggHtoTauTau' : ( 101, 101),
     }
     
     
@@ -155,8 +165,8 @@ def makeMetaJSON( grouping ) :
         summedWeightsNorm = 0
         inFiles = open('NtupleInputs_%s/%s.txt' % (grouping, k), 'r')
         for fileName in inFiles :
-            eventCount += getEventCount( fileName.strip(), 'em' )
-            w = getSummedWeights( fileName.strip(), 'em' )
+            eventCount += getEventCount( fileName.strip(), ch )
+            w = getSummedWeights( fileName.strip(), ch )
             summedWeights += w[0]
             summedWeightsNorm += w[1]
         inFiles.close()
