@@ -5,7 +5,7 @@ import os
 
 # A function to set up our directories and check if we are running
 # certain bkg methods
-def checkBkgs( samples, params ) :
+def checkBkgs( samples, params, grouping ) :
     import analysis1BaselineCuts
     bkgMap = analysis1BaselineCuts.getBkgMap()
     if params[ 'bkgs' ] != 'None' :

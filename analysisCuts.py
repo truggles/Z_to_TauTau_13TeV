@@ -106,9 +106,25 @@ def syncCutsNtuple( ch ) :
     if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt40]
     cutMap = {'BaseLine' : cuts}
     return cutMap
-    
+
+#############################################################    
+###                  Trigger Studies                      ###
+#############################################################
+
+# MT Baseline
+tagTrig = '(mMatchesIsoMu17Path > 0.5 || mMatchesIsoMu18Path > 0.5)'
+trKin   = 'mPt > 20 && mAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.1'
+trTauCharge    = 'abs( tCharge ) == 1'
+trIso   = 'mIsoDB03 < 0.1 && tByTightCombinedIsolationDeltaBetaCorr3Hits <= 2.0'
+trDisc  = 'tAgainstElectronVLooseMVA5 > 0.5 && tAgainstMuonLoose3 > 0.5'
+tmMT    = 'mMtToPfMet_Raw < 30'
+noBJets = 'bjetCISVVeto20MediumZTT == 0'
+trSSBkgElim = '( 1*(m_t_SS == 0) - 1*(m_t_SS == 1))'
 
 
-
+def trigCuts( ch ) :
+    if ch == 'mt' : cuts = [tagTrig, trKin, trTauCharge, trIso, trDisc, mID, tmMT, noBJets, extraVeto, trSSBkgElim]
+    cutMap = {'BaseLine' : cuts}
+    return cutMap
 
 

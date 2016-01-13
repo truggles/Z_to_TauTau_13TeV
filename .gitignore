@@ -5,6 +5,7 @@ baseSelectionRootQuick/
 25ns*
 50ns*
 Sync*
+Trigger*
 dataCards*
 *_old
 meta/*/arch*

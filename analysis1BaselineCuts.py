@@ -83,7 +83,7 @@ def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMap
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0])
+    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
     print '%s%s/%s.root' % (grouping, mid2, save)
     #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)

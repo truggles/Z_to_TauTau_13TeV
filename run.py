@@ -87,7 +87,7 @@ params = {
     #'additionalCut' : '*( (t1DecayMode < 3 || t1DecayMode == 10) && (t2DecayMode < 3 || t2DecayMode == 10) )',
 }
 
-samples = checkBkgs( samples, params )
+samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
@@ -95,23 +95,23 @@ analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #params['additionalCut'] = '*(Z_SS==0)'
 ##params['additionalCut'] = '*(Z_SS==1)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
 ##params['additionalCut'] = '*(Z_SS==1)*(t1ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
-#samples = checkBkgs( samples, params )
+#samples = checkBkgs( samples, params, grouping )
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #
 #params['mid3'] = '3dec04_OS_ZPtGtr100vMed'
 ##params['additionalCut'] = '*(Z_SS==0)*(t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
 #params['additionalCut'] = '*(Z_SS==0)*(t1ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5)*(t1_t2_Pt > 100)'
-#samples = checkBkgs( samples, params )
+#samples = checkBkgs( samples, params, grouping )
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 
 ''' for WJets and QCD shapes 
 uncomment and run each time you change cuts '''
 #params[ 'bkgs' ] = 'WJets'
-#samples = checkBkgs( samples, params )
+#samples = checkBkgs( samples, params, grouping )
 ##analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #params[ 'bkgs' ] = 'QCDSync'
-#samples = checkBkgs( samples, params )
+#samples = checkBkgs( samples, params, grouping )
 #analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
