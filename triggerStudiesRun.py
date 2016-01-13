@@ -1,7 +1,7 @@
 '''#################################################################
-##     Analysis run file for Z or Higgs -> TauTau                 ##
+##     Trigger run file for Z or Higgs -> TauTau                  ##
 ##     Tyler Ruggles                                              ##
-##     Oct 11, 2015                                               ##
+##     Jan 13, 2016                                               ##
 #################################################################'''
 
 
@@ -17,7 +17,7 @@ ROOT.gROOT.Reset()
 ''' Set grouping for Trigger Studies '''
 grouping = 'Trigger'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-cmsLumi = '220.0'
+cmsLumi = '2200.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
@@ -27,10 +27,10 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-from meta.makeMeta import makeMetaJSON
-os.chdir('meta')
-makeMetaJSON( grouping )
-os.chdir('..')
+#from meta.makeMeta import makeMetaJSON
+#os.chdir('meta')
+#makeMetaJSON( grouping, 'mt' )
+#os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -43,7 +43,7 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-SamplesTrigger = ['ggH', 'data_trig']
+SamplesTrigger = ['ggHtoTauTau', 'data_mt']
 samples = SamplesTrigger
 
 ''' These parameters are fed into the 2 main function calls.
@@ -64,20 +64,8 @@ params = {
     'additionalCut' : '',
 }
 
-samples = checkBkgs( samples, params )
+samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
-
-params['mid3'] = '3jan13_numerLIsoTau20'
-params['additionalCut'] = '*(mMatchesIsoMu17LooseIsoTau20Path > 0.5)' # && L1_trigObj_pt > 0
-samples = checkBkgs( samples, params )
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-
-params['mid3'] = '3jan13_numerMIsoTau35'
-params['additionalCut'] = '*(mMatchesIsoMu17MedIsoTau35Path > 0.5)' # && L1_trigObj_pt > 0
-samples = checkBkgs( samples, params )
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
 
 
 
