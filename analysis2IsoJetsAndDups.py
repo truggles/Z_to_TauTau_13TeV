@@ -24,17 +24,14 @@ prodMap = {
 
 def getXSec( shortName, sampDict ) :
     htts = ['100-200', '200-400', '400-600', '600-Inf']
-    scaler1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+    scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
     if 'QCD' in shortName : return scaler1
     if 'data' in shortName : return 1.0
     for htt in htts :
         if htt in shortName :
-            scaler2 = cmsLumi * sampDict[ shortName[:-7] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-7] ]['summedWeightsNorm'] )
+            scalar2 = cmsLumi * sampDict[ shortName[:-7] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-7] ]['summedWeightsNorm'] )
             return 1/( (1/scalar1) + (1/scalar2) )
     return scalar1
-
-def leptonWeights( idMap, isoMap ) :
-    print 'Hi'
 
 def getIso( cand, row ) :
     if 'e' in cand :
@@ -158,41 +155,20 @@ def calcDR( eta1, phi1, eta2, phi2 ) :
 
 
 
-def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
+def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
         sampDict = json.load( sampFile )
 
     shortName = sample.split('_')[0]
     if shortName == 'data' : shortName = 'data_%s' % channel
-    UniqueID[0] = sampDict[ shortName ]['UniqueID']
-    BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
 
     xsec = getXSec( shortName, sampDict )
 
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
 
-    from util.lepSF import getSF, sfHistos
-    elec12TrigMap = getSF( 'Electron_Ele12_eff' )
-    elec12TrigSF = sfHistos( elec12TrigMap )
-    elec17TrigMap = getSF( 'Electron_Ele17_eff' )
-    elec17TrigSF = sfHistos( elec17TrigMap )
-    elecIdIso0p10Map = getSF( 'Electron_IdIso0p10_eff' )
-    elecIdIso0p10SF = sfHistos( elecIdIso0p10Map )
-    elecIdIso0p15Map = getSF( 'Electron_IdIso0p15_eff' )
-    elecIdIso0p15SF = sfHistos( elecIdIso0p15Map )
-    elecSingleEffMap = getSF( 'Electron_SingleEle_eff' )
-    elecSingleEffSF = sfHistos( elecSingleEffMap )
-    muon8TrigMap = getSF( 'Muon_Mu8_eff' )
-    muon8TrigSF = sfHistos( muon8TrigMap )
-    muon17TrigMap = getSF( 'Muon_Mu17_eff' )
-    muon17TrigSF = sfHistos( muon17TrigMap )
-    muonIdIso0p10Map = getSF( 'Muon_IdIso0p10_eff' )
-    muonIdIso0p10SF = sfHistos( muonIdIso0p10Map )
-    muonIdIso0p15Map = getSF( 'Muon_IdIso0p15_eff' )
-    muonIdIso0p15SF = sfHistos( muonIdIso0p15Map )
-    muonSingleEffMap = getSF( 'Muon_SingleMu_eff' )
-    muonSingleEffSF = sfHistos( muonSingleEffMap )
+    from util.lepSF import LepWeights
+    lepWeights = LepWeights( channel, count )
 
     branchMapping = {
         'run' : 'run',
@@ -243,7 +219,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'SS' : 'Z_SS',
         }
     branchMappingElec = {
-        'cand_ZTTGenMatching' : 'gen_match',
+        #'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt', # rename ePt to pt_1
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -256,7 +232,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'cand_MtToPfMet_Raw' : 'mt',
         }
     branchMappingMuon = {
-        'cand_ZTTGenMatching' : 'gen_match',
+        #'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -268,7 +244,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
         'cand_MtToPfMet_Raw' : 'mt',
         }
     branchMappingTau = {
-        'cand_ZTTGenMatching' : 'gen_match',
+        #'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -445,14 +421,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     l1TrigWeight = array('f', [ 0 ] )
     l1TrigWeightB = tnew.Branch('l1TrigWeight', l1TrigWeight, 'l1TrigWeight/F')
-    l1IsoIDWeight = array('f', [ 0 ] )
-    l1IsoIDWeightB = tnew.Branch('l1IsoIDWeight', l1IsoIDWeight, 'l1IsoIDWeight/F')
+    l1IdIsoWeight = array('f', [ 0 ] )
+    l1IdIsoWeightB = tnew.Branch('l1IdIsoWeight', l1IdIsoWeight, 'l1IdIsoWeight/F')
     l1EffWeight = array('f', [ 0 ] )
     l1EffWeightB = tnew.Branch('l1EffWeight', l1EffWeight, 'l1EffWeight/F')
     l2TrigWeight = array('f', [ 0 ] )
     l2TrigWeightB = tnew.Branch('l2TrigWeight', l2TrigWeight, 'l2TrigWeight/F')
-    l2IsoIDWeight = array('f', [ 0 ] )
-    l2IsoIDWeightB = tnew.Branch('l2IsoIDWeight', l2IsoIDWeight, 'l2IsoIDWeight/F')
+    l2IdIsoWeight = array('f', [ 0 ] )
+    l2IdIsoWeightB = tnew.Branch('l2IdIsoWeight', l2IdIsoWeight, 'l2IdIsoWeight/F')
     l2EffWeight = array('f', [ 0 ] )
     l2EffWeightB = tnew.Branch('l2EffWeight', l2EffWeight, 'l2EffWeight/F')
     UniqueID = array('f', [ 0 ] )
@@ -537,14 +513,16 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             if row.isZtautau == 1 :#or row.isHtautau == 1 : 
                 isZTT[0] = 1
             if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
+            UniqueID[0] = sampDict[ shortName ]['UniqueID']
+            BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
 
             if 'data' in sample :
                 puweight[0] = 1
                 l1TrigWeight[0] = 1
-                l1IsoIDWeight[0] = 1
+                l1IdIsoWeight[0] = 1
                 l1EffWeight[0] = 1
                 l2TrigWeight[0] = 1
-                l2IsoIDWeight[0] = 1
+                l2IdIsoWeight[0] = 1
                 l2EffWeight[0] = 1
                 XSecLumiWeight[0] = 1
                 isZEE[0] = -1
@@ -553,12 +531,26 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag ) :
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
-                l1TrigWeight[0] = 1
-                l1IsoIDWeight[0] = 1
-                l1EffWeight[0] = 1
-                l2TrigWeight[0] = 1
-                l2IsoIDWeight[0] = 1
-                l2EffWeight[0] = 1
+                l1Pt = getattr( row, '%sPt' % l1 )
+                l1Eta = getattr( row, '%sEta' % l1 )
+                l2Pt = getattr( row, '%sPt' % l2 )
+                l2Eta = getattr( row, '%sEta' % l2 )
+                if 't' in l1 :
+                    l1TrigWeight[0] = 1
+                    l1IdIsoWeight[0] = 1
+                    l1EffWeight[0] = 1
+                else :
+                    l1TrigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                    l1IdIsoWeight[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
+                    l1EffWeight[0] = lepWeights.getWeight( l1, 'Eff', l1Pt, l1Eta )
+                if 't' in l2 :
+                    l2TrigWeight[0] = 1
+                    l2IdIsoWeight[0] = 1
+                    l2EffWeight[0] = 1
+                else :
+                    l2TrigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                    l2IdIsoWeight[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
+                    l2EffWeight[0] = lepWeights.getWeight( l1, 'Eff', l1Pt, l1Eta )
                 XSecLumiWeight[0] = xsec
  
 

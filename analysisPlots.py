@@ -23,6 +23,11 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
         var2 = '%s%i' % (var, 2)
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
     	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
+
+        # Adding Trigger, ID and Iso, & Efficiency Scale Factors
+        # Taus are currently filled with 1 for all SFs
+        sfs = '*(l1TrigWeight * l1IdIsoWeight * l1EffWeight * l2TrigWeight * l2IdIsoWeight * l2EffWeight)'
+
         # the >> sends the output to a predefined histo
         if isData : # Data has no GenWeight and by def has puweight = 1
             if var == 'm_vis' and blind :
@@ -35,10 +40,10 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                     print 'm_vis'
                     print "Data Count:", histos[ var ].Integral()
         else :
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s' % additionalCut )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s%s' % (additionalCut, sfs) )
             histos2[ var ] = gPad.GetPrimitive( var2 )
 
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s' % additionalCut )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s%s' % (additionalCut, sfs) )
             ''' No reweighting at the moment! '''
             #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(GenWeight/abs( GenWeight ))%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( var )
