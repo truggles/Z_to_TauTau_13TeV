@@ -13,6 +13,7 @@ from util.helpers import checkBkgs
 import analysis1BaselineCuts
 ROOT.gROOT.Reset()
 
+os.chdir('..')
 
 ''' Set grouping for Trigger Studies '''
 grouping = 'Trigger'
@@ -28,9 +29,9 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 #from meta.makeMeta import makeMetaJSON
-#os.chdir('../meta')
+#os.chdir('meta')
 #makeMetaJSON( grouping, 'mt' )
-#os.chdir('../TriggerStudies')
+#os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -70,4 +71,5 @@ analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 
 
 
+os.chdir('TriggerStudies')
 
