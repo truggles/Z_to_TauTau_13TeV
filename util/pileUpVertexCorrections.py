@@ -3,6 +3,7 @@ from array import array
 from util.buildTChain import makeTChain
 import os
 import subprocess
+from collections import OrderedDict
 
 def makeDataPUTemplate( cert, puJson ) :
     zHome = os.getenv('_ZHOME_')
@@ -86,27 +87,55 @@ def makeMCPUTemplate( ) :
         dHist.SetBinContent( i, MCDist[i] )
     dHist.SaveAs('meta/PileUpInfo/MCTemplate.root')
 
+def makeDYJetsPUTemplate( grouping ) :
+    import util.buildTChain as chainer
+    from ROOT import gPad
+    inFiles = 'meta/NtupleInputs_%s/DYJets.txt' % grouping
+    #avgHist = ROOT.TH1F('nTruePU', 'avgHist', 52, 0, 52)
 
-def PUreweight( ) :
-    datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
+    for channel in ['em', 'tt'] :
+        chain = chainer.makeTChain( inFiles, '%s/final/Ntuple' % channel )
+        prevEvt = (0,0,0)
+        tmpHist = ROOT.TH1F('nTruePU', 'tmpHist', 52, 0, 52)
+        for row in chain :
+            currentEvt = (row.lumi, row.run, row.evt)
+            if currentEvt != prevEvt :
+                if row.GenWeight > 0 :
+                    genW = 1
+                else : # this is for data
+                    genW = -1
+                #print "Filling - nvtx:%i    genW:%i" % (row.nvtx, genW)
+                tmpHist.Fill( row.nTruePU * genW )
+                prevEvt = currentEvt
+        tmpHist.Scale( 1 / tmpHist.Integral() )
+        tmpHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU_%s.root' % channel )
+        #avgHist.Add( tmpHist )
+    #avgHist.Scale( 1 / avgHist.Integral() )
+    #avgHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU.root' % (grouping) )
+
+
+def PUreweight( channel ) :
+    # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2015#PU_reweighting
+    #datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
+    datafile = ROOT.TFile('meta/PileUpInfo/Data_Pileup_2015D_Nov17.root', 'READ') # Made by Adinda
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 
-    samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
-    sHist = samplefile.Get('nTruePU')
+    samplefile = ROOT.TFile('meta/PileUpInfo/MC_Spring15_PU25_Startup.root', 'READ') # Made by Adinda, same as mine but shifter up 1 bin
+    #samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
+    #sHist = samplefile.Get('nTruePU')
+    sHist = samplefile.Get('pileup')
     sHist.Scale( 1 / sHist.Integral() )
 
-    reweightDict = {}
+    reweightDict = OrderedDict()
     #i_data = 0
     #i_mc = 0
-    for i in range( 1, 53 ) :
+    for i in range( 1, dHist.GetXaxis().GetNbins()+1 ) :
+        # dHist has exactly 600 bins, not 601 w/ over/underflow
         if sHist.GetBinContent( i ) > 0 :
-            #i_data += dHist.GetBinContent( i )
-            #i_mc += sHist.GetBinContent( i )
-            #print "%i data: %f    mc: %f    ratio: %f" % (i, dHist.GetBinContent( i ), sHist.GetBinContent( i ), (dHist.GetBinContent( i ) / sHist.GetBinContent( i )) )
             ratio = dHist.GetBinContent( i ) / sHist.GetBinContent( i )
         else : ratio = 0
-        reweightDict[ i-1 ] = ratio
+        reweightDict[ (i-1)/10. ] = ratio
 
     #print "Data = %f   MC = %f" % (i_data, i_mc)
     #print reweightDict
@@ -143,4 +172,10 @@ if __name__ == '__main__' :
     #print zHome
     #makeDataPUTemplate( 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt', 'pileup_JSON_10-23-2015.txt' )
     #makeMCPUTemplate()
-    PUreweight()
+    ary = PUreweight( 'em' )
+    tot = 0
+    for key in ary.keys() :
+        print key, ary[key]
+        tot += ary[key]
+    print tot
+    #makeDYJetsPUTemplate( 'dataCards' )

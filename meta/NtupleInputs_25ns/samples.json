@@ -4,14 +4,14 @@
     "DAS status": "ok", 
     "nEvents": 7847799, 
     "DAS Path": "", 
-    "nfiles": 276, 
-    "nblocks": 45, 
+    "nfiles": 334, 
+    "nblocks": 69, 
     "Cross Section (pb)": -999.0, 
     "summedWeightsNorm": -262737, 
     "summedWeights": 0.0, 
-    "nevents": 13241664, 
+    "nevents": 16589452, 
     "nNtupleFiles": 263, 
-    "nlumis": 41894
+    "nlumis": 49315
   }, 
   "DYJetsLow": {
     "STATUS": "Good to Go!", 
@@ -74,14 +74,14 @@
     "DAS status": "ok", 
     "nEvents": 6371881, 
     "DAS Path": "", 
-    "nfiles": 223, 
-    "nblocks": 39, 
+    "nfiles": 271, 
+    "nblocks": 59, 
     "Cross Section (pb)": -999.0, 
     "summedWeightsNorm": -215784, 
     "summedWeights": 0.0, 
-    "nevents": 10951476, 
+    "nevents": 13508746, 
     "nNtupleFiles": 216, 
-    "nlumis": 41045
+    "nlumis": 47830
   }, 
   "VBFHtoTauTau": {
     "STATUS": "Good to Go!", 
@@ -152,6 +152,20 @@
     "nevents": 996944, 
     "nNtupleFiles": 26, 
     "nlumis": 5193
+  }, 
+  "QCD": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 13247363, 
+    "DAS Path": "/QCD_Pt-20toInf_MuEnrichedPt15_TuneCUETP8M1_13TeV_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 299, 
+    "nblocks": 13, 
+    "Cross Section (pb)": 302672.16000000003, 
+    "summedWeightsNorm": 13247363.0, 
+    "summedWeights": 13247363.0, 
+    "nevents": 13247363, 
+    "nNtupleFiles": 299, 
+    "nlumis": 141827
   }, 
   "Tbar-tW": {
     "STATUS": "Good to Go!", 

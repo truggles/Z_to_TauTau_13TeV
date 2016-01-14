@@ -5,8 +5,15 @@ baseSelectionRootQuick/
 25ns*
 50ns*
 Sync*
+Trigger*
+dataCards*
 *_old
 meta/*/arch*
 ThreeProngTaus/2*
 ThreeProngTaus/arch*
 ThreeProngTaus/JetHT*
+qcdScale/*.root
+qcdScale/roots
+util/*.txt
+lepSFdata/*
+tmp/

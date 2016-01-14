@@ -3,7 +3,6 @@ from util.fileLength import file_len
 import util.pileUpVertexCorrections
 from analysis2IsoJetsAndDups import renameBranches
 import ROOT
-from array import array
 from time import gmtime, strftime
 import analysisCuts
 import analysisPlots
@@ -24,6 +23,7 @@ def getBkgMap() :
 
 #for sample in samples :
 def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=0, fileMax=9999 ) :
+    #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     path = '%s/final/Ntuple' % channel
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -44,7 +44,8 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
     
-    cutString = cutMap[ cutName ]
+    cutString = ' && '.join(cutMap[ cutName ])
+    cutString = '('+cutString+')'
     chainNew = analysisCuts.makeGenCut( chain, cutString )
     numEntries = chainNew.GetEntries()
     #print "%25s : %10i" % (cutName, numEntries)
@@ -71,7 +72,7 @@ def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMap
         outFile1 = ROOT.TFile('meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
-    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * numFilesPerCycle, (count + 1) * numFilesPerCycle-1 )
+    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
     cutOut[1].Write()
@@ -82,7 +83,7 @@ def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMap
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0])
+    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
     print '%s%s/%s.root' % (grouping, mid2, save)
     #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
@@ -103,7 +104,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
-    channels = ['em', 'tt']
+    channels = fargs[ 'channels' ]
     ''' Start multiprocessing tests '''
     #output = multiprocessing.Queue()
     pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
@@ -118,9 +119,10 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         while go :
             for channel in channels :
     
-                #if channel == 'em' : continue
-                if channel == 'em' and sample == 'data_tt' : continue
-                if channel == 'tt' and sample == 'data_em' : continue
+                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
+                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
+                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
+                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
     
                 multiprocessingOutputs.append( pool.apply_async(runCutsAndIso, args=(grouping,
@@ -138,8 +140,8 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
     
             count += 1
             
-            # Make sure we look over large samples to get all files
-            if count * fargs['numFilesPerCycle'] >= fileLen : go = False
+            # Make sure we loop over large samples to get all files
+            if count * fargs['numFilesPerCycle'] > fileLen : go = False
     
     
     mpResults = [p.get() for p in multiprocessingOutputs]
@@ -172,10 +174,8 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
 
 
 
-#def drawHistos() : 
-#def drawHistos(numCores, grouping, samples, bkgs, numFilesPerCycle, mid2, mid3 ) :
 def drawHistos(grouping, samples, **fargs ) :
-    channels = ['em', 'tt']
+    channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
     ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']/2) ) )
     gROOT.SetBatch(True)
@@ -190,9 +190,10 @@ def drawHistos(grouping, samples, **fargs ) :
     
         for channel in channels :
     
-            #if channel == 'em' : continue
-            if channel == 'em' and sample == 'data_tt' : continue
-            if channel == 'tt' and sample == 'data_em' : continue
+            if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
+            if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
+            if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
+            if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
             print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
     
             chain = ROOT.TChain('Ntuple')
