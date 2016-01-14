@@ -28,9 +28,9 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 #from meta.makeMeta import makeMetaJSON
-#os.chdir('meta')
+#os.chdir('../meta')
 #makeMetaJSON( grouping, 'mt' )
-#os.chdir('..')
+#os.chdir('../TriggerStudies')
 
 
 ''' Uncomment to make pile up vertex templates! '''

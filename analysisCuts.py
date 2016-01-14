@@ -119,11 +119,11 @@ trIso   = 'mIsoDB03 < 0.1 && tByTightCombinedIsolationDeltaBetaCorr3Hits <= 2.0'
 trDisc  = 'tAgainstElectronVLooseMVA5 > 0.5 && tAgainstMuonLoose3 > 0.5'
 tmMT    = 'mMtToPfMet_Raw < 30'
 noBJets = 'bjetCISVVeto20MediumZTT == 0'
-trSSBkgElim = '( 1*(m_t_SS == 0) - 1*(m_t_SS == 1))'
+#trSSBkgElim = '( 1*(m_t_SS == 0) - 1*(m_t_SS == 1))'
 
 
 def trigCuts( ch ) :
-    if ch == 'mt' : cuts = [tagTrig, trKin, trTauCharge, trIso, trDisc, mID, tmMT, noBJets, extraVeto, trSSBkgElim]
+    if ch == 'mt' : cuts = [tagTrig, trKin, trTauCharge, trIso, trDisc, mID, tmMT, noBJets, extraVeto,]# trSSBkgElim]
     cutMap = {'BaseLine' : cuts}
     return cutMap
 
