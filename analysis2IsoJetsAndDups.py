@@ -25,7 +25,7 @@ prodMap = {
 def getXSec( shortName, sampDict ) :
     htts = ['100-200', '200-400', '400-600', '600-Inf']
     scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
-    if 'QCD' in shortName : return scaler1
+    if 'QCD' in shortName : return scalar1
     if 'data' in shortName : return 1.0
     for htt in htts :
         if htt in shortName :
@@ -177,24 +177,24 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'nvtx' : 'npv',
         'nTruePU' : 'npu',
         'charge' : 'charge',
-        'j1pt' : 'jpt_1',
-        'j1phi' : 'jphi_1',
-        'j1eta' : 'jeta_1',
-        'j1mva' : 'jmva_1',
-        'j2pt' : 'jpt_2',
-        'j2phi' : 'jphi_2',
-        'j2eta' : 'jeta_2',
-        'j2mva' : 'jmva_2',
-        'jb1pt' : 'bpt_1',
-        'jb1phi' : 'bphi_1',
-        'jb1eta' : 'beta_1',
-        'jb1mva' : 'bmva_1',
-        'jb1csv' : 'bcsv_1',
-        'jb2pt' : 'bpt_2',
-        'jb2phi' : 'bphi_2',
-        'jb2eta' : 'beta_2',
-        'jb2mva' : 'bmva_2',
-        'jb2csv' : 'bcsv_2',
+        #XXX#'j1pt' : 'jpt_1',
+        #XXX#'j1phi' : 'jphi_1',
+        #XXX#'j1eta' : 'jeta_1',
+        #XXX#'j1mva' : 'jmva_1',
+        #XXX#'j2pt' : 'jpt_2',
+        #XXX#'j2phi' : 'jphi_2',
+        #XXX#'j2eta' : 'jeta_2',
+        #XXX#'j2mva' : 'jmva_2',
+        #XXX#'jb1pt' : 'bpt_1',
+        #XXX#'jb1phi' : 'bphi_1',
+        #XXX#'jb1eta' : 'beta_1',
+        #XXX#'jb1mva' : 'bmva_1',
+        #XXX#'jb1csv' : 'bcsv_1',
+        #XXX#'jb2pt' : 'bpt_2',
+        #XXX#'jb2phi' : 'bphi_2',
+        #XXX#'jb2eta' : 'beta_2',
+        #XXX#'jb2mva' : 'bmva_2',
+        #XXX#'jb2csv' : 'bcsv_2',
         'muVetoZTT10new2' : 'extramuon_veto',
         'eVetoZTT10new2' : 'extraelec_veto',
         #'mvaMetEt' : 'mvamet',
@@ -205,11 +205,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
-        'vbfMassZTT' : 'mjj',
-        'vbfDetaZTT' : 'jdeta',
-        'vbfDphiZTT' : 'jdphi',
-        'vbfJetVeto30ZTT' : 'njetingap',
-        'vbfJetVeto20ZTT' : 'njetingap20',
+        #XXX#'vbfMassZTT' : 'mjj',
+        #XXX#'vbfDetaZTT' : 'jdeta',
+        #XXX#'vbfDphiZTT' : 'jdphi',
+        #XXX#'vbfJetVeto30ZTT' : 'njetingap',
+        #XXX#'vbfJetVeto20ZTT' : 'njetingap20',
         }
     doubleProds = {
         'Mass' : 'm_vis',
@@ -419,18 +419,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
-    l1TrigWeight = array('f', [ 0 ] )
-    l1TrigWeightB = tnew.Branch('l1TrigWeight', l1TrigWeight, 'l1TrigWeight/F')
+    trigWeight = array('f', [ 0 ] )
+    trigWeightB = tnew.Branch('trigWeight', trigWeight, 'trigWeight/F')
     l1IdIsoWeight = array('f', [ 0 ] )
     l1IdIsoWeightB = tnew.Branch('l1IdIsoWeight', l1IdIsoWeight, 'l1IdIsoWeight/F')
-    l1EffWeight = array('f', [ 0 ] )
-    l1EffWeightB = tnew.Branch('l1EffWeight', l1EffWeight, 'l1EffWeight/F')
-    l2TrigWeight = array('f', [ 0 ] )
-    l2TrigWeightB = tnew.Branch('l2TrigWeight', l2TrigWeight, 'l2TrigWeight/F')
     l2IdIsoWeight = array('f', [ 0 ] )
     l2IdIsoWeightB = tnew.Branch('l2IdIsoWeight', l2IdIsoWeight, 'l2IdIsoWeight/F')
-    l2EffWeight = array('f', [ 0 ] )
-    l2EffWeightB = tnew.Branch('l2EffWeight', l2EffWeight, 'l2EffWeight/F')
     UniqueID = array('f', [ 0 ] )
     UniqueIDB = tnew.Branch('UniqueID', UniqueID, 'UniqueID/F')
     BkgGroup = array('f', [ 0 ] )
@@ -482,7 +476,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
             isoOrder( channel, row )
-            vbfClean( row )
+            #vbfClean( row )
 
 
             isZtt[0] = 0
@@ -518,12 +512,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
             if 'data' in sample :
                 puweight[0] = 1
-                l1TrigWeight[0] = 1
+                trigWeight[0] = 1
                 l1IdIsoWeight[0] = 1
-                l1EffWeight[0] = 1
-                l2TrigWeight[0] = 1
                 l2IdIsoWeight[0] = 1
-                l2EffWeight[0] = 1
                 XSecLumiWeight[0] = 1
                 isZEE[0] = -1
                 isZMM[0] = -1
@@ -535,22 +526,19 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 l1Eta = getattr( row, '%sEta' % l1 )
                 l2Pt = getattr( row, '%sPt' % l2 )
                 l2Eta = getattr( row, '%sEta' % l2 )
-                if 't' in l1 :
-                    l1TrigWeight[0] = 1
-                    l1IdIsoWeight[0] = 1
-                    l1EffWeight[0] = 1
-                else :
-                    l1TrigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                    l1IdIsoWeight[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
-                    l1EffWeight[0] = lepWeights.getWeight( l1, 'Eff', l1Pt, l1Eta )
-                if 't' in l2 :
-                    l2TrigWeight[0] = 1
-                    l2IdIsoWeight[0] = 1
-                    l2EffWeight[0] = 1
-                else :
-                    l2TrigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                    l2IdIsoWeight[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
-                    l2EffWeight[0] = lepWeights.getWeight( l1, 'Eff', l1Pt, l1Eta )
+
+                # Isolation / ID weights
+                if 't' in l1 : l1IdIsoWeight[0] = 1
+                else : l1IdIsoWeight[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
+                if 't' in l2 : l2IdIsoWeight[0] = 1
+                else : l2IdIsoWeight[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
+
+                # Trigger Weights
+                if channel == 'et' : trigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                if channel == 'mt' : trigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                if channel == 'em' : trigWeight[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
+                else : trigWeight[0] = 1
+
                 XSecLumiWeight[0] = xsec
  
 
