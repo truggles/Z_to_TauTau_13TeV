@@ -102,7 +102,7 @@ class LepWeights :
         # the highest bin
         nBins = sfMap[etaCode].GetNbinsX()
         ptMax = sfMap[etaCode].GetBinLowEdge( nBins + 1 ) # gives lower edge of overflow == high edge of max plotted bin
-        if pt > ptMax : pt = ptMax
+        if pt >= ptMax : pt = ptMax-1
         bin_ = sfMap[etaCode].GetXaxis().FindBin( pt )
         return sfMap[etaCode].GetBinContent( bin_ )
 
