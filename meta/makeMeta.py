@@ -44,6 +44,12 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     samplesDataCards = { 
                 'data_em' : ('', -999.0),
                 'data_tt' : ('', -999.0),
+                'ggHtoTauTau120' : ('/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 43.92 * 0.0632 ),
+                'ggHtoTauTau125' : ('/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 43.92 * 0.0632 ),
+                'ggHtoTauTau130' : ('/GluGluHToTauTau_M130_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 43.92 * 0.0632 ),
+                'VBFHtoTauTau120' : ('/VBFHToTauTau_M120_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 3.748 * 0.0632 ),
+                'VBFHtoTauTau125' : ('/VBFHToTauTau_M125_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 3.748 * 0.0632 ),
+                'VBFHtoTauTau130' : ('/VBFHToTauTau_M130_13TeV_powheg_pythia8/%sv1/MINIAODSIM' % campaign, 3.748 * 0.0632 ),
                 'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 6025.2 ), 
                 'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%sv1/MINIAODSIM' % campaign, 18610.0 ), 
                 'T-tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv2/MINIAODSIM' % campaign, 35.6 ),
@@ -133,7 +139,12 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'QCD250-Inf' : ( 25, 5),
                 'Sync-HtoTT' : ( 100, 100),
                 'data_mt' : ( 101, 101),
-                'ggHtoTauTau' : ( 101, 101),
+                'ggHtoTauTau120' : ( 101, 99),
+                'ggHtoTauTau125' : ( 102, 99),
+                'ggHtoTauTau130' : ( 103, 99),
+                'VBFHtoTauTau120' : ( 104, 99),
+                'VBFHtoTauTau125' : ( 105, 99),
+                'VBFHtoTauTau130' : ( 106, 99),
     }
     
     
