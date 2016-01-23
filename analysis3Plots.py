@@ -49,8 +49,8 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
-#XXX#samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
-#XXX#samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
+samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
+samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
 samples['DYJets']   = ('kOrange-4', 'dyj')
 samples['DYJetsLow']   = ('kOrange-4', 'dyj')
 samples['T-tW']     = ('kYellow+2', 'dib')
@@ -91,7 +91,7 @@ sampColors = {
 
 for channel in ['em', 'tt'] :
 
-    if channel == 'tt' : continue
+    #if channel == 'tt' : continue
     #if channel == 'em' : continue
 
     # Make an index file for web viewing
@@ -217,13 +217,10 @@ for channel in ['em', 'tt'] :
                     if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
                     print "Using QCD Yield numbers from this file, QCD Int: %f" % hist.Integral()
             elif 'data' not in sample and hist.Integral() != 0:
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
-                    hist.Scale( scaler * bkgsTTScaleFactor )
+                    hist.Scale( bkgsTTScaleFactor )
                 elif 'QCD' in sample :
-                    if channel == 'em' : hist.Scale( scaler * qcdEMScaleFactor )
-                else :
-                    hist.Scale( scaler )
+                    if channel == 'em' : hist.Scale( qcdEMScaleFactor )
 
 
             ''' For TT rescaling studies in pZeta distributions '''
@@ -278,7 +275,7 @@ for channel in ['em', 'tt'] :
         higgs.SetLineColor( ROOT.kBlue )
         higgs.SetLineWidth( 4 )
         higgs.SetLineStyle( 7 )
-        #XXX#Ary[ higgs ] = "higgs"
+        Ary[ higgs ] = "higgs"
         
         # With Variable binning, need to set bin content appropriately
         for h in Ary.keys() :
@@ -303,7 +300,7 @@ for channel in ['em', 'tt'] :
 
 
         # Scale Higgs samples for viewing
-        #XXX#higgs.Scale( higgsSF )
+        higgs.Scale( higgsSF )
 
             
         if options.qcdMake :
@@ -417,7 +414,7 @@ for channel in ['em', 'tt'] :
         legend.SetMargin(0.3)
         legend.SetBorderSize(0)
         legend.AddEntry( data, "Data", 'lep')
-        #XXX#legend.AddEntry( higgs, "SM Higgs x %i" % higgsSF, 'l')
+        legend.AddEntry( higgs, "SM Higgs x %i" % higgsSF, 'l')
         for j in range(0, stack.GetStack().GetLast() + 1) :
             last = stack.GetStack().GetLast()
             legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')
