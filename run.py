@@ -30,10 +30,10 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-from meta.makeMeta import makeMetaJSON
-os.chdir('meta')
-makeMetaJSON( grouping )
-os.chdir('..')
+#from meta.makeMeta import makeMetaJSON
+#os.chdir('meta')
+#makeMetaJSON( grouping )
+#os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -79,22 +79,22 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsNtuple',
     #'cutName' : 'BaseLine',
-    'mid1' : '1Jan23',
-    'mid2' : '2Jan23',
-    'mid3' : '3Jan23',
+    'mid1' : '1Jan23a',
+    'mid2' : '2Jan23a',
+    'mid3' : '3Jan23a',
     'additionalCut' : '',
 }
 
-#samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+samples = checkBkgs( samples, params, grouping )
+analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 ###analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan23_SS'
+params['mid3'] = '3Jan23_SSa'
 params['additionalCut'] = '*(Z_SS==1)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan23_OS'
+params['mid3'] = '3Jan23_OSa'
 params['additionalCut'] = '*(Z_SS==0)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )

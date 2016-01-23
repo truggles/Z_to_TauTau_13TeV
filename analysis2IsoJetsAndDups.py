@@ -13,7 +13,7 @@ import math
 import json
 import os
 
-cmsLumi = float( os.getenv('_LUMI_', '2170.0') )
+cmsLumi = float( os.getenv('_LUMI_', '2200.0') )
 
 prodMap = {
     'em' : ('e', 'm'),

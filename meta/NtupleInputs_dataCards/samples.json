@@ -160,19 +160,19 @@
     "nlumis": 48535
   }, 
   "ggHtoTauTau125": {
-    "STATUS": "Error", 
+    "STATUS": "Good to Go!", 
     "UniqueID": 101, 
     "DAS status": "ok", 
-    "nEvents": 42000, 
+    "nEvents": 1498200, 
     "DAS Path": "/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
     "nfiles": 37, 
     "nblocks": 1, 
     "Cross Section (pb)": 2.7757440000000004, 
     "BkgGroup": 101, 
-    "summedWeightsNorm": 42000.0, 
-    "summedWeights": 42000.0, 
+    "summedWeightsNorm": 1498200.0, 
+    "summedWeights": 1498200.0, 
     "nevents": 1498200, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 37, 
     "nlumis": 7499
   }, 
   "ggHtoTauTau120": {
