@@ -217,6 +217,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'PZeta' : 'pzetamis',
         'PZetaVis' : 'pzetavis',
         'SS' : 'Z_SS',
+        'Pt' : 'Z_Pt',
+        'DR' : 'Z_DR',
+        'DPhi' : 'Z_DPhi',
         }
     branchMappingElec = {
         #'cand_ZTTGenMatching' : 'gen_match',

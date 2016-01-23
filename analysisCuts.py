@@ -28,7 +28,8 @@ emSS    = 'e_m_SS == 1'
 emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.15'
 emIsoLoose   = 'eIsoDB03 < 0.3 && mIsoDB03 < 0.3'
 extraVeto   = 'eVetoZTT10new2 == 0 && muVetoZTT10new2 == 0'
-emMTFix = '( (type1_pfMetEt > 1) || ( eMtToPfMet_Raw > 5 && mMtToPfMet_Raw > 5 ) )'
+emMTFix = '( eMtToPfMet_Raw > 5 && mMtToPfMet_Raw > 5 )'
+#emMTFix = '( (type1_pfMetEt > 1) || ( eMtToPfMet_Raw > 5 && mMtToPfMet_Raw > 5 ) )' # Looking at this it isn't cutting the data / MC excess region
 # EM Studies
 emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
 emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
@@ -67,9 +68,17 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 
 
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
+def signalExtractionNoSign( ch ) :
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, emMTFix, 'e_m_PZeta > -25']
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, ttMTFix, DecayMode, 't1_t2_Pt > 100']
+    cutMap = {'PostSync' : cuts}
+    return cutMap
+
+
+# A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalCutsNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, emMTFix]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, DecayMode, ttMTFix]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, ttMTFix, DecayMode]
     cutMap = {'PostSync' : cuts}
     return cutMap
 

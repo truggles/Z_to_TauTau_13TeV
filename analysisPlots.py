@@ -26,7 +26,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # Taus are currently filled with 1 for all SFs
-        sfs = '*(l1TrigWeight * l1IdIsoWeight * l1EffWeight * l2TrigWeight * l2IdIsoWeight * l2EffWeight)'
+        sfs = '*(trigWeight * l1IdIsoWeight * l2IdIsoWeight)'
 
         # the >> sends the output to a predefined histo
         if isData : # Data has no GenWeight and by def has puweight = 1
@@ -72,6 +72,9 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
 def getHistoDict( channel ) :
     genVarMap = {
         'Z_SS' : ('Z_SS', 20, 0, 2),
+        'Z_Pt' : ('Z_Pt', 400, 0, 400),
+        'Z_DR' : ('Z_DR', 500, 0, 5),
+        'Z_DPhi' : ('Z_DPhi', 800, -4, 4),
         'LT' : ('LT', 600, 0, 600),
         'Mt' : ('Mt', 600, 0, 600),
         'met' : ('met', 400, 0, 400),
@@ -87,10 +90,10 @@ def getHistoDict( channel ) :
         'bjetCISVVeto30Tight' : ('bjetCISVVeto30Tight', 6, 0, 6),
         'extraelec_veto' : ('extraelec_veto', 20, 0, 2),
         'extramuon_veto' : ('extramuon_veto', 20, 0, 2),
-        'jpt_1' : ('jpt_1', 400, 0, 400),
-        'jeta_1' : ('jeta_1', 100, -5, 5),
-        'jpt_2' : ('jpt_2', 400, 0, 400),
-        'jeta_2' : ('jeta_2', 100, -5, 5),
+        #XXX#'jpt_1' : ('jpt_1', 400, 0, 400),
+        #XXX#'jeta_1' : ('jeta_1', 100, -5, 5),
+        #XXX#'jpt_2' : ('jpt_2', 400, 0, 400),
+        #XXX#'jeta_2' : ('jeta_2', 100, -5, 5),
         'GenWeight' : ('GenWeight', 60, -30, 30),
         'npv' : ('npv', 50, 0, 50),
         'npu' : ('npu', 50, 0, 50),
@@ -112,11 +115,8 @@ def getHistoDict( channel ) :
     if channel == 'em' :
         # Provides a list of histos to create for 'EM' channel
         chanVarMapEM = {
-            'Z_Pt' : ('e_m_Pt', 400, 0, 400),
             'eJetPt' : ('eJetPt', 400, 0, 400),
             'mJetPt' : ('mJetPt', 400, 0, 400),
-            'Z_DR' : ('e_m_DR', 500, 0, 5),
-            'Z_DPhi' : ('e_m_DPhi', 800, -4, 4),
             #'m_sv' : ('m_sv', 1000, 0, 1000),
             #'pt_H' : ('e_m_Pt + mvamet', 1000, 0, 1000),
             #'ePVDZ' : ('ePVDZ', 100, -1, 1),
@@ -131,9 +131,6 @@ def getHistoDict( channel ) :
     # Provides a list of histos to create for 'TT' channel
     if channel == 'tt' :
         chanVarMapTT = {
-            'Z_Pt' : ('t1_t2_Pt', 400, 0, 400),
-            'Z_DR' : ('t1_t2_DR', 500, 0, 5),
-            'Z_DPhi' : ('t1_t2_DPhi', 800, -4, 4),
             #'m_sv' : ('m_sv', 1000, 0, 1000),
             #'pt_H' : ('t1_t2_Pt + mvamet', 1000, 0, 1000),
             't1DecayMode' : ('t1DecayMode', 12, 0, 12),

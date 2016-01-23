@@ -1,19 +1,19 @@
 {
-  "QCD170-250": {
+  "WZ2l2q": {
     "STATUS": "Good to Go!", 
-    "UniqueID": 24, 
+    "UniqueID": 15, 
     "DAS status": "ok", 
-    "nEvents": 2944507, 
-    "DAS Path": "/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
-    "nfiles": 73, 
-    "nblocks": 4, 
-    "Cross Section (pb)": 2635.81332, 
-    "BkgGroup": 5, 
-    "summedWeightsNorm": 2944507.0, 
-    "summedWeights": 2944507.0, 
-    "nevents": 2944507, 
-    "nNtupleFiles": 73, 
-    "nlumis": 21321
+    "nEvents": 31477411, 
+    "DAS Path": "/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 737, 
+    "nblocks": 22, 
+    "Cross Section (pb)": 5.595, 
+    "BkgGroup": 3, 
+    "summedWeightsNorm": 18844495.505835142, 
+    "summedWeights": 277715149.0, 
+    "nevents": 31477411, 
+    "nNtupleFiles": 737, 
+    "nlumis": 153366
   }, 
   "data_em": {
     "STATUS": "Files Match", 
@@ -47,6 +47,38 @@
     "nNtupleFiles": 24, 
     "nlumis": 9886
   }, 
+  "VBFHtoTauTau120": {
+    "STATUS": "Good to Go!", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 191590, 
+    "DAS Path": "/VBFHToTauTau_M120_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 8, 
+    "nblocks": 5, 
+    "Cross Section (pb)": 0.23687360000000005, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": 191146.7351565729, 
+    "summedWeights": 744960.0, 
+    "nevents": 191590, 
+    "nNtupleFiles": 8, 
+    "nlumis": 1013
+  }, 
+  "VBFHtoTauTau125": {
+    "STATUS": "Good to Go!", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 1478412, 
+    "DAS Path": "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 35, 
+    "nblocks": 4, 
+    "Cross Section (pb)": 0.23687360000000005, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": 1474575.375494621, 
+    "summedWeights": 5521238.0, 
+    "nevents": 1478412, 
+    "nNtupleFiles": 35, 
+    "nlumis": 7608
+  }, 
   "ZZ2l2q": {
     "STATUS": "Good to Go!", 
     "UniqueID": 18, 
@@ -63,21 +95,21 @@
     "nNtupleFiles": 440, 
     "nlumis": 90366
   }, 
-  "WZ2l2q": {
+  "QCD170-250": {
     "STATUS": "Good to Go!", 
-    "UniqueID": 15, 
+    "UniqueID": 24, 
     "DAS status": "ok", 
-    "nEvents": 31477411, 
-    "DAS Path": "/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
-    "nfiles": 737, 
-    "nblocks": 22, 
-    "Cross Section (pb)": 5.595, 
-    "BkgGroup": 3, 
-    "summedWeightsNorm": 18844495.505835142, 
-    "summedWeights": 277715149.0, 
-    "nevents": 31477411, 
-    "nNtupleFiles": 737, 
-    "nlumis": 153366
+    "nEvents": 2944507, 
+    "DAS Path": "/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 73, 
+    "nblocks": 4, 
+    "Cross Section (pb)": 2635.81332, 
+    "BkgGroup": 5, 
+    "summedWeightsNorm": 2944507.0, 
+    "summedWeights": 2944507.0, 
+    "nevents": 2944507, 
+    "nNtupleFiles": 73, 
+    "nlumis": 21321
   }, 
   "WZ1l1nu2q": {
     "STATUS": "Good to Go!", 
@@ -126,6 +158,38 @@
     "nevents": 16342573, 
     "nNtupleFiles": 328, 
     "nlumis": 48535
+  }, 
+  "ggHtoTauTau125": {
+    "STATUS": "Error", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 42000, 
+    "DAS Path": "/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 37, 
+    "nblocks": 1, 
+    "Cross Section (pb)": 2.7757440000000004, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": 42000.0, 
+    "summedWeights": 42000.0, 
+    "nevents": 1498200, 
+    "nNtupleFiles": 1, 
+    "nlumis": 7499
+  }, 
+  "ggHtoTauTau120": {
+    "STATUS": "Good to Go!", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 200000, 
+    "DAS Path": "/GluGluHToTauTau_M120_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 5, 
+    "nblocks": 1, 
+    "Cross Section (pb)": 2.7757440000000004, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": 200000.0, 
+    "summedWeights": 200000.0, 
+    "nevents": 200000, 
+    "nNtupleFiles": 5, 
+    "nlumis": 1000
   }, 
   "Tbar-tchan": {
     "STATUS": "Good to Go!", 
@@ -287,6 +351,22 @@
     "nNtupleFiles": 68, 
     "nlumis": 15478
   }, 
+  "VBFHtoTauTau130": {
+    "STATUS": "Error", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 178482, 
+    "DAS Path": "/VBFHToTauTau_M130_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 5, 
+    "nblocks": 2, 
+    "Cross Section (pb)": 0.23687360000000005, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": 178168.6220861582, 
+    "summedWeights": 641432.0, 
+    "nevents": 191310, 
+    "nNtupleFiles": 4, 
+    "nlumis": 996
+  }, 
   "QCD15-20": {
     "STATUS": "Good to Go!", 
     "UniqueID": 20, 
@@ -350,6 +430,22 @@
     "nevents": 30021559, 
     "nNtupleFiles": 731, 
     "nlumis": 148789
+  }, 
+  "ggHtoTauTau130": {
+    "STATUS": "Good to Go!", 
+    "UniqueID": 101, 
+    "DAS status": "ok", 
+    "nEvents": 200000, 
+    "DAS Path": "/GluGluHToTauTau_M130_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
+    "nfiles": 5, 
+    "nblocks": 2, 
+    "Cross Section (pb)": 2.7757440000000004, 
+    "BkgGroup": 101, 
+    "summedWeightsNorm": 200000.0, 
+    "summedWeights": 200000.0, 
+    "nevents": 200000, 
+    "nNtupleFiles": 5, 
+    "nlumis": 1004
   }, 
   "WW2l2nu": {
     "STATUS": "Good to Go!", 
