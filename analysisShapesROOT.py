@@ -16,6 +16,7 @@ p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDe
 p.add_argument('--blind', action='store', default=True, dest='blind', help="blind data above 150 GeV?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
+p.add_argument('--ztt', action='store', default=False, dest='ztt', help="Is Z->tautau the signal POI?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -62,11 +63,27 @@ samples['ggHtoTauTau125'] = ('kGreen', '_vbfH125_')
 
 nameArray = ['_data_obs_','_ZTT_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH125_']
 
-#if options.sync :
-#    samples['DYJets']   = ('kOrange-4', '_ZTT_')
-#    del samples['DYJetsLow']
-#    nameArray.remove('_ZTT120_')
-#    nameArray.append('_ZTT_')
+extra = ''
+if not os.path.exists( '%sShapes' % grouping ) :
+    os.makedirs( '%sShapes' % grouping )
+if options.ztt : 
+    if not os.path.exists( '%sShapes/ztt' % grouping ) :
+        os.makedirs( '%sShapes/ztt' % grouping )
+    extra = 'ztt'
+if not options.ztt : 
+    if not os.path.exists( '%sShapes/htt' % grouping ) :
+        os.makedirs( '%sShapes/htt' % grouping )
+    extra = 'htt'
+
+if options.ztt :
+    del samples['VBFHtoTauTau125']
+    del samples['ggHtoTauTau125']
+    samples['DYJets'] = ('kOrange-4', '_ZTT90_')
+    samples['DYJetsLow'] = ('kOrange-4', '_ZTT90_')
+    nameArray.remove('_vbfH125_')
+    nameArray.remove('_ggH125_')
+    nameArray.remove('_ZTT_')
+    nameArray.append('_ZTT90_')
 
 channels = { 'em' : 'EMu',
              'tt' : 'TauTau',}
@@ -76,9 +93,6 @@ for channel in channels.keys() :
     #if channel == 'tt' : continue
     #if channel == 'em' : continue
 
-    # Make an index file for web viewing
-    if not os.path.exists( '%sShapes' % grouping ) :
-        os.makedirs( '%sShapes' % grouping )
 
     print channel
 
@@ -87,11 +101,11 @@ for channel in channels.keys() :
 
     for var, info in newVarMap.iteritems() :
         if not var == 'm_vis' : continue
-        print "\n Output shapes file: %sShapes/htt_%s.inputs-sm-13TeV.root \n" % (grouping, channel)
-        shapeFile = ROOT.TFile('%sShapes/htt_%s.inputs-sm-13TeV.root' % (grouping, channel), 'RECREATE')
-        shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
+        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-sm-13TeV.root \n" % (grouping, extra, channel)
+        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-sm-13TeV.root' % (grouping, extra, channel), 'RECREATE')
+        #shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
         #shapeDir = shapeFile.mkdir( channel + '_boostedZ' )
-        #shapeDir = shapeFile.mkdir( channel + '_inclusive' )
+        shapeDir = shapeFile.mkdir( channel + '_inclusive' )
 
         # Defined out here for large scope
         name = info[0]
@@ -168,7 +182,7 @@ for channel in channels.keys() :
         for name in histos :
             print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
             # Make sure we have no negative bins
-            for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins() ) :
+            for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
                 setVal = 0.001
                 if histos[ name ].GetBinContent( bin_ ) < 0 :
                     histos[ name ].SetBinContent( bin_, setVal )
