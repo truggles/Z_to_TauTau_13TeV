@@ -27,7 +27,7 @@ emOS    = 'e_m_SS == 0'
 emSS    = 'e_m_SS == 1'
 emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.15'
 emIsoLoose   = 'eIsoDB03 < 0.3 && mIsoDB03 < 0.3'
-extraVeto   = 'eVetoZTT10new2 == 0 && muVetoZTT10new2 == 0'
+extraVeto   = 'eVetoZTTp001dxyz == 0 && muVetoZTTp001dxyz == 0'
 emMTFix = '( eMtToPfMet_Raw > 5 && mMtToPfMet_Raw > 5 )'
 #emMTFix = '( (type1_pfMetEt > 1) || ( eMtToPfMet_Raw > 5 && mMtToPfMet_Raw > 5 ) )' # Looking at this it isn't cutting the data / MC excess region
 # EM Studies
@@ -39,7 +39,8 @@ emIsoInvert    = 'eIsoDB03 > 0.5 && mIsoDB03 > 0.25'
 mtKin   = 'mPt > 19 && mAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'
 mtDR    = 'm_t_DR > 0.5'
 mtVtx   = 'abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && abs(tPVDZ) < 0.2'
-mtTrig   = '(singleMu18Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && (mIsoMu17Filter > 0 || mIsoMu18Filter > 0) && mPt > 18)'
+mtTrig   = '(singleIsoMu17eta2p1Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && (mIsoMu17Filter > 0 || mIsoMu18Filter > 0) && mPt > 18)'
+mtTrigData   = '(singleIsoMu18Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && (mIsoMu17Filter > 0 || mIsoMu18Filter > 0) && mPt > 18)'
 
 # ET Baseline
 etKin   = 'ePt > 24 && eAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'

@@ -17,8 +17,8 @@ ROOT.gROOT.Reset()
 
 ''' Set grouping (25ns or Sync) '''
 #grouping = '25ns'
-#grouping = 'Sync'
-grouping = 'dataCards'
+grouping = 'Sync'
+#grouping = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 cmsLumi = '2200.0'
 print "zHome: ",zHome
@@ -54,9 +54,9 @@ Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow'
 SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l']#, 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
 SamplesQCD = ['QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf']
 #samples = Samples25nsFinal
-#samples = SamplesSync
+samples = SamplesSync
 #samples = SamplesData
-samples = SamplesDataCards
+#samples = SamplesDataCards
 #samples = SamplesQCD
 
 ''' These parameters are fed into the 2 main function calls.
@@ -74,14 +74,14 @@ params = {
     #'channels' : ['tt',],
     #'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
-    'cutMapper' : 'signalExtractionNoSign', #!
-    'cutName' : 'PostSync', #!
+    #'cutMapper' : 'signalExtractionNoSign', #!
+    #'cutName' : 'PostSync', #!
     #'cutMapper' : 'syncCutsDC',
-    #'cutMapper' : 'syncCutsNtuple',
-    #'cutName' : 'BaseLine',
-    'mid1' : '1Jan23a',
-    'mid2' : '2Jan23a',
-    'mid3' : '3Jan23a',
+    'cutMapper' : 'syncCutsNtuple',
+    'cutName' : 'BaseLine',
+    'mid1' : '1Jan25',
+    'mid2' : '2Jan25',
+    'mid3' : '3Jan25',
     'additionalCut' : '',
 }
 
@@ -89,15 +89,15 @@ samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 ###analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan23_SSa'
-params['additionalCut'] = '*(Z_SS==1)'
-samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-params['mid3'] = '3Jan23_OSa'
-params['additionalCut'] = '*(Z_SS==0)'
-samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#params['mid3'] = '3Jan23_SSa'
+#params['additionalCut'] = '*(Z_SS==1)'
+#samples = checkBkgs( samples, params, grouping )
+#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#params['mid3'] = '3Jan23_OSa'
+#params['additionalCut'] = '*(Z_SS==0)'
+#samples = checkBkgs( samples, params, grouping )
+#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 
 ''' for WJets and QCD shapes 
