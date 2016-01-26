@@ -1,0 +1,11 @@
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-0C399D9F-5C71-E511-B30F-002618943972/make_ntuples_cfg-0C399D9F-5C71-E511-B30F-002618943972.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-0E881996-5C71-E511-A194-002618943916/make_ntuples_cfg-0E881996-5C71-E511-A194-002618943916.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-28780D61-5C71-E511-8D39-002618943906/make_ntuples_cfg-28780D61-5C71-E511-8D39-002618943906.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-8CCC419C-5C71-E511-9A24-002618943843/make_ntuples_cfg-8CCC419C-5C71-E511-9A24-002618943843.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-90A6CDC3-5C71-E511-8B6D-0025905938D4/make_ntuples_cfg-90A6CDC3-5C71-E511-8B6D-0025905938D4.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-9A4E1098-5C71-E511-84F1-002618943970/make_ntuples_cfg-9A4E1098-5C71-E511-84F1-002618943970.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-AE0DE9AA-5C71-E511-9911-0026189438E9/make_ntuples_cfg-AE0DE9AA-5C71-E511-9911-0026189438E9.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-B2F0A737-5C71-E511-ABE7-0025905938B4/make_ntuples_cfg-B2F0A737-5C71-E511-ABE7-0025905938B4.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-BEF0ABA9-5C71-E511-A01B-002618943836/make_ntuples_cfg-BEF0ABA9-5C71-E511-A01B-002618943836.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-C6343732-5C71-E511-A3F1-0025905964B6/make_ntuples_cfg-C6343732-5C71-E511-A3F1-0025905964B6.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-F68A13A7-5C71-E511-95C6-002354EF3BDD/make_ntuples_cfg-F68A13A7-5C71-E511-95C6-002354EF3BDD.root

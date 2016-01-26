@@ -1,0 +1,3 @@
+/data/truggles/jan25_mssm74x/SUSYGluGluToBBHToTauTau_M-1500_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-847550EB-3A71-E511-97A2-00259059649C/make_ntuples_cfg-847550EB-3A71-E511-97A2-00259059649C.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToBBHToTauTau_M-1500_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-C2601CEC-3A71-E511-9ABC-0025905B855C/make_ntuples_cfg-C2601CEC-3A71-E511-9ABC-0025905B855C.root
+/data/truggles/jan25_mssm74x/SUSYGluGluToBBHToTauTau_M-1500_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-F6EB5467-3B71-E511-809A-02163E016B33/make_ntuples_cfg-F6EB5467-3B71-E511-809A-02163E016B33.root

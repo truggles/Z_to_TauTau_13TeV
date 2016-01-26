@@ -79,22 +79,22 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsNtuple',
     #'cutName' : 'BaseLine',
-    'mid1' : '1Jan23a',
-    'mid2' : '2Jan23a',
-    'mid3' : '3Jan23a',
+    'mid1' : '1Jan26',
+    'mid2' : '2Jan26',
+    'mid3' : '3Jan26',
     'additionalCut' : '',
 }
 
-samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#samples = checkBkgs( samples, params, grouping )
+#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 ###analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan23_SSa'
+params['mid3'] = '3Jan26_SS'
 params['additionalCut'] = '*(Z_SS==1)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan23_OSa'
+params['mid3'] = '3Jan26_OS'
 params['additionalCut'] = '*(Z_SS==0)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )

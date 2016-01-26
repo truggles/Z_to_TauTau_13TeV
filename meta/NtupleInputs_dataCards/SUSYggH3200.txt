@@ -1,0 +1,1 @@
+/data/truggles/jan25_mssm74x/SUSYGluGluToHToTauTau_M-3200_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-38D40A6A-E570-E511-8DC7-0CC47A4129F4/make_ntuples_cfg-38D40A6A-E570-E511-8DC7-0CC47A4129F4.root
