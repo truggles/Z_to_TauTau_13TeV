@@ -53,6 +53,12 @@ Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJe
 Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
 SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l']#, 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
 SamplesQCD = ['QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf']
+
+masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
+for mass in masses :
+       SamplesDataCards.append( 'SUSYggH%i' % mass )
+       SamplesDataCards.append( 'SUSYbbH%i' % mass )
+
 #samples = Samples25nsFinal
 #samples = SamplesSync
 #samples = SamplesData
@@ -73,15 +79,15 @@ params = {
     #'channels' : ['em',],
     #'channels' : ['tt',],
     #'cutMapper' : 'signalCutsNoIsoNoSign', #!
-    #'cutMapper' : 'signalCutsNoSign', #!
-    'cutMapper' : 'signalExtractionNoSign', #!
+    'cutMapper' : 'signalCutsNoSign', #!
+    #'cutMapper' : 'signalExtractionNoSign', #!
     'cutName' : 'PostSync', #!
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsNtuple',
     #'cutName' : 'BaseLine',
-    'mid1' : '1Jan26',
-    'mid2' : '2Jan26',
-    'mid3' : '3Jan26',
+    'mid1' : '1Jan27mssm',
+    'mid2' : '2Jan27mssm',
+    'mid3' : '3Jan27mssm',
     'additionalCut' : '',
 }
 
@@ -89,12 +95,12 @@ params = {
 #analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 ###analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan26_SS'
+params['mid3'] = '3Jan27mssm_SS'
 params['additionalCut'] = '*(Z_SS==1)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan26_OS'
+params['mid3'] = '3Jan27mssm_OS'
 params['additionalCut'] = '*(Z_SS==0)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )

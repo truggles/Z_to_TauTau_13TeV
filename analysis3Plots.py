@@ -25,6 +25,7 @@ p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake',
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
 p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
+p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -36,6 +37,8 @@ ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
 luminosity = 2200.0 # / fb 25ns - Final 2015 25ns Golden JSON, adjusted 4% upwards by https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/544.html
+mssmMass = 180
+mssmSF = 100
 higgsSF = 10
 qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
@@ -77,6 +80,8 @@ samples['QCD170-250']        = ('kMagenta-10', 'qcd')
 samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
+samples['SUSYggH%i' % mssmMass] = ('kPink', 'mssm')
+samples['SUSYbbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : 'kRed+2',
@@ -85,6 +90,7 @@ sampColors = {
     'dyj' : 'kOrange-4',
     'wjets' : 'kAzure+2',
     'higgs' : 'kBlue',
+    'mssm' : 'kPink',
     'data' : 'kBlack',
 }
 
@@ -151,6 +157,7 @@ for channel in ['em', 'tt'] :
         dib = ROOT.TH1F("All Backgrounds dib %s" % append, "dib", xNum, xBins )
         top = ROOT.TH1F("All Backgrounds top %s" % append, "top", xNum, xBins )
         higgs = ROOT.TH1F("All Backgrounds higgs %s" % append, "higgs", xNum, xBins )
+        mssm = ROOT.TH1F("All Backgrounds mssm %s" % append, "mssm", xNum, xBins )
         qcd = ROOT.TH1F("All Backgrounds qcd %s" % append, "qcd", xNum, xBins )
         wjets = ROOT.TH1F("All Backgrounds wjets %s" % append, "wjets", xNum, xBins )
         data = ROOT.TH1F("All Backgrounds data %s" % append, "data", xNum, xBins )
@@ -254,6 +261,9 @@ for channel in ['em', 'tt'] :
             if samples[ sample ][1] == 'wjets' :
                 hist.SetTitle('WJets')
                 wjets.Add( hist )
+            if samples[ sample ][1] == 'mssm' :
+                hist.SetTitle('MSSM(%i) x %i' % (mssmMass, mssmSF))
+                mssm.Add( hist )
             if samples[ sample ][1] == 'higgs' :
                 hist.SetTitle('SM Higgs(125) x %i' % higgsSF)
                 higgs.Add( hist )
@@ -275,7 +285,13 @@ for channel in ['em', 'tt'] :
         higgs.SetLineColor( ROOT.kBlue )
         higgs.SetLineWidth( 4 )
         higgs.SetLineStyle( 7 )
+        higgs.SetMarkerStyle( 0 )
         Ary[ higgs ] = "higgs"
+        mssm.SetLineColor( ROOT.kPink )
+        mssm.SetLineWidth( 4 )
+        mssm.SetLineStyle( 7 )
+        mssm.SetMarkerStyle( 0 )
+        Ary[ mssm ] = "mssm"
         
         # With Variable binning, need to set bin content appropriately
         for h in Ary.keys() :
@@ -285,7 +301,7 @@ for channel in ['em', 'tt'] :
                 h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( h.GetBinWidth(1) / h.GetBinWidth( bin_ ) ) )
 
         # Set hist Names
-        Names = { "data" : "Data", "higgs" : "SM Higgs x %i" % higgsSF, "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        Names = { "data" : "Data", "higgs" : "SM Higgs x %i" % higgsSF, "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
         for h in Ary.keys() :
             h.SetTitle( Names[ Ary[h] ] )
             
@@ -301,6 +317,7 @@ for channel in ['em', 'tt'] :
 
         # Scale Higgs samples for viewing
         higgs.Scale( higgsSF )
+        mssm.Scale( mssmSF )
 
             
         if options.qcdMake :
@@ -327,6 +344,8 @@ for channel in ['em', 'tt'] :
             pad1.cd()
             stack.Draw('hist')
             higgs.Draw('same')
+            if options.mssm :
+                mssm.Draw('same')
             data.Draw('esamex0')
             # X Axis!
             stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
@@ -378,6 +397,8 @@ for channel in ['em', 'tt'] :
             pad1.cd()
             stack.Draw('hist')
             higgs.Draw('same')
+            if options.mssm :
+                mssm.Draw('same')
             data.Draw('esamex0')
 
 
@@ -415,6 +436,8 @@ for channel in ['em', 'tt'] :
         legend.SetBorderSize(0)
         legend.AddEntry( data, "Data", 'lep')
         legend.AddEntry( higgs, "SM Higgs x %i" % higgsSF, 'l')
+        if options.mssm :
+            legend.AddEntry( mssm, "MSSM(%i) x %i" % (mssmMass, mssmSF), 'l')
         for j in range(0, stack.GetStack().GetLast() + 1) :
             last = stack.GetStack().GetLast()
             legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')

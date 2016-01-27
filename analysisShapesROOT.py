@@ -17,6 +17,7 @@ p.add_argument('--blind', action='store', default=True, dest='blind', help="blin
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 p.add_argument('--ztt', action='store', default=False, dest='ztt', help="Is Z->tautau the signal POI?")
+p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Is this the MSSM H->TauTau search?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -63,6 +64,19 @@ samples['ggHtoTauTau125'] = ('kGreen', '_vbfH125_')
 
 nameArray = ['_data_obs_','_ZTT_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH125_']
 
+if options.mssm :
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
+    for mssmMass in masses :
+        samples['SUSYggH%i' % mssmMass] = ('kPink', '_SUSYggH%i_' % mssmMass)
+        samples['SUSYbbH%i' % mssmMass] = ('kPink', '_SUSYbbH%i_' % mssmMass) 
+        nameArray.append('_SUSYggH%i_' % mssmMass)
+        nameArray.append('_SUSYbbH%i_' % mssmMass)
+    del samples['VBFHtoTauTau125']
+    del samples['ggHtoTauTau125']
+    nameArray.remove('_vbfH125_')
+    nameArray.remove('_ggH125_')
+
+
 extra = ''
 if not os.path.exists( '%sShapes' % grouping ) :
     os.makedirs( '%sShapes' % grouping )
@@ -70,7 +84,12 @@ if options.ztt :
     if not os.path.exists( '%sShapes/ztt' % grouping ) :
         os.makedirs( '%sShapes/ztt' % grouping )
     extra = 'ztt'
-if not options.ztt : 
+elif options.mssm : 
+    if not os.path.exists( '%sShapes/mssm' % grouping ) :
+        os.makedirs( '%sShapes/mssm' % grouping )
+    extra = 'mssm'
+#if not options.ztt : 
+else : 
     if not os.path.exists( '%sShapes/htt' % grouping ) :
         os.makedirs( '%sShapes/htt' % grouping )
     extra = 'htt'
@@ -113,7 +132,10 @@ for channel in channels.keys() :
 
         if not options.sync :
             binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
-        if options.sync :
+        #if options.mssm :
+        #    binArray = array.array( 'd', [0,20,40,60,80,100,150,200] )
+            #binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,3000] )
+        else :
             binArray = array.array( 'd', [] )
             for i in range(0, 61 ) :
                 binArray.append( i * 10 )
@@ -165,9 +187,9 @@ for channel in channels.keys() :
 
             if 'QCD' not in sample :
                 #hist.Rebin( 10 )
-                #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
+                print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
                 hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
-                #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
+                print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
                 histos[ samples[ sample ][1] ].Add( hNew )
             else :
                 histos[ samples[ sample ][1] ].Add( hist )
