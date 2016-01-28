@@ -13,12 +13,10 @@ from array import array
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
-p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Include ratio plots? Defaul = False")
+p.add_argument('--ratio', action='store', default=True, dest='ratio', help="Include ratio plots? Defaul = False")
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
-p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
-p.add_argument('--www', action='store', default=True, dest='www', help="Save to Tyler's public 'www' space?")
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
@@ -26,6 +24,7 @@ p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', hel
 p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
+p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -40,8 +39,10 @@ luminosity = 2200.0 # / fb 25ns - Final 2015 25ns Golden JSON, adjusted 4% upwar
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
-qcdTTScaleFactor = 1.06
-qcdEMScaleFactor = 1.06
+#qcdTTScaleFactor = 1.06
+#qcdEMScaleFactor = 1.06
+qcdTTScaleFactor = 1.5
+qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
 qcdYieldTT = 35.7 * qcdTTScaleFactor
@@ -99,6 +100,7 @@ for channel in ['em', 'tt'] :
 
     #if channel == 'tt' : continue
     #if channel == 'em' : continue
+    if channel == 'tt' : mssmSF = int(mssmSF / 10)
 
     # Make an index file for web viewing
     if not os.path.exists( '%sPlots' % grouping ) :
@@ -107,10 +109,7 @@ for channel in ['em', 'tt'] :
     if not os.path.exists( '%sPlotsList' % grouping ) :
         os.makedirs( '%sPlotsList/em' % grouping )
         os.makedirs( '%sPlotsList/tt' % grouping )
-    if options.www :
-        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (grouping, channel), 'w')
-    else :
-        htmlFile = open('%sPlots/%s/index.html' % (grouping, channel), 'w')
+    htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (grouping, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
     htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
     htmlFile.write( '<body>\n' )
@@ -122,18 +121,28 @@ for channel in ['em', 'tt'] :
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     if options.qcdMake :
+        if not os.path.exists('meta/%sBackgrounds' % grouping) :
+            os.makedirs('meta/%sBackgrounds' % grouping)
         qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
         qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
 
+    print newVarMap
     for var, info in newVarMap.iteritems() :
 
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
-        #if not var == 'm_vis' : continue
+        if not 'm_vis' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
 
-        if not options.sync and var == 'm_vis' and channel == 'tt' :
+
+        """
+        Handle variable binning and longer ranges for visible mass
+        """
+        if var == 'm_vis_mssm' :
+            varBinned = True
+            xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+        elif var == 'm_vis_varB' :
             varBinned = True
             xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
         else :
@@ -195,7 +204,8 @@ for channel in ['em', 'tt'] :
 
 
             dic = tFile.Get("%s_Histos" % channel )
-            preHist = dic.Get( "%s" % var )
+            if 'm_vis' in var : preHist = dic.Get( "m_vis" )
+            else : preHist = dic.Get( var )
             preHist.SetDirectory( 0 )
 
             if sample == 'QCD' and options.useQCDMake :
@@ -265,7 +275,7 @@ for channel in ['em', 'tt'] :
                 hist.SetTitle('MSSM(%i) x %i' % (mssmMass, mssmSF))
                 mssm.Add( hist )
             if samples[ sample ][1] == 'higgs' :
-                hist.SetTitle('SM Higgs(125) x %i' % higgsSF)
+                hist.SetTitle('SM Higgs(125)')
                 higgs.Add( hist )
             if samples[ sample ][1] == 'data' :
                 hist.SetTitle('Data')
@@ -282,10 +292,15 @@ for channel in ['em', 'tt'] :
         data.SetLineWidth( 2 )
         data.SetMarkerStyle( 21 )
         Ary[ data ] = "data"
-        higgs.SetLineColor( ROOT.kBlue )
-        higgs.SetLineWidth( 4 )
-        higgs.SetLineStyle( 7 )
-        higgs.SetMarkerStyle( 0 )
+        if not options.mssm :
+            higgs.SetLineColor( ROOT.kBlue )
+            higgs.SetLineWidth( 4 )
+            higgs.SetLineStyle( 7 )
+            higgs.SetMarkerStyle( 0 )
+        else :
+            higgs.SetFillColor( ROOT.kGreen )
+            higgs.SetLineColor( ROOT.kBlack )
+            higgs.SetLineWidth( 2 )
         Ary[ higgs ] = "higgs"
         mssm.SetLineColor( ROOT.kPink )
         mssm.SetLineWidth( 4 )
@@ -306,7 +321,9 @@ for channel in ['em', 'tt'] :
             h.SetTitle( Names[ Ary[h] ] )
             
 
-        if options.plotQCD == True :
+        if options.mssm :
+            stack.Add( higgs )
+        if not options.qcdMake :
             print "Adding QCD"
             stack.Add( qcd )
         stack.Add( top )
@@ -316,7 +333,8 @@ for channel in ['em', 'tt'] :
 
 
         # Scale Higgs samples for viewing
-        higgs.Scale( higgsSF )
+        if not options.mssm :
+            higgs.Scale( higgsSF )
         mssm.Scale( mssmSF )
 
             
@@ -343,9 +361,10 @@ for channel in ['em', 'tt'] :
             pad1.Draw()
             pad1.cd()
             stack.Draw('hist')
-            higgs.Draw('same')
             if options.mssm :
                 mssm.Draw('same')
+            else :
+                higgs.Draw('same')
             data.Draw('esamex0')
             # X Axis!
             stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
@@ -396,9 +415,10 @@ for channel in ['em', 'tt'] :
 
             pad1.cd()
             stack.Draw('hist')
-            higgs.Draw('same')
             if options.mssm :
                 mssm.Draw('same')
+            else :
+                higgs.Draw('same')
             data.Draw('esamex0')
 
 
@@ -435,7 +455,8 @@ for channel in ['em', 'tt'] :
         legend.SetMargin(0.3)
         legend.SetBorderSize(0)
         legend.AddEntry( data, "Data", 'lep')
-        legend.AddEntry( higgs, "SM Higgs x %i" % higgsSF, 'l')
+        if not options.mssm :
+            legend.AddEntry( higgs, "SM Higgs(125) x %i" % higgsSF, 'l')
         if options.mssm :
             legend.AddEntry( mssm, "MSSM(%i) x %i" % (mssmMass, mssmSF), 'l')
         for j in range(0, stack.GetStack().GetLast() + 1) :
@@ -479,12 +500,20 @@ for channel in ['em', 'tt'] :
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.ratio :
             ratioHist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
-        if options.www :
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
-        else :
-            c1.SaveAs('%sPlots/%s/%s.png' % (grouping, channel, var ) )
-            c1.SaveAs('%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
+
+
+        """ Additional views for Visible Mass """
+        if 'm_vis' in var :
+            pad1.SetLogy()
+            if var == 'm_vis_mssm' :
+                pad1.SetLogx()
+                if options.ratio : ratioPad.SetLogx()
+            pad1.Update()
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (grouping, channel, var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (grouping, channel, var ) )
+            htmlFile.write( '<img src="%s_LogY.png">\n' % var )
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
