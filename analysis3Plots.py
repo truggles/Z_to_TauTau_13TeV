@@ -21,7 +21,6 @@ p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', he
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
-p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
