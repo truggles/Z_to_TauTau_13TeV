@@ -44,7 +44,9 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s%s%s' % (additionalCut, sfs, xsec) )
             histos2[ var ] = gPad.GetPrimitive( var2 )
 
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s%s%s' % (additionalCut, sfs, xsec) )
+            #XXX# Remove PileUp reweighting for now as they are supposed to be much closer with 76x
+            #XXX#chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s%s%s' % (additionalCut, sfs, xsec) )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(GenWeight/abs( GenWeight ))%s%s%s' % (additionalCut, sfs, xsec) )
             ''' No reweighting at the moment! '''
             #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(GenWeight/abs( GenWeight ))%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( var )
@@ -80,8 +82,8 @@ def getHistoDict( channel ) :
         'Mt' : ('Mt', 600, 0, 600),
         'met' : ('met', 400, 0, 400),
         'metphi' : ('metphi', 80, -4, 4),
-        #'mvamet' : ('mvamet', 100, 0, 400),
-        #'mvametphi' : ('mvametphi', 100, -5, 5),
+        'mvamet' : ('mvamet', 100, 0, 400),
+        'mvametphi' : ('mvametphi', 100, -5, 5),
         #'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
         'njetspt20' : ('njetspt20', 100, 0, 10),
         'jetVeto30' : ('jetVeto30', 100, 0, 10),
@@ -91,10 +93,10 @@ def getHistoDict( channel ) :
         'bjetCISVVeto30Tight' : ('bjetCISVVeto30Tight', 6, 0, 6),
         'extraelec_veto' : ('extraelec_veto', 20, 0, 2),
         'extramuon_veto' : ('extramuon_veto', 20, 0, 2),
-        #XXX#'jpt_1' : ('jpt_1', 400, 0, 400),
-        #XXX#'jeta_1' : ('jeta_1', 100, -5, 5),
-        #XXX#'jpt_2' : ('jpt_2', 400, 0, 400),
-        #XXX#'jeta_2' : ('jeta_2', 100, -5, 5),
+        'jpt_1' : ('jpt_1', 400, 0, 400),
+        'jeta_1' : ('jeta_1', 100, -5, 5),
+        'jpt_2' : ('jpt_2', 400, 0, 400),
+        'jeta_2' : ('jeta_2', 100, -5, 5),
         'GenWeight' : ('GenWeight', 60, -30, 30),
         'npv' : ('npv', 50, 0, 50),
         'npu' : ('npu', 50, 0, 50),
@@ -157,8 +159,8 @@ def getPlotDetails( channel ) :
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
         'met' : (0, 250, 20, 'pfMet [GeV]', ' GeV'),
         'metphi' : (-4, 4, 10, 'pfMetPhi', ''),
-        #'mvamet' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-        #'mvametphi' : (-5, 5, 2, 'mvaMetPhi', ''),
+        'mvamet' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+        'mvametphi' : (-5, 5, 2, 'mvaMetPhi', ''),
         'LT' : (0, 300, 20, 'Total LT [GeV]', ' GeV'),
         'Mt' : (0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
         'nbtag' : (0, 6, 1, 'nBTag', ''),

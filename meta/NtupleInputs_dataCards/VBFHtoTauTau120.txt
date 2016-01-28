@@ -1,8 +1,5 @@
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-02E25BC7-C16D-E511-9A3D-0025904C540E/make_ntuples_cfg-02E25BC7-C16D-E511-9A3D-0025904C540E.root
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-106AC8BB-ED6D-E511-905B-002590E3A024/make_ntuples_cfg-106AC8BB-ED6D-E511-905B-002590E3A024.root
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-7A35DFB0-ED6D-E511-9B11-0CC47A13CCFC/make_ntuples_cfg-7A35DFB0-ED6D-E511-9B11-0CC47A13CCFC.root
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-82D47EBE-C16D-E511-BA68-003048F5ADF8/make_ntuples_cfg-82D47EBE-C16D-E511-BA68-003048F5ADF8.root
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-965CF9BC-ED6D-E511-8A02-0025904A91F6/make_ntuples_cfg-965CF9BC-ED6D-E511-8A02-0025904A91F6.root
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-A4E75CB1-ED6D-E511-856A-0CC47A13CC7E/make_ntuples_cfg-A4E75CB1-ED6D-E511-856A-0CC47A13CC7E.root
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-BCE9B5C4-C16D-E511-8B0D-001E67E6F5D0/make_ntuples_cfg-BCE9B5C4-C16D-E511-8B0D-001E67E6F5D0.root
-/data/truggles/jan22_higgsSignals/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-DE618AC4-C16D-E511-9725-00266CFFC948/make_ntuples_cfg-DE618AC4-C16D-E511-9725-00266CFFC948.root
+/data/truggles/jan25_mssmAndHiggs76x/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-524DD736-6EBB-E511-8101-B083FED13C9E/make_ntuples_cfg-524DD736-6EBB-E511-8101-B083FED13C9E.root
+/data/truggles/jan25_mssmAndHiggs76x/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-569FD730-6EBB-E511-9A72-44A84225C3D0/make_ntuples_cfg-569FD730-6EBB-E511-9A72-44A84225C3D0.root
+/data/truggles/jan25_mssmAndHiggs76x/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-5A10EB20-6EBB-E511-A88E-002590D600B6/make_ntuples_cfg-5A10EB20-6EBB-E511-A88E-002590D600B6.root
+/data/truggles/jan25_mssmAndHiggs76x/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-CAD2042F-6EBB-E511-B40F-44A84225CDFE/make_ntuples_cfg-CAD2042F-6EBB-E511-B40F-44A84225CDFE.root
+/data/truggles/jan25_mssmAndHiggs76x/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-D206BC36-6EBB-E511-B79A-002590D600E6/make_ntuples_cfg-D206BC36-6EBB-E511-B79A-002590D600E6.root
