@@ -41,7 +41,7 @@ mssmSF = 100
 higgsSF = 10
 #qcdTTScaleFactor = 1.06
 #qcdEMScaleFactor = 1.06
-qcdTTScaleFactor = 1.5
+qcdTTScaleFactor = 1.3
 qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
@@ -126,11 +126,11 @@ for channel in ['em', 'tt'] :
         qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
         qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
 
-    print newVarMap
+    #print newVarMap
     for var, info in newVarMap.iteritems() :
 
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
-        if not 'm_vis' in var : continue
+        #if not 'm_vis' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
@@ -204,7 +204,11 @@ for channel in ['em', 'tt'] :
 
 
             dic = tFile.Get("%s_Histos" % channel )
-            if 'm_vis' in var : preHist = dic.Get( "m_vis" )
+            if 'm_vis' in var :
+                if 'QCD' in sample and options.useQCDMake :
+                    preHist = dic.Get( var )
+                else :
+                    preHist = dic.Get( "m_vis" )
             else : preHist = dic.Get( var )
             preHist.SetDirectory( 0 )
 

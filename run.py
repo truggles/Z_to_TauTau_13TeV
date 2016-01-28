@@ -79,8 +79,8 @@ params = {
     #'channels' : ['em',],
     #'channels' : ['tt',],
     #'cutMapper' : 'signalCutsNoIsoNoSign', #!
-    'cutMapper' : 'signalCutsNoSign', #!
-    #'cutMapper' : 'signalExtractionNoSign', #!
+    #'cutMapper' : 'signalCutsNoSign', #!
+    'cutMapper' : 'signalExtractionNoSign', #!
     'cutName' : 'PostSync', #!
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsNtuple',
@@ -95,12 +95,12 @@ params = {
 #analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 ###analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan27mssm_SS'
+params['mid3'] = '3Jan28mssm_SS'
 params['additionalCut'] = '*(Z_SS==1)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-params['mid3'] = '3Jan27mssm_OS'
+params['mid3'] = '3Jan28mssm_OS'
 params['additionalCut'] = '*(Z_SS==0)'
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.drawHistos( grouping, samples, **params )
