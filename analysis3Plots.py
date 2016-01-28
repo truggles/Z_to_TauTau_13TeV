@@ -316,7 +316,9 @@ for channel in ['em', 'tt'] :
                 h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( h.GetBinWidth(1) / h.GetBinWidth( bin_ ) ) )
 
         # Set hist Names
-        Names = { "data" : "Data", "higgs" : "SM Higgs x %i" % higgsSF, "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        if options.mssm : Names["higgs"] = "SM Higgs(125)"
+        else : Names["higgs"] = "SM Higgs(125) x %i" % higgsSF
         for h in Ary.keys() :
             h.SetTitle( Names[ Ary[h] ] )
             
@@ -399,19 +401,11 @@ for channel in ['em', 'tt'] :
             # X Axis!
             ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
             ratioHist.GetYaxis().SetTitle("Data / MC")
-            #yAxis = ratioHist.GetYaxis()
-            #xAxis = ratioHist.GetXaxis()
-            #fixFontSize( yAxis, (1-.8))
-            #fixFontSize( xAxis  (1-.8))
             ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
-            #ratioHist.GetYaxis().SetTextSize( ratioHist.GetYaxis().GetTextSize()*( 1/smlPadSize) )
             ratioHist.GetYaxis().SetNdivisions( 5, True )
-            #ratioHist.GetYaxis().SetTitleSize( ratioHist.GetYaxis().GetTitleSize()*( 1/smlPadSize/2) )
             ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
             ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
-            #ratioHist.GetXaxis().SetTitleOffset( ratioHist.GetXaxis().GetTitleOffset()*( 1/smlPadSize/2.5) )
-            #ratioHist.GetYaxis().SetTickSize( .25 )
-            #ratioHist.GetYaxis().SetTickLength( .03 )
+
 
             pad1.cd()
             stack.Draw('hist')
@@ -529,6 +523,8 @@ for channel in ['em', 'tt'] :
         """ Additional views for Visible Mass """
         if 'm_vis' in var :
             pad1.SetLogy()
+            stack.SetMaximum( stack.GetMaximum() * 10 )
+            stack.SetMinimum( higgs.GetMaximum() * .1 )
             if var == 'm_vis_mssm' :
                 pad1.SetLogx()
                 if options.ratio : ratioPad.SetLogx()
