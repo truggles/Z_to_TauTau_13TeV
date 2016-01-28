@@ -98,7 +98,9 @@ def getHistoDict( channel ) :
         'GenWeight' : ('GenWeight', 60, -30, 30),
         'npv' : ('npv', 50, 0, 50),
         'npu' : ('npu', 50, 0, 50),
-        'm_vis' : ('m_vis', 600, 0, 600),
+        'm_vis_mssm' : ('m_vis', 3500, 0, 3500),
+        'm_vis_varB' : ('m_vis', 600, 0, 600),
+        'm_vis' : ('m_vis', 350, 0, 350),
         'pt_1' : ('pt_1', 400, 0, 400),
         'eta_1' : ('eta_1', 80, -4, 4),
         'iso_1' : ('iso_1', 100, 0, 1),
@@ -148,6 +150,8 @@ def getHistoDict( channel ) :
 
 def getPlotDetails( channel ) :
     plotDetails = {
+        'm_vis_mssm' : (0, 3500, 10, 'Z Vis Mass [GeV]', ' GeV'),
+        'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'Z_Pt' : (0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),

@@ -22,6 +22,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     # em enriched QCD has a filter efficiency applied to their cross sections
     campaign = 'RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-'
     old = 'RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-'
+    new76x = 'RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-'
     samples25ns = { 
                 'data_em' : ('', -999.0),
                 'data_tt' : ('', -999.0),
@@ -92,6 +93,72 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'DYJetsLow400-600' : ('/DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 3.581 ), 
                 'DYJetsLow600-Inf' : ('/DYJetsToLL_M-5to50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%sv1/MINIAODSIM' % campaign, 1.124 ), 
     }
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
+    #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2000, 2900, 3200]
+    samplesMSSM = {}
+    for mass in masses :
+       samplesMSSM['SUSYggH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % (mass, new76x), 1 )
+       samplesMSSM['SUSYbbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % (mass, new76x), 1 )
+       samplesDataCards['SUSYggH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % (mass, campaign), 1 )
+       samplesDataCards['SUSYbbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % (mass, campaign), 1 )
+                #'SUSYggH90' : ('/SUSYGluGluToBBHToTauTau_M-90_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH100' : ('/SUSYGluGluToBBHToTauTau_M-100_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH110' : ('/SUSYGluGluToBBHToTauTau_M-110_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH120' : ('/SUSYGluGluToBBHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH130' : ('/SUSYGluGluToBBHToTauTau_M-130_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH140' : ('/SUSYGluGluToBBHToTauTau_M-140_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH160' : ('/SUSYGluGluToBBHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH180' : ('/SUSYGluGluToBBHToTauTau_M-180_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH200' : ('/SUSYGluGluToBBHToTauTau_M-200_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH250' : ('/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH300' : ('/SUSYGluGluToBBHToTauTau_M-300_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH400' : ('/SUSYGluGluToBBHToTauTau_M-400_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH500' : ('/SUSYGluGluToBBHToTauTau_M-500_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH600' : ('/SUSYGluGluToBBHToTauTau_M-600_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH700' : ('/SUSYGluGluToBBHToTauTau_M-700_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH800' : ('/SUSYGluGluToBBHToTauTau_M-800_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH900' : ('/SUSYGluGluToBBHToTauTau_M-900_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH1000' : ('/SUSYGluGluToBBHToTauTau_M-1000_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH1200' : ('/SUSYGluGluToBBHToTauTau_M-1200_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH1400' : ('/SUSYGluGluToBBHToTauTau_M-1400_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH1500' : ('/SUSYGluGluToBBHToTauTau_M-1500_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH1600' : ('/SUSYGluGluToBBHToTauTau_M-1600_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH1800' : ('/SUSYGluGluToBBHToTauTau_M-1800_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH2000' : ('/SUSYGluGluToBBHToTauTau_M-2000_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH2300' : ('/SUSYGluGluToBBHToTauTau_M-2300_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH2600' : ('/SUSYGluGluToBBHToTauTau_M-2600_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH2900' : ('/SUSYGluGluToBBHToTauTau_M-2900_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYggH3200' : ('/SUSYGluGluToBBHToTauTau_M-3200_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH80' : ('/SUSYGluGluToHToTauTau_M-80_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH90' : ('/SUSYGluGluToHToTauTau_M-90_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH100' : ('/SUSYGluGluToHToTauTau_M-100_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH110' : ('/SUSYGluGluToHToTauTau_M-110_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH120' : ('/SUSYGluGluToHToTauTau_M-120_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH130' : ('/SUSYGluGluToHToTauTau_M-130_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH140' : ('/SUSYGluGluToHToTauTau_M-140_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH160' : ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH180' : ('/SUSYGluGluToHToTauTau_M-180_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH200' : ('/SUSYGluGluToHToTauTau_M-200_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH250' : ('/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH300' : ('/SUSYGluGluToHToTauTau_M-300_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH400' : ('/SUSYGluGluToHToTauTau_M-400_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH500' : ('/SUSYGluGluToHToTauTau_M-500_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH600' : ('/SUSYGluGluToHToTauTau_M-600_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH700' : ('/SUSYGluGluToHToTauTau_M-700_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH800' : ('/SUSYGluGluToHToTauTau_M-800_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH900' : ('/SUSYGluGluToHToTauTau_M-900_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH1000' : ('/SUSYGluGluToHToTauTau_M-1000_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH1200' : ('/SUSYGluGluToHToTauTau_M-1200_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH1400' : ('/SUSYGluGluToHToTauTau_M-1400_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH1500' : ('/SUSYGluGluToHToTauTau_M-1500_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH1600' : ('/SUSYGluGluToHToTauTau_M-1600_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH1800' : ('/SUSYGluGluToHToTauTau_M-1800_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH2000' : ('/SUSYGluGluToHToTauTau_M-2000_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH2300' : ('/SUSYGluGluToHToTauTau_M-2300_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH2600' : ('/SUSYGluGluToHToTauTau_M-2600_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH2900' : ('/SUSYGluGluToHToTauTau_M-2900_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+                #'SUSYbbH3200' : ('/SUSYGluGluToHToTauTau_M-3200_TuneCUETP8M1_13TeV-pythia8/%sv1/MINIAODSIM' % new76x, 1 ),
+        #}
 
     samplesTrigger = {
                 'data_mt' : ('', -999.0),
@@ -102,6 +169,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     if grouping == '25ns': samples = samples25ns
     if grouping == 'dataCards': samples = samplesDataCards
     if grouping == 'Trigger': samples = samplesTrigger
+    if grouping == 'MSSM': samples = samplesMSSM
      
     dataSamples = {
                 'data_em' : ['/MuonEG/Run2015D-05Oct2015-v2/MINIAOD', '/MuonEG/Run2015D-PromptReco-v4/MINIAOD'],
@@ -145,6 +213,9 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'VBFHtoTauTau125' : ( 105, 99),
                 'VBFHtoTauTau130' : ( 106, 99),
     }
+    for mass in masses :
+        sampleCodes['SUSYggH%i' % mass] = (800, 800)
+        sampleCodes['SUSYbbH%i' % mass] = (900, 900)
     
     
     # A dictionary to store each samples info
@@ -165,7 +236,11 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 if infoDAStmp[4] != u'ok' :
                     infoDAS[4] = 'error'
                 print "Data: ", infoDAStmp
-        else : infoDAS = getDBSInfo( k, v[0] )
+        else :
+            try : infoDAS = getDBSInfo( k, v[0] )
+            except IndexError :
+                print "IndexError for sample: %s" % k
+                continue
         print infoDAS
     
         # Get the Ntuple info that FSA created
