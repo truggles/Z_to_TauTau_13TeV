@@ -492,14 +492,36 @@ for channel in ['em', 'tt'] :
             #text4.SetTextSize(0.05)
             #text4.DrawTextNDC(.65,.45,"SS Selection" )
 
-        if (var == 't1DecayMode' or var == 't2DecayMode') :
-            print var + " DATA: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( data.GetBinContent( 1), data.GetBinContent( 2), data.GetBinContent( 11 ) )
-            print var + " MC: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( stack.GetStack().Last().GetBinContent( 1), stack.GetStack().Last().GetBinContent( 2), stack.GetStack().Last().GetBinContent( 11 ) )
+        #if (var == 't1DecayMode' or var == 't2DecayMode') :
+        #    print var + " DATA: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( data.GetBinContent( 1), data.GetBinContent( 2), data.GetBinContent( 11 ) )
+        #    print var + " MC: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( stack.GetStack().Last().GetBinContent( 1), stack.GetStack().Last().GetBinContent( 2), stack.GetStack().Last().GetBinContent( 11 ) )
+
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.ratio :
             ratioHist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+
+
+
+        """ Blinding Data """
+        if options.blind :
+            nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+            for k in range( nBins+1 ) :
+                if data.GetXaxis().GetBinLowEdge(k+1)>150 :
+                    data.SetBinContent(k, 0.)
+                    data.SetBinError(k, 0.)
+                    if options.ratio :
+                        ratioHist.SetBinContent(k, 0.)
+                        ratioHist.SetBinError(k, 0.)
+            if options.ratio : 
+                ratioPad.cd()
+                ratioHist.Draw('esamex0')
+            pad1.cd()
+            data.Draw('esamex0')
+            
+
+
         c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
         c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
 
