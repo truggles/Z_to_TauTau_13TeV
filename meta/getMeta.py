@@ -11,22 +11,22 @@ import time
 
 
 def getDBSInfo( key, name ) :
-	query = "summary dataset=%s" % name
-	print query
-	try: results = das_query( query )
+    query = "summary dataset=%s" % name
+    print query
+    try: results = das_query( query )
     except "DAS query returned result status fail" :
         print "DAS query failed initially, sleeping for 60 seconds, then retry"
         time.sleep( 60 )
         results = das_query( query )
-	
-	status = results['status']
-	nfiles = results['data'][0]['summary'][0]['nfiles']
-	nblocks = results['data'][0]['summary'][0]['nblocks']
-	nevents = results['data'][0]['summary'][0]['nevents']
-	nlumis = results['data'][0]['summary'][0]['nlumis']
-
-	infoVect = [ nfiles, nblocks, nevents, nlumis, status ]
-	return infoVect
+    
+    status = results['status']
+    nfiles = results['data'][0]['summary'][0]['nfiles']
+    nblocks = results['data'][0]['summary'][0]['nblocks']
+    nevents = results['data'][0]['summary'][0]['nevents']
+    nlumis = results['data'][0]['summary'][0]['nlumis']
+    
+    infoVect = [ nfiles, nblocks, nevents, nlumis, status ]
+    return infoVect
 
 def getNumberOfFiles( name, sampPrefix ) :
     try:

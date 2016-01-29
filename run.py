@@ -17,8 +17,8 @@ ROOT.gROOT.Reset()
 
 ''' Set grouping (25ns or Sync) '''
 #grouping = '25ns'
-grouping = 'Sync'
-#grouping = 'dataCards'
+#grouping = 'Sync'
+grouping = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 cmsLumi = '2200.0'
 print "zHome: ",zHome
@@ -51,7 +51,8 @@ SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
 Samples25ns = ['data_em', 'data_tt', 'DYJets', 'Tbar-tW', 'T-tW', 'WJets', 'TTJets', 'WW', 'WW2l2n', 'WW4q', 'WW1l1n2q', 'WZJets', 'WZ1l1n2q', 'WZ3l1nu', 'ZZ', 'ZZ4l', 'TT', 'TTPow', 'ggHtoTauTau', 'VBFHtoTauTau'] # extra TT samples on stand by
 Samples25nsFinal = ['data_em', 'data_tt', 'QCD', 'TTJets', 'DYJets', 'DYJetsLow', 'Tbar-tW', 'T-tW', 'WJets', 'WW', 'WZJets', 'ZZ', 'ggHtoTauTau', 'VBFHtoTauTau'] # Intended good one
-SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l']#, 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
+#SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l']#, 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
+SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'DYJets', 'DYJets100-200', 'DYJets200-400', 'DYJets400-600', 'DYJets600-Inf', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'WJets', 'WJets100-200', 'WJets200-400', 'WJets400-600', 'WJets600-Inf', 'WW1l1nu2q', 'WZ1l3nu', 'ZZ4l']
 SamplesQCD = ['QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf']
 
 masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
@@ -60,9 +61,9 @@ for mass in masses :
        SamplesDataCards.append( 'SUSYbbH%i' % mass )
 
 #samples = Samples25nsFinal
-samples = SamplesSync
+#samples = SamplesSync
 #samples = SamplesData
-#samples = SamplesDataCards
+samples = SamplesDataCards
 #samples = SamplesQCD
 
 ''' These parameters are fed into the 2 main function calls.
@@ -85,14 +86,14 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Jan25',
-    'mid2' : '2Jan25',
-    'mid3' : '3Jan25',
+    'mid1' : '1Jan29',
+    'mid2' : '2Jan29',
+    'mid3' : '3Jan29',
     'additionalCut' : '',
 }
 
-#samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+samples = checkBkgs( samples, params, grouping )
+analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 ###analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 #params['mid3'] = '3Jan23_SSa'
