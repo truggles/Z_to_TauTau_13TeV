@@ -57,8 +57,8 @@ SamplesQCD = ['QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QC
 
 masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
 for mass in masses :
-       SamplesDataCards.append( 'SUSYggH%i' % mass )
-       SamplesDataCards.append( 'SUSYbbH%i' % mass )
+       SamplesDataCards.append( 'ggH%i' % mass )
+       SamplesDataCards.append( 'bbH%i' % mass )
 
 #samples = Samples25nsFinal
 #samples = SamplesSync
@@ -73,7 +73,7 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 15,
+    'numCores' : 4,
     'numFilesPerCycle' : 25,
     'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],

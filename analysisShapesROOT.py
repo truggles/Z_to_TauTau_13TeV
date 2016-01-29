@@ -27,7 +27,7 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2200.0 # / fb 25ns - Final 2015 25ns Golden JSON
+luminosity = 2260.0 # / fb 25ns
 
 # Scaling = 1 for data card sync
 #qcdTTScaleFactor = 1.06
@@ -70,9 +70,9 @@ if options.mssm :
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
     for mssmMass in masses :
         samples['SUSYggH%i' % mssmMass] = ('kPink', '_SUSYggH%i_' % mssmMass)
-        samples['SUSYbbH%i' % mssmMass] = ('kPink', '_SUSYbbH%i_' % mssmMass) 
+        samples['bbH%i' % mssmMass] = ('kPink', '_bbH%i_' % mssmMass) 
         nameArray.append('_SUSYggH%i_' % mssmMass)
-        nameArray.append('_SUSYbbH%i_' % mssmMass)
+        nameArray.append('_bbH%i_' % mssmMass)
     del samples['VBFHtoTauTau125']
     del samples['ggHtoTauTau125']
     nameArray.remove('_vbfH125_')

@@ -34,7 +34,7 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2200.0 # / fb 25ns - Final 2015 25ns Golden JSON, adjusted 4% upwards by https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/544.html
+luminosity = 2260.0 # / fb 25ns
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
@@ -81,7 +81,7 @@ samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
 samples['SUSYggH%i' % mssmMass] = ('kPink', 'mssm')
-samples['SUSYbbH%i' % mssmMass] = ('kPink', 'mssm') 
+samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : 'kRed+2',

@@ -95,9 +95,9 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     samplesMSSM = {}
     for mass in masses :
        samplesMSSM['SUSYggH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
-       samplesMSSM['SUSYbbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+       samplesMSSM['bbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
        samplesDataCards['SUSYggH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
-       samplesDataCards['SUSYbbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+       samplesDataCards['bbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
 
     samplesTrigger = {
                 'data_mt' : ('', -999.0),
@@ -162,7 +162,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     }
     for mass in masses :
         sampleCodes['SUSYggH%i' % mass] = (800, 800)
-        sampleCodes['SUSYbbH%i' % mass] = (900, 900)
+        sampleCodes['bbH%i' % mass] = (900, 900)
     
     
     # A dictionary to store each samples info
