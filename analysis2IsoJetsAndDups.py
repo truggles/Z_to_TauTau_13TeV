@@ -198,6 +198,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'jb2csv' : 'bcsv_2',
         'muVetoZTTp001dxyz' : 'extramuon_veto',
         'eVetoZTTp001dxyz' : 'extraelec_veto',
+        #'muVetoZTTp001dxyzR0' : 'extramuon_veto',
+        #'eVetoZTTp001dxyzR0' : 'extraelec_veto',
         'mvaMetCov00' : 'covMatrix00',
         'mvaMetCov01' : 'covMatrix01',
         'mvaMetCov10' : 'covMatrix10',
@@ -313,7 +315,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     # A few branches are ints instead of floats and must be treated specially
     # I think these are all the ones in FSA ntuples, but add more if you find them
     #intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake'])
-    intBranches = set(['isdata',])
+    intBranches = set(['run', 'evt', 'lumi', 'isdata',])
     
     ##############################################################################
     # Shouldn't need to modify anything below here                               #
