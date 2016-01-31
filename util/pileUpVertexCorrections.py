@@ -121,7 +121,7 @@ def PUreweight( channel ) :
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 
-    samplefile = ROOT.TFile('meta/PileUpInfo/MC_Spring15_PU25_Startup.root', 'READ') # Made by Adinda, same as mine but shifter up 1 bin
+    samplefile = ROOT.TFile('meta/PileUpInfo/MC_Fall15_PU25_V1.root', 'READ') # Made by Adinda, same as mine but shifter up 1 bin
     #samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
     #sHist = samplefile.Get('nTruePU')
     sHist = samplefile.Get('pileup')
