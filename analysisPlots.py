@@ -26,7 +26,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # Taus are currently filled with 1 for all SFs
-        sfs = '*(trigWeight * l1IdIsoWeight * l2IdIsoWeight)'
+        sfs = '*(trigweight_1 * idisoweight_1 * idisoweight_2)'
         xsec = '*(XSecLumiWeight)'
 
         # the >> sends the output to a predefined histo
@@ -41,14 +41,12 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                     print 'm_vis'
                     print "Data Count:", histos[ var ].Integral()
         else :
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'GenWeight/abs( GenWeight )%s%s%s' % (additionalCut, sfs, xsec) )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'weight/abs( weight )%s%s%s' % (additionalCut, sfs, xsec) )
             histos2[ var ] = gPad.GetPrimitive( var2 )
 
-            #XXX# Remove PileUp reweighting for now as they are supposed to be much closer with 76x
-            #XXX#chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s%s%s' % (additionalCut, sfs, xsec) )
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(GenWeight/abs( GenWeight ))%s%s%s' % (additionalCut, sfs, xsec) )
+            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (weight/abs( weight ))%s%s%s' % (additionalCut, sfs, xsec) )
             ''' No reweighting at the moment! '''
-            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(GenWeight/abs( GenWeight ))%s' % additionalCut )
+            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(weight/abs( weight ))%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( var )
             if chain.GetEntries() > 0 :
                 integralPre = histos2[ var ].Integral()
@@ -97,7 +95,7 @@ def getHistoDict( channel ) :
         'jeta_1' : ('jeta_1', 100, -5, 5),
         'jpt_2' : ('jpt_2', 400, 0, 400),
         'jeta_2' : ('jeta_2', 100, -5, 5),
-        'GenWeight' : ('GenWeight', 60, -30, 30),
+        'weight' : ('weight', 60, -30, 30),
         'npv' : ('npv', 50, 0, 50),
         'npu' : ('npu', 50, 0, 50),
         'm_vis_mssm' : ('m_vis', 3500, 0, 3500),
@@ -175,7 +173,7 @@ def getPlotDetails( channel ) :
         'jeta_2' : (-5, 5, 10, 'Second Jet Eta', ' Eta'),
         'extraelec_veto' : (0, 2, 1, 'Extra Electron Veto', ''),
         'extramuon_veto' : (0, 2, 1, 'Extra Muon Veto', ''),
-        'GenWeight' : (-30, 30, 1, 'Gen Weight', ''),
+        'weight' : (-30, 30, 1, 'Gen Weight', ''),
         'npv' : (0, 40, 2, 'Number of Vertices', ''),
         'npu' : (0, 40, 2, 'Number of True PU Vertices', ''),
         'pzetavis' : (0, 300, 20, 'pZetaVis', ' GeV'),

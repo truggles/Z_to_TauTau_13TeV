@@ -23,6 +23,7 @@ prodMap = {
 }
 
 def getXSec( shortName, sampDict ) :
+    #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
     htts = ['100-200', '200-400', '400-600', '600-Inf']
     scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
     if 'QCD' in shortName : return scalar1
@@ -75,15 +76,14 @@ tauIso = {
     'MtToPfMet_Raw' : 'mt',
     'MtToPfMet_type1' : '',
     'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
-    'AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5',
-    'AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5',
-    'AgainstElectronTightMVA5' : 'againstElectronTightMVA5',
-    'AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5',
-    'AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5',
+    'AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
+    'AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
+    'AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
+    'AgainstElectronVLooseMVA6' : 'againstElectronVLooseMVA6',
+    'AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
     'AgainstMuonLoose3' : 'againstMuonLoose3',
-    #'AgainstMuonLoose' : 'againstMuonLoose',
+    'AgainstMuonTight3' : 'againstMuonTight3',
     'ChargedIsoPtSum' : 'chargedIsoPtSum',
-    #'DecayModeFindingNewDMs' : 'decayModeFindingOldDMs',
     'NeutralIsoPtSum' : 'neutralIsoPtSum',
     'PuCorrPtSum' : 'puCorrPtSum',
     #'ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
@@ -96,7 +96,6 @@ tauIso = {
     'AgainstElectronMVA5raw' : '',
     #'AgainstElectronMedium' : '',
     #'AgainstElectronTight' : '',
-    #'AgainstMuonLoose2' : '',
     'DecayMode' : '',
     'DecayModeFinding' : '',
     'DoubleTau40Filter' : '',
@@ -196,10 +195,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'jb2eta' : 'beta_2',
         'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
-        'muVetoZTTp001dxyz' : 'extramuon_veto',
-        'eVetoZTTp001dxyz' : 'extraelec_veto',
-        #'muVetoZTTp001dxyzR0' : 'extramuon_veto',
-        #'eVetoZTTp001dxyzR0' : 'extraelec_veto',
+        #'muVetoZTTp001dxyz' : 'extramuon_veto',
+        #'eVetoZTTp001dxyz' : 'extraelec_veto',
+        'muVetoZTTp001dxyzR0' : 'extramuon_veto',
+        'eVetoZTTp001dxyzR0' : 'extraelec_veto',
         'mvaMetCov00' : 'covMatrix00',
         'mvaMetCov01' : 'covMatrix01',
         'mvaMetCov10' : 'covMatrix10',
@@ -227,9 +226,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'Pt' : 'Z_Pt',
         'DR' : 'Z_DR',
         'DPhi' : 'Z_DPhi',
+        'pt_tt' : 'pp_tt',
+        'MtTotal' : 'mt_tot',
         }
     branchMappingElec = {
-        #'cand_ZTTGenMatching' : 'gen_match',
+        'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt', # rename ePt to pt_1
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -242,7 +243,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_MtToPfMet_Raw' : 'mt',
         }
     branchMappingMuon = {
-        #'cand_ZTTGenMatching' : 'gen_match',
+        'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -254,7 +255,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_MtToPfMet_Raw' : 'mt',
         }
     branchMappingTau = {
-        #'cand_ZTTGenMatching' : 'gen_match',
+        'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -263,13 +264,13 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
-        'cand_AgainstElectronLooseMVA5' : 'againstElectronLooseMVA5',
-        'cand_AgainstElectronMediumMVA5' : 'againstElectronMediumMVA5',
-        'cand_AgainstElectronTightMVA5' : 'againstElectronTightMVA5',
-        'cand_AgainstElectronVLooseMVA5' : 'againstElectronVLooseMVA5',
-        'cand_AgainstElectronVTightMVA5' : 'againstElectronVTightMVA5',
+        'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
+        'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
+        'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
+        'cand_AgainstElectronVLooseMVA6' : 'againstElectronVLooseMVA6',
+        'cand_AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
         'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
-        #cand_AgainstMuonLoose' : 'againstMuonLoose',
+        'cand_AgainstMuonTight3' : 'againstMuonTight3',
         'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
         'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
@@ -430,12 +431,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
-    trigWeight = array('f', [ 0 ] )
-    trigWeightB = tnew.Branch('trigWeight', trigWeight, 'trigWeight/F')
-    l1IdIsoWeight = array('f', [ 0 ] )
-    l1IdIsoWeightB = tnew.Branch('l1IdIsoWeight', l1IdIsoWeight, 'l1IdIsoWeight/F')
-    l2IdIsoWeight = array('f', [ 0 ] )
-    l2IdIsoWeightB = tnew.Branch('l2IdIsoWeight', l2IdIsoWeight, 'l2IdIsoWeight/F')
+    trigweight_1 = array('f', [ 0 ] )
+    trigweight_1B = tnew.Branch('trigweight_1', trigweight_1, 'trigweight_1/F')
+    idisoweight_1 = array('f', [ 0 ] )
+    idisoweight_1B = tnew.Branch('idisoweight_1', idisoweight_1, 'idisoweight_1/F')
+    idisoweight_2 = array('f', [ 0 ] )
+    idisoweight_2B = tnew.Branch('idisoweight_2', idisoweight_2, 'idisoweight_2/F')
     UniqueID = array('f', [ 0 ] )
     UniqueIDB = tnew.Branch('UniqueID', UniqueID, 'UniqueID/F')
     BkgGroup = array('f', [ 0 ] )
@@ -523,9 +524,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
             if 'data' in sample :
                 puweight[0] = 1
-                trigWeight[0] = 1
-                l1IdIsoWeight[0] = 1
-                l2IdIsoWeight[0] = 1
+                trigweight_1[0] = 1
+                idisoweight_1[0] = 1
+                idisoweight_2[0] = 1
                 XSecLumiWeight[0] = 1
                 isZEE[0] = -1
                 isZMM[0] = -1
@@ -539,16 +540,16 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 l2Eta = getattr( row, '%sEta' % l2 )
 
                 # Isolation / ID weights
-                if 't' in l1 : l1IdIsoWeight[0] = 1
-                else : l1IdIsoWeight[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
-                if 't' in l2 : l2IdIsoWeight[0] = 1
-                else : l2IdIsoWeight[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
+                if 't' in l1 : idisoweight_1[0] = 1
+                else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
+                if 't' in l2 : idisoweight_2[0] = 1
+                else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
 
                 # Trigger Weights
-                if channel == 'et' : trigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                if channel == 'mt' : trigWeight[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                if channel == 'em' : trigWeight[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
-                else : trigWeight[0] = 1
+                if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                if channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                if channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
+                else : trigweight_1[0] = 1
 
                 XSecLumiWeight[0] = xsec
  
