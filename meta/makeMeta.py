@@ -55,25 +55,26 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'T-tchan' : ('/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 136.02 * 0.108*3 ),
                 'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c76x, 831.76 ),
                 'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 35.6),
-                'Tbar-tchan' : ('/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c74x, 80.95 * 0.108*3 ),
-                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 61526.7 ),
-                'WW1l1nu2q' : ('/WWToLNuQQ_13TeV-powheg/%s-v1/MINIAODSIM' % c76x, 49.997 ),
-                'WW2l2nu' : ('/WWTo2L2Nu_13TeV-powheg/%s-v1/MINIAODSIM' % c74x, 12.178 ),
-                'WZ1l1nu2q' : ('/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 10.71 ),
+                #XXX#'Tbar-tchan' : ('/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c74x, 80.95 * 0.108*3 ),
+                #'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 61526.7 ),
+                'WW1l1nu2q' : ('/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 49.997 ),
+                'WZJets' : ('/WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 5.26 ),
+                #'WW2l2nu' : ('/WWTo2L2Nu_13TeV-powheg/%s-v1/MINIAODSIM' % c74x, 12.178 ),
+                #XXX#'WZ1l1nu2q' : ('/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 10.71 ),
                 'WZ1l3nu' : ('/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 3.05 ),
-                'WZ2l2q' : ('/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 5.595 ),
+                #'WZ2l2q' : ('/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 5.595 ),
                 'WZ3l1nu' : ('/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c74x, 4.42965 ),
-                'ZZ2l2nu' : ('/ZZTo2L2Nu_13TeV_powheg_pythia8/%sv2/MINIAODSIM' % c74x, 0.564 ),
-                'ZZ2l2q' : ('/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 3.22 ),
+                #'ZZ2l2nu' : ('/ZZTo2L2Nu_13TeV_powheg_pythia8/%sv2/MINIAODSIM' % c74x, 0.564 ),
+                #XXX#'ZZ2l2q' : ('/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 3.22 ),
                 'ZZ4l' : ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 1.212 ),
-                'QCD15-20' : ('/QCD_Pt_15to20_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 1.27298e+09 * 0.00020 ), 
-                'QCD20-30' : ('/QCD_Pt_20to30_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 5.57627e+08 * 0.00059 ),
-                'QCD30-80' : ('/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 1.59068e+08 * 0.00255 ), 
-                'QCD80-170' : ('/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 3.221e+06 * 0.01183 ), 
-                'QCD170-250' : ('/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 105771 * 0.02492 ), 
-                'QCD250-Inf' : ('/QCD_Pt_250toInf_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 21094.1 * 0.03375 ), 
+                #XXX#'QCD15-20' : ('/QCD_Pt_15to20_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 1.27298e+09 * 0.00020 ), 
+                #XXX#'QCD20-30' : ('/QCD_Pt_20to30_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 5.57627e+08 * 0.00059 ),
+                #XXX#'QCD30-80' : ('/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 1.59068e+08 * 0.00255 ), 
+                #XXX#'QCD80-170' : ('/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 3.221e+06 * 0.01183 ), 
+                #XXX#'QCD170-250' : ('/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 105771 * 0.02492 ), 
+                #XXX#'QCD250-Inf' : ('/QCD_Pt_250toInf_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 21094.1 * 0.03375 ), 
                 # The scale factor is for LO -> NNLO scaling see excel sheet below https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_samples
-                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 50690 * 1.213783784),
+                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 50690 * 1.213783784),
                 'WJets100-200' : ('/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 1345.0 * 1.213783784),
                 'WJets200-400' : ('/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 359.7 * 1.213783784),
                 'WJets400-600' : ('/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 48.91 * 1.213783784),
@@ -84,7 +85,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'DYJets400-600' : ('/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 5.497 * 1.230888662 ), 
                 'DYJets600-Inf' : ('/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 2.21 * 1.230888662 ), 
 
-                'DYJetsLow' : ('/DYJetsToLL_M-5to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 71310.0 ), 
+                'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 71310.0 ), 
                 #'DYJetsLow100-200' : ('/DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 224.2 ), 
                 #'DYJetsLow200-400' : ('/DYJetsToLL_M-5to50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 37.2 ), 
                 #'DYJetsLow400-600' : ('/DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 3.581 ), 
@@ -94,10 +95,10 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2000, 2900, 3200]
     samplesMSSM = {}
     for mass in masses :
-       samplesMSSM['SUSYggH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
-       samplesMSSM['bbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
-       samplesDataCards['SUSYggH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
-       samplesDataCards['bbH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+       samplesMSSM['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+       samplesMSSM['bbH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+       samplesDataCards['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+       samplesDataCards['bbH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
 
     samplesTrigger = {
                 'data_mt' : ('', -999.0),
@@ -142,6 +143,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'WZ1l3nu' : ( 14, 3),
                 'WZ2l2q' : ( 15, 3),
                 'WZ3l1nu' : ( 16, 3),
+                'WZJets' : ( 16.1, 3),
                 'ZZ2l2nu' : ( 17, 3),
                 'ZZ2l2q' : ( 18, 3),
                 'ZZ4l' : ( 19, 3),
@@ -161,7 +163,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'VBFHtoTauTau130' : ( 106, 99),
     }
     for mass in masses :
-        sampleCodes['SUSYggH%i' % mass] = (800, 800)
+        sampleCodes['ggH%i' % mass] = (800, 800)
         sampleCodes['bbH%i' % mass] = (900, 900)
     
     
@@ -186,7 +188,9 @@ def makeMetaJSON( grouping, ch = 'em' ) :
         else :
             try : infoDAS = getDBSInfo( k, v[0] )
             except IndexError :
+                print "\n#######################################"
                 print "IndexError for sample: %s" % k
+                print "#######################################\n"
                 continue
         print infoDAS
     
