@@ -50,7 +50,8 @@ etTrig   = '(singleE23Pass > 0 && (eMatchesEle23Path == 1 || eMatchesEle22Path =
 
 # TT Baseline
 DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
-ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
+ttKin   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
+#ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
@@ -113,7 +114,7 @@ def syncCutsNtuple( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')']
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt40]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35]
     cutMap = {'BaseLine' : cuts}
     return cutMap
 
