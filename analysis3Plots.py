@@ -38,10 +38,10 @@ luminosity = 2260.0 # / fb 25ns
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
-#qcdTTScaleFactor = 1.06
-#qcdEMScaleFactor = 1.06
-qcdTTScaleFactor = 1.3
-qcdEMScaleFactor = 1.5
+qcdTTScaleFactor = 1.06
+qcdEMScaleFactor = 1.06
+#qcdTTScaleFactor = 1.3
+#qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
 qcdYieldTT = 35.7 * qcdTTScaleFactor
@@ -55,32 +55,32 @@ samples = OrderedDict()
 samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
 samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
 samples['DYJets']   = ('kOrange-4', 'dyj')
-samples['DYJetsLow']   = ('kOrange-4', 'dyj')
-samples['T-tW']     = ('kYellow+2', 'dib')
+#samples['DYJetsLow']   = ('kOrange-4', 'dyj')
+#samples['T-tW']     = ('kYellow+2', 'dib')
 samples['T-tchan']     = ('kYellow+2', 'dib')
 samples['TT']       = ('kBlue-8', 'top')
 samples['Tbar-tW']  = ('kYellow-2', 'dib')
 samples['Tbar-tchan']  = ('kYellow-2', 'dib')
 samples['WJets']    = ('kAzure+2', 'wjets')
 samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
-samples['WW2l2nu']       = ('kAzure+8', 'dib')
-samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
+#samples['WW2l2nu']       = ('kAzure+8', 'dib')
+#samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
 samples['WZ1l3nu'] = ('kAzure-6', 'dib')
-samples['WZ2l2q'] = ('kAzure-6', 'dib')
-samples['WZ3l1nu'] = ('kAzure-6', 'dib')
-samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
-samples['ZZ2l2q'] = ('kAzure-12', 'dib')
+#samples['WZ2l2q'] = ('kAzure-6', 'dib')
+#samples['WZ3l1nu'] = ('kAzure-6', 'dib')
+#samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
+#samples['ZZ2l2q'] = ('kAzure-12', 'dib')
 samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
-samples['QCD15-20']        = ('kMagenta-10', 'qcd')
-samples['QCD20-30']        = ('kMagenta-10', 'qcd')
-samples['QCD30-80']        = ('kMagenta-10', 'qcd')
-samples['QCD80-170']        = ('kMagenta-10', 'qcd')
-samples['QCD170-250']        = ('kMagenta-10', 'qcd')
-samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
+#samples['QCD15-20']        = ('kMagenta-10', 'qcd')
+#samples['QCD20-30']        = ('kMagenta-10', 'qcd')
+#samples['QCD30-80']        = ('kMagenta-10', 'qcd')
+#samples['QCD80-170']        = ('kMagenta-10', 'qcd')
+#samples['QCD170-250']        = ('kMagenta-10', 'qcd')
+#samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-samples['SUSYggH%i' % mssmMass] = ('kPink', 'mssm')
+samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
 samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
@@ -98,7 +98,7 @@ sampColors = {
 for channel in ['em', 'tt'] :
 
     #if channel == 'tt' : continue
-    #if channel == 'em' : continue
+    if channel == 'em' : continue
     if channel == 'tt' : mssmSF = int(mssmSF / 10)
 
     # Make an index file for web viewing

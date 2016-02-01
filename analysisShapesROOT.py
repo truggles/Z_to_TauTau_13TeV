@@ -42,21 +42,21 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
                 # Sample : Color
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', '_ZTT_')
-samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
-samples['T-tW']     = ('kYellow+2', '_VV_')
+#samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
+#samples['T-tW']     = ('kYellow+2', '_VV_')
 samples['T-tchan']     = ('kYellow+2', '_VV_')
 samples['TT']       = ('kBlue-8', '_TT_')
 samples['Tbar-tW']  = ('kYellow-2', '_VV_')
 samples['Tbar-tchan']  = ('kYellow-2', '_VV_')
 samples['WJets']    = ('kAzure+2', '_W_')
-samples['WW1l1nu2q']     = ('kAzure+4', '_VV_')
-samples['WW2l2nu']       = ('kAzure+8', '_VV_')
-samples['WZ1l1nu2q'] = ('kAzure-6', '_VV_')
+#samples['WW1l1nu2q']     = ('kAzure+4', '_VV_')
+#samples['WW2l2nu']       = ('kAzure+8', '_VV_')
+#samples['WZ1l1nu2q'] = ('kAzure-6', '_VV_')
 samples['WZ1l3nu'] = ('kAzure-6', '_VV_')
-samples['WZ2l2q'] = ('kAzure-6', '_VV_')
-samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
-samples['ZZ2l2nu'] = ('kAzure-12', '_VV_')
-samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
+#samples['WZ2l2q'] = ('kAzure-6', '_VV_')
+#samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
+#samples['ZZ2l2nu'] = ('kAzure-12', '_VV_')
+#samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
 samples['ZZ4l'] = ('kAzure-12', '_VV_')
 samples['QCD']        = ('kMagenta-10', '_QCD_')
 samples['data_tt']  = ('kBlack', '_data_obs_')
@@ -69,9 +69,9 @@ nameArray = ['_data_obs_','_ZTT_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH1
 if options.mssm :
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
     for mssmMass in masses :
-        samples['SUSYggH%i' % mssmMass] = ('kPink', '_SUSYggH%i_' % mssmMass)
+        samples['ggH%i' % mssmMass] = ('kPink', '_ggH%i_' % mssmMass)
         samples['bbH%i' % mssmMass] = ('kPink', '_bbH%i_' % mssmMass) 
-        nameArray.append('_SUSYggH%i_' % mssmMass)
+        nameArray.append('_ggH%i_' % mssmMass)
         nameArray.append('_bbH%i_' % mssmMass)
     del samples['VBFHtoTauTau125']
     del samples['ggHtoTauTau125']
@@ -121,9 +121,10 @@ for channel in channels.keys() :
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     for var, info in newVarMap.iteritems() :
-        if not var == 'm_vis' : continue
-        print "\n Output shapes file: %sShapes/%s/%s_%s.inputs-sm-13TeV.root \n" % (grouping, extra, extra, channel)
-        shapeFile = ROOT.TFile('%sShapes/%s/%s_%s.inputs-sm-13TeV.root' % (grouping, extra, extra, channel), 'RECREATE')
+        if not var == 'm_vis_mssm' : continue
+        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-mssm-13TeV.root \n" % (grouping, extra, channel)
+
+        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-mssm-13TeV.root' % (grouping, extra, channel), 'RECREATE')
         #shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
         #shapeDir = shapeFile.mkdir( channel + '_boostedZ' )
         shapeDir = shapeFile.mkdir( channel + '_inclusive' )
