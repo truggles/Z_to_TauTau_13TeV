@@ -177,7 +177,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
 def drawHistos(grouping, samples, **fargs ) :
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
-    ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']/2) ) )
+    ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']) ) )
     gROOT.SetBatch(True)
     bkgMap = getBkgMap()
     
