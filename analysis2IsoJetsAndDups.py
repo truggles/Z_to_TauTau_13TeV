@@ -22,16 +22,41 @@ prodMap = {
     'tt' : ('t1', 't2'),
 }
 
-def getXSec( shortName, sampDict ) :
+def getXSec( shortName, sampDict, genHTT=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
     htts = ['100-200', '200-400', '400-600', '600-Inf']
     scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+    
+    # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
+    # and need to be deweighted
+    if shortName == 'WJets' or shortName == 'DYJets' :
+        #print shortName," --- GenHTT",genHTT
+        httPartner = ''
+        if genHTT < 100 :
+            #print " - return scalar1"
+            return scalar1
+        elif genHTT >= 100 and genHTT < 200 :
+            httPartner = '100-200'
+        elif genHTT >= 200 and genHTT < 400 :
+            httPartner = '200-400'
+        elif genHTT >= 400 and genHTT < 600 :
+            httPartner = '400-600'
+        else :
+            httPartner = '600-Inf'
+        scalar2 = cmsLumi * sampDict[ shortName+httPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+httPartner ]['summedWeightsNorm'] )
+        #print " - Special Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))," for ",httPartner
+        #print " - scalar1: ",scalar1,"    scalar2: ",scalar2
+        return (1.0/( (1/scalar1) + (1/scalar2) ))
+        
+        
     if 'QCD' in shortName : return scalar1
     if 'data' in shortName : return 1.0
     for htt in htts :
         if htt in shortName :
             scalar2 = cmsLumi * sampDict[ shortName[:-7] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-7] ]['summedWeightsNorm'] )
-            return 1/( (1/scalar1) + (1/scalar2) )
+            #print "HTT in HTTs",shortName
+            #print "Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))
+            return (1.0/( (1/scalar1) + (1/scalar2) ))
     return scalar1
 
 def getIso( cand, row ) :
@@ -195,10 +220,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'jb2eta' : 'beta_2',
         'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
-        #'muVetoZTTp001dxyz' : 'extramuon_veto',
-        #'eVetoZTTp001dxyz' : 'extraelec_veto',
-        'muVetoZTTp001dxyzR0' : 'extramuon_veto',
-        'eVetoZTTp001dxyzR0' : 'extraelec_veto',
+        'muVetoZTTp001dxyz' : 'extramuon_veto',
+        'eVetoZTTp001dxyz' : 'extraelec_veto',
+        #XXX#'muVetoZTTp001dxyzR0' : 'extramuon_veto',
+        #XXX#'eVetoZTTp001dxyzR0' : 'extraelec_veto',
         'mvaMetCov00' : 'covMatrix00',
         'mvaMetCov01' : 'covMatrix01',
         'mvaMetCov10' : 'covMatrix10',
@@ -226,8 +251,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'Pt' : 'Z_Pt',
         'DR' : 'Z_DR',
         'DPhi' : 'Z_DPhi',
-        'pt_tt' : 'pp_tt',
-        'MtTotal' : 'mt_tot',
+        #XXX#'pt_tt' : 'pp_tt',
+        #XXX#'MtTotal' : 'mt_tot',
         }
     branchMappingElec = {
         'cand_ZTTGenMatching' : 'gen_match',
@@ -551,6 +576,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 if channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
                 else : trigweight_1[0] = 1
 
+                # Special weighting for WJets and DYJets
+                if shortName == 'WJets' or shortName == 'DYJets' :
+                    xsec = getXSec( shortName, sampDict, row.genHTT )
+                # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
  
 
