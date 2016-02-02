@@ -24,6 +24,7 @@ p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', hel
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
+p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -52,9 +53,13 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
-samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
-samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
+#samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
+#samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
 samples['DYJets']   = ('kOrange-4', 'dyj')
+samples['DYJets100-200']   = ('kOrange-4', 'dyj')
+samples['DYJets200-400']   = ('kOrange-4', 'dyj')
+samples['DYJets400-600']   = ('kOrange-4', 'dyj')
+samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
 #samples['DYJetsLow']   = ('kOrange-4', 'dyj')
 #samples['T-tW']     = ('kYellow+2', 'dib')
 samples['T-tchan']     = ('kYellow+2', 'dib')
@@ -62,6 +67,10 @@ samples['TT']       = ('kBlue-8', 'top')
 samples['Tbar-tW']  = ('kYellow-2', 'dib')
 samples['Tbar-tchan']  = ('kYellow-2', 'dib')
 samples['WJets']    = ('kAzure+2', 'wjets')
+samples['WJets100-200']    = ('kAzure+2', 'wjets')
+samples['WJets200-400']    = ('kAzure+2', 'wjets')
+samples['WJets400-600']    = ('kAzure+2', 'wjets')
+samples['WJets600-Inf']    = ('kAzure+2', 'wjets')
 samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
 #samples['WW2l2nu']       = ('kAzure+8', 'dib')
 #samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
@@ -80,8 +89,8 @@ samples['QCD']        = ('kMagenta-10', 'qcd')
 #samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
-samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
+#samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
+#samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : 'kRed+2',
@@ -98,7 +107,9 @@ sampColors = {
 for channel in ['em', 'tt'] :
 
     #if channel == 'tt' : continue
-    if channel == 'em' : continue
+    #if channel == 'em' : continue
+    if 'tt' not in options.channels and channel == 'tt' : continue
+    if 'em' not in options.channels and channel == 'em' : continue
     if channel == 'tt' : mssmSF = int(mssmSF / 10)
 
     # Make an index file for web viewing
