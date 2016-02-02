@@ -19,7 +19,9 @@ p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDe
 p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
-p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
+p.add_argument('--qcdMakeDM', action='store', default='x', dest='qcdMakeDM', help="Make a data - MC qcd shape for a specific DM?")
+p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Use a data - MC qcd shape?")
+p.add_argument('--useQCDMakeDM', action='store', default=False, dest='useQCDMakeDM', help="Use a data - MC qcd shape for DM 0, 1, 10?")
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
@@ -39,12 +41,18 @@ luminosity = 2260.0 # / fb 25ns
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
-qcdTTScaleFactor = 1.06
+#qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
-#qcdTTScaleFactor = 1.3
+qcdTTScaleFactor = 1.25
 #qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
+
+# DM specific scaling
+dm0sf = 1.27
+dm1sf = 1.21
+dm10sf = 1.14
+
 qcdYieldTT = 35.7 * qcdTTScaleFactor
 qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 
@@ -133,7 +141,10 @@ for channel in ['em', 'tt'] :
     if options.qcdMake :
         if not os.path.exists('meta/%sBackgrounds' % grouping) :
             os.makedirs('meta/%sBackgrounds' % grouping)
-        qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
+        if options.qcdMakeDM in '0 1 or 10' :
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm%s.root' % (grouping, channel, options.qcdMakeDM), 'RECREATE')
+        else :
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
         qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
 
     #print newVarMap
@@ -190,7 +201,7 @@ for channel in ['em', 'tt'] :
             if options.qcdMC and sample == 'QCD' : continue
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
-            #print sample
+            print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
@@ -199,8 +210,14 @@ for channel in ['em', 'tt'] :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif 'QCD' in sample :
                 if options.useQCDMake :
-                    tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
-                    print "Got QCD make file:", sample
+                    if options.useQCDMakeDM  :
+                        tFile1 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm0.root' % (grouping, channel), 'READ')
+                        tFile2 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm1.root' % (grouping, channel), 'READ')
+                        tFile3 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm10.root' % (grouping, channel), 'READ')
+                        print "Got QCD make file DM specific:", sample
+                    else :
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                        print "Got QCD make file:", sample
                 elif options.qcdMC :
                     print "Got QCD MC file", sample
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
@@ -213,16 +230,40 @@ for channel in ['em', 'tt'] :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
 
-            dic = tFile.Get("%s_Histos" % channel )
+            if not options.useQCDMakeDM or 'QCD' not in sample :
+                dic = tFile.Get("%s_Histos" % channel )
             if 'm_vis' in var :
                 if 'QCD' in sample and options.useQCDMake :
-                    preHist = dic.Get( var )
+                    if options.useQCDMakeDM :
+                        print "multiple dics"
+                        dic1 = tFile1.Get("%s_Histos" % channel )
+                        dic2 = tFile2.Get("%s_Histos" % channel )
+                        dic3 = tFile3.Get("%s_Histos" % channel )
+                        preHist = dic1.Get( var )
+                        preHist.Scale( dm0sf )
+                        preHist.Add( dic2.Get( var ) * dm1sf )
+                        preHist.Add( dic3.Get( var ) * dm10sf )
+                        #preHist2 = dic2.Get( var )
+                        #preHist3 = dic3.Get( var )
+                        #preHist =
+                    else :
+                        preHist = dic.Get( var )
                 else :
                     preHist = dic.Get( "m_vis" )
+            elif 'QCD' in sample and options.useQCDMakeDM :
+                print "multiple dics"
+                dic1 = tFile1.Get("%s_Histos" % channel )
+                dic2 = tFile2.Get("%s_Histos" % channel )
+                dic3 = tFile3.Get("%s_Histos" % channel )
+                preHist = dic1.Get( var )
+                preHist.Scale( dm0sf )
+                preHist.Add( dic2.Get( var ) * dm1sf )
+                preHist.Add( dic3.Get( var ) * dm10sf )
+
             else : preHist = dic.Get( var )
             preHist.SetDirectory( 0 )
 
-            if sample == 'QCD' and options.useQCDMake :
+            if sample == 'QCD' and options.useQCDMake and not options.useQCDMakeDM :
                 if channel == 'em' :
                     print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
                     preHist.Scale( qcdEMScaleFactor )
