@@ -69,7 +69,7 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalExtractionNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, 'e_m_PZeta > -25']
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, DecayMode, 't1_t2_Pt > 100']
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode, 't1_t2_Pt > 100']
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -77,7 +77,7 @@ def signalExtractionNoSign( ch ) :
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalCutsNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -85,7 +85,7 @@ def signalCutsNoSign( ch ) :
 # A version which applies all cuts at once RunII
 def signalCuts( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emOS, emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt40, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt35, DecayMode]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -93,7 +93,7 @@ def signalCuts( ch ) :
 # Data card sync, no Decay Mode cut 
 def signalCutsNoIsoNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt40, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt35, DecayMode]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -101,7 +101,7 @@ def signalCutsNoIsoNoSign( ch ) :
 # Selection which only does baseline for sync data cards, NO SIGN for QCD
 def syncCutsDC( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     
