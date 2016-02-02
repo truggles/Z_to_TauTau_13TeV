@@ -76,53 +76,66 @@ def makeCuts( folder ) :
     """
     The below cuts will be based on a previous cut files from 'mid2'
     """
+
+    for i in [0,1,10]:
+        params['mid3'] = folder+'_tt_SStau%i'% i
+        params['channels'] = ['tt',]
+        params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode == %i) && (t2DecayMode != 5 && t2DecayMode != 6))'% i
+        samples = checkBkgs( samples, params, grouping )
+        analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+        
+        params['mid3'] = folder+'_tt_OStau%i'% i
+        params['channels'] = ['tt',]
+        params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode == %i) && (t2DecayMode != 5 && t2DecayMode != 6))' % i
+        samples = checkBkgs( samples, params, grouping )
+        analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     
     
-    params['mid3'] = folder+'_SS'
-    params['additionalCut'] = '*(Z_SS==1)'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #params['mid3'] = folder+'_SS'
+    #params['additionalCut'] = '*(Z_SS==1)'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['mid3'] = folder+'_OS'
+    #params['additionalCut'] = '*(Z_SS==0)'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     
-    params['mid3'] = folder+'_OS'
-    params['additionalCut'] = '*(Z_SS==0)'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['mid3'] = folder+'_tt_SSno2p'
-    params['channels'] = ['tt',]
-    params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['mid3'] = folder+'_tt_OSno2p'
-    params['channels'] = ['tt',]
-    params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['mid3'] = folder+'_tt_SSn2pZpt60'
-    params['channels'] = ['tt',]
-    params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))*(Z_Pt>60)'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['mid3'] = folder+'_tt_OSn2pZpt60'
-    params['channels'] = ['tt',]
-    params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))*(Z_Pt>60)'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['mid3'] = folder+'_em_SSpZetaCut'
-    params['channels'] = ['em',]
-    params['additionalCut'] = '*(Z_SS==1)*(pzetamis > -25)'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['mid3'] = folder+'_em_OSpZetaCut'
-    params['channels'] = ['em',]
-    params['additionalCut'] = '*(Z_SS==0)*(pzetamis > -25)'
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #params['mid3'] = folder+'_tt_SSno2p'
+    #params['channels'] = ['tt',]
+    #params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['mid3'] = folder+'_tt_OSno2p'
+    #params['channels'] = ['tt',]
+    #params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['mid3'] = folder+'_tt_SSn2pZpt60'
+    #params['channels'] = ['tt',]
+    #params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))*(Z_Pt>60)'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['mid3'] = folder+'_tt_OSn2pZpt60'
+    #params['channels'] = ['tt',]
+    #params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))*(Z_Pt>60)'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['mid3'] = folder+'_em_SSpZetaCut'
+    #params['channels'] = ['em',]
+    #params['additionalCut'] = '*(Z_SS==1)*(pzetamis > -25)'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['mid3'] = folder+'_em_OSpZetaCut'
+    #params['channels'] = ['em',]
+    #params['additionalCut'] = '*(Z_SS==0)*(pzetamis > -25)'
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
     return
 
@@ -158,10 +171,13 @@ if __name__ == '__main__' :
     #makeCuts( folder )
 
     tups = [
-        ('SS', 'OS', 'em,tt'),
-        ('tt_SSno2p', 'tt_OSno2p', 'tt'),
-        ('tt_SSno2pZpt60', 'tt_OSno2pZpt60', 'tt'),
-        ('em_SSpZetaCut', 'em_OSpZetaCut', 'em'),
+        #('SS', 'OS', 'em,tt'),
+        #('tt_SSno2p', 'tt_OSno2p', 'tt'),
+        #('tt_SSno2pZpt60', 'tt_OSno2pZpt60', 'tt'),
+        #('em_SSpZetaCut', 'em_OSpZetaCut', 'em'),
+        ('tt_SStau0', 'tt_OStau0', 'tt', '0'),
+        ('tt_SStau1', 'tt_OStau1', 'tt', '1'),
+        ('tt_SStau10', 'tt_OStau10', 'tt', '10'),
     ]
 
     #folder = "2Feb02sDC"

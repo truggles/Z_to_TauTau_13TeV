@@ -10,8 +10,8 @@ def addDetails( hist ) :
     hist.GetYaxis().SetTitle("Secondary #tau_{h} DBIsoRawComb3Hits")
 
 
-#xBin = array('d', [0,1,3,4.5,7,10])
-xBin = array('d', [0,10])
+xBin = array('d', [0,1,3,4.5,7,10])
+#xBin = array('d', [0,10])
 yBin = array('d', [0,1,3,4.5,7,10])
 #yBin = array('d', [0,10])
 xNum = len( xBin ) - 1
@@ -24,12 +24,12 @@ def getHistos( decay="", dStr="" ) :
     Td = fd.Get("Ntuple")
     fmc = ROOT.TFile("mcTT.root","READ")
     Tmc = fmc.Get("Ntuple")
-    fqcd = ROOT.TFile("qcdTT.root","READ")
-    Tqcd = fqcd.Get("Ntuple")
+    #fqcd = ROOT.TFile("qcdTT.root","READ")
+    #Tqcd = fqcd.Get("Ntuple")
     
     iso = "((iso_1 > 3 || t1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5) && ( iso_2 > 3 || t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5))"
-    #XSec = "*( (GenWeight/abs(GenWeight)) * XSecLumiWeight)"# * puweight )"
-    XSec = "*( (GenWeight/abs(GenWeight)) * XSecLumiWeight * puweight )"
+    #XSec = "*( (weight/abs(weight)) * XSecLumiWeight)"# * puweight )"
+    XSec = "*( (weight/abs(weight)) * XSecLumiWeight * puweight )"
     isoMC = "%s%s" % (iso, XSec)
     for cut in cutMap.keys() :
         dataCut = "%s%s%s" % (iso, cutMap[ cut ], dStr )
@@ -51,9 +51,9 @@ def getHistos( decay="", dStr="" ) :
         histos[cut + "hMC"].Draw("colz text")
         p2.cd(3)
         histos[cut + "hQCDmc"] = ROOT.TH2F("hQCDmc%s" % cut, "QCD (MC sample): %s%s" % (cut,decay),xNum,xBin,yNum,yBin)
-        Tqcd.Draw("iso_1:iso_2>>hQCDmc%s" % cut, mcCut)
-        addDetails( histos[cut + "hQCDmc"] )
-        histos[cut + "hQCDmc"].Draw("colz text")
+        #Tqcd.Draw("iso_1:iso_2>>hQCDmc%s" % cut, mcCut)
+        #addDetails( histos[cut + "hQCDmc"] )
+        #histos[cut + "hQCDmc"].Draw("colz text")
         p2.cd(4)
         histos[cut + "hQCDdd"] = ROOT.TH2F("hQCDdd%s" % cut, "QCD (data - MC): %s%s" % (cut,decay),xNum,xBin,yNum,yBin)
         histos[cut + "hQCDdd"].Add( histos[cut + "hData"] )
