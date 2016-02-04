@@ -21,6 +21,7 @@ p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', he
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
 p.add_argument('--qcdMakeDM', action='store', default='x', dest='qcdMakeDM', help="Make a data - MC qcd shape for a specific DM?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Use a data - MC qcd shape?")
+p.add_argument('--useQCDMakeName', action='store', default='x', dest='useQCDMakeName', help="Use a specific qcd shape?")
 p.add_argument('--useQCDMakeDM', action='store', default=False, dest='useQCDMakeDM', help="Use a data - MC qcd shape for DM 0, 1, 10?")
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
@@ -44,6 +45,9 @@ higgsSF = 10
 #qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
 qcdTTScaleFactor = 1.25
+#qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
+qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
+qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
 #qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
@@ -73,7 +77,7 @@ samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
 samples['T-tchan']     = ('kYellow+2', 'dib')
 samples['TT']       = ('kBlue-8', 'top')
 samples['Tbar-tW']  = ('kYellow-2', 'dib')
-samples['Tbar-tchan']  = ('kYellow-2', 'dib')
+#samples['Tbar-tchan']  = ('kYellow-2', 'dib')
 samples['WJets']    = ('kAzure+2', 'wjets')
 samples['WJets100-200']    = ('kAzure+2', 'wjets')
 samples['WJets200-400']    = ('kAzure+2', 'wjets')
@@ -97,8 +101,8 @@ samples['QCD']        = ('kMagenta-10', 'qcd')
 #samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-#samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
-#samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
+samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
+samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : 'kRed+2',
@@ -141,8 +145,9 @@ for channel in ['em', 'tt'] :
     if options.qcdMake :
         if not os.path.exists('meta/%sBackgrounds' % grouping) :
             os.makedirs('meta/%sBackgrounds' % grouping)
-        if options.qcdMakeDM in '0 1 or 10' :
-            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm%s.root' % (grouping, channel, options.qcdMakeDM), 'RECREATE')
+        if options.qcdMakeDM != 'x' :
+            print "qcdMakeDM called: ",options.qcdMakeDM
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.qcdMakeDM), 'RECREATE')
         else :
             qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
         qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
@@ -210,7 +215,9 @@ for channel in ['em', 'tt'] :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif 'QCD' in sample :
                 if options.useQCDMake :
-                    if options.useQCDMakeDM  :
+                    if options.useQCDMakeName != 'x'  :
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.useQCDMakeName), 'READ')
+                    elif options.useQCDMakeDM  :
                         tFile1 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm0.root' % (grouping, channel), 'READ')
                         tFile2 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm1.root' % (grouping, channel), 'READ')
                         tFile3 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm10.root' % (grouping, channel), 'READ')
@@ -263,7 +270,7 @@ for channel in ['em', 'tt'] :
             else : preHist = dic.Get( var )
             preHist.SetDirectory( 0 )
 
-            if sample == 'QCD' and options.useQCDMake and not options.useQCDMakeDM :
+            if sample == 'QCD' and options.useQCDMake and not options.useQCDMakeDM and not options.useQCDMakeName :
                 if channel == 'em' :
                     print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
                     preHist.Scale( qcdEMScaleFactor )
@@ -274,6 +281,12 @@ for channel in ['em', 'tt'] :
                     preHist.Scale( qcdTTScaleFactor )
                     print "QCD yield: %f" % preHist.Integral()
                     hist = ROOT.TH1F( preHist )
+            # If we use this option we specify a scaling factor
+            elif sample == 'QCD' and options.useQCDMakeName :
+                print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                preHist.Scale( qcdTTScaleFactorNew )
+                print "QCD yield: %f" % preHist.Integral()
+                hist = ROOT.TH1F( preHist )
             else :
                 #preHist.Rebin( plotDetails[ var ][2] )
                 hist = preHist.Rebin( xNum, "rebinned", xBins )
@@ -381,7 +394,7 @@ for channel in ['em', 'tt'] :
         if options.mssm :
             stack.Add( higgs )
         if not options.qcdMake :
-            print "Adding QCD"
+            print "Adding QCD: ",qcd.Integral()
             stack.Add( qcd )
         stack.Add( top )
         stack.Add( dib )
@@ -443,8 +456,8 @@ for channel in ['em', 'tt'] :
                 ratioHist.SetMaximum( 1.5 )
                 ratioHist.SetMinimum( 0.5 )
             if channel == 'tt' :
-                ratioHist.SetMaximum( 2. )
-                ratioHist.SetMinimum( 0. )
+                ratioHist.SetMaximum( 1.5 )
+                ratioHist.SetMinimum( 0.5 )
             ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
@@ -554,7 +567,7 @@ for channel in ['em', 'tt'] :
 
 
         """ Blinding Data """
-        if options.blind :
+        if options.blind and 'm_vis' in var :
             nBins = stack.GetStack().Last().GetXaxis().GetNbins()
             for k in range( nBins+1 ) :
                 if data.GetXaxis().GetBinLowEdge(k+1)>150 :
