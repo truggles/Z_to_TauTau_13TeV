@@ -101,7 +101,8 @@ def signalCutsNoIsoNoSign( ch ) :
 # Selection which only does baseline for sync data cards, NO SIGN for QCD
 def syncCutsDC( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35]
+    #if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVeto, tt35]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     
