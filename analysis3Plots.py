@@ -10,6 +10,7 @@ import analysisPlots
 from util.splitCanvas import fixFontSize
 import os
 from array import array
+import math
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -28,6 +29,7 @@ p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
+p.add_argument('--addUncert', action='store', default=True, dest='addUncert', help="What channels?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -47,7 +49,7 @@ qcdEMScaleFactor = 1.06
 qcdTTScaleFactor = 1.25
 #qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
 qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
-qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
+#qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
 #qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
@@ -62,6 +64,12 @@ qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
+
+chans = {
+    'tt' : '#Tau_{h}#Tau_{h}',
+    'em' : 'e#mu',
+}
+
 
                 # Sample : Color
 samples = OrderedDict()
@@ -83,7 +91,7 @@ samples['WJets100-200']    = ('kAzure+2', 'wjets')
 samples['WJets200-400']    = ('kAzure+2', 'wjets')
 samples['WJets400-600']    = ('kAzure+2', 'wjets')
 samples['WJets600-Inf']    = ('kAzure+2', 'wjets')
-samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
+#samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
 #samples['WW2l2nu']       = ('kAzure+8', 'dib')
 #samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
 samples['WZ1l3nu'] = ('kAzure-6', 'dib')
@@ -93,12 +101,6 @@ samples['WZ1l3nu'] = ('kAzure-6', 'dib')
 #samples['ZZ2l2q'] = ('kAzure-12', 'dib')
 samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
-#samples['QCD15-20']        = ('kMagenta-10', 'qcd')
-#samples['QCD20-30']        = ('kMagenta-10', 'qcd')
-#samples['QCD30-80']        = ('kMagenta-10', 'qcd')
-#samples['QCD80-170']        = ('kMagenta-10', 'qcd')
-#samples['QCD170-250']        = ('kMagenta-10', 'qcd')
-#samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
 samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
@@ -156,7 +158,7 @@ for channel in ['em', 'tt'] :
     for var, info in newVarMap.iteritems() :
 
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
-        #if not 'm_vis' in var : continue
+        #if not 'm_vis_mssm' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
@@ -289,7 +291,11 @@ for channel in ['em', 'tt'] :
                 hist = ROOT.TH1F( preHist )
             else :
                 #preHist.Rebin( plotDetails[ var ][2] )
+                print "Rebinning"
+                print xNum
+                print xBins
                 hist = preHist.Rebin( xNum, "rebinned", xBins )
+                print "Done Rebinning"
 
 
 
@@ -391,8 +397,8 @@ for channel in ['em', 'tt'] :
             h.SetTitle( Names[ Ary[h] ] )
             
 
-        if options.mssm :
-            stack.Add( higgs )
+        #if options.mssm :
+        #    stack.Add( higgs )
         if not options.qcdMake :
             print "Adding QCD: ",qcd.Integral()
             stack.Add( qcd )
@@ -400,6 +406,10 @@ for channel in ['em', 'tt'] :
         stack.Add( dib )
         stack.Add( wjets )
         stack.Add( dyj )
+
+        binErrors = []
+        for k in range( top.GetNbinsX()+1 ) :
+            binErrors.append( math.sqrt( (top.GetBinContent( k )*.1)**2 + (dib.GetBinContent(k)*.1)**2 + (wjets.GetBinContent(k)*.1)**2 + (dyj.GetBinContent(k)*.1)**2 + (qcd.GetBinContent(k)*.2)**2 ) )
 
 
         # Scale Higgs samples for viewing
@@ -479,8 +489,8 @@ for channel in ['em', 'tt'] :
             stack.Draw('hist')
             if options.mssm :
                 mssm.Draw('same')
-            else :
-                higgs.Draw('same')
+            #else :
+            #    higgs.Draw('same')
             data.Draw('esamex0')
 
 
@@ -517,8 +527,8 @@ for channel in ['em', 'tt'] :
         legend.SetMargin(0.3)
         legend.SetBorderSize(0)
         legend.AddEntry( data, "Data", 'lep')
-        if not options.mssm :
-            legend.AddEntry( higgs, "SM Higgs(125) x %i" % higgsSF, 'l')
+        #if not options.mssm :
+        #    legend.AddEntry( higgs, "SM Higgs(125) x %i" % higgsSF, 'l')
         if options.mssm :
             legend.AddEntry( mssm, "MSSM(%i) x %i" % (mssmMass, mssmSF), 'l')
         for j in range(0, stack.GetStack().GetLast() + 1) :
@@ -534,10 +544,12 @@ for channel in ['em', 'tt'] :
         chan = ROOT.TText(.2, .80,"x")
         chan.SetTextSize(0.05)
         chan.DrawTextNDC(.2, .84,"Channel: %s" % channel.upper() )
+        #chan.DrawTextNDC(.2, .84,"Channel: %s" % chans[channel] )
 
         lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(luminosity/1000,2) )
         lumi.SetTextSize(0.03)
-        lumi.DrawTextNDC(.7,.96,"%f / fb (13 TeV)" % round(luminosity/1000,2) )
+        #lumi.DrawTextNDC(.7,.96,"%f / fb (13 TeV)" % round(luminosity/1000,2) )
+        lumi.DrawTextNDC(.7,.96,"2.26 / fb (13 TeV)" )
 
         ''' Random print outs on plots '''
         if options.text and not varBinned :
@@ -565,12 +577,31 @@ for channel in ['em', 'tt'] :
             ratioHist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
 
 
+        """
+        Add uncertainty bands on background stack
+        """
+        if options.addUncert :
+            e1 = ROOT.TH1F("e1 %s" % append, "e1", xNum, xBins )
+            e1.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+            for k in range( e1.GetNbinsX()+1 ) :
+                e1.SetBinContent( k, stack.GetStack().Last().GetBinContent( k ) )
+                #e1.SetBinError(k, math.sqrt( (top.GetBinContent( k )*.1)**2 + (dib.GetBinContent(k)*.1)**2 + (wjets.GetBinContent(k)*.1)**2 + (dyj.GetBinContent(k)*.1)**2 + (qcd.GetBinContent(k)*.4)**2 ) )
+                e1.SetBinError(k, binErrors[k] )
+                #print "Qcd Error:",qcd.GetBinError(k)
+            e1.SetLineColor( 0 )
+            e1.SetLineWidth( 0 )
+            e1.SetMarkerSize( 0 )
+            e1.SetFillStyle( 3002 )
+            #e1.SetFillStyle( 3244 )
+            e1.SetFillColor( 15 )
+            e1.Draw('same e2')
+
 
         """ Blinding Data """
         if options.blind and 'm_vis' in var :
             nBins = stack.GetStack().Last().GetXaxis().GetNbins()
             for k in range( nBins+1 ) :
-                if data.GetXaxis().GetBinLowEdge(k+1)>150 :
+                if data.GetXaxis().GetBinLowEdge(k+1)>100 :
                     data.SetBinContent(k, 0.)
                     data.SetBinError(k, 0.)
                     if options.ratio :
@@ -580,7 +611,7 @@ for channel in ['em', 'tt'] :
                 ratioPad.cd()
                 ratioHist.Draw('esamex0')
             pad1.cd()
-            data.Draw('esamex0')
+        data.Draw('esamex0')
             
 
 

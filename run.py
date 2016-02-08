@@ -56,10 +56,10 @@ SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau125', 'ggHtoTauTau130', 'V
 SamplesQCD = ['QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf']
 
 #SamplesDataCards = []
-#masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
-#for mass in masses :
-#       SamplesDataCards.append( 'ggH%i' % mass )
-#       SamplesDataCards.append( 'bbH%i' % mass )
+masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
+for mass in masses :
+       SamplesDataCards.append( 'ggH%i' % mass )
+       SamplesDataCards.append( 'bbH%i' % mass )
 
 #samples = Samples25nsFinal
 #samples = SamplesSync
@@ -74,12 +74,12 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 15,
-    'numFilesPerCycle' : 15,
-    'channels' : ['em', 'tt'],
+    'numCores' : 10,
+    'numFilesPerCycle' : 10,
+    #'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
-    #'channels' : ['tt',],
+    'channels' : ['tt',],
     #'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
@@ -87,36 +87,22 @@ params = {
     'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb02sDC',
-    'mid2' : '2Feb02sDC',
-    'mid3' : '3Feb02sDC',
+    'mid1' : '1Feb03LooseIsoSyncDC',
+    'mid2' : '2Feb03LooseIsoSyncDC',
+    'mid3' : '3Feb03LooseIsoSyncDC',
     'additionalCut' : '',
 }
 
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 
-params['mid3'] = '3Feb02sDC_SS'
-params['additionalCut'] = '*(Z_SS==1)'
-#params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
-samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-params['mid3'] = '3Feb02sDC_OS'
-params['additionalCut'] = '*(Z_SS==0)'
-#params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
-samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-#params['mid3'] = '3Feb01sDC_SSn2pZpt60'
-##params['additionalCut'] = '*(Z_SS==1)'
-#params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))*(Z_Pt>60)'
+#params['mid3'] = '3Feb02sDC_SS'
+#params['additionalCut'] = '*(Z_SS==1)'
 #samples = checkBkgs( samples, params, grouping )
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #
-#params['mid3'] = '3Feb01sDC_OSn2pZpt60'
-##params['additionalCut'] = '*(Z_SS==0)'
-#params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))*(Z_Pt>60)'
+#params['mid3'] = '3Feb02sDC_OS'
+#params['additionalCut'] = '*(Z_SS==0)'
 #samples = checkBkgs( samples, params, grouping )
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 

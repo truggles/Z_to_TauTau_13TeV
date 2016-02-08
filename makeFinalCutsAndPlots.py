@@ -38,13 +38,13 @@ def makeCuts( folder ) :
     
     ''' Preset samples '''
     #SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l']#, 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
-    SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'DYJets', 'DYJets100-200', 'DYJets200-400', 'DYJets400-600', 'DYJets600-Inf', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'WJets', 'WJets100-200', 'WJets200-400', 'WJets400-600', 'WJets600-Inf', 'WW1l1nu2q', 'WZ1l3nu', 'ZZ4l'] # As we wait for all samples 76x to come in, this is our complete list
+    #SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'DYJets', 'DYJets100-200', 'DYJets200-400', 'DYJets400-600', 'DYJets600-Inf', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'WJets', 'WJets100-200', 'WJets200-400', 'WJets400-600', 'WJets600-Inf', 'WW1l1nu2q', 'WZ1l3nu', 'ZZ4l'] # As we wait for all samples 76x to come in, this is our complete list
     
-    #SamplesDataCards = []
-    #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
-    #for mass in masses :
-    #       SamplesDataCards.append( 'ggH%i' % mass )
-    #       SamplesDataCards.append( 'bbH%i' % mass )
+    SamplesDataCards = []
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
+    for mass in masses :
+           SamplesDataCards.append( 'ggH%i' % mass )
+           SamplesDataCards.append( 'bbH%i' % mass )
     
     samples = SamplesDataCards
     
@@ -56,7 +56,7 @@ def makeCuts( folder ) :
     params = {
         'bkgs' : 'None',
         'numCores' : 15,
-        'numFilesPerCycle' : 15,
+        'numFilesPerCycle' : 10,
         'channels' : ['em', 'tt'],
         #'channels' : ['em', 'tt', 'et', 'mt'],
         #'channels' : ['em',],
@@ -77,29 +77,85 @@ def makeCuts( folder ) :
     The below cuts will be based on a previous cut files from 'mid2'
     """
 
-    for i in [0,1,10]:
-        params['mid3'] = folder+'_tt_SStau%i'% i
-        params['channels'] = ['tt',]
-        params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode == %i) && (t2DecayMode != 5 && t2DecayMode != 6))'% i
-        samples = checkBkgs( samples, params, grouping )
-        analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-        
-        params['mid3'] = folder+'_tt_OStau%i'% i
-        params['channels'] = ['tt',]
-        params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode == %i) && (t2DecayMode != 5 && t2DecayMode != 6))' % i
-        samples = checkBkgs( samples, params, grouping )
-        analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    # Experimental DM based shapes
+    #for i in [0,1,10]:
+    #    params['mid3'] = folder+'_tt_SStau%i'% i
+    #    params['channels'] = ['tt',]
+    #    params['additionalCut'] = '*(Z_SS==1)*((t1DecayMode == %i) && (t2DecayMode != 5 && t2DecayMode != 6))'% i
+    #    samples = checkBkgs( samples, params, grouping )
+    #    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #    
+    #    params['mid3'] = folder+'_tt_OStau%i'% i
+    #    params['channels'] = ['tt',]
+    #    params['additionalCut'] = '*(Z_SS==0)*((t1DecayMode == %i) && (t2DecayMode != 5 && t2DecayMode != 6))' % i
+    #    samples = checkBkgs( samples, params, grouping )
+    #    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     
     
-    #params['mid3'] = folder+'_SS'
-    #params['additionalCut'] = '*(Z_SS==1)'
+    #params['mid3'] = folder+'_SStest'
+    #params['channels'] = ['tt',]
+    #params['additionalCut'] = '*(Z_SS==1)*(iso_1 < 1 && iso_2 > 1 && iso_2 < 3)'
     #samples = checkBkgs( samples, params, grouping )
     #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['mid3'] = folder+'_OS'
-    #params['additionalCut'] = '*(Z_SS==0)'
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    isoL2loose = '(iso_1<1. && iso_2>1. && iso_2 <3)'
+    no2p = '((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
+    isoSig = '(iso_1<1. && iso_2<1.)'
+
+    """
+    Double Hardonic baseline with good QCD estimation
+    """
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_SSl2loose'
+    params['additionalCut'] = '*(Z_SS==1)*%s*%s' % (no2p, isoL2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_OSl2loose'
+    params['additionalCut'] = '*(Z_SS==0)*%s*%s' % (no2p, isoL2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_SSsig'
+    params['additionalCut'] = '*(Z_SS==1)*%s*%s' % (no2p, isoSig)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_OSsig'
+    params['additionalCut'] = '*(Z_SS==0)*%s*%s' % (no2p, isoSig)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    """
+    Double Hardonic boosted Z/higgs
+    """
+    zPt = '(Z_Pt>100)'
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_SSl2looseZPt2'
+    params['additionalCut'] = '*(Z_SS==1)*%s*%s*%s' % (no2p, isoL2loose, zPt)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_OSl2looseZPt2'
+    params['additionalCut'] = '*(Z_SS==0)*%s*%s*%s' % (no2p, isoL2loose, zPt)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_SSsigZPt2'
+    params['additionalCut'] = '*(Z_SS==1)*%s*%s*%s' % (no2p, isoSig, zPt)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_OSsigZPt2'
+    params['additionalCut'] = '*(Z_SS==0)*%s*%s*%s' % (no2p, isoSig, zPt)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     
     #params['mid3'] = folder+'_tt_SSno2p'
     #params['channels'] = ['tt',]
@@ -168,21 +224,22 @@ def plotThem( folder, sufix1, sufix2, channel ) :
 
 
 if __name__ == '__main__' :
-    #makeCuts( folder )
+    makeCuts( folder )
 
     tups = [
         #('SS', 'OS', 'em,tt'),
+        ('SS', 'OS', 'tt'),
         #('tt_SSno2p', 'tt_OSno2p', 'tt'),
         #('tt_SSno2pZpt60', 'tt_OSno2pZpt60', 'tt'),
         #('em_SSpZetaCut', 'em_OSpZetaCut', 'em'),
-        ('tt_SStau0', 'tt_OStau0', 'tt', '0'),
-        ('tt_SStau1', 'tt_OStau1', 'tt', '1'),
-        ('tt_SStau10', 'tt_OStau10', 'tt', '10'),
+        #('tt_SStau0', 'tt_OStau0', 'tt', '0'),
+        #('tt_SStau1', 'tt_OStau1', 'tt', '1'),
+        #('tt_SStau10', 'tt_OStau10', 'tt', '10'),
     ]
 
     #folder = "2Feb02sDC"
-    for tup in tups :
-        plotThem( folder, tup[0], tup[1], tup[2] )
+    #for tup in tups :
+    #    plotThem( folder, tup[0], tup[1], tup[2] )
     
     
 
