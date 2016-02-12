@@ -24,29 +24,31 @@ prodMap = {
 
 def getXSec( shortName, sampDict, genHTT=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
+    if 'data' in shortName : return 1.0 #XXX#
     htts = ['100-200', '200-400', '400-600', '600-Inf']
     scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
-    
-    # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
-    # and need to be deweighted
-    if shortName == 'WJets' or shortName == 'DYJets' :
-        #print shortName," --- GenHTT",genHTT
-        httPartner = ''
-        if genHTT < 100 :
-            #print " - return scalar1"
-            return scalar1
-        elif genHTT >= 100 and genHTT < 200 :
-            httPartner = '100-200'
-        elif genHTT >= 200 and genHTT < 400 :
-            httPartner = '200-400'
-        elif genHTT >= 400 and genHTT < 600 :
-            httPartner = '400-600'
-        else :
-            httPartner = '600-Inf'
-        scalar2 = cmsLumi * sampDict[ shortName+httPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+httPartner ]['summedWeightsNorm'] )
-        #print " - Special Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))," for ",httPartner
-        #print " - scalar1: ",scalar1,"    scalar2: ",scalar2
-        return (1.0/( (1/scalar1) + (1/scalar2) ))
+    return scalar1 #XXX#
+   #XXX# 
+   #XXX# # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
+   #XXX# # and need to be deweighted
+   #XXX# if shortName == 'WJets' or shortName == 'DYJets' :
+   #XXX#     #print shortName," --- GenHTT",genHTT
+   #XXX#     httPartner = ''
+   #XXX#     if genHTT < 100 :
+   #XXX#         #print " - return scalar1"
+   #XXX#         return scalar1
+   #XXX#     elif genHTT >= 100 and genHTT < 200 :
+   #XXX#         httPartner = '100-200'
+   #XXX#     elif genHTT >= 200 and genHTT < 400 :
+   #XXX#         httPartner = '200-400'
+   #XXX#     elif genHTT >= 400 and genHTT < 600 :
+   #XXX#         httPartner = '400-600'
+   #XXX#     else :
+   #XXX#         httPartner = '600-Inf'
+   #XXX#     scalar2 = cmsLumi * sampDict[ shortName+httPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+httPartner ]['summedWeightsNorm'] )
+   #XXX#     #print " - Special Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))," for ",httPartner
+   #XXX#     #print " - scalar1: ",scalar1,"    scalar2: ",scalar2
+   #XXX#     return (1.0/( (1/scalar1) + (1/scalar2) ))
         
         
     if 'QCD' in shortName : return scalar1
@@ -65,7 +67,8 @@ def getIso( cand, row ) :
     if 'm' in cand :
         return getattr(row, cand+'RelPFIsoDBDefault')
     if 't' in cand :
-        return getattr(row, cand+'ByCombinedIsolationDeltaBetaCorrRaw3Hits')
+        #return getattr(row, cand+'ByCombinedIsolationDeltaBetaCorrRaw3Hits')
+        return getattr(row, cand+'ByIsolationMVArun2v1DBnewDMwLTraw' )
         
         
 def getCurrentEvt( channel, row ) :
@@ -77,9 +80,9 @@ def getCurrentEvt( channel, row ) :
     leg2Pt = getattr(row, l2+'Pt')
 
     if channel == 'tt' :
-        if leg1Iso < leg2Iso :
+        if leg1Iso > leg2Iso :
             currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
-        elif leg1Iso > leg2Iso :
+        elif leg1Iso < leg2Iso :
             currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
         elif leg1Pt > leg2Pt :
             currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
@@ -101,6 +104,8 @@ tauIso = {
     'MtToPfMet_Raw' : 'mt',
     'MtToPfMet_type1' : '',
     'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
+    'ByIsolationMVArun2v1DBnewDMwLTraw' : '',
+    'ByIsolationMVArun2v1DBoldDMwLTraw' : '',
     'AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
     'AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
     'AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
@@ -111,25 +116,13 @@ tauIso = {
     'ChargedIsoPtSum' : 'chargedIsoPtSum',
     'NeutralIsoPtSum' : 'neutralIsoPtSum',
     'PuCorrPtSum' : 'puCorrPtSum',
-    #'ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
-    #'ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
-    #'ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
-    #'ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
     'AbsEta' : '',
-    #'AgainstElectronLoose' : '',
-    'AgainstElectronMVA5category' : '',
-    'AgainstElectronMVA5raw' : '',
-    #'AgainstElectronMedium' : '',
-    #'AgainstElectronTight' : '',
     'DecayMode' : '',
     'DecayModeFinding' : '',
     'DoubleTau40Filter' : '',
     'ElecOverlap' : '',
-    #'ElectronPt10IdIsoVtxOverlap' : '',
-    #'ElectronPt10IdVtxOverlap' : '',
-    #'ElectronPt15IdIsoVtxOverlap' : '',
-    #'ElectronPt15IdVtxOverlap' : '',
     'GenDecayMode' : '',
+    'ZTTGenMatching' : 'gen_match',
     'GlobalMuonVtxOverlap' : '',
     'JetArea' : '',
     'JetBtag' : '',
@@ -149,18 +142,19 @@ tauIso = {
     'MuonIdVtxOverlap' : '',
     'NearestZMass' : '',
     'Rank' : '',
-    #'TNPId' : '',
-    #'ToMETDPhi' : '',
     'VZ' : '',
 }
 
 def isoOrder( channel, row ) :
     if channel != 'tt' : return
-    iso1 = getattr( row, 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
-    iso2 = getattr( row, 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits' )
+    iso1 = getattr( row, 't1ByIsolationMVArun2v1DBnewDMwLTraw' )
+    iso2 = getattr( row, 't2ByIsolationMVArun2v1DBnewDMwLTraw' )
+        
+    #iso1 = getattr( row, 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits')
+    #iso2 = getattr( row, 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits')
     pt1 = getattr( row, 't1Pt' )
     pt2 = getattr( row, 't2Pt' )
-    if iso2 < iso1 :
+    if iso2 > iso1 :
         for uw in tauIso.keys() :
             tmp1 = getattr( row, 't1%s' % uw )
             tmp2 = getattr( row, 't2%s' % uw )
@@ -220,16 +214,16 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'jb2eta' : 'beta_2',
         'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
-        'muVetoZTTp001dxyz' : 'extramuon_veto',
-        'eVetoZTTp001dxyz' : 'extraelec_veto',
-        #XXX#'muVetoZTTp001dxyzR0' : 'extramuon_veto',
-        #XXX#'eVetoZTTp001dxyzR0' : 'extraelec_veto',
-        'mvaMetCov00' : 'covMatrix00',
-        'mvaMetCov01' : 'covMatrix01',
-        'mvaMetCov10' : 'covMatrix10',
-        'mvaMetCov11' : 'covMatrix11',
-        'mvaMetEt' : 'mvamet',
-        'mvaMetPhi' : 'mvametphi',
+        #'muVetoZTTp001dxyz' : 'extramuon_veto',
+        #'eVetoZTTp001dxyz' : 'extraelec_veto',
+        #'muVetoZTTp001dxyzR0' : 'extramuon_veto',
+        #'eVetoZTTp001dxyzR0' : 'extraelec_veto',
+        #'mvaMetCov00' : 'covMatrix00',
+        #'mvaMetCov01' : 'covMatrix01',
+        #'mvaMetCov10' : 'covMatrix10',
+        #'mvaMetCov11' : 'covMatrix11',
+        #'mvaMetEt' : 'mvamet',
+        #'mvaMetPhi' : 'mvametphi',
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
         'jetVeto30ZTT' : 'njets',
@@ -288,7 +282,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_Charge' : 'q',
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
+        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
         'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
+        'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
+        #'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'iso',
         'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
         'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
         'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
@@ -300,10 +297,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
-        #cand_ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
-        #cand_ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
-        #cand_ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
-        #cand_ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
+        'cand_ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
+        #'cand_ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
+        'cand_ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
+        #'cand_ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
         'cand_MtToPfMet_Raw' : 'mt',
         }
 
@@ -418,24 +415,49 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             continue
 
         #print currentRunLumiEvt, currentEvt
-        # lowest iso_1
-        if currentEvt[ 0 ] < prevEvt[ 0 ] :
-            prevEvt = currentEvt
-        # iso_1 equal
-        elif currentEvt[ 0 ] == prevEvt[ 0 ] :
-            # highest pt_1
-            if currentEvt[ 1 ] > prevEvt[ 1 ] :
+        """
+        Iso sorting is channel specific b/c tt uses MVA iso
+        where are high value == good isolation
+        """
+        if channel == 'tt' :
+            # lowest iso_1
+            if currentEvt[ 0 ] > prevEvt[ 0 ] :
                 prevEvt = currentEvt
-            # pt_1 equal
-            if currentEvt[ 1 ] == prevEvt[ 1 ] :
-                # lowest iso_2
-                if currentEvt[ 2 ] < prevEvt[ 2 ] :
+            # iso_1 equal
+            elif currentEvt[ 0 ] == prevEvt[ 0 ] :
+                # highest pt_1
+                if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
-                # iso_2 equal
-                if currentEvt[ 2 ] == prevEvt[ 2 ] :
-                    # highest pt_2
-                    if currentEvt[ 3 ] > prevEvt[ 3 ] :
+                # pt_1 equal
+                if currentEvt[ 1 ] == prevEvt[ 1 ] :
+                    # lowest iso_2
+                    if currentEvt[ 2 ] > prevEvt[ 2 ] :
                         prevEvt = currentEvt
+                    # iso_2 equal
+                    if currentEvt[ 2 ] == prevEvt[ 2 ] :
+                        # highest pt_2
+                        if currentEvt[ 3 ] > prevEvt[ 3 ] :
+                            prevEvt = currentEvt
+        else :
+            # lowest iso_1
+            if currentEvt[ 0 ] < prevEvt[ 0 ] :
+                prevEvt = currentEvt
+            # iso_1 equal
+            elif currentEvt[ 0 ] == prevEvt[ 0 ] :
+                # highest pt_1
+                if currentEvt[ 1 ] < prevEvt[ 1 ] :
+                    prevEvt = currentEvt
+                # pt_1 equal
+                if currentEvt[ 1 ] == prevEvt[ 1 ] :
+                    # lowest iso_2
+                    if currentEvt[ 2 ] < prevEvt[ 2 ] :
+                        prevEvt = currentEvt
+                    # iso_2 equal
+                    if currentEvt[ 2 ] == prevEvt[ 2 ] :
+                        # highest pt_2
+                        if currentEvt[ 3 ] < prevEvt[ 3 ] :
+                            prevEvt = currentEvt
+        
 
         # Make sure we get the last event
         if count == numRows :
@@ -466,6 +488,22 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     UniqueIDB = tnew.Branch('UniqueID', UniqueID, 'UniqueID/F')
     BkgGroup = array('f', [ 0 ] )
     BkgGroupB = tnew.Branch('BkgGroup', BkgGroup, 'BkgGroup/F')
+    extramuon_veto = array('f', [ 0 ] )
+    extramuon_vetoB = tnew.Branch('extramuon_veto', extramuon_veto, 'extramuon_veto/F')
+    extraelec_veto = array('f', [ 0 ] )
+    extraelec_vetoB = tnew.Branch('extraelec_veto', extraelec_veto, 'extraelec_veto/F')
+    mvamet = array('f', [ 0 ] )
+    mvametB = tnew.Branch('mvamet', mvamet, 'mvamet/F')
+    mvametphi = array('f', [ 0 ] )
+    mvametphiB = tnew.Branch('mvametphi', mvametphi, 'mvametphi/F')
+    covMatrix00 = array('f', [ 0 ] )
+    covMatrix00B = tnew.Branch('covMatrix00', covMatrix00, 'covMatrix00/F')
+    covMatrix01 = array('f', [ 0 ] )
+    covMatrix01B = tnew.Branch('covMatrix01', covMatrix01, 'covMatrix01/F')
+    covMatrix10 = array('f', [ 0 ] )
+    covMatrix10B = tnew.Branch('covMatrix10', covMatrix10, 'covMatrix10/F')
+    covMatrix11 = array('f', [ 0 ] )
+    covMatrix11B = tnew.Branch('covMatrix11', covMatrix11, 'covMatrix11/F')
     isZtt = array('f', [ 0 ] )
     isZttB = tnew.Branch('isZtt', isZtt, 'isZtt/F')
     isZmt = array('f', [ 0 ] )
@@ -512,8 +550,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            isoOrder( channel, row )
-            #vbfClean( row )
+            if channel == 'tt' : isoOrder( channel, row )
+            vbfClean( row )
 
 
             isZtt[0] = 0
@@ -547,6 +585,38 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             UniqueID[0] = sampDict[ shortName ]['UniqueID']
             BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
 
+
+            # Channel specific vetoes
+            if channel == 'tt' :
+                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
+                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+            if channel == 'em' :
+                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
+                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+            if channel == 'et' :
+                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
+                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+            if channel == 'mt' :
+                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
+                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+            
+            # Channel specific pairwise mvaMet
+            if channel == 'tt' :
+                mvamet[0] = getattr( row, "t1_t2_TTpairMvaMet" )
+                mvametphi[0] = getattr( row, "t1_t2_TTpairMvaMetPhi" )
+                covMatrix00[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix00" )
+                covMatrix01[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix01" )
+                covMatrix10[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix10" )
+                covMatrix11[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix11" )
+            if channel == 'em' :
+                mvamet[0] = getattr( row, "e_m_EMpairMvaMet" )
+                mvametphi[0] = getattr( row, "e_m_EMpairMvaMetPhi" )
+                covMatrix00[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix00" )
+                covMatrix01[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix01" )
+                covMatrix10[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix10" )
+                covMatrix11[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix11" )
+
+            # Data specific vars
             if 'data' in sample :
                 puweight[0] = 1
                 trigweight_1[0] = 1
