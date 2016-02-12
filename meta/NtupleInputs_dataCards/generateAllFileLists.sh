@@ -17,7 +17,7 @@ ls /data/truggles/${BKGS}/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia
 #ls /data/truggles/${BKGS}/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root > DYJets400-600.txt
 #ls /data/truggles/${BKGS}/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root > DYJets600-Inf.txt
 ls /data/truggles/${BKGS}/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root > T-tchan.txt 
-ls /data/truggles/${BKGS}/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root > T-tchan.txt 
+ls /data/truggles/${BKGS}/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root > Tbar-tchan.txt 
 ls /data/truggles/${BKGS}/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root > Tbar-tW.txt 
 ls /data/truggles/${BKGS}/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root > T-tW.txt 
 ls /data/truggles/${TT}/TT_TuneCUETP8M1_13TeV-powheg-pythia8/*/*/*.root > TT.txt 
@@ -29,4 +29,6 @@ ls /data/truggles/${BKGS}/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/*/*
 ls /data/truggles/${BKGS}/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/*/*/*.root > WW1l1nu2q.txt 
 ls /data/truggles/${BKGS}/WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/*/*/*.root > WZJets.txt
 ls /data/truggles/${BKGS}/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/*/*/*.root > WZ1l3nu.txt 
+ls /data/truggles/${BKGS}/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/*/*/*.root > WZ1l1nu2q.txt 
 ls /data/truggles/${BKGS}/ZZTo4L_13TeV-amcatnloFXFX-pythia8/*/*/*.root > ZZ4l.txt 
+ls /data/truggles/${BKGS}/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/*/*/*.root > ZZ2l2q.txt 
