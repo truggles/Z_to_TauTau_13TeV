@@ -23,14 +23,12 @@ print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
 os.environ['_LUMI_'] = cmsLumi
-lumiCert = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2.11/fb - all of 2015 25ns golden
-puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-makeMetaJSON( grouping )
+#makeMetaJSON( grouping )
 os.chdir('..')
 
 
@@ -68,11 +66,11 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
     'numCores' : 10,
-    'numFilesPerCycle' : 10,
-    'channels' : ['em', 'tt'],
+    'numFilesPerCycle' : 2,
+    #'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
-    #'channels' : ['tt',],
+    'channels' : ['tt',],
     #'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
@@ -86,8 +84,8 @@ params = {
     'additionalCut' : '',
 }
 
-#samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+samples = checkBkgs( samples, params, grouping )
+analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 
 #params['mid3'] = '3Feb02sDC_SS'
 #params['additionalCut'] = '*(Z_SS==1)'

@@ -82,25 +82,20 @@ def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMap
     print "%5i %20s %10s %3i: Finished Cuts" % (num, sample, channel, count)
 
     ''' 2. Rename branches, Tau and Iso order legs '''
-    print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
-    print '%s%s/%s.root' % (grouping, mid2, save)
-    #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
-    print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
+    #XXX#print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
+    #XXX#isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
+    #XXX#print '%s%s/%s.root' % (grouping, mid2, save)
+    #XXX##output.put( '%s%s/%s.root' % (grouping, mid2, save) )
+    #XXX#print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
     #output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
     print "%5i %20s %10s %3i: ====>>> DONE <<<====" % (num, sample, channel, count)
-    return (num, sample, channel, count, initialQty, postCutQty, isoQty )
+    return (num, sample, channel, count, initialQty, postCutQty)#XXX#, isoQty )
 
 
 
 
-#def doInitialCutsAndOrder() :
-#def doInitialCutsAndOrder(grouping, samples, mid1, mid2, bkgs, cutMapper, cutName, numFilesPerCycle, numCores) :
 def doInitialCutsAndOrder(grouping, samples, **fargs) :
-    #mid1, mid2, mid3, bkgs, cutMapp, cutName = ''
-    #numfilesPerCycle, numCores = 0
-    #for kw in args.keys() :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -167,7 +162,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
         print item[4]
         print item[5]
-        print item[6]
+        #print item[6]
     
     print "Start Time: %s" % str( begin )
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )

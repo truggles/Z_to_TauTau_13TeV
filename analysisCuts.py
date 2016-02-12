@@ -59,7 +59,7 @@ tt35    = 'doubleTau35Pass == 1 && t1MatchesDoubleTau35Path == 1 && t2MatchesDou
 ttOS    = 't1_t2_SS == 0'
 ttSS    = 't1_t2_SS == 1'
 ttIso   = 't1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5'
-ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
+ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0'
 ttDisc  = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
 ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0'
@@ -113,6 +113,15 @@ def syncCutsNtuple( ch ) :
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
     if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35]
+    cutMap = {'BaseLine' : cuts}
+    return cutMap
+
+# Selection which only does baseline for sync sample
+def crazyCutsNtuple( ch ) :
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+') && ePt > 150']
+    if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
+    if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35, 't1Pt>150&&t2Pt>150']
     cutMap = {'BaseLine' : cuts}
     return cutMap
 

@@ -44,15 +44,16 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
     'numCores' : 5,
-    'numFilesPerCycle' : 25,
+    'numFilesPerCycle' : 2,
     'channels' : ['em', 'tt'],
     #'channels' : ['tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     'cutMapper' : 'syncCutsNtuple',
+    #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb12b',
-    'mid2' : '2Feb12b',
-    'mid3' : '3Feb12b',
+    'mid1' : '1Feb12d',
+    'mid2' : '2Feb12d',
+    'mid3' : '3Feb12d',
     'additionalCut' : '',
 }
 
