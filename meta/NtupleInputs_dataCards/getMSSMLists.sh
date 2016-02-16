@@ -15,8 +15,8 @@ for MASS in 80 90 100 110 120 130 140 160 180 200 250 300 350 400 450 500 600 70
 done
 
 for MASS in 120 125 130; do
-    echo "ls /data/truggles/jan25_mssmAndHiggs76x/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > ggHtoTauTau${MASS}.txt"
-    ls /data/truggles/jan25_mssmAndHiggs76x/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > ggHtoTauTau${MASS}.txt
-    echo "ls /data/truggles/jan25_mssmAndHiggs76x/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > VBFHtoTauTau${MASS}.txt"
-    ls /data/truggles/jan25_mssmAndHiggs76x/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > VBFHtoTauTau${MASS}.txt
+    echo "ls /data/truggles/${jobId}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > ggHtoTauTau${MASS}.txt"
+    ls /data/truggles/${jobId}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > ggHtoTauTau${MASS}.txt
+    echo "ls /data/truggles/${jobId}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > VBFHtoTauTau${MASS}.txt"
+    ls /data/truggles/${jobId}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > VBFHtoTauTau${MASS}.txt
 done
