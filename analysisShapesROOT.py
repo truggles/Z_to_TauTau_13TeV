@@ -43,7 +43,11 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
-samples['DYJets']   = ('kOrange-4', '_ZTT_')
+#samples['DYJets']   = ('kOrange-4', '_ZTT_')
+samples['DYJets-ZTT']   = ('kOrange-4', '_ZTT_')
+samples['DYJets-ZL']   = ('kOrange-4', '_ZL_')
+samples['DYJets-ZJ']   = ('kOrange-4', '_ZJ_')
+samples['DYJets-ZLL']   = ('kOrange-4', '_ZLL_')
 #samples['DYJets100-200']   = ('kOrange-4', '_ZTT_')
 #samples['DYJets200-400']   = ('kOrange-4', '_ZTT_')
 #samples['DYJets400-600']   = ('kOrange-4', '_ZTT_')
@@ -74,7 +78,7 @@ samples['data_em']  = ('kBlack', '_data_obs_')
 samples['VBFHtoTauTau125'] = ('kGreen', '_ggH125_')
 samples['ggHtoTauTau125'] = ('kGreen', '_vbfH125_')
 
-nameArray = ['_data_obs_','_ZTT_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH125_']
+nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH125_']
 
 if options.mssm :
     #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
@@ -110,7 +114,7 @@ else :
 if options.ztt :
     del samples['VBFHtoTauTau125']
     del samples['ggHtoTauTau125']
-    samples['DYJets'] = ('kOrange-4', '_ZTT_')
+    #XXX#samples['DYJets'] = ('kOrange-4', '_ZTT_')
     #XXX#samples['DYJets'] = ('kOrange-4', '_ZTT90_')
     #XXX#samples['DYJetsLow'] = ('kOrange-4', '_ZTT90_')
     nameArray.remove('_vbfH125_')
@@ -125,6 +129,14 @@ for channel in ['em', 'tt'] :
     if 'tt' not in options.channels and channel == 'tt' : continue
     if 'em' not in options.channels and channel == 'em' : continue
 
+    if channel == 'tt' :
+        del samples['DYJets-ZLL']
+        nameArray.remove('_ZLL_')
+    if channel == 'em' :
+        del samples['DYJets-ZJ']
+        nameArray.remove('_ZJ_')
+        del samples['DYJets-ZL']
+        nameArray.remove('_ZL_')
 
     print channel
 

@@ -260,6 +260,17 @@ def doInitialOrder(grouping, samples, **fargs) :
 
 
 def drawHistos(grouping, samples, **fargs ) :
+    genMap = {
+        # sample : em , tt
+        'ZTT' : {'em' : '*(gen_match_1 > 2 && gen_match_2 > 3)',
+                'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
+        'ZL' : {'em' : '',
+                'tt' : '*(gen_match_1 < 6 && gen_match_2 < 6 && !(gen_match_1 == 5 && gen_match_2 == 5))'},
+        'ZJ' : {'em' : '',
+                'tt' : '*(gen_match_2 == 6 || gen_match_1 == 6)'},
+        'ZLL' : {'em' : '*(gen_match_1 < 3 || gen_match_2 < 4)',
+                'tt' : '*(gen_match_1 != 5 && gen_match_2 != 5)'},
+    }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
     ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']) ) )
@@ -267,40 +278,57 @@ def drawHistos(grouping, samples, **fargs ) :
     bkgMap = getBkgMap()
     
     for sample in samples :
-    
+
+        # the gen matching samples are: based off of the DYJets samples
+        loopList = []
+        if 'DYJets' in sample :
+            genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
+            loopList = genList
+            loopList.append( sample ) 
+        else : loopList.append( sample )
         fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
-        print "File len: %i" % fileLen
+        print "File len: %5i  File name: meta/NtupleInputs_%s/%s.txt" % (fileLen, grouping, sample)
         numIters = int( math.ceil( fileLen / fargs['numFilesPerCycle'] ) )
         print "Num Iters: %i" % numIters
     
-        for channel in channels :
+        for subName in loopList :
+            print "SubName:",subName
+            if subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
+            else : saveName = sample.split('_')[0]
+            
+            for channel in channels :
     
-            if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-            if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-            if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-            if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
-            print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, sample, channel)
+                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
+                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
+                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
+                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+                print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, saveName, channel)
     
-            chain = ROOT.TChain('Ntuple')
-            if fargs['bkgs'] != 'None' :
-                outFile = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], channel), 'RECREATE')
-                for i in range( numIters+1 ) :
-                    #print "%s_%i" % ( sample, i)
-                    chain.Add('meta/%sBackgrounds/%s/iso/%s_%i_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], i, channel) )
-            else :
-                outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], sample.split('_')[0], channel), 'RECREATE')
-                for i in range( numIters+1 ) :
-                    #print "%s_%i" % ( sample, i)
-                    chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
-            print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
-            if 'data' in sample : isData = True
-            else : isData = False
-            additionalCut = fargs['additionalCut']
-            #if fargs['bkgs'] != 'None' : blind = False
-            #else : blind = True
-            blind = False
-            analysisPlots.plotHistosProof( outFile, chain, channel, isData, additionalCut, blind )
-            outFile.Close()
+                chain = ROOT.TChain('Ntuple')
+                if fargs['bkgs'] != 'None' :
+                    outFile = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], channel), 'RECREATE')
+                    for i in range( numIters+1 ) :
+                        #print "%s_%i" % ( sample, i)
+                        chain.Add('meta/%sBackgrounds/%s/iso/%s_%i_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], i, channel) )
+                else :
+                    outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
+                    for i in range( numIters+1 ) :
+                        #print "%s_%i" % ( sample, i)
+                        chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
+                print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
+                if 'data' in sample : isData = True
+                else : isData = False
+                additionalCut = fargs['additionalCut']
+                if subName != sample : 
+                    if genMap[subName][channel] == '' : continue
+                    if additionalCut == '' : additionalCut = genMap[subName][channel] 
+                    else : additionalCut += genMap[subName][channel] 
+                print "AdditionalCuts",additionalCut
+                #if fargs['bkgs'] != 'None' : blind = False
+                #else : blind = True
+                blind = False
+                analysisPlots.plotHistosProof( outFile, chain, channel, isData, additionalCut, blind )
+                outFile.Close()
          
 if __name__ == '__main__' :
     runCutsAndIso('25ns', 'data_em', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)

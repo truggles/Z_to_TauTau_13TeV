@@ -75,7 +75,10 @@ chans = {
 samples = OrderedDict()
 #samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
 #samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
-samples['DYJets']   = ('kOrange-4', 'dyj')
+samples['DYJets-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets-ZLL']   = ('kOrange-4', 'zll')
 #samples['DYJets100-200']   = ('kOrange-4', 'dyj')
 #samples['DYJets200-400']   = ('kOrange-4', 'dyj')
 #samples['DYJets400-600']   = ('kOrange-4', 'dyj')
@@ -110,7 +113,10 @@ sampColors = {
     'dib' : 'kRed+2',
     'top' : 'kBlue-8',
     'qcd' : 'kMagenta-10',
-    'dyj' : 'kOrange-4',
+    'ztt' : 'kOrange-4',
+    'zl' : 'kOrange-2',
+    'zj' : 'kOrange-6',
+    'zll' : 'kOrange-8',
     'wjets' : 'kAzure+2',
     'higgs' : 'kBlue',
     'mssm' : 'kPink',
@@ -190,7 +196,10 @@ for channel in ['em', 'tt'] :
 
         append = var + channel
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
-        dyj = ROOT.TH1F("All Backgrounds dyj %s" % append, "dyj", xNum, xBins )
+        ztt = ROOT.TH1F("All Backgrounds ztt %s" % append, "ztt", xNum, xBins )
+        zl = ROOT.TH1F("All Backgrounds zl %s" % append, "zl", xNum, xBins )
+        zj = ROOT.TH1F("All Backgrounds zj %s" % append, "zj", xNum, xBins )
+        zll = ROOT.TH1F("All Backgrounds zll %s" % append, "zll", xNum, xBins )
         dib = ROOT.TH1F("All Backgrounds dib %s" % append, "dib", xNum, xBins )
         top = ROOT.TH1F("All Backgrounds top %s" % append, "top", xNum, xBins )
         higgs = ROOT.TH1F("All Backgrounds higgs %s" % append, "higgs", xNum, xBins )
@@ -204,7 +213,10 @@ for channel in ['em', 'tt'] :
         for sample in samples:
 
             if channel == 'tt' and sample == 'data_em' : continue
+            if channel == 'tt' and '-ZLL' in sample : continue
             if channel == 'em' and sample == 'data_tt' : continue
+            if channel == 'em' and '-ZJ' in sample : continue
+            if channel == 'em' and '-ZL' in sample and not '-ZLL' in sample : continue
             if options.qcdMC and sample == 'QCD' : continue
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
@@ -301,7 +313,7 @@ for channel in ['em', 'tt'] :
 
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
-            print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
+            #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
                 if not options.useQCDMake or options.QCDYield :
                     if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
@@ -328,9 +340,18 @@ for channel in ['em', 'tt'] :
 
 
             #print "Hist int: %s %f" % (sample, hist.Integral() )
-            if samples[ sample ][1] == 'dyj' :
-                hist.SetTitle('Z #rightarrow #tau#tau')
-                dyj.Add( hist )
+            if samples[ sample ][1] == 'ztt' :
+                #hist.SetTitle('Z #rightarrow #tau#tau')
+                ztt.Add( hist )
+            if samples[ sample ][1] == 'zl' :
+                #hist.SetTitle('ZL')
+                zl.Add( hist )
+            if samples[ sample ][1] == 'zj' :
+                #hist.SetTitle('ZJ')
+                zj.Add( hist )
+            if samples[ sample ][1] == 'zll' :
+                #hist.SetTitle('ZLL')
+                zll.Add( hist )
             if samples[ sample ][1] == 'qcd' :
                 hist.SetTitle('QCD')
                 qcd.Add( hist )
@@ -356,7 +377,7 @@ for channel in ['em', 'tt'] :
                 data.Add( hist )
             tFile.Close()
 
-        Ary = { qcd : "qcd", top : "top", dib : "dib", wjets : "wjets", dyj : "dyj", }
+        Ary = { qcd : "qcd", top : "top", dib : "dib", wjets : "wjets", ztt : "ztt", zl :  "zl", zj : "zj", zll : "zll" }
         for h in Ary.keys() :
             color = "ROOT.%s" % sampColors[ Ary[h] ]
             h.SetFillColor( eval( color ) )
@@ -390,7 +411,7 @@ for channel in ['em', 'tt'] :
                 h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( h.GetBinWidth(1) / h.GetBinWidth( bin_ ) ) )
 
         # Set hist Names
-        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "ztt" : "Z #rightarrow #tau#tau", "zl" : "ZL", "zj" : "ZJ", "zll" : "ZLL" }
         if options.mssm : Names["higgs"] = "SM Higgs(125)"
         else : Names["higgs"] = "SM Higgs(125) x %i" % higgsSF
         for h in Ary.keys() :
@@ -405,11 +426,30 @@ for channel in ['em', 'tt'] :
         stack.Add( top )
         stack.Add( dib )
         stack.Add( wjets )
-        stack.Add( dyj )
+        if channel != 'em' :
+            stack.Add( zl )
+            stack.Add( zj )
+        if channel == 'em' :
+            stack.Add( zll )
+        stack.Add( ztt )
 
+
+        """
+        Calculate rough bin-by-bin uncertainties
+        """
         binErrors = []
         for k in range( top.GetNbinsX()+1 ) :
-            binErrors.append( math.sqrt( (top.GetBinContent( k )*.1)**2 + (dib.GetBinContent(k)*.1)**2 + (wjets.GetBinContent(k)*.1)**2 + (dyj.GetBinContent(k)*.1)**2 + (qcd.GetBinContent(k)*.2)**2 ) )
+            toRoot = (top.GetBinContent( k )*.1)**2
+            toRoot += (dib.GetBinContent(k)*.1)**2
+            toRoot += (wjets.GetBinContent(k)*.1)**2
+            toRoot += (ztt.GetBinContent(k)*.1)**2
+            toRoot += (qcd.GetBinContent(k)*.2)**2
+            if channel != 'em' :
+                toRoot += (zj.GetBinContent(k)*.1)**2
+                toRoot += (zl.GetBinContent(k)*.1)**2
+            if channel == 'em' :
+                toRoot += (zll.GetBinContent(k)*.1)**2
+            binErrors.append( math.sqrt(toRoot) )
 
 
         # Scale Higgs samples for viewing
@@ -585,7 +625,6 @@ for channel in ['em', 'tt'] :
             e1.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             for k in range( e1.GetNbinsX()+1 ) :
                 e1.SetBinContent( k, stack.GetStack().Last().GetBinContent( k ) )
-                #e1.SetBinError(k, math.sqrt( (top.GetBinContent( k )*.1)**2 + (dib.GetBinContent(k)*.1)**2 + (wjets.GetBinContent(k)*.1)**2 + (dyj.GetBinContent(k)*.1)**2 + (qcd.GetBinContent(k)*.4)**2 ) )
                 e1.SetBinError(k, binErrors[k] )
                 #print "Qcd Error:",qcd.GetBinError(k)
             e1.SetLineColor( 0 )
