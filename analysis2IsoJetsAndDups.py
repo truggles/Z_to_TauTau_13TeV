@@ -68,7 +68,7 @@ def getIso( cand, row ) :
         return getattr(row, cand+'RelPFIsoDBDefault')
     if 't' in cand :
         #return getattr(row, cand+'ByCombinedIsolationDeltaBetaCorrRaw3Hits')
-        return getattr(row, cand+'ByIsolationMVArun2v1DBnewDMwLTraw' )
+        return getattr(row, cand+'ByIsolationMVArun2v1DBoldDMwLTraw' )
         
         
 def getCurrentEvt( channel, row ) :
@@ -147,8 +147,8 @@ tauIso = {
 
 def isoOrder( channel, row ) :
     if channel != 'tt' : return
-    iso1 = getattr( row, 't1ByIsolationMVArun2v1DBnewDMwLTraw' )
-    iso2 = getattr( row, 't2ByIsolationMVArun2v1DBnewDMwLTraw' )
+    iso1 = getattr( row, 't1ByIsolationMVArun2v1DBoldDMwLTraw' )
+    iso2 = getattr( row, 't2ByIsolationMVArun2v1DBoldDMwLTraw' )
         
     #iso1 = getattr( row, 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits')
     #iso2 = getattr( row, 't2ByCombinedIsolationDeltaBetaCorrRaw3Hits')
@@ -174,7 +174,7 @@ def calcDR( eta1, phi1, eta2, phi2 ) :
 
 
 
-def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
+def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName, count ) :
     with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
         sampDict = json.load( sampFile )
 
@@ -214,16 +214,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'jb2eta' : 'beta_2',
         'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
-        #'muVetoZTTp001dxyz' : 'extramuon_veto',
-        #'eVetoZTTp001dxyz' : 'extraelec_veto',
-        #'muVetoZTTp001dxyzR0' : 'extramuon_veto',
-        #'eVetoZTTp001dxyzR0' : 'extraelec_veto',
-        #'mvaMetCov00' : 'covMatrix00',
-        #'mvaMetCov01' : 'covMatrix01',
-        #'mvaMetCov10' : 'covMatrix10',
-        #'mvaMetCov11' : 'covMatrix11',
-        #'mvaMetEt' : 'mvamet',
-        #'mvaMetPhi' : 'mvametphi',
         'bjetCISVVeto20MediumZTT' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
         'jetVeto30ZTT' : 'njets',
@@ -285,7 +275,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
         'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
         'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
-        #'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'iso',
+        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
         'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
         'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
         'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
@@ -325,7 +315,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     for key in l2Map.keys() :
         branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
 
-    if bkgFlag == '' :
+    if SVF :
+        oldFileName = '%s%s.root' % (svfName, sample)
+        newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
+    elif bkgFlag == '' :
         oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
         newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
     else :
@@ -496,14 +489,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     mvametB = tnew.Branch('mvamet', mvamet, 'mvamet/F')
     mvametphi = array('f', [ 0 ] )
     mvametphiB = tnew.Branch('mvametphi', mvametphi, 'mvametphi/F')
-    covMatrix00 = array('f', [ 0 ] )
-    covMatrix00B = tnew.Branch('covMatrix00', covMatrix00, 'covMatrix00/F')
-    covMatrix01 = array('f', [ 0 ] )
-    covMatrix01B = tnew.Branch('covMatrix01', covMatrix01, 'covMatrix01/F')
-    covMatrix10 = array('f', [ 0 ] )
-    covMatrix10B = tnew.Branch('covMatrix10', covMatrix10, 'covMatrix10/F')
-    covMatrix11 = array('f', [ 0 ] )
-    covMatrix11B = tnew.Branch('covMatrix11', covMatrix11, 'covMatrix11/F')
+    mvacov00 = array('f', [ 0 ] )
+    mvacov00B = tnew.Branch('mvacov00', mvacov00, 'mvacov00/F')
+    mvacov01 = array('f', [ 0 ] )
+    mvacov01B = tnew.Branch('mvacov01', mvacov01, 'mvacov01/F')
+    mvacov10 = array('f', [ 0 ] )
+    mvacov10B = tnew.Branch('mvacov10', mvacov10, 'mvacov10/F')
+    mvacov11 = array('f', [ 0 ] )
+    mvacov11B = tnew.Branch('mvacov11', mvacov11, 'mvacov11/F')
     isZtt = array('f', [ 0 ] )
     isZttB = tnew.Branch('isZtt', isZtt, 'isZtt/F')
     isZmt = array('f', [ 0 ] )
@@ -604,17 +597,17 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             if channel == 'tt' :
                 mvamet[0] = getattr( row, "t1_t2_TTpairMvaMet" )
                 mvametphi[0] = getattr( row, "t1_t2_TTpairMvaMetPhi" )
-                covMatrix00[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix00" )
-                covMatrix01[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix01" )
-                covMatrix10[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix10" )
-                covMatrix11[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix11" )
+                mvacov00[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix00" )
+                mvacov01[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix01" )
+                mvacov10[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix10" )
+                mvacov11[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix11" )
             if channel == 'em' :
                 mvamet[0] = getattr( row, "e_m_EMpairMvaMet" )
                 mvametphi[0] = getattr( row, "e_m_EMpairMvaMetPhi" )
-                covMatrix00[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix00" )
-                covMatrix01[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix01" )
-                covMatrix10[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix10" )
-                covMatrix11[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix11" )
+                mvacov00[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix00" )
+                mvacov01[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix01" )
+                mvacov10[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix10" )
+                mvacov11[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix11" )
 
             # Data specific vars
             if 'data' in sample :

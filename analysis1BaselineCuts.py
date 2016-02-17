@@ -58,7 +58,7 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
 
 
 
-def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
+def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
@@ -81,21 +81,39 @@ def runCutsAndIso(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMap
     postCutQty = cutOut[3]
     print "%5i %20s %10s %3i: Finished Cuts" % (num, sample, channel, count)
 
+    return (num, sample, channel, count, initialQty, postCutQty)
+
+
+def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,svf,svfName,numFilesPerCycle) :
+
+    if svf == 'true' : SVF = True
+    else : SVF = False
+
+    if 'data' in sample : save = 'data_%i_%s' % (count, channel)
+    else : save = '%s_%i_%s' % (sample, count, channel)
+    bkgMap = getBkgMap()
+    #print "save",save
+    print "%5i %20s %10s %3i: ====>>> START Iso Order <<<====" % (num, sample, channel, count)
+
     ''' 2. Rename branches, Tau and Iso order legs '''
-    #XXX#print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    #XXX#isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
-    #XXX#print '%s%s/%s.root' % (grouping, mid2, save)
-    #XXX##output.put( '%s%s/%s.root' % (grouping, mid2, save) )
-    #XXX#print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
+    print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
+    if SVF : 
+        print 'Infile: %s%s.root' % (svfName,save)
+        print 'Output: %s%s/%s.root' % (grouping, mid2, save)
+    else :
+        print 'Output: %s%s/%s.root' % (grouping, mid2, save)
+    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], SVF,svfName, count )
+    #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
+    print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
     #output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
-    print "%5i %20s %10s %3i: ====>>> DONE <<<====" % (num, sample, channel, count)
-    return (num, sample, channel, count, initialQty, postCutQty)#XXX#, isoQty )
+    print "%5i %20s %10s %3i: ====>>> DONE Iso Order <<<====" % (num, sample, channel, count)
+    return (num, sample, channel, count, isoQty )
 
 
 
 
-def doInitialCutsAndOrder(grouping, samples, **fargs) :
+def doInitialCuts(grouping, samples, **fargs) :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -120,7 +138,7 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
                 if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
     
-                multiprocessingOutputs.append( pool.apply_async(runCutsAndIso, args=(grouping,
+                multiprocessingOutputs.append( pool.apply_async(runCuts, args=(grouping,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
@@ -162,7 +180,79 @@ def doInitialCutsAndOrder(grouping, samples, **fargs) :
         print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
         print item[4]
         print item[5]
-        #print item[6]
+    
+    print "Start Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+
+
+def doInitialOrder(grouping, samples, **fargs) :
+        
+    begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print begin
+    channels = fargs[ 'channels' ]
+    ''' Start multiprocessing tests '''
+    #output = multiprocessing.Queue()
+    pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
+    multiprocessingOutputs = []
+    
+    num = 0
+    for sample in samples :
+    
+        fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+        go = True
+        count = 0
+        while go :
+            for channel in channels :
+    
+                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
+                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
+                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
+                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
+    
+                multiprocessingOutputs.append( pool.apply_async(runIsoOrder, args=(grouping,
+                                                                                    sample,
+                                                                                    channel,
+                                                                                    count,
+                                                                                    num,
+                                                                                    fargs['bkgs'],
+                                                                                    fargs['mid1'],
+                                                                                    fargs['mid2'],
+                                                                                    fargs['cutMapper'],
+                                                                                    fargs['cutName'],
+                                                                                    fargs['svf'],
+                                                                                    fargs['svfName'],
+                                                                                    fargs['numFilesPerCycle'])) )
+                num +=  1
+    
+            count += 1
+            
+            # Make sure we loop over large samples to get all files
+            if count * fargs['numFilesPerCycle'] > fileLen : go = False
+    
+    
+    mpResults = [p.get() for p in multiprocessingOutputs]
+    
+    #print(mpResults)
+    print "#################################################################"
+    print "###               Finished, summary below                     ###"
+    print "#################################################################"
+    
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    print "\n"
+    
+    print " --- CutTable used: %s" % fargs['cutMapper']
+    print " --- Cut used: %s" % fargs['cutName']
+    print " --- Grouping: %s" % grouping
+    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
+    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+    print "\n"
+    
+    mpResults.sort()
+    for item in mpResults :
+        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+        print item[4]
     
     print "Start Time: %s" % str( begin )
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )

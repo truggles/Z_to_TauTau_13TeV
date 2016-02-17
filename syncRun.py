@@ -43,22 +43,28 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 5,
+    'numCores' : 16,
     'numFilesPerCycle' : 2,
     'channels' : ['em', 'tt'],
     #'channels' : ['tt'],
+    #'channels' : ['em'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb12d',
-    'mid2' : '2Feb12d',
-    'mid3' : '3Feb12d',
+    'mid1' : '1Feb17a',
+    'mid2' : '2Feb17a',
+    'mid3' : '3Feb17a',
     'additionalCut' : '',
+    'svf' : 'true',
+    'svfName' : '/data/truggles/Sync_feb16_svFitted2/TauTau_13_Sync1Feb12d-',
+    #'svfName' : '/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-',
+    #'svf' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 
 
 
