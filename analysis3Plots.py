@@ -44,9 +44,9 @@ luminosity = 2260.0 # / fb 25ns
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
-#qcdTTScaleFactor = 1.06
+qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
-qcdTTScaleFactor = 1.25
+#qcdTTScaleFactor = 1.25
 #qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
 qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
 #qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
@@ -76,29 +76,29 @@ samples = OrderedDict()
 #samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
 #samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
 samples['DYJets']   = ('kOrange-4', 'dyj')
-samples['DYJets100-200']   = ('kOrange-4', 'dyj')
-samples['DYJets200-400']   = ('kOrange-4', 'dyj')
-samples['DYJets400-600']   = ('kOrange-4', 'dyj')
-samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
+#samples['DYJets100-200']   = ('kOrange-4', 'dyj')
+#samples['DYJets200-400']   = ('kOrange-4', 'dyj')
+#samples['DYJets400-600']   = ('kOrange-4', 'dyj')
+#samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
 #samples['DYJetsLow']   = ('kOrange-4', 'dyj')
-#samples['T-tW']     = ('kYellow+2', 'dib')
+samples['T-tW']     = ('kYellow+2', 'dib')
 samples['T-tchan']     = ('kYellow+2', 'dib')
 samples['TT']       = ('kBlue-8', 'top')
 samples['Tbar-tW']  = ('kYellow-2', 'dib')
-#samples['Tbar-tchan']  = ('kYellow-2', 'dib')
+samples['Tbar-tchan']  = ('kYellow-2', 'dib')
 samples['WJets']    = ('kAzure+2', 'wjets')
-samples['WJets100-200']    = ('kAzure+2', 'wjets')
-samples['WJets200-400']    = ('kAzure+2', 'wjets')
-samples['WJets400-600']    = ('kAzure+2', 'wjets')
-samples['WJets600-Inf']    = ('kAzure+2', 'wjets')
-#samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
+#samples['WJets100-200']    = ('kAzure+2', 'wjets')
+#samples['WJets200-400']    = ('kAzure+2', 'wjets')
+#samples['WJets400-600']    = ('kAzure+2', 'wjets')
+#samples['WJets600-Inf']    = ('kAzure+2', 'wjets')
+samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
 #samples['WW2l2nu']       = ('kAzure+8', 'dib')
-#samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
+samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
 samples['WZ1l3nu'] = ('kAzure-6', 'dib')
 #samples['WZ2l2q'] = ('kAzure-6', 'dib')
 #samples['WZ3l1nu'] = ('kAzure-6', 'dib')
 #samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
-#samples['ZZ2l2q'] = ('kAzure-12', 'dib')
+samples['ZZ2l2q'] = ('kAzure-12', 'dib')
 samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
@@ -291,17 +291,17 @@ for channel in ['em', 'tt'] :
                 hist = ROOT.TH1F( preHist )
             else :
                 #preHist.Rebin( plotDetails[ var ][2] )
-                print "Rebinning"
-                print xNum
-                print xBins
+                #print "Rebinning"
+                #print xNum
+                #print xBins
                 hist = preHist.Rebin( xNum, "rebinned", xBins )
-                print "Done Rebinning"
+                #print "Done Rebinning"
 
 
 
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
-            #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
+            print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and hist.Integral() != 0 :
                 if not options.useQCDMake or options.QCDYield :
                     if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )

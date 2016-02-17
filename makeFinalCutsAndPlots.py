@@ -39,8 +39,9 @@ def makeCuts( folder ) :
     ''' Preset samples '''
     #SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l']#, 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
     #SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'DYJets', 'DYJets100-200', 'DYJets200-400', 'DYJets400-600', 'DYJets600-Inf', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'WJets', 'WJets100-200', 'WJets200-400', 'WJets400-600', 'WJets600-Inf', 'WW1l1nu2q', 'WZ1l3nu', 'ZZ4l'] # As we wait for all samples 76x to come in, this is our complete list
+    SamplesDataCards = ['DYJets', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l3nu', 'WZ1l1nu2q', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', ] # As of Feb11
     
-    SamplesDataCards = []
+    #SamplesDataCards = []
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
     for mass in masses :
            SamplesDataCards.append( 'ggH%i' % mass )
@@ -56,7 +57,7 @@ def makeCuts( folder ) :
     params = {
         'bkgs' : 'None',
         'numCores' : 15,
-        'numFilesPerCycle' : 10,
+        'numFilesPerCycle' : 2,
         'channels' : ['em', 'tt'],
         #'channels' : ['em', 'tt', 'et', 'mt'],
         #'channels' : ['em',],
@@ -65,10 +66,10 @@ def makeCuts( folder ) :
         #'cutMapper' : 'signalCutsNoSign', #!
         #'cutMapper' : 'signalExtractionNoSign', #!
         #'cutName' : 'PostSync', #!
-        'cutMapper' : 'syncCutsDC',
+        #'cutMapper' : 'syncCutsDC',
         #'cutMapper' : 'syncCutsNtuple',
-        'cutName' : 'BaseLine',
-        'mid1' : '1Feb02sDC',
+        #'cutName' : 'BaseLine',
+        'mid1' : '1Feb16a',
         'mid2' : folder,
         'additionalCut' : '',
     }
@@ -102,60 +103,60 @@ def makeCuts( folder ) :
     no2p = '((t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6))'
     isoSig = '(iso_1<1. && iso_2<1.)'
 
-    """
-    Double Hardonic baseline with good QCD estimation
-    """
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSl2loose'
-    params['additionalCut'] = '*(Z_SS==1)*%s*%s' % (no2p, isoL2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSl2loose'
-    params['additionalCut'] = '*(Z_SS==0)*%s*%s' % (no2p, isoL2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSsig'
-    params['additionalCut'] = '*(Z_SS==1)*%s*%s' % (no2p, isoSig)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSsig'
-    params['additionalCut'] = '*(Z_SS==0)*%s*%s' % (no2p, isoSig)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    """
-    Double Hardonic boosted Z/higgs
-    """
-    zPt = '(Z_Pt>100)'
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSl2looseZPt2'
-    params['additionalCut'] = '*(Z_SS==1)*%s*%s*%s' % (no2p, isoL2loose, zPt)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSl2looseZPt2'
-    params['additionalCut'] = '*(Z_SS==0)*%s*%s*%s' % (no2p, isoL2loose, zPt)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSsigZPt2'
-    params['additionalCut'] = '*(Z_SS==1)*%s*%s*%s' % (no2p, isoSig, zPt)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSsigZPt2'
-    params['additionalCut'] = '*(Z_SS==0)*%s*%s*%s' % (no2p, isoSig, zPt)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #"""
+    #Double Hardonic baseline with good QCD estimation
+    #"""
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSl2loose'
+    #params['additionalCut'] = '*(Z_SS==1)*%s*%s' % (no2p, isoL2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSl2loose'
+    #params['additionalCut'] = '*(Z_SS==0)*%s*%s' % (no2p, isoL2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSsig'
+    #params['additionalCut'] = '*(Z_SS==1)*%s*%s' % (no2p, isoSig)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSsig'
+    #params['additionalCut'] = '*(Z_SS==0)*%s*%s' % (no2p, isoSig)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #"""
+    #Double Hardonic boosted Z/higgs
+    #"""
+    #zPt = '(Z_Pt>100)'
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSl2looseZPt2'
+    #params['additionalCut'] = '*(Z_SS==1)*%s*%s*%s' % (no2p, isoL2loose, zPt)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSl2looseZPt2'
+    #params['additionalCut'] = '*(Z_SS==0)*%s*%s*%s' % (no2p, isoL2loose, zPt)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSsigZPt2'
+    #params['additionalCut'] = '*(Z_SS==1)*%s*%s*%s' % (no2p, isoSig, zPt)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSsigZPt2'
+    #params['additionalCut'] = '*(Z_SS==0)*%s*%s*%s' % (no2p, isoSig, zPt)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     
     #params['mid3'] = folder+'_tt_SSno2p'
     #params['channels'] = ['tt',]
@@ -193,6 +194,35 @@ def makeCuts( folder ) :
     #samples = checkBkgs( samples, params, grouping )
     #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
+    """
+    Standard DC Sync cuts
+    """
+    ttIso   = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+    # EMu
+##    params['mid3'] = folder+'_em_SS'
+##    params['channels'] = ['em',]
+##    params['additionalCut'] = '*(Z_SS==1)'
+##    samples = checkBkgs( samples, params, grouping )
+##    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+##    
+##    params['mid3'] = folder+'_em_OS'
+##    params['channels'] = ['em',]
+##    params['additionalCut'] = '*(Z_SS==0)'
+##    samples = checkBkgs( samples, params, grouping )
+##    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+
+    # TT
+    params['mid3'] = folder+'_tt_SS'
+    params['channels'] = ['tt',]
+    params['additionalCut'] = '*(Z_SS==1)*%s*%s' % (ttIso, no2p)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['mid3'] = folder+'_tt_OS'
+    params['channels'] = ['tt',]
+    params['additionalCut'] = '*(Z_SS==0)*%s*%s' % (ttIso, no2p)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     return
 
 def plotThem( folder, sufix1, sufix2, channel ) :
@@ -202,21 +232,21 @@ def plotThem( folder, sufix1, sufix2, channel ) :
 
     if not os.path.exists( '/afs/cern.ch/user/t/truggles/www/%s' % (folder) ) :
         os.makedirs( '/afs/cern.ch/user/t/truggles/www/%s' % (folder) )
-    if not os.path.exists( '/afs/cern.ch/user/t/truggles/www/%s/%s' % (folder[1:], sufix1) ) :
-        os.makedirs( '/afs/cern.ch/user/t/truggles/www/%s/%s' % (folder[1:], sufix1) )
+    if not os.path.exists( '/afs/cern.ch/user/t/truggles/www/%s/%s%s' % (folder[1:], channel, sufix1) ) :
+        os.makedirs( '/afs/cern.ch/user/t/truggles/www/%s/%s%s' % (folder[1:], channel, sufix1) )
 
-    subprocess.call(["python", "analysis3Plots.py", "--folder=%s_%s"%(folder,sufix1), "--qcdMake=True", "--text=True", "--ratio=True", "--channels=%s"%channel])
+    subprocess.call(["python", "analysis3Plots.py", "--folder=%s_%s_%s"%(folder,channel,sufix1), "--qcdMake=True", "--text=True", "--ratio=True", "--channels=%s"%channel, "--qcdMakeDM=%s"%sufix1])
 
-    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlots", "/afs/cern.ch/user/t/truggles/www/%s/%s" % (folder[1:], sufix1)])
-    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlotsList", "/afs/cern.ch/user/t/truggles/www/%s/%s" % (folder[1:], sufix1)])
+    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlots", "/afs/cern.ch/user/t/truggles/www/%s/%s%s" % (folder[1:], channel, sufix1)])
+    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlotsList", "/afs/cern.ch/user/t/truggles/www/%s/%s%s" % (folder[1:], channel, sufix1)])
 
-    if not os.path.exists( '/afs/cern.ch/user/t/truggles/www/%s/%s' % (folder[1:], sufix2) ) :
-        os.makedirs( '/afs/cern.ch/user/t/truggles/www/%s/%s' % (folder[1:], sufix2) )
+    if not os.path.exists( '/afs/cern.ch/user/t/truggles/www/%s/%s%s' % (folder[1:], channel, sufix2) ) :
+        os.makedirs( '/afs/cern.ch/user/t/truggles/www/%s/%s%s' % (folder[1:], channel, sufix2) )
 
-    subprocess.call(["python", "analysis3Plots.py", "--folder=%s_%s"%(folder,sufix2), "--useQCDMake=True", "--text=True", "--ratio=True", "--channels=%s"%channel])
+    subprocess.call(["python", "analysis3Plots.py", "--folder=%s_%s_%s"%(folder,channel,sufix2), "--useQCDMake=True", "--text=True", "--ratio=True", "--channels=%s"%channel, "--useQCDMakeName=%s"%sufix1])
 
-    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlots", "/afs/cern.ch/user/t/truggles/www/%s/%s" % (folder[1:], sufix2)])
-    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlotsList", "/afs/cern.ch/user/t/truggles/www/%s/%s" % (folder[1:], sufix2)])
+    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlots", "/afs/cern.ch/user/t/truggles/www/%s/%s%s" % (folder[1:], channel, sufix2)])
+    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlotsList", "/afs/cern.ch/user/t/truggles/www/%s/%s%s" % (folder[1:], channel, sufix2)])
 
 
 
@@ -224,10 +254,11 @@ def plotThem( folder, sufix1, sufix2, channel ) :
 
 
 if __name__ == '__main__' :
-    makeCuts( folder )
+#    makeCuts( folder )
 
     tups = [
         #('SS', 'OS', 'em,tt'),
+        ('SS', 'OS', 'em'),
         ('SS', 'OS', 'tt'),
         #('tt_SSno2p', 'tt_OSno2p', 'tt'),
         #('tt_SSno2pZpt60', 'tt_OSno2pZpt60', 'tt'),
@@ -238,8 +269,8 @@ if __name__ == '__main__' :
     ]
 
     #folder = "2Feb02sDC"
-    #for tup in tups :
-    #    plotThem( folder, tup[0], tup[1], tup[2] )
+    for tup in tups :
+        plotThem( folder, tup[0], tup[1], tup[2] )
     
     
 

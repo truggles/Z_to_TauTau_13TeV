@@ -19,6 +19,8 @@ p.add_argument('--useQCDMakeName', action='store', default='x', dest='useQCDMake
 p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 p.add_argument('--ztt', action='store', default=False, dest='ztt', help="Is Z->tautau the signal POI?")
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Is this the MSSM H->TauTau search?")
+p.add_argument('--category', action='store', default='inclusive', dest='category', help="directory name channel_[category]?")
+p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -33,8 +35,6 @@ luminosity = 2260.0 # / fb 25ns
 # Scaling = 1 for data card sync
 qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
-#qcdTTScaleFactor = 1.3
-#qcdEMScaleFactor = 1.5
 bkgsTTScaleFactor = 1.0
 qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
 
@@ -44,29 +44,29 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
                 # Sample : Color
 samples = OrderedDict()
 samples['DYJets']   = ('kOrange-4', '_ZTT_')
-samples['DYJets100-200']   = ('kOrange-4', '_ZTT_')
-samples['DYJets200-400']   = ('kOrange-4', '_ZTT_')
-samples['DYJets400-600']   = ('kOrange-4', '_ZTT_')
-samples['DYJets600-Inf']   = ('kOrange-4', '_ZTT_')
+#samples['DYJets100-200']   = ('kOrange-4', '_ZTT_')
+#samples['DYJets200-400']   = ('kOrange-4', '_ZTT_')
+#samples['DYJets400-600']   = ('kOrange-4', '_ZTT_')
+#samples['DYJets600-Inf']   = ('kOrange-4', '_ZTT_')
 #samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
-#samples['T-tW']     = ('kYellow+2', '_VV_')
+samples['T-tW']     = ('kYellow+2', '_VV_')
 samples['T-tchan']     = ('kYellow+2', '_VV_')
 samples['TT']       = ('kBlue-8', '_TT_')
 samples['Tbar-tW']  = ('kYellow-2', '_VV_')
-#samples['Tbar-tchan']  = ('kYellow-2', '_VV_')
+samples['Tbar-tchan']  = ('kYellow-2', '_VV_')
 samples['WJets']    = ('kAzure+2', '_W_')
-samples['WJets100-200']    = ('kAzure+2', '_W_')
-samples['WJets200-400']    = ('kAzure+2', '_W_')
-samples['WJets400-600']    = ('kAzure+2', '_W_')
-samples['WJets600-Inf']    = ('kAzure+2', '_W_')
-#samples['WW1l1nu2q']     = ('kAzure+4', '_VV_')
+#samples['WJets100-200']    = ('kAzure+2', '_W_')
+#samples['WJets200-400']    = ('kAzure+2', '_W_')
+#samples['WJets400-600']    = ('kAzure+2', '_W_')
+#samples['WJets600-Inf']    = ('kAzure+2', '_W_')
+samples['WW1l1nu2q']     = ('kAzure+4', '_VV_')
 #samples['WW2l2nu']       = ('kAzure+8', '_VV_')
-#samples['WZ1l1nu2q'] = ('kAzure-6', '_VV_')
+samples['WZ1l1nu2q'] = ('kAzure-6', '_VV_')
 samples['WZ1l3nu'] = ('kAzure-6', '_VV_')
 #samples['WZ2l2q'] = ('kAzure-6', '_VV_')
 #samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
 #samples['ZZ2l2nu'] = ('kAzure-12', '_VV_')
-#samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
+samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
 samples['ZZ4l'] = ('kAzure-12', '_VV_')
 samples['QCD']        = ('kMagenta-10', '_QCD_')
 samples['data_tt']  = ('kBlack', '_data_obs_')
@@ -110,20 +110,20 @@ else :
 if options.ztt :
     del samples['VBFHtoTauTau125']
     del samples['ggHtoTauTau125']
-    samples['DYJets'] = ('kOrange-4', '_ZTT90_')
-    samples['DYJetsLow'] = ('kOrange-4', '_ZTT90_')
+    samples['DYJets'] = ('kOrange-4', '_ZTT_')
+    #XXX#samples['DYJets'] = ('kOrange-4', '_ZTT90_')
+    #XXX#samples['DYJetsLow'] = ('kOrange-4', '_ZTT90_')
     nameArray.remove('_vbfH125_')
     nameArray.remove('_ggH125_')
-    nameArray.remove('_ZTT_')
-    nameArray.append('_ZTT90_')
+    #XXX#nameArray.remove('_ZTT_')
+    #XXX#nameArray.append('_ZTT90_')
 
-channels = { 'em' : 'EMu',
-             'tt' : 'TauTau',}
-
-for channel in channels.keys() :
+for channel in ['em', 'tt'] :
 
     #if channel == 'tt' : continue
-    if channel == 'em' : continue
+    #if channel == 'em' : continue
+    if 'tt' not in options.channels and channel == 'tt' : continue
+    if 'em' not in options.channels and channel == 'em' : continue
 
 
     print channel
@@ -142,9 +142,7 @@ for channel in channels.keys() :
         print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV.root \n" % (grouping, extra, channel, mid)
 
         shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV.root' % (grouping, extra, channel, mid), 'RECREATE')
-        #shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
-        #shapeDir = shapeFile.mkdir( channel + '_boostedZ' )
-        shapeDir = shapeFile.mkdir( channel + '_inclusive' )
+        shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
 
         # Defined out here for large scope
         name = info[0]
@@ -184,7 +182,8 @@ for channel in channels.keys() :
                     if options.useQCDMakeName != 'x'  :
                         print "Use QCD MAKE NAME: ",options.useQCDMakeName
                         tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.useQCDMakeName), 'READ')
-                    tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                    else :
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
                     print "Got 'useQCDMake' QCD Shape"
                 else :
                     print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
@@ -203,9 +202,12 @@ for channel in channels.keys() :
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and options.useQCDMakeName :
-                print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                if channel == 'tt' : qcdScale = qcdTTScaleFactor
+                if channel == 'em' : qcdScale = qcdEMScaleFactor
+                print "Skip rebin; Scale QCD shape by %f" % qcdScale
                 print "QCD yield Pre: %f" % hist.Integral()
-                hist.Scale( qcdTTScaleFactorNew )
+                #hist.Scale( qcdTTScaleFactorNew )
+                hist.Scale( qcdScale )
                 print "QCD yield Post Scale: %f" % hist.Integral()
             elif sample == 'QCD' and hist.Integral() != 0 :
                 if channel == 'em' : hist.Scale( qcdEMScaleFactor )
