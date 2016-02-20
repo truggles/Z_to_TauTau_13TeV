@@ -17,12 +17,12 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
     histosDir.cd()
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
-    histos2 = {}
+    #histos2 = {}
     for var, cv in newVarMap.iteritems() :
         #if var != 'npv' : continue
         var2 = '%s%i' % (var, 2)
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
-    	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
+    	#histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # Taus are currently filled with 1 for all SFs
@@ -42,21 +42,21 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                     print "Data Count:", histos[ var ].Integral()
         else :
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'weight/abs( weight )%s%s%s' % (additionalCut, sfs, xsec) )
-            histos2[ var ] = gPad.GetPrimitive( var2 )
+            #histos2[ var ] = gPad.GetPrimitive( var2 )
 
             chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (weight/abs( weight ))%s%s%s' % (additionalCut, sfs, xsec) )
             ''' No reweighting at the moment! '''
             #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(weight/abs( weight ))%s' % additionalCut )
             histos[ var ] = gPad.GetPrimitive( var )
             if chain.GetEntries() > 0 :
-                integralPre = histos2[ var ].Integral()
+                #integralPre = histos2[ var ].Integral()
                 integralPost = histos[ var ].Integral()
                 if var == 'm_vis' :
                     print 'm_vis'
-                    print "intPre: %f" % integralPre
+                    #print "intPre: %f" % integralPre
                     print "tmpIntPost: %f" % integralPost
-                    if integralPre != 0 :
-                        print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
+                    #if integralPre != 0 :
+                    #    print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
                 #    print "  ---!!! UNSCALING !!!--- "
                 #if integralPost != 0 :
                 #    histos[ var ].Scale( integralPre / integralPost )

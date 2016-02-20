@@ -18,7 +18,7 @@ ROOT.gROOT.Reset()
 ''' Set grouping (25ns or Sync) '''
 grouping = 'Sync'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-cmsLumi = '2260.0'
+cmsLumi = '2246.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
@@ -44,7 +44,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
     'numCores' : 16,
-    'numFilesPerCycle' : 2,
+    'numFilesPerCycle' : 25,
     'channels' : ['em', 'tt'],
     #'channels' : ['tt'],
     #'channels' : ['em'],
@@ -52,18 +52,19 @@ params = {
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb17a',
-    'mid2' : '2Feb17a',
-    'mid3' : '3Feb17a',
+    'mid1' : '1Feb20a',
+    'mid2' : '2Feb20a',
+    'mid3' : '3Feb20a',
     'additionalCut' : '',
-    'svf' : 'true',
-    'svfName' : '/data/truggles/Sync_feb16_svFitted2/TauTau_13_Sync1Feb12d-',
+    #'svf' : 'true',
+    #'svfName' : '/data/truggles/Sync_feb16_svFitted2/TauTau_13_Sync1Feb12d-',
     #'svfName' : '/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-',
-    #'svf' : 'false',
+    'svfName' : 'xxx',
+    'svf' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 
 

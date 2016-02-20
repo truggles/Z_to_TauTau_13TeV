@@ -40,15 +40,16 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2260.0 # / fb 25ns
+luminosity = 2246.0 # / fb 25ns
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
 qcdTTScaleFactor = 1.06
 qcdEMScaleFactor = 1.06
 #qcdTTScaleFactor = 1.25
+qcdTTScaleFactorNew = 499.075601 / 684.737359 
 #qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
-qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
+#qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
 #qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
 #qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
@@ -106,8 +107,8 @@ samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
-samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
+#samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
+#samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : 'kRed+2',
@@ -297,7 +298,10 @@ for channel in ['em', 'tt'] :
                     hist = ROOT.TH1F( preHist )
             # If we use this option we specify a scaling factor
             elif sample == 'QCD' and options.useQCDMakeName :
-                print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                print "Using QCD SCALE FACTOR <<<< NEW >>>>"
+                #print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                #preHist.Scale( qcdTTScaleFactor )
+                print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactorNew
                 preHist.Scale( qcdTTScaleFactorNew )
                 print "QCD yield: %f" % preHist.Integral()
                 hist = ROOT.TH1F( preHist )
@@ -589,7 +593,7 @@ for channel in ['em', 'tt'] :
         lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(luminosity/1000,2) )
         lumi.SetTextSize(0.03)
         #lumi.DrawTextNDC(.7,.96,"%f / fb (13 TeV)" % round(luminosity/1000,2) )
-        lumi.DrawTextNDC(.7,.96,"2.26 / fb (13 TeV)" )
+        lumi.DrawTextNDC(.7,.96,"2.246 / fb (13 TeV)" )
 
         ''' Random print outs on plots '''
         if options.text and not varBinned :

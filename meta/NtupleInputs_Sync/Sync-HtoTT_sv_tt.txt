@@ -1,0 +1,8 @@
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_0_tt.root
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_1_tt.root
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_2_tt.root
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_3_tt.root
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_4_tt.root
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_5_tt.root
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_6_tt.root
+/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-Sync-HtoTT_7_tt.root

@@ -13,7 +13,7 @@ import math
 import json
 import os
 
-cmsLumi = float( os.getenv('_LUMI_', '2260.0') )
+cmsLumi = float( os.getenv('_LUMI_', '2246.0') )
 
 prodMap = {
     'em' : ('e', 'm'),
@@ -24,11 +24,11 @@ prodMap = {
 
 def getXSec( shortName, sampDict, genHTT=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
-    #if 'data' in shortName : return 1.0 #XXX#
+    if 'data' in shortName : return 1.0 #XXX#
     #htts = ['100-200', '200-400', '400-600', '600-Inf']
     jetBins = ['1', '2', '3', '4']
     scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
-    #return scalar1 #XXX#
+    return scalar1 #XXX#
     
     # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
     # and need to be deweighted

@@ -7,6 +7,7 @@ def makeGenCut( inTree, cutString ) :
 
 # EM Baseline
 emKin   = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4'
+emKinLoose   = 'ePt > 12 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4'
 eID     = 'ePassesConversionVeto == 1 && eMissingHits <= 1 && eMVANonTrigWP80 == 1' #eCBIDMedium == 1
 eIDLoose     = 'eMVANonTrigWP90 == 1'
 mID     = 'mPFIDMedium == 1'
@@ -26,8 +27,9 @@ m17e12  = '(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatche
 emOS    = 'e_m_SS == 0'
 emSS    = 'e_m_SS == 1'
 emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.15'
-emIsoLoose   = 'eIsoDB03 < 0.3 && mIsoDB03 < 0.3'
+emIsoLoose   = 'eIsoDB03 < 5. && mIsoDB03 < 5.'
 extraVeto   = 'eVetoZTTp001dxyz == 0 && muVetoZTTp001dxyz == 0'
+extraVetoTT   = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0'
 # EM Studies
 emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
 emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
@@ -47,21 +49,23 @@ etVtx   = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(tPVDZ) < 0.2'
 etTrig   = '(singleE23Pass > 0 && (eMatchesEle23Path == 1 || eMatchesEle22Path == 1) && (eEle22Filter > 0 || eEle23Filter > 0) && ePt > 23)'
 
 # TT Baseline
-DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
+#DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
+DecayMode = 't1DecayModeFinding == 1 && t2DecayModeFinding == 1'
 ttKin   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
+ttKinLoose   = 't1Pt > 35 && t1AbsEta < 2.1 && t2Pt > 35 && t2AbsEta < 2.1'
 #ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
 tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1DoubleTau40Filter > 0 && t2DoubleTau40Filter > 0'
-tt35    = 'doubleTau35Pass == 1 && t1MatchesDoubleTau35Path == 1 && t2MatchesDoubleTau35Path == 1 && t1DoubleTau35Filter > 0 && t2DoubleTau35Filter > 0'
+tt35    = 'doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1DoubleTau35Filter > 0 && t2DoubleTau35Filter > 0'
 # TT PostSync
 ttOS    = 't1_t2_SS == 0'
 ttSS    = 't1_t2_SS == 1'
 #ttIso   = 't1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5'
 ttIso   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5'
-ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 10.0'
-ttDisc  = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
+ttIsoLoose   = 't1ByIsolationMVArun2v1DBoldDMwLTraw > 0.0 && t2ByIsolationMVArun2v1DBoldDMwLTraw > 0.0'
+ttDisc  = 't1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
 ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0'
 ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
@@ -103,7 +107,15 @@ def signalCutsNoIsoNoSign( ch ) :
 def syncCutsDC( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
     #if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVeto, tt35, DecayMode]
+    #if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVetoTT, tt35, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode]
+    cutMap = {'BaseLine' : cuts}
+    return cutMap
+    
+
+# Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
+def syncCutsDCqcd( ch ) :
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVetoTT, tt35, DecayMode]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     
@@ -114,6 +126,17 @@ def syncCutsNtuple( ch ) :
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
     if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35]
+    cutMap = {'BaseLine' : cuts}
+    return cutMap
+    
+
+# Selection which only does a loose version of the sync Ntuple cuts
+# incase we need to do tau energy scaling later
+def svFitCuts( ch ) :
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIsoLoose]
+    if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
+    if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
+    if ch == 'tt' : cuts = [ttKinLoose, ttCharge, ttDR, ttVtx, tt35, DecayMode, ttIsoLoose]
     cutMap = {'BaseLine' : cuts}
     return cutMap
 

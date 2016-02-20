@@ -30,7 +30,7 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2260.0 # / fb 25ns
+luminosity = 2246.0 # / fb 25ns
 
 # Scaling = 1 for data card sync
 qcdTTScaleFactor = 1.06

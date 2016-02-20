@@ -112,8 +112,7 @@ def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMappe
 
 
 
-
-def doInitialCuts(grouping, samples, **fargs) :
+def svFitPrep(grouping, samples, **fargs) :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -155,6 +154,70 @@ def doInitialCuts(grouping, samples, **fargs) :
             
             # Make sure we loop over large samples to get all files
             if count * fargs['numFilesPerCycle'] > fileLen : go = False
+    
+    
+    mpResults = [p.get() for p in multiprocessingOutputs]
+    
+    #print(mpResults)
+    print "#################################################################"
+    print "###               Finished, summary below                     ###"
+    print "#################################################################"
+    
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    print "\n"
+    
+    print " --- CutTable used: %s" % fargs['cutMapper']
+    print " --- Cut used: %s" % fargs['cutName']
+    print " --- Grouping: %s" % grouping
+    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
+    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+    print "\n"
+    
+    mpResults.sort()
+    for item in mpResults :
+        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+        print item[4]
+        print item[5]
+    
+    print "Start Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+
+
+
+def doInitialCuts(grouping, samples, **fargs) :
+        
+    begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print begin
+    channels = fargs[ 'channels' ]
+    ''' Start multiprocessing tests '''
+    #output = multiprocessing.Queue()
+    pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
+    multiprocessingOutputs = []
+    
+    num = 0
+    for sample in samples :
+    
+        fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+        for count in range( fileLen ) :
+            for channel in channels :
+    
+                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
+                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
+                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
+                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
+    
+                multiprocessingOutputs.append( pool.apply_async(runSVFitCuts, args=(grouping,
+                                                                                    sample,
+                                                                                    channel,
+                                                                                    count,
+                                                                                    num,
+                                                                                    fargs['bkgs'],
+                                                                                    fargs['mid1'],
+                                                                                    fargs['cutMapper'],
+                                                                                    fargs['cutName'],)) )
+                num +=  1
     
     
     mpResults = [p.get() for p in multiprocessingOutputs]
