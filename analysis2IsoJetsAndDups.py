@@ -213,6 +213,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
     l2 = prodMap[channel][1]
 
     from util.lepSF import LepWeights
+    from util.doubleTauSF import doubleTauTriggerEff
     lepWeights = LepWeights( channel, count )
 
     branchMapping = {
@@ -663,6 +664,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
                 if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 if channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 if channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
+                if channel == 'tt' : trigweight_1[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
                 else : trigweight_1[0] = 1
 
                 # Special weighting for WJets and DYJets
