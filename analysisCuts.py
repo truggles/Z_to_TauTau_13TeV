@@ -59,6 +59,7 @@ ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
 tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1DoubleTau40Filter > 0 && t2DoubleTau40Filter > 0'
 tt35    = 'doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1DoubleTau35Filter > 0 && t2DoubleTau35Filter > 0'
 # TT PostSync
+ttL1IsoTaus = 't1L1IsoTauMatch > 0 && t2L1IsoTauMatch > 0'
 ttOS    = 't1_t2_SS == 0'
 ttSS    = 't1_t2_SS == 1'
 #ttIso   = 't1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5'
@@ -73,7 +74,7 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalExtractionNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, 'e_m_PZeta > -25']
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode, 't1_t2_Pt > 100']
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus, 't1_t2_Pt > 100']
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -81,7 +82,7 @@ def signalExtractionNoSign( ch ) :
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalCutsNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -89,7 +90,7 @@ def signalCutsNoSign( ch ) :
 # A version which applies all cuts at once RunII
 def signalCuts( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emOS, emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt35, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -97,7 +98,7 @@ def signalCuts( ch ) :
 # Data card sync, no Decay Mode cut 
 def signalCutsNoIsoNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt35, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -107,14 +108,14 @@ def syncCutsDC( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
     #if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35]
     #if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVetoTT, tt35, DecayMode]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     
 
 # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
 def syncCutsDCqcd( ch ) :
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVetoTT, tt35, DecayMode]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     
