@@ -111,17 +111,17 @@ samples['data_em']  = ('kBlack', 'data')
 #samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
-    'dib' : 'kRed+2',
-    'top' : 'kBlue-8',
-    'qcd' : 'kMagenta-10',
-    'ztt' : 'kOrange-4',
-    'zl' : 'kOrange-2',
-    'zj' : 'kOrange-6',
-    'zll' : 'kOrange-8',
-    'wjets' : 'kAzure+2',
-    'higgs' : 'kBlue',
-    'mssm' : 'kPink',
-    'data' : 'kBlack',
+    'dib' : ROOT.kRed+2,
+    'top' : ROOT.kBlue-8,
+    'qcd' : ROOT.TColor.GetColor(250,202,255), #kMagenta-10
+    'ztt' : ROOT.TColor.GetColor(248,206,104), #kOrange-4,
+    'zl' : ROOT.kAzure+2,
+    'zj' : ROOT.kGreen+2,
+    'zll' : ROOT.TColor.GetColor(100,182,232),
+    'wjets' : ROOT.kAzure+6,
+    'higgs' : ROOT.kBlue,
+    'mssm' : ROOT.kPink,
+    'data' : ROOT.kBlack,
 }
 
 
@@ -345,46 +345,34 @@ for channel in ['em', 'tt'] :
 
             #print "Hist int: %s %f" % (sample, hist.Integral() )
             if samples[ sample ][1] == 'ztt' :
-                #hist.SetTitle('Z #rightarrow #tau#tau')
                 ztt.Add( hist )
             if samples[ sample ][1] == 'zl' :
-                #hist.SetTitle('ZL')
                 zl.Add( hist )
             if samples[ sample ][1] == 'zj' :
-                #hist.SetTitle('ZJ')
                 zj.Add( hist )
             if samples[ sample ][1] == 'zll' :
-                #hist.SetTitle('ZLL')
                 zll.Add( hist )
             if samples[ sample ][1] == 'qcd' :
-                hist.SetTitle('QCD')
                 qcd.Add( hist )
                 #print "qcd Stack yield: %f" % qcd.GetStack().Last().Integral()
                 print "qcd Stack yield: %f" % qcd.Integral()
             if samples[ sample ][1] == 'top' :
-                hist.SetTitle('TT')
                 top.Add( hist )
             if samples[ sample ][1] == 'dib' :
-                hist.SetTitle('VV')
                 dib.Add( hist )
             if samples[ sample ][1] == 'wjets' :
-                hist.SetTitle('WJets')
                 wjets.Add( hist )
             if samples[ sample ][1] == 'mssm' :
-                hist.SetTitle('MSSM(%i) x %i' % (mssmMass, mssmSF))
                 mssm.Add( hist )
             if samples[ sample ][1] == 'higgs' :
-                hist.SetTitle('SM Higgs(125)')
                 higgs.Add( hist )
             if samples[ sample ][1] == 'data' :
-                hist.SetTitle('Data')
                 data.Add( hist )
             tFile.Close()
 
         Ary = { qcd : "qcd", top : "top", dib : "dib", wjets : "wjets", ztt : "ztt", zl :  "zl", zj : "zj", zll : "zll" }
         for h in Ary.keys() :
-            color = "ROOT.%s" % sampColors[ Ary[h] ]
-            h.SetFillColor( eval( color ) )
+            h.SetFillColor( sampColors[ Ary[h] ] )
             h.SetLineColor( ROOT.kBlack )
             h.SetLineWidth( 2 )
         data.SetLineColor( ROOT.kBlack )
@@ -415,7 +403,7 @@ for channel in ['em', 'tt'] :
                 h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( h.GetBinWidth(1) / h.GetBinWidth( bin_ ) ) )
 
         # Set hist Names
-        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "ztt" : "Z #rightarrow #tau#tau", "zl" : "ZL", "zj" : "ZJ", "zll" : "ZLL" }
+        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "t#bar{t}", "dib" : "VV", "wjets" : "WJets", "ztt" : "Z#rightarrow#tau#tau", "zl" : "Z#rightarrowee (lepton)", "zj" : "Z#rightarrowee (jet)", "zll" : "Z#rightarrowee" }
         if options.mssm : Names["higgs"] = "SM Higgs(125)"
         else : Names["higgs"] = "SM Higgs(125) x %i" % higgsSF
         for h in Ary.keys() :
