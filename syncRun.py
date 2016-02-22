@@ -52,15 +52,16 @@ params = {
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb20a',
-    'mid2' : '2Feb20a',
-    'mid3' : '3Feb20a',
+    'mid1' : '1Feb22a',
+    'mid2' : '2Feb22a',
+    'mid3' : '3Feb22a',
     'additionalCut' : '',
     #'svf' : 'true',
     #'svfName' : '/data/truggles/Sync_feb16_svFitted2/TauTau_13_Sync1Feb12d-',
     #'svfName' : '/hdfs/store/user/truggles/SyncTry1/Sync1Feb12d/TauTau_13_Sync1Feb12d-',
     'svfName' : 'xxx',
     'svf' : 'false',
+    'svFitPrep' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
