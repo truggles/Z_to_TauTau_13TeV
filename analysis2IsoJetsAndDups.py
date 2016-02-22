@@ -256,7 +256,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
     doubleProds = {
         'Mass' : 'm_vis',
         #'SVfitMass' : 'm_sv',
-        'PZeta' : 'pzetamis',
+        'PZeta' : 'pfpzetamis',
         'PZetaVis' : 'pzetavis',
         'SS' : 'Z_SS',
         'Pt' : 'Z_Pt',
@@ -276,7 +276,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB03' : 'iso',
         'cand_MVANonTrigWP90' : 'id_e_mva_nt_loose',
-        'cand_MtToPfMet_Raw' : 'mt',
+        'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingMuon = {
         'cand_ZTTGenMatching' : 'gen_match',
@@ -288,7 +288,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB03' : 'iso',
-        'cand_MtToPfMet_Raw' : 'mt',
+        'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingTau = {
         'cand_ZTTGenMatching' : 'gen_match',
@@ -318,7 +318,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
         #'cand_ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
         'cand_ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
         #'cand_ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
-        'cand_MtToPfMet_Raw' : 'mt',
+        'cand_MtToPfMet_Raw' : 'pfmt',
         }
 
     # Generate our mapping for double candidate variables
@@ -488,6 +488,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
     
     ''' Add a nvtx Pile UP weighting variable to the new tree
     see util.pileUpVertexCorrections.addNvtxWeight for inspiration '''
+    from util.pZeta import compZeta
     from util.pileUpVertexCorrections import PUreweight
     from array import array
     puDict = PUreweight( channel )
@@ -496,6 +497,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
     PU Weighting '''
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
+    pzetamiss = array('f', [ 0 ] )
+    pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    mt_1 = array('f', [ 0 ] )
+    mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
+    mt_2 = array('f', [ 0 ] )
+    mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
@@ -628,6 +635,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
                 mvacov01[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix01" )
                 mvacov10[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix10" )
                 mvacov11[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix11" )
+                if mvamet[0] >= 0 :
+                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.t1_t2_TTpairMvaMet, row.t1_t2_TTpairMvaMetPhi)[1]
+                    mt_1[0] = math.sqrt( 2*row.t1Pt*row.t1_t2_TTpairMvaMet* (1 - math.cos( row.t1Phi - row.t1_t2_TTpairMvaMetPhi)))
+                    mt_2[0] = math.sqrt( 2*row.t2Pt*row.t1_t2_TTpairMvaMet* (1 - math.cos( row.t2Phi - row.t1_t2_TTpairMvaMetPhi)))
+                else :
+                    pzetamiss[0] = -999
+                    mt_1[0] = -999
+                    mt_2[0] = -999
             if channel == 'em' :
                 mvamet[0] = getattr( row, "e_m_EMpairMvaMet" )
                 mvametphi[0] = getattr( row, "e_m_EMpairMvaMetPhi" )
@@ -635,6 +650,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
                 mvacov01[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix01" )
                 mvacov10[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix10" )
                 mvacov11[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix11" )
+                if mvamet[0] >= 0 :
+                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.e_m_EMpairMvaMet, row.e_m_EMpairMvaMetPhi)[1]
+                    mt_1[0] = math.sqrt( 2*row.ePt*row.e_m_EMpairMvaMet* (1 - math.cos( row.ePhi - row.e_m_EMpairMvaMetPhi)))
+                    mt_2[0] = math.sqrt( 2*row.mPt*row.e_m_EMpairMvaMet* (1 - math.cos( row.mPhi - row.e_m_EMpairMvaMetPhi)))
+                else :
+                    pzetamiss[0] = -999
+                    mt_1[0] = -999
+                    mt_2[0] = -999
 
             # Data specific vars
             if 'data' in sample :
