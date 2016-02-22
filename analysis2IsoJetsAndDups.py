@@ -22,15 +22,13 @@ prodMap = {
     'tt' : ('t1', 't2'),
 }
 
-"""
-Remember DYJetsLow and FXFX """
 def getXSec( shortName, sampDict, genHTT=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
-    if 'data' in shortName : return 1.0 #XXX#
+    #if 'data' in shortName : return 1.0 #XXX#
     #htts = ['100-200', '200-400', '400-600', '600-Inf']
     jetBins = ['1', '2', '3', '4']
     scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
-    return scalar1 #XXX#
+    #return scalar1 #XXX#
     
     # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
     # and need to be deweighted
@@ -74,7 +72,7 @@ def getXSec( shortName, sampDict, genHTT=0 ) :
         return (1.0/( (1/scalar1) + (1/scalar2) ))
         
         
-    if 'QCD' in shortName : return scalar1
+    if 'QCD' in shortName or 'toTauTau' in shortName : return scalar1
     if 'data' in shortName : return 1.0
     #XXX#for htt in htts :
     #XXX#    if htt in shortName :
@@ -691,7 +689,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
                 else : trigweight_1[0] = 1
 
                 # Special weighting for WJets and DYJets
-                if shortName == 'WJets' or shortName == 'DYJets' :
+                if shortName == 'DYJets' :
                     xsec = getXSec( shortName, sampDict, row.genHTT )
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
