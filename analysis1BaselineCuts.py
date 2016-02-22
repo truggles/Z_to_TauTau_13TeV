@@ -1,4 +1,4 @@
-from util.buildTChain import makeTChain
+from util.buildTChain import makeTChain, getTree
 from util.fileLength import file_len
 import util.pileUpVertexCorrections
 from analysis2IsoJetsAndDups import renameBranches
@@ -22,7 +22,7 @@ def getBkgMap() :
 
 
 #for sample in samples :
-def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPrep, count, fileMin=0, fileMax=9999 ) :
     #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     path = '%s/final/Ntuple' % channel
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
@@ -32,7 +32,26 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
     #print "Channel:  %s" % channel
     sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
     # This should allow us to run over sections of files
-    chain = makeTChain( sampleList, path, 0, fileMin, fileMax )
+    if svFitPrep == 'true' :
+        files = open( sampleList, 'r' )	
+        i = 0
+        for file_ in files :
+            #print "i =",i
+            #currentFile = ROOT.TFile( file_.strip(), 'r' )
+            #fileTree =  currentFile.Get( treePath )
+            if i == count :
+                #print "i ",i," == count",count
+                #print "line %3i  %s" % (count, file_)
+                f = ROOT.TFile( file_.strip() )
+                chain = f.Get( path )
+                #print "tree entries",chain.GetEntries()
+                #files.close()
+                #return tree
+            i += 1
+        #chain = getTree( sampleList, path, count )
+        #print "Again...", chain.GetEntries()
+    else :
+        chain = makeTChain( sampleList, path, 0, fileMin, fileMax )
     numEntries = chain.GetEntries()
     #print "%25s : %10i" % ('Initial', numEntries)
     initialQty = "%25s : %10i" % ('Initial', numEntries)
@@ -58,7 +77,7 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, fileMin=
 
 
 
-def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
+def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle,svFitPrep) :
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
@@ -68,11 +87,11 @@ def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cu
 
     ''' 1. Make cuts and save '''
     print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
-    if bkgs != 'None' :
-        outFile1 = ROOT.TFile('meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgMap[ bkgs ][0], save), 'RECREATE')
+    if svFitPrep == 'true' :
+        outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
-    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, svFitPrep, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
     cutOut[1].Write()
@@ -112,7 +131,8 @@ def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMappe
 
 
 
-def svFitPrep(grouping, samples, **fargs) :
+
+def doInitialCuts(grouping, samples, **fargs) :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -121,6 +141,12 @@ def svFitPrep(grouping, samples, **fargs) :
     #output = multiprocessing.Queue()
     pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
     multiprocessingOutputs = []
+
+    import os
+    if fargs[ 'svFitPrep' ] == 'true' :
+        if not os.path.exists( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1']) ) :
+            os.makedirs( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1' ]) )
+        
     
     num = 0
     for sample in samples :
@@ -147,16 +173,16 @@ def svFitPrep(grouping, samples, **fargs) :
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
                                                                                     fargs['cutName'],
-                                                                                    fargs['numFilesPerCycle'])) )
+                                                                                    fargs['numFilesPerCycle'],
+                                                                                    fargs['svFitPrep'])) )
                 num +=  1
     
             count += 1
             
             # Make sure we loop over large samples to get all files
-            if count * fargs['numFilesPerCycle'] > fileLen : go = False
+            if count * fargs['numFilesPerCycle'] >= fileLen : go = False
     
     
-    mpResults = [p.get() for p in multiprocessingOutputs]
     
     #print(mpResults)
     print "#################################################################"
@@ -166,86 +192,27 @@ def svFitPrep(grouping, samples, **fargs) :
     print "\nStart Time: %s" % str( begin )
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
     print "\n"
-    
-    print " --- CutTable used: %s" % fargs['cutMapper']
-    print " --- Cut used: %s" % fargs['cutName']
-    print " --- Grouping: %s" % grouping
-    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
-    print "\n"
-    
-    mpResults.sort()
-    for item in mpResults :
-        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-        print item[4]
-        print item[5]
-    
-    print "Start Time: %s" % str( begin )
-    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
-
-
-def doInitialCuts(grouping, samples, **fargs) :
+    if num < 1000 :
+        mpResults = [p.get() for p in multiprocessingOutputs]
         
-    begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    print begin
-    channels = fargs[ 'channels' ]
-    ''' Start multiprocessing tests '''
-    #output = multiprocessing.Queue()
-    pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
-    multiprocessingOutputs = []
-    
-    num = 0
-    for sample in samples :
-    
-        fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
-        for count in range( fileLen ) :
-            for channel in channels :
-    
-                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
-                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
-    
-                multiprocessingOutputs.append( pool.apply_async(runSVFitCuts, args=(grouping,
-                                                                                    sample,
-                                                                                    channel,
-                                                                                    count,
-                                                                                    num,
-                                                                                    fargs['bkgs'],
-                                                                                    fargs['mid1'],
-                                                                                    fargs['cutMapper'],
-                                                                                    fargs['cutName'],)) )
-                num +=  1
-    
-    
-    mpResults = [p.get() for p in multiprocessingOutputs]
-    
-    #print(mpResults)
-    print "#################################################################"
-    print "###               Finished, summary below                     ###"
-    print "#################################################################"
-    
-    print "\nStart Time: %s" % str( begin )
-    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-    print "\n"
-    
-    print " --- CutTable used: %s" % fargs['cutMapper']
-    print " --- Cut used: %s" % fargs['cutName']
-    print " --- Grouping: %s" % grouping
-    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
-    print "\n"
-    
-    mpResults.sort()
-    for item in mpResults :
-        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-        print item[4]
-        print item[5]
-    
-    print "Start Time: %s" % str( begin )
-    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+        print " --- CutTable used: %s" % fargs['cutMapper']
+        print " --- Cut used: %s" % fargs['cutName']
+        print " --- Grouping: %s" % grouping
+        print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
+        print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+        print "\n"
+        
+        mpResults.sort()
+        for item in mpResults :
+            print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+            print item[4]
+            print item[5]
+        
+        print "Start Time: %s" % str( begin )
+        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    else :
+        print "Over 1000 iterations.  Summary skipped"
 
 
 def doInitialOrder(grouping, samples, **fargs) :

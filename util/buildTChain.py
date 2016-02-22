@@ -29,3 +29,29 @@ def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
     print "File List: %s\n - Tree Path: %s\n - Loaded Files up to = %i" % (sampleList, treePath, count-1)
     files.close()
     return tree
+
+
+def getTree( sampleList, treePath, count ) :
+    print "sampleList",sampleList
+    print "path",treePath
+    print "count",count
+    files = open( sampleList, 'r' )	
+    
+    i = 0
+    for file_ in files :
+        print "i =",i
+        #currentFile = ROOT.TFile( file_.strip(), 'r' )
+        #fileTree =  currentFile.Get( treePath )
+        if i == count :
+            print "i ",i," == count",count
+            #print "line %3i  %s" % (count, file_)
+            f = ROOT.TFile( file_.strip() )
+            tree = f.Get( treePath )
+            print "tree entries",tree.GetEntries()
+            files.close()
+            return tree
+        i += 1
+    print "END OF FILE LIST AND NO FILE SELECTED"
+
+
+

@@ -7,7 +7,6 @@ def makeGenCut( inTree, cutString ) :
 
 # EM Baseline
 emKin   = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4'
-emKinLoose   = 'ePt > 12 && eAbsEta < 2.5 && mPt > 9 && mAbsEta < 2.4'
 eID     = 'ePassesConversionVeto == 1 && eMissingHits <= 1 && eMVANonTrigWP80 == 1' #eCBIDMedium == 1
 eIDLoose     = 'eMVANonTrigWP90 == 1'
 mID     = 'mPFIDMedium == 1'

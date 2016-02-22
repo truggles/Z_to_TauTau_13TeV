@@ -22,6 +22,8 @@ prodMap = {
     'tt' : ('t1', 't2'),
 }
 
+"""
+Remember DYJetsLow and FXFX """
 def getXSec( shortName, sampDict, genHTT=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
     if 'data' in shortName : return 1.0 #XXX#

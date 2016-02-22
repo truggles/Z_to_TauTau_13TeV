@@ -14,9 +14,11 @@ for MASS in 80 90 100 110 120 130 140 160 180 200 250 300 350 400 450 500 600 70
     ls /data/truggles/${jobId}/SUSYGluGluToBBHToTauTau_M-${MASS}_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-*/*.root > bbH${MASS}.txt
 done
 
-for MASS in 120 125 130; do
+for MASS in 125 130; do
     echo "ls /data/truggles/${jobId}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > ggHtoTauTau${MASS}.txt"
     ls /data/truggles/${jobId}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > ggHtoTauTau${MASS}.txt
     echo "ls /data/truggles/${jobId}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > VBFHtoTauTau${MASS}.txt"
     ls /data/truggles/${jobId}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > VBFHtoTauTau${MASS}.txt
 done
+
+ls /data/truggles/${jobId}/VBFHToTauTau_M120_13TeV_powheg_pythia8/submit/make_ntuples_cfg-*/*.root > VBFHtoTauTau120.txt
