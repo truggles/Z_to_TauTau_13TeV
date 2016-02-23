@@ -29,13 +29,13 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
     ''' Get initial chain '''
     #print "###   %s  ###" % sample
     #print "Channel:  %s" % channel
-    if svFitPost :
+    if svFitPost == 'true' :
         sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel)
         path = '%s/Ntuple' % channel
     else :
         sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
         path = '%s/final/Ntuple' % channel
-    print "sample List and path", sampleList, path
+    #print "sample List and path", sampleList, path
     # This should allow us to run over sections of files
     if svFitPrep == 'true' :
         files = open( sampleList, 'r' )	
@@ -46,7 +46,7 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
                 chain = f.Get( path )
             i += 1
     else :
-        print "svFitPrep not true"
+        #print "svFitPrep not true"
         chain = makeTChain( sampleList, path, 0, fileMin, fileMax )
     numEntries = chain.GetEntries()
     #print "%25s : %10i" % ('Initial', numEntries)
@@ -143,11 +143,12 @@ def doInitialCuts(grouping, samples, **fargs) :
     if fargs[ 'svFitPrep' ] == 'true' :
         if not os.path.exists( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1']) ) :
             os.makedirs( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1' ]) )
-        
     
     num = 0
     for sample in samples :
     
+        fileLenEM = 9999
+        fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
             fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
             fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
@@ -239,6 +240,8 @@ def doInitialOrder(grouping, samples, **fargs) :
     num = 0
     for sample in samples :
     
+        fileLenEM = 9999
+        fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
             fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
             fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
@@ -275,7 +278,7 @@ def doInitialOrder(grouping, samples, **fargs) :
             count += 1
             
             # Make sure we loop over large samples to get all files
-            if count * fargs['numFilesPerCycle'] > fileLen : go = False
+            if count * fargs['numFilesPerCycle']+1 > fileLen : go = False
     
     
     mpResults = [p.get() for p in multiprocessingOutputs]
@@ -297,11 +300,15 @@ def doInitialOrder(grouping, samples, **fargs) :
     print "\n"
     
     mpResults.sort()
+    totalIso = 0
     for item in mpResults :
         print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
         print item[4]
+        totalIso += int(item[4].split(' ')[-1])
+        
+    print "\nTotal Iso:", totalIso
     
-    print "Start Time: %s" % str( begin )
+    print "\nStart Time: %s" % str( begin )
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
@@ -333,6 +340,8 @@ def drawHistos(grouping, samples, **fargs ) :
             loopList = genList
             loopList.append( sample ) 
         else : loopList.append( sample )
+        fileLenEM = 9999
+        fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
             fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
             fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
