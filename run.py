@@ -59,8 +59,8 @@ for mass in masses :
        SamplesDataCards.append( 'ggH%i' % mass )
        SamplesDataCards.append( 'bbH%i' % mass )
 
-#SamplesDataCards = [ 'DYJets4', 'bbH3200', 'ggH3200' ]
-#SamplesDataCards = [ 'VBFHtoTauTau130', ]
+#SamplesDataCards = [ 'DYJetsFXFX', ]
+SamplesDataCards = [ 'VBFHtoTauTau130', ]
 #SamplesDataCards = [ 'WZJets', ]
 samples = SamplesDataCards
 
@@ -71,8 +71,8 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 15,
-    'numFilesPerCycle' : 1,
+    'numCores' : 6,
+    'numFilesPerCycle' : 5,
     'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
@@ -85,22 +85,21 @@ params = {
     'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb21a',
-    'mid2' : '2Feb21a',
-    'mid3' : '3Feb21a',
+    'mid1' : '1Feb23a',
+    'mid2' : '2Feb23a',
+    'mid3' : '3Feb23a',
     'additionalCut' : '',
-    #'svf' : 'true',
-    'svf' : 'false',
-    #'svfName' : '/data/truggles/svFittedFeb14/TauTau_13_svFitSamplesFeb12-', #for all except WJets
-    #'svfName' : '/data/truggles/svFittedFeb14/TauTau_13_dc16WJets-', #for WJets
+    'svFitPost' : 'true',
+    #'svFitPost' : 'false',
     'svfName' : 'xxx',
-    'svFitPrep' : 'true',
+    #'svFitPrep' : 'true',
+    'svFitPrep' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 #params['mid3'] = '3Feb02sDC_SS'
 #params['additionalCut'] = '*(Z_SS==1)'

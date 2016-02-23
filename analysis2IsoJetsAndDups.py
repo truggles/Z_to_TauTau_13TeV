@@ -198,7 +198,7 @@ def calcDR( eta1, phi1, eta2, phi2 ) :
 
 
 
-def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName, count ) :
+def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
         sampDict = json.load( sampFile )
 
@@ -340,10 +340,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, SVF, svfName
     for key in l2Map.keys() :
         branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
 
-    if SVF :
-        oldFileName = '%s%s.root' % (svfName, sample)
-        newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
-    elif bkgFlag == '' :
+    if bkgFlag == '' :
         oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
         newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
     else :
