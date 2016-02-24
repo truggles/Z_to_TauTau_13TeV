@@ -40,12 +40,15 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2246.0 # / fb 25ns
+cmsLumi = float(os.getenv('LUMI'))
+print "Lumi = %i" % cmsLumi
+
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
 qcdTTScaleFactor = 1.06
-qcdEMScaleFactor = 1.06
+#qcdEMScaleFactor = 1.06
+qcdEMScaleFactor = 1.9
 #qcdTTScaleFactor = 1.25
 qcdTTScaleFactorNew = 499.075601 / 684.737359 
 #qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
@@ -67,7 +70,7 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
 
 chans = {
-    'tt' : '#Tau_{h}#Tau_{h}',
+    'tt' : '#tau_{h}#tau_{h}',
     'em' : 'e#mu',
 }
 
@@ -80,11 +83,30 @@ samples['DYJets-ZTT']   = ('kOrange-4', 'ztt')
 samples['DYJets-ZL']   = ('kOrange-4', 'zl')
 samples['DYJets-ZJ']   = ('kOrange-4', 'zj')
 samples['DYJets-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets1-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets1-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets1-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets1-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets2-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets2-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets2-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets2-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets3-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets3-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets3-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets3-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets4-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets4-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets4-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets4-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJetsLow-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJetsLow-ZL']   = ('kOrange-4', 'zl')
+samples['DYJetsLow-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJetsLow-ZLL']   = ('kOrange-4', 'zll')
 #samples['DYJets100-200']   = ('kOrange-4', 'dyj')
 #samples['DYJets200-400']   = ('kOrange-4', 'dyj')
 #samples['DYJets400-600']   = ('kOrange-4', 'dyj')
 #samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
-#samples['DYJetsLow']   = ('kOrange-4', 'dyj')
 samples['T-tW']     = ('kYellow+2', 'dib')
 samples['T-tchan']     = ('kYellow+2', 'dib')
 samples['TT']       = ('kBlue-8', 'top')
@@ -99,7 +121,7 @@ samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
 #samples['WW2l2nu']       = ('kAzure+8', 'dib')
 samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
 samples['WZ1l3nu'] = ('kAzure-6', 'dib')
-#samples['WZ2l2q'] = ('kAzure-6', 'dib')
+samples['WZ2l2q'] = ('kAzure-6', 'dib')
 #samples['WZ3l1nu'] = ('kAzure-6', 'dib')
 #samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
 samples['ZZ2l2q'] = ('kAzure-12', 'dib')
@@ -299,10 +321,15 @@ for channel in ['em', 'tt'] :
             # If we use this option we specify a scaling factor
             elif sample == 'QCD' and options.useQCDMakeName :
                 print "Using QCD SCALE FACTOR <<<< NEW >>>>"
-                #print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
-                #preHist.Scale( qcdTTScaleFactor )
-                print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactorNew
-                preHist.Scale( qcdTTScaleFactorNew )
+                if channel == 'em' :
+                    print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
+                    preHist.Scale( qcdEMScaleFactor )
+                
+                if channel == 'tt' :
+                    print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                    preHist.Scale( qcdTTScaleFactor )
+                #print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactorNew
+                #preHist.Scale( qcdTTScaleFactorNew )
                 print "QCD yield: %f" % preHist.Integral()
                 hist = ROOT.TH1F( preHist )
             else :
@@ -537,7 +564,7 @@ for channel in ['em', 'tt'] :
         #    else :
         #        stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
 
-        stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % luminosity )
+        stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % cmsLumi )
 
         # Set axis and viewing area
         #higgsMin = higgs.GetMaximum()
@@ -573,15 +600,13 @@ for channel in ['em', 'tt'] :
         logo.SetTextSize(0.03)
         logo.DrawTextNDC(.2, .89,"CMS Preliminary")
 
-        chan = ROOT.TText(.2, .80,"x")
+        chan = ROOT.TLatex(.2, .80,"x")
         chan.SetTextSize(0.05)
-        chan.DrawTextNDC(.2, .84,"Channel: %s" % channel.upper() )
-        #chan.DrawTextNDC(.2, .84,"Channel: %s" % chans[channel] )
+        chan.DrawLatexNDC(.2, .84,"Channel: %s" % chans[channel] )
 
-        lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(luminosity/1000,2) )
+        lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
         lumi.SetTextSize(0.03)
-        #lumi.DrawTextNDC(.7,.96,"%f / fb (13 TeV)" % round(luminosity/1000,2) )
-        lumi.DrawTextNDC(.7,.96,"2.246 / fb (13 TeV)" )
+        lumi.DrawTextNDC(.7,.96,"2.3 / fb (13 TeV)" )
 
         ''' Random print outs on plots '''
         if options.text and not varBinned :

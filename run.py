@@ -18,11 +18,9 @@ ROOT.gROOT.Reset()
 ''' Set grouping (25ns or Sync) '''
 grouping = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-cmsLumi = '2246.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
-os.environ['_LUMI_'] = cmsLumi
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
@@ -60,8 +58,10 @@ for mass in masses :
        SamplesDataCards.append( 'bbH%i' % mass )
 
 #SamplesDataCards = [ 'DYJetsFXFX', ]
-SamplesDataCards = [ 'VBFHtoTauTau130', ]
+#SamplesDataCards = [ 'VBFHtoTauTau130', ]
 #SamplesDataCards = [ 'WZJets', ]
+#SamplesDataCards = [ 'data_em', 'data_tt' ]
+SamplesDataCards = [ 'DYJets', ]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -71,8 +71,8 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 6,
-    'numFilesPerCycle' : 5,
+    'numCores' : 1,
+    'numFilesPerCycle' : 1,
     'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
@@ -81,13 +81,13 @@ params = {
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
     #'cutName' : 'PostSync', #!
-    #'cutMapper' : 'syncCutsDC',
-    'cutMapper' : 'svFitCuts',
+    'cutMapper' : 'syncCutsDC',
+    #'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb23a',
-    'mid2' : '2Feb23a',
-    'mid3' : '3Feb23a',
+    'mid1' : '1Feb24b',
+    'mid2' : '2Feb24c',
+    'mid3' : '3Feb24c',
     'additionalCut' : '',
     'svFitPost' : 'true',
     #'svFitPost' : 'false',
@@ -98,8 +98,8 @@ params = {
 
 samples = checkBkgs( samples, params, grouping )
 #analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
-analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 #params['mid3'] = '3Feb02sDC_SS'
 #params['additionalCut'] = '*(Z_SS==1)'

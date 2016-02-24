@@ -21,6 +21,7 @@ p.add_argument('--ztt', action='store', default=False, dest='ztt', help="Is Z->t
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Is this the MSSM H->TauTau search?")
 p.add_argument('--category', action='store', default='inclusive', dest='category', help="directory name channel_[category]?")
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
+p.add_argument('--svFit', action='store', default=False, dest='svFit', help="svFit Distribution?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -30,11 +31,11 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2246.0 # / fb 25ns
 
 # Scaling = 1 for data card sync
 qcdTTScaleFactor = 1.06
-qcdEMScaleFactor = 1.06
+#qcdEMScaleFactor = 1.06
+qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
 qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
 
@@ -48,11 +49,30 @@ samples['DYJets-ZTT']   = ('kOrange-4', '_ZTT_')
 samples['DYJets-ZL']   = ('kOrange-4', '_ZL_')
 samples['DYJets-ZJ']   = ('kOrange-4', '_ZJ_')
 samples['DYJets-ZLL']   = ('kOrange-4', '_ZLL_')
+samples['DYJets1-ZTT']   = ('kOrange-4', '_ZTT_')
+samples['DYJets1-ZL']   = ('kOrange-4', '_ZL_')
+samples['DYJets1-ZJ']   = ('kOrange-4', '_ZJ_')
+samples['DYJets1-ZLL']   = ('kOrange-4', '_ZLL_')
+samples['DYJets2-ZTT']   = ('kOrange-4', '_ZTT_')
+samples['DYJets2-ZL']   = ('kOrange-4', '_ZL_')
+samples['DYJets2-ZJ']   = ('kOrange-4', '_ZJ_')
+samples['DYJets2-ZLL']   = ('kOrange-4', '_ZLL_')
+samples['DYJets3-ZTT']   = ('kOrange-4', '_ZTT_')
+samples['DYJets3-ZL']   = ('kOrange-4', '_ZL_')
+samples['DYJets3-ZJ']   = ('kOrange-4', '_ZJ_')
+samples['DYJets3-ZLL']   = ('kOrange-4', '_ZLL_')
+samples['DYJets4-ZTT']   = ('kOrange-4', '_ZTT_')
+samples['DYJets4-ZL']   = ('kOrange-4', '_ZL_')
+samples['DYJets4-ZJ']   = ('kOrange-4', '_ZJ_')
+samples['DYJets4-ZLL']   = ('kOrange-4', '_ZLL_')
+samples['DYJetsLow-ZTT']   = ('kOrange-4', '_ZTT_')
+samples['DYJetsLow-ZL']   = ('kOrange-4', '_ZL_')
+samples['DYJetsLow-ZJ']   = ('kOrange-4', '_ZJ_')
+samples['DYJetsLow-ZLL']   = ('kOrange-4', '_ZLL_')
 #samples['DYJets100-200']   = ('kOrange-4', '_ZTT_')
 #samples['DYJets200-400']   = ('kOrange-4', '_ZTT_')
 #samples['DYJets400-600']   = ('kOrange-4', '_ZTT_')
 #samples['DYJets600-Inf']   = ('kOrange-4', '_ZTT_')
-#samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
 samples['T-tW']     = ('kYellow+2', '_VV_')
 samples['T-tchan']     = ('kYellow+2', '_VV_')
 samples['TT']       = ('kBlue-8', '_TT_')
@@ -130,12 +150,15 @@ for channel in ['em', 'tt'] :
     if 'em' not in options.channels and channel == 'em' : continue
 
     if channel == 'tt' :
-        del samples['DYJets-ZLL']
+        for sample in samples.keys() :
+            if '-ZLL' in sample :
+                del samples[ sample ]
         nameArray.remove('_ZLL_')
     if channel == 'em' :
-        del samples['DYJets-ZJ']
+        for sample in samples.keys() :
+            if sample[-3:] == '-ZL' or '-ZJ' in sample :
+                del samples[ sample ]
         nameArray.remove('_ZJ_')
-        del samples['DYJets-ZL']
         nameArray.remove('_ZL_')
 
     print channel
@@ -145,15 +168,25 @@ for channel in ['em', 'tt'] :
 
     for var, info in newVarMap.iteritems() :
         mid = ''
+
+
+        baseVar = ''
+        if options.svFit : 
+            baseVar = 'm_sv'
+            append = '_svFit'
+        else : 
+            baseVar = 'm_vis'
+            append = ''
+
+
         if options.mssm :
-            if not var == 'm_vis_mssm' : continue
+            if not var == baseVar+'_mssm' : continue
             mid = 'mssm'
         else :
-            if not var == 'm_vis' : continue
+            if not var == baseVar : continue
             mid = 'sm'
-        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV.root \n" % (grouping, extra, channel, mid)
 
-        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV.root' % (grouping, extra, channel, mid), 'RECREATE')
+        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (grouping, extra, channel, mid, append), 'RECREATE')
         shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
 
         # Defined out here for large scope
@@ -262,3 +295,8 @@ for channel in ['em', 'tt'] :
             histos[ name ].SetName( name.strip('_') )
             histos[ name ].Write()
         shapeFile.Close()
+
+
+        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (grouping, extra, channel, mid, append)
+
+

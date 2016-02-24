@@ -30,7 +30,10 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
     #print "###   %s  ###" % sample
     #print "Channel:  %s" % channel
     if svFitPost == 'true' :
-        sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel)
+        if 'data' in sample :
+            sampleList = 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample)
+        else :
+            sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel)
         path = '%s/Ntuple' % channel
     else :
         sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
@@ -150,9 +153,12 @@ def doInitialCuts(grouping, samples, **fargs) :
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
-            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
-            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
-            fileLen = max( fileLenEM, fileLenTT )
+            if 'data' in sample :
+                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
+            else :
+                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
+                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
+                fileLen = max( fileLenEM, fileLenTT )
         else :
             fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
         go = True
@@ -243,9 +249,12 @@ def doInitialOrder(grouping, samples, **fargs) :
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
-            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
-            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
-            fileLen = max( fileLenEM, fileLenTT )
+            if 'data' in sample :
+                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
+            else :
+                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
+                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
+                fileLen = max( fileLenEM, fileLenTT )
         else :
             fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
         go = True
@@ -340,17 +349,6 @@ def drawHistos(grouping, samples, **fargs ) :
             loopList = genList
             loopList.append( sample ) 
         else : loopList.append( sample )
-        fileLenEM = 9999
-        fileLenTT = 9999
-        if fargs['svFitPost'] == 'true' :
-            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
-            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
-            fileLen = max( fileLenEM, fileLenTT )
-        else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
-        print "File len: %5i  File name: meta/NtupleInputs_%s/%s.txt" % (fileLen, grouping, sample)
-        numIters = int( math.ceil( fileLen / fargs['numFilesPerCycle'] ) )
-        print "Num Iters: %i" % numIters
     
         for subName in loopList :
             print "SubName:",subName
@@ -359,25 +357,37 @@ def drawHistos(grouping, samples, **fargs ) :
             
             for channel in channels :
 
-                if channel == 'tt' and numIters >= fileLenTT : continue 
-                if channel == 'em' and numIters >= fileLenEM : continue 
-    
                 if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
                 if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
                 if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
                 if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+
+                if fargs['svFitPost'] == 'true' :
+                    if 'data' in sample :
+                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
+                    else :
+                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel) )
+                else :
+                    fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+                print "File len:",fileLen
+                numIters = int( math.ceil( fileLen / fargs['numFilesPerCycle'] ) )
+                print "Num Iters: %i" % numIters
+
+
                 print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, saveName, channel)
     
                 chain = ROOT.TChain('Ntuple')
                 if fargs['bkgs'] != 'None' :
+                    print "Why are we here?"
                     outFile = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], channel), 'RECREATE')
                     for i in range( numIters+1 ) :
                         #print "%s_%i" % ( sample, i)
                         chain.Add('meta/%sBackgrounds/%s/iso/%s_%i_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], i, channel) )
                 else :
                     outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
-                    for i in range( numIters+1 ) :
+                    for i in range( numIters ) :
                         #print "%s_%i" % ( sample, i)
+                        print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
                         chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True

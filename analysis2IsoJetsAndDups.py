@@ -13,7 +13,8 @@ import math
 import json
 import os
 
-cmsLumi = float( os.getenv('_LUMI_', '2246.0') )
+cmsLumi = float(os.getenv('LUMI'))
+print "Lumi = %i" % cmsLumi
 
 prodMap = {
     'em' : ('e', 'm'),
@@ -22,12 +23,17 @@ prodMap = {
     'tt' : ('t1', 't2'),
 }
 
-def getXSec( shortName, sampDict, genHTT=0 ) :
+#def getXSec( shortName, sampDict, genHTT=0 ) :
+def getXSec( shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
     #if 'data' in shortName : return 1.0 #XXX#
     #htts = ['100-200', '200-400', '400-600', '600-Inf']
     jetBins = ['1', '2', '3', '4']
-    scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+    try :
+        scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+    except KeyError :
+        print "Sample not found in meta/Ntuples_xxx/samples.json"
+        return
     #return scalar1 #XXX#
     
     # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
@@ -206,6 +212,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     if shortName == 'data' : shortName = 'data_%s' % channel
 
     xsec = getXSec( shortName, sampDict )
+    print "\n Sampe: %s    xsec: %f" % (sample, xsec)
 
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
@@ -687,7 +694,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
                 # Special weighting for WJets and DYJets
                 if shortName == 'DYJets' :
-                    xsec = getXSec( shortName, sampDict, row.genHTT )
+                    #xsec = getXSec( shortName, sampDict, row.genHTT )
+                    xsec = getXSec( shortName, sampDict, row.numGenJets )
+                    #print "\n Sampe: %s    xsec: %f     numGenJets %i" % (sample, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
  

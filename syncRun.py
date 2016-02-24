@@ -18,11 +18,9 @@ ROOT.gROOT.Reset()
 ''' Set grouping (25ns or Sync) '''
 grouping = 'Sync'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-cmsLumi = '2246.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
-os.environ['_LUMI_'] = cmsLumi
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
