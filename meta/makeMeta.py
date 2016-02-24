@@ -56,7 +56,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c76x, 831.76 ),
                 'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 35.6),
                 'Tbar-tchan' : ('/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 80.95 * 0.108*3 ),
-                #'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 61526.7 ),
+                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 61526.7 ),
                 'WW1l1nu2q' : ('/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 49.997 ),
                 'WZJets' : ('/WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 5.26 ),
                 #'WW2l2nu' : ('/WWTo2L2Nu_13TeV-powheg/%s-v1/MINIAODSIM' % c76x, 12.178 ),
@@ -82,6 +82,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'DYJets2' : ('/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 332.8 * 1.23 ),
                 'DYJets3' : ('/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 101.8 * 1.23 ),
                 'DYJets4' : ('/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 54.8 * 1.23 ),
+                'DYJetsFXFX' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 6025.2 ),
 
                 'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 71310.0 ), 
                 #'DYJetsLow100-200' : ('/DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 224.2 ), 
@@ -129,6 +130,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'DYJets3' : ( 92, 1),
                 'DYJets4' : ( 93, 1),
                 'DYJetsLow' : ( 98, 1),
+                'DYJetsFXFX' : ( 99, 1),
                 'T-tW' : ( 5, 3),
                 'T-tchan' : ( 6, 3),
                 'TT' : ( 7, 2),
@@ -202,11 +204,16 @@ def makeMetaJSON( grouping, ch = 'em' ) :
         summedWeights = 0
         summedWeightsNorm = 0
         inFiles = open('NtupleInputs_%s/%s.txt' % (grouping, k), 'r')
-        for fileName in inFiles :
-            eventCount += getEventCount( fileName.strip(), ch )
-            w = getSummedWeights( fileName.strip(), ch )
-            summedWeights += w[0]
-            summedWeightsNorm += w[1]
+        try :
+            for fileName in inFiles :
+                eventCount += getEventCount( fileName.strip(), ch )
+                w = getSummedWeights( fileName.strip(), ch )
+                summedWeights += w[0]
+                summedWeightsNorm += w[1]
+        except AttributeError :
+            print "\nAttributeError\n"
+            continue
+            inFiles.close()
         inFiles.close()
     
         # Check that DAS and FSA events and file numbers match
