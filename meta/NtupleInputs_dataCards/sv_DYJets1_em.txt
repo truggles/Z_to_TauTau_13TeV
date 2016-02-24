@@ -1,0 +1,15 @@
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_12_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_11_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_5_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_9_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_0_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_6_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_2_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_1_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_13_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_14_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_8_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_4_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_7_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_3_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets1_10_em.root

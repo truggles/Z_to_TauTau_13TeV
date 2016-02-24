@@ -1,0 +1,2 @@
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/VBFHtoTauTau125_0_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/VBFHtoTauTau125_1_em.root

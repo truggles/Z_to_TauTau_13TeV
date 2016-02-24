@@ -1,0 +1,2 @@
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets4_0_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets4_1_em.root
