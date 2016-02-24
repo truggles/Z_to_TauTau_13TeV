@@ -1,0 +1,13 @@
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_4_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_9_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_10_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_5_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_2_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_3_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_8_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_7_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_1_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_12_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_0_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_11_tt.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ4l_6_tt.root
