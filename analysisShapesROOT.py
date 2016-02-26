@@ -21,7 +21,8 @@ p.add_argument('--ztt', action='store', default=False, dest='ztt', help="Is Z->t
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Is this the MSSM H->TauTau search?")
 p.add_argument('--category', action='store', default='inclusive', dest='category', help="directory name channel_[category]?")
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
-p.add_argument('--svFit', action='store', default=False, dest='svFit', help="svFit Distribution?")
+p.add_argument('--fitShape', action='store', default='m_vis', dest='fitShape', help="Which shape to fit? m_vis, m_sv, or mt_sv?")
+p.add_argument('--qcdSF', action='store', default=1.9, dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -34,6 +35,7 @@ tdr.setTDRStyle()
 
 # Scaling = 1 for data card sync
 qcdTTScaleFactor = 1.06
+qcdTTScaleFactor = 504.5 / 676.6 # Feb24, no2p, Medium -> VTight
 #qcdEMScaleFactor = 1.06
 qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
@@ -170,13 +172,14 @@ for channel in ['em', 'tt'] :
         mid = ''
 
 
-        baseVar = ''
-        if options.svFit : 
-            baseVar = 'm_sv'
-            append = '_svFit'
-        else : 
-            baseVar = 'm_vis'
+        baseVar = options.fitShape
+        if 'data' in sample : print "Fitting",baseVar
+        if baseVar == 'm_vis' :
             append = ''
+        if baseVar == 'm_sv' :
+            append = '_svFit'
+        if baseVar == 'mt_sv' :
+            append = '_MtsvFit'
 
 
         if options.mssm :
@@ -186,7 +189,7 @@ for channel in ['em', 'tt'] :
             if not var == baseVar : continue
             mid = 'sm'
 
-        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (grouping, extra, channel, mid, append), 'RECREATE')
+        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (grouping, extra, channel, mid, append), 'UPDATE')
         shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
 
         # Defined out here for large scope
@@ -196,7 +199,10 @@ for channel in ['em', 'tt'] :
         if not options.sync :
             binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
         if options.mssm :
-            binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            #binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            binArray = array.array( 'd', [] )
+            for i in range(0, 351 ) :
+                binArray.append( i * 10 )
         else :
             binArray = array.array( 'd', [] )
             for i in range(0, 36 ) :
@@ -239,7 +245,7 @@ for channel in ['em', 'tt'] :
             dic = tFile.Get("%s_Histos" % channel )
             hist = dic.Get( "%s" % var )
             hist.SetDirectory( 0 )
-            print "Hist yield before scaling ",hist.Integral()
+            #print "Hist yield before scaling ",hist.Integral()
 
 
 
@@ -247,8 +253,9 @@ for channel in ['em', 'tt'] :
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
             if sample == 'QCD' and options.useQCDMakeName :
-                if channel == 'tt' : qcdScale = qcdTTScaleFactor
-                if channel == 'em' : qcdScale = qcdEMScaleFactor
+                #if channel == 'tt' : qcdScale = qcdTTScaleFactor
+                #if channel == 'em' : qcdScale = qcdEMScaleFactor
+                qcdScale = float(options.qcdSF)
                 print "Skip rebin; Scale QCD shape by %f" % qcdScale
                 print "QCD yield Pre: %f" % hist.Integral()
                 #hist.Scale( qcdTTScaleFactorNew )

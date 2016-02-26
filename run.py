@@ -61,7 +61,7 @@ for mass in masses :
 #SamplesDataCards = [ 'VBFHtoTauTau130', ]
 #SamplesDataCards = [ 'WZJets', ]
 #SamplesDataCards = [ 'data_em', 'data_tt' ]
-SamplesDataCards = [ 'DYJets', ]
+#SamplesDataCards = [ 'DYJets', ]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -82,12 +82,13 @@ params = {
     #'cutMapper' : 'signalExtractionNoSign', #!
     #'cutName' : 'PostSync', #!
     'cutMapper' : 'syncCutsDC',
+#XXX    'cutMapper' : 'syncCutsDCqcd',
     #'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb24b',
-    'mid2' : '2Feb24c',
-    'mid3' : '3Feb24c',
+    'mid1' : '1Feb25a',
+    'mid2' : '2Feb25a',
+    'mid3' : '3Feb25a',
     'additionalCut' : '',
     'svFitPost' : 'true',
     #'svFitPost' : 'false',
@@ -97,7 +98,7 @@ params = {
 }
 
 samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 

@@ -32,6 +32,20 @@ def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
     return tree
 
 
+
+def makeTChainFromGlob( sampleList, treePath, ) :
+    #print "makeTChain: startFile: %i   maxFile: %i" % (startFile, maxFile)
+    tree = ROOT.TChain( treePath )
+    i = 0
+    for file_ in sampleList :
+        tree.Add( file_ )
+        i += 1
+        
+    print "Loaded %i files" % i
+    return tree
+
+
+
 def getTree( sampleList, treePath, count ) :
     print "sampleList",sampleList
     print "path",treePath

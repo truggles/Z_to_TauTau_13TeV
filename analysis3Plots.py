@@ -30,6 +30,7 @@ p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot 
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
 p.add_argument('--addUncert', action='store', default=True, dest='addUncert', help="What channels?")
+p.add_argument('--qcdSF', action='store', default=1.9, dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -43,14 +44,15 @@ tdr.setTDRStyle()
 cmsLumi = float(os.getenv('LUMI'))
 print "Lumi = %i" % cmsLumi
 
-mssmMass = 180
+mssmMass = 500
 mssmSF = 100
 higgsSF = 10
 qcdTTScaleFactor = 1.06
+qcdTTScaleFactor = 504.5 / 676.6 # Feb24, no2p, Medium -> VTight
 #qcdEMScaleFactor = 1.06
 qcdEMScaleFactor = 1.9
 #qcdTTScaleFactor = 1.25
-qcdTTScaleFactorNew = 499.075601 / 684.737359 
+#qcdTTScaleFactorNew = 499.075601 / 684.737359 
 #qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
 #qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
 #qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
@@ -129,8 +131,8 @@ samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-#samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
-#samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
+samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
+samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : ROOT.kRed+2,
@@ -186,6 +188,7 @@ for channel in ['em', 'tt'] :
     #print newVarMap
     for var, info in newVarMap.iteritems() :
 
+        if 'mt_sv' in var : continue
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
         #if not 'm_vis_mssm' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
@@ -198,7 +201,10 @@ for channel in ['em', 'tt'] :
         """
         if var == 'm_vis_mssm' :
             varBinned = True
-            xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            xBins = array( 'd', [] )
+            for i in range(0, 351 ) :
+                xBins.append( i * 10 )
         elif var == 'm_vis_varB' :
             varBinned = True
             xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
@@ -243,7 +249,7 @@ for channel in ['em', 'tt'] :
             if options.qcdMC and sample == 'QCD' : continue
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
-            print sample
+            if var == 'm_vis' : print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
@@ -321,13 +327,15 @@ for channel in ['em', 'tt'] :
             # If we use this option we specify a scaling factor
             elif sample == 'QCD' and options.useQCDMakeName :
                 print "Using QCD SCALE FACTOR <<<< NEW >>>>"
-                if channel == 'em' :
-                    print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
-                    preHist.Scale( qcdEMScaleFactor )
-                
-                if channel == 'tt' :
-                    print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
-                    preHist.Scale( qcdTTScaleFactor )
+                #if channel == 'em' :
+                #    print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
+                #    preHist.Scale( qcdEMScaleFactor )
+                #
+                #if channel == 'tt' :
+                #    print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                #    preHist.Scale( qcdTTScaleFactor )
+                print "Using qcdSF from command line: %s" % options.qcdSF
+                preHist.Scale( float(options.qcdSF) )
                 #print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactorNew
                 #preHist.Scale( qcdTTScaleFactorNew )
                 print "QCD yield: %f" % preHist.Integral()
@@ -486,6 +494,8 @@ for channel in ['em', 'tt'] :
             qcdVar.SetLineWidth( 2 )
             # Add the shape estimated here to the stack pre-scaling!!!
             stack.Add( qcdVar ) 
+            if var == 'm_vis_mssm' :
+                print "M_VIS_MSSM plot details: %f %f" % (plotDetails[ var ][0], plotDetails[ var ][1])
             qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             print "qcdVar: %f" % qcdVar.Integral()
             qcdDir.cd()
@@ -654,10 +664,10 @@ for channel in ['em', 'tt'] :
 
 
         """ Blinding Data """
-        if options.blind and 'm_vis' in var :
+        if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var) :
             nBins = stack.GetStack().Last().GetXaxis().GetNbins()
             for k in range( nBins+1 ) :
-                if data.GetXaxis().GetBinLowEdge(k+1)>100 :
+                if data.GetXaxis().GetBinLowEdge(k+1)>170 :
                     data.SetBinContent(k, 0.)
                     data.SetBinError(k, 0.)
                     if options.ratio :
@@ -676,17 +686,17 @@ for channel in ['em', 'tt'] :
 
 
         """ Additional views for Visible Mass """
-        if 'm_vis' in var :
-            pad1.SetLogy()
-            stack.SetMaximum( stack.GetMaximum() * 10 )
-            stack.SetMinimum( higgs.GetMaximum() * .1 )
-            if var == 'm_vis_mssm' :
-                pad1.SetLogx()
-                if options.ratio : ratioPad.SetLogx()
-            pad1.Update()
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (grouping, channel, var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (grouping, channel, var ) )
-            htmlFile.write( '<img src="%s_LogY.png">\n' % var )
+        #if 'm_vis' in var :
+        #    pad1.SetLogy()
+        #    stack.SetMaximum( stack.GetMaximum() * 10 )
+        #    stack.SetMinimum( higgs.GetMaximum() * .1 )
+        #    if var == 'm_vis_mssm' :
+        #        pad1.SetLogx()
+        #        if options.ratio : ratioPad.SetLogx()
+        #    pad1.Update()
+        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (grouping, channel, var ) )
+        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (grouping, channel, var ) )
+        #    htmlFile.write( '<img src="%s_LogY.png">\n' % var )
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
