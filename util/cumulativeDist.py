@@ -1,11 +1,12 @@
 import ROOT
 
-def CDF( h1, zeroNegBins=False ) :
+def CDF( h1, zeroNegBins=False, name='' ) :
     nBins = h1.GetXaxis().GetNbins()
     minBin = h1.GetBinLowEdge( 1 )
     maxBin = h1.GetBinLowEdge( nBins+1 )
     
-    h2 = ROOT.TH1F('h2','h2',nBins,minBin,maxBin)
+    h2 = ROOT.TH1F("%s%s" % (name, h1.GetName()),'h2',nBins,minBin,maxBin)
+    h2.SetDirectory( 0 )
 
     runningTotal = 0.
     for i in range( 1, nBins + 1 ) :
