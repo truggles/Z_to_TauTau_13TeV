@@ -5,16 +5,16 @@ ROOT.gROOT.SetBatch(True)
 
 isoPairs = [
     ('Loose','Medium'),
-    ('Loose','Tight'),
-    ('Loose','VTight'),
+    #('Loose','Tight'),
+    #('Loose','VTight'),
     ('Medium','Tight'),
-    ('Medium','VTight'),
+    #('Medium','VTight'),
     ('Tight','VTight')
     ]
 
 def signalSamp( var, sign ) :
     print "\nSignal sample Var: %s    Sign: %s" % (var, sign)
-    f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCutBT.root' % sign,'r')
+    f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCut.root' % sign,'r')
     t = f.Get('tt_Histos')
     h = t.Get( var )
     h.SetDirectory( 0 )
@@ -23,7 +23,7 @@ def signalSamp( var, sign ) :
 def getShapes( var, sign ) :
     histos = []
     for i,pair in enumerate(isoPairs) :
-        f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s_%s_%sBT.root' % (sign, pair[1], pair[0]),'r')
+        f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s_%s_%s.root' % (sign, pair[1], pair[0]),'r')
         t1 = f1.Get('tt_Histos')
         h1 = t1.Get( var )
         h1.SetName( "%s%s" % (pair[0],pair[1]) )
@@ -70,11 +70,48 @@ def KSTests( cdf1, eCDF1, cdfs, histos ) :
         ksVals.append( maxDiff * math.sqrt((eCDF1*e2)/(eCDF1+e2)))
         #print " --- Crit Val: %f" % ( ksVals[i] )
     return ksVals
+
+def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
+    ksProb = h1.KolmogorovTest( h2 )
+    print "%s: KS Prop = %f" % (n0, ksProb )
+    c1 = ROOT.TCanvas( 'c1%s' % n0, 'c1', 600, 600 )
+    p1 = ROOT.TPad('p1%s' % n0, 'p1', 0, 0, 1, 1 )
+    p1.Draw()
+    p1.cd()
+    #osSigCDF.SetStats( 0 )
+    #osSigCDF.SetLineWidth( 2 )
+    #osSigCDF.SetLineColor( ROOT.kBlack )
+    #osSigCDF.SetTitle( "%s %s" % (shape, n))
+    #osSigCDF.Draw('hist')
+    #for i,h in enumerate(h2) :
+    #    h.SetLineColor( i+1 )
+    #    h.Draw('hist same')
+    
+    h1.SetLineColor( ROOT.kRed )
+    h1.SetTitle( '%s %s %s KS Prob = %f' % (n0, shape, zeroed, ksProb ) )
+    h2.SetLineColor( ROOT.kBlue )
+    #h2.SetTitle( n2 )
+    h1.SetStats(0)
+    h1.Draw('hist')
+    h2.Draw('same hist')
+    
+    
+    ''' Build the legend explicitly so we can specify marker styles '''
+    legend = ROOT.TLegend(0.60, 0.35, 0.90, 0.5)
+    legend.SetMargin(0.3)
+    #legend.SetBorderSize(0)
+    legend.AddEntry( h1, n1, 'l')
+    legend.AddEntry( h2, n2, 'l')
+    #for i,cdf in enumerate(h2) :
+    #    legend.AddEntry( cdf, "%s-%s KS=%f" % (isoPairs[i][0],isoPairs[i][1],ksVals[i]), 'l')
+    legend.Draw()
+    
+    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/moreQCD/%s_%s_%s%s%s.png' % (shape, n, n0,n1,n2))
         
 if __name__ == '__main__' :
 
     for shape in ['m_sv', 'm_vis']:
-        for zero in [True,]:# False] :
+        for zero in [False,]:# True] :
             if zero : n = 'zeroed'
             else : n = 'incNeg'
 
@@ -90,32 +127,40 @@ if __name__ == '__main__' :
             osSigCDF = CDF.CDF( osh, zero, 'OS' )
             #KSTests( ssSigCDF, ssCDFs, ssHistos )
             ksVals = KSTests( osSigCDF, osh.GetEntries(), osCDFs, osHistos )
-        
-            
-            c1 = ROOT.TCanvas( 'c1', 'c1', 1000, 1200 )
-            p1 = ROOT.TPad('p1', 'p1', 0, 0, 1, 1 )
-            p1.Draw()
-            p1.cd()
-            osSigCDF.SetStats( 0 )
-            osSigCDF.SetLineWidth( 2 )
-            osSigCDF.SetLineColor( ROOT.kBlack )
-            osSigCDF.SetTitle( "%s %s" % (shape, n))
-            osSigCDF.Draw('hist')
-            for i,h in enumerate(osCDFs) :
-                h.SetLineColor( i+1 )
-                h.Draw('hist same')
-        
-            ''' Build the legend explicitly so we can specify marker styles '''
-            legend = ROOT.TLegend(0.50, 0.15, 0.90, 0.5)
-            legend.SetMargin(0.3)
-            #legend.SetBorderSize(0)
-            legend.AddEntry( osSigCDF, "OS Signal", 'l')
-            for i,cdf in enumerate(osCDFs) :
-                legend.AddEntry( cdf, "%s-%s KS=%f" % (isoPairs[i][0],isoPairs[i][1],ksVals[i]), 'l')
-            legend.Draw()
-        
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/moreQCD/osCDFs_%s_%s.png' % (shape, n))
 
+            ''' rebin! '''
+            rBin = 2
+            for i in range( len( isoPairs ) ) :
+                osCDFs[i].Rebin(rBin)
+                osCDFs[i].Scale(1./rBin)
+                ssCDFs[i].Rebin(rBin)
+                ssCDFs[i].Scale(1./rBin)
+            ssSigCDF.Rebin(rBin)
+            ssSigCDF.Scale(1./rBin)
+            osSigCDF.Rebin(rBin)
+            osSigCDF.Scale(1./rBin)
+    
+            
+            
+
+            print "\nROOT KS Tests"
+            for i in range( len( isoPairs ) ) :
+                n0 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+                ksTest( shape, ssCDFs[i], osCDFs[i], n0, 'SS', 'OS' )
+            for i in range( len( isoPairs )-1 ) :
+                n0 = "SS"
+                n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+                n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
+                ksTest( shape, ssCDFs[i], ssCDFs[i+1], n0, n1, n2 )
+            for i in range( len( isoPairs )-1 ) :
+                n0 = "OS"
+                n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+                n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
+                ksTest( shape, osCDFs[i], osCDFs[i+1], n0, n1, n2 )
+            
+            ksTest( shape, ssCDFs[-1], ssSigCDF, 'T->VTvsSig(VT)', 'SS T->VT', 'SS Signal' )
+            print "T->VT vs Sig in SS %f" % ssSigCDF.KolmogorovTest( ssCDFs[-1] ) 
+            print "\n\n"   
 
 
 
