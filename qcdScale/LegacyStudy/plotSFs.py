@@ -17,6 +17,7 @@ def signalSamp( var, sign ) :
     f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCut.root' % sign,'r')
     t = f.Get('tt_Histos')
     h = t.Get( var )
+    h.SetFillColor( 0 )
     h.SetDirectory( 0 )
     return h
 
@@ -28,6 +29,7 @@ def getShapes( var, sign ) :
         h1 = t1.Get( var )
         h1.SetName( "%s%s" % (pair[0],pair[1]) )
         h1.SetDirectory( 0 )
+        h1.SetFillColor( 0 )
         histos.append( h1 )
         f1.Close()
     return histos
@@ -77,6 +79,7 @@ def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     c1 = ROOT.TCanvas( 'c1%s' % n0, 'c1', 600, 600 )
     p1 = ROOT.TPad('p1%s' % n0, 'p1', 0, 0, 1, 1 )
     p1.Draw()
+    p1.SetGrid()
     p1.cd()
     #osSigCDF.SetStats( 0 )
     #osSigCDF.SetLineWidth( 2 )
@@ -92,12 +95,15 @@ def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     h2.SetLineColor( ROOT.kBlue )
     #h2.SetTitle( n2 )
     h1.SetStats(0)
-    h1.Draw('hist')
-    h2.Draw('same hist')
+    h1.Draw('HIST')
+    h2.Draw('same HIST')
+
+    h1.SetMaximum( max(h1.GetMaximum(), h2.GetMaximum()) * 1.1 )
+    h1.SetMinimum( min(h1.GetMinimum(), h2.GetMinimum()) * 1.2 )
     
     
     ''' Build the legend explicitly so we can specify marker styles '''
-    legend = ROOT.TLegend(0.60, 0.35, 0.90, 0.5)
+    legend = ROOT.TLegend(0.60, 0.75, 0.90, 0.9)
     legend.SetMargin(0.3)
     #legend.SetBorderSize(0)
     legend.AddEntry( h1, n1, 'l')
@@ -131,14 +137,30 @@ if __name__ == '__main__' :
             ''' rebin! '''
             rBin = 2
             for i in range( len( isoPairs ) ) :
+                osCDFs[i].Sumw2()
+                ssCDFs[i].Sumw2()
                 osCDFs[i].Rebin(rBin)
                 osCDFs[i].Scale(1./rBin)
                 ssCDFs[i].Rebin(rBin)
                 ssCDFs[i].Scale(1./rBin)
+                #osHistos[i].Sumw2()
+                #ssHistos[i].Sumw2()
+                osHistos[i].Rebin(rBin)
+                osHistos[i].Scale(1./osHistos[i].Integral())
+                ssHistos[i].Rebin(rBin)
+                ssHistos[i].Scale(1./ssHistos[i].Integral())
+            ssSigCDF.Sumw2()
+            osSigCDF.Sumw2()
             ssSigCDF.Rebin(rBin)
             ssSigCDF.Scale(1./rBin)
             osSigCDF.Rebin(rBin)
             osSigCDF.Scale(1./rBin)
+            #ssh.Sumw2()
+            #osh.Sumw2()
+            ssh.Rebin(rBin)
+            ssh.Scale(1./ssh.Integral())
+            osh.Rebin(rBin)
+            osh.Scale(1./osh.Integral())
     
             
             
@@ -146,20 +168,36 @@ if __name__ == '__main__' :
             print "\nROOT KS Tests"
             for i in range( len( isoPairs ) ) :
                 n0 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-                ksTest( shape, ssCDFs[i], osCDFs[i], n0, 'SS', 'OS' )
+                ksTest( shape, ssHistos[i], osHistos[i], n0, 'SS', 'OS' )
             for i in range( len( isoPairs )-1 ) :
                 n0 = "SS"
                 n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
                 n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-                ksTest( shape, ssCDFs[i], ssCDFs[i+1], n0, n1, n2 )
+                ksTest( shape, ssHistos[i], ssHistos[i+1], n0, n1, n2 )
             for i in range( len( isoPairs )-1 ) :
                 n0 = "OS"
                 n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
                 n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-                ksTest( shape, osCDFs[i], osCDFs[i+1], n0, n1, n2 )
+                ksTest( shape, osHistos[i], osHistos[i+1], n0, n1, n2 )
+            #for i in range( len( isoPairs ) ) :
+            #    n0 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+            #    ksTest( shape, ssCDFs[i], osCDFs[i], n0, 'SS', 'OS' )
+            #for i in range( len( isoPairs )-1 ) :
+            #    n0 = "SS"
+            #    n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+            #    n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
+            #    ksTest( shape, ssCDFs[i], ssCDFs[i+1], n0, n1, n2 )
+            #for i in range( len( isoPairs )-1 ) :
+            #    n0 = "OS"
+            #    n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+            #    n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
+            #    ksTest( shape, osCDFs[i], osCDFs[i+1], n0, n1, n2 )
             
-            ksTest( shape, ssCDFs[-1], ssSigCDF, 'T->VTvsSig(VT)', 'SS T->VT', 'SS Signal' )
-            print "T->VT vs Sig in SS %f" % ssSigCDF.KolmogorovTest( ssCDFs[-1] ) 
+            #ksTest( shape, ssCDFs[-1], ssSigCDF, 'T->VTvsSig(VT)', 'SS T->VT', 'SS Signal' )
+            #print "T->VT vs Sig in SS %f" % ssSigCDF.KolmogorovTest( ssCDFs[-1] ) 
+            #print "\n\n"   
+            ksTest( shape, ssHistos[-1], ssh, 'T->VTvsSig(VT)', 'SS T->VT', 'SS Signal' )
+            print "T->VT vs Sig in SS %f" % ssh.KolmogorovTest( ssHistos[-1] ) 
             print "\n\n"   
 
 
