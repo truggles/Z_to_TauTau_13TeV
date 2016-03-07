@@ -115,7 +115,8 @@ def syncCutsDC( ch ) :
 
 # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
 def syncCutsDCqcd( ch ) :
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
+    #if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     
@@ -125,7 +126,7 @@ def syncCutsNtuple( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')']
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35, ttL1IsoTaus]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     

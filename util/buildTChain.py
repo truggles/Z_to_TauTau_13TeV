@@ -21,13 +21,13 @@ def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
         # Just in case we want to debug with a limited amount of files
         line += 1
         if line >= maxFiles and maxFiles != 0:
-            print "Loaded line %i --> line %i" % (startFile, maxFile)
+            #print "Loaded line %i --> line %i" % (startFile, maxFile)
             break
         if line > maxFile :
             #print "reached maxFile = %i" % maxFile
             break
 
-    print "File List: %s\n - Tree Path: %s\n - Loaded Files up to = %i" % (sampleList, treePath, line-1)
+    #print "File List: %s\n - Tree Path: %s\n - Loaded Files up to = %i" % (sampleList, treePath, line-1)
     files.close()
     return tree
 

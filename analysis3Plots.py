@@ -131,8 +131,8 @@ samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
-samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
+#samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
+#samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : ROOT.kRed+2,
@@ -217,7 +217,10 @@ for channel in ['em', 'tt'] :
             #print first, last, totBins, binWidth
             xBins = array('d', []) 
             for i in range( 0, int(totBins)+1 ) :
-                xBins.append( round(i*binWidth+first,1) )
+                if 'iso' in var :
+                    xBins.append( round(i*binWidth+first,2) )
+                else :
+                    xBins.append( round(i*binWidth+first,1) )
         xNum = len( xBins ) - 1
         #print "Binning scheme: ",xBins
             

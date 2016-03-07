@@ -82,15 +82,15 @@ def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cu
     else : save = '%s_%i_%s' % (sample, count, channel)
     bkgMap = getBkgMap()
     #print "save",save
-    print "%5i %20s %10s %3i: ====>>> START <<<====" % (num, sample, channel, count)
+    print "%5i %20s %10s %3i: ====>>> START Cuts <<<====" % (num, sample, channel, count)
 
     ''' 1. Make cuts and save '''
-    print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
+    #print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
     if svFitPrep == 'true' :
         outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
-    print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
