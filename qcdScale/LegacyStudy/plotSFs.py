@@ -9,7 +9,8 @@ isoPairs = [
     #('Loose','VTight'),
     ('Medium','Tight'),
     #('Medium','VTight'),
-    ('Tight','VTight')
+    ('Tight','VTight'),
+    ('VTight','')
     ]
 
 def signalSamp( var, sign ) :
@@ -39,10 +40,10 @@ def printYields( osHistos, ssh, ssHistos ) :
     ssSigInt = ssh.Integral()
     ssInts = []
     for h in ssHistos :
-        ssInts.append( (h.Integral(),math.sqrt(h.Integral()) ) )
+        ssInts.append( (h.Integral(),math.sqrt(h.Integral()),1./math.sqrt(h.Integral()) ) )
     osInts = []
     for h in osHistos :
-        osInts.append( (h.Integral(),math.sqrt(h.Integral()) ) )
+        osInts.append( (h.Integral(),math.sqrt(h.Integral()),1./math.sqrt(h.Integral()) ) )
     for i,pair in enumerate(isoPairs) :
         ssWUncert = ssInts[i][1]
         print "SS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], ssInts[i][0], ssWUncert)
@@ -54,22 +55,31 @@ def printYields( osHistos, ssh, ssHistos ) :
         #print "SS %s %s yield = %3.2f +/- %3.2fper" % (pair[0], pair[1], osInts[i][0], osWUncert)
     print "SS VTight yield = %3.2f +/- %3.2f\n" % (ssSigInt, math.sqrt(ssSigInt))
 
-    tags = {0:'MT/LM',1:'TVT/MT',2:'VT/TVT'}
-    print "          SS                       OS"
-    for i in range( 3 ) :
-        if i < 2:
-            ssr = ssInts[i+1][0]/ssInts[i][0]
-            sse = math.sqrt( (1./ssInts[i+1][1])**2 + (1./ssInts[i][1])**2 )
-            osr = osInts[i+1][0]/osInts[i][0]
-            ose = math.sqrt( (1./osInts[i+1][1])**2 + (1./osInts[i][1])**2 )
-            print "%8s   %3.2f+/-%3.2f        %3.2f+/-%3.2f" % (tags[i],ssr,sse,osr,ose)
-        else :
+    #tags = {0:'MT/LM',1:'TVT/MT',2:'VT/TVT'}
+    tags = {(0,1):'MT/LM',(0,2):'TVT/LT',(1,2):'TVT/MT',len(isoPairs)-1:'VT/TVT'}
+    #tags = {0:'LT/LM',1:'LVT/LT',2:'MT/LVT',3:'MVT/MT',4:'TVT/MVT'}
+    print "              SS                       OS"
+    for i in range( len(isoPairs) ) :
+        for j in range(i+1, len(isoPairs) ) :
+            #if i == j : continue
+            #if i+j > len(isoPairs) : continue
+            #print "i:",i,"j:",j
+            if i < len(isoPairs)-1:
+                ssr = ssInts[j][0]/ssInts[i][0]
+                sse = math.sqrt( (1./ssInts[j][1])**2 + (1./ssInts[i][1])**2 )
+                osr = osInts[j][0]/osInts[i][0]
+                ose = math.sqrt( (1./osInts[j][1])**2 + (1./osInts[i][1])**2 )
+                print "%8s   %3.2f+/-%3.2f        %3.2f+/-%3.2f" % (tags[(i,j)],ssr,sse,osr,ose)
+        if i == len(isoPairs)-1 :
             ssr = ssSigInt/ssInts[i][0]
             sse = math.sqrt( (1./math.sqrt(ssSigInt))**2 + (1./ssInts[i][1])**2 )
             print "%8s   %3.2f+/-%3.2f" % (tags[i],ssr,sse)
 
+    print "\n"
     for i,pair in enumerate(isoPairs) :
-        print "%s %s   SS/OS   %3.2f" % ( pair[0], pair[1], ssInts[i][0]/osInts[i][0])
+        uncert = math.sqrt( osInts[i][2]**2 + ssInts[i][2]**2 )
+        ratio = ssInts[i][0]/osInts[i][0]
+        print "%s %s   SS/OS   %3.2f +/- %3.3f" % ( pair[0], pair[1], ratio, ratio*uncert )
 
 
 
@@ -126,8 +136,8 @@ def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     h1.SetStats(0)
     #h1.Draw('')
     #h2.Draw('same')
-    h1.Draw('HIST')
-    h2.Draw('same HIST')
+    h1.Draw('HIST e1')
+    h2.Draw('same HIST e1')
 
     h1.SetMaximum( max(h1.GetMaximum(), h2.GetMaximum()) * 1.1 )
     h1.SetMinimum( min(h1.GetMinimum(), h2.GetMinimum()) * 1.2 )
@@ -165,9 +175,9 @@ if __name__ == '__main__' :
             ksVals = KSTests( osSigCDF, osh.GetEntries(), osCDFs, osHistos )
 
             ''' rebin! '''
-            ks = False
+            ks = True
             if ks:
-                rBin = 20
+                rBin = 40
                 for i in range( len( isoPairs ) ) :
                     osCDFs[i].Sumw2()
                     ssCDFs[i].Sumw2()
@@ -198,20 +208,28 @@ if __name__ == '__main__' :
                 
 
                 print "\nROOT KS Tests"
+                ''' SS vs OS '''
                 for i in range( len( isoPairs ) ) :
-                    n0 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-                    ksTest( shape, ssHistos[i], osHistos[i], n0, 'SS', 'OS' )
+                    for j in range( len( isoPairs ) ) :
+                        n0 = "SSvsOS"
+                        n1 = "SS_%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+                        n2 = "OS_%s->%s" % (isoPairs[j][0], isoPairs[j][1] )
+                        ksTest( shape, ssHistos[i], osHistos[j], n0, n1, n2 )
+
+                ''' iso Binning '''
                 for i in range( len( isoPairs )-1 ) :
-                    n0 = "SS"
-                    n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-                    n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-                    ksTest( shape, ssHistos[i], ssHistos[i+1], n0, n1, n2 )
+                    for j in range(i+1, len( isoPairs ) ) :
+                        n0 = "SS"
+                        n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+                        n2 = "%s->%s" % (isoPairs[j][0], isoPairs[j][1] )
+                        ksTest( shape, ssHistos[i], ssHistos[j], n0, n1, n2 )
                 for i in range( len( isoPairs )-1 ) :
-                    n0 = "OS"
-                    n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-                    n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-                    ksTest( shape, osHistos[i], osHistos[i+1], n0, n1, n2 )
-                ksTest( shape, ssHistos[-1], ssh, 'T->VTvsSig(VT)', 'SS T->VT', 'SS Signal' )
+                    for j in range(i+1, len( isoPairs ) ) :
+                        n0 = "OS"
+                        n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+                        n2 = "%s->%s" % (isoPairs[j][0], isoPairs[j][1] )
+                        ksTest( shape, osHistos[i], osHistos[j], n0, n1, n2 )
+                ksTest( shape, ssHistos[-1], ssh, 'SS', 'Tight->VTight', 'VTight' )
                 print "T->VT vs Sig in SS %f" % ssh.KolmogorovTest( ssHistos[-1] ) 
                 print "\n\n"   
 
