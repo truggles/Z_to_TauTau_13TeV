@@ -332,10 +332,13 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
 if __name__ == '__main__' :    
     mpCount = 0
     targetRun = 259721
-    targetLumis = [322,335,]
+    #targetLumis = [322,335,]
     #targetFile = '/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root'
     #targetFile = '/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/0406B003-1C7B-E511-AFD3-02163E0138BA.root'
-    targetRun = 254833
-    targetFile = '/store/data/Run2015C_50ns/JetHT/MINIAOD/05Oct2015-v1/50000/02D10C8B-896F-E511-A562-0026189438BA.root'
+    #targetRun = 254833
+    #targetFile = '/store/data/Run2015C_50ns/JetHT/MINIAOD/05Oct2015-v1/50000/02D10C8B-896F-E511-A562-0026189438BA.root'
+    targetFile = '/store/relval/CMSSW_8_0_0_pre6/SingleMuon/MINIAOD/80X_dataRun2_v4_RelVal_sigMu2015HLHT-v1/10000/046C8E4B-84D6-E511-830D-0CC47A4D7602.root'
+    targetRun = 260627
+    targetLumis = [1173, 1179,]
     maxEvents = 999999
     tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents )

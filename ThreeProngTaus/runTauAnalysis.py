@@ -42,7 +42,7 @@ for item in mpResults :
 
 subprocess.call( ['bash', 'haddRuns.sh'] )
 
-runs = [254790, 254833, 258425, 259721]
+runs = [260627,]#[254790, 254833, 258425, 259721]
 for run in runs :
     f = ROOT.TFile('%i/%i.root' % (run, run),'r')
     tree = f.Get('tauEvents/Ntuple')

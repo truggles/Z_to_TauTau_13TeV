@@ -142,10 +142,11 @@ plotMap = {
 
 from collections import OrderedDict
 runs = OrderedDict()
-runs[258425] = ROOT.kCyan
-runs[259721] = ROOT.kGreen
-runs[254833] = ROOT.kBlue
-runs[254790] = ROOT.kRed
+#runs[258425] = ROOT.kCyan
+#runs[259721] = ROOT.kGreen
+#runs[254833] = ROOT.kBlue
+#runs[254790] = ROOT.kRed
+runs[260627] = ROOT.kRed
 
 def plotter( plot ) :
     print "Starting: %s" % plot
