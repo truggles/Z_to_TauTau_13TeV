@@ -43,7 +43,7 @@ def getShapes( var, sign ) :
     return histos
 
 def printStats( h ) :
-    print " -- Mean: %3.2f  StdDev: %3.2f  Skew: %3.2f  Kurtosis %3.2f\n" % (h.GetMean(), h.GetStdDev(), h.GetSkewness(), h.GetKurtosis() )
+    print " -- Mean: %3.2f +/- %3.2f  StdDev: %3.2f +/- %3.2f  Skew: %3.2f +/- %3.2f Kurtosis %3.2f +/- %3.2f\n" % (h.GetMean(), h.GetMeanError(), h.GetStdDev(), h.GetStdDevError(), h.GetSkewness(), h.GetSkewness(11), h.GetKurtosis(), h.GetKurtosis(11) )
 
 def printYields( osHistos, ssh, ssHistos ) :
     isoPairs = osIsoPairs
@@ -131,7 +131,8 @@ def KSTests( cdf1, eCDF1, cdfs, histos ) :
 
 def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     ksProb = h1.KolmogorovTest( h2 )
-    print "%s: KS Prop = %f" % (n0, ksProb )
+    chi2 = h1.Chi2Test( h2, 'WW' )
+    print "%s: KS Prop = %3.2f  chi2 = %3.2f" % (n0, ksProb, chi2 )
     c1 = ROOT.TCanvas( 'c1%s' % n0, 'c1', 600, 600 )
     p1 = ROOT.TPad('p1%s' % n0, 'p1', 0, 0, 1, 1 )
     p1.Draw()
@@ -139,9 +140,13 @@ def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     p1.cd()
     
     h1.SetLineColor( ROOT.kRed )
-    h1.SetTitle( '%s %s %s KS Prob = %f' % (n0, shape, zeroed, ksProb ) )
+    h1.SetTitle( '%s  %s KS Prob = %3.3f' % (n0, zeroed, ksProb ) )
     h2.SetLineColor( ROOT.kBlue )
     h1.SetStats(0)
+    if shape == 'm_sv' : title = 'svFit M_{#tau#tau}'
+    if shape == 'm_vis' : title = 'Visible M_{#tau#tau}'
+    h1.GetXaxis().SetTitle('%s (GeV)' % title)
+    h1.GetYaxis().SetTitle('A.U.')
     #h1.Draw('')
     #h2.Draw('same')
     h1.Draw('HIST e1')
@@ -160,7 +165,7 @@ def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     legend.Draw()
     
     c1.SaveAs('/afs/cern.ch/user/t/truggles/www/moreQCD/%s_%s_%s%s%s.png' % (shape, n, n0,n1,n2))
-    return ksProb
+    return (ksProb, chi2)
         
 if __name__ == '__main__' :
 
@@ -177,9 +182,9 @@ if __name__ == '__main__' :
             printYields( osHistos, ssh, ssHistos )
 
             ''' rebin! '''
-            ks = False
+            ks = True
             if ks:
-                rBin = 10
+                rBin = 20
                 for i in range( len( osIsoPairs ) ) :
                     osHistos[i].Rebin(rBin)
                     osHistos[i].Scale(1./osHistos[i].Integral())
@@ -233,7 +238,7 @@ if __name__ == '__main__' :
                         n0 = "SSvsOS"
                         n1 = "SS_%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
                         n2 = "OS_%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
-                        print "%20s %20s %20s %f" % (n0, n1, n2, log1[cnt])
+                        print "%20s %20s %20s KS: %3.4f  Chi2: %3.2f" % (n0, n1, n2, log1[cnt][0], log1[cnt][1])
                         cnt += 1
                 cnt = 0
                 for i in range( len( ssIsoPairs )-1 ) :
@@ -241,7 +246,7 @@ if __name__ == '__main__' :
                         n0 = "SS"
                         n1 = "%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
                         n2 = "%s->%s" % (ssIsoPairs[j][0], ssIsoPairs[j][1] )
-                        print "%20s %20s %20s %f" % (n0, n1, n2, log2[cnt])
+                        print "%20s %20s %20s KS: %3.4f  Chi2: %3.2f" % (n0, n1, n2, log2[cnt][0], log2[cnt][1])
                         cnt += 1
                 cnt = 0
                 for i in range( len( osIsoPairs )-1 ) :
@@ -249,7 +254,7 @@ if __name__ == '__main__' :
                         n0 = "OS"
                         n1 = "%s->%s" % (osIsoPairs[i][0], osIsoPairs[i][1] )
                         n2 = "%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
-                        print "%20s %20s %20s %f" % (n0, n1, n2, log3[cnt])
+                        print "%20s %20s %20s KS: %3.4f  Chi2: %3.2f" % (n0, n1, n2, log3[cnt][0], log3[cnt][1])
                         cnt += 1
 
 
