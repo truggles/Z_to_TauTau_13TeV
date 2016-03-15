@@ -20,19 +20,21 @@ osIsoPairs = [
 
 def signalSamp( var, sign ) :
     print "\nSignal sample Var: %s    Sign: %s" % (var, sign)
-    f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCut.root' % sign,'r')
+    #f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCut.root' % sign,'r')
+    f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCutBT.root' % sign,'r')
     t = f.Get('tt_Histos')
     h = t.Get( var )
     h.SetFillColor( 0 )
     h.SetDirectory( 0 )
     return h
 
-def getShapes( var, sign ) :
+def getShapes( var, sign, l1='', btag='' ) :
     histos = []
     if sign == 'SS' : isoPairs = ssIsoPairs
     if sign == 'OS' : isoPairs = osIsoPairs
     for i,pair in enumerate(isoPairs) :
-        f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s_%s_%s.root' % (sign, pair[1], pair[0]),'r')
+        #f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s_%s_%s.root' % (sign, pair[1], pair[0]),'r')
+        f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root' % (sign, l1, pair[1], pair[0], btag),'r')
         t1 = f1.Get('tt_Histos')
         h1 = t1.Get( var )
         h1.SetName( "%s%s" % (pair[0],pair[1]) )
@@ -45,9 +47,9 @@ def getShapes( var, sign ) :
 def printStats( h ) :
     print " -- Mean: %3.2f +/- %3.2f  StdDev: %3.2f +/- %3.2f  Skew: %3.2f +/- %3.2f Kurtosis %3.2f +/- %3.2f\n" % (h.GetMean(), h.GetMeanError(), h.GetStdDev(), h.GetStdDevError(), h.GetSkewness(), h.GetSkewness(11), h.GetKurtosis(), h.GetKurtosis(11) )
 
-def printYields( osHistos, ssh, ssHistos ) :
+def printYields( osHistos, ssHistos ) :
     isoPairs = osIsoPairs
-    ssSigInt = ssh.Integral()
+    ssSigInt = ssHistos[-1].Integral()
     ssInts = []
     for h in ssHistos :
         ssInts.append( (h.Integral(),math.sqrt(h.Integral()),1./math.sqrt(h.Integral()) ) )
@@ -62,7 +64,7 @@ def printYields( osHistos, ssh, ssHistos ) :
         print "OS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], osInts[i][0], osWUncert)
         printStats( osHistos[i] )
     print "SS VTight yield = %3.2f +/- %3.2f" % (ssSigInt, math.sqrt(ssSigInt))
-    printStats( ssh )
+    printStats( ssHistos[-1] )
     print "\n"
 
     #tags = {0:'MT/LM',1:'TVT/MT',2:'VT/TVT'}
@@ -91,23 +93,6 @@ def printYields( osHistos, ssh, ssHistos ) :
 
 
 
-def compareYield( osHistos, osh, ssh, ssHistos ) :
-    ssSigInt = ssh.Integral()
-    osSigInt = osh.Integral()
-    ints = []
-    for h in ssHistos :
-        ints.append( (h.Integral(),math.sqrt(h.Integral()) ) )
-    #print "OS Signal yield = %3.2f +/- %3.2f" % (osSigInt, math.sqrt(osSigInt))
-    print "SS Signal yield = %3.2f +/- %3.2f" % (ssSigInt, math.sqrt(ssSigInt))
-    for i,pair in enumerate(isoPairs) :
-        sf = math.sqrt( (math.sqrt(ssSigInt)/ssSigInt)**2 + (ints[i][1]/ints[i][0])**2 )
-        wUncert = ints[i][1]/ints[i][0]
-        print "\n%s %s yield = %3.2f +/- %3.2fper" % (pair[0], pair[1], ints[i][0], wUncert)
-        print " --- SF = %3.2f +/- %3.2fper" % (ssSigInt/ints[i][0], sf)
-        fYield = (osHistos[i].Integral())*ssSigInt/ints[i][0]
-        print " --- SF applied yield << %f +/- %3.2f>>" % (fYield, fYield*sf)
-
-
 def makeCDFs( histos, sign, zeroNeg ) :
     cdfs = []
     for hist in histos :
@@ -131,8 +116,7 @@ def KSTests( cdf1, eCDF1, cdfs, histos ) :
 
 def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     ksProb = h1.KolmogorovTest( h2 )
-    chi2 = h1.Chi2Test( h2, 'WW' )
-    print "%s: KS Prop = %3.2f  chi2 = %3.2f" % (n0, ksProb, chi2 )
+    #print "%s: KS Prop = %3.2f" % (n0, ksProb )
     c1 = ROOT.TCanvas( 'c1%s' % n0, 'c1', 600, 600 )
     p1 = ROOT.TPad('p1%s' % n0, 'p1', 0, 0, 1, 1 )
     p1.Draw()
@@ -165,97 +149,99 @@ def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
     legend.Draw()
     
     c1.SaveAs('/afs/cern.ch/user/t/truggles/www/moreQCD/%s_%s_%s%s%s.png' % (shape, n, n0,n1,n2))
-    return (ksProb, chi2)
+    return ksProb
         
+def runAllKS( osIsoPairs, ssIsoPairs, osHistos, ssHistos ) :
+    ''' rebin! '''
+    ks = True
+    if ks:
+        rBin = 10
+        for i in range( len( osIsoPairs ) ) :
+            osHistos[i].Rebin(rBin)
+            osHistos[i].Scale(1./osHistos[i].Integral())
+        for i in range( len( ssIsoPairs ) ) :
+            ssHistos[i].Rebin(rBin)
+            ssHistos[i].Scale(1./ssHistos[i].Integral())
+    print "\nROOT KS Tests"
+    ''' SS vs OS '''
+    log1 = []
+    cnt = 0
+    for i in range( len( ssIsoPairs ) ) :
+        for j in range( len( osIsoPairs ) ) :
+            n0 = "SSvsOS"
+            n1 = "SS_%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "OS_%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            log1.append( ksTest( shape, ssHistos[i], osHistos[j], n0, n1, n2 ) )
+            cnt += 1
+
+    ''' iso Binning '''
+    log2 = []
+    cnt = 0
+    for i in range( len( ssIsoPairs )-1 ) :
+        for j in range(i+1, len( ssIsoPairs ) ) :
+            n0 = "SS"
+            n1 = "%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "%s->%s" % (ssIsoPairs[j][0], ssIsoPairs[j][1] )
+            log2.append( ksTest( shape, ssHistos[i], ssHistos[j], n0, n1, n2 ) )
+            cnt += 1
+    log3 = []
+    cnt = 0
+    for i in range( len( osIsoPairs )-1 ) :
+        for j in range(i+1, len( osIsoPairs ) ) :
+            n0 = "OS"
+            n1 = "%s->%s" % (osIsoPairs[i][0], osIsoPairs[i][1] )
+            n2 = "%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            log3.append( ksTest( shape, osHistos[i], osHistos[j], n0, n1, n2 ) )
+            cnt += 1
+    print "\n\n"   
+
+    cnt = 0
+    for i in range( len( ssIsoPairs ) ) :
+        for j in range( len( osIsoPairs ) ) :
+            n0 = "SSvsOS"
+            n1 = "SS_%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "OS_%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            print "%20s %20s %20s KS: %3.4f" % (n0, n1, n2, log1[cnt])
+            cnt += 1
+    cnt = 0
+    for i in range( len( ssIsoPairs )-1 ) :
+        for j in range(i+1, len( ssIsoPairs ) ) :
+            n0 = "SS"
+            n1 = "%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "%s->%s" % (ssIsoPairs[j][0], ssIsoPairs[j][1] )
+            print "%20s %20s %20s KS: %3.4f" % (n0, n1, n2, log2[cnt])
+            cnt += 1
+    cnt = 0
+    for i in range( len( osIsoPairs )-1 ) :
+        for j in range(i+1, len( osIsoPairs ) ) :
+            n0 = "OS"
+            n1 = "%s->%s" % (osIsoPairs[i][0], osIsoPairs[i][1] )
+            n2 = "%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            print "%20s %20s %20s KS: %3.4f" % (n0, n1, n2, log3[cnt])
+            cnt += 1
+
+
+
 if __name__ == '__main__' :
 
-    for shape in ['m_sv',]:# 'm_vis']:
-        for zero in [False,]:# True] :
-            if zero : n = 'zeroed'
-            else : n = 'incNeg'
+    #for shape in ['m_sv',]:# 'm_vis']:
+    #    for zero in [False,]:# True] :
+    #        if zero : n = 'zeroed'
+    #        else : n = 'incNeg'
+    shape = 'm_sv'
+    n = 'incNeg'
 
-            ssh = signalSamp( shape, 'SS' )
-            ssHistos = getShapes( shape, 'SS' )
-            osh = signalSamp( shape, 'OS' )
-            osHistos = getShapes( shape, 'OS' )
-            #compareYield( osHistos, osh, ssh, ssHistos )
-            printYields( osHistos, ssh, ssHistos )
+    ssh = signalSamp( shape, 'SS' )
+    ssHistos = getShapes( shape, 'SS', '', '' )
+    osh = signalSamp( shape, 'OS' )
+    osHistos = getShapes( shape, 'OS', '', '' )
+    printYields( osHistos, ssHistos )
 
-            ''' rebin! '''
-            ks = True
-            if ks:
-                rBin = 20
-                for i in range( len( osIsoPairs ) ) :
-                    osHistos[i].Rebin(rBin)
-                    osHistos[i].Scale(1./osHistos[i].Integral())
-                for i in range( len( ssIsoPairs ) ) :
-                    ssHistos[i].Rebin(rBin)
-                    ssHistos[i].Scale(1./ssHistos[i].Integral())
-                ssh.Rebin(rBin)
-                ssh.Scale(1./ssh.Integral())
-                osh.Rebin(rBin)
-                osh.Scale(1./osh.Integral())
     
+    runAllKS( osIsoPairs, ssIsoPairs, osHistos, ssHistos )
                 
                 
 
-                print "\nROOT KS Tests"
-                ''' SS vs OS '''
-                log1 = []
-                cnt = 0
-                for i in range( len( ssIsoPairs ) ) :
-                    for j in range( len( osIsoPairs ) ) :
-                        n0 = "SSvsOS"
-                        n1 = "SS_%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
-                        n2 = "OS_%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
-                        log1.append( ksTest( shape, ssHistos[i], osHistos[j], n0, n1, n2 ) )
-                        cnt += 1
-
-                ''' iso Binning '''
-                log2 = []
-                cnt = 0
-                for i in range( len( ssIsoPairs )-1 ) :
-                    for j in range(i+1, len( ssIsoPairs ) ) :
-                        n0 = "SS"
-                        n1 = "%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
-                        n2 = "%s->%s" % (ssIsoPairs[j][0], ssIsoPairs[j][1] )
-                        log2.append( ksTest( shape, ssHistos[i], ssHistos[j], n0, n1, n2 ) )
-                        cnt += 1
-                log3 = []
-                cnt = 0
-                for i in range( len( osIsoPairs )-1 ) :
-                    for j in range(i+1, len( osIsoPairs ) ) :
-                        n0 = "OS"
-                        n1 = "%s->%s" % (osIsoPairs[i][0], osIsoPairs[i][1] )
-                        n2 = "%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
-                        log3.append( ksTest( shape, osHistos[i], osHistos[j], n0, n1, n2 ) )
-                        cnt += 1
-                print "\n\n"   
-
-                cnt = 0
-                for i in range( len( ssIsoPairs ) ) :
-                    for j in range( len( osIsoPairs ) ) :
-                        n0 = "SSvsOS"
-                        n1 = "SS_%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
-                        n2 = "OS_%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
-                        print "%20s %20s %20s KS: %3.4f  Chi2: %3.2f" % (n0, n1, n2, log1[cnt][0], log1[cnt][1])
-                        cnt += 1
-                cnt = 0
-                for i in range( len( ssIsoPairs )-1 ) :
-                    for j in range(i+1, len( ssIsoPairs ) ) :
-                        n0 = "SS"
-                        n1 = "%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
-                        n2 = "%s->%s" % (ssIsoPairs[j][0], ssIsoPairs[j][1] )
-                        print "%20s %20s %20s KS: %3.4f  Chi2: %3.2f" % (n0, n1, n2, log2[cnt][0], log2[cnt][1])
-                        cnt += 1
-                cnt = 0
-                for i in range( len( osIsoPairs )-1 ) :
-                    for j in range(i+1, len( osIsoPairs ) ) :
-                        n0 = "OS"
-                        n1 = "%s->%s" % (osIsoPairs[i][0], osIsoPairs[i][1] )
-                        n2 = "%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
-                        print "%20s %20s %20s KS: %3.4f  Chi2: %3.2f" % (n0, n1, n2, log3[cnt][0], log3[cnt][1])
-                        cnt += 1
 
 
 
