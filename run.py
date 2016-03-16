@@ -66,8 +66,8 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 20,
-    'numFilesPerCycle' : 10,
+    'numCores' : 1,
+    'numFilesPerCycle' : 1,
     #'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
@@ -81,19 +81,19 @@ params = {
     #'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Mar01NoIsoB',
-    'mid2' : '2Mar01NoIsoB',
-    'mid3' : '3Mar01NoIsoB',
+    'mid1' : '1Mar16a',
+    'mid2' : '2Mar16a',
+    'mid3' : '3Mar16a',
     'additionalCut' : '',
-    #'svFitPost' : 'true',
-    'svFitPost' : 'false',
+    'svFitPost' : 'true',
+    #'svFitPost' : 'false',
     'svfName' : 'xxx',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 

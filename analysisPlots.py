@@ -166,11 +166,11 @@ def getPlotDetails( channel ) :
     plotDetails = {
         'm_vis_mssm' : (0, 3500, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
-#XXX        'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
+#XXX       'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis' : (0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'),
         'm_sv_mssm' : (0, 3500, 10, 'Z svFit Mass [GeV]', ' GeV'),
         'm_sv_varB' : (0, 600, 10, 'Z svFit Mass [GeV]', ' GeV'),
-#XXX        'm_sv' : (0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
+#XXX       'm_sv' : (0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
         'm_sv' : (0, 350, 1, 'Z svFit Mass [GeV]', ' GeV'),
         'mt_sv_mssm' : (0, 3500, 10, 'Total Transverse Mass [GeV]', ' GeV'),
         'mt_sv_varB' : (0, 600, 10, 'Total Transverse Mass [GeV]', ' GeV'),

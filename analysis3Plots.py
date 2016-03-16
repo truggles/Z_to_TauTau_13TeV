@@ -381,7 +381,8 @@ for channel in ['em', 'tt'] :
             #    print " --- pZeta running total = ",pZetaTot
 
 
-            #print "Hist int: %s %f" % (sample, hist.Integral() )
+            if var == 'm_sv' :
+                print "Hist int: %s %f" % (sample, hist.Integral() )
             if samples[ sample ][1] == 'ztt' :
                 ztt.Add( hist )
             if samples[ sample ][1] == 'zl' :
@@ -667,20 +668,20 @@ for channel in ['em', 'tt'] :
 
 
         """ Blinding Data """
-        if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var) :
-            nBins = stack.GetStack().Last().GetXaxis().GetNbins()
-            for k in range( nBins+1 ) :
-                if data.GetXaxis().GetBinLowEdge(k+1)>170 :
-                    data.SetBinContent(k, 0.)
-                    data.SetBinError(k, 0.)
-                    if options.ratio :
-                        ratioHist.SetBinContent(k, 0.)
-                        ratioHist.SetBinError(k, 0.)
-            if options.ratio : 
-                ratioPad.cd()
-                ratioHist.Draw('esamex0')
-            pad1.cd()
-        data.Draw('esamex0')
+        #if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var) :
+        #    nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+        #    for k in range( nBins+1 ) :
+        #        if data.GetXaxis().GetBinLowEdge(k+1)>170 :
+        #            data.SetBinContent(k, 0.)
+        #            data.SetBinError(k, 0.)
+        #            if options.ratio :
+        #                ratioHist.SetBinContent(k, 0.)
+        #                ratioHist.SetBinError(k, 0.)
+        #    if options.ratio : 
+        #        ratioPad.cd()
+        #        ratioHist.Draw('esamex0')
+        #    pad1.cd()
+        #data.Draw('esamex0')
             
 
 
