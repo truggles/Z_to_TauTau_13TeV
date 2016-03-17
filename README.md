@@ -78,8 +78,8 @@ script, there is again a default qcdShape option.
 
 Auxilary Functions:
 Tau Tracking Study tools including an analyzer and plotter can be found in
-Z_to_TauTau_13TeV/ThreeProngTaus
-To run:
+Z_to_TauTau_13TeV/ThreeProngTaus<BR>
+To run:<BR>
 0 - if you are changing the target runs, you will need to change a number of hardcoded run #s<BR>
 1 - find relevant files and put them in the files labeled 'targetRunXXXX.txt'<BR>
 2 - update the 'targetRunsJSON.txt' file for good lumi masks<BR>
