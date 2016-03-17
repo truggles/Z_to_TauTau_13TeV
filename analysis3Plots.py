@@ -30,11 +30,12 @@ p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot 
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
 p.add_argument('--addUncert', action='store', default=True, dest='addUncert', help="What channels?")
-p.add_argument('--qcdSF', action='store', default=1.9, dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
+p.add_argument('--qcdSF', action='store', default='1.9/1.0', dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
 folderDetails = options.folderDetails
+
 
 print "Running over %s samples" % grouping
 
@@ -188,7 +189,7 @@ for channel in ['em', 'tt'] :
     #print newVarMap
     for var, info in newVarMap.iteritems() :
 
-        if 'mt_sv' in var : continue
+        #if 'mt_sv' in var : continue
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
         #if not 'm_vis_mssm' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
@@ -252,7 +253,7 @@ for channel in ['em', 'tt'] :
             if options.qcdMC and sample == 'QCD' : continue
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
-            if var == 'm_vis' : print sample
+            #if var == 'm_vis' : print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
@@ -337,8 +338,12 @@ for channel in ['em', 'tt'] :
                 #if channel == 'tt' :
                 #    print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
                 #    preHist.Scale( qcdTTScaleFactor )
-                print "Using qcdSF from command line: %s" % options.qcdSF
-                preHist.Scale( float(options.qcdSF) )
+                qcdSF_s = options.qcdSF
+                if '/' in qcdSF_s :
+                    qcdSF = float(qcdSF_s.split('/')[0]) / float(qcdSF_s.split('/')[1])
+                else : qcdSF = float(qcdSF_s)
+                print "Using qcdSF from command line: %s" % qcdSF
+                preHist.Scale( qcdSF )
                 #print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactorNew
                 #preHist.Scale( qcdTTScaleFactorNew )
                 print "QCD yield: %f" % preHist.Integral()
@@ -381,7 +386,7 @@ for channel in ['em', 'tt'] :
             #    print " --- pZeta running total = ",pZetaTot
 
 
-            if var == 'm_sv' :
+            if var == 'mt_sv' :
                 print "Hist int: %s %f" % (sample, hist.Integral() )
             if samples[ sample ][1] == 'ztt' :
                 ztt.Add( hist )
@@ -502,6 +507,7 @@ for channel in ['em', 'tt'] :
                 print "M_VIS_MSSM plot details: %f %f" % (plotDetails[ var ][0], plotDetails[ var ][1])
             qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             print "qcdVar: %f" % qcdVar.Integral()
+            qcdVarIntegral = qcdVar.Integral()
             qcdDir.cd()
             qcdVar.Write()
 
@@ -668,20 +674,20 @@ for channel in ['em', 'tt'] :
 
 
         """ Blinding Data """
-        #if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var) :
-        #    nBins = stack.GetStack().Last().GetXaxis().GetNbins()
-        #    for k in range( nBins+1 ) :
-        #        if data.GetXaxis().GetBinLowEdge(k+1)>170 :
-        #            data.SetBinContent(k, 0.)
-        #            data.SetBinError(k, 0.)
-        #            if options.ratio :
-        #                ratioHist.SetBinContent(k, 0.)
-        #                ratioHist.SetBinError(k, 0.)
-        #    if options.ratio : 
-        #        ratioPad.cd()
-        #        ratioHist.Draw('esamex0')
-        #    pad1.cd()
-        #data.Draw('esamex0')
+        if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var) :
+            nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+            for k in range( nBins+1 ) :
+                if data.GetXaxis().GetBinLowEdge(k+1)>170 :
+                    data.SetBinContent(k, 0.)
+                    data.SetBinError(k, 0.)
+                    if options.ratio :
+                        ratioHist.SetBinContent(k, 0.)
+                        ratioHist.SetBinError(k, 0.)
+            if options.ratio : 
+                ratioPad.cd()
+                ratioHist.Draw('esamex0')
+            pad1.cd()
+        data.Draw('esamex0')
             
 
 
@@ -707,3 +713,5 @@ for channel in ['em', 'tt'] :
         #htmlFile.write( '<br>\n' )
     htmlFile.write( '</body></html>' )
     htmlFile.close()
+    #if qcdVarIntegral :
+    #    print "\n\n     QCD yield: %f           QCD Make: %s\n\n" % (qcdVarIntegral ,options.qcdMakeDM)

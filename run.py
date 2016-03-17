@@ -57,6 +57,7 @@ for mass in masses :
        SamplesDataCards.append( 'ggH%i' % mass )
        SamplesDataCards.append( 'bbH%i' % mass )
 
+#SamplesDataCards = ['DYJets',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -66,7 +67,7 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 1,
+    'numCores' : 20,
     'numFilesPerCycle' : 1,
     #'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
@@ -75,15 +76,16 @@ params = {
     #'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
-    #'cutName' : 'PostSync', #!
+#XXX    'cutName' : 'PostSync', #!
 #XXX    'cutMapper' : 'syncCutsDC',
     'cutMapper' : 'syncCutsDCqcd',
     #'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Mar16a',
-    'mid2' : '2Mar16a',
-    'mid3' : '3Mar16a',
+#XXX    'cutMapper' : 'signalCuts',
+    'mid1' : '1Mar17h_QCD',
+    'mid2' : '2Mar17h_QCD',
+    'mid3' : '3Mar17h_QCD',
     'additionalCut' : '',
     'svFitPost' : 'true',
     #'svFitPost' : 'false',

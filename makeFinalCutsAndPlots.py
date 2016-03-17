@@ -64,6 +64,8 @@ def testQCDCuts( folder, isoL, isoT ) :
 
     if isoL == '' :
         isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % isoT
+        isoL1TL2loose = '(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+        isoL1ML2loose = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
         
     print "IsoL2Loose: %s" % isoL2loose
 
@@ -74,55 +76,55 @@ def testQCDCuts( folder, isoL, isoT ) :
     """
     ''' pt ordering '''
     ''' L1T '''
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSPt1Gtrl1tl2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt1GtrL1TL2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSPt1Gtrl1tl2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt1GtrL1TL2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSPt2Gtrl1tl2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt2GtrL1TL2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSPt2Gtrl1tl2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt2GtrL1TL2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSPt1Gtrl1tl2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt1GtrL1TL2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSPt1Gtrl1tl2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt1GtrL1TL2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSPt2Gtrl1tl2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt2GtrL1TL2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSPt2Gtrl1tl2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt2GtrL1TL2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     ''' end L1T '''
 
     ''' L1M '''
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSPt1Gtrl1ml2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt1GtrL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSPt1Gtrl1ml2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt1GtrL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSPt2Gtrl1ml2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt2GtrL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSPt2Gtrl1ml2_%s_%s' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt2GtrL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSPt1Gtrl1ml2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt1GtrL1ML2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSPt1Gtrl1ml2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt1GtrL1ML2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_SSPt2Gtrl1ml2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt2GtrL1ML2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    #
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_OSPt2Gtrl1ml2_%s_%s' % (isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt2GtrL1ML2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
     ''' end L1M '''
     
@@ -140,18 +142,30 @@ def testQCDCuts( folder, isoL, isoT ) :
     #samples = checkBkgs( samples, params, grouping )
     #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSl1ml2_%s_%sBT' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s*(nbtag!=0)' % (isoL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSl1ml2_%s_%sBT' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s*(nbtag!=0)' % (isoL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #''' end l1 medium '''
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_SSl1ml2_%s_%sBT' % (isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==1)*%s*(nbtag!=0)*(njets<=2)' % (isoL1ML2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_OSl1ml2_%s_%sBT' % (isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==0)*%s*(nbtag!=0)*(njets<=2)' % (isoL1ML2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_SSl1ml2_%s_%sBTL' % (isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==1)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (isoL1ML2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_OSl1ml2_%s_%sBTL' % (isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==0)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (isoL1ML2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    ''' end l1 medium '''
     #
     #''' l1 tight '''
     #params['channels'] = ['tt',]
@@ -497,6 +511,45 @@ def makeCuts( folder ) :
 #    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     return
 
+
+
+
+def setUpForCuts() :
+    ''' Set grouping (25ns or Sync) '''
+    grouping = 'dataCards'
+    zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
+    print "zHome: ",zHome
+    os.environ['_GROUPING_'] = grouping
+    os.environ['_ZHOME_'] = zHome
+    
+    
+    
+    ''' Preset samples '''
+    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of Feb22 XXX DYJetsFXFX not included
+    
+    #SamplesDataCards = []
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
+    for mass in masses :
+           SamplesDataCards.append( 'ggH%i' % mass )
+           SamplesDataCards.append( 'bbH%i' % mass )
+    samples = SamplesDataCards
+    params = {
+        'bkgs' : 'None',
+        'numCores' : 20,
+        'numFilesPerCycle' : 1,
+        'channels' : ['tt',],
+        'mid1' : '1Feb24a',
+        'mid2' : 'xxx',
+        'additionalCut' : '',
+        'svFitPost' : 'true'
+    }
+    return (grouping, params, samples)
+
+
+
+
+
+
 def plotThem( folder, sufix1, sufix2, channel, single=False ) :
     if folder == 'xxx' :
         print "ERROR: Folder was not choosen"
@@ -542,6 +595,22 @@ def plotSingle( folder, sufix1, channel, btag ) :
     subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlotsList", "/afs/cern.ch/user/t/truggles/www/%s/%s%s%s" % (folder, channel, sufix1, btag)])
 
 
+def plotSingle2( folder, folder2 ) :
+    if folder == 'xxx' :
+        print "ERROR: Folder was not choosen"
+        return
+    print folder,folder2
+
+    if not os.path.exists( '/afs/cern.ch/user/t/truggles/www/%s' % (folder) ) :
+        os.makedirs( '/afs/cern.ch/user/t/truggles/www/%s' % (folder) )
+    if not os.path.exists( '/afs/cern.ch/user/t/truggles/www/%s/%s' % (folder, folder2) ) :
+        os.makedirs( '/afs/cern.ch/user/t/truggles/www/%s/%s' % (folder, folder2) )
+
+    #subprocess.call(["python", "analysis3Plots.py", "--folder=%s_%s%s"%(folder,sufix1,btag), "--qcdMake=True", "--ratio=True", "--channels=%s"%channel, "--qcdMakeDM=%s"%sufix1]) # Works for QCD study plotting
+    subprocess.call(["python", "analysis3Plots.py", "--folder=%s"%(folder2), "--qcdMake=True", "--ratio=True", "--channels=tt", "--qcdMakeDM=%s" % folder2]) # Works for QCD study plotting
+
+    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlots", "/afs/cern.ch/user/t/truggles/www/%s/%s" % (folder, folder2)])
+    subprocess.call(["cp", "-r", "/afs/cern.ch/user/t/truggles/www/dataCardsPlotsList", "/afs/cern.ch/user/t/truggles/www/%s/%s" % (folder, folder2)])
 
 
 
@@ -572,7 +641,7 @@ if __name__ == '__main__' :
         ('Medium','Tight'),
         #('Medium','VTight'),
         ('Tight','VTight'),
-        #('','VTight'),
+        ('','VTight'),
     ]
 
     for pair in isoPairs :
@@ -585,5 +654,44 @@ if __name__ == '__main__' :
     #                folder = '2Mar15a_'+sign+l2
     #                plotSingle( folder, pair[1]+'_'+pair[0], 'tt', bt )
     
-
-
+#    stuff = setUpForCuts()
+#    grouping = stuff[0]
+#    params  = stuff[1]
+#    samples = stuff[2]
+#
+#    info = {
+#    'LBTagOSSig' : ['2Mar17g_osSig', 'OS', 'VTight', 'VTight', 'bjetCISVVeto20Loose'],
+#    'LBTagOSt1mt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'bjetCISVVeto20Loose'],
+#    'LBTagSSSig' : ['2Mar17h_QCD', 'SS', 'VTight', 'VTight', 'bjetCISVVeto20Loose'],
+#    'LBTagSSt1mt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'bjetCISVVeto20Loose'],
+#    'MBTagOSSig' : ['2Mar17g_osSig', 'OS', 'VTight', 'VTight', 'nbtag'],
+#    'MBTagOSt1mt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'nbtag'],
+#    'MBTagSSSig' : ['2Mar17h_QCD', 'SS', 'VTight', 'VTight', 'nbtag'],
+#    'MBTagSSt1mt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'nbtag'],
+#    'LBTagOSt1tt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'bjetCISVVeto20Loose'],
+#    'LBTagSSt1tt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'bjetCISVVeto20Loose'],
+#    'MBTagOSt1tt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'nbtag'],
+#    'MBTagSSt1tt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'nbtag'],
+#    }
+#
+#    for key,tup in info.iteritems() :
+#        print key, tup
+#        #isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
+#        isoL1ML2loose = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (tup[2], tup[3])
+#        isoL1TL2loose = '(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (tup[2], tup[3])
+#        isoSig = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+#        if 'Sig' in key : iso = isoSig
+#        if 't1t' in key : iso = isoL1TL2loose
+#        if 't1m' in key : iso = isoL1ML2loose
+#
+#        if tup[1] == 'OS' : sign = 0
+#        else : sign = 1
+#    
+#        params['channels'] = ['tt',]
+#        params['mid2'] = tup[0]
+#        params['mid3'] = key
+#        params['additionalCut'] = '*(Z_SS==%i)*%s*(%s>0)*(njets<=2)' % (sign, iso, tup[4])
+#        samples = checkBkgs( samples, params, grouping )
+#        analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    for key,tup in info.iteritems() :
+#        plotSingle2( 'Mar17BTagged', key)

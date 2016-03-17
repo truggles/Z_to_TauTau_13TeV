@@ -183,14 +183,16 @@ for channel in ['em', 'tt'] :
 
 
         if options.mssm :
-            if not var == baseVar+'_mssm' : continue
+        #    if not var == baseVar+'_mssm' : continue
             mid = 'mssm'
+            if var != baseVar : continue
         else :
             if not var == baseVar : continue
             mid = 'sm'
 
         shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (grouping, extra, channel, mid, append), 'UPDATE')
         shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
+        print shapeDir
 
         # Defined out here for large scope
         name = info[0]
@@ -201,7 +203,8 @@ for channel in ['em', 'tt'] :
         if options.mssm :
             #binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
             binArray = array.array( 'd', [] )
-            for i in range(0, 351 ) :
+            #for i in range(0, 351 ) :
+            for i in range(0, 36 ) :
                 binArray.append( i * 10 )
         else :
             binArray = array.array( 'd', [] )
@@ -255,7 +258,12 @@ for channel in ['em', 'tt'] :
             if sample == 'QCD' and options.useQCDMakeName :
                 #if channel == 'tt' : qcdScale = qcdTTScaleFactor
                 #if channel == 'em' : qcdScale = qcdEMScaleFactor
-                qcdScale = float(options.qcdSF)
+                qcdSF_s = options.qcdSF
+                if '/' in qcdSF_s :
+                    qcdSF = float(qcdSF_s.split('/')[0]) / float(qcdSF_s.split('/')[1])
+                else : qcdSF = float(qcdSF_s)
+                print "Using qcdSF from command line: %s" % qcdSF
+                qcdScale = qcdSF
                 print "Skip rebin; Scale QCD shape by %f" % qcdScale
                 print "QCD yield Pre: %f" % hist.Integral()
                 #hist.Scale( qcdTTScaleFactorNew )

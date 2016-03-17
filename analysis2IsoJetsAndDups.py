@@ -583,7 +583,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            if channel == 'tt' : isoOrder( channel, row )
+            #if channel == 'tt' : isoOrder( channel, row )
             vbfClean( row )
 
 
