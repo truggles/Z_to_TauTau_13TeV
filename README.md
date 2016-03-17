@@ -82,8 +82,9 @@ Z_to_TauTau_13TeV/ThreeProngTaus
 To run:
 1 - find relevant files and put them in the files labeled 'targetRunXXXX.txt'
 2 - update the 'targetRunsJSON.txt' file for good lumi masks
+    - /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt
 3 - make a folder for each run with the run number
 4 - 'python runTauAnalysis.py'
 5 - 'source env.sh'
 6 - 'python tauPlotting.py'
-7 - view plots online
+7 - view plots online: `http://truggles.web.cern.ch/truggles/threeProngs/`

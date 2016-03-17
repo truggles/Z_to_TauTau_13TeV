@@ -40,17 +40,17 @@ mpResults.sort()
 for item in mpResults :
     print item
 
-subprocess.call( ['bash', 'haddRuns.sh'] )
 
-runs = [260627,]#[254790, 254833, 258425, 259721]
+runs = [256677, 260627,]#[254790, 254833, 258425, 259721]
 for run in runs :
+    subprocess.call( ['bash', 'haddRuns.sh', '%s' % run] )
     f = ROOT.TFile('%i/%i.root' % (run, run),'r')
     tree = f.Get('tauEvents/Ntuple')
     tauHelpers.nvtxTemplate( tree, run )
     #tauHelpers.jetPtTemplate( tree, run )
 
 for run in runs :
-    puDict = tauHelpers.PUreweightDict( 254833, run )
+    puDict = tauHelpers.PUreweightDict( 260627, run )
     #jetPtpuDict = tauHelpers.jetPtPUreweightDict( 254833, run )
     print "\n RUN: %i" % run
     #for key in puDict.keys() :

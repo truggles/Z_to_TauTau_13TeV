@@ -14,10 +14,8 @@ def finishPlots( histos, plot, plotMap, run, name ) :
     p1.Draw()
     p1.cd()
 
-    histos[258425].Draw('e0')
-    histos[259721].Draw('same e0')
-    histos[254833].Draw('same e0')
-    histos[254790].Draw('same e0')
+    histos[260627].Draw('e0')
+    histos[256677].Draw('same e0')
 
     maxi = 0
     for run in runs :
@@ -25,8 +23,8 @@ def finishPlots( histos, plot, plotMap, run, name ) :
         histos[run].SetLineColor( runs[ run ] )
         histos[run].SetLineWidth( 2 )
         if histos[run].GetMaximum() > maxi : maxi = histos[run].GetMaximum()
-    histos[258425].SetMaximum( maxi * 1.5 )
-    histos[258425].GetXaxis().SetTitle( '%s' % plotMap[plot][0] )
+    histos[260627].SetMaximum( maxi * 1.5 )
+    histos[260627].GetXaxis().SetTitle( '%s' % plotMap[plot][0] )
     #p1.SetTitle( '%s' % plot.replace('By',' vs. ') )
     #c1.SetTitle( '%s' % plot.replace('By',' vs. ') )
     if 'threeProng' in name : yaxis = 'Taus / Event'
@@ -35,7 +33,7 @@ def finishPlots( histos, plot, plotMap, run, name ) :
     else : yaxis = name
     if 'scale' in plotMap[plot][4] :
         yaxis = 'A.U.'
-    histos[258425].GetYaxis().SetTitle( yaxis )
+    histos[260627].GetYaxis().SetTitle( yaxis )
 
     logo = ROOT.TText(.2, .88,"CMS Preliminary")
     logo.SetTextSize(0.04)
@@ -74,7 +72,7 @@ def finishPlots( histos, plot, plotMap, run, name ) :
     c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s.png' % name )
     if 'num' in name :
         p1.SetLogy()
-        histos[258425].SetMaximum( 2 )
+        histos[260627].SetMaximum( 2 )
         p1.Update()
         c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s_log.png' % name )
 
@@ -142,11 +140,8 @@ plotMap = {
 
 from collections import OrderedDict
 runs = OrderedDict()
-#runs[258425] = ROOT.kCyan
-#runs[259721] = ROOT.kGreen
-#runs[254833] = ROOT.kBlue
-#runs[254790] = ROOT.kRed
-runs[260627] = ROOT.kRed
+runs[260627] = ROOT.kCyan
+runs[256677] = ROOT.kGreen
 
 def plotter( plot ) :
     print "Starting: %s" % plot
