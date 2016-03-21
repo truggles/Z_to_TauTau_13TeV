@@ -2,11 +2,11 @@ import ROOT
 from ROOT import gPad
 from array import array
 
-def nvtxTemplate( tree, run ) :
+def nvtxTemplate( tree, run, version ) :
     hist = ROOT.TH1F('nvtx', 'nvtx', 60, 0, 60)
     tree.Draw('nvtx>>nvtx')
     hist = gPad.GetPrimitive( 'nvtx')
-    hist.SaveAs('%s/nvtx.root' % run)
+    hist.SaveAs('%s_%s/nvtx.root' % (run, version) )
 
 def jetPtTemplate( tree, run ) :
     hist = ROOT.TH1F('jetPt', 'jetPt', 50, 0, 1000)

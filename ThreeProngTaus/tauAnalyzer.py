@@ -1,5 +1,5 @@
 
-def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
+def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version ) :
     print "TAU ANALYZER CALLED:"
     print "Count: %i    targetRun %i targetFile %s" % (mpCount, targetRun, targetFile)
     
@@ -41,9 +41,9 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents ) :
     #tFile = ROOT.TFile('study.root','RECREATE')
     ''' Store root files in separate folders by Run '''
     import os
-    if not os.path.exists( '%i' % targetRun ):
-        os.makedirs( '%i' % targetRun )
-    tFile = ROOT.TFile('%i/%i_%i_%s.root' % (targetRun, targetRun, mpCount, targetFile.split('/')[-1].split('.')[0]),'RECREATE')
+    if not os.path.exists( '%i_%s' % (targetRun, version) ):
+        os.makedirs( '%i_%s' % (targetRun, version) )
+    tFile = ROOT.TFile('%i_%s/%i_%i_%s.root' % (targetRun, version, targetRun, mpCount, targetFile.split('/')[-1].split('.')[0]),'RECREATE')
     #tFile = ROOT.TFile('tmp.root','RECREATE')
     tDir = tFile.mkdir('tauEvents')
     tDir.cd()

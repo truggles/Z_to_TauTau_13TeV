@@ -1,2 +1,2 @@
 
-hadd -f $1/$1.root $1/$1_*.root
+hadd -f $1_$2/$1.root $1_$2/$1_*.root
