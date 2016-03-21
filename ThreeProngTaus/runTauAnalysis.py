@@ -62,7 +62,7 @@ for run in runs :
 for run in runs :
     for version in versions:
         #puDict = tauHelpers.PUreweightDict( 260627, run )
-        puDict = tauHelpers.PUreweightDict( run, run )
+        puDict = tauHelpers.PUreweightDict( run, run, version )
         #jetPtpuDict = tauHelpers.jetPtPUreweightDict( 254833, run )
         print "\n RUN: %s VERSION %s" % (run, version)
         #for key in puDict.keys() :

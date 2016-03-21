@@ -14,12 +14,12 @@ def jetPtTemplate( tree, run ) :
     hist = gPad.GetPrimitive( 'jetPt')
     hist.SaveAs('%s/jetPt.root' % run)
 
-def PUreweightDict( templateRun, run ) :
-    tmpFile = ROOT.TFile('%i/nvtx.root' % templateRun, 'READ')
+def PUreweightDict( templateRun, run, version ) :
+    tmpFile = ROOT.TFile('%s_%s/nvtx.root' % (templateRun, version), 'READ')
     tmpHist = tmpFile.Get('nvtx')
     tmpHist.Scale( 1 / tmpHist.Integral() )
 
-    samplefile = ROOT.TFile('%i/nvtx.root' % run, 'READ')
+    samplefile = ROOT.TFile('%s_%s/nvtx.root' % (run, version), 'READ')
     sHist = samplefile.Get('nvtx')
     sHist.Scale( 1 / sHist.Integral() )
 
