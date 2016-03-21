@@ -1,6 +1,10 @@
 import ROOT
 from ROOT import gPad
 from array import array
+import json
+from collections import OrderedDict
+
+
 
 def nvtxTemplate( tree, run, version ) :
     hist = ROOT.TH1F('nvtx', 'nvtx', 60, 0, 60)
@@ -62,3 +66,25 @@ def buildFullLumiList( jsonDict ) :
             #print lumis
         expandedLumis[ int(targetRun) ] = lumis
     return expandedLumis
+
+
+
+def makeBunchSpacingJSON( run, version='76X' ) :
+    f = ROOT.TFile( '%i_%s/%i.root' % (run,version,run), 'r' )
+    t = f.Get('tauEvents/Ntuple')
+
+    jsonF = open('%i_%s/%i_BunchFill.json' %(run,version,run), 'w')
+    fillScheme = OrderedDict()
+    for i in range( 3564 ) :
+        fillScheme[ i ] = 0
+
+    for row in t :
+        bunchBC = int(row.bunchCrossing)
+        fillScheme[ bunchBC ] = fillScheme[ bunchBC ] + 1
+
+    json.dump( fillScheme, jsonF, indent=2 )
+    jsonF.close()
+
+if __name__ == '__main__' :
+    for run in [256677,260627] :
+        makeBunchSpacingJSON( run )

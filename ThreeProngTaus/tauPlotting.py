@@ -2,6 +2,10 @@ import ROOT
 from time import gmtime, strftime
 from ROOT import gPad, gROOT, gStyle
 import pyplotter.tdrstyle as tdr
+import sys
+sys.path.append( '/afs/cern.ch/work/t/truggles/Z_to_tautau/CMSSW_7_6_3_patch2/src/Z_to_TauTau_13TeV/util' )
+from ratioPlot import ratioPlot
+from array import array
 
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
@@ -9,10 +13,53 @@ numT = 5
 numJ = 7
 
 def finishPlots( histos, plot, plotMap, runList, name, runColors ) :
+    ratio = True
 
     c1 = ROOT.TCanvas(plot,plot,600,600)
-    p1 = ROOT.TPad('p_%s' % plot,'p_%s' % plot,0,0,1,1)
-    p1.Draw()
+    if ratio :
+        xBins = array('d', []) 
+        totBins = histos[ runList[0] ].GetXaxis().GetNbins()
+        binWidth = histos[ runList[0] ].GetXaxis().GetBinWidth( 1 )
+        first = histos[ runList[0] ].GetXaxis().GetBinLowEdge( 1 )
+        for i in range( 0, int(totBins)+1 ) :
+             xBins.append( round(i*binWidth+first,1) )
+        xNum = len( xBins ) - 1
+        smlPadSize = .25
+        pads = ratioPlot( c1, 1-smlPadSize )
+        p1 = pads[0]
+        ratioPad = pads[1]
+        ratioPad.SetTopMargin(0.00)
+        ratioPad.SetBottomMargin(0.3)
+        p1.SetBottomMargin(0.00)
+        ratioPad.SetGridy()
+        ratioHist = ROOT.TH1F('ratio %s' % runList[0], 'ratio', xNum, xBins )
+        ratioHist.Sumw2()
+        ratioHist.Add( histos[ runList[0] ] )
+        ratioHist.Divide( histos[ runList[1] ] )
+        #ratioHist.SetMaximum( ratioHist.GetMaximum() * 1.2 )
+        #ratioHist.SetMinimum( ratioHist.GetMinimum() * 1.2 )
+        ratioHist.SetMaximum( 1.5 )
+        ratioHist.SetMinimum( 0.5 )
+        ratioHist.SetMarkerStyle( 21 )
+        ratioPad.cd()
+        ratioHist.Draw('ex0')
+        line = ROOT.TLine( xBins[0], 1, xBins[-1], 1 )
+        line.SetLineColor(ROOT.kBlack)
+        line.SetLineWidth( 1 )
+        line.Draw()
+        ratioHist.Draw('esamex0')
+        # X Axis!
+        ratioHist.GetXaxis().SetTitle('%s' % plotMap[plot][0])
+        ratioHist.GetYaxis().SetTitle("80X / 76X")
+        ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
+        ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
+        ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
+        ratioHist.GetYaxis().SetNdivisions( 5, True )
+        ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
+        ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
+
+
+    p1.cd()
     p1.cd()
 
     histos[ runList[0] ].Draw('e0')
@@ -28,7 +75,7 @@ def finishPlots( histos, plot, plotMap, runList, name, runColors ) :
     histos[ runList[0] ].GetXaxis().SetTitle( '%s' % plotMap[plot][0] )
     #p1.SetTitle( '%s' % plot.replace('By',' vs. ') )
     #c1.SetTitle( '%s' % plot.replace('By',' vs. ') )
-    if 'threeProng' in name : yaxis = 'Taus / Event'
+    if 'hreeProng' in name : yaxis = 'Taus / Event'
     elif 'taus' in name : yaxis = 'Taus / Jets Rate'
     elif 'jets' in name : yaxis = 'Jets / Event'
     else : yaxis = name
@@ -151,6 +198,8 @@ plotMap = {
     'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'threeProngTaus30ByTauIsoChrg_' : ( 't1IsoChrg', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'IsolatedThreeProngTaus30ByTauIsoChrg__' : ( 't1IsoChrg', '(10,0,2)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
@@ -208,8 +257,8 @@ def RunPlots( runList ) :
     multiprocessingOutputs = []
     for plot in plotMap.keys() :
         
-        #plotter( runList, runColors, '%s' % plot ) # For Debugging
-        multiprocessingOutputs.append( pool.apply_async(plotter, args=( runList, runColors, '%s' % plot, ) ) )
+        plotter( runList, runColors, '%s' % plot ) # For Debugging
+        #multiprocessingOutputs.append( pool.apply_async(plotter, args=( runList, runColors, '%s' % plot, ) ) )
     
     mpResults = [p.get() for p in multiprocessingOutputs]
     mpResults.sort()
@@ -238,7 +287,7 @@ def RunPlots( runList ) :
 
 
 if __name__ == '__main__' :
-    runs = [256677, 260627]
+    runs = [256677,]# 260627]
     versions = ['80X_RelVal','76X']
     for run in runs :
         runList = []
