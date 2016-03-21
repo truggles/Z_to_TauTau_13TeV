@@ -240,6 +240,17 @@ for channel in ['em', 'tt'] :
         qcd = ROOT.TH1F("All Backgrounds qcd %s" % append, "qcd", xNum, xBins )
         wjets = ROOT.TH1F("All Backgrounds wjets %s" % append, "wjets", xNum, xBins )
         data = ROOT.TH1F("All Backgrounds data %s" % append, "data", xNum, xBins )
+        ztt.Sumw2()
+        zl.Sumw2()
+        zj.Sumw2()
+        zll.Sumw2()
+        dib.Sumw2()
+        top.Sumw2()
+        higgs.Sumw2()
+        mssm.Sumw2()
+        qcd.Sumw2()
+        wjets.Sumw2()
+        data.Sumw2()
 
 
         pZetaTot = 0
@@ -496,6 +507,7 @@ for channel in ['em', 'tt'] :
             
         if options.qcdMake :
             qcdVar = ROOT.TH1F( var, 'qcd%s' % append, xNum, xBins )
+            qcdVar.Sumw2()
             qcdVar.Add( data )
             qcdVar.Add( -1 * stack.GetStack().Last() )
             qcdVar.SetFillColor( ROOT.kMagenta-10 )
@@ -538,8 +550,8 @@ for channel in ['em', 'tt'] :
             pad1.SetBottomMargin(0.00)
             ratioPad.SetGridy()
             ratioHist = ROOT.TH1F('ratio %s' % append, 'ratio', xNum, xBins )
-            ratioHist.Add( data )
             ratioHist.Sumw2()
+            ratioHist.Add( data )
             ratioHist.Divide( stack.GetStack().Last() )
             if channel == 'em' :
                 ratioHist.SetMaximum( 1.5 )
@@ -558,6 +570,8 @@ for channel in ['em', 'tt'] :
             # X Axis!
             ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
             ratioHist.GetYaxis().SetTitle("Data / MC")
+            ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
+            ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
             ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
             ratioHist.GetYaxis().SetNdivisions( 5, True )
             ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
@@ -659,6 +673,7 @@ for channel in ['em', 'tt'] :
         """
         if options.addUncert :
             e1 = ROOT.TH1F("e1 %s" % append, "e1", xNum, xBins )
+            e1.Sumw2()
             e1.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             for k in range( e1.GetNbinsX()+1 ) :
                 e1.SetBinContent( k, stack.GetStack().Last().GetBinContent( k ) )

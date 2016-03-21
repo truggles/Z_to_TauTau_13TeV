@@ -217,6 +217,7 @@ for channel in ['em', 'tt'] :
         for name in nameArray :
             title = name.strip('_')
             histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
+            histos[ name ].Sumw2()
 
 
         for sample in samples:
