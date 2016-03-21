@@ -13,7 +13,7 @@ import subprocess
 Main Settings
 """
 runs = [256677, 260627,]#[254790, 254833, 258425, 259721]
-versions = ['80X_RelVal','76X']
+versions = ['80X_RelVal',]#'76X']
 
 
 
