@@ -236,7 +236,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
             tIsoChrg = tau.tauID('chargedIsoPtSum')
             tChrgHad = tau.leadChargedHadrCand()
             tMiss = tChrgHad.lostInnerHits()
-            if tMiss == 18446744073709551615 :
+            if tMiss == 18446744073709551615 or tMiss == 4294967295 :
                 tMiss = 0
             tally['numTauMissingHits'] += tMiss
             #print "lead chrg had: ",tChrgHad
@@ -341,4 +341,4 @@ if __name__ == '__main__' :
     targetRun = 260627
     targetLumis = [1173, 1179,]
     maxEvents = 999999
-    tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents )
+    tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, 'xxx' )
