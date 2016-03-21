@@ -387,7 +387,7 @@ def drawHistos(grouping, samples, **fargs ) :
                     outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
                     for i in range( numIters ) :
                         #print "%s_%i" % ( sample, i)
-                        print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
+                        #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
                         chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True

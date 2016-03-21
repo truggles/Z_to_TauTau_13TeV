@@ -24,11 +24,12 @@ folder=2Mar15a
 # For l1 medium
 folder=2Mar17h_QCD
 for sign in SS OS; do
-    #for name in Medium_Loose Tight_Loose VTight_Loose Tight_Medium VTight_Medium VTight_Tight; do
     for name in Medium_Loose VTight_Loose Tight_Medium VTight_Tight VTight_; do
-    #for name in Medium_Loose Tight_Medium VTight_Tight; do
-        python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}BT --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}BT
+    #for name in VTight_; do
+        python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}BTM --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}BTM
         python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}BTL --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}BTL
+        python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}NoBTM --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}NoBTM
+        python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}NoBTL --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}NoBTL
         #python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name} --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}
     done
 done

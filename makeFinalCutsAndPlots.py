@@ -20,7 +20,7 @@ options = p.parse_args()
 folder = options.folder
 
 
-def testQCDCuts( folder, isoL, isoT ) :
+def testQCDCuts( folder, isoL, isoT, sign ) :
     if folder == 'xxx' :
         print "ERROR: Folder was not choosen"
         return
@@ -37,11 +37,10 @@ def testQCDCuts( folder, isoL, isoT ) :
     ''' Preset samples '''
     SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of Feb22 XXX DYJetsFXFX not included
     
-#XXX    SamplesDataCards = []
-#XXX    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
-#XXX    for mass in masses :
-#XXX           SamplesDataCards.append( 'ggH%i' % mass )
-#XXX           SamplesDataCards.append( 'bbH%i' % mass )
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
+    for mass in masses :
+           SamplesDataCards.append( 'ggH%i' % mass )
+           SamplesDataCards.append( 'bbH%i' % mass )
     samples = SamplesDataCards
     params = {
         'bkgs' : 'None',
@@ -63,9 +62,15 @@ def testQCDCuts( folder, isoL, isoT ) :
     isoPt2GtrL1ML2loose = '(pt_1 < pt_2)*(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
 
     if isoL == '' :
-        isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % isoT
-        isoL1TL2loose = '(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
-        isoL1ML2loose = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+        isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+        #isoL1TL2loose = '(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+        #isoL1ML2loose = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+        isoL1TL2loose = isoL2loose
+        isoL1ML2loose = isoL2loose
+    if sign == 'OS' :
+        Zsign = 0
+    else : 
+        Zsign = 1
         
     print "IsoL2Loose: %s" % isoL2loose
 
@@ -142,29 +147,32 @@ def testQCDCuts( folder, isoL, isoT ) :
     #samples = checkBkgs( samples, params, grouping )
     #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     #
+    """ BTAG VS NO BTAG TEST WITH IMPERIAL """
     params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSl1ml2_%s_%sBT' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==1)*%s*(nbtag!=0)*(njets<=2)' % (isoL1ML2loose)
+    params['mid3'] = folder+'_%sl1ml2_%s_%sBTM' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag!=0)*(njets<=2)' % (Zsign, isoL1ML2loose)
     samples = checkBkgs( samples, params, grouping )
     analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     
     params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSl1ml2_%s_%sBT' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==0)*%s*(nbtag!=0)*(njets<=2)' % (isoL1ML2loose)
+    params['mid3'] = folder+'_%sl1ml2_%s_%sBTL' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (Zsign, isoL1ML2loose)
     samples = checkBkgs( samples, params, grouping )
     analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
     params['channels'] = ['tt',]
-    params['mid3'] = folder+'_SSl1ml2_%s_%sBTL' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==1)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (isoL1ML2loose)
+    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTM' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1ML2loose)
     samples = checkBkgs( samples, params, grouping )
     analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     
     params['channels'] = ['tt',]
-    params['mid3'] = folder+'_OSl1ml2_%s_%sBTL' % (isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==0)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (isoL1ML2loose)
+    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1ML2loose)
     samples = checkBkgs( samples, params, grouping )
     analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+
+    """ END BTAG TEST WITH IMPERIAL """
     ''' end l1 medium '''
     #
     #''' l1 tight '''
@@ -645,7 +653,8 @@ if __name__ == '__main__' :
     ]
 
     for pair in isoPairs :
-        testQCDCuts( folder, pair[0], pair[1] )
+        for sign in ['OS', 'SS']:
+            testQCDCuts( folder, pair[0], pair[1], sign )
     #makeCuts( folder )
     #for pair in isoPairs :
     #    for sign in ['SS', 'OS'] :
