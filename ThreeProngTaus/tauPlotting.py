@@ -196,6 +196,8 @@ plotMap = {
     'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'threeProngTaus30ByTauIso_' : ( 't1Iso', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    'threeProngTaus30ByTauIso__' : ( 't1Iso', '(10,0,5)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'threeProngTaus30ByTauIsoChrg_' : ( 't1IsoChrg', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
@@ -210,6 +212,7 @@ plotMap = {
     'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     'missingHitsPer3ProngTaus30ByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
     'missingHitsPer3ProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
+
     'missingHitsPer3ProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
     'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
     'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
@@ -257,8 +260,8 @@ def RunPlots( runList ) :
     multiprocessingOutputs = []
     for plot in plotMap.keys() :
         
-        plotter( runList, runColors, '%s' % plot ) # For Debugging
-        #multiprocessingOutputs.append( pool.apply_async(plotter, args=( runList, runColors, '%s' % plot, ) ) )
+        #plotter( runList, runColors, '%s' % plot ) # For Debugging
+        multiprocessingOutputs.append( pool.apply_async(plotter, args=( runList, runColors, '%s' % plot, ) ) )
     
     mpResults = [p.get() for p in multiprocessingOutputs]
     mpResults.sort()
@@ -287,7 +290,7 @@ def RunPlots( runList ) :
 
 
 if __name__ == '__main__' :
-    runs = [256677,]# 260627]
+    runs = [256677, 260627]
     versions = ['80X_RelVal','76X']
     for run in runs :
         runList = []
