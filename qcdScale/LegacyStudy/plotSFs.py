@@ -5,7 +5,7 @@ ROOT.gROOT.SetBatch(True)
 ssIsoPairs = [
     ('Loose','Medium'),
     #('Loose','Tight'),
-    #('Loose','VTight'),
+    ('Loose','VTight'),
     ('Medium','Tight'),
     #('Medium','VTight'),
     ('Tight','VTight'),
@@ -14,10 +14,11 @@ ssIsoPairs = [
 osIsoPairs = [
     ('Loose','Medium'),
     #('Loose','Tight'),
-    #('Loose','VTight'),
+    ('Loose','VTight'),
     ('Medium','Tight'),
     #('Medium','VTight'),
     ('Tight','VTight'),
+    #('VTight','')
     ]
 
 def signalSamp( var, sign ) :
@@ -44,6 +45,8 @@ def getShapes( var, sign, isoPairs, l1='', btag='' ) :
         #    f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root' % (sign, '', pair[1], pair[0], btag),'r')
         t1 = f1.Get('tt_Histos')
         h1 = t1.Get( var )
+        h1.Sumw2()
+        print h1.GetXaxis().GetNbins()
         h1.SetName( "%s%s" % (pair[0],pair[1]) )
         h1.SetDirectory( 0 )
         h1.SetFillColor( 0 )
@@ -64,35 +67,35 @@ def printYields( osHistos, ssHistos, l1='', btag='', ssIsoPairs=['',] ) :
         osInts.append( (h.Integral(),math.sqrt(h.Integral()),1./math.sqrt(h.Integral()) ) )
     for i,pair in enumerate(isoPairs) :
         ssWUncert = ssInts[i][1]
-        print "SS %s %s yield = %3.2f+/-%3.2f" % (pair[0], pair[1], ssInts[i][0], ssWUncert)
+        print "SS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], ssInts[i][0], ssWUncert)
         printStats( ssHistos[i] )
         osWUncert = osInts[i][1]
-        print "OS %s %s yield = %3.2f+/-%3.2f" % (pair[0], pair[1], osInts[i][0], osWUncert)
+        print "OS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], osInts[i][0], osWUncert)
         printStats( osHistos[i] )
     if ('VTight','') in ssIsoPairs :
         ssSigInt = ssHistos[-1].Integral()
-        print "SS VTight yield = %3.2f+/-%3.2f" % (ssSigInt, math.sqrt(ssSigInt))
+        print "SS VTight yield = %3.2f +/- %3.2f" % (ssSigInt, math.sqrt(ssSigInt))
         printStats( ssHistos[-1] )
     print "\n"
 
     #if l1 == '' :
     #tags = {0:'MT/LM',1:'TVT/MT',2:'VT/TVT'}
-    tags = {(0,1):'MT/LM',(0,2):'TVT/LT',(1,2):'TVT/MT',len(osIsoPairs)-1:'VT/TVT'}
-    #tags = {0:'LT/LM',1:'LVT/LT',2:'MT/LVT',3:'MVT/MT',4:'TVT/MVT'}
-    print "%s %s          SS                       OS" % (l1, btag)
-    for i in range( len(isoPairs) ) :
-        for j in range(i+1, len(isoPairs) ) :
-            if i < len(isoPairs)-1:
-                ssr = ssInts[j][0]/ssInts[i][0]
-                sse = math.sqrt( (1./ssInts[j][1])**2 + (1./ssInts[i][1])**2 )
-                osr = osInts[j][0]/osInts[i][0]
-                ose = math.sqrt( (1./osInts[j][1])**2 + (1./osInts[i][1])**2 )
-                print "%8s   %3.2f+/-%3.2f        %3.2f+/-%3.2f" % (tags[(i,j)],ssr,sse,osr,ose)
-        if i == len(isoPairs)-1 :
-            ssr = ssSigInt/ssInts[i][0]
-            sse = math.sqrt( (1./math.sqrt(ssSigInt))**2 + (1./ssInts[i][1])**2 )
-            print "%8s   %3.2f+/-%3.2f" % (tags[i],ssr,sse)
-
+#    tags = {(0,1):'MT/LM',(0,2):'TVT/LT',(1,2):'TVT/MT',len(osIsoPairs)-1:'VT/TVT'}
+#    #tags = {0:'LT/LM',1:'LVT/LT',2:'MT/LVT',3:'MVT/MT',4:'TVT/MVT'}
+#    print "%s %s          SS                       OS" % (l1, btag)
+#    for i in range( len(isoPairs) ) :
+#        for j in range(i+1, len(isoPairs) ) :
+#            if i < len(isoPairs)-1:
+#                ssr = ssInts[j][0]/ssInts[i][0]
+#                sse = math.sqrt( (1./ssInts[j][1])**2 + (1./ssInts[i][1])**2 )
+#                osr = osInts[j][0]/osInts[i][0]
+#                ose = math.sqrt( (1./osInts[j][1])**2 + (1./osInts[i][1])**2 )
+#                print "%8s   %3.2f+/-%3.2f        %3.2f+/-%3.2f" % (tags[(i,j)],ssr,sse,osr,ose)
+#        if i == len(isoPairs)-1 :
+#            ssr = ssSigInt/ssInts[i][0]
+#            sse = math.sqrt( (1./math.sqrt(ssSigInt))**2 + (1./ssInts[i][1])**2 )
+#            print "%8s   %3.2f+/-%3.2f" % (tags[i],ssr,sse)
+#
     print "\n"
     for i,pair in enumerate(isoPairs) :
         uncert = math.sqrt( osInts[i][2]**2 + ssInts[i][2]**2 )
@@ -102,6 +105,7 @@ def printYields( osHistos, ssHistos, l1='', btag='', ssIsoPairs=['',] ) :
 
 
 def ksTest( shape, h1, h2, n0, n1, n2, l1, btag, zeroed='' ) :
+    ksProbX = h1.KolmogorovTest( h2, 'X' )
     ksProb = h1.KolmogorovTest( h2 )
     #print "%s: KS Prop = %3.2f" % (n0, ksProb )
     c1 = ROOT.TCanvas( 'c1%s' % n0, 'c1', 600, 600 )
@@ -111,46 +115,62 @@ def ksTest( shape, h1, h2, n0, n1, n2, l1, btag, zeroed='' ) :
     p1.cd()
     
     h1.SetLineColor( ROOT.kRed )
-    h1.SetTitle( '%s %s %s KS Prob = %3.3f' % (n0, l1, btag, ksProb ) )
+    h1.SetTitle( '%s %s %s KS Prob = %3.3f, PseudoExp = %3.3f' % (n0, l1, btag, ksProb, ksProbX ) )
     h2.SetLineColor( ROOT.kBlue )
     h1.SetStats(0)
     if shape == 'm_sv' : title = 'svFit M_{#tau#tau}'
+    if shape == 'mt_sv' : title = 'svFit Transverse M_{#tau#tau}'
     if shape == 'm_vis' : title = 'Visible M_{#tau#tau}'
     h1.GetXaxis().SetTitle('%s (GeV)' % title)
     h1.GetYaxis().SetTitle('A.U.')
     #h1.Draw('')
     #h2.Draw('same')
-    h1.Draw('HIST e1')
-    h2.Draw('same HIST e1')
 
-    h1.SetMaximum( max(h1.GetMaximum(), h2.GetMaximum()) * 1.1 )
-    h1.SetMinimum( min(h1.GetMinimum(), h2.GetMinimum()) * 1.2 )
+    ''' Rebin for viewing '''
+    #RebinValGeV = 10.0
+    #currentBinW = float(h1.GetXaxis().GetBinWidth( 1 ))
+    #print RebinValGeV,currentBinW
+    #rebinNum = RebinValGeV / currentBinW
+    #print RebinValGeV,currentBinW,rebinNum
+    rebinNum = 2000
+    h1new = h1.Clone( h1.GetTitle()+'new' )
+    h2new = h2.Clone( h2.GetTitle()+'new' )
+    h1new.Rebin( rebinNum )
+    h2new.Rebin( rebinNum )
+
+    h1new.Draw('HIST e1')
+    h2new.Draw('same HIST e1')
+
+    h1new.SetMaximum( max(h1new.GetMaximum(), h2new.GetMaximum()) * 1.1 )
+    h1new.SetMinimum( min(h1new.GetMinimum(), h2new.GetMinimum()) * 1.2 )
     
     
     ''' Build the legend explicitly so we can specify marker styles '''
     legend = ROOT.TLegend(0.60, 0.75, 0.90, 0.9)
     legend.SetMargin(0.3)
     #legend.SetBorderSize(0)
-    legend.AddEntry( h1, n1, 'l')
-    legend.AddEntry( h2, n2, 'l')
+    legend.AddEntry( h1new, n1, 'l')
+    legend.AddEntry( h2new, n2, 'l')
     legend.Draw()
     
     c1.SaveAs('/afs/cern.ch/user/t/truggles/www/moreQCD/%s_%s_%s_%s_%s_%s%s.png' % (shape, n, l1, btag, n0,n1,n2))
     return ksProb
         
 def runAllKS( osIsoPairs, ssIsoPairs, osHistos, ssHistos, l1, btag, normalize=True ) :
+
+    
+
     ''' rebin! '''
-    ks = True
-    if ks:
-        rBin = 10
-        for i in range( len( osIsoPairs ) ) :
-            osHistos[i].Rebin(rBin)
-            if normalize :
-                osHistos[i].Scale(1./osHistos[i].Integral())
-        for i in range( len( ssIsoPairs ) ) :
-            ssHistos[i].Rebin(rBin)
-            if normalize :
-                ssHistos[i].Scale(1./ssHistos[i].Integral())
+    rBin = 1
+    for i in range( len( osIsoPairs ) ) :
+        osHistos[i].Rebin(rBin)
+        if normalize :
+            osHistos[i].Scale(1./osHistos[i].Integral())
+    for i in range( len( ssIsoPairs ) ) :
+        ssHistos[i].Rebin(rBin)
+        if normalize :
+            ssHistos[i].Scale(1./ssHistos[i].Integral())
+
     print "\nROOT KS Tests"
     ''' SS vs OS '''
     log1 = []
@@ -212,19 +232,27 @@ def runAllKS( osIsoPairs, ssIsoPairs, osHistos, ssHistos, l1, btag, normalize=Tr
     print "\n\n"
 
 
-def runAllPtCompKS( isoPairs, HPt1, HPt2, l1, sign, btag, normalize=True ) :
+def runAllPtCompKS( isoPairs, HPt1, HPt2, l1, sign, btag, normalize=True, zero=True ) :
     ''' rebin! '''
     ks = True
     if ks:
-        rBin = 10
+        rBin = 1
         for i in range( len( isoPairs ) ) :
             HPt2[i].Rebin(rBin)
             if normalize :
                 HPt2[i].Scale(1./HPt2[i].Integral())
-        for i in range( len( isoPairs ) ) :
             HPt1[i].Rebin(rBin)
             if normalize :
                 HPt1[i].Scale(1./HPt1[i].Integral())
+
+    ''' zero out neg bins and add poisson errors to zero bins '''
+    #totBins = HPt1[0].GetXaxis().GetNbins()
+    #for i in range( len( isoPairs ) ) :
+    #    for j in range( 0, int(totBins)+1 ) :
+    #        if HPt1[i].GetBinContent( j ) < 0 :
+                
+        
+
     print "\nROOT KS Tests"
     ''' SS vs OS '''
     log1 = []
@@ -255,8 +283,8 @@ if __name__ == '__main__' :
     #    for zero in [False,]:# True] :
     #        if zero : n = 'zeroed'
     #        else : n = 'incNeg'
-    #shape = 'm_sv'
-    shape = 'mt_sv'
+    shape = 'm_sv'
+    #shape = 'mt_sv'
     n = 'incNeg'
 
     #ssh = signalSamp( shape, 'SS' )
@@ -265,7 +293,7 @@ if __name__ == '__main__' :
     #for l1 in ['', 'l1t', 'l1m'] :
     for l1 in ['l1m',] :
         #for btag in ['', 'BT'] :
-        for btag in ['BT','BTL'] :
+        for btag in ['BTM','BTL', 'NoBTM', 'NoBTL'] :
             ssIsoPairs_ = ssIsoPairs
             osIsoPairs_ = osIsoPairs
             #if l1 != '' : ssIsoPairs_ = osIsoPairs
@@ -275,7 +303,7 @@ if __name__ == '__main__' :
             ssHistos = getShapes( shape, 'SS', ssIsoPairs_, l1, btag )
             osHistos = getShapes( shape, 'OS', osIsoPairs_, l1, btag )
             printYields( osHistos, ssHistos, l1, btag, ssIsoPairs_ )
-#            runAllKS( osIsoPairs_, ssIsoPairs_, osHistos, ssHistos, l1, btag )
+            runAllKS( osIsoPairs_, ssIsoPairs_, osHistos, ssHistos, l1, btag )
                 
                 
     #for l1 in ['l1t', 'l1m'] :

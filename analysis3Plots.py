@@ -177,6 +177,8 @@ for channel in ['em', 'tt'] :
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     if options.qcdMake :
+        finalQCDYield = 0.0
+        finalDataYield = 0.0
         if not os.path.exists('meta/%sBackgrounds' % grouping) :
             os.makedirs('meta/%sBackgrounds' % grouping)
         if options.qcdMakeDM != 'x' :
@@ -399,6 +401,7 @@ for channel in ['em', 'tt'] :
 
             if var == 'mt_sv' :
                 print "Hist int: %s %f" % (sample, hist.Integral() )
+                if 'data' in sample and options.qcdMake : finalDataYield = hist.Integral()
             if samples[ sample ][1] == 'ztt' :
                 ztt.Add( hist )
             if samples[ sample ][1] == 'zl' :
@@ -519,7 +522,7 @@ for channel in ['em', 'tt'] :
                 print "M_VIS_MSSM plot details: %f %f" % (plotDetails[ var ][0], plotDetails[ var ][1])
             qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             print "qcdVar: %f" % qcdVar.Integral()
-            qcdVarIntegral = qcdVar.Integral()
+            finalQCDYield = qcdVar.Integral()
             qcdDir.cd()
             qcdVar.Write()
 
@@ -728,5 +731,9 @@ for channel in ['em', 'tt'] :
         #htmlFile.write( '<br>\n' )
     htmlFile.write( '</body></html>' )
     htmlFile.close()
+
+    if options.qcdMake :
+        print "\n\n Final QCD and Data Info:\n -- Data Yield = %f\n -- QCD Yield = %f" % (finalDataYield, finalQCDYield)
+
     #if qcdVarIntegral :
     #    print "\n\n     QCD yield: %f           QCD Make: %s\n\n" % (qcdVarIntegral ,options.qcdMakeDM)

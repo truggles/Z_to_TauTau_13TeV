@@ -103,8 +103,7 @@ samples['ggHtoTauTau125'] = ('kGreen', '_vbfH125_')
 nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH125_']
 
 if options.mssm :
-    #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
-    masses = [80, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900]
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
     for mssmMass in masses :
         samples['ggH%i' % mssmMass] = ('kPink', '_ggH%i_' % mssmMass)
         samples['bbH%i' % mssmMass] = ('kPink', '_bbH%i_' % mssmMass) 
@@ -174,11 +173,11 @@ for channel in ['em', 'tt'] :
 
         baseVar = options.fitShape
         if 'data' in sample : print "Fitting",baseVar
-        if baseVar == 'm_vis' :
+        if 'm_vis' in baseVar :
             append = ''
-        if baseVar == 'm_sv' :
+        if 'm_sv' in baseVar :
             append = '_svFit'
-        if baseVar == 'mt_sv' :
+        if 'mt_sv' in baseVar :
             append = '_MtsvFit'
 
 
@@ -203,15 +202,15 @@ for channel in ['em', 'tt'] :
         if options.mssm :
             #binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
             binArray = array.array( 'd', [] )
-            #for i in range(0, 351 ) :
-            for i in range(0, 36 ) :
+            for i in range(0, 401 ) :
+            #for i in range(0, 36 ) :
                 binArray.append( i * 10 )
         else :
             binArray = array.array( 'd', [] )
             for i in range(0, 36 ) :
                 binArray.append( i * 10 )
             #binArray.append( 600 )
-        print binArray
+        #print binArray
         numBins = len( binArray ) - 1
         histos = {}
         for name in nameArray :
@@ -299,11 +298,11 @@ for channel in ['em', 'tt'] :
         for name in histos :
             #print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
             # Make sure we have no negative bins
-            for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
-                setVal = 0.0
-                if histos[ name ].GetBinContent( bin_ ) < 0 :
-                    histos[ name ].SetBinContent( bin_, setVal )
-                    print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
+            #for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
+            #    setVal = 0.0
+            #    if histos[ name ].GetBinContent( bin_ ) < 0 :
+            #        histos[ name ].SetBinContent( bin_, setVal )
+            #        print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
             #print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
             if not options.mssm :
                 histos[ name ].GetXaxis().SetRangeUser( 0, 350 )

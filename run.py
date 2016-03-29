@@ -57,7 +57,7 @@ for mass in masses :
        SamplesDataCards.append( 'ggH%i' % mass )
        SamplesDataCards.append( 'bbH%i' % mass )
 
-#SamplesDataCards = ['DYJets',]
+#SamplesDataCards = ['data_tt',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -73,22 +73,22 @@ params = {
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
     'channels' : ['tt',],
-    #'cutMapper' : 'signalCutsNoIsoNoSign', #!
+#XXX    'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
-#XXX    'cutName' : 'PostSync', #!
+    'cutName' : 'PostSync', #!
 #XXX    'cutMapper' : 'syncCutsDC',
-    'cutMapper' : 'syncCutsDCqcd',
+#XXX    'cutMapper' : 'syncCutsDCqcd',
     #'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
-    'cutName' : 'BaseLine',
-#XXX    'cutMapper' : 'signalCuts',
-    'mid1' : '1Mar17h_QCD',
-    'mid2' : '2Mar17h_QCD',
-    'mid3' : '3Mar17h_QCD',
+#XXX    'cutName' : 'BaseLine',
+    'cutMapper' : 'signalCuts',
+    'mid1' : '1Mar24a',
+    'mid2' : '2Mar24a',
+    'mid3' : '3Mar24a',
     'additionalCut' : '',
-    'svFitPost' : 'true',
-    #'svFitPost' : 'false',
+    #'svFitPost' : 'true',
+    'svFitPost' : 'false',
     'svfName' : 'xxx',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',

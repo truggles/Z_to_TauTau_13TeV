@@ -75,7 +75,7 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalExtractionNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, 'e_m_PZeta > -25']
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus, 't1_t2_Pt > 100']
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus, 't1_t2_Pt > 100']
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -83,7 +83,7 @@ def signalExtractionNoSign( ch ) :
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalCutsNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -91,7 +91,7 @@ def signalCutsNoSign( ch ) :
 # A version which applies all cuts at once RunII
 def signalCuts( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emOS, emIso, extraVeto, 'e_m_PZeta > -25']
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -99,7 +99,7 @@ def signalCuts( ch ) :
 # Data card sync, no Decay Mode cut 
 def signalCutsNoIsoNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt35, DecayMode, ttL1IsoTaus]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
