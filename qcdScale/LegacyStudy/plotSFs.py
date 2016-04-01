@@ -3,21 +3,21 @@ import math
 ROOT.gROOT.SetBatch(True)
 
 ssIsoPairs = [
-    ('Loose','Medium'),
+#    ('Loose','Medium'),
     #('Loose','Tight'),
     ('Loose','VTight'),
-    ('Medium','Tight'),
+#    ('Medium','Tight'),
     #('Medium','VTight'),
-    ('Tight','VTight'),
+#    ('Tight','VTight'),
     ('VTight','')
     ]
 osIsoPairs = [
-    ('Loose','Medium'),
+#    ('Loose','Medium'),
     #('Loose','Tight'),
     ('Loose','VTight'),
-    ('Medium','Tight'),
+#    ('Medium','Tight'),
     #('Medium','VTight'),
-    ('Tight','VTight'),
+#    ('Tight','VTight'),
     #('VTight','')
     ]
 
@@ -31,22 +31,22 @@ def signalSamp( var, sign ) :
     h.SetDirectory( 0 )
     return h
 
-def getShapes( var, sign, isoPairs, l1='', btag='' ) :
+def getShapes( var, sign, isoPairs, l1='', btag='', njets='' ) :
     histos = []
     #if sign == 'SS' : isoPairs = ssIsoPairs
     #if sign == 'OS' : isoPairs = osIsoPairs
     for i,pair in enumerate(isoPairs) :
         #f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s_%s_%s.root' % (sign, pair[1], pair[0]),'r')
         if pair != ('VTight','') :
-            f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root' % (sign, l1, pair[1], pair[0], btag),'r')
+            f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s%s.root' % (sign, l1, pair[1], pair[0], btag, njets),'r')
         else :
-            f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s.root' % (sign, l1, pair[0], btag),'r')
+            f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root' % (sign, l1, pair[0], btag, njets),'r')
         #    print "File name: '../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root'" %     (sign, '', pair[1], pair[0], btag)
         #    f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root' % (sign, '', pair[1], pair[0], btag),'r')
         t1 = f1.Get('tt_Histos')
         h1 = t1.Get( var )
-        h1.Sumw2()
-        print h1.GetXaxis().GetNbins()
+        #h1.Sumw2()
+        #print h1.GetXaxis().GetNbins()
         h1.SetName( "%s%s" % (pair[0],pair[1]) )
         h1.SetDirectory( 0 )
         h1.SetFillColor( 0 )
@@ -67,16 +67,16 @@ def printYields( osHistos, ssHistos, l1='', btag='', ssIsoPairs=['',] ) :
         osInts.append( (h.Integral(),math.sqrt(h.Integral()),1./math.sqrt(h.Integral()) ) )
     for i,pair in enumerate(isoPairs) :
         ssWUncert = ssInts[i][1]
-        print "SS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], ssInts[i][0], ssWUncert)
-        printStats( ssHistos[i] )
+#XXX        print "SS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], ssInts[i][0], ssWUncert)
+#XXX        printStats( ssHistos[i] )
         osWUncert = osInts[i][1]
-        print "OS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], osInts[i][0], osWUncert)
-        printStats( osHistos[i] )
+#XXX        print "OS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], osInts[i][0], osWUncert)
+#XXX        printStats( osHistos[i] )
     if ('VTight','') in ssIsoPairs :
         ssSigInt = ssHistos[-1].Integral()
-        print "SS VTight yield = %3.2f +/- %3.2f" % (ssSigInt, math.sqrt(ssSigInt))
-        printStats( ssHistos[-1] )
-    print "\n"
+#XXX        print "SS VTight yield = %3.2f +/- %3.2f" % (ssSigInt, math.sqrt(ssSigInt))
+#XXX        printStats( ssHistos[-1] )
+#XXX    print "\n"
 
     #if l1 == '' :
     #tags = {0:'MT/LM',1:'TVT/MT',2:'VT/TVT'}
@@ -100,7 +100,7 @@ def printYields( osHistos, ssHistos, l1='', btag='', ssIsoPairs=['',] ) :
     for i,pair in enumerate(isoPairs) :
         uncert = math.sqrt( osInts[i][2]**2 + ssInts[i][2]**2 )
         ratio = ssInts[i][0]/osInts[i][0]
-        print "%s %s   SS/OS   %3.2f+/-%3.3f" % ( pair[0], pair[1], ratio, ratio*uncert )
+        print "%s %s   SS/OS   %3.2f +/- %3.3f" % ( pair[0], pair[1], ratio, ratio*uncert )
     print "\n"
 
 
@@ -291,19 +291,24 @@ if __name__ == '__main__' :
     #osh = signalSamp( shape, 'OS' )
 
     #for l1 in ['', 'l1t', 'l1m'] :
+    #for l1 in ['l1l','l1m','l1t','l1vt'] :
     for l1 in ['l1m',] :
         #for btag in ['', 'BT'] :
-        for btag in ['BTM','BTL', 'NoBTM', 'NoBTL'] :
-            ssIsoPairs_ = ssIsoPairs
-            osIsoPairs_ = osIsoPairs
-            #if l1 != '' : ssIsoPairs_ = osIsoPairs
-            print "################"
-            print "### %s %s ###" % (l1, btag)
-            print "################"
-            ssHistos = getShapes( shape, 'SS', ssIsoPairs_, l1, btag )
-            osHistos = getShapes( shape, 'OS', osIsoPairs_, l1, btag )
-            printYields( osHistos, ssHistos, l1, btag, ssIsoPairs_ )
-            runAllKS( osIsoPairs_, ssIsoPairs_, osHistos, ssHistos, l1, btag )
+        #for btag in ['BTM','BTL', 'NoBTM', 'NoBTL'] :
+        for btag in ['BTM', 'BTL'] :
+            for njets in ['allJ','jl1'] :
+                ssIsoPairs_ = ssIsoPairs
+                osIsoPairs_ = osIsoPairs
+                #if l1 != '' : ssIsoPairs_ = osIsoPairs
+                #print "################"
+                print "\n"
+                print "### %s %s %s ###" % (l1, btag, njets)
+                #print "################"
+                ssHistos = getShapes( shape, 'SS', ssIsoPairs_, l1, btag, njets )
+                print "VT/LtoVT: %3.1f / %3.1f = %f3.3" % (ssHistos[-1].Integral(),ssHistos[0].Integral(),ssHistos[-1].Integral()/ssHistos[0].Integral())
+            #osHistos = getShapes( shape, 'OS', osIsoPairs_, l1, btag )
+            #printYields( osHistos, ssHistos, l1, btag, ssIsoPairs_ )
+            #runAllKS( osIsoPairs_, ssIsoPairs_, osHistos, ssHistos, l1, btag )
                 
                 
     #for l1 in ['l1t', 'l1m'] :

@@ -56,6 +56,8 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
     isoL1TL2loose = '(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
     isoL1ML2loose = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
+    isoL1LL2loose = '(t1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
+    isoL1VTL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
     isoPt1GtrL1TL2loose = '(pt_1 > pt_2)*(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
     isoPt2GtrL1TL2loose = '(pt_1 < pt_2)*(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
     isoPt1GtrL1ML2loose = '(pt_1 > pt_2)*(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
@@ -63,10 +65,10 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
 
     if isoL == '' :
         isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
-        #isoL1TL2loose = '(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
-        #isoL1ML2loose = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
         isoL1TL2loose = isoL2loose
         isoL1ML2loose = isoL2loose
+        isoL1LL2loose = isoL2loose
+        isoL1VTL2loose = isoL2loose
     if sign == 'OS' :
         Zsign = 0
     else : 
@@ -74,156 +76,139 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
         
     print "IsoL2Loose: %s" % isoL2loose
 
-
+    """ HIG-15-007 ZTT """
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     """
     Double Hardonic baseline with good QCD estimation
         Inclusive
     """
-    ''' pt ordering '''
-    ''' L1T '''
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSPt1Gtrl1tl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt1GtrL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSPt1Gtrl1tl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt1GtrL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSPt2Gtrl1tl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt2GtrL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSPt2Gtrl1tl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt2GtrL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    ''' end L1T '''
-
-    ''' L1M '''
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSPt1Gtrl1ml2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt1GtrL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSPt1Gtrl1ml2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt1GtrL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSPt2Gtrl1ml2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoPt2GtrL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSPt2Gtrl1ml2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoPt2GtrL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-    ''' end L1M '''
-    
-    ''' normal iso ordering w/ and w/o btags '''
-    ''' l1 medium '''
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSl1ml2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSl1ml2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    """ BTAG VS NO BTAG TEST WITH IMPERIAL """
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_%sl1ml2_%s_%sBTM' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag!=0)*(njets<=2)' % (Zsign, isoL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_%sl1ml2_%s_%sBTL' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (Zsign, isoL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTM' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1ML2loose)
-    samples = checkBkgs( samples, params, grouping )
-    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
+    """ BTAG VS NO BTAG TEST WITH IMPERIAL medium """
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ml2_%s_%sBTMjl1' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag!=0)*(njets<=1)' % (Zsign, isoL1ML2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ml2_%s_%sBTLjl1' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)*(njets<=1)' % (Zsign, isoL1ML2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1ML2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1ML2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ml2_%s_%sBTLallJ' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)' % (Zsign, isoL1ML2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1ML2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1ML2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     """ END BTAG TEST WITH IMPERIAL """
     ''' end l1 medium '''
-    #
-    #''' l1 tight '''
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSl1tl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSl1tl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSl1tl2_%s_%sBT' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s*(nbtag!=0)' % (isoL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSl1tl2_%s_%sBT' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s*(nbtag!=0)' % (isoL1TL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #''' end l1 tight '''
-
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSl2_%s_%sBT' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s*(nbtag!=0)' % (isoL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSl2_%s_%sBT' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s*(nbtag!=0)' % (isoL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_SSl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==1)*%s' % (isoL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    #
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_OSl2_%s_%s' % (isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==0)*%s' % (isoL2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    """ BTAG VS NO BTAG TEST WITH IMPERIAL Loose """
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ll2_%s_%sBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag!=0)*(njets<=2)' % (Zsign, isoL1LL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ll2_%s_%sBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (Zsign, isoL1LL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ll2_%s_%sNoBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1LL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1ll2_%s_%sNoBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1LL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    """ END BTAG TEST WITH IMPERIAL """
+#    ''' end l1 loose '''
+#    """ BTAG VS NO BTAG TEST WITH IMPERIAL tight """
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1tl2_%s_%sBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag!=0)*(njets<=2)' % (Zsign, isoL1TL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1tl2_%s_%sBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (Zsign, isoL1TL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1tl2_%s_%sNoBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1TL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1tl2_%s_%sNoBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1TL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    """ END BTAG TEST WITH IMPERIAL """
+#    ''' end l1 tight '''
+#    """ BTAG VS NO BTAG TEST WITH IMPERIAL vtight """
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1vtl2_%s_%sBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag!=0)*(njets<=2)' % (Zsign, isoL1VTL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1vtl2_%s_%sBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)*(njets<=2)' % (Zsign, isoL1VTL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1vtl2_%s_%sNoBTM' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1VTL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    
+#    params['channels'] = ['tt',]
+#    params['mid3'] = folder+'_%sl1vtl2_%s_%sNoBTL' % (sign, isoT, isoL)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1VTL2loose)
+#    samples = checkBkgs( samples, params, grouping )
+#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+#    """ END BTAG TEST WITH IMPERIAL """
+#    ''' end l1 vtight '''
     return
 
 
@@ -643,12 +628,12 @@ if __name__ == '__main__' :
 #        plotThem( folder, tup[0], tup[1], tup[2] )
     
     isoPairs = [
-        ('Loose','Medium'),
+#        ('Loose','Medium'),
         #('Loose','Tight'),
         ('Loose','VTight'),
-        ('Medium','Tight'),
+#        ('Medium','Tight'),
         #('Medium','VTight'),
-        ('Tight','VTight'),
+#        ('Tight','VTight'),
         ('','VTight'),
     ]
 
