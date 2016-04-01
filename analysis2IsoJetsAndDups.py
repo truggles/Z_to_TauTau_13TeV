@@ -12,6 +12,7 @@
 import math
 import json
 import os
+import ROOT
 
 cmsLumi = float(os.getenv('LUMI'))
 print "Lumi = %i" % cmsLumi
@@ -91,6 +92,22 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
         return (1.0/( (1/scalar1) + (1/scalar2) ))
     return scalar1
 
+def mVisTEST( cand1, cand2, row, TES ) :
+    pt1 = (1 + TES) * getattr( row, cand1+'Pt' )
+    eta1 = getattr( row, cand1+'Eta' )
+    phi1 = getattr( row, cand1+'Phi' )
+    m1 = getattr( row, cand1+'Mass' )
+    pt2 = (1 + TES) * getattr( row, cand2+'Pt' )
+    eta2 = getattr( row, cand2+'Eta' )
+    phi2 = getattr( row, cand2+'Phi' )
+    m2 = getattr( row, cand2+'Mass' )
+    lorentz1 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
+    lorentz2 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
+    shifted = lorentz1 + lorentz2
+    return shifted.M()
+
 def getIso( cand, row ) :
     if 'e' in cand :
         return getattr(row, cand+'RelPFIsoDB')
@@ -108,18 +125,21 @@ def getCurrentEvt( channel, row ) :
     leg2Iso = getIso( l2, row )
     leg1Pt = getattr(row, l1+'Pt')
     leg2Pt = getattr(row, l2+'Pt')
+    sign = ''
+    if getattr(row, '%s_%s_SS' % (l1,l2)) == 1 : sign = 'SS'
+    if getattr(row, '%s_%s_SS' % (l1,l2)) == 0 : sign = 'OS'
 
     if channel == 'tt' :
         if leg1Iso > leg2Iso :
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
         elif leg1Iso < leg2Iso :
-            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt, sign)
         elif leg1Pt > leg2Pt :
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
         elif leg1Pt < leg2Pt :
-            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt, sign)
         else : print "Iso1 == Iso2 & Pt1 == Pt2", row.evt
-    else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+    else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
     return currentEvt
 
 
@@ -235,22 +255,23 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'j1pt' : 'jpt_1',
         'j1phi' : 'jphi_1',
         'j1eta' : 'jeta_1',
-        'j1mva' : 'jmva_1',
+        #XXX'j1mva' : 'jmva_1',
         'j2pt' : 'jpt_2',
         'j2phi' : 'jphi_2',
         'j2eta' : 'jeta_2',
-        'j2mva' : 'jmva_2',
+        #XXX'j2mva' : 'jmva_2',
         'jb1pt' : 'bpt_1',
         'jb1phi' : 'bphi_1',
         'jb1eta' : 'beta_1',
-        'jb1mva' : 'bmva_1',
+        #XXX'jb1mva' : 'bmva_1',
         'jb1csv' : 'bcsv_1',
         'jb2pt' : 'bpt_2',
         'jb2phi' : 'bphi_2',
         'jb2eta' : 'beta_2',
-        'jb2mva' : 'bmva_2',
+        #XXX'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
-        'bjetCISVVeto20MediumZTT' : 'nbtag',
+        #'bjetCISVVeto20MediumZTT' : 'nbtag',
+        'NBTagPDM' : 'nbtag',
         'jetVeto20ZTT' : 'njetspt20',
         'jetVeto30ZTT' : 'njets',
         'type1_pfMetEt' : 'met',
@@ -412,7 +433,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     ''' Select the version of each even we want to keep '''
     numRows = told.GetEntries()
     #print "Num rows %i" % numRows
-    prevEvt = (999, 0, 999, 0)
+    prevEvt = (999, 0, 999, 0, '')
     prevRunLumiEvt = (0, 0, 0)
     toFillMap = {}
     count = 0
@@ -446,8 +467,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         where are high value == good isolation
         """
         if channel == 'tt' :
+            # OS has preference over SS regardless of iso and pt
+            if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
+                prevEvt = currentEvt
             # lowest iso_1
-            if currentEvt[ 0 ] > prevEvt[ 0 ] :
+            elif currentEvt[ 0 ] > prevEvt[ 0 ] :
                 prevEvt = currentEvt
             # iso_1 equal
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
@@ -455,18 +479,21 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
                 # pt_1 equal
-                if currentEvt[ 1 ] == prevEvt[ 1 ] :
+                elif currentEvt[ 1 ] == prevEvt[ 1 ] :
                     # lowest iso_2
                     if currentEvt[ 2 ] > prevEvt[ 2 ] :
                         prevEvt = currentEvt
                     # iso_2 equal
-                    if currentEvt[ 2 ] == prevEvt[ 2 ] :
+                    elif currentEvt[ 2 ] == prevEvt[ 2 ] :
                         # highest pt_2
                         if currentEvt[ 3 ] > prevEvt[ 3 ] :
                             prevEvt = currentEvt
         else :
+            # OS has preference over SS regardless of iso and pt
+            if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
+                prevEvt = currentEvt
             # lowest iso_1
-            if currentEvt[ 0 ] < prevEvt[ 0 ] :
+            elif currentEvt[ 0 ] < prevEvt[ 0 ] :
                 prevEvt = currentEvt
             # iso_1 equal
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
@@ -474,12 +501,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 if currentEvt[ 1 ] < prevEvt[ 1 ] :
                     prevEvt = currentEvt
                 # pt_1 equal
-                if currentEvt[ 1 ] == prevEvt[ 1 ] :
+                elif currentEvt[ 1 ] == prevEvt[ 1 ] :
                     # lowest iso_2
                     if currentEvt[ 2 ] < prevEvt[ 2 ] :
                         prevEvt = currentEvt
                     # iso_2 equal
-                    if currentEvt[ 2 ] == prevEvt[ 2 ] :
+                    elif currentEvt[ 2 ] == prevEvt[ 2 ] :
                         # highest pt_2
                         if currentEvt[ 3 ] < prevEvt[ 3 ] :
                             prevEvt = currentEvt
@@ -505,6 +532,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    m_vis_TES_up = array('f', [ 0 ] )
+    m_vis_TES_upB = tnew.Branch('m_vis_TES_up', m_vis_TES_up, 'm_vis_TES_up/F')
+    m_vis_TES_down = array('f', [ 0 ] )
+    m_vis_TES_downB = tnew.Branch('m_vis_TES_down', m_vis_TES_down, 'm_vis_TES_down/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -513,6 +544,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
     trigweight_1B = tnew.Branch('trigweight_1', trigweight_1, 'trigweight_1/F')
+    effweight = array('f', [ 0 ] )
+    effweightB = tnew.Branch('effweight', effweight, 'effweight/F')
     idisoweight_1 = array('f', [ 0 ] )
     idisoweight_1B = tnew.Branch('idisoweight_1', idisoweight_1, 'idisoweight_1/F')
     idisoweight_2 = array('f', [ 0 ] )
@@ -583,7 +616,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            #if channel == 'tt' : isoOrder( channel, row )
+            if channel == 'tt' : isoOrder( channel, row )
             vbfClean( row )
 
 
@@ -618,6 +651,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             UniqueID[0] = sampDict[ shortName ]['UniqueID']
             BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
 
+            # TES Shifted M_Vis
+            m_vis_TES_up[0] = mVisTEST( l1, l2, row, 0.03 )
+            m_vis_TES_down[0] = mVisTEST( l1, l2, row, -0.03 )
+
 
             # Channel specific vetoes
             if channel == 'tt' :
@@ -633,33 +670,28 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
             
+            mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
+            mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
+            mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
+            mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
+            mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
+            mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
+
             # Channel specific pairwise mvaMet
             if channel == 'tt' :
-                mvamet[0] = getattr( row, "t1_t2_TTpairMvaMet" )
-                mvametphi[0] = getattr( row, "t1_t2_TTpairMvaMetPhi" )
-                mvacov00[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix00" )
-                mvacov01[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix01" )
-                mvacov10[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix10" )
-                mvacov11[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix11" )
                 if mvamet[0] >= 0 :
-                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.t1_t2_TTpairMvaMet, row.t1_t2_TTpairMvaMetPhi)[1]
-                    mt_1[0] = math.sqrt( 2*row.t1Pt*row.t1_t2_TTpairMvaMet* (1 - math.cos( row.t1Phi - row.t1_t2_TTpairMvaMetPhi)))
-                    mt_2[0] = math.sqrt( 2*row.t2Pt*row.t1_t2_TTpairMvaMet* (1 - math.cos( row.t2Phi - row.t1_t2_TTpairMvaMetPhi)))
+                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.t1_t2_MvaMet, row.t1_t2_MvaMetPhi)[1]
+                    mt_1[0] = math.sqrt( 2*row.t1Pt*row.t1_t2_MvaMet* (1 - math.cos( row.t1Phi - row.t1_t2_MvaMetPhi)))
+                    mt_2[0] = math.sqrt( 2*row.t2Pt*row.t1_t2_MvaMet* (1 - math.cos( row.t2Phi - row.t1_t2_MvaMetPhi)))
                 else :
                     pzetamiss[0] = -999
                     mt_1[0] = -999
                     mt_2[0] = -999
             if channel == 'em' :
-                mvamet[0] = getattr( row, "e_m_EMpairMvaMet" )
-                mvametphi[0] = getattr( row, "e_m_EMpairMvaMetPhi" )
-                mvacov00[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix00" )
-                mvacov01[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix01" )
-                mvacov10[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix10" )
-                mvacov11[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix11" )
                 if mvamet[0] >= 0 :
-                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.e_m_EMpairMvaMet, row.e_m_EMpairMvaMetPhi)[1]
-                    mt_1[0] = math.sqrt( 2*row.ePt*row.e_m_EMpairMvaMet* (1 - math.cos( row.ePhi - row.e_m_EMpairMvaMetPhi)))
-                    mt_2[0] = math.sqrt( 2*row.mPt*row.e_m_EMpairMvaMet* (1 - math.cos( row.mPhi - row.e_m_EMpairMvaMetPhi)))
+                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.e_m_MvaMet, row.e_m_MvaMetPhi)[1]
+                    mt_1[0] = math.sqrt( 2*row.ePt*row.e_m_MvaMet* (1 - math.cos( row.ePhi - row.e_m_MvaMetPhi)))
+                    mt_2[0] = math.sqrt( 2*row.mPt*row.e_m_MvaMet* (1 - math.cos( row.mPhi - row.e_m_MvaMetPhi)))
                 else :
                     pzetamiss[0] = -999
                     mt_1[0] = -999
@@ -690,10 +722,13 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
 
                 # Trigger Weights
+                effweight[0] = 1
                 if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
-                elif channel == 'tt' : trigweight_1[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
+                elif channel == 'tt' :
+                    trigweight_1[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
+                    effweight[0] = trigweight_1[0]
                 else : trigweight_1[0] = 1
 
                 # Special weighting for WJets and DYJets
