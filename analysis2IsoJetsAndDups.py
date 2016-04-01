@@ -92,22 +92,6 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
         return (1.0/( (1/scalar1) + (1/scalar2) ))
     return scalar1
 
-def mVisTEST( cand1, cand2, row, TES ) :
-    pt1 = (1 + TES) * getattr( row, cand1+'Pt' )
-    eta1 = getattr( row, cand1+'Eta' )
-    phi1 = getattr( row, cand1+'Phi' )
-    m1 = getattr( row, cand1+'Mass' )
-    pt2 = (1 + TES) * getattr( row, cand2+'Pt' )
-    eta2 = getattr( row, cand2+'Eta' )
-    phi2 = getattr( row, cand2+'Phi' )
-    m2 = getattr( row, cand2+'Mass' )
-    lorentz1 = ROOT.TLorentzVector( 0,0,0,0 )
-    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
-    lorentz2 = ROOT.TLorentzVector( 0,0,0,0 )
-    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
-    shifted = lorentz1 + lorentz2
-    return shifted.M()
-
 def getIso( cand, row ) :
     if 'e' in cand :
         return getattr(row, cand+'RelPFIsoDB')
@@ -468,10 +452,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         """
         if channel == 'tt' :
             # OS has preference over SS regardless of iso and pt
-            if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
-                prevEvt = currentEvt
+            #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
+            #    prevEvt = currentEvt
             # lowest iso_1
-            elif currentEvt[ 0 ] > prevEvt[ 0 ] :
+            if currentEvt[ 0 ] > prevEvt[ 0 ] :
                 prevEvt = currentEvt
             # iso_1 equal
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
@@ -490,10 +474,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                             prevEvt = currentEvt
         else :
             # OS has preference over SS regardless of iso and pt
-            if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
-                prevEvt = currentEvt
+            #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
+            #    prevEvt = currentEvt
             # lowest iso_1
-            elif currentEvt[ 0 ] < prevEvt[ 0 ] :
+            if currentEvt[ 0 ] < prevEvt[ 0 ] :
                 prevEvt = currentEvt
             # iso_1 equal
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
@@ -532,10 +516,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
-    m_vis_TES_up = array('f', [ 0 ] )
-    m_vis_TES_upB = tnew.Branch('m_vis_TES_up', m_vis_TES_up, 'm_vis_TES_up/F')
-    m_vis_TES_down = array('f', [ 0 ] )
-    m_vis_TES_downB = tnew.Branch('m_vis_TES_down', m_vis_TES_down, 'm_vis_TES_down/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -650,10 +630,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
             UniqueID[0] = sampDict[ shortName ]['UniqueID']
             BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
-
-            # TES Shifted M_Vis
-            m_vis_TES_up[0] = mVisTEST( l1, l2, row, 0.03 )
-            m_vis_TES_down[0] = mVisTEST( l1, l2, row, -0.03 )
 
 
             # Channel specific vetoes
