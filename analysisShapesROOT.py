@@ -8,7 +8,7 @@ import argparse
 import analysisPlots
 from util.splitCanvas import fixFontSize
 import os
-import array
+from array import array
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -23,6 +23,8 @@ p.add_argument('--category', action='store', default='inclusive', dest='category
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
 p.add_argument('--fitShape', action='store', default='m_vis', dest='fitShape', help="Which shape to fit? m_vis, m_sv, or mt_sv?")
 p.add_argument('--qcdSF', action='store', default=1.9, dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
+p.add_argument('--btag', action='store', default=False, dest='btag', help="BTagging has specific binning")
+p.add_argument('--TES', action='store', default=False, dest='TES', help="Add TES shapes?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -167,46 +169,54 @@ for channel in ['em', 'tt'] :
     newVarMap = analysisPlots.getHistoDict( channel )
     plotDetails = analysisPlots.getPlotDetails( channel )
 
+    baseVar = options.fitShape
+    if 'data' in sample : print "Fitting",baseVar
+    if 'm_vis' in baseVar :
+        append = ''
+    if 'm_sv' in baseVar :
+        append = '_svFit'
+    if 'mt_sv' in baseVar :
+        append = '_MtsvFit'
+
+    if options.mssm :
+    #    if not var == baseVar+'_mssm' : continue
+        mid = 'mssm'
+    else :
+        mid = 'sm'
+
+    shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (grouping, extra, channel, mid, append), 'UPDATE')
+    shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
+    print shapeDir
+
     for var, info in newVarMap.iteritems() :
-        mid = ''
-
-
-        baseVar = options.fitShape
-        if 'data' in sample : print "Fitting",baseVar
-        if 'm_vis' in baseVar :
-            append = ''
-        if 'm_sv' in baseVar :
-            append = '_svFit'
-        if 'mt_sv' in baseVar :
-            append = '_MtsvFit'
-
 
         if options.mssm :
         #    if not var == baseVar+'_mssm' : continue
-            mid = 'mssm'
             if var != baseVar : continue
+        elif options.TES :
+            if not baseVar in var : continue
+            if not (('TES' in var) or (baseVar == var)) : continue
         else :
             if not var == baseVar : continue
-            mid = 'sm'
 
-        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (grouping, extra, channel, mid, append), 'UPDATE')
-        shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
-        print shapeDir
 
         # Defined out here for large scope
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
 
         if not options.sync :
-            binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
-        if options.mssm :
-            #binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
-            binArray = array.array( 'd', [] )
-            for i in range(0, 401 ) :
+            binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
+        if options.mssm and not options.btag :
+            binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+        elif options.mssm and options.btag :
+            binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            #binArray = array( 'd', [] )
+            #for i in range(0, 401 ) :
             #for i in range(0, 36 ) :
-                binArray.append( i * 10 )
+            #    binArray.append( i * 10 )
         else :
-            binArray = array.array( 'd', [] )
+            binArray = array( 'd', [] )
             for i in range(0, 36 ) :
                 binArray.append( i * 10 )
             #binArray.append( 600 )
@@ -215,7 +225,13 @@ for channel in ['em', 'tt'] :
         histos = {}
         for name in nameArray :
             title = name.strip('_')
-            histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
+            if options.TES and 'TES' in var :
+                if 'TES_up' in var :
+                    histos[ name ] = ROOT.TH1F( name+'TESUp', name+'TESUp', numBins, binArray )
+                if 'TES_down' in var :
+                    histos[ name ] = ROOT.TH1F( name+'TESDown', name+'TESDown', numBins, binArray )
+            else :
+                histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
             histos[ name ].Sumw2()
 
 
@@ -306,12 +322,24 @@ for channel in ['em', 'tt'] :
             #print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
             if not options.mssm :
                 histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
-            histos[ name ].SetTitle( name.strip('_') )
-            histos[ name ].SetName( name.strip('_') )
-            histos[ name ].Write()
-        shapeFile.Close()
+
+            # Proper naming of output histos
+            if options.TES and 'TES' in var :
+                if name == '_data_obs_' : continue 
+                if 'TES_up' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_tt_13TeVUp' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_tt_13TeVUp' )
+                elif 'TES_down' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_tt_13TeVDown' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_tt_13TeVDown' )
+                histos[ name ].Write()
+            else :
+                histos[ name ].SetTitle( name.strip('_') )
+                histos[ name ].SetName( name.strip('_') )
+                histos[ name ].Write()
+    shapeFile.Close()
 
 
-        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (grouping, extra, channel, mid, append)
+    print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (grouping, extra, channel, mid, append)
 
 
