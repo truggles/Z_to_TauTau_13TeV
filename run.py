@@ -52,10 +52,10 @@ SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJet
 #SamplesDataCards = []
 # Full list of SUSY Masses: 80 90 100 110 120 130 140 160 180 200 250 300 350 400 450 500 600 700 800 900 1000 1200 1400 1500 1600 1800 2000 2300 2600 2900 3200; do
 # gg->H missing 250, 300, 350, 400.  bb->H missing 200, 2300
-masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
-for mass in masses :
-       SamplesDataCards.append( 'ggH%i' % mass )
-       SamplesDataCards.append( 'bbH%i' % mass )
+#XXX masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
+#XXX for mass in masses :
+#XXX        SamplesDataCards.append( 'ggH%i' % mass )
+#XXX        SamplesDataCards.append( 'bbH%i' % mass )
 
 #SamplesDataCards = ['data_tt',]
 samples = SamplesDataCards
@@ -69,26 +69,26 @@ params = {
     'bkgs' : 'None',
     'numCores' : 20,
     'numFilesPerCycle' : 1,
-    #'channels' : ['em', 'tt'],
+    'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
-    'channels' : ['tt',],
+#XXX    'channels' : ['tt',],
 #XXX    'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
-    'cutName' : 'PostSync', #!
+#XXX    'cutName' : 'PostSync', #!
 #XXX    'cutMapper' : 'syncCutsDC',
-#XXX    'cutMapper' : 'syncCutsDCqcd',
+    'cutMapper' : 'syncCutsDCqcd',
     #'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
-#XXX    'cutName' : 'BaseLine',
-    'cutMapper' : 'signalCuts',
-    'mid1' : '1Mar24a',
-    'mid2' : '2Mar24a',
-    'mid3' : '3Mar24a',
+    'cutName' : 'BaseLine',
+#XXX    'cutMapper' : 'signalCuts',
+    'mid1' : '1Mar31a',
+    'mid2' : '2Mar31a',
+    'mid3' : '3Mar31a',
     'additionalCut' : '',
-    #'svFitPost' : 'true',
-    'svFitPost' : 'false',
+    'svFitPost' : 'true',
+    #'svFitPost' : 'false',
     'svfName' : 'xxx',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
