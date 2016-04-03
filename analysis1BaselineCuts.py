@@ -100,7 +100,10 @@ def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cu
     postCutQty = cutOut[3]
     print "%5i %20s %10s %3i: Finished Cuts" % (num, sample, channel, count)
 
-    return (num, sample, channel, count, initialQty, postCutQty)
+    if num < 1000 :
+        return (num, sample, channel, count, initialQty, postCutQty)
+    else :
+        print "Over 1000 iterations.  Summary skipped"
 
 
 def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
@@ -116,11 +119,6 @@ def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMappe
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    #if SVF : 
-    #    print 'Infile: %s%s.root' % (svfName,save)
-    #    print 'Output: %s%s/%s.root' % (grouping, mid2, save)
-    #else :
-    #    print 'Output: %s%s/%s.root' % (grouping, mid2, save)
     isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
     #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
@@ -196,41 +194,38 @@ def doInitialCuts(grouping, samples, **fargs) :
             if count * fargs['numFilesPerCycle'] >= fileLen : go = False
     
     
-    if num < 1000 :
-        mpResults = [p.get() for p in multiprocessingOutputs]
-        
-        #print(mpResults)
-        print "#################################################################"
-        print "###               Finished, summary below                     ###"
-        print "#################################################################"
-        
-        print "\nStart Time: %s" % str( begin )
-        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-        print "\n"
+    mpResults = [p.get() for p in multiprocessingOutputs]
+    
+    #print(mpResults)
+    print "#################################################################"
+    print "###               Finished, summary below                     ###"
+    print "#################################################################"
+    
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    print "\n"
 
-        print " --- CutTable used: %s" % fargs['cutMapper']
-        print " --- Cut used: %s" % fargs['cutName']
-        print " --- Grouping: %s" % grouping
-        print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-        print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
-        print "\n"
-        
-        totalIn = 0
-        totalOut = 0
-        mpResults.sort()
-        for item in mpResults :
-            print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-            print item[4]
-            print item[5]
-            totalIn += int(item[4].split(' ')[-1])
-            totalOut += int(item[5].split(' ')[-1])
-        
-        print "\nTotal In:", totalIn
-        print "Total Out:", totalIn,"\n"
-        print "Start Time: %s" % str( begin )
-        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-    else :
-        print "Over 1000 iterations.  Summary skipped"
+    print " --- CutTable used: %s" % fargs['cutMapper']
+    print " --- Cut used: %s" % fargs['cutName']
+    print " --- Grouping: %s" % grouping
+    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
+    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+    print "\n"
+    
+    totalIn = 0
+    totalOut = 0
+    mpResults.sort()
+    for item in mpResults :
+        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+        print item[4]
+        print item[5]
+        totalIn += int(item[4].split(' ')[-1])
+        totalOut += int(item[5].split(' ')[-1])
+    
+    print "\nTotal In:", totalIn
+    print "Total Out:", totalIn,"\n"
+    print "Start Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
 def doInitialOrder(grouping, samples, **fargs) :

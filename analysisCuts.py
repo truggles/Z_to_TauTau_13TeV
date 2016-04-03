@@ -138,7 +138,7 @@ def svFitCuts( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIsoLoose]
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
-    if ch == 'tt' : cuts = [ttKinLoose, ttCharge, ttDR, ttVtx, tt35, DecayMode, ttIsoLoose]
+    if ch == 'tt' : cuts = [ttKinLoose, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus, ttIsoLooseMVA]
     cutMap = {'BaseLine' : cuts}
     return cutMap
 
@@ -147,7 +147,7 @@ def crazyCutsNtuple( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+') && ePt > 150']
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35, 't1Pt>150&&t2Pt>150']
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35, DecayMode, ttL1IsoTaus, 't1Pt>150&&t2Pt>150']
     cutMap = {'BaseLine' : cuts}
     return cutMap
 
