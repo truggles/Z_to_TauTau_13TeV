@@ -1,0 +1,15 @@
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_0_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_10_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_11_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_12_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_13_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_14_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_1_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_2_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_3_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_4_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_5_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_6_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_7_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_8_tt.root
+/data/truggles/svFitComplete/april03_test/TauTau_13_test_April03-Sync-HtoTT_9_tt.root
