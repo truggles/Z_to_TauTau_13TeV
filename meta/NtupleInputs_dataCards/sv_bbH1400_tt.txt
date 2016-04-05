@@ -1,0 +1,2 @@
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil2_TESType1_isWJ0-bbH1400_1_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil2_TESType1_isWJ0-bbH1400_0_tt.root

@@ -1,0 +1,8 @@
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_0_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_7_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_6_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_3_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_4_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_2_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_5_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-TT_1_tt.root

@@ -1,0 +1,4 @@
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil2_TESType1_isWJ0-DYJets3_2_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil2_TESType1_isWJ0-DYJets3_1_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil2_TESType1_isWJ0-DYJets3_3_tt.root
+/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil2_TESType1_isWJ0-DYJets3_0_tt.root
