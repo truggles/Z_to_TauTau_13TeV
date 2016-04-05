@@ -26,14 +26,17 @@ prodMap = {
 
 
 def getXSec( shortName, sampDict, numGenJets=0 ) :
-    #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
+    #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
     #if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
-        if shortName in ['DYJets', 'DYJetsBig'] :
-            scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ 'DYJets' ]['summedWeightsNorm'] + sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] )
+        if shortName in ['DYJets', 'DYJetsBig'] or shortName[:6] == 'DYJets' :
+        #if 'DYJets' in shortName :
+            scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / ( sampDict[ 'DYJets' ]['summedWeightsNorm'] + sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] )
+            #print "DYJets in shortName, scalar1 =",scalar1
         else :
             scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+            #print "DYJets not in shortName, scalar1 =",scalar1
     except KeyError :
         print "Sample not found in meta/Ntuples_xxx/samples.json"
         return
@@ -44,7 +47,7 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
     jet binned samples
     """
     # If inclusive sample
-    if shortName in ['DYJets', 'DYJetsBig', 'DYJetsMerge', 'WJets'] :
+    if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
         binPartner = ''
         if numGenJets == 0 :
             return scalar1
@@ -59,21 +62,39 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
         else :
             return scalar1
 
-        if shortName in ['DYJetsBig', 'DYJetsMerge'] :
+        if shortName in ['DYJetsBig','DYJets'] :
             scalar2 = cmsLumi * sampDict[ 'DYJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'DYJets'+binPartner ]['summedWeightsNorm'] )
-        else :
-            scalar2 = cmsLumi * sampDict[ shortName+binPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+binPartner ]['summedWeightsNorm'] )
+        elif shortName == 'WJets' :
+            scalar2 = cmsLumi * sampDict[ 'WJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'WJets'+binPartner ]['summedWeightsNorm'] )
 
         return (1.0/( (1./scalar1) + (1./scalar2) ))
     # If exclusive sample
-    if shortName[-1:] in jetBins :
-        scalar2 = cmsLumi * sampDict[ shortName[:-1] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-1] ]['summedWeightsNorm'] )
+    if (('DYJets' in shortName) or ('WJets' in shortName)) and shortName[-1:] in jetBins :
+        scalar2 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+        #print "Scalar2 ",scalar2
         return (1.0/( (1./scalar1) + (1./scalar2) ))
         
         
     if 'QCD' in shortName or 'toTauTau' in shortName : return scalar1
     if 'data' in shortName : return 1.0
     return scalar1
+
+
+def mVisTES( cand1, cand2, row, TES ) :
+    pt1 = (1 + TES) * getattr( row, cand1+'Pt' )
+    eta1 = getattr( row, cand1+'Eta' )
+    phi1 = getattr( row, cand1+'Phi' )
+    m1 = getattr( row, cand1+'Mass' )
+    pt2 = (1 + TES) * getattr( row, cand2+'Pt' )
+    eta2 = getattr( row, cand2+'Eta' )
+    phi2 = getattr( row, cand2+'Phi' )
+    m2 = getattr( row, cand2+'Mass' )
+    lorentz1 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
+    lorentz2 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
+    shifted = lorentz1 + lorentz2
+    return shifted.M()
 
 
 
@@ -205,7 +226,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     if shortName == 'data' : shortName = 'data_%s' % channel
 
     xsec = getXSec( shortName, sampDict )
-    print "\n Sampe: %s    xsec: %f" % (sample, xsec)
+    print "\n Sampe: %s    shortName: %s    xsec: %f" % (sample, shortName, xsec)
 
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
@@ -243,11 +264,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'NBTagPDM_idL_jVeto' : 'nbtag',
         'NBTagPDL_idL_jVeto' : 'nbtagLoose',
         'jetVeto20ZTT' : 'njetspt20',
-        #'jetVeto30RecoilZTT' : 'njets',
-        'jetVeto30ZTT' : 'njets',
+        'jetVeto30RecoilZTT' : 'njets',
+        #'jetVeto30ZTT' : 'njets',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
-        'GenWeight' : 'weight',
+        #'GenWeight' : 'weight',
         'vbfMassZTT' : 'mjj',
         'vbfDetaZTT' : 'jdeta',
         'vbfDphiZTT' : 'jdphi',
@@ -503,6 +524,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    m_vis_UP = array('f', [ 0 ] )
+    m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
+    m_vis_DOWN = array('f', [ 0 ] )
+    m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -618,6 +643,18 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             UniqueID[0] = sampDict[ shortName ]['UniqueID']
             BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
 
+            # TES Shifted M_Vis
+            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
+                m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
+                m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
+            else :
+                m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+                setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+                setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+                setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+
 
             # Channel specific vetoes
             if channel == 'tt' :
@@ -695,9 +732,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 else : trigweight_1[0] = 1
 
                 # Special weighting for WJets and DYJets
-                if shortName in ['DYJets', 'DYJetsBig', 'DYJetsMerge', 'WJets'] :
+                if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
                     xsec = getXSec( shortName, sampDict, row.numGenJets )
-                    #print "\n Sampe: %s    xsec: %f     numGenJets %i" % (sample, xsec, row.numGenJets)
+                    print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
  
