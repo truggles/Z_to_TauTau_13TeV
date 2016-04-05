@@ -1,2 +1,0 @@
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/bbH3200_0_tt.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/bbH3200_1_tt.root

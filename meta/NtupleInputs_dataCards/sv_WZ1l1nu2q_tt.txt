@@ -1,5 +1,0 @@
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WZ1l1nu2q_1_tt.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WZ1l1nu2q_2_tt.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WZ1l1nu2q_0_tt.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WZ1l1nu2q_4_tt.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WZ1l1nu2q_3_tt.root
