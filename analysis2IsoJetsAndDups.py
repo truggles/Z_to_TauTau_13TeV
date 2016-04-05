@@ -24,44 +24,27 @@ prodMap = {
     'tt' : ('t1', 't2'),
 }
 
-#def getXSec( shortName, sampDict, genHTT=0 ) :
+
 def getXSec( shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
     #if 'data' in shortName : return 1.0 #XXX#
-    #htts = ['100-200', '200-400', '400-600', '600-Inf']
     jetBins = ['1', '2', '3', '4']
     try :
-        scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+        if shortName in ['DYJets', 'DYJetsBig'] :
+            scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ 'DYJets' ]['summedWeightsNorm'] + sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] )
+        else :
+            scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
     except KeyError :
         print "Sample not found in meta/Ntuples_xxx/samples.json"
         return
     #return scalar1 #XXX#
     
-    # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
-    # and need to be deweighted
     """
     Commented out for HT bin samples, we're switching to
     jet binned samples
     """
-    #XXX#if shortName == 'WJets' or shortName == 'DYJets' :
-    #XXX#    #print shortName," --- GenHTT",genHTT
-    #XXX#    httPartner = ''
-    #XXX#    if genHTT < 100 :
-    #XXX#        #print " - return scalar1"
-    #XXX#        return scalar1
-    #XXX#    elif genHTT >= 100 and genHTT < 200 :
-    #XXX#        httPartner = '100-200'
-    #XXX#    elif genHTT >= 200 and genHTT < 400 :
-    #XXX#        httPartner = '200-400'
-    #XXX#    elif genHTT >= 400 and genHTT < 600 :
-    #XXX#        httPartner = '400-600'
-    #XXX#    else :
-    #XXX#        httPartner = '600-Inf'
-    #XXX#    scalar2 = cmsLumi * sampDict[ shortName+httPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+httPartner ]['summedWeightsNorm'] )
-    #XXX#    #print " - Special Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))," for ",httPartner
-    #XXX#    #print " - scalar1: ",scalar1,"    scalar2: ",scalar2
-    #XXX#    return (1.0/( (1/scalar1) + (1/scalar2) ))
-    if shortName == 'DYJets' :
+    # If inclusive sample
+    if shortName in ['DYJets', 'DYJetsBig', 'DYJetsMerge', 'WJets'] :
         binPartner = ''
         if numGenJets == 0 :
             return scalar1
@@ -75,22 +58,24 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
             binPartner = '4'
         else :
             return scalar1
-        scalar2 = cmsLumi * sampDict[ shortName+binPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+binPartner ]['summedWeightsNorm'] )
-        return (1.0/( (1/scalar1) + (1/scalar2) ))
+
+        if shortName in ['DYJetsBig', 'DYJetsMerge'] :
+            scalar2 = cmsLumi * sampDict[ 'DYJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'DYJets'+binPartner ]['summedWeightsNorm'] )
+        else :
+            scalar2 = cmsLumi * sampDict[ shortName+binPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+binPartner ]['summedWeightsNorm'] )
+
+        return (1.0/( (1./scalar1) + (1./scalar2) ))
+    # If exclusive sample
+    if shortName[-1:] in jetBins :
+        scalar2 = cmsLumi * sampDict[ shortName[:-1] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-1] ]['summedWeightsNorm'] )
+        return (1.0/( (1./scalar1) + (1./scalar2) ))
         
         
     if 'QCD' in shortName or 'toTauTau' in shortName : return scalar1
     if 'data' in shortName : return 1.0
-    #XXX#for htt in htts :
-    #XXX#    if htt in shortName :
-    #XXX#        scalar2 = cmsLumi * sampDict[ shortName[:-7] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-7] ]['summedWeightsNorm'] )
-    #XXX#        #print "HTT in HTTs",shortName
-    #XXX#        #print "Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))
-    #XXX#        return (1.0/( (1/scalar1) + (1/scalar2) ))
-    if shortName[-1:] in jetBins :
-        scalar2 = cmsLumi * sampDict[ shortName[:-1] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-1] ]['summedWeightsNorm'] )
-        return (1.0/( (1/scalar1) + (1/scalar2) ))
     return scalar1
+
+
 
 def getIso( cand, row ) :
     if 'e' in cand :
@@ -710,8 +695,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 else : trigweight_1[0] = 1
 
                 # Special weighting for WJets and DYJets
-                if shortName == 'DYJets' :
-                    #xsec = getXSec( shortName, sampDict, row.genHTT )
+                if shortName in ['DYJets', 'DYJetsBig', 'DYJetsMerge', 'WJets'] :
                     xsec = getXSec( shortName, sampDict, row.numGenJets )
                     #print "\n Sampe: %s    xsec: %f     numGenJets %i" % (sample, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
