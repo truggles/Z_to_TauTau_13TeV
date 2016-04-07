@@ -30,6 +30,8 @@ grouping = options.sampleName
 folderDetails = options.folderDetails
 
 print "Running over %s samples" % grouping
+print "BTAGGIN????",options.btag
+doBTagging = options.btag
 
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
@@ -111,10 +113,10 @@ if options.mssm :
         samples['bbH%i' % mssmMass] = ('kPink', '_bbH%i_' % mssmMass) 
         nameArray.append('_ggH%i_' % mssmMass)
         nameArray.append('_bbH%i_' % mssmMass)
-    del samples['VBFHtoTauTau125']
-    del samples['ggHtoTauTau125']
-    nameArray.remove('_vbfH125_')
-    nameArray.remove('_ggH125_')
+    #del samples['VBFHtoTauTau125']
+    #del samples['ggHtoTauTau125']
+    #nameArray.remove('_vbfH125_')
+    #nameArray.remove('_ggH125_')
 
 
 extra = ''
@@ -190,12 +192,13 @@ for channel in ['em', 'tt'] :
 
     for var, info in newVarMap.iteritems() :
 
-        if options.mssm :
+        #if options.mssm :
         #    if not var == baseVar+'_mssm' : continue
-            if var != baseVar : continue
-        elif options.TES :
+        #    if var != baseVar : continue
+        #elif options.TES :
+        if options.TES :
             if not baseVar in var : continue
-            if not (('TES' in var) or (baseVar == var)) : continue
+            if not (('_UP' in var) or('_DOWN' in var) or (baseVar == var)) : continue
         else :
             if not var == baseVar : continue
 
@@ -204,12 +207,28 @@ for channel in ['em', 'tt'] :
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
 
-        if not options.sync :
-            binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
-        if options.mssm and not options.btag :
-            binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-        elif options.mssm and options.btag :
-            binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+        #if not options.sync :
+        #    binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
+        #if options.mssm and not options.btag :
+        print "MSSM btag option:",options.btag
+        binArray = array( 'd', [] )
+        if options.mssm :
+            print "MSSM btag option:",options.btag
+            #if options.btag == True :
+            #if doBTagging == True :
+            if 'ZTT' in options.folderDetails :
+                print "Inclusive"
+                binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            elif 'NoBTL' in options.folderDetails :
+                print "No-BTAGGING"
+                binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            elif 'NoBTL' not in options.folderDetails :
+                print "BTAGGING"
+                binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #if options.btag == False :
+            #if doBTagging == False :
+            #if not options.btag :
+            #elif options.mssm and options.btag :
             #binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
             #binArray = array( 'd', [] )
             #for i in range(0, 401 ) :
@@ -220,18 +239,18 @@ for channel in ['em', 'tt'] :
             for i in range(0, 36 ) :
                 binArray.append( i * 10 )
             #binArray.append( 600 )
-        #print binArray
+        print binArray
         numBins = len( binArray ) - 1
         histos = {}
         for name in nameArray :
             title = name.strip('_')
-            if options.TES and 'TES' in var :
-                if 'TES_up' in var :
+            if options.TES :
+                if '_UP' in var :
                     histos[ name ] = ROOT.TH1F( name+'TESUp', name+'TESUp', numBins, binArray )
-                if 'TES_down' in var :
+                elif '_DOWN' in var :
                     histos[ name ] = ROOT.TH1F( name+'TESDown', name+'TESDown', numBins, binArray )
-            else :
-                histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
+                else :
+                    histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
             histos[ name ].Sumw2()
 
 
@@ -241,7 +260,7 @@ for channel in ['em', 'tt'] :
             if channel == 'em' and sample == 'data_tt' : continue
             #if sample == 'DYJetsLow' : continue
             #if 'HtoTauTau' in sample : continue
-            print sample
+            #print sample
 
             if sample == 'data_em' :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
@@ -304,7 +323,7 @@ for channel in ['em', 'tt'] :
                 #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
                 histos[ samples[ sample ][1] ].Add( hNew )
 
-            #print "Hist yield ",hist.Integral()
+            print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
             #hist2 = hist.Rebin( 18, 'rebinned', binArray )
             #histos[ samples[ sample ][1] ].Add( hist2 )
             tFile.Close()
@@ -319,17 +338,17 @@ for channel in ['em', 'tt'] :
             #    if histos[ name ].GetBinContent( bin_ ) < 0 :
             #        histos[ name ].SetBinContent( bin_, setVal )
             #        print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
-            #print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
+            print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
             if not options.mssm :
                 histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
 
             # Proper naming of output histos
-            if options.TES and 'TES' in var :
-                if name == '_data_obs_' : continue 
-                if 'TES_up' in var :
+            if options.TES and ('_UP' in var or '_DOWN' in var) :
+                if name in ['_data_obs_','_TT_','_QCD_','_VV_','_W_'] : continue 
+                if '_UP' in var :
                     histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_tt_13TeVUp' )
                     histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_tt_13TeVUp' )
-                elif 'TES_down' in var :
+                elif '_DOWN' in var :
                     histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_tt_13TeVDown' )
                     histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_tt_13TeVDown' )
                 histos[ name ].Write()

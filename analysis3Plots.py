@@ -204,12 +204,18 @@ for channel in ['em', 'tt'] :
         """
         Handle variable binning and longer ranges for visible mass
         """
-        if '_mssm' in var and not options.btag :
+        if '_mssm' in var :
             varBinned = True
-            xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-        elif '_mssm' in var and options.btag :
-            varBinned = True
-            xBins = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            if 'ZTT' in options.folderDetails :
+                print "Inclusive"
+                xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            elif 'NoBTL' in options.folderDetails :
+                print "No-BTAGGING"
+                xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            elif 'NoBTL' not in options.folderDetails :
+                print "BTAGGING"
+                xBins = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+
         elif var == 'm_vis_mssm' :
             varBinned = True
             #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
@@ -411,8 +417,8 @@ for channel in ['em', 'tt'] :
 
 
             #if var == 'mt_sv' :
-            #if var in ['m_vis', 'm_vis_TES_up','m_vis_TES_down'] :
-                #if 'data' in sample and options.qcdMake : finalDataYield = hist.Integral()
+            if var == 'mt_sv_mssm' :
+                if 'data' in sample and options.qcdMake : finalDataYield = hist.Integral()
 
             if samples[ sample ][1] == 'ztt' :
                 ztt.Add( hist )
@@ -534,7 +540,10 @@ for channel in ['em', 'tt'] :
                 print "M_VIS_MSSM plot details: %f %f" % (plotDetails[ var ][0], plotDetails[ var ][1])
             qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             print "qcdVar: %f   mean %f" % (qcdVar.Integral(), qcdVar.GetMean() )
-            finalQCDYield = qcdVar.Integral()
+            if var == 'mt_sv_mssm' :
+                print "QCD Binning"
+                print xBins
+                finalQCDYield = qcdVar.Integral()
             qcdDir.cd()
             qcdVar.Write()
 
@@ -745,7 +754,10 @@ for channel in ['em', 'tt'] :
     htmlFile.close()
 
     if options.qcdMake :
-        print "\n\n Final QCD and Data Info:\n -- Data Yield = %f\n -- QCD Yield = %f" % (finalDataYield, finalQCDYield)
+        print "\n\n Final QCD and Data Info:\n -- QCD Name: %s\n -- Data Yield = %f\n -- QCD Yield = %f" % (options.qcdMakeDM, finalDataYield, finalQCDYield)
+        dumpFile = open('plotsOut.txt', 'a')
+        dumpFile.write("\nFinal QCD and Data Info:\n -- QCD Name: %s\n -- Data Yield = %f\n -- QCD Yield = %f" % (options.qcdMakeDM, finalDataYield, finalQCDYield))
+        dumpFile.close()
 
     #if qcdVarIntegral :
     #    print "\n\n     QCD yield: %f           QCD Make: %s\n\n" % (qcdVarIntegral ,options.qcdMakeDM)
