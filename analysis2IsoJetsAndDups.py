@@ -34,9 +34,12 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
         #if 'DYJets' in shortName :
             scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / ( sampDict[ 'DYJets' ]['summedWeightsNorm'] + sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] )
             #print "DYJets in shortName, scalar1 =",scalar1
+        elif 'WJets' in shortName :
+            scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
         else :
             scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
             #print "DYJets not in shortName, scalar1 =",scalar1
+
     except KeyError :
         print "Sample not found in meta/Ntuples_xxx/samples.json"
         return
@@ -66,8 +69,8 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
             scalar2 = cmsLumi * sampDict[ 'DYJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'DYJets'+binPartner ]['summedWeightsNorm'] )
         elif shortName == 'WJets' :
             scalar2 = cmsLumi * sampDict[ 'WJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'WJets'+binPartner ]['summedWeightsNorm'] )
-
         return (1.0/( (1./scalar1) + (1./scalar2) ))
+
     # If exclusive sample
     if (('DYJets' in shortName) or ('WJets' in shortName)) and shortName[-1:] in jetBins :
         scalar2 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
@@ -96,6 +99,9 @@ def mVisTES( cand1, cand2, row, TES ) :
     shifted = lorentz1 + lorentz2
     return shifted.M()
 
+
+def getTransMass( met, metphi, l1pt, l1phi ) :
+    return math.sqrt( 2 * l1pt * met * (1 - math.cos( l1phi - metphi)))
 
 
 def getIso( cand, row ) :
@@ -141,7 +147,7 @@ tauIso = {
     'Charge' : 'q',
     'PVDXY' : 'd0',
     'PVDZ' : 'dZ',
-    'MtToPfMet_Raw' : 'mt',
+    'MtToPfMet_Raw' : '',
     'MtToPfMet_type1' : '',
     'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
     'ByIsolationMVArun2v1DBnewDMwLTraw' : '',
@@ -150,6 +156,8 @@ tauIso = {
     'ByMediumIsolationMVArun2v1DBoldDMwLT' : '',
     'ByTightIsolationMVArun2v1DBoldDMwLT' : '',
     'ByVTightIsolationMVArun2v1DBoldDMwLT' : '',
+    'ByIsolationMVA3newDMwLTraw' : '',
+    'ByIsolationMVA3oldDMwLTraw' : '',
     'AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
     'AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
     'AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
@@ -321,10 +329,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_Charge' : 'q',
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
-        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
-        'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
+        'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
+        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
         'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
-        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
+        #'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
+        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'iso',
         'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
         'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
         'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
@@ -520,6 +529,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
     ''' We are calculating and adding these below variables to our new tree
     PU Weighting '''
+    weight = array('f', [ 0 ] )
+    weightB = tnew.Branch('weight', weight, 'weight/F')
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     pzetamiss = array('f', [ 0 ] )
@@ -550,10 +561,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     extramuon_vetoB = tnew.Branch('extramuon_veto', extramuon_veto, 'extramuon_veto/F')
     extraelec_veto = array('f', [ 0 ] )
     extraelec_vetoB = tnew.Branch('extraelec_veto', extraelec_veto, 'extraelec_veto/F')
-    mvamet = array('f', [ 0 ] )
-    mvametB = tnew.Branch('mvamet', mvamet, 'mvamet/F')
-    mvametphi = array('f', [ 0 ] )
-    mvametphiB = tnew.Branch('mvametphi', mvametphi, 'mvametphi/F')
     mvacov00 = array('f', [ 0 ] )
     mvacov00B = tnew.Branch('mvacov00', mvacov00, 'mvacov00/F')
     mvacov01 = array('f', [ 0 ] )
@@ -608,7 +615,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            if channel == 'tt' : isoOrder( channel, row )
+            if channel == 'tt' and 'Sync-HtoTT' in sample : 
+                #print "### Iso Ordering %s ###" % sample
+                isoOrder( channel, row )
             vbfClean( row )
 
 
@@ -650,10 +659,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             else :
                 m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
                 m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-                setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
-                setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
-                setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
-                setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+                if hasattr( row, 'm_sv_UP' ) :
+                    setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+                    setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+                    setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+                    setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
 
 
             # Channel specific vetoes
@@ -670,8 +680,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
             
-            mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
-            mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
             mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
             mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
             mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
@@ -679,23 +687,23 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
             # Channel specific pairwise mvaMet
             if channel == 'tt' :
-                if mvamet[0] >= 0 :
-                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.t1_t2_MvaMet, row.t1_t2_MvaMetPhi)[1]
-                    mt_1[0] = math.sqrt( 2*row.t1Pt*row.t1_t2_MvaMet* (1 - math.cos( row.t1Phi - row.t1_t2_MvaMetPhi)))
-                    mt_2[0] = math.sqrt( 2*row.t2Pt*row.t1_t2_MvaMet* (1 - math.cos( row.t2Phi - row.t1_t2_MvaMetPhi)))
+                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.mvamet, row.mvametphi)[1]
+                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.t1Pt, row.t1Phi )
+                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.t2Pt, row.t2Phi )
                 else :
-                    pzetamiss[0] = -999
-                    mt_1[0] = -999
-                    mt_2[0] = -999
+                    pzetamiss[0] = -9999
+                    mt_1[0] = -9999
+                    mt_2[0] = -9999
             if channel == 'em' :
-                if mvamet[0] >= 0 :
-                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.e_m_MvaMet, row.e_m_MvaMetPhi)[1]
-                    mt_1[0] = math.sqrt( 2*row.ePt*row.e_m_MvaMet* (1 - math.cos( row.ePhi - row.e_m_MvaMetPhi)))
-                    mt_2[0] = math.sqrt( 2*row.mPt*row.e_m_MvaMet* (1 - math.cos( row.mPhi - row.e_m_MvaMetPhi)))
+                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.mvamet, row.mvametphi)[1]
+                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.ePt, row.ePhi )
+                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.mPt, row.mPhi )
                 else :
-                    pzetamiss[0] = -999
-                    mt_1[0] = -999
-                    mt_2[0] = -999
+                    pzetamiss[0] = -9999
+                    mt_1[0] = -9999
+                    mt_2[0] = -9999
 
             # Data specific vars
             if 'data' in sample :
@@ -727,14 +735,17 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
                 elif channel == 'tt' :
-                    trigweight_1[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
-                    effweight[0] = trigweight_1[0]
+                    trigweight_1[0] = 1
+                    effweight[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
                 else : trigweight_1[0] = 1
+
+                weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
+                weight[0] *= trigweight_1[0] * effweight[0]
 
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
                     xsec = getXSec( shortName, sampDict, row.numGenJets )
-                    print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
+                    #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
  
