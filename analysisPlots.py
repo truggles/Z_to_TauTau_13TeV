@@ -2,14 +2,39 @@ import ROOT
 from collections import OrderedDict
 from ROOT import gPad
 
+
+
 # Make a histo, but fill it later so we can keep track of events for ALL histos at once
 def makeHisto( cutName, varBins, varMin, varMax ) :
     hist = ROOT.TH1F( cutName, cutName, varBins, varMin, varMax )
     return hist
 
 
+
+# Make specific extra cuts for different TES requirements
+def ESCuts( sample, channel, var ) :
+    if channel == 'em' :
+        print "\n\n\nERROR, NOT DEFINED YET FOR EMu\n\n\n"
+        return '1'
+    if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
+        return '*(pt_1 > 40 && pt_2 > 40)'
+    ESMap = {
+        'tt' : { 
+            '_UP' : '*((pt_1*1.03) > 40 && (pt_2*1.03) > 40)',
+            '_DOWN' : '*((pt_1*0.97) > 40 && (pt_2*0.97) > 40)',
+            '_NoShift' : '*(pt_1 > 40 && pt_2 > 40)',}
+        #'em' : { 
+        #    '_UP' : '((pt_1*1.03) > 40 && (pt_2*1.03) > 40)',
+        #    '_DOWN' : '((pt_1*0.97) > 40 && (pt_2*0.97) > 40)',}
+        }
+    if '_UP' in var : return ESMap[ channel ]['_UP']
+    elif '_DOWN' in var : return ESMap[ channel ]['_DOWN']
+    else : return ESMap[ channel ]['_NoShift']
+
+
+
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
+def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind ) :
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMap = getHistoDict( channel )
 
@@ -28,6 +53,11 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
         # Taus are currently filled with 1 for all SFs
         sfs = '*(trigweight_1 * idisoweight_1 * idisoweight_2)'
         xsec = '*(XSecLumiWeight)'
+        # Adding additional TES cuts (EES and MES to come for EMu channel
+        es = ESCuts( sample, channel, var )
+        dataES = '*(pt_1 > 40 && pt_2 > 40)'
+        #print var,es
+        totalCutAndWeightMC = 'puweight * (GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, es) 
 
         # the >> sends the output to a predefined histo
         try :
@@ -36,7 +66,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                     chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
                     histos[ var ] = gPad.GetPrimitive( "%s" % var )
                 else :
-                    chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
+                    chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s%s' % (additionalCut, dataES) )
                     histos[ var ] = gPad.GetPrimitive( "%s" % var )
                     if var == 'm_vis' :
                         print 'm_vis'
@@ -45,7 +75,7 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
                 #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'weight/abs( weight )%s%s%s' % (additionalCut, sfs, xsec) )
                 #histos2[ var ] = gPad.GetPrimitive( var2 )
 
-                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (weight/abs( weight ))%s%s%s' % (additionalCut, sfs, xsec) )
+                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, es) )
                 ''' No reweighting at the moment! '''
                 #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(weight/abs( weight ))%s' % additionalCut )
                 histos[ var ] = gPad.GetPrimitive( var )
@@ -103,17 +133,27 @@ def getHistoDict( channel ) :
 #        'weight' : ('weight', 60, -30, 30),
 #        'npv' : ('npv', 50, 0, 50),
 #        'npu' : ('npu', 50, 0, 50),
- #XXX       'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
+#XXX        'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
+#XXX        'm_vis_mssm_UP' : ('m_vis_UP', 3900, 0, 3900),
+#XXX        'm_vis_mssm_DOWN' : ('m_vis_DOWN', 3900, 0, 3900),
 #        'm_vis_varB' : ('m_vis', 600, 0, 600),
         'm_vis' : ('m_vis', 350, 0, 350),
-        'm_vis_TES_up' : ('m_vis_TES_up', 350, 0, 350),
-        'm_vis_TES_down' : ('m_vis_TES_down', 350, 0, 350),
- #XXX       'm_sv_mssm' : ('m_sv', 3900, 0, 3900),
+        'm_vis_UP' : ('m_vis_UP', 350, 0, 350),
+        'm_vis_DOWN' : ('m_vis_DOWN', 350, 0, 350),
+        'm_sv_mssm' : ('m_sv', 3900, 0, 3900),
+        'm_sv_mssm_UP' : ('m_sv_UP', 3900, 0, 3900),
+        'm_sv_mssm_DOWN' : ('m_sv_DOWN', 3900, 0, 3900),
 #        'm_sv_varB' : ('m_sv', 600, 0, 600),
- #XXX       'm_sv' : ('m_sv', 35000, 0, 350),
- #XXX       'mt_sv_mssm' : ('mt_sv', 3900, 0, 3900),
+        'm_sv' : ('m_sv', 350, 0, 350),
+        'm_sv_UP' : ('m_sv_UP', 350, 0, 350),
+        'm_sv_DOWN' : ('m_sv_DOWN', 350, 0, 350),
+        'mt_sv_mssm' : ('mt_sv', 3900, 0, 3900),
+        'mt_sv_mssm_UP' : ('mt_sv_UP', 3900, 0, 3900),
+        'mt_sv_mssm_DOWN' : ('mt_sv_DOWN', 3900, 0, 3900),
 #        'mt_sv_varB' : ('mt_sv', 600, 0, 600),
- #XXX       'mt_sv' : ('mt_sv', 35000, 0, 350),
+#XX        'mt_sv' : ('mt_sv', 350, 0, 350),
+#XX        'mt_sv_UP' : ('mt_sv_UP', 350, 0, 350),
+#XX        'mt_sv_DOWN' : ('mt_sv_DOWN', 350, 0, 350),
 #        'pt_1' : ('pt_1', 400, 0, 400),
 #        'eta_1' : ('eta_1', 80, -4, 4),
 #XXX        'iso_1' : ('iso_1', 100, 0, 1),
@@ -167,18 +207,28 @@ def getHistoDict( channel ) :
 def getPlotDetails( channel ) :
     plotDetails = {
         'm_vis_mssm' : (0, 3900, 10, 'Z Vis Mass [GeV]', ' GeV'),
-        'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
+        'm_vis_mssm_UP' : (0, 3900, 10, 'TES UP Z Vis Mass [GeV]', ' GeV'),
+        'm_vis_mssm_DOWN' : (0, 3900, 10, 'TES DOWN Z Vis Mass [GeV]', ' GeV'),
+#XXX        'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
-        'm_vis_TES_up' : (0, 350, 10, 'Z Vis Mass TES Down [GeV]', ' GeV'),
-        'm_vis_TES_down' : (0, 350, 10, 'Z Vis Mass TES Up [GeV]', ' GeV'),
+        'm_vis_UP' : (0, 350, 10, 'TES UP Z Vis Mass TES Down [GeV]', ' GeV'),
+        'm_vis_DOWN' : (0, 350, 10, 'TES DOWN Z Vis Mass TES Up [GeV]', ' GeV'),
 #XXX        'm_vis' : (0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'),
         'm_sv_mssm' : (0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_varB' : (0, 600, 10, 'Z svFit Mass [GeV]', ' GeV'),
-        'm_sv' : (0, 350, 1000, 'Z svFit Mass [GeV]', ' GeV'),
+        'm_sv_mssm_UP' : (0, 3900, 10, 'TES UP Z svFit Mass [GeV]', ' GeV'),
+        'm_sv_mssm_DOWN' : (0, 3900, 10, 'TES DOWN Z svFit Mass [GeV]', ' GeV'),
+#XXX        'm_sv_varB' : (0, 600, 10, 'Z svFit Mass [GeV]', ' GeV'),
+        'm_sv' : (0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
+        'm_sv_UP' : (0, 350, 10, 'TES UP Z svFit Mass [GeV]', ' GeV'),
+        'm_sv_DOWN' : (0, 350, 10, 'TES DOWN Z svFit Mass [GeV]', ' GeV'),
 #XXX        'm_sv' : (0, 350, 1, 'Z svFit Mass [GeV]', ' GeV'),
         'mt_sv_mssm' : (0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv_varB' : (0, 600, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv' : (0, 350, 1000, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv_mssm_UP' : (0, 3900, 10, 'TES UP Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv_mssm_DOWN' : (0, 3900, 10, 'TES DOWN Total Transverse Mass [GeV]', ' GeV'),
+#XXX        'mt_sv_varB' : (0, 600, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv' : (0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv_UP' : (0, 350, 10, 'TES UP Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv_DOWN' : (0, 350, 10, 'TES DOWN Total Transverse Mass [GeV]', ' GeV'),
 #XXX        'mt_sv' : (0, 350, 1, 'Total Transverse Mass [GeV]', ' GeV'),
         'Z_Pt' : (0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
