@@ -1527,12 +1527,28 @@
     "DAS Path": "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", 
     "nfiles": 226, 
     "nblocks": 31, 
-    "Cross Section (pb)": 6097.822431547999, 
+    "Cross Section (pb)": 6025.2, 
     "BkgGroup": 1, 
     "summedWeightsNorm": 9004328.0, 
     "summedWeights": 9004328.0, 
     "nevents": 9004328, 
     "nNtupleFiles": 226, 
     "nlumis": 45051
+  },
+  "DYJetsLow": {
+    "STATUS": "Good to Go!", 
+    "UniqueID": 98, 
+    "DAS status": "ok", 
+    "nEvents": 30899063, 
+    "DAS Path": "/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", 
+    "nfiles": 753, 
+    "nblocks": 19, 
+    "Cross Section (pb)": 71310.0, 
+    "BkgGroup": 1, 
+    "summedWeightsNorm": 22482567.214869734, 
+    "summedWeights": 931771994602.0, 
+    "nevents": 30899063, 
+    "nNtupleFiles": 753, 
+    "nlumis": 153127
   }
 }

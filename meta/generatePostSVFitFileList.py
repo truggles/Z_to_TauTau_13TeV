@@ -4,7 +4,7 @@ import os, glob, subprocess
 
 
 def makePostSVFitFileList( jobId, folder, sample, channel ) :
-    files = glob.glob('/data/truggles/%s/%s_*_%s.root' % (jobId, sample, channel) )
+    files = glob.glob('/data/truggles/%s/*-%s_*_%s.root' % (jobId, sample, channel) )
     ofile = open('%s/sv_%s_%s.txt' % (folder, sample, channel), "w")
 
     for file_ in files :

@@ -56,7 +56,7 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'WJets2' : ('/W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 3144.5 * 1.221252 ),
                 'WJets3' : ('/W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 954.8 * 1.221252 ),
                 'WJets4' : ('/W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 485.6 * 1.221252 ),
-                'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 4954.0 * 1.230888662), 
+                'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 4954.0 * 1.216229 ), 
                 'DYJetsBig' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c76x, 4954.0 * 1.216229 ), 
                 'DYJets1' : ('/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 1012.5 * 1.216229 ),
                 'DYJets2' : ('/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 332.8 * 1.216229 ),
@@ -64,11 +64,10 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'DYJets4' : ('/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 54.8 * 1.216229 ),
                 #'DYJetsFXFX' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 6025.2 ),
                 'DYJetsHigh' : ('/DYJetsToLL_M-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 6.7 ),
-
                 'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 71310.0 ), 
+
     }
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
-    #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2000, 2900, 3200]
     #samplesMSSM = {}
     for mass in masses :
        #samplesMSSM['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
