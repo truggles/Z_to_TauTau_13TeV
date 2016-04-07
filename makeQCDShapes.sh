@@ -23,12 +23,15 @@
 
 
 # For l1 medium
-folder=2Mar31a
+folder=2April05f
+rm plotsOut.txt
+echo `date` >> plotsOut.txt
 for sign in SS OS; do
     #for name in Medium_Loose VTight_Loose Tight_Medium VTight_Tight VTight_; do
     for name in VTight_Loose VTight_; do
         python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}ZTT --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}ZTT --btag=False
-        python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}ZTT --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}ZTT --btag=False
+        python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}BTL --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}BTL --btag=True
+        python analysis3Plots.py --folder=${folder}_${sign}l1ml2_${name}NoBTL --text=True --qcdMake=True --channels=tt --qcdMakeDM=${sign}l1m_${name}NoBTL --btag=False
     done
 done
 

@@ -40,6 +40,8 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
+    #'debug' : 'true',
+    'debug' : 'false',
     'bkgs' : 'None',
     'numCores' : 16,
     'numFilesPerCycle' : 20,
@@ -50,9 +52,9 @@ params = {
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1April04a_svFitVerify',
-    'mid2' : '2April04a_svFitVerify',
-    'mid3' : '3April04a_svFitVerify',
+    'mid1' : '1April07a_svFitVerify',
+    'mid2' : '2April07a_svFitVerify',
+    'mid3' : '3April07a_svFitVerify',
     'additionalCut' : '',
     'svFitPost' : 'true',
     #'svFitPost' : 'false',

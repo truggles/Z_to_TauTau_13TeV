@@ -35,12 +35,15 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     
     
     ''' Preset samples '''
-    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of Feb22 XXX DYJetsFXFX not included
+    SamplesDataCards = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April03
     
-    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
     for mass in masses :
            SamplesDataCards.append( 'ggH%i' % mass )
            SamplesDataCards.append( 'bbH%i' % mass )
+    #SamplesDataCards = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow',] # As of April03
+    #SamplesDataCards = ['DYJets4',] # As of April03
+    #SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
     samples = SamplesDataCards
     params = {
         'bkgs' : 'None',
@@ -77,15 +80,35 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     print "IsoL2Loose: %s" % isoL2loose
 
     """ HIG-15-007 ZTT """
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
+    #samples = checkBkgs( samples, params, grouping )
+    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    """
+    Double Hardonic baseline with good QCD estimation
+        Inclusive
+    """
+    ''' FINAL SELECTIONS MSSM '''
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_%sl1ml2_%s_%sBTL' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose>0)*(njets<=1)' % (Zsign, isoL1ML2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+
+    params['channels'] = ['tt',]
+    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose==0)' % (Zsign, isoL1ML2loose)
+    samples = checkBkgs( samples, params, grouping )
+    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+
+    ''' FINAL SELECTIONS ZTT '''
     params['channels'] = ['tt',]
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
     samples = checkBkgs( samples, params, grouping )
     analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-    """
-    Double Hardonic baseline with good QCD estimation
-        Inclusive
-    """
+
     """ BTAG VS NO BTAG TEST WITH IMPERIAL medium """
 #    params['channels'] = ['tt',]
 #    params['mid3'] = folder+'_%sl1ml2_%s_%sBTMjl1' % (sign, isoT, isoL)
@@ -95,7 +118,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
 #    
 #    params['channels'] = ['tt',]
 #    params['mid3'] = folder+'_%sl1ml2_%s_%sBTLjl1' % (sign, isoT, isoL)
-#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)*(njets<=1)' % (Zsign, isoL1ML2loose)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose!=0)*(njets<=1)' % (Zsign, isoL1ML2loose)
 #    samples = checkBkgs( samples, params, grouping )
 #    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #
@@ -104,17 +127,11 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
 #    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1ML2loose)
 #    samples = checkBkgs( samples, params, grouping )
 #    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-#    
-#    params['channels'] = ['tt',]
-#    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
-#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1ML2loose)
-#    samples = checkBkgs( samples, params, grouping )
-#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-#
-#    
+    
+    
 #    params['channels'] = ['tt',]
 #    params['mid3'] = folder+'_%sl1ml2_%s_%sBTLallJ' % (sign, isoT, isoL)
-#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose!=0)' % (Zsign, isoL1ML2loose)
+#    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose!=0)' % (Zsign, isoL1ML2loose)
 #    samples = checkBkgs( samples, params, grouping )
 #    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 #
@@ -123,12 +140,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
 #    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtag==0)' % (Zsign, isoL1ML2loose)
 #    samples = checkBkgs( samples, params, grouping )
 #    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-#    
-#    params['channels'] = ['tt',]
-#    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
-#    params['additionalCut'] = '*(Z_SS==%i)*%s*(bjetCISVVeto20Loose==0)' % (Zsign, isoL1ML2loose)
-#    samples = checkBkgs( samples, params, grouping )
-#    analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+    
     """ END BTAG TEST WITH IMPERIAL """
     ''' end l1 medium '''
 #    """ BTAG VS NO BTAG TEST WITH IMPERIAL Loose """
@@ -640,6 +652,9 @@ if __name__ == '__main__' :
     for pair in isoPairs :
         for sign in ['OS', 'SS']:
             testQCDCuts( folder, pair[0], pair[1], sign )
+
+#XXX    testQCDCuts( folder, '', 'VTight', 'OS' )
+
     #makeCuts( folder )
     #for pair in isoPairs :
     #    for sign in ['SS', 'OS'] :

@@ -52,7 +52,7 @@ def mergeSample( jobId, recoilType, TESType, isWJets, sample, channel ) :
 
 if __name__ == '__main__' :
 
-    #samples = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April03  XXX No data_em
+    AllSamples = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April03
 
     jobId = 'dataCards1April03a'
 	#channels = ['em', 'tt']
@@ -92,7 +92,7 @@ if __name__ == '__main__' :
 
 
     """ section 3, No TES, no recoil, no WJets """
-    samples = ['T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_tt'] 
+    samples = ['T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data'] 
     recoilType = 0 # 0 = no recoil
         # 1 = aMC@NLO DY and W+Jets MC samples
         # 2 = MG5 DY and W+Jets MC samples or Higgs MC samples
@@ -104,13 +104,6 @@ if __name__ == '__main__' :
             mergeSample( jobId, recoilType, TESType, isWJets, sample, channel )
 
 
-#    samples = ['WJets1',]
-#
-#	
-#
-#    for sample in samples :
-#        for channel in channels :
-#            mergeSample( jobId, recoilType, TESType, isWJets, sample, channel )
 
 
 

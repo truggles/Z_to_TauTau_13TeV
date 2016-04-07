@@ -53,6 +53,9 @@ for mass in masses :
        SamplesDataCards.append( 'bbH%i' % mass )
 
 #SamplesDataCards = ['data_tt',]
+#SamplesDataCards = ['DYJetsHigh',]
+#SamplesDataCards = ['WZJets',]
+SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -61,6 +64,8 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
+    #'debug' : 'true',
+    'debug' : 'false',
     'bkgs' : 'None',
     'numCores' : 20,
     'numFilesPerCycle' : 1,
@@ -74,24 +79,25 @@ params = {
 #XXX    'cutName' : 'PostSync', #!
 #XXX    'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
+    'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'crazyCutsNtuple',
-    'cutMapper' : 'svFitCuts',
+    #'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
 #XXX    'cutMapper' : 'signalCuts',
-    'mid1' : '1April03a',
-    'mid2' : '2April03a',
-    'mid3' : '3April03a',
+    'mid1' : '1April05f',
+    'mid2' : '2April05f',
+    'mid3' : '3April05f',
     'additionalCut' : '',
-    #'svFitPost' : 'true',
-    'svFitPost' : 'false',
-    'svFitPrep' : 'true',
-    #'svFitPrep' : 'false',
+    'svFitPost' : 'true',
+    #'svFitPost' : 'false',
+    #'svFitPrep' : 'true',
+    'svFitPrep' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
 analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 #params['mid3'] = '3Feb02sDC_SS'
