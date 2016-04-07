@@ -445,7 +445,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         
         currentEvt = getCurrentEvt( channel, row )
         currentRunLumiEvt = (run, lumi, evt)
-        if count == 0 : prevRunLumiEvt = currentRunLumiEvt
+        if count == 0 :
+            prevRunLumiEvt = currentRunLumiEvt
+            prevEvt = currentEvt
 
         count += 1
         
@@ -462,7 +464,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 toFillMap[ prevRunLumiEvt ] = prevEvt
             continue
 
-        #print currentRunLumiEvt, currentEvt
+        #print "Current: ",currentRunLumiEvt, currentEvt
         """
         Iso sorting is channel specific b/c tt uses MVA iso
         where are high value == good isolation
@@ -515,7 +517,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
         # Make sure we get the last event
         if count == numRows :
-            #print "LastRow:",prevRunLumiEvt, prevEvt
+            #print "LastRowPrev:",prevRunLumiEvt, prevEvt
+            #print "LastRowCur:",currentRunLumiEvt, currentEvt
             prevRunLumiEvt = currentRunLumiEvt
             prevEvt = currentEvt
             toFillMap[ prevRunLumiEvt ] = prevEvt
