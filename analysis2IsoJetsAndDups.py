@@ -673,9 +673,13 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             if channel == 'tt' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
             if channel == 'em' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
             if channel == 'et' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
