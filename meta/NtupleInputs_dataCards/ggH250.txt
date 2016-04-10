@@ -1,5 +1,5 @@
-/data/truggles/april03_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-585C30E6-63C1-E511-807B-002590DE6E30/make_ntuples_cfg-585C30E6-63C1-E511-807B-002590DE6E30.root
-/data/truggles/april03_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-7E34C318-64C1-E511-92D2-003048C756EA/make_ntuples_cfg-7E34C318-64C1-E511-92D2-003048C756EA.root
-/data/truggles/april03_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-DED607C3-63C1-E511-BD2D-003048C75DE4/make_ntuples_cfg-DED607C3-63C1-E511-BD2D-003048C75DE4.root
-/data/truggles/april03_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-E44D47E3-63C1-E511-81DB-002590DE6C56/make_ntuples_cfg-E44D47E3-63C1-E511-81DB-002590DE6C56.root
-/data/truggles/april03_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-F0C88F1D-64C1-E511-AA42-00266CF2CD48/make_ntuples_cfg-F0C88F1D-64C1-E511-AA42-00266CF2CD48.root
+/data/truggles/april08_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-585C30E6-63C1-E511-807B-002590DE6E30/make_ntuples_cfg-585C30E6-63C1-E511-807B-002590DE6E30.root
+/data/truggles/april08_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-7E34C318-64C1-E511-92D2-003048C756EA/make_ntuples_cfg-7E34C318-64C1-E511-92D2-003048C756EA.root
+/data/truggles/april08_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-DED607C3-63C1-E511-BD2D-003048C75DE4/make_ntuples_cfg-DED607C3-63C1-E511-BD2D-003048C75DE4.root
+/data/truggles/april08_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-E44D47E3-63C1-E511-81DB-002590DE6C56/make_ntuples_cfg-E44D47E3-63C1-E511-81DB-002590DE6C56.root
+/data/truggles/april08_signals/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-F0C88F1D-64C1-E511-AA42-00266CF2CD48/make_ntuples_cfg-F0C88F1D-64C1-E511-AA42-00266CF2CD48.root
