@@ -1,2 +1,1 @@
-/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-VV_1_tt.root
-/data/truggles/svFitComplete/april04_DoubleHad_2/TauTau_13_Recoil0_TESType0_isWJ0-VV_0_tt.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil0_TESType0_isWJ0-VV_0_tt.root

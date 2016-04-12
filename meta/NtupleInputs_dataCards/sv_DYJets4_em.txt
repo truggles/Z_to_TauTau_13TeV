@@ -1,2 +1,10 @@
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets4_0_em.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJets4_1_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_3_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_6_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_2_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_9_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_7_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_8_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_4_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_0_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_1_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType1_isWJ0-DYJets4_5_em.root

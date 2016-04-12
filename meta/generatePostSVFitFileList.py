@@ -25,9 +25,9 @@ if __name__ == '__main__' :
         samples.append( 'ggH%i' % mass )
         samples.append( 'bbH%i' % mass )
 
-    jobId = 'svFitComplete/april04_DoubleHad_2'
-    #channels = ['em', 'tt']
-    channels = ['tt',]
+    jobId = 'svFitComplete/April11'
+    channels = ['em', 'tt']
+    #channels = ['tt',]
     
     for sample in samples :
         for channel in channels :

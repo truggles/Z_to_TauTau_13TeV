@@ -1,6 +1,1 @@
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WJets_3_em.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WJets_0_em.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WJets_2_em.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WJets_5_em.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WJets_1_em.root
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/WJets_4_em.root
+/data/truggles/svFitComplete/April11/TauTau_13_Recoil2_TESType0_isWJ1-WJets_0_em.root
