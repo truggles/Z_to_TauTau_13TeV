@@ -7,6 +7,7 @@ def makeGenCut( inTree, cutString ) :
 
 # EM Baseline
 emKin   = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4'
+emKinEES   = 'ePt > 12 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4'
 eID     = 'ePassesConversionVeto == 1 && eMissingHits <= 1 && eMVANonTrigWP80 == 1' #eCBIDMedium == 1
 eIDLoose     = 'eMVANonTrigWP90 == 1'
 mID     = 'mPFIDMedium == 1'
@@ -126,7 +127,7 @@ def syncCutsDCqcd( ch ) :
 
 # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
 def syncCutsDCqcdTES( ch ) :
-    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
+    if ch == 'em' : cuts = [emKinEES, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
     if ch == 'tt' : cuts = [ttKinTES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus, ttIsoLooseMVA]
     cutMap = {'BaseLine' : cuts}
     return cutMap
@@ -145,7 +146,7 @@ def syncCutsNtuple( ch ) :
 # Selection which only does a loose version of the sync Ntuple cuts
 # incase we need to do tau energy scaling later
 def svFitCuts( ch ) :
-    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIsoLoose]
+    if ch == 'em' : cuts = [emKinEES, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso]
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
     if ch == 'tt' : cuts = [ttKinLoose, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus, ttIsoLooseMVA]
