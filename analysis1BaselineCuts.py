@@ -196,7 +196,6 @@ def doInitialCuts(grouping, samples, **fargs) :
     
     mpResults = [p.get() for p in multiprocessingOutputs]
     
-    #print(mpResults)
     print "#################################################################"
     print "###               Finished, summary below                     ###"
     print "#################################################################"
@@ -216,6 +215,7 @@ def doInitialCuts(grouping, samples, **fargs) :
     totalOut = 0
     mpResults.sort()
     for item in mpResults :
+        if item is None : continue
         print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
         print item[4]
         print item[5]
@@ -307,7 +307,6 @@ def doInitialOrder(grouping, samples, **fargs) :
     if fargs['debug'] != 'true' :
         mpResults = [p.get() for p in multiprocessingOutputs]
     
-        #print(mpResults)
         print "#################################################################"
         print "###               Finished, summary below                     ###"
         print "#################################################################"
@@ -326,6 +325,7 @@ def doInitialOrder(grouping, samples, **fargs) :
         mpResults.sort()
         totalIso = 0
         for item in mpResults :
+            if item is None : continue
             print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
             print item[4]
             totalIso += int(item[4].split(' ')[-1])
