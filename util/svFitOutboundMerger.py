@@ -22,7 +22,7 @@ def mergeSample( jobId, recoilType, TESType, isWJets, sample, channel ) :
     ints = []
     for file_ in files :
     
-        # Merge to ~ 800 events per file
+        # Merge to ~ 1000 events per file
         f = ROOT.TFile(file_,'r')
         t = f.Get('%s/Ntuple' % channel)
         size = t.GetEntries()
@@ -31,7 +31,7 @@ def mergeSample( jobId, recoilType, TESType, isWJets, sample, channel ) :
     	runningEvtSize += size
         print "running size: ",runningEvtSize
     	toMerge.append( file_ )
-    	if runningEvtSize > 800 :
+    	if runningEvtSize > 1000 :
     		runningEvtSize = 0
     		mergeList = ["hadd", "-f", "%s/%s_%i_%s.root" % (outDir, sample, rep, channel)]
     		for f in toMerge :
@@ -54,9 +54,10 @@ if __name__ == '__main__' :
 
     AllSamples = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April03
 
-    jobId = 'dataCards1April03a'
-	#channels = ['em', 'tt']
-    channels = ['tt',]
+    jobId = 'dataCards1April10a'
+    channels = ['em', 'tt']
+    #channels = ['em',]
+    #channels = ['tt',]
 
     """ section 1, Need TES, Recoil type 2, no WJets """
     samples = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsHigh', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
