@@ -83,6 +83,21 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
     return scalar1
 
 
+def getTauPtWeight( sample, channel, row, ptScaler ) :
+    if channel != 'tt' : return 1
+    if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample or 'Sync' in sample) :
+        return 1
+    l1weight = 0. 
+    l2weight = 0.
+    if row.t1ZTTGenMatching == 5 and row.t1GenJetPt >= 0 :
+        l1weight = row.t1GenJetPt * ptScaler / 1000.
+    if row.t2ZTTGenMatching == 5 and row.t2GenJetPt >= 0 :
+        l2weight = row.t2GenJetPt * ptScaler / 1000.
+    return 1 + l1weight + l2weight
+
+
+
+
 def mVisTES( cand1, cand2, row, TES ) :
     pt1 = (1 + TES) * getattr( row, cand1+'Pt' )
     eta1 = getattr( row, cand1+'Eta' )
@@ -184,6 +199,7 @@ tauIso = {
     'JetPartonFlavour' : '',
     'JetPhiPhiMoment' : '',
     'JetPt' : '',
+    'GenJetPt' : '',
     'LeadTrackPt' : '',
     'LowestMll' : '',
     'MatchesDoubleTau40Path' : '',
@@ -536,6 +552,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     weightB = tnew.Branch('weight', weight, 'weight/F')
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
+    tauPtWeightUp = array('f', [ 0 ] )
+    tauPtWeightUpB = tnew.Branch('tauPtWeightUp', tauPtWeightUp, 'tauPtWeightUp/F')
+    tauPtWeightDown = array('f', [ 0 ] )
+    tauPtWeightDownB = tnew.Branch('tauPtWeightDown', tauPtWeightDown, 'tauPtWeightDown/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     m_vis_UP = array('f', [ 0 ] )
@@ -715,7 +735,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             # Data specific vars
             if 'data' in sample :
                 puweight[0] = 1
+                tauPtWeightUp[0] = 1
+                tauPtWeightDown[0] = 1
                 trigweight_1[0] = 1
+                effweight[0] = 1
                 idisoweight_1[0] = 1
                 idisoweight_2[0] = 1
                 XSecLumiWeight[0] = 1
@@ -755,6 +778,16 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
+
+            # Tau Pt Weighting
+            if 'data' not in sample :
+                if channel == 'em' :
+                    tauPtWeightUp[0] = 1
+                    tauPtWeightDown[0] = 1
+                if channel == 'tt' :
+                    tauPtWeightUp[0] = getTauPtWeight( sample, channel, row, 0.2 )
+                    tauPtWeightDown[0] = getTauPtWeight( sample, channel, row, -0.2 )
+                
  
 
             tnew.Fill()

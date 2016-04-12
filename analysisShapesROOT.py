@@ -24,7 +24,8 @@ p.add_argument('--channels', action='store', default='em,tt', dest='channels', h
 p.add_argument('--fitShape', action='store', default='m_vis', dest='fitShape', help="Which shape to fit? m_vis, m_sv, or mt_sv?")
 p.add_argument('--qcdSF', action='store', default=1.9, dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
 p.add_argument('--btag', action='store', default=False, dest='btag', help="BTagging has specific binning")
-p.add_argument('--TES', action='store', default=False, dest='TES', help="Add TES shapes?")
+p.add_argument('--ES', action='store', default=False, dest='ES', help="Add ES shapes?")
+p.add_argument('--tauPt', action='store', default=False, dest='tauPt', help="Add tau pt weighting shapes?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -195,10 +196,16 @@ for channel in ['em', 'tt'] :
         #if options.mssm :
         #    if not var == baseVar+'_mssm' : continue
         #    if var != baseVar : continue
-        #elif options.TES :
-        if options.TES :
+        #elif options.ES :
+        if options.ES and not options.tauPt :
             if not baseVar in var : continue
-            if not (('_UP' in var) or('_DOWN' in var) or (baseVar == var)) : continue
+            if not (('_UP' in var) or ('_DOWN' in var) or (baseVar == var)) : continue
+        elif options.tauPt and not options.ES :
+            if not baseVar in var : continue
+            if not (('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
+        elif options.tauPt and options.ES :
+            if not baseVar in var : continue
+            if not (('_UP' in var) or ('_DOWN' in var) or ('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
         else :
             if not var == baseVar : continue
 
@@ -244,11 +251,15 @@ for channel in ['em', 'tt'] :
         histos = {}
         for name in nameArray :
             title = name.strip('_')
-            if options.TES :
+            if options.ES or options.tauPt :
                 if '_UP' in var :
-                    histos[ name ] = ROOT.TH1F( name+'TESUp', name+'TESUp', numBins, binArray )
+                    histos[ name ] = ROOT.TH1F( name+'ESUp', name+'ESUp', numBins, binArray )
                 elif '_DOWN' in var :
-                    histos[ name ] = ROOT.TH1F( name+'TESDown', name+'TESDown', numBins, binArray )
+                    histos[ name ] = ROOT.TH1F( name+'ESDown', name+'ESDown', numBins, binArray )
+                elif '_tauPtUp' in var :
+                    histos[ name ] = ROOT.TH1F( name+'tauPtUp', name+'tauPtUp', numBins, binArray )
+                elif '_tauPtDown' in var :
+                    histos[ name ] = ROOT.TH1F( name+'tauPtDown', name+'tauPtDown', numBins, binArray )
                 else :
                     histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
             histos[ name ].Sumw2()
@@ -343,14 +354,20 @@ for channel in ['em', 'tt'] :
                 histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
 
             # Proper naming of output histos
-            if options.TES and ('_UP' in var or '_DOWN' in var) :
+            if (options.ES or options.tauPt) and ('_UP' in var or '_DOWN' in var or '_tauPtUp' in var or '_tauPtDown' in var) :
                 if name in ['_data_obs_','_TT_','_QCD_','_VV_','_W_'] : continue 
                 if '_UP' in var :
-                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_tt_13TeVUp' )
-                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_tt_13TeVUp' )
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVUp' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVUp' )
                 elif '_DOWN' in var :
-                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_tt_13TeVDown' )
-                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_tt_13TeVDown' )
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVDown' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVDown' )
+                elif '_tauPtUp' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
+                elif '_tauPtDown' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVDown' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVDown' )
                 histos[ name ].Write()
             else :
                 histos[ name ].SetTitle( name.strip('_') )
