@@ -62,15 +62,20 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # Taus are currently filled with 1 for all SFs
-        sfs = '*(trigweight_1 * idisoweight_1 * idisoweight_2)'
+        sfs = ''
+        if channel == 'tt' :
+            sfs = '*(effweight)'
+        else :
+            sfs = '*(trigweight_1 * idisoweight_1 * idisoweight_2)'
         xsec = '*(XSecLumiWeight)'
         # Adding additional TES cuts (EES and MES to come for EMu channel
         es = ESCuts( sample, channel, var )
         tauW = HighPtTauWeight( var )
+        #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         dataES = '*(pt_1 > 40 && pt_2 > 40)'
         #print var,es
         totalCutAndWeightMC = 'puweight * (GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCut, sfs, xsec, es, tauW) 
-        if var == 'mt_sv_mssm' : print "\n\n total cut and weight MC : %s \n\n" % totalCutAndWeightMC
+        #if var == 'mt_sv_mssm' : print "\n\n total cut and weight MC : %s \n\n" % totalCutAndWeightMC
 
         # the >> sends the output to a predefined histo
         try :
@@ -230,8 +235,8 @@ def getPlotDetails( channel ) :
         'm_vis_mssm_DOWN' : (0, 3900, 10, 'TES DOWN Z Vis Mass [GeV]', ' GeV'),
 #XXX        'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
-        'm_vis_UP' : (0, 350, 10, 'TES UP Z Vis Mass TES Down [GeV]', ' GeV'),
-        'm_vis_DOWN' : (0, 350, 10, 'TES DOWN Z Vis Mass TES Up [GeV]', ' GeV'),
+        'm_vis_UP' : (0, 350, 10, 'TES UP Z Vis Mass [GeV]', ' GeV'),
+        'm_vis_DOWN' : (0, 350, 10, 'TES DOWN Z Vis Mass [GeV]', ' GeV'),
 #XXX        'm_vis' : (0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'),
         'm_sv_mssm' : (0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
         'm_sv_mssm_UP' : (0, 3900, 10, 'TES UP Z svFit Mass [GeV]', ' GeV'),
