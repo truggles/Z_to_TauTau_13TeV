@@ -224,6 +224,8 @@ def isoOrder( channel, row ) :
     pt2 = getattr( row, 't2Pt' )
     if iso2 > iso1 :
         for uw in tauIso.keys() :
+            if not hasattr( row, 't1%s' % uw ) : continue
+            if not hasattr( row, 't2%s' % uw ) : continue
             tmp1 = getattr( row, 't1%s' % uw )
             tmp2 = getattr( row, 't2%s' % uw )
             setattr( row, 't1%s' % uw, tmp2 )
@@ -517,7 +519,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             # iso_1 equal
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
                 # highest pt_1
-                if currentEvt[ 1 ] < prevEvt[ 1 ] :
+                if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
                 # pt_1 equal
                 elif currentEvt[ 1 ] == prevEvt[ 1 ] :
@@ -527,7 +529,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                     # iso_2 equal
                     elif currentEvt[ 2 ] == prevEvt[ 2 ] :
                         # highest pt_2
-                        if currentEvt[ 3 ] < prevEvt[ 3 ] :
+                        if currentEvt[ 3 ] > prevEvt[ 3 ] :
                             prevEvt = currentEvt
         
 
@@ -626,6 +628,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
+    xsecList = []
     for row in told:
         run = int( row.run )
         lumi = int( row.lumi )
@@ -745,6 +748,13 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 isZEE[0] = -1
                 isZMM[0] = -1
                 isZLL[0] = -1
+                # Have the btag numbers correspond to actual values not
+                # Promote/Demote values
+                if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
+                    setattr(row, 'NBTagPDM_idL_jVeto', getattr(row, 'bjetCISVVeto20MediumZTT'))
+                if hasattr(row, 'NBTagPDL_idL_jVeto' ) :
+                    setattr(row, 'NBTagPDL_idL_jVeto', getattr(row, 'bjetCISVVeto20LooseZTT'))
+
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
@@ -775,6 +785,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
                     xsec = getXSec( shortName, sampDict, row.numGenJets )
+                    if xsec not in xsecList : xsecList.append( xsec )
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
@@ -792,6 +803,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
             tnew.Fill()
             count2 += 1
+
+    # For xsec debugging:
+    if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
+        print "Cross Sections in sample: ",xsecList
 
 
     #print "Count: %i count2: %i" % (count, count2)
