@@ -633,6 +633,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         run = int( row.run )
         lumi = int( row.lumi )
         evt = int( row.evt )
+        if evt < 0 :
+            print "\n\n\n BIG \n\n TROUBLE \n\n EVT: %i   Sample: %s \n\n\n\n" % (evt, sample)
         
         currentEvt = getCurrentEvt( channel, row )
         currentRunLumiEvt = (run, lumi, evt)
@@ -805,8 +807,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             count2 += 1
 
     # For xsec debugging:
-    if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
-        print "Cross Sections in sample: ",xsecList
+    #if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
+        #print "Cross Sections in sample: ",xsecList
 
 
     #print "Count: %i count2: %i" % (count, count2)

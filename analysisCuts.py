@@ -79,7 +79,7 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 def signalExtractionNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, 'e_m_PZeta > -25']
     if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus, 't1_t2_Pt > 100']
-    cutMap = {'PostSync' : cuts}
+    cutMap = {'BaseLine' : cuts}
     return cutMap
 
 
@@ -87,7 +87,7 @@ def signalExtractionNoSign( ch ) :
 def signalCutsNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
     if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
-    cutMap = {'PostSync' : cuts}
+    cutMap = {'BaseLine' : cuts}
     return cutMap
 
 
@@ -95,7 +95,7 @@ def signalCutsNoSign( ch ) :
 def signalCuts( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emOS, emIso, extraVeto, 'e_m_PZeta > -25']
     if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
-    cutMap = {'PostSync' : cuts}
+    cutMap = {'BaseLine' : cuts}
     return cutMap
 
 
@@ -103,7 +103,7 @@ def signalCuts( ch ) :
 def signalCutsNoIsoNoSign( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', extraVeto]
     if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttL1IsoTaus]
-    cutMap = {'PostSync' : cuts}
+    cutMap = {'BaseLine' : cuts}
     return cutMap
 
     

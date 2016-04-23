@@ -70,7 +70,11 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
         xsec = '*(XSecLumiWeight)'
         # Adding additional TES cuts (EES and MES to come for EMu channel
         es = ESCuts( sample, channel, var )
+
+        # Add a shape for tau weights (not applicable to EMu chan)
         tauW = HighPtTauWeight( var )
+        if channel == 'em' and '_tauPt' in var : continue
+
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         dataES = '*(pt_1 > 40 && pt_2 > 40)'
         #print var,es
