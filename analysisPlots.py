@@ -61,12 +61,9 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
     	#histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
-        # Taus are currently filled with 1 for all SFs
-        sfs = ''
-        if channel == 'tt' :
-            sfs = '*(effweight)'
-        else :
-            sfs = '*(trigweight_1 * idisoweight_1 * idisoweight_2)'
+        # and, top pt reweighting
+        # weight is a composition of all applied MC/Data corrections
+        sfs = 'weight' 
         xsec = '*(XSecLumiWeight)'
         # Adding additional TES cuts (EES and MES to come for EMu channel
         es = ESCuts( sample, channel, var )
@@ -78,7 +75,7 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         dataES = '*(pt_1 > 40 && pt_2 > 40)'
         #print var,es
-        totalCutAndWeightMC = 'puweight * (GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCut, sfs, xsec, es, tauW) 
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCut, sfs, xsec, es, tauW) 
         #if var == 'mt_sv_mssm' : print "\n\n total cut and weight MC : %s \n\n" % totalCutAndWeightMC
 
         # the >> sends the output to a predefined histo

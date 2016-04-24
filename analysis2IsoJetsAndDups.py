@@ -32,7 +32,7 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
     try :
         if shortName in ['DYJets', 'DYJetsBig'] or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
-            scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / ( sampDict[ 'DYJets' ]['summedWeightsNorm'] + sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] )
+            scalar1 = cmsLumi * sampDict[ 'DYJetsBig' ]['Cross Section (pb)'] / sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] # removing LO small DYJets
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
@@ -558,6 +558,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     tauPtWeightUpB = tnew.Branch('tauPtWeightUp', tauPtWeightUp, 'tauPtWeightUp/F')
     tauPtWeightDown = array('f', [ 0 ] )
     tauPtWeightDownB = tnew.Branch('tauPtWeightDown', tauPtWeightDown, 'tauPtWeightDown/F')
+    topWeight = array('f', [ 0 ] )
+    topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     m_vis_UP = array('f', [ 0 ] )
@@ -746,6 +748,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 effweight[0] = 1
                 idisoweight_1[0] = 1
                 idisoweight_2[0] = 1
+                topWeight[0] = 1
+                weight[0] = 1
                 XSecLumiWeight[0] = 1
                 isZEE[0] = -1
                 isZMM[0] = -1
@@ -756,6 +760,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                     setattr(row, 'NBTagPDM_idL_jVeto', getattr(row, 'bjetCISVVeto20MediumZTT'))
                 if hasattr(row, 'NBTagPDL_idL_jVeto' ) :
                     setattr(row, 'NBTagPDL_idL_jVeto', getattr(row, 'bjetCISVVeto20LooseZTT'))
+
 
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
@@ -780,9 +785,15 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                     trigweight_1[0] = 1
                     effweight[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
                 else : trigweight_1[0] = 1
+                
+                # top pt reweighting, only for ttbar events
+                # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
+                if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
+                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*row.topQuarkPt1)*math.exp(0.156-0.00137*row.topQuarkPt2))
+                else : topWeight[0] = 1.0
 
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
-                weight[0] *= trigweight_1[0] * effweight[0]
+                weight[0] *= trigweight_1[0] * effweight[0] * topWeight[0]
 
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
@@ -800,8 +811,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 if channel == 'tt' :
                     tauPtWeightUp[0] = getTauPtWeight( sample, channel, row, 0.2 )
                     tauPtWeightDown[0] = getTauPtWeight( sample, channel, row, -0.2 )
-                
- 
+
+
 
             tnew.Fill()
             count2 += 1
