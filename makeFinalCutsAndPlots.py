@@ -35,19 +35,19 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     
     
     ''' Preset samples '''
-    SamplesDataCards = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April03
+    SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April24, removed LO DYJets small sample and DYJets m-150
     
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
     for mass in masses :
            SamplesDataCards.append( 'ggH%i' % mass )
            SamplesDataCards.append( 'bbH%i' % mass )
-    #SamplesDataCards = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow',] # As of April03
-    #SamplesDataCards = ['DYJets4',] # As of April03
+    #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow',] # As of April03
+    SamplesDataCards = ['data_tt'] # As of April03
     #SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
     samples = SamplesDataCards
     params = {
         'bkgs' : 'None',
-        'numCores' : 20,
+        'numCores' : 10,
         'numFilesPerCycle' : 1,
         'channels' : ['tt',],
         'mid1' : '1Feb24a',
@@ -79,12 +79,6 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
         
     print "IsoL2Loose: %s" % isoL2loose
 
-    """ HIG-15-007 ZTT """
-    #params['channels'] = ['tt',]
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
-    #samples = checkBkgs( samples, params, grouping )
-    #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
     """
     Double Hardonic baseline with good QCD estimation
         Inclusive
@@ -102,7 +96,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     samples = checkBkgs( samples, params, grouping )
     analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
-    ''' FINAL SELECTIONS ZTT '''
+    ''' FINAL SELECTIONS ZTT && HIG-15-007 ZTT '''
     params['channels'] = ['tt',]
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
@@ -243,16 +237,7 @@ def makeCuts( folder ) :
     
     
     ''' Preset samples '''
-    #SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'DYJets', 'DYJetsLow', 'T-tW', 'T-tchan', 'TT', 'Tbar-tW', 'Tbar-tchan', 'WJets', 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l']#, 'QCD15-20', 'QCD20-30', 'QCD30-80', 'QCD80-170', 'QCD170-250', 'QCD250-Inf'] # Set list for Data Card Sync (less DYJetsLow)
-    #SamplesDataCards = ['data_em', 'data_tt', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'DYJets', 'DYJets100-200', 'DYJets200-400', 'DYJets400-600', 'DYJets600-Inf', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'WJets', 'WJets100-200', 'WJets200-400', 'WJets400-600', 'WJets600-Inf', 'WW1l1nu2q', 'WZ1l3nu', 'ZZ4l'] # As we wait for all samples 76x to come in, this is our complete list
-    #SamplesDataCards = ['DYJets', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l3nu', 'WZ1l1nu2q', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', ] # As of Feb11
-    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of Feb22 XXX DYJetsFXFX not included
-    
-#XXX    SamplesDataCards = []
-#XXX    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
-#XXX    for mass in masses :
-#XXX           SamplesDataCards.append( 'ggH%i' % mass )
-#XXX           SamplesDataCards.append( 'bbH%i' % mass )
+    SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of Feb22 XXX DYJetsFXFX not included
     
     #SamplesDataCards = ['DYJets',]
     samples = SamplesDataCards
@@ -530,7 +515,7 @@ def setUpForCuts() :
     
     
     ''' Preset samples '''
-    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of Feb22 XXX DYJetsFXFX not included
+    SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of Feb22 XXX DYJetsFXFX not included
     
     #SamplesDataCards = []
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
@@ -655,52 +640,6 @@ if __name__ == '__main__' :
 
 #XXX    testQCDCuts( folder, '', 'VTight', 'OS' )
 
-    #makeCuts( folder )
-    #for pair in isoPairs :
-    #    for sign in ['SS', 'OS'] :
-    #        for l2 in ['l2', 'l1tl2', 'l1ml2'] :
-    #            for bt in ['', 'BT'] :
-    #                folder = '2Mar15a_'+sign+l2
-    #                plotSingle( folder, pair[1]+'_'+pair[0], 'tt', bt )
-    
-#    stuff = setUpForCuts()
-#    grouping = stuff[0]
-#    params  = stuff[1]
-#    samples = stuff[2]
-#
-#    info = {
-#    'LBTagOSSig' : ['2Mar17g_osSig', 'OS', 'VTight', 'VTight', 'bjetCISVVeto20Loose'],
-#    'LBTagOSt1mt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'bjetCISVVeto20Loose'],
-#    'LBTagSSSig' : ['2Mar17h_QCD', 'SS', 'VTight', 'VTight', 'bjetCISVVeto20Loose'],
-#    'LBTagSSt1mt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'bjetCISVVeto20Loose'],
-#    'MBTagOSSig' : ['2Mar17g_osSig', 'OS', 'VTight', 'VTight', 'nbtag'],
-#    'MBTagOSt1mt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'nbtag'],
-#    'MBTagSSSig' : ['2Mar17h_QCD', 'SS', 'VTight', 'VTight', 'nbtag'],
-#    'MBTagSSt1mt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'nbtag'],
-#    'LBTagOSt1tt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'bjetCISVVeto20Loose'],
-#    'LBTagSSt1tt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'bjetCISVVeto20Loose'],
-#    'MBTagOSt1tt2l' : ['2Mar17h_QCD', 'OS', 'VTight','Loose', 'nbtag'],
-#    'MBTagSSt1tt2l' : ['2Mar17h_QCD', 'SS', 'VTight', 'Loose', 'nbtag'],
-#    }
-#
-#    for key,tup in info.iteritems() :
-#        print key, tup
-#        #isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
-#        isoL1ML2loose = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (tup[2], tup[3])
-#        isoL1TL2loose = '(t1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (tup[2], tup[3])
-#        isoSig = '(t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
-#        if 'Sig' in key : iso = isoSig
-#        if 't1t' in key : iso = isoL1TL2loose
-#        if 't1m' in key : iso = isoL1ML2loose
-#
-#        if tup[1] == 'OS' : sign = 0
-#        else : sign = 1
-#    
-#        params['channels'] = ['tt',]
-#        params['mid2'] = tup[0]
-#        params['mid3'] = key
-#        params['additionalCut'] = '*(Z_SS==%i)*%s*(%s>0)*(njets<=2)' % (sign, iso, tup[4])
-#        samples = checkBkgs( samples, params, grouping )
-#        analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-#    for key,tup in info.iteritems() :
-#        plotSingle2( 'Mar17BTagged', key)
+
+
+

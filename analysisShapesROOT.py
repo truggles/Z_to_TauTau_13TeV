@@ -51,10 +51,6 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
-samples['DYJets-ZTT']   = ('kOrange-4', '_ZTT_')
-samples['DYJets-ZL']   = ('kOrange-4', '_ZL_')
-samples['DYJets-ZJ']   = ('kOrange-4', '_ZJ_')
-samples['DYJets-ZLL']   = ('kOrange-4', '_ZLL_')
 samples['DYJetsBig-ZTT']   = ('kOrange-4', '_ZTT_')
 samples['DYJetsBig-ZL']   = ('kOrange-4', '_ZL_')
 samples['DYJetsBig-ZJ']   = ('kOrange-4', '_ZJ_')
