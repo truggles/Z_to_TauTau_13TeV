@@ -1,2 +1,2 @@
-/data/truggles/svFitComplete/April11/TauTau_13_Recoil0_TESType0_isWJ0-Tbar-tchan_0_em.root
-/data/truggles/svFitComplete/April11/TauTau_13_Recoil0_TESType0_isWJ0-Tbar-tchan_1_em.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-Tbar-tchan_0_em.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-Tbar-tchan_1_em.root
