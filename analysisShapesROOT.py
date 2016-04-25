@@ -9,6 +9,7 @@ import analysisPlots
 from util.splitCanvas import fixFontSize
 import os
 from array import array
+from analysisPlots import skipSystShapeVar
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -26,6 +27,7 @@ p.add_argument('--qcdSF', action='store', default=1.9, dest='qcdSF', help="Choos
 p.add_argument('--btag', action='store', default=False, dest='btag', help="BTagging has specific binning")
 p.add_argument('--ES', action='store', default=False, dest='ES', help="Add ES shapes?")
 p.add_argument('--tauPt', action='store', default=False, dest='tauPt', help="Add tau pt weighting shapes?")
+p.add_argument('--allShapes', action='store', default=True, dest='allShapes', help="Do energy scale, tau pt, z pt and top pt shape systematics?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -136,13 +138,8 @@ else :
 if options.ztt :
     del samples['VBFHtoTauTau125']
     del samples['ggHtoTauTau125']
-    #XXX#samples['DYJets'] = ('kOrange-4', '_ZTT_')
-    #XXX#samples['DYJets'] = ('kOrange-4', '_ZTT90_')
-    #XXX#samples['DYJetsLow'] = ('kOrange-4', '_ZTT90_')
     nameArray.remove('_vbfH125_')
     nameArray.remove('_ggH125_')
-    #XXX#nameArray.remove('_ZTT_')
-    #XXX#nameArray.append('_ZTT90_')
 
 for channel in ['em', 'tt'] :
 
@@ -189,19 +186,20 @@ for channel in ['em', 'tt'] :
 
     for var, info in newVarMap.iteritems() :
 
+        if not baseVar in var : continue
+        if options.allShapes :
+            if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
+                continue
         #if options.mssm :
         #    if not var == baseVar+'_mssm' : continue
         #    if var != baseVar : continue
         #elif options.ES :
-        if options.ES and not options.tauPt :
-            if not baseVar in var : continue
-            if not (('_UP' in var) or ('_DOWN' in var) or (baseVar == var)) : continue
+        elif options.ES and not options.tauPt :
+            if not (('_energyScaleUp' in var) or ('_energyScaleDown' in var) or (baseVar == var)) : continue
         elif options.tauPt and not options.ES :
-            if not baseVar in var : continue
             if not (('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
         elif options.tauPt and options.ES :
-            if not baseVar in var : continue
-            if not (('_UP' in var) or ('_DOWN' in var) or ('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
+            if not (('_energyScaleUp' in var) or ('_energyScaleDown' in var) or ('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
         else :
             if not var == baseVar : continue
 
@@ -242,26 +240,38 @@ for channel in ['em', 'tt'] :
             for i in range(0, 36 ) :
                 binArray.append( i * 10 )
             #binArray.append( 600 )
-        print binArray
+        #print binArray
         numBins = len( binArray ) - 1
         histos = {}
         for name in nameArray :
             title = name.strip('_')
             if options.ES or options.tauPt :
-                if '_UP' in var :
-                    histos[ name ] = ROOT.TH1F( name+'ESUp', name+'ESUp', numBins, binArray )
-                elif '_DOWN' in var :
-                    histos[ name ] = ROOT.TH1F( name+'ESDown', name+'ESDown', numBins, binArray )
+                if '_energyScaleUp' in var :
+                    histos[ name ] = ROOT.TH1F( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
+                elif '_energyScaleDown' in var :
+                    histos[ name ] = ROOT.TH1F( name+'energyScaleDown', name+'energyScaleDown', numBins, binArray )
                 elif '_tauPtUp' in var :
                     histos[ name ] = ROOT.TH1F( name+'tauPtUp', name+'tauPtUp', numBins, binArray )
                 elif '_tauPtDown' in var :
                     histos[ name ] = ROOT.TH1F( name+'tauPtDown', name+'tauPtDown', numBins, binArray )
+                elif '_zPtUp' in var :
+                    histos[ name ] = ROOT.TH1F( name+'zPtUp', name+'zPtUp', numBins, binArray )
+                elif '_zPtDown' in var :
+                    histos[ name ] = ROOT.TH1F( name+'zPtDown', name+'zPtDown', numBins, binArray )
+                elif '_topPtUp' in var :
+                    histos[ name ] = ROOT.TH1F( name+'topPtUp', name+'topPtUp', numBins, binArray )
+                elif '_topPtDown' in var :
+                    histos[ name ] = ROOT.TH1F( name+'topPtDown', name+'topPtDown', numBins, binArray )
                 else :
                     histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
             histos[ name ].Sumw2()
 
 
         for sample in samples:
+
+            ''' Skip plotting unused shape systematics '''
+            if skipSystShapeVar( var, sample, channel ) : continue
+            if '_topPt' in var : print "Top Pt still in Var: "+var+" sample: "+sample
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
@@ -314,9 +324,9 @@ for channel in ['em', 'tt'] :
             elif sample == 'QCD' and hist.Integral() != 0 :
                 if channel == 'em' : hist.Scale( qcdEMScaleFactor )
                 if channel == 'tt' : hist.Scale( qcdTTScaleFactor )
-            elif 'data' not in sample and hist.Integral() != 0:
-                if 'TT' in sample :
-                    hist.Scale( bkgsTTScaleFactor )
+            #elif 'data' not in sample and hist.Integral() != 0:
+            #    if 'TT' in sample :
+            #        hist.Scale( bkgsTTScaleFactor )
 
             if 'QCD' not in sample :
                 #hist.Rebin( 10 )
@@ -330,7 +340,8 @@ for channel in ['em', 'tt'] :
                 #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
                 histos[ samples[ sample ][1] ].Add( hNew )
 
-            print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
+            if not 'ggH' in sample and not 'bbH' in sample :
+                print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
             #hist2 = hist.Rebin( 18, 'rebinned', binArray )
             #histos[ samples[ sample ][1] ].Add( hist2 )
             tFile.Close()
@@ -345,25 +356,46 @@ for channel in ['em', 'tt'] :
             #    if histos[ name ].GetBinContent( bin_ ) < 0 :
             #        histos[ name ].SetBinContent( bin_, setVal )
             #        print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
-            print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
+            if not 'ggH' in name and not 'bbH' in name :
+                print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
             if not options.mssm :
                 histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
 
             # Proper naming of output histos
-            if (options.ES or options.tauPt) and ('_UP' in var or '_DOWN' in var or '_tauPtUp' in var or '_tauPtDown' in var) :
-                if name in ['_data_obs_','_TT_','_QCD_','_VV_','_W_'] : continue 
-                if '_UP' in var :
-                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVUp' )
-                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVUp' )
-                elif '_DOWN' in var :
-                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVDown' )
-                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeVDown' )
+            if (options.allShapes) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var or '_topPt' in var) :
+                if name in ['_data_obs_','_QCD_','_VV_','_W_'] : continue 
+                lep = 'x'
+                if channel == 'tt' : lep = 't'
+                if channel == 'em' : lep = 'e'
+
+                if '_topPt' in var :
+                    if name == '_TT_' :
+                        if '_topPtUp' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVUp' )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVUp' )
+                        elif '_topPtDown' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
+                    else : continue
+                elif name == '_TT_' : continue # this is to catch TT when it's not wanted
+                elif '_energyScaleUp' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
+                elif '_energyScaleDown' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
                 elif '_tauPtUp' in var :
                     histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
                     histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
                 elif '_tauPtDown' in var :
                     histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVDown' )
                     histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVDown' )
+                elif '_zPtUp' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeVUp' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeVUp' )
+                elif '_zPtDown' in var :
+                    histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeVDown' )
+                    histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeVDown' )
                 histos[ name ].Write()
             else :
                 histos[ name ].SetTitle( name.strip('_') )

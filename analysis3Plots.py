@@ -11,6 +11,7 @@ from util.splitCanvas import fixFontSize
 import os
 from array import array
 import math
+from analysisPlots import skipSystShapeVar
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -267,6 +268,9 @@ for channel in ['em', 'tt'] :
 
         pZetaTot = 0
         for sample in samples:
+
+            ''' Skip plotting unused shape systematics '''
+            if skipSystShapeVar( var, sample, channel ) : continue
 
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'tt' and '-ZLL' in sample : continue

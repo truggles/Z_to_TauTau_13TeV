@@ -43,19 +43,17 @@ os.chdir('..')
 ''' Preset samples '''
 SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
-SamplesDataCards = ['DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April03
+SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
 
 #SamplesDataCards = []
-# gg->H missing 250, 300, 350, 400.  bb->H missing 200, 2300
 masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
 for mass in masses :
        SamplesDataCards.append( 'ggH%i' % mass )
        SamplesDataCards.append( 'bbH%i' % mass )
 
-#SamplesDataCards = ['data_tt',]
-#SamplesDataCards = ['DYJetsHigh',]
-#SamplesDataCards = ['WZJets',]
-SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
+#SamplesDataCards = ['data_tt','data_em']
+#SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh'] # LO DYJets
+SamplesDataCards = ['DYJetsLow',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -67,27 +65,28 @@ params = {
     #'debug' : 'true',
     'debug' : 'false',
     'bkgs' : 'None',
-    'numCores' : 20,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
-    #'channels' : ['em', 'tt'],
+    'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
-    'channels' : ['tt',],
-#XXX    'cutMapper' : 'signalCutsNoIsoNoSign', #!
+    #'channels' : ['tt',],
+    #'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
+    #'cutMapper' : 'signalCuts', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
-#XXX    'cutName' : 'PostSync', #!
-#XXX    'cutMapper' : 'syncCutsDC',
+    #'cutName' : 'PostSync', #!
+    #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
     'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'crazyCutsNtuple',
-    #'cutMapper' : 'svFitCuts',
+#XXX    'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
 #XXX    'cutMapper' : 'signalCuts',
-    'mid1' : '1April05f',
-    'mid2' : '2April05f',
-    'mid3' : '3April05f',
+    'mid1' : '1April25b',
+    'mid2' : '2April25b',
+    'mid3' : '3April25b',
     'additionalCut' : '',
     'svFitPost' : 'true',
     #'svFitPost' : 'false',
@@ -96,7 +95,7 @@ params = {
 }
 
 samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 

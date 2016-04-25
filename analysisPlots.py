@@ -10,6 +10,29 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
     return hist
 
 
+def skipSystShapeVar( var, sample, channel ) :
+        # Tau Pt Scale reweighting only applied to DYJets and signal
+        if '_tauPt' in var :
+            if channel == 'em' : return True
+            if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
+                return True
+            
+        # Energy Scale reweighting only applied to DYJets and signal
+        elif '_energyScale' in var :
+            if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
+                return True
+
+        # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
+        # do run for DYJetsLow as weight is set to 1
+        elif '_zPt' in var :
+            if 'DYJets' not in sample : return True
+
+        # top pt reweighting only applied to ttbar
+        elif '_topPt' in var :
+            if 'TT' not in sample : return True
+            elif 'DYJets' in sample : return True
+        return False
+
 
 # Make specific extra cuts for different TES requirements
 def ESCuts( sample, channel, var ) :
@@ -20,16 +43,16 @@ def ESCuts( sample, channel, var ) :
             return '*(pt_1 > 13 && pt_2 > 10)'
     ESMap = {
         'tt' : { 
-            '_UP' : '*((pt_1*1.03) > 40 && (pt_2*1.03) > 40)',
-            '_DOWN' : '*((pt_1*0.97) > 40 && (pt_2*0.97) > 40)',
+            '_energyScaleUp' : '*((pt_1*1.03) > 40 && (pt_2*1.03) > 40)',
+            '_energyScaleDown' : '*((pt_1*0.97) > 40 && (pt_2*0.97) > 40)',
             '_NoShift' : '*(pt_1 > 40 && pt_2 > 40)'},
         'em' : { 
-            '_UP' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
-            '_DOWN' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
+            '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
+            '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
             '_NoShift' : '*(pt_1 > 13 && pt_2 > 10)'}
         }
-    if '_UP' in var : return ESMap[ channel ]['_UP']
-    elif '_DOWN' in var : return ESMap[ channel ]['_DOWN']
+    if '_energyScaleUp' in var : return ESMap[ channel ]['_energyScaleUp']
+    elif '_energyScaleDown' in var : return ESMap[ channel ]['_energyScaleDown']
     else : return ESMap[ channel ]['_NoShift']
 
 
@@ -55,6 +78,34 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
     histos = {}
     #histos2 = {}
     for var, cv in newVarMap.iteritems() :
+
+
+        ''' Skip plotting unused shape systematics '''
+        if skipSystShapeVar( var, sample, channel ) : continue
+
+        ''' Define syst shape weights if applicable '''
+        shapeSyst = ''
+        # High Pt tau reweighting only applied to DYJets and signal
+        if '_tauPt' in var :
+            shapeSyst = HighPtTauWeight( var )
+
+        # top pt reweighting only applied to ttbar
+        elif '_topPt' in var :
+            if '_topPtUp' in var : shapeSyst = '*(topWeight)'
+            elif '_topPtDown' in var : shapeSyst = '*(1./topWeight)'
+
+        # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
+        elif '_zPt' in var :
+            if '_zPtUp' in var : shapeSyst = '*(zPtWeight)'
+            elif '_zPtDown' in var : shapeSyst = '*(1./zPtWeight)'
+            
+        # Energy Scale reweighting only applied to DYJets and signal
+        # this is not an "if" style shape b/c we need to apply
+        # normal pt cuts if the shape syst is not called
+        # so instead we appeand it to what ever else we have
+        shapeSyst += ESCuts( sample, channel, var )
+
+
         #if var != 'npv' : continue
         #var2 = '%s%i' % (var, 2)
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
@@ -63,19 +114,13 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # and, top pt reweighting
         # weight is a composition of all applied MC/Data corrections
-        sfs = 'weight' 
+        sfs = '*(weight)' 
         xsec = '*(XSecLumiWeight)'
-        # Adding additional TES cuts (EES and MES to come for EMu channel
-        es = ESCuts( sample, channel, var )
-
-        # Add a shape for tau weights (not applicable to EMu chan)
-        tauW = HighPtTauWeight( var )
-        if channel == 'em' and '_tauPt' in var : continue
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         dataES = '*(pt_1 > 40 && pt_2 > 40)'
         #print var,es
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCut, sfs, xsec, es, tauW) 
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
         #if var == 'mt_sv_mssm' : print "\n\n total cut and weight MC : %s \n\n" % totalCutAndWeightMC
 
         # the >> sends the output to a predefined histo
@@ -94,7 +139,7 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
                 #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'weight/abs( weight )%s%s%s' % (additionalCut, sfs, xsec) )
                 #histos2[ var ] = gPad.GetPrimitive( var2 )
 
-                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCut, sfs, xsec, es, tauW) )
+                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '%s' % totalCutAndWeightMC )
                 ''' No reweighting at the moment! '''
                 #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(weight/abs( weight ))%s' % additionalCut )
                 histos[ var ] = gPad.GetPrimitive( var )
@@ -152,33 +197,15 @@ def getHistoDict( channel ) :
 #        'weight' : ('weight', 60, -30, 30),
 #        'npv' : ('npv', 50, 0, 50),
 #        'npu' : ('npu', 50, 0, 50),
-#XXX        'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
-#XXX        'm_vis_mssm_UP' : ('m_vis_UP', 3900, 0, 3900),
-#XXX        'm_vis_mssm_DOWN' : ('m_vis_DOWN', 3900, 0, 3900),
+        'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
 #        'm_vis_varB' : ('m_vis', 600, 0, 600),
         'm_vis' : ('m_vis', 350, 0, 350),
-        'm_vis_UP' : ('m_vis_UP', 350, 0, 350),
-        'm_vis_DOWN' : ('m_vis_DOWN', 350, 0, 350),
         'm_sv_mssm' : ('m_sv', 3900, 0, 3900),
-        'm_sv_mssm_UP' : ('m_sv_UP', 3900, 0, 3900),
-        'm_sv_mssm_DOWN' : ('m_sv_DOWN', 3900, 0, 3900),
-        'm_sv_mssm_tauPtUp' : ('m_sv', 3900, 0, 3900),
-        'm_sv_mssm_tauPtDown' : ('m_sv', 3900, 0, 3900),
 #        'm_sv_varB' : ('m_sv', 600, 0, 600),
         'm_sv' : ('m_sv', 350, 0, 350),
-        'm_sv_UP' : ('m_sv_UP', 350, 0, 350),
-        'm_sv_DOWN' : ('m_sv_DOWN', 350, 0, 350),
-        'm_sv_tauPtUp' : ('m_sv', 350, 0, 350),
-        'm_sv_tauPtDown' : ('m_sv', 350, 0, 350),
         'mt_sv_mssm' : ('mt_sv', 3900, 0, 3900),
-        'mt_sv_mssm_UP' : ('mt_sv_UP', 3900, 0, 3900),
-        'mt_sv_mssm_DOWN' : ('mt_sv_DOWN', 3900, 0, 3900),
-        'mt_sv_mssm_tauPtUp' : ('mt_sv', 3900, 0, 3900),
-        'mt_sv_mssm_tauPtDown' : ('mt_sv', 3900, 0, 3900),
 #        'mt_sv_varB' : ('mt_sv', 600, 0, 600),
 #XX        'mt_sv' : ('mt_sv', 350, 0, 350),
-#XX        'mt_sv_UP' : ('mt_sv_UP', 350, 0, 350),
-#XX        'mt_sv_DOWN' : ('mt_sv_DOWN', 350, 0, 350),
 #        'pt_1' : ('pt_1', 400, 0, 400),
 #        'eta_1' : ('eta_1', 80, -4, 4),
 #XXX        'iso_1' : ('iso_1', 100, 0, 1),
@@ -195,6 +222,20 @@ def getHistoDict( channel ) :
 #        'pzetamiss' : ('pzetamiss', 1000, -400, 600),
 #        'pZeta-0.85pZetaVis' : ('pzetamiss - 0.85 * pzetavis', 1000, -500, 500),
     }
+
+    ''' added shape systematics '''
+    toAdd = ['mt_sv', 'm_sv', 'm_vis']
+    varsForShapeSyst = []
+    for item in toAdd :
+        varsForShapeSyst.append( item )
+        varsForShapeSyst.append( item+'_mssm' )
+    shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
+    for var in genVarMap.keys() :
+        if var in varsForShapeSyst :
+            for shape in shapesToAdd :
+                genVarMap[ var+'_'+shape+'Up' ] = genVarMap[ var ]
+                genVarMap[ var+'_'+shape+'Down' ] = genVarMap[ var ]
+        
 
     if channel == 'em' :
         # Provides a list of histos to create for 'EM' channel
@@ -232,34 +273,16 @@ def getHistoDict( channel ) :
 def getPlotDetails( channel ) :
     plotDetails = {
         'm_vis_mssm' : (0, 3900, 10, 'Z Vis Mass [GeV]', ' GeV'),
-        'm_vis_mssm_UP' : (0, 3900, 10, 'TES UP Z Vis Mass [GeV]', ' GeV'),
-        'm_vis_mssm_DOWN' : (0, 3900, 10, 'TES DOWN Z Vis Mass [GeV]', ' GeV'),
 #XXX        'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
-        'm_vis_UP' : (0, 350, 10, 'TES UP Z Vis Mass [GeV]', ' GeV'),
-        'm_vis_DOWN' : (0, 350, 10, 'TES DOWN Z Vis Mass [GeV]', ' GeV'),
 #XXX        'm_vis' : (0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'),
         'm_sv_mssm' : (0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_mssm_UP' : (0, 3900, 10, 'TES UP Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_mssm_DOWN' : (0, 3900, 10, 'TES DOWN Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_mssm_tauPtUp' : (0, 3900, 10, 'Tau Pt Up Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_mssm_tauPtDown' : (0, 3900, 10, 'Tau Pt Down Z svFit Mass [GeV]', ' GeV'),
 #XXX        'm_sv_varB' : (0, 600, 10, 'Z svFit Mass [GeV]', ' GeV'),
         'm_sv' : (0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_UP' : (0, 350, 10, 'TES UP Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_DOWN' : (0, 350, 10, 'TES DOWN Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_tauPtUp' : (0, 350, 10, 'Tau Pt Up Z svFit Mass [GeV]', ' GeV'),
-        'm_sv_tauPtDown' : (0, 350, 10, 'Tau Pt Down Z svFit Mass [GeV]', ' GeV'),
 #XXX        'm_sv' : (0, 350, 1, 'Z svFit Mass [GeV]', ' GeV'),
         'mt_sv_mssm' : (0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv_mssm_UP' : (0, 3900, 10, 'TES UP Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv_mssm_DOWN' : (0, 3900, 10, 'TES DOWN Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv_mssm_tauPtUp' : (0, 3900, 10, 'Tau Pt Up Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv_mssm_tauPtDown' : (0, 3900, 10, 'Tau Pt Down Total Transverse Mass [GeV]', ' GeV'),
 #XXX        'mt_sv_varB' : (0, 600, 10, 'Total Transverse Mass [GeV]', ' GeV'),
         'mt_sv' : (0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv_UP' : (0, 350, 10, 'TES UP Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv_DOWN' : (0, 350, 10, 'TES DOWN Total Transverse Mass [GeV]', ' GeV'),
 #XXX        'mt_sv' : (0, 350, 1, 'Total Transverse Mass [GeV]', ' GeV'),
         'Z_Pt' : (0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
@@ -294,6 +317,20 @@ def getPlotDetails( channel ) :
         #'m_sv' : (0, 600, 20, 'ditau svFit Mass', ' GeV'),
         #'pt_H' : (0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
         }
+
+    ''' added shape systematics '''
+    toAdd = ['mt_sv', 'm_sv', 'm_vis']
+    varsForShapeSyst = []
+    for item in toAdd :
+        varsForShapeSyst.append( item )
+        varsForShapeSyst.append( item+'_mssm' )
+    shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
+    for var in plotDetails.keys() :
+        if var in varsForShapeSyst :
+            for shape in shapesToAdd :
+                plotDetails[ var+'_'+shape+'Up' ] = plotDetails[ var ]
+                plotDetails[ var+'_'+shape+'Down' ] = plotDetails[ var ]
+        
 
     if channel == 'em' :
         plotDetailsEM  = {

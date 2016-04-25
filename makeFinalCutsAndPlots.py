@@ -41,13 +41,13 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     for mass in masses :
            SamplesDataCards.append( 'ggH%i' % mass )
            SamplesDataCards.append( 'bbH%i' % mass )
-    #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow',] # As of April03
-    SamplesDataCards = ['data_tt'] # As of April03
+    #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh',] # As of April03
+    #SamplesDataCards = ['DYJetsLow',] # As of April03
     #SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
     samples = SamplesDataCards
     params = {
         'bkgs' : 'None',
-        'numCores' : 10,
+        'numCores' : 15,
         'numFilesPerCycle' : 1,
         'channels' : ['tt',],
         'mid1' : '1Feb24a',
