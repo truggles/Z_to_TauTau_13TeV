@@ -261,6 +261,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     from util.doubleTauSF import doubleTauTriggerEff
     lepWeights = LepWeights( channel, count )
 
+    from util.zPtReweight import ZPtReweighter
+    zPtWeighter = ZPtReweighter()
+
     branchMapping = {
         'run' : 'run',
         'lumi' : 'lumi',
@@ -560,8 +563,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     tauPtWeightDownB = tnew.Branch('tauPtWeightDown', tauPtWeightDown, 'tauPtWeightDown/F')
     topWeight = array('f', [ 0 ] )
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
+    zPtWeight = array('f', [ 0 ] )
+    zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    pzeta = array('f', [ 0 ] )
+    pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
     m_vis_UP = array('f', [ 0 ] )
     m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
     m_vis_DOWN = array('f', [ 0 ] )
@@ -738,6 +745,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                     pzetamiss[0] = -9999
                     mt_1[0] = -9999
                     mt_2[0] = -9999
+            if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+                pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
 
             # Data specific vars
             if 'data' in sample :
@@ -749,6 +758,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 idisoweight_1[0] = 1
                 idisoweight_2[0] = 1
                 topWeight[0] = 1
+                zPtWeight[0] = 1
                 weight[0] = 1
                 XSecLumiWeight[0] = 1
                 isZEE[0] = -1
@@ -789,11 +799,23 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
                 if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
-                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*row.topQuarkPt1)*math.exp(0.156-0.00137*row.topQuarkPt2))
-                else : topWeight[0] = 1.0
+                    top1Pt = row.topQuarkPt1
+                    if top1Pt > 400 : top1Pt = 400
+                    top2Pt = row.topQuarkPt2
+                    if top2Pt > 400 : top2Pt = 400
+                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
+                else : topWeight[0] = 1
+
+                # Apply z Pt Reweighting to LO DYJets samples
+                # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
+                zPtWeight[0] = 1
+                if 'DYJets' in sample and 'Low' not in sample :
+                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
+                        zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
 
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * effweight[0] * topWeight[0]
+                weight[0] *= zPtWeight[0]
 
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
