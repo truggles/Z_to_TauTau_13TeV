@@ -1,5 +1,12 @@
+import math
 
-def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version ) :
+
+dRCut = 0.4
+def calcDR( eta1, phi1, eta2, phi2 ) :
+    return float(math.sqrt( (eta1-eta2)*(eta1-eta2) + (phi1-phi2)*(phi1-phi2) ))
+
+    
+def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version, doLumi=True, localFile=False, includeTrigger=True ) :
     print "TAU ANALYZER CALLED:"
     print "Count: %i    targetRun %i targetFile %s" % (mpCount, targetRun, targetFile)
     
@@ -23,18 +30,20 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
     vertices, vertexLabel = Handle("std::vector<reco::Vertex>"), "offlineSlimmedPrimaryVertices"
     verticesScore = Handle("edm::ValueMap<float>")
     jets, jetLabel = Handle("std::vector<pat::Jet>"), "slimmedJets"
-    triggerBits, triggerBitLabel = Handle("edm::TriggerResults"), ("TriggerResults","","HLT")
-    
-    import math
-    dRCut = 0.4
-    def calcDR( eta1, phi1, eta2, phi2 ) :
-        return float(math.sqrt( (eta1-eta2)*(eta1-eta2) + (phi1-phi2)*(phi1-phi2) ))
+    if includeTrigger :
+        triggerBits, triggerBitLabel = Handle("edm::TriggerResults"), ("TriggerResults","","HLT")
     
     # open file (you can use 'edmFileUtil -d /store/whatever.root' to get the physical file name)
     #events = Events("root://eoscms//eos/cms/store/relval/CMSSW_7_4_1/RelValTTbar_13/MINIAODSIM/PU25ns_MCRUN2_74_V9_gensim71X-v1/00000/72C84BA7-F9EC-E411-B875-002618FDA210.root")
     # didn't work! events = Events("edmFileUtil -d /store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root")
     #events = Events("root://eoscms//eos/cms/store/data/Run2015D/JetHT/MINIAOD/PromptReco-v4/000/259/721/00000/FEB5B9FA-1B7B-E511-8791-02163E011B09.root")
-    events = Events("root://eoscms//eos/cms%s" % targetFile)
+    if localFile :
+        import os.path
+        here = os.path.dirname('.')
+        print "Local path: %s" % here
+        events = Events( here+targetFile )
+    if not localFile :
+        events = Events("root://eoscms//eos/cms%s" % targetFile)
     #events = Events("/afs/cern.ch/work/t/truggles/Z_to_tautau/sync_mcRun2.root")
     #events = Events("/afs/cern.ch/work/t/truggles/Z_to_tautau/JetHT.root")
     
@@ -43,7 +52,11 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
     import os
     if not os.path.exists( '%i_%s' % (targetRun, version) ):
         os.makedirs( '%i_%s' % (targetRun, version) )
-    tFile = ROOT.TFile('%i_%s/%i_%i_%s.root' % (targetRun, version, targetRun, mpCount, targetFile.split('/')[-1].split('.')[0]),'RECREATE')
+    if localFile :
+        tFile = ROOT.TFile('%i_%s/%i_%s.root' % (targetRun, version, targetRun, version),'RECREATE')
+    else :
+        tFile = ROOT.TFile('%i_%s/%i_%i_%s.root' % (targetRun, version, targetRun, mpCount, targetFile.split('/')[-1].split('.')[0]),'RECREATE')
+
     #tFile = ROOT.TFile('tmp.root','RECREATE')
     tDir = tFile.mkdir('tauEvents')
     tDir.cd()
@@ -68,11 +81,6 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
     varMap[13] = 'bunchCrossing'
     varMap[14] = 'numTausThreeProng30IsoPass'
     varMap[15] = 'numTausThreeProng30IsoChrgPass'
-    #varMap[16] = 'PFJet200Pass'
-    #varMap[17] = 'PFJet260Pass'
-    #varMap[18] = 'PFJet320Pass'
-    #varMap[19] = 'PFJet400Pass'
-    #varMap[20] = 'PFJet450Pass'
     varMap[18] = 'IsoMu17'
     varMap[19] = 'IsoMu20'
     varMap[20] = 'IsoMu27'
@@ -94,7 +102,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
     # Add Taus to tree
     # Only keey 3 prong taus!!!
     count = 0
-    for i in range(1, 41, 8):
+    for i in range(1, 46, 9):
         count += 1
         varMap[150+i] = 't%iPt' % count
         varMap[150+i+1] = 't%iEta' % count
@@ -104,6 +112,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
         varMap[150+i+5] = 't%iIso' % count
         varMap[150+i+6] = 't%iIsoChrg' % count
         varMap[150+i+7] = 't%iMissingHits' % count
+        varMap[150+i+8] = 't%iLeadTrkNumHits' % count
         
     
     vals = {}
@@ -132,71 +141,48 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
         event.getByLabel(vertexLabel, vertices)
         event.getByLabel(vertexLabel, verticesScore)
         event.getByLabel(jetLabel, jets)
-        event.getByLabel(triggerBitLabel, triggerBits)
+        if includeTrigger :
+            event.getByLabel(triggerBitLabel, triggerBits)
     
         for key in tally.keys() :
             tally[ key ] = -10
     
-        if iev % 10000 == 0 :
+        if iev % 10000 == 0 or (localFile and iev % 1000 == 0) :
             print "Run: %i   Count: %i" % (targetRun, mpCount)
             print " --- iev: %d: run %6d, lumi %4d, event %12d" % (iev,event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(),event.eventAuxiliary().event())
         # Check if this evt is in the Run and Good Lumis we want
         tally['run'] = event.eventAuxiliary().run()
-        if targetRun != tally['run'] : continue
         tally['lumi'] = event.eventAuxiliary().luminosityBlock()
-        if tally['lumi'] not in targetLumis : continue
+        if doLumi :
+            if targetRun != tally['run'] : continue
+            if tally['lumi'] not in targetLumis : continue
 
         tally['evt'] = event.eventAuxiliary().event()
         tally['orbitNumber'] = event.eventAuxiliary().orbitNumber()
         tally['bunchCrossing'] = event.eventAuxiliary().bunchCrossing()
 
-        # log the lowest un-prescaled HLT trigger for these 4 runs
-        trignames = event.object().triggerNames(triggerBits.product())
-        tally['TrigPass'] = 0
-        for i in xrange(triggerBits.product().size()):
-            #if triggerBits.product().accept(i) : print "PASS trigger: %s" % trignames.triggerName(i) 
-            #if 'HLT_PFJet450' in trignames.triggerName(i) : print "%s %s" % (trignames.triggerName(i), triggerBits.product().accept(i) )
-            #if 'HLT_PFJet200' in trignames.triggerName(i) :
-            #    if triggerBits.product().accept(i) :
-            #        tally['PFJet200Pass'] = 1
-            #        tally['TrigPass'] += 1
-            #    else : tally['PFJet200Pass'] = 0
-            #if 'HLT_PFJet260' in trignames.triggerName(i) :
-            #    if triggerBits.product().accept(i) :
-            #        tally['PFJet260Pass'] = 1
-            #        tally['TrigPass'] += 1
-            #    else : tally['PFJet260Pass'] = 0
-            #if 'HLT_PFJet320' in trignames.triggerName(i) :
-            #    if triggerBits.product().accept(i) :
-            #        tally['PFJet320Pass'] = 1
-            #        tally['TrigPass'] += 1
-            #    else : tally['PFJet320Pass'] = 0
-            #if 'HLT_PFJet400' in trignames.triggerName(i) :
-            #    if triggerBits.product().accept(i) :
-            #        tally['PFJet400Pass'] = 1
-            #        tally['TrigPass'] += 1
-            #    else : tally['PFJet400Pass'] = 0
-            #if 'HLT_PFJet450' in trignames.triggerName(i) :
-            #    if triggerBits.product().accept(i) :
-            #        tally['PFJet450Pass'] = 1
-            #        tally['TrigPass'] += 1
-            #    else : tally['PFJet450Pass'] = 0
-            if 'HLT_IsoMu17_eta2p1_v' in trignames.triggerName(i) :
-                if triggerBits.product().accept(i) :
-                    tally['IsoMu17'] = 1
-                    tally['TrigPass'] += 1
-                else : tally['IsoMu17'] = 0
-            if 'HLT_IsoMu20_v' in trignames.triggerName(i) :
-                if triggerBits.product().accept(i) :
-                    tally['IsoMu20'] = 1
-                    tally['TrigPass'] += 1
-                else : tally['IsoMu20'] = 0
-            if 'HLT_IsoMu27_v' in trignames.triggerName(i) :
-                if triggerBits.product().accept(i) :
-                    tally['IsoMu27'] = 1
-                    tally['TrigPass'] += 1
-                else : tally['IsoMu27'] = 0
-        if tally['TrigPass'] == 0 : continue
+        if includeTrigger :
+            # log the lowest un-prescaled HLT trigger for these 4 runs
+            trignames = event.object().triggerNames(triggerBits.product())
+            tally['TrigPass'] = 0
+            for i in xrange(triggerBits.product().size()):
+                #if triggerBits.product().accept(i) : print "PASS trigger: %s" % trignames.triggerName(i) 
+                if 'HLT_IsoMu17_eta2p1_v' in trignames.triggerName(i) :
+                    if triggerBits.product().accept(i) :
+                        tally['IsoMu17'] = 1
+                        tally['TrigPass'] += 1
+                    else : tally['IsoMu17'] = 0
+                if 'HLT_IsoMu20_v' in trignames.triggerName(i) :
+                    if triggerBits.product().accept(i) :
+                        tally['IsoMu20'] = 1
+                        tally['TrigPass'] += 1
+                    else : tally['IsoMu20'] = 0
+                if 'HLT_IsoMu27_v' in trignames.triggerName(i) :
+                    if triggerBits.product().accept(i) :
+                        tally['IsoMu27'] = 1
+                        tally['TrigPass'] += 1
+                    else : tally['IsoMu27'] = 0
+            if tally['TrigPass'] == 0 : continue
         # Vertices
         tally['nvtx'] = 0
         tally['nvtxCleaned'] = 0
@@ -238,6 +224,12 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
             tMiss = tChrgHad.lostInnerHits()
             if tMiss == 18446744073709551615 or tMiss == 4294967295 :
                 tMiss = 0
+
+            bestTrack = tChrgHad.bestTrack()
+            if bestTrack != None :
+                tNumHits = bestTrack.found()
+            else : tNumHits = -10
+
             tally['numTauMissingHits'] += tMiss
             #print "lead chrg had: ",tChrgHad
             #print "lost hits: ",tChrgHad.lostInnerHits()
@@ -254,6 +246,7 @@ def tauAnalyzer( mpCount, targetRun, targetLumis, targetFile, maxEvents, version
             tally['t%iIso' % cnt] = tIso
             tally['t%iIsoChrg' % cnt] = tIsoChrg
             tally['t%iMissingHits' % cnt] = tMiss
+            tally['t%iLeadTrkNumHits' % cnt] = tNumHits
 
             # Find the JetPt and dR of our matching Jet
             jetDRAndPt = []

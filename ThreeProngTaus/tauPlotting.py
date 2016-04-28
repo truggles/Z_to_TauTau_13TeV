@@ -12,7 +12,7 @@ tdr.setTDRStyle()
 numT = 5
 numJ = 7
 
-def finishPlots( histos, plot, plotMap, runList, name, runColors ) :
+def finishPlots( is80XMC, histos, plot, plotMap, runList, name, runColors ) :
     ratio = True
 
     c1 = ROOT.TCanvas(plot,plot,600,600)
@@ -50,7 +50,10 @@ def finishPlots( histos, plot, plotMap, runList, name, runColors ) :
         ratioHist.Draw('esamex0')
         # X Axis!
         ratioHist.GetXaxis().SetTitle('%s' % plotMap[plot][0])
-        ratioHist.GetYaxis().SetTitle("80X / 76X")
+        if is80XMC :
+            ratioHist.GetYaxis().SetTitle("Nominal / PixUp")
+        else :
+            ratioHist.GetYaxis().SetTitle("80X / 76X")
         ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
         ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
         ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
@@ -85,7 +88,18 @@ def finishPlots( histos, plot, plotMap, runList, name, runColors ) :
 
     logo = ROOT.TText(.2, .88,"CMS Preliminary")
     logo.SetTextSize(0.04)
-    logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+    if is80XMC :
+        logo.DrawTextNDC(.2, .89,"CMS Simulation")
+    else :
+        logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+
+    if is80XMC :
+        scenario = ROOT.TText(.2, .88,"CMS Preliminary")
+        scenario.SetTextSize(0.04)
+        if 'pu25' in runList[0] :
+            scenario.DrawTextNDC(.3, .75,"PU 25 Scenario")
+        else :
+            scenario.DrawTextNDC(.3, .75,"No Pileup Scenario")
 
     lumi = ROOT.TText(.7,1.05,"(13 TeV)")
     lumi.SetTextSize(0.04)
@@ -117,23 +131,41 @@ def finishPlots( histos, plot, plotMap, runList, name, runColors ) :
             fits[ run ].SetLineStyle( 1 )
             fits[ run ].Draw('same')
 
-    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s.png' % (runList[0].split('_')[0], name ) )
+    if is80XMC :
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s.png' % (runList[0], name ) )
+    else :
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s.png' % (runList[0].split('_')[0], name ) )
 
     if 'num' in name :
         p1.SetLogy()
         histos[ runList[0] ].SetMaximum( 2 )
         p1.Update()
-        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s_log.png' % (runList[0].split('_')[0], name ) )
+        if is80XMC :
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s_log.png' % (runList[0], name ) )
+        else :
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s_log.png' % (runList[0].split('_')[0], name ) )
 
 def getHist( histDict, key, tree, fill, weight, histName, run ) :
     tree.Draw( fill, weight )
     histDict[ key ] = gPad.GetPrimitive( histName )
     histDict[ key ].SetDirectory( 0 )
-    histDict[ key ].SetTitle( str(run) )
+    if '999' in str(run) :
+        if '2017' in run and 'pu25' in run :
+            histDict[ key ].SetTitle( '2017 Upgrade PU25' )
+        elif '2017' in run and not 'pu25' in run :
+            histDict[ key ].SetTitle( '2017 Upgrade no PU' )
+        elif not '2017' in run and 'pu25' in run :
+            histDict[ key ].SetTitle( 'Run 2 Nominal PU25' )
+        elif not '2017' in run and not 'pu25' in run :
+            histDict[ key ].SetTitle( 'Run 2 Nominal no PU' )
+        else :
+            histDict[ key ].SetTitle( str(run) )
+    else :
+        histDict[ key ].SetTitle( str(run) )
     histDict[ key ].Sumw2()
     
 
-def plotter( runList, runColors, plot ) :
+def plotter( is80XMC, runList, runColors, plot ) :
     print "Starting: %s" % plot
 #for plot in plotMap.keys() :
     numEventsPerRun = {}
@@ -155,12 +187,19 @@ def plotter( runList, runColors, plot ) :
     
     for run in runList :
         print "Run: %s" % run
-        f = ROOT.TFile('%s/%s.root' % (run, run.split('_')[0]),'r')
+        if is80XMC :
+            f = ROOT.TFile('%s/%s.root' % (run, run),'r')
+        else :
+            f = ROOT.TFile('%s/%s.root' % (run, run.split('_')[0]),'r')
+
         #f = ROOT.TFile('%s.root' % run,'r')
         tree = f.Get('tauEvents/Ntuple')
         weightedSum = 0
         for row in tree :
-            weightedSum += row.PUWeight
+            if is80XMC :
+                weightedSum += 1
+            else :
+                weightedSum += row.PUWeight
         numEventsPerRun[ run ] = (tree.GetEntries(), weightedSum)
         #if (plotMap[plot][0] == 'nvtx') or (plotMap[plot][0] == 'bunchCrossing') or (plotMap[plot][0] == 'lumi') :
         getHist( hists, run, tree, '%s>>hist%s%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s' % plotMap[plot][2], 'hist%s' % run, run )
@@ -178,7 +217,7 @@ def plotter( runList, runColors, plot ) :
 
     print " <<< Plotting"
     name = plot
-    finishPlots( hists, plot, plotMap, runList, name, runColors )
+    finishPlots( is80XMC, hists, plot, plotMap, runList, name, runColors )
     return "Finished Plotting %s" % plot
         
 
@@ -186,61 +225,92 @@ def plotter( runList, runColors, plot ) :
 
 plotMap = {
 
+    # For MC Comparisons
+    # No trigger or pureweighting
+    'numTausThreeProng' : ( 'numTausThreeProng', '(4,0,4)', '', '', 'scale' ),
+    'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', '', '', 'scale' ),
+    'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', '', '', 'scale' ),
+    'numJets30Clean' : ( 'numJets30Clean', '(10,0,10)', '', '', 'scale' ),
+    'numLeadingTauMissingHits' : ( 't1MissingHits', '(4,0,4)', '', '', 'scale' ),
+    'numLeadingTauLeadTrkHits' : ( 't1LeadTrkNumHits', '(30,0,30)', '', '', 'scale' ),
+    'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', '', '', 'scale' ),
+#    'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIso_' : ( 't1Iso', '(25,0,25)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIso__' : ( 't1Iso', '(10,0,5)', '', '', 'scale' ),
+#    'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIsoChrg_' : ( 't1IsoChrg', '(25,0,25)', '', '', 'scale' ),
+    'IsolatedThreeProngTaus30ByTauIsoChrg__' : ( 't1IsoChrg', '(10,0,2)', '', '', 'scale' ),
+#    'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', '', '', 'scale' ),
+#    'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', '', '', 'scale' ),
+#    'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', '', '', 'scale' ),
+#    'jets30CleanByJet3Pt' : ( 'j3Pt', '(30,0,150)', '', '', 'scale' ),
+    'threeProngTaus30ByTauPhi' : ( 't1Phi', '(20,-4,4)', '', '', 'scale' ),
+#    'jets30CleanByJetPhi' : ( 'j1Phi', '(20,-4,4)', '', '', 'scale' ),
+    'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', '', '', 'scale' ),
+#    'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', '', '', 'scale' ),
+
+
+
+
+    # For Data Comparisons
     #''' With Trigger Matching !!! '''
-    'numTausThreeProng' : ( 'numTausThreeProng', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numJets30Clean' : ( 'numJets30Clean', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numLeadingTauMissingHits' : ( 't1MissingHits', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numTausThreeProng' : ( 'numTausThreeProng', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numJets30Clean' : ( 'numJets30Clean', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numLeadingTauMissingHits' : ( 't1MissingHits', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numLeadingTauLeadTrkHits' : ( 't1LeadTrkNumHits', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
 
-    'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauIso_' : ( 't1Iso', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauIso__' : ( 't1Iso', '(10,0,5)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauIsoChrg_' : ( 't1IsoChrg', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'IsolatedThreeProngTaus30ByTauIsoChrg__' : ( 't1IsoChrg', '(10,0,2)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJet3Pt' : ( 'j3Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauPhi' : ( 't1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJetPhi' : ( 'j1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'missingHitsPer3ProngTaus30ByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
-    'missingHitsPer3ProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
+    #'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIso_' : ( 't1Iso', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIso__' : ( 't1Iso', '(10,0,5)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIsoChrg_' : ( 't1IsoChrg', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'IsolatedThreeProngTaus30ByTauIsoChrg__' : ( 't1IsoChrg', '(10,0,2)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJet3Pt' : ( 'j3Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauPhi' : ( 't1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJetPhi' : ( 'j1Phi', '(20,-4,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'missingHitsPer3ProngTaus30ByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
+    #'missingHitsPer3ProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
 
-    'missingHitsPer3ProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
-    'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30IsoPassByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30IsoChrgPassByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20', 'div' ),
-    'jets30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numJets30Clean', 'PUWeight*IsoMu20', 'div' ),
-    'taus30PerJet30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
-    'taus30IsoPassPerJet30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
-    'taus30IsoChrgPassPerJet30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'missingHitsPer3ProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
+    #'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30IsoPassByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30IsoChrgPassByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20', 'div' ),
+    #'jets30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numJets30Clean', 'PUWeight*IsoMu20', 'div' ),
+    #'taus30PerJet30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'taus30IsoPassPerJet30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'taus30IsoChrgPassPerJet30CleanByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
 
-    'jets30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numJets30Clean', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30ByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30IsoPassByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30IsoChrgPassByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
-    'taus30IsoPassPerJet30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
-    'taus30IsoChrgPassPerJet30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
-    'taus30PerJet30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'jets30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numJets30Clean', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30ByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30IsoPassByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30IsoChrgPassByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
+    #'taus30IsoPassPerJet30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'taus30IsoChrgPassPerJet30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30IsoChrgPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'taus30PerJet30CleanByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
 
-    'jets30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numJets30Clean', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
-    'threeProngTaus30IsoPassByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
-    'taus30IsoPassPerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
-    'taus30PerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'jets30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numJets30Clean', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
+    #'threeProngTaus30IsoPassByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20', 'div' ),
+    #'taus30IsoPassPerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30IsoPass', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
+    #'taus30PerJet30CleanByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20*numJets30Clean', 'div' ),
 
 }
 
 
-def RunPlots( runList ) :
+def RunPlots( runList, is80XMC ) :
     ''' timing... '''
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print "\nStart Time: %s" % str( begin )
@@ -255,21 +325,27 @@ def RunPlots( runList ) :
     
     import multiprocessing
     ## Enable multiprocessing
-    numCores = 20
+    numCores = 5
     pool = multiprocessing.Pool(processes = numCores )
     multiprocessingOutputs = []
     for plot in plotMap.keys() :
         
         #plotter( runList, runColors, '%s' % plot ) # For Debugging
-        multiprocessingOutputs.append( pool.apply_async(plotter, args=( runList, runColors, '%s' % plot, ) ) )
-    
-    mpResults = [p.get() for p in multiprocessingOutputs]
-    mpResults.sort()
-    for item in mpResults :
-        print item
+        if not is80XMC :
+            multiprocessingOutputs.append( pool.apply_async(plotter, args=( is80XMC, runList, runColors, plot, ) ) )
+        else :
+            plotter( is80XMC, runList, runColors, plot )
+    if not is80XMC :
+        mpResults = [p.get() for p in multiprocessingOutputs]
+        mpResults.sort()
+        for item in mpResults :
+            print item
     
     print "Make html.index"
-    htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/index.html' % runList[0].split('_')[0], 'w' )
+    if is80XMC :
+        htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/index.html' % runList[0], 'w' )
+    else :
+        htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/index.html' % runList[0].split('_')[0], 'w' )
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
     htmlFile.write( '<title>Tau Tracking Study/</title></head>\n' )
     htmlFile.write( '<body>\n' )
@@ -290,14 +366,21 @@ def RunPlots( runList ) :
 
 
 if __name__ == '__main__' :
-    runs = [256677, 260627]
-    versions = ['80X_RelVal','76X']
-    for run in runs :
-        runList = []
-        for version in versions :
-            runList.append( "%s_%s" % (str(run), version) )
-        RunPlots( runList )
+    ''' for data related comparisons '''
+    #runs = [256677, 260627]
+    #versions = ['80X_RelVal','76X']
+    #for run in runs :
+    #    runList = []
+    #    for version in versions :
+    #        runList.append( "%s_%s" % (str(run), version) )
+    #    RunPlots( runList )
 
+    ''' for MC comparisons '''
+    is80XMC = True
+    runList = ['999_ttbar_800', '999_ttbar_2017_800']
+    RunPlots( runList, is80XMC )
+    runList = ['999_ttbar_800_pu25', '999_ttbar_2017_800_pu25']
+    RunPlots( runList, is80XMC )
 
 
 
