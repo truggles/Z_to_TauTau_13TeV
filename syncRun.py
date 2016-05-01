@@ -53,18 +53,18 @@ params = {
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1April24a',
-    'mid2' : '2April24a',
-    'mid3' : '3April24a',
+    'mid1' : '1May01a',
+    'mid2' : '2May01a',
+    'mid3' : '3May01a',
     'additionalCut' : '',
-    #'svFitPost' : 'true',
-    'svFitPost' : 'false',
+    'svFitPost' : 'true',
+    #'svFitPost' : 'false',
     'svFitPrep' : 'false',
     #'svFitPrep' : 'true',
 }
 
 samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 
 
