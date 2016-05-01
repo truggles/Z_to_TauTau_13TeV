@@ -237,7 +237,7 @@ for channel in ['em', 'tt'] :
             #    binArray.append( i * 10 )
         else :
             binArray = array( 'd', [] )
-            for i in range(0, 36 ) :
+            for i in range(2, 26 ) :
                 binArray.append( i * 10 )
             #binArray.append( 600 )
         #print binArray
@@ -359,7 +359,7 @@ for channel in ['em', 'tt'] :
             if not 'ggH' in name and not 'bbH' in name :
                 print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
             if not options.mssm :
-                histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
+                histos[ name ].GetXaxis().SetRangeUser( 20, 250 )
 
             # Proper naming of output histos
             if (options.allShapes) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var or '_topPt' in var) :
