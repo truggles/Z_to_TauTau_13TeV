@@ -51,7 +51,14 @@ def finishPlots( is80XMC, histos, plot, plotMap, runList, name, runColors ) :
         # X Axis!
         ratioHist.GetXaxis().SetTitle('%s' % plotMap[plot][0])
         if is80XMC :
-            ratioHist.GetYaxis().SetTitle("Nominal / PixUp")
+            if 'pu25' in runList[0] and 'pu25' in runList[1] :
+                ratioHist.GetYaxis().SetTitle("Nominal / PixUp")
+            elif 'pu25' not in runList[0] and 'pu25' not in runList[1] :
+                ratioHist.GetYaxis().SetTitle("Nominal / PixUp")
+            elif '2017' in runList[0] and '2017' in runList[1] :
+                ratioHist.GetYaxis().SetTitle("No PU / PU 25")
+            elif '2017' not in runList[0] and '2017' not in runList[1] :
+                ratioHist.GetYaxis().SetTitle("No PU / PU 25")
         else :
             ratioHist.GetYaxis().SetTitle("80X / 76X")
         ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
@@ -67,6 +74,10 @@ def finishPlots( is80XMC, histos, plot, plotMap, runList, name, runColors ) :
 
     histos[ runList[0] ].Draw('e0')
     histos[ runList[1] ].Draw('same e0')
+    if len( histos ) > 2 :
+        histos[ runList[2] ].Draw('same e0')
+    if len( histos ) > 3 :
+        histos[ runList[3] ].Draw('same e0')
 
     maxi = 0
     for run in runList :
@@ -96,10 +107,16 @@ def finishPlots( is80XMC, histos, plot, plotMap, runList, name, runColors ) :
     if is80XMC :
         scenario = ROOT.TText(.2, .88,"CMS Preliminary")
         scenario.SetTextSize(0.04)
-        if 'pu25' in runList[0] :
+        if 'pu25' in runList[0] and 'pu25' in runList[1] :
             scenario.DrawTextNDC(.3, .75,"PU 25 Scenario")
-        else :
+        elif 'pu25' not in runList[0] and 'pu25' not in runList[1] :
             scenario.DrawTextNDC(.3, .75,"No Pileup Scenario")
+        elif '2017' in runList[0] and '2017' in runList[1] :
+            scenario.DrawTextNDC(.3, .75,"2017 Upgrade Scenario")
+        elif '2017' not in runList[0] and '2017' not in runList[1] :
+            scenario.DrawTextNDC(.2, .75,"Run II No Upgrade Scenario")
+        else :
+            scenario.DrawTextNDC(.3, .75,"Title Problem...")
 
     lumi = ROOT.TText(.7,1.05,"(13 TeV)")
     lumi.SetTextSize(0.04)
@@ -231,7 +248,8 @@ plotMap = {
     'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', '', '', 'scale' ),
     'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', '', '', 'scale' ),
     'numJets30Clean' : ( 'numJets30Clean', '(10,0,10)', '', '', 'scale' ),
-    'numLeadingTauMissingHits' : ( 't1MissingHits', '(4,0,4)', '', '', 'scale' ),
+    'numLeadingTauMissingHits' : ( 't1MissingHits', '(3,0,3)', '', '', 'scale' ),
+    'numIsoLeadingTauMissingHits' : ( 't1MissingHits', '(3,0,3)', '(t1IsoChrg < 2.)', '', 'scale' ),
     'numLeadingTauLeadTrkHits' : ( 't1LeadTrkNumHits', '(30,0,30)', '', '', 'scale' ),
     'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', '', '', 'scale' ),
 #    'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', '', '', 'scale' ),
@@ -320,6 +338,8 @@ def RunPlots( runList, is80XMC ) :
     runColors = OrderedDict()
     runColors[runList[0]] = ROOT.kBlack
     runColors[runList[1]] = ROOT.kRed
+    runColors[runList[2]] = ROOT.kBlue
+    runColors[runList[3]] = ROOT.kGreen
     
     
     
@@ -377,9 +397,18 @@ if __name__ == '__main__' :
 
     ''' for MC comparisons '''
     is80XMC = True
-    runList = ['999_ttbar_800', '999_ttbar_2017_800']
-    RunPlots( runList, is80XMC )
-    runList = ['999_ttbar_800_pu25', '999_ttbar_2017_800_pu25']
+    ''' Constant Pileup Comparisons '''
+    #runList = ['999_ttbar_800', '999_ttbar_2017_800']
+    #RunPlots( runList, is80XMC )
+    #runList = ['999_ttbar_800_pu25', '999_ttbar_2017_800_pu25']
+    #RunPlots( runList, is80XMC )
+    ''' Constant Detector Comparisons '''
+    #runList = ['999_ttbar_800', '999_ttbar_800_pu25']
+    #RunPlots( runList, is80XMC )
+    #runList = ['999_ttbar_2017_800', '999_ttbar_2017_800_pu25']
+    #RunPlots( runList, is80XMC )
+    ''' All at once '''
+    runList = ['999_ttbar_800', '999_ttbar_800_pu25', '999_ttbar_2017_800', '999_ttbar_2017_800_pu25']
     RunPlots( runList, is80XMC )
 
 
