@@ -169,10 +169,12 @@ for channel in ['em', 'tt'] :
     if 'data' in sample : print "Fitting",baseVar
     if 'm_vis' in baseVar :
         append = ''
-    if 'm_sv' in baseVar :
+    elif 'm_sv' in baseVar :
         append = '_svFit'
-    if 'mt_sv' in baseVar :
+    elif 'mt_sv' in baseVar :
         append = '_MtsvFit'
+    elif 'mt_tot' in baseVar :
+        append = '_MtTot'
 
     if options.mssm :
     #    if not var == baseVar+'_mssm' : continue

@@ -204,6 +204,7 @@ def getHistoDict( channel ) :
 #        'm_sv_varB' : ('m_sv', 600, 0, 600),
         'm_sv' : ('m_sv', 350, 0, 350),
         'mt_sv_mssm' : ('mt_sv', 3900, 0, 3900),
+        'mt_tot_mssm' : ('mt_tot', 3900, 0, 3900),
 #        'mt_sv_varB' : ('mt_sv', 600, 0, 600),
 #XX        'mt_sv' : ('mt_sv', 350, 0, 350),
 #        'pt_1' : ('pt_1', 400, 0, 400),
@@ -224,7 +225,7 @@ def getHistoDict( channel ) :
     }
 
     ''' added shape systematics '''
-    toAdd = ['mt_sv', 'm_sv', 'm_vis']
+    toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
     varsForShapeSyst = []
     for item in toAdd :
         varsForShapeSyst.append( item )
@@ -280,10 +281,12 @@ def getPlotDetails( channel ) :
 #XXX        'm_sv_varB' : (0, 600, 10, 'Z svFit Mass [GeV]', ' GeV'),
         'm_sv' : (0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
 #XXX        'm_sv' : (0, 350, 1, 'Z svFit Mass [GeV]', ' GeV'),
-        'mt_sv_mssm' : (0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv_mssm' : (0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
 #XXX        'mt_sv_varB' : (0, 600, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv' : (0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv' : (0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
 #XXX        'mt_sv' : (0, 350, 1, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_tot_mssm' : (0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_tot' : (0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
         'Z_Pt' : (0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
         'met' : (0, 250, 20, 'pfMet [GeV]', ' GeV'),
@@ -319,7 +322,7 @@ def getPlotDetails( channel ) :
         }
 
     ''' added shape systematics '''
-    toAdd = ['mt_sv', 'm_sv', 'm_vis']
+    toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
     varsForShapeSyst = []
     for item in toAdd :
         varsForShapeSyst.append( item )

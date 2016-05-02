@@ -541,8 +541,8 @@ for channel in ['em', 'tt'] :
             qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             print "qcdVar: %f   mean %f" % (qcdVar.Integral(), qcdVar.GetMean() )
             if var == 'mt_sv_mssm' :
-                print "QCD Binning"
-                print xBins
+                #print "QCD Binning"
+                #print xBins
                 finalQCDYield = qcdVar.Integral()
             qcdDir.cd()
             qcdVar.Write()
@@ -713,7 +713,7 @@ for channel in ['em', 'tt'] :
 
 
         """ Blinding Data """
-        if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var) :
+        if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var or 'mt_tot' in var) :
             nBins = stack.GetStack().Last().GetXaxis().GetNbins()
             for k in range( nBins+1 ) :
                 if data.GetXaxis().GetBinLowEdge(k+1)>170 :

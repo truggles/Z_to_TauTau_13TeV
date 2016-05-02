@@ -53,7 +53,7 @@ for mass in masses :
 
 #SamplesDataCards = ['data_tt','data_em']
 #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh'] # LO DYJets
-SamplesDataCards = ['DYJetsLow',]
+#SamplesDataCards = ['DYJetsLow',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -65,7 +65,7 @@ params = {
     #'debug' : 'true',
     'debug' : 'false',
     'bkgs' : 'None',
-    'numCores' : 10,
+    'numCores' : 20,
     'numFilesPerCycle' : 1,
     'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
@@ -84,9 +84,9 @@ params = {
     #'cutMapper' : 'syncCutsNtuple',
     'cutName' : 'BaseLine',
 #XXX    'cutMapper' : 'signalCuts',
-    'mid1' : '1April25b',
-    'mid2' : '2April25b',
-    'mid3' : '3April25b',
+    'mid1' : '1May01',
+    'mid2' : '2May01',
+    'mid3' : '3May01',
     'additionalCut' : '',
     'svFitPost' : 'true',
     #'svFitPost' : 'false',
@@ -95,18 +95,8 @@ params = {
 }
 
 samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-
-#params['mid3'] = '3Feb02sDC_SS'
-#params['additionalCut'] = '*(Z_SS==1)'
-#samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
-#
-#params['mid3'] = '3Feb02sDC_OS'
-#params['additionalCut'] = '*(Z_SS==0)'
-#samples = checkBkgs( samples, params, grouping )
 #analysis1BaselineCuts.drawHistos( grouping, samples, **params )
 
 

@@ -115,6 +115,39 @@ def mVisTES( cand1, cand2, row, TES ) :
     return shifted.M()
 
 
+def getMTTotal( pt1, phi1, pt2, phi2, row, channel, esUP=True ) :
+    if channel == 'tt' :
+        es = 0.03
+    if channel == 'em' :
+        if abs( row.eEta ) < 1.479 : # BarrelEndcap transition at eta = 1.479
+            es = 0.01
+        else :
+            es = 0.025
+
+    shift = 1.
+    if esUP : shift += es
+    else : shift -= es
+
+    # Get ES corrected mva met
+    dx1_UP = pt1 * math.cos( phi1 ) * (( 1. / (shift) ) - 1.)
+    dy1_UP = pt1 * math.sin( phi1 ) * (( 1. / (shift) ) - 1.)
+    if hasattr( row, "mvametcorr_ex" ) :
+        mvametcorr_ex_UP = row.mvametcorr_ex + dx1_UP
+        mvametcorr_ey_UP = row.mvametcorr_ey + dy1_UP
+    else : return -10
+    mvametcorr = math.sqrt( mvametcorr_ex_UP**2 + mvametcorr_ey_UP**2 )
+    mvametcorrphi = ROOT.TMath.ATan2( mvametcorr_ey_UP, mvametcorr_ex_UP )
+
+    mt_1_UP = getTransMass( mvametcorr, mvametcorrphi, pt1*shift, phi1 )
+    mt_2_UP = getTransMass( mvametcorr, mvametcorrphi, pt2*shift, phi2 )
+    return calcMTTotal( pt1*shift, phi1, pt2*shift, phi2, mt_1_UP, mt_2_UP )
+
+
+def calcMTTotal( pt1, phi1, pt2, phi2, mt1, mt2 ) :
+    mt_diTau = getTransMass( pt1, phi1, pt2, phi2 )
+    return math.sqrt( mt_diTau**2 + mt1**2 + mt2**2 )
+
+
 def getTransMass( met, metphi, l1pt, l1phi ) :
     return math.sqrt( 2 * l1pt * met * (1 - math.cos( l1phi - metphi)))
 
@@ -573,6 +606,12 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
     m_vis_DOWN = array('f', [ 0 ] )
     m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
+    mt_tot = array('f', [ 0 ] )
+    mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
+    mt_tot_UP = array('f', [ 0 ] )
+    mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
+    mt_tot_DOWN = array('f', [ 0 ] )
+    mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -747,6 +786,22 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                     mt_2[0] = -9999
             if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
                 pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+
+
+            # With calculated transverse mass variables, do Mt_Total for mssm search
+            pt1 = getattr( row, l1+'Pt' )
+            pt2 = getattr( row, l2+'Pt' )
+            phi1 = getattr( row, l1+'Phi' )
+            phi2 = getattr( row, l2+'Phi' )
+            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
+            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
+                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+            else :
+                mt_tot_UP[0] = -10
+                mt_tot_DOWN[0] = -10
+            #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
+
 
             # Data specific vars
             if 'data' in sample :
