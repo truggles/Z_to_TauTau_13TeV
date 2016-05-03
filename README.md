@@ -17,7 +17,7 @@ Load from GitHub the measured lepton efficiencies for scale factors
 If any FSA ntuples have been updated, make a list of the backgrounds and data 
 samples in:
 ```bash
-    meta/NtupleInputs_[25/50]ns
+    meta/NtupleInputs_[dataCards/Sync]
 ```
 And, make sure DAS paths and updated cross sections are all in 
 ```bash
@@ -89,3 +89,7 @@ To run:<BR>
 5 - `source env.sh`<BR>
 6 - `python tauPlotting.py`<BR>
 7 - view plots online: `http://truggles.web.cern.ch/truggles/threeProngs/`<BR>
+
+Fake Factors additions:
+Fake factors have been derived to estimate QCD, WJets and TTJets from data, initially for the MuTau channel, but are being tested in double hadronic channel.  Find documentations here: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
+
