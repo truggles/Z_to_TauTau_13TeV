@@ -13,7 +13,8 @@ def das_query ( query ) :
   output = subprocess.Popen(" ".join(cmd), shell=True, stdout=subprocess.PIPE).stdout
   result = json.load(output)
   if result['status'] != 'ok' :
-    raise Exception('DAS query returned result status %s' % result['status'])
+    rtn = 'DAS query returned result status %s' % result['status']
+    raise Exception(rtn)
   return result
 
 if __name__ == '__main__' :

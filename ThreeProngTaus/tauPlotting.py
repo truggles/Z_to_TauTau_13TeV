@@ -2,44 +2,121 @@ import ROOT
 from time import gmtime, strftime
 from ROOT import gPad, gROOT, gStyle
 import pyplotter.tdrstyle as tdr
+import sys
+sys.path.append( '/afs/cern.ch/work/t/truggles/Z_to_tautau/CMSSW_7_6_3_patch2/src/Z_to_TauTau_13TeV/util' )
+from ratioPlot import ratioPlot
+from array import array
 
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 numT = 5
 numJ = 7
 
-def finishPlots( histos, plot, plotMap, run, name ) :
+def finishPlots( is80XMC, histos, plot, plotMap, runList, name, runColors ) :
+    ratio = True
+
     c1 = ROOT.TCanvas(plot,plot,600,600)
-    p1 = ROOT.TPad('p_%s' % plot,'p_%s' % plot,0,0,1,1)
-    p1.Draw()
+    if ratio :
+        xBins = array('d', []) 
+        totBins = histos[ runList[0] ].GetXaxis().GetNbins()
+        binWidth = histos[ runList[0] ].GetXaxis().GetBinWidth( 1 )
+        first = histos[ runList[0] ].GetXaxis().GetBinLowEdge( 1 )
+        for i in range( 0, int(totBins)+1 ) :
+             xBins.append( round(i*binWidth+first,1) )
+        xNum = len( xBins ) - 1
+        smlPadSize = .25
+        pads = ratioPlot( c1, 1-smlPadSize )
+        p1 = pads[0]
+        ratioPad = pads[1]
+        ratioPad.SetTopMargin(0.00)
+        ratioPad.SetBottomMargin(0.3)
+        p1.SetBottomMargin(0.00)
+        ratioPad.SetGridy()
+        ratioHist = ROOT.TH1F('ratio %s' % runList[0], 'ratio', xNum, xBins )
+        ratioHist.Sumw2()
+        ratioHist.Add( histos[ runList[0] ] )
+        ratioHist.Divide( histos[ runList[1] ] )
+        #ratioHist.SetMaximum( ratioHist.GetMaximum() * 1.2 )
+        #ratioHist.SetMinimum( ratioHist.GetMinimum() * 1.2 )
+        ratioHist.SetMaximum( 1.5 )
+        ratioHist.SetMinimum( 0.5 )
+        ratioHist.SetMarkerStyle( 21 )
+        ratioPad.cd()
+        ratioHist.Draw('ex0')
+        line = ROOT.TLine( xBins[0], 1, xBins[-1], 1 )
+        line.SetLineColor(ROOT.kBlack)
+        line.SetLineWidth( 1 )
+        line.Draw()
+        ratioHist.Draw('esamex0')
+        # X Axis!
+        ratioHist.GetXaxis().SetTitle('%s' % plotMap[plot][0])
+        if is80XMC :
+            if 'pu25' in runList[0] and 'pu25' in runList[1] :
+                ratioHist.GetYaxis().SetTitle("Nominal / PixUp")
+            elif 'pu25' not in runList[0] and 'pu25' not in runList[1] :
+                ratioHist.GetYaxis().SetTitle("Nominal / PixUp")
+            elif '2017' in runList[0] and '2017' in runList[1] :
+                ratioHist.GetYaxis().SetTitle("No PU / PU 25")
+            elif '2017' not in runList[0] and '2017' not in runList[1] :
+                ratioHist.GetYaxis().SetTitle("No PU / PU 25")
+        else :
+            ratioHist.GetYaxis().SetTitle("80X / 76X")
+        ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
+        ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
+        ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
+        ratioHist.GetYaxis().SetNdivisions( 5, True )
+        ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
+        ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
+
+
+    p1.cd()
     p1.cd()
 
-    histos[258425].Draw('e0')
-    histos[259721].Draw('same e0')
-    histos[254833].Draw('same e0')
-    histos[254790].Draw('same e0')
+    histos[ runList[0] ].Draw('e0')
+    histos[ runList[1] ].Draw('same e0')
+    if len( histos ) > 2 :
+        histos[ runList[2] ].Draw('same e0')
+    if len( histos ) > 3 :
+        histos[ runList[3] ].Draw('same e0')
 
     maxi = 0
-    for run in runs :
+    for run in runList :
         #print histos[run].GetMaximum()
-        histos[run].SetLineColor( runs[ run ] )
+        histos[run].SetLineColor( runColors[ run ] )
         histos[run].SetLineWidth( 2 )
         if histos[run].GetMaximum() > maxi : maxi = histos[run].GetMaximum()
-    histos[258425].SetMaximum( maxi * 1.5 )
-    histos[258425].GetXaxis().SetTitle( '%s' % plotMap[plot][0] )
+    histos[ runList[0] ].SetMaximum( maxi * 1.5 )
+    histos[ runList[0] ].GetXaxis().SetTitle( '%s' % plotMap[plot][0] )
     #p1.SetTitle( '%s' % plot.replace('By',' vs. ') )
     #c1.SetTitle( '%s' % plot.replace('By',' vs. ') )
-    if 'threeProng' in name : yaxis = 'Taus / Event'
+    if 'hreeProng' in name : yaxis = 'Taus / Event'
     elif 'taus' in name : yaxis = 'Taus / Jets Rate'
     elif 'jets' in name : yaxis = 'Jets / Event'
     else : yaxis = name
     if 'scale' in plotMap[plot][4] :
         yaxis = 'A.U.'
-    histos[258425].GetYaxis().SetTitle( yaxis )
+    histos[ runList[0] ].GetYaxis().SetTitle( yaxis )
 
     logo = ROOT.TText(.2, .88,"CMS Preliminary")
     logo.SetTextSize(0.04)
-    logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+    if is80XMC :
+        logo.DrawTextNDC(.2, .89,"CMS Simulation")
+    else :
+        logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+
+    if is80XMC :
+        scenario = ROOT.TText(.2, .88,"CMS Preliminary")
+        scenario.SetTextSize(0.04)
+        if 'pu25' in runList[0] and 'pu25' in runList[1] :
+            scenario.DrawTextNDC(.3, .75,"PU 25 Scenario")
+        elif 'pu25' not in runList[0] and 'pu25' not in runList[1] :
+            scenario.DrawTextNDC(.3, .75,"No Pileup Scenario")
+        elif '2017' in runList[0] and '2017' in runList[1] :
+            scenario.DrawTextNDC(.3, .75,"2017 Upgrade Scenario")
+        elif '2017' not in runList[0] and '2017' not in runList[1] :
+            scenario.DrawTextNDC(.2, .75,"Run II No Upgrade Scenario")
+        else :
+            scenario.DrawTextNDC(.3, .75,"Title Problem...")
 
     lumi = ROOT.TText(.7,1.05,"(13 TeV)")
     lumi.SetTextSize(0.04)
@@ -55,55 +132,164 @@ def finishPlots( histos, plot, plotMap, run, name ) :
         gStyle.SetOptFit(0000)
         funcs = {}
         fits = {}
-        for run in runs :
-            funcs[ run ] = ROOT.TF1( 'funx%i' % run, '[0] + (x * [1])', 5, 27 )
-            f1 = gROOT.GetFunction('funx%i' % run )
+        for run in runList :
+            funcs[ run ] = ROOT.TF1( 'funx%s' % run, '[0] + (x * [1])', 5, 27 )
+            f1 = gROOT.GetFunction('funx%s' % run )
             f1.SetParName( 0, 'Y-int' )
             f1.SetParName( 1, 'slope' )
             f1.SetParameter( 0, 99 )
             f1.SetParameter( 1, 99 ) 
 
-            #histos[run].Fit('funx%i' % run, 'EMRIW')
-            histos[run].Fit('funx%i' % run, 'R' )
-            fits[ run ] = histos[run].GetFunction("funx%i" % run )
-            fits[ run ].SetLineColor( runs[ run ] )
+            #histos[run].Fit('funx%s' % run, 'EMRIW')
+            histos[run].Fit('funx%s' % run, 'R' )
+            fits[ run ] = histos[run].GetFunction("funx%s" % run )
+            fits[ run ].SetLineColor( runColors[ run ] )
             fits[ run ].SetLineWidth( 4 )
             fits[ run ].SetLineStyle( 1 )
             fits[ run ].Draw('same')
 
-    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s.png' % name )
+    if is80XMC :
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s.png' % (runList[0], name ) )
+    else :
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s.png' % (runList[0].split('_')[0], name ) )
+
     if 'num' in name :
         p1.SetLogy()
-        histos[258425].SetMaximum( 2 )
+        histos[ runList[0] ].SetMaximum( 2 )
         p1.Update()
-        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s_log.png' % name )
+        if is80XMC :
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s_log.png' % (runList[0], name ) )
+        else :
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/%s_log.png' % (runList[0].split('_')[0], name ) )
 
 def getHist( histDict, key, tree, fill, weight, histName, run ) :
     tree.Draw( fill, weight )
     histDict[ key ] = gPad.GetPrimitive( histName )
     histDict[ key ].SetDirectory( 0 )
-    histDict[ key ].SetTitle( str(run) )
+    if '999' in str(run) :
+        if '2017' in run and 'pu25' in run :
+            histDict[ key ].SetTitle( '2017 Upgrade PU25' )
+        elif '2017' in run and not 'pu25' in run :
+            histDict[ key ].SetTitle( '2017 Upgrade no PU' )
+        elif not '2017' in run and 'pu25' in run :
+            histDict[ key ].SetTitle( 'Run 2 Nominal PU25' )
+        elif not '2017' in run and not 'pu25' in run :
+            histDict[ key ].SetTitle( 'Run 2 Nominal no PU' )
+        else :
+            histDict[ key ].SetTitle( str(run) )
+    else :
+        histDict[ key ].SetTitle( str(run) )
     histDict[ key ].Sumw2()
     
 
-''' timing... '''
-begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-print "\nStart Time: %s" % str( begin )
+def plotter( is80XMC, runList, runColors, plot ) :
+    print "Starting: %s" % plot
+#for plot in plotMap.keys() :
+    numEventsPerRun = {}
+    hists = {}
+    #jhists = {}
+    hists2 = {}
+    #jhists2 = {}
+    for run in runList :
+        info = plotMap[plot][1].strip('(').strip(')').split(',')
+        #print info
+        numB = int(info[0])
+        first = int(info[1])
+        last = int(info[2])
+        hists[ run ] = ROOT.TH1F( '%s' % run, '%s' % run, numB, first, last)
+        #jhists[ run ] = ROOT.TH1F( 'j%s' % run, 'j%s' % run, numB, first, last)
+        hists2[ run ] = ROOT.TH1F( '2_%s' % run, '2_%s' % run, numB, first, last)
+        #jhists2[ run ] = ROOT.TH1F( 'j2_%s' % run, 'j2_%s' % run, numB, first, last)
+        
+    
+    for run in runList :
+        print "Run: %s" % run
+        if is80XMC :
+            f = ROOT.TFile('%s/%s.root' % (run, run),'r')
+        else :
+            f = ROOT.TFile('%s/%s.root' % (run, run.split('_')[0]),'r')
+
+        #f = ROOT.TFile('%s.root' % run,'r')
+        tree = f.Get('tauEvents/Ntuple')
+        weightedSum = 0
+        for row in tree :
+            if is80XMC :
+                weightedSum += 1
+            else :
+                weightedSum += row.PUWeight
+        numEventsPerRun[ run ] = (tree.GetEntries(), weightedSum)
+        #if (plotMap[plot][0] == 'nvtx') or (plotMap[plot][0] == 'bunchCrossing') or (plotMap[plot][0] == 'lumi') :
+        getHist( hists, run, tree, '%s>>hist%s%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s' % plotMap[plot][2], 'hist%s' % run, run )
+        getHist( hists2, run, tree, '%s>>hist2%s%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s' % plotMap[plot][3], 'hist2%s' % run, run )
+
+        if 'div' in plotMap[plot][4] :
+            hists[ run ].Divide( hists2[ run ] )
+        if 'scale' in plotMap[plot][4] :
+            hists[ run ].Scale( 1 / hists[ run ].Integral() )
+        if 'x' in plotMap[plot][4] :
+            print "Scaling by weighted sum: %f" % numEventsPerRun[ run ][1]
+            hists[ run ].Scale( 1 / numEventsPerRun[ run ][1] )
+            print "New Integral: %f" % hists[ run ].Integral()
+        print "### Done first"
+
+    print " <<< Plotting"
+    name = plot
+    finishPlots( is80XMC, hists, plot, plotMap, runList, name, runColors )
+    return "Finished Plotting %s" % plot
+        
+
+
 
 plotMap = {
 
+    # For MC Comparisons
+    # No trigger or pureweighting
+    'numTausThreeProng' : ( 'numTausThreeProng', '(4,0,4)', '', '', 'scale' ),
+    'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', '', '', 'scale' ),
+    'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', '', '', 'scale' ),
+    'numJets30Clean' : ( 'numJets30Clean', '(10,0,10)', '', '', 'scale' ),
+    'numLeadingTauMissingHits' : ( 't1MissingHits', '(3,0,3)', '', '', 'scale' ),
+    'numIsoLeadingTauMissingHits' : ( 't1MissingHits', '(3,0,3)', '(t1IsoChrg < 2.)', '', 'scale' ),
+    'numLeadingTauLeadTrkHits' : ( 't1LeadTrkNumHits', '(30,0,30)', '', '', 'scale' ),
+    'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', '', '', 'scale' ),
+#    'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIso_' : ( 't1Iso', '(25,0,25)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIso__' : ( 't1Iso', '(10,0,5)', '', '', 'scale' ),
+#    'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', '', '', 'scale' ),
+    'threeProngTaus30ByTauIsoChrg_' : ( 't1IsoChrg', '(25,0,25)', '', '', 'scale' ),
+    'IsolatedThreeProngTaus30ByTauIsoChrg__' : ( 't1IsoChrg', '(10,0,2)', '', '', 'scale' ),
+#    'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', '', '', 'scale' ),
+#    'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', '', '', 'scale' ),
+#    'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', '', '', 'scale' ),
+#    'jets30CleanByJet3Pt' : ( 'j3Pt', '(30,0,150)', '', '', 'scale' ),
+    'threeProngTaus30ByTauPhi' : ( 't1Phi', '(20,-4,4)', '', '', 'scale' ),
+#    'jets30CleanByJetPhi' : ( 'j1Phi', '(20,-4,4)', '', '', 'scale' ),
+    'threeProngTaus30ByTauEta' : ( 't1Eta', '(30,-3,3)', '', '', 'scale' ),
+#    'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', '', '', 'scale' ),
+
+
+
+
+    # For Data Comparisons
     #''' With Trigger Matching !!! '''
-    'numTausThreeProng' : ( 'numTausThreeProng', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numJets30Clean' : ( 'numJets30Clean', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
-    'numLeadingTauMissingHits' : ( 't1MissingHits', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numTausThreeProng' : ( 'numTausThreeProng', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numTausThreeProng30' : ( 'numTausThreeProng30', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numTausThreeProngIsoPass' : ( 'numTausThreeProngIsoPass', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numJets30Clean' : ( 'numJets30Clean', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numLeadingTauMissingHits' : ( 't1MissingHits', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'numLeadingTauLeadTrkHits' : ( 't1LeadTrkNumHits', '(4,0,4)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
 
     #'threeProngTaus30ByTauPt' : ( 't1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'threeProngTaus30ByTau2Pt' : ( 't2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'threeProngTaus30ByTauIso' : ( 't1Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIso_' : ( 't1Iso', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIso__' : ( 't1Iso', '(10,0,5)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'threeProngTaus30ByTau2Iso' : ( 't2Iso', '(20,0,200)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'threeProngTaus30ByTauIsoChrg' : ( 't1IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'threeProngTaus30ByTauIsoChrg_' : ( 't1IsoChrg', '(25,0,25)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
+    #'IsolatedThreeProngTaus30ByTauIsoChrg__' : ( 't1IsoChrg', '(10,0,2)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'threeProngTaus30ByTau2IsoChrg' : ( 't2IsoChrg', '(20,0,100)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'jets30CleanByJetPt' : ( 'j1Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'jets30CleanByJet2Pt' : ( 'j2Pt', '(30,0,150)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
@@ -114,6 +300,7 @@ plotMap = {
     #'jets30CleanByJetEta' : ( 'j1Eta', '(30,-3,3)', 'PUWeight*IsoMu20', 'IsoMu20', 'scale' ),
     #'missingHitsPer3ProngTaus30ByLumi' : ( 'lumi', '(17,0,1700)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
     #'missingHitsPer3ProngTaus30ByBunchCrossing' : ( 'bunchCrossing', '(35,0,3500)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
+
     #'missingHitsPer3ProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTauMissingHits', 'PUWeight*IsoMu20*numTausThreeProng30', 'div' ),
     #'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
     #'threeProngTaus30ByNvtx' : ( 'nvtx', '(30,0,30)', 'PUWeight*IsoMu20*numTausThreeProng30', 'PUWeight*IsoMu20', 'div' ),
@@ -140,145 +327,89 @@ plotMap = {
 
 }
 
-from collections import OrderedDict
-runs = OrderedDict()
-runs[258425] = ROOT.kCyan
-runs[259721] = ROOT.kGreen
-runs[254833] = ROOT.kBlue
-runs[254790] = ROOT.kRed
 
-def plotter( plot ) :
-    print "Starting: %s" % plot
-#for plot in plotMap.keys() :
-    numEventsPerRun = {}
-    hists = {}
-    #jhists = {}
-    hists2 = {}
-    #jhists2 = {}
-    for run in runs.keys() :
-        info = plotMap[plot][1].strip('(').strip(')').split(',')
-        #print info
-        numB = int(info[0])
-        first = int(info[1])
-        last = int(info[2])
-        hists[ run ] = ROOT.TH1F( '%i' % run, '%i' % run, numB, first, last)
-        #jhists[ run ] = ROOT.TH1F( 'j%i' % run, 'j%i' % run, numB, first, last)
-        hists2[ run ] = ROOT.TH1F( '2_%i' % run, '2_%i' % run, numB, first, last)
-        #jhists2[ run ] = ROOT.TH1F( 'j2_%i' % run, 'j2_%i' % run, numB, first, last)
-        
+def RunPlots( runList, is80XMC ) :
+    ''' timing... '''
+    begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    print "\nStart Time: %s" % str( begin )
     
-    for run in runs.keys() :
-        print "Run: %i" % run
-        f = ROOT.TFile('%i/%i.root' % (run, run),'r')
-        #f = ROOT.TFile('%i.root' % run,'r')
-        tree = f.Get('tauEvents/Ntuple')
-        weightedSum = 0
-        for row in tree :
-            weightedSum += row.PUWeight
-        numEventsPerRun[ run ] = (tree.GetEntries(), weightedSum)
-        #if (plotMap[plot][0] == 'nvtx') or (plotMap[plot][0] == 'bunchCrossing') or (plotMap[plot][0] == 'lumi') :
-        getHist( hists, run, tree, '%s>>hist%i%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s*(run == %i)' % (plotMap[plot][2], run), 'hist%i' % run, run )
-        getHist( hists2, run, tree, '%s>>hist2%i%s' % (plotMap[plot][0], run, plotMap[plot][1]), '%s*(run == %i)' % (plotMap[plot][3], run), 'hist2%i' % run, run )
-
-        if 'div' in plotMap[plot][4] :
-            hists[ run ].Divide( hists2[ run ] )
-        if 'scale' in plotMap[plot][4] :
-            hists[ run ].Scale( 1 / hists[ run ].Integral() )
-        if 'x' in plotMap[plot][4] :
-            print "Scaling by weighted sum: %f" % numEventsPerRun[ run ][1]
-            hists[ run ].Scale( 1 / numEventsPerRun[ run ][1] )
-            print "New Integral: %f" % hists[ run ].Integral()
-        print "### Done first"
-
-
-        #else :
-        #    var_ = plotMap[plot][0]
-        #    cnt = 0
-        #    for row in tree :
-        #        cnt += 1
-        #        if cnt > 1000 : continue
-        #        for i in range(1, numT + 1) :
-        #            inVar = 't_%s' % var_
-        #            newVar = inVar.replace('_',str(i))
-        #            if plotMap[plot][0] == 'bunchCrossing' :
-        #                newVar = 'bunchCrossing'
-        #            if plotMap[plot][0] == 'Pt' :
-        #                inVar = 't_Jet%s' % var_
-        #                newVar = inVar.replace('_',str(i))
-        #            hists[ run ].Fill( getattr(row, newVar), row.PUWeight )
-        #            hists2[ run ].Fill( getattr(row, newVar) )
-        #        if 'Iso' not in plotMap[plot][0] :
-        #            for j in range(1, numJ + 1) :
-        #                inVar = 'j_%s' % var_
-        #                newVar = inVar.replace('_',str(j))
-        #                if plotMap[plot][0] == 'bunchCrossing' :
-        #                    newVar = 'bunchCrossing'
-        #                if ( getattr( row, 'j%iLooseID' % j ) > 0 ) and ( getattr( row, 'j%iPassPU' % j ) > 0 ) and ( getattr( row, 'j%iPt' % j) > 30 ) :
-        #                    jhists[ run ].Fill( getattr(row, newVar), row.PUWeight )
-        #                    jhists2[ run ].Fill( getattr( row, newVar) )
-    #for iRun in numEventsPerRun :
-    #    print "RUN: %i  Evt Stuff:" % iRun, numEventsPerRun[iRun]
-                
-            
-   
-    #if (plotMap[plot][0] == 'nvtx') or (plotMap[plot][0] == 'bunchCrossing') or (plotMap[plot][0] == 'lumi') :
-    print " <<< Plotting"
-    name = plot
-    finishPlots( hists, plot, plotMap, runs, name )
-    #else :
-    #    for run in runs :
-    #        if numEventsPerRun[run][0] > 0 :
-    #            hists[ run ].Scale( 1 / numEventsPerRun[run][0] )
-#   #             hists2[ run ].Scale( 1 / numEventsPerRun[run][0] )
-    #            jhists[ run ].Scale( 1 / numEventsPerRun[run][0] )
-#   #             jhists2[ run ].Scale( 1 / numEventsPerRun[run][0] )
-    #    name = 'tmp2/%s_tau' % plot
-    #    finishPlots( hists, plot, plotMap, runs, name )
-#   #     name = 'tmp2/%s_tau2' % plot
-#   #     finishPlots( hists2, plot, plotMap, runs, name )
-    #    name = 'tmp2/%s_jet' % plot
-    #    finishPlots( jhists, plot, plotMap, runs, name )
-#   #     name = 'tmp2/%s_jet2' % plot
-#   #     finishPlots( jhists2, plot, plotMap, runs, name )
-    #    if ('Iso' not in plotMap[plot][0]) and (hists[run].Integral() > 0 ) :
-    #        for run in runs :
-    #            hists[ run ].Divide( jhists[ run ] )
-    #            hists[ run ].Scale( 1 / hists[ run ].Integral() )
-    #        name = 'tmp2/%s_tauPerJet' % plot
-    #        finishPlots( hists, plot, plotMap, runs, name )
-    return "Finished Plotting %s" % plot
-        
-
-        
     
+    from collections import OrderedDict
+    runColors = OrderedDict()
+    runColors[runList[0]] = ROOT.kBlack
+    runColors[runList[1]] = ROOT.kRed
+    runColors[runList[2]] = ROOT.kBlue
+    runColors[runList[3]] = ROOT.kGreen
+    
+    
+    
+    import multiprocessing
+    ## Enable multiprocessing
+    numCores = 5
+    pool = multiprocessing.Pool(processes = numCores )
+    multiprocessingOutputs = []
+    for plot in plotMap.keys() :
+        
+        #plotter( runList, runColors, '%s' % plot ) # For Debugging
+        if not is80XMC :
+            multiprocessingOutputs.append( pool.apply_async(plotter, args=( is80XMC, runList, runColors, plot, ) ) )
+        else :
+            plotter( is80XMC, runList, runColors, plot )
+    if not is80XMC :
+        mpResults = [p.get() for p in multiprocessingOutputs]
+        mpResults.sort()
+        for item in mpResults :
+            print item
+    
+    print "Make html.index"
+    if is80XMC :
+        htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/index.html' % runList[0], 'w' )
+    else :
+        htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/%s/index.html' % runList[0].split('_')[0], 'w' )
+    htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
+    htmlFile.write( '<title>Tau Tracking Study/</title></head>\n' )
+    htmlFile.write( '<body>\n' )
+    for plot in plotMap.keys() :
+        htmlFile.write( '<img src="%s.png">\n' % plot )
+        if 'num' in plot: 
+            htmlFile.write( '<img src="%s_log.png">\n' % plot )
+    htmlFile.write( '</body></html>' )
+    htmlFile.close()
+    
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
-import multiprocessing
-## Enable multiprocessing
-numCores = 20
-pool = multiprocessing.Pool(processes = numCores )
-multiprocessingOutputs = []
-for plot in plotMap.keys() :
-    multiprocessingOutputs.append( pool.apply_async(plotter, args=( '%s' % plot, ) ) )
 
-mpResults = [p.get() for p in multiprocessingOutputs]
-mpResults.sort()
-for item in mpResults :
-    print item
 
-print "Make html.index"
-htmlFile = open('/afs/cern.ch/user/t/truggles/www/threeProngs/index.html', 'w')
-htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
-htmlFile.write( '<title>Tau Tracking Study/</title></head>\n' )
-htmlFile.write( '<body>\n' )
-for plot in plotMap.keys() :
-    htmlFile.write( '<img src="%s.png">\n' % plot )
-    if 'num' in plot: 
-        htmlFile.write( '<img src="%s_log.png">\n' % plot )
-htmlFile.write( '</body></html>' )
-htmlFile.close()
 
-print "\nStart Time: %s" % str( begin )
-print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+
+
+
+if __name__ == '__main__' :
+    ''' for data related comparisons '''
+    #runs = [256677, 260627]
+    #versions = ['80X_RelVal','76X']
+    #for run in runs :
+    #    runList = []
+    #    for version in versions :
+    #        runList.append( "%s_%s" % (str(run), version) )
+    #    RunPlots( runList )
+
+    ''' for MC comparisons '''
+    is80XMC = True
+    ''' Constant Pileup Comparisons '''
+    #runList = ['999_ttbar_800', '999_ttbar_2017_800']
+    #RunPlots( runList, is80XMC )
+    #runList = ['999_ttbar_800_pu25', '999_ttbar_2017_800_pu25']
+    #RunPlots( runList, is80XMC )
+    ''' Constant Detector Comparisons '''
+    #runList = ['999_ttbar_800', '999_ttbar_800_pu25']
+    #RunPlots( runList, is80XMC )
+    #runList = ['999_ttbar_2017_800', '999_ttbar_2017_800_pu25']
+    #RunPlots( runList, is80XMC )
+    ''' All at once '''
+    runList = ['999_ttbar_800', '999_ttbar_800_pu25', '999_ttbar_2017_800', '999_ttbar_2017_800_pu25']
+    RunPlots( runList, is80XMC )
 
 
 

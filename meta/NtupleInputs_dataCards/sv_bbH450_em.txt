@@ -1,0 +1,2 @@
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH450_1_em.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH450_0_em.root

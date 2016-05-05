@@ -1,1 +1,5 @@
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/bbH160_0_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH160_4_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH160_2_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH160_1_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH160_3_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH160_0_tt.root

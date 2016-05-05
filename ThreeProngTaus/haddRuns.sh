@@ -1,6 +1,2 @@
-#folder=25ns3oct14
 
-for run in 254790 254833 258425 259721
-do
-    hadd -f ${run}/${run}.root ${run}/${run}_*.root
-done
+hadd -f $1_$2/$1.root $1_$2/$1_*.root

@@ -82,15 +82,15 @@ def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cu
     else : save = '%s_%i_%s' % (sample, count, channel)
     bkgMap = getBkgMap()
     #print "save",save
-    print "%5i %20s %10s %3i: ====>>> START <<<====" % (num, sample, channel, count)
+    print "%5i %20s %10s %3i: ====>>> START Cuts <<<====" % (num, sample, channel, count)
 
     ''' 1. Make cuts and save '''
-    print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
+    #print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
     if svFitPrep == 'true' :
         outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
-    print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
@@ -100,7 +100,10 @@ def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cu
     postCutQty = cutOut[3]
     print "%5i %20s %10s %3i: Finished Cuts" % (num, sample, channel, count)
 
-    return (num, sample, channel, count, initialQty, postCutQty)
+    if num < 1000 :
+        return (num, sample, channel, count, initialQty, postCutQty)
+    else :
+        print "Over 1000 iterations.  Summary skipped"
 
 
 def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
@@ -116,11 +119,6 @@ def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMappe
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    #if SVF : 
-    #    print 'Infile: %s%s.root' % (svfName,save)
-    #    print 'Output: %s%s/%s.root' % (grouping, mid2, save)
-    #else :
-    #    print 'Output: %s%s/%s.root' % (grouping, mid2, save)
     isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
     #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
@@ -196,41 +194,38 @@ def doInitialCuts(grouping, samples, **fargs) :
             if count * fargs['numFilesPerCycle'] >= fileLen : go = False
     
     
-    if num < 1000 :
-        mpResults = [p.get() for p in multiprocessingOutputs]
-        
-        #print(mpResults)
-        print "#################################################################"
-        print "###               Finished, summary below                     ###"
-        print "#################################################################"
-        
-        print "\nStart Time: %s" % str( begin )
-        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-        print "\n"
+    mpResults = [p.get() for p in multiprocessingOutputs]
+    
+    print "#################################################################"
+    print "###               Finished, summary below                     ###"
+    print "#################################################################"
+    
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    print "\n"
 
-        print " --- CutTable used: %s" % fargs['cutMapper']
-        print " --- Cut used: %s" % fargs['cutName']
-        print " --- Grouping: %s" % grouping
-        print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-        print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
-        print "\n"
-        
-        totalIn = 0
-        totalOut = 0
-        mpResults.sort()
-        for item in mpResults :
-            print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-            print item[4]
-            print item[5]
-            totalIn += int(item[4].split(' ')[-1])
-            totalOut += int(item[5].split(' ')[-1])
-        
-        print "\nTotal In:", totalIn
-        print "Total Out:", totalIn,"\n"
-        print "Start Time: %s" % str( begin )
-        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-    else :
-        print "Over 1000 iterations.  Summary skipped"
+    print " --- CutTable used: %s" % fargs['cutMapper']
+    print " --- Cut used: %s" % fargs['cutName']
+    print " --- Grouping: %s" % grouping
+    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
+    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+    print "\n"
+    
+    totalIn = 0
+    totalOut = 0
+    mpResults.sort()
+    for item in mpResults :
+        if item is None : continue
+        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+        print item[4]
+        print item[5]
+        totalIn += int(item[4].split(' ')[-1])
+        totalOut += int(item[5].split(' ')[-1])
+    
+    print "\nTotal In:", totalIn
+    print "Total Out:", totalIn,"\n"
+    print "Start Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
 def doInitialOrder(grouping, samples, **fargs) :
@@ -271,7 +266,8 @@ def doInitialOrder(grouping, samples, **fargs) :
                 if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
     
-                multiprocessingOutputs.append( pool.apply_async(runIsoOrder, args=(grouping,
+                if not fargs['debug'] == 'true' :
+                    multiprocessingOutputs.append( pool.apply_async(runIsoOrder, args=(grouping,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
@@ -282,6 +278,19 @@ def doInitialOrder(grouping, samples, **fargs) :
                                                                                     fargs['cutMapper'],
                                                                                     fargs['cutName'],
                                                                                     fargs['numFilesPerCycle'])) )
+                """ for debugging without multiprocessing """
+                if fargs['debug'] == 'true' :
+                    runIsoOrder(grouping,
+                                                                                    sample,
+                                                                                    channel,
+                                                                                    count,
+                                                                                    num,
+                                                                                    fargs['bkgs'],
+                                                                                    fargs['mid1'],
+                                                                                    fargs['mid2'],
+                                                                                    fargs['cutMapper'],
+                                                                                    fargs['cutName'],
+                                                                                    fargs['numFilesPerCycle'])
                 num +=  1
     
             count += 1
@@ -290,35 +299,41 @@ def doInitialOrder(grouping, samples, **fargs) :
             if count * fargs['numFilesPerCycle']+1 > fileLen : go = False
     
     
-    mpResults = [p.get() for p in multiprocessingOutputs]
+    if fargs['debug'] == 'true' :
+        print "#################################################################"
+        print "###               Finished, summary below                     ###"
+        print "#################################################################"
+
+    if fargs['debug'] != 'true' :
+        mpResults = [p.get() for p in multiprocessingOutputs]
     
-    #print(mpResults)
-    print "#################################################################"
-    print "###               Finished, summary below                     ###"
-    print "#################################################################"
-    
-    print "\nStart Time: %s" % str( begin )
-    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-    print "\n"
-    
-    print " --- CutTable used: %s" % fargs['cutMapper']
-    print " --- Cut used: %s" % fargs['cutName']
-    print " --- Grouping: %s" % grouping
-    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
-    print "\n"
-    
-    mpResults.sort()
-    totalIso = 0
-    for item in mpResults :
-        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-        print item[4]
-        totalIso += int(item[4].split(' ')[-1])
+        print "#################################################################"
+        print "###               Finished, summary below                     ###"
+        print "#################################################################"
         
-    print "\nTotal Iso:", totalIso
-    
-    print "\nStart Time: %s" % str( begin )
-    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+        print "\nStart Time: %s" % str( begin )
+        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+        print "\n"
+        
+        print " --- CutTable used: %s" % fargs['cutMapper']
+        print " --- Cut used: %s" % fargs['cutName']
+        print " --- Grouping: %s" % grouping
+        print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
+        print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+        print "\n"
+        
+        mpResults.sort()
+        totalIso = 0
+        for item in mpResults :
+            if item is None : continue
+            print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+            print item[4]
+            totalIso += int(item[4].split(' ')[-1])
+            
+        print "\nTotal Iso:", totalIso
+        
+        print "\nStart Time: %s" % str( begin )
+        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
 
@@ -333,6 +348,8 @@ def drawHistos(grouping, samples, **fargs ) :
                 'tt' : '*(gen_match_2 == 6 || gen_match_1 == 6)'},
         'ZLL' : {'em' : '*(gen_match_1 < 3 || gen_match_2 < 4)',
                 'tt' : '*(gen_match_1 != 5 && gen_match_2 != 5)'},
+        'QCD' : {'em' : '*(FFWeightQCD)',
+                'tt' : '*(FFWeightQCD)'},
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -348,11 +365,16 @@ def drawHistos(grouping, samples, **fargs ) :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
             loopList.append( sample ) 
+        elif 'data' in sample and fargs['doFRMthd'] == 'true' :
+            loopList.append( sample )
+            loopList.append( 'QCD' )
         else : loopList.append( sample )
+
     
         for subName in loopList :
             print "SubName:",subName
-            if subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
+            if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
+            elif subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
             else : saveName = sample.split('_')[0]
             
             for channel in channels :
@@ -387,7 +409,7 @@ def drawHistos(grouping, samples, **fargs ) :
                     outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
                     for i in range( numIters ) :
                         #print "%s_%i" % ( sample, i)
-                        print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
+                        #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
                         chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True
@@ -401,7 +423,7 @@ def drawHistos(grouping, samples, **fargs ) :
                 #if fargs['bkgs'] != 'None' : blind = False
                 #else : blind = True
                 blind = False
-                analysisPlots.plotHistosProof( outFile, chain, channel, isData, additionalCut, blind )
+                analysisPlots.plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind )
                 outFile.Close()
          
 if __name__ == '__main__' :

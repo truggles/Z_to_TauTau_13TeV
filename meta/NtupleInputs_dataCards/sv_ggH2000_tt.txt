@@ -1,1 +1,4 @@
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ggH2000_0_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH2000_1_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH2000_0_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH2000_2_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH2000_3_tt.root

@@ -12,6 +12,7 @@
 import math
 import json
 import os
+import ROOT
 
 cmsLumi = float(os.getenv('LUMI'))
 print "Lumi = %i" % cmsLumi
@@ -23,44 +24,33 @@ prodMap = {
     'tt' : ('t1', 't2'),
 }
 
-#def getXSec( shortName, sampDict, genHTT=0 ) :
+
 def getXSec( shortName, sampDict, numGenJets=0 ) :
-    #print "Short Name: ",shortName," mini Name: ",shortName[:-7]
+    #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
     #if 'data' in shortName : return 1.0 #XXX#
-    #htts = ['100-200', '200-400', '400-600', '600-Inf']
     jetBins = ['1', '2', '3', '4']
     try :
-        scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+        if shortName in ['DYJets', 'DYJetsBig'] or shortName[:6] == 'DYJets' :
+        #if 'DYJets' in shortName :
+            scalar1 = cmsLumi * sampDict[ 'DYJetsBig' ]['Cross Section (pb)'] / sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] # removing LO small DYJets
+            #print "DYJets in shortName, scalar1 =",scalar1
+        elif 'WJets' in shortName :
+            scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
+        else :
+            scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+            #print "DYJets not in shortName, scalar1 =",scalar1
+
     except KeyError :
         print "Sample not found in meta/Ntuples_xxx/samples.json"
         return
     #return scalar1 #XXX#
     
-    # Deal with WJets and DYJets specially b/c some of their events are in the high HTT region
-    # and need to be deweighted
     """
     Commented out for HT bin samples, we're switching to
     jet binned samples
     """
-    #XXX#if shortName == 'WJets' or shortName == 'DYJets' :
-    #XXX#    #print shortName," --- GenHTT",genHTT
-    #XXX#    httPartner = ''
-    #XXX#    if genHTT < 100 :
-    #XXX#        #print " - return scalar1"
-    #XXX#        return scalar1
-    #XXX#    elif genHTT >= 100 and genHTT < 200 :
-    #XXX#        httPartner = '100-200'
-    #XXX#    elif genHTT >= 200 and genHTT < 400 :
-    #XXX#        httPartner = '200-400'
-    #XXX#    elif genHTT >= 400 and genHTT < 600 :
-    #XXX#        httPartner = '400-600'
-    #XXX#    else :
-    #XXX#        httPartner = '600-Inf'
-    #XXX#    scalar2 = cmsLumi * sampDict[ shortName+httPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+httPartner ]['summedWeightsNorm'] )
-    #XXX#    #print " - Special Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))," for ",httPartner
-    #XXX#    #print " - scalar1: ",scalar1,"    scalar2: ",scalar2
-    #XXX#    return (1.0/( (1/scalar1) + (1/scalar2) ))
-    if shortName == 'DYJets' :
+    # If inclusive sample
+    if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
         binPartner = ''
         if numGenJets == 0 :
             return scalar1
@@ -74,22 +64,93 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
             binPartner = '4'
         else :
             return scalar1
-        scalar2 = cmsLumi * sampDict[ shortName+binPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+binPartner ]['summedWeightsNorm'] )
-        return (1.0/( (1/scalar1) + (1/scalar2) ))
+
+        if shortName in ['DYJetsBig','DYJets'] :
+            scalar2 = cmsLumi * sampDict[ 'DYJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'DYJets'+binPartner ]['summedWeightsNorm'] )
+        elif shortName == 'WJets' :
+            scalar2 = cmsLumi * sampDict[ 'WJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'WJets'+binPartner ]['summedWeightsNorm'] )
+        return (1.0/( (1./scalar1) + (1./scalar2) ))
+
+    # If exclusive sample
+    if (('DYJets' in shortName) or ('WJets' in shortName)) and shortName[-1:] in jetBins :
+        scalar2 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+        #print "Scalar2 ",scalar2
+        return (1.0/( (1./scalar1) + (1./scalar2) ))
         
         
     if 'QCD' in shortName or 'toTauTau' in shortName : return scalar1
     if 'data' in shortName : return 1.0
-    #XXX#for htt in htts :
-    #XXX#    if htt in shortName :
-    #XXX#        scalar2 = cmsLumi * sampDict[ shortName[:-7] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-7] ]['summedWeightsNorm'] )
-    #XXX#        #print "HTT in HTTs",shortName
-    #XXX#        #print "Weight: ",(1.0/( (1/scalar1) + (1/scalar2) ))
-    #XXX#        return (1.0/( (1/scalar1) + (1/scalar2) ))
-    if shortName[-1:] in jetBins :
-        scalar2 = cmsLumi * sampDict[ shortName[:-1] ]['Cross Section (pb)'] / ( sampDict[ shortName[:-1] ]['summedWeightsNorm'] )
-        return (1.0/( (1/scalar1) + (1/scalar2) ))
     return scalar1
+
+
+def getTauPtWeight( sample, channel, row, ptScaler ) :
+    if channel != 'tt' : return 1
+    if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample or 'Sync' in sample) :
+        return 1
+    l1weight = 0. 
+    l2weight = 0.
+    if row.t1ZTTGenMatching == 5 and row.t1GenJetPt >= 0 :
+        l1weight = row.t1GenJetPt * ptScaler / 1000.
+    if row.t2ZTTGenMatching == 5 and row.t2GenJetPt >= 0 :
+        l2weight = row.t2GenJetPt * ptScaler / 1000.
+    return 1 + l1weight + l2weight
+
+
+
+
+def mVisTES( cand1, cand2, row, TES ) :
+    pt1 = (1 + TES) * getattr( row, cand1+'Pt' )
+    eta1 = getattr( row, cand1+'Eta' )
+    phi1 = getattr( row, cand1+'Phi' )
+    m1 = getattr( row, cand1+'Mass' )
+    pt2 = (1 + TES) * getattr( row, cand2+'Pt' )
+    eta2 = getattr( row, cand2+'Eta' )
+    phi2 = getattr( row, cand2+'Phi' )
+    m2 = getattr( row, cand2+'Mass' )
+    lorentz1 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
+    lorentz2 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
+    shifted = lorentz1 + lorentz2
+    return shifted.M()
+
+
+def getMTTotal( pt1, phi1, pt2, phi2, row, channel, esUP=True ) :
+    if channel == 'tt' :
+        es = 0.03
+    if channel == 'em' :
+        if abs( row.eEta ) < 1.479 : # BarrelEndcap transition at eta = 1.479
+            es = 0.01
+        else :
+            es = 0.025
+
+    shift = 1.
+    if esUP : shift += es
+    else : shift -= es
+
+    # Get ES corrected mva met
+    dx1_UP = pt1 * math.cos( phi1 ) * (( 1. / (shift) ) - 1.)
+    dy1_UP = pt1 * math.sin( phi1 ) * (( 1. / (shift) ) - 1.)
+    if hasattr( row, "mvametcorr_ex" ) :
+        mvametcorr_ex_UP = row.mvametcorr_ex + dx1_UP
+        mvametcorr_ey_UP = row.mvametcorr_ey + dy1_UP
+    else : return -10
+    mvametcorr = math.sqrt( mvametcorr_ex_UP**2 + mvametcorr_ey_UP**2 )
+    mvametcorrphi = ROOT.TMath.ATan2( mvametcorr_ey_UP, mvametcorr_ex_UP )
+
+    mt_1_UP = getTransMass( mvametcorr, mvametcorrphi, pt1*shift, phi1 )
+    mt_2_UP = getTransMass( mvametcorr, mvametcorrphi, pt2*shift, phi2 )
+    return calcMTTotal( pt1*shift, phi1, pt2*shift, phi2, mt_1_UP, mt_2_UP )
+
+
+def calcMTTotal( pt1, phi1, pt2, phi2, mt1, mt2 ) :
+    mt_diTau = getTransMass( pt1, phi1, pt2, phi2 )
+    return math.sqrt( mt_diTau**2 + mt1**2 + mt2**2 )
+
+
+def getTransMass( met, metphi, l1pt, l1phi ) :
+    return math.sqrt( 2 * l1pt * met * (1 - math.cos( l1phi - metphi)))
+
 
 def getIso( cand, row ) :
     if 'e' in cand :
@@ -108,18 +169,21 @@ def getCurrentEvt( channel, row ) :
     leg2Iso = getIso( l2, row )
     leg1Pt = getattr(row, l1+'Pt')
     leg2Pt = getattr(row, l2+'Pt')
+    sign = ''
+    if getattr(row, '%s_%s_SS' % (l1,l2)) == 1 : sign = 'SS'
+    if getattr(row, '%s_%s_SS' % (l1,l2)) == 0 : sign = 'OS'
 
     if channel == 'tt' :
         if leg1Iso > leg2Iso :
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
         elif leg1Iso < leg2Iso :
-            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt, sign)
         elif leg1Pt > leg2Pt :
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
         elif leg1Pt < leg2Pt :
-            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt, sign)
         else : print "Iso1 == Iso2 & Pt1 == Pt2", row.evt
-    else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
+    else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
     return currentEvt
 
 
@@ -131,11 +195,17 @@ tauIso = {
     'Charge' : 'q',
     'PVDXY' : 'd0',
     'PVDZ' : 'dZ',
-    'MtToPfMet_Raw' : 'mt',
+    'MtToPfMet_Raw' : '',
     'MtToPfMet_type1' : '',
     'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
     'ByIsolationMVArun2v1DBnewDMwLTraw' : '',
     'ByIsolationMVArun2v1DBoldDMwLTraw' : '',
+    'ByLooseIsolationMVArun2v1DBoldDMwLT' : '',
+    'ByMediumIsolationMVArun2v1DBoldDMwLT' : '',
+    'ByTightIsolationMVArun2v1DBoldDMwLT' : '',
+    'ByVTightIsolationMVArun2v1DBoldDMwLT' : '',
+    'ByIsolationMVA3newDMwLTraw' : '',
+    'ByIsolationMVA3oldDMwLTraw' : '',
     'AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
     'AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
     'AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
@@ -162,6 +232,7 @@ tauIso = {
     'JetPartonFlavour' : '',
     'JetPhiPhiMoment' : '',
     'JetPt' : '',
+    'GenJetPt' : '',
     'LeadTrackPt' : '',
     'LowestMll' : '',
     'MatchesDoubleTau40Path' : '',
@@ -186,6 +257,8 @@ def isoOrder( channel, row ) :
     pt2 = getattr( row, 't2Pt' )
     if iso2 > iso1 :
         for uw in tauIso.keys() :
+            if not hasattr( row, 't1%s' % uw ) : continue
+            if not hasattr( row, 't2%s' % uw ) : continue
             tmp1 = getattr( row, 't1%s' % uw )
             tmp2 = getattr( row, 't2%s' % uw )
             setattr( row, 't1%s' % uw, tmp2 )
@@ -212,7 +285,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     if shortName == 'data' : shortName = 'data_%s' % channel
 
     xsec = getXSec( shortName, sampDict )
-    print "\n Sampe: %s    xsec: %f" % (sample, xsec)
+    print "\n Sampe: %s    shortName: %s    xsec: %f" % (sample, shortName, xsec)
 
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
@@ -220,6 +293,13 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     from util.lepSF import LepWeights
     from util.doubleTauSF import doubleTauTriggerEff
     lepWeights = LepWeights( channel, count )
+
+    from util.zPtReweight import ZPtReweighter
+    zPtWeighter = ZPtReweighter()
+
+    cmssw_base = os.getenv('CMSSW_BASE')
+    ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
+    ffqcd = ff_file.Get('ff_qcd_os') 
 
     branchMapping = {
         'run' : 'run',
@@ -231,27 +311,30 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'j1pt' : 'jpt_1',
         'j1phi' : 'jphi_1',
         'j1eta' : 'jeta_1',
-        'j1mva' : 'jmva_1',
+        #XXX'j1mva' : 'jmva_1',
         'j2pt' : 'jpt_2',
         'j2phi' : 'jphi_2',
         'j2eta' : 'jeta_2',
-        'j2mva' : 'jmva_2',
+        #XXX'j2mva' : 'jmva_2',
         'jb1pt' : 'bpt_1',
         'jb1phi' : 'bphi_1',
         'jb1eta' : 'beta_1',
-        'jb1mva' : 'bmva_1',
+        #XXX'jb1mva' : 'bmva_1',
         'jb1csv' : 'bcsv_1',
         'jb2pt' : 'bpt_2',
         'jb2phi' : 'bphi_2',
         'jb2eta' : 'beta_2',
-        'jb2mva' : 'bmva_2',
+        #XXX'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
-        'bjetCISVVeto20MediumZTT' : 'nbtag',
+        #'bjetCISVVeto20MediumZTT' : 'nbtag',
+        'NBTagPDM_idL_jVeto' : 'nbtag',
+        'NBTagPDL_idL_jVeto' : 'nbtagLoose',
         'jetVeto20ZTT' : 'njetspt20',
-        'jetVeto30ZTT' : 'njets',
+        'jetVeto30RecoilZTT' : 'njets',
+        #'jetVeto30ZTT' : 'njets',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
-        'GenWeight' : 'weight',
+        #'GenWeight' : 'weight',
         'vbfMassZTT' : 'mjj',
         'vbfDetaZTT' : 'jdeta',
         'vbfDphiZTT' : 'jdphi',
@@ -304,10 +387,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_Charge' : 'q',
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
-        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
-        'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
+        'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
+        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
         'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
-        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
+        #'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
+        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'iso',
         'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
         'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
         'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
@@ -408,7 +492,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     ''' Select the version of each even we want to keep '''
     numRows = told.GetEntries()
     #print "Num rows %i" % numRows
-    prevEvt = (999, 0, 999, 0)
+    prevEvt = (999, 0, 999, 0, '')
     prevRunLumiEvt = (0, 0, 0)
     toFillMap = {}
     count = 0
@@ -419,7 +503,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         
         currentEvt = getCurrentEvt( channel, row )
         currentRunLumiEvt = (run, lumi, evt)
-        if count == 0 : prevRunLumiEvt = currentRunLumiEvt
+        if count == 0 :
+            prevRunLumiEvt = currentRunLumiEvt
+            prevEvt = currentEvt
 
         count += 1
         
@@ -436,12 +522,15 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 toFillMap[ prevRunLumiEvt ] = prevEvt
             continue
 
-        #print currentRunLumiEvt, currentEvt
+        #print "Current: ",currentRunLumiEvt, currentEvt
         """
         Iso sorting is channel specific b/c tt uses MVA iso
         where are high value == good isolation
         """
         if channel == 'tt' :
+            # OS has preference over SS regardless of iso and pt
+            #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
+            #    prevEvt = currentEvt
             # lowest iso_1
             if currentEvt[ 0 ] > prevEvt[ 0 ] :
                 prevEvt = currentEvt
@@ -451,39 +540,43 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
                 # pt_1 equal
-                if currentEvt[ 1 ] == prevEvt[ 1 ] :
+                elif currentEvt[ 1 ] == prevEvt[ 1 ] :
                     # lowest iso_2
                     if currentEvt[ 2 ] > prevEvt[ 2 ] :
                         prevEvt = currentEvt
                     # iso_2 equal
-                    if currentEvt[ 2 ] == prevEvt[ 2 ] :
+                    elif currentEvt[ 2 ] == prevEvt[ 2 ] :
                         # highest pt_2
                         if currentEvt[ 3 ] > prevEvt[ 3 ] :
                             prevEvt = currentEvt
         else :
+            # OS has preference over SS regardless of iso and pt
+            #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
+            #    prevEvt = currentEvt
             # lowest iso_1
             if currentEvt[ 0 ] < prevEvt[ 0 ] :
                 prevEvt = currentEvt
             # iso_1 equal
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
                 # highest pt_1
-                if currentEvt[ 1 ] < prevEvt[ 1 ] :
+                if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
                 # pt_1 equal
-                if currentEvt[ 1 ] == prevEvt[ 1 ] :
+                elif currentEvt[ 1 ] == prevEvt[ 1 ] :
                     # lowest iso_2
                     if currentEvt[ 2 ] < prevEvt[ 2 ] :
                         prevEvt = currentEvt
                     # iso_2 equal
-                    if currentEvt[ 2 ] == prevEvt[ 2 ] :
+                    elif currentEvt[ 2 ] == prevEvt[ 2 ] :
                         # highest pt_2
-                        if currentEvt[ 3 ] < prevEvt[ 3 ] :
+                        if currentEvt[ 3 ] > prevEvt[ 3 ] :
                             prevEvt = currentEvt
         
 
         # Make sure we get the last event
         if count == numRows :
-            #print "LastRow:",prevRunLumiEvt, prevEvt
+            #print "LastRowPrev:",prevRunLumiEvt, prevEvt
+            #print "LastRowCur:",currentRunLumiEvt, currentEvt
             prevRunLumiEvt = currentRunLumiEvt
             prevEvt = currentEvt
             toFillMap[ prevRunLumiEvt ] = prevEvt
@@ -497,10 +590,50 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
     ''' We are calculating and adding these below variables to our new tree
     PU Weighting '''
+    weight = array('f', [ 0 ] )
+    weightB = tnew.Branch('weight', weight, 'weight/F')
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
+    tauPtWeightUp = array('f', [ 0 ] )
+    tauPtWeightUpB = tnew.Branch('tauPtWeightUp', tauPtWeightUp, 'tauPtWeightUp/F')
+    tauPtWeightDown = array('f', [ 0 ] )
+    tauPtWeightDownB = tnew.Branch('tauPtWeightDown', tauPtWeightDown, 'tauPtWeightDown/F')
+    topWeight = array('f', [ 0 ] )
+    topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
+    zPtWeight = array('f', [ 0 ] )
+    zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
+    FFWeightQCD = array('f', [ 0 ] )
+    FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
+    FFWeightQCD_UP = array('f', [ 0 ] )
+    FFWeightQCD_UPB = tnew.Branch('FFWeightQCD_UP', FFWeightQCD_UP, 'FFWeightQCD_UP/F')
+    FFWeightQCD_DOWN = array('f', [ 0 ] )
+    FFWeightQCD_DOWNB = tnew.Branch('FFWeightQCD_DOWN', FFWeightQCD_DOWN, 'FFWeightQCD_DOWN/F')
+    FFWeightQCD1 = array('f', [ 0 ] )
+    FFWeightQCD1B = tnew.Branch('FFWeightQCD1', FFWeightQCD1, 'FFWeightQCD1/F')
+    FFWeightQCD1_UP = array('f', [ 0 ] )
+    FFWeightQCD1_UPB = tnew.Branch('FFWeightQCD1_UP', FFWeightQCD1_UP, 'FFWeightQCD1_UP/F')
+    FFWeightQCD1_DOWN = array('f', [ 0 ] )
+    FFWeightQCD1_DOWNB = tnew.Branch('FFWeightQCD1_DOWN', FFWeightQCD1_DOWN, 'FFWeightQCD1_DOWN/F')
+    FFWeightQCD2 = array('f', [ 0 ] )
+    FFWeightQCD2B = tnew.Branch('FFWeightQCD2', FFWeightQCD2, 'FFWeightQCD2/F')
+    FFWeightQCD2_UP = array('f', [ 0 ] )
+    FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
+    FFWeightQCD2_DOWN = array('f', [ 0 ] )
+    FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    pzeta = array('f', [ 0 ] )
+    pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    m_vis_UP = array('f', [ 0 ] )
+    m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
+    m_vis_DOWN = array('f', [ 0 ] )
+    m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
+    mt_tot = array('f', [ 0 ] )
+    mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
+    mt_tot_UP = array('f', [ 0 ] )
+    mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
+    mt_tot_DOWN = array('f', [ 0 ] )
+    mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -509,6 +642,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
     trigweight_1B = tnew.Branch('trigweight_1', trigweight_1, 'trigweight_1/F')
+    effweight = array('f', [ 0 ] )
+    effweightB = tnew.Branch('effweight', effweight, 'effweight/F')
     idisoweight_1 = array('f', [ 0 ] )
     idisoweight_1B = tnew.Branch('idisoweight_1', idisoweight_1, 'idisoweight_1/F')
     idisoweight_2 = array('f', [ 0 ] )
@@ -521,10 +656,6 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     extramuon_vetoB = tnew.Branch('extramuon_veto', extramuon_veto, 'extramuon_veto/F')
     extraelec_veto = array('f', [ 0 ] )
     extraelec_vetoB = tnew.Branch('extraelec_veto', extraelec_veto, 'extraelec_veto/F')
-    mvamet = array('f', [ 0 ] )
-    mvametB = tnew.Branch('mvamet', mvamet, 'mvamet/F')
-    mvametphi = array('f', [ 0 ] )
-    mvametphiB = tnew.Branch('mvametphi', mvametphi, 'mvametphi/F')
     mvacov00 = array('f', [ 0 ] )
     mvacov00B = tnew.Branch('mvacov00', mvacov00, 'mvacov00/F')
     mvacov01 = array('f', [ 0 ] )
@@ -567,10 +698,13 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
+    xsecList = []
     for row in told:
         run = int( row.run )
         lumi = int( row.lumi )
         evt = int( row.evt )
+        if evt < 0 :
+            print "\n\n\n BIG \n\n TROUBLE \n\n EVT: %i   Sample: %s \n\n\n\n" % (evt, sample)
         
         currentEvt = getCurrentEvt( channel, row )
         currentRunLumiEvt = (run, lumi, evt)
@@ -579,7 +713,9 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            if channel == 'tt' : isoOrder( channel, row )
+            if channel == 'tt' and 'Sync-HtoTT' in sample : 
+                #print "### Iso Ordering %s ###" % sample
+                isoOrder( channel, row )
             vbfClean( row )
 
 
@@ -593,6 +729,15 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             isZMM[0] = 0
             isZTT[0] = 0
             isZLL[0] = 0
+            FFWeightQCD[0] = -1
+            FFWeightQCD_UP[0] = -1
+            FFWeightQCD_DOWN[0] = -1
+            FFWeightQCD1[0] = -1
+            FFWeightQCD1_UP[0] = -1
+            FFWeightQCD1_DOWN[0] = -1
+            FFWeightQCD2[0] = -1
+            FFWeightQCD2_UP[0] = -1
+            FFWeightQCD2_DOWN[0] = -1
 
             # Decay final states
             if channel == 'tt' :
@@ -614,14 +759,31 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             UniqueID[0] = sampDict[ shortName ]['UniqueID']
             BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
 
+            # TES Shifted M_Vis
+            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
+                m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
+                m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
+            else :
+                m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                if hasattr( row, 'm_sv_UP' ) :
+                    setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+                    setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+                    setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+                    setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+
 
             # Channel specific vetoes
             if channel == 'tt' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
             if channel == 'em' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
             if channel == 'et' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
@@ -629,48 +791,106 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
             
+            mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
+            mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
+            mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
+            mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
+
             # Channel specific pairwise mvaMet
             if channel == 'tt' :
-                mvamet[0] = getattr( row, "t1_t2_TTpairMvaMet" )
-                mvametphi[0] = getattr( row, "t1_t2_TTpairMvaMetPhi" )
-                mvacov00[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix00" )
-                mvacov01[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix01" )
-                mvacov10[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix10" )
-                mvacov11[0] = getattr( row, "t1_t2_TTpairMvaMetCovMatrix11" )
-                if mvamet[0] >= 0 :
-                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.t1_t2_TTpairMvaMet, row.t1_t2_TTpairMvaMetPhi)[1]
-                    mt_1[0] = math.sqrt( 2*row.t1Pt*row.t1_t2_TTpairMvaMet* (1 - math.cos( row.t1Phi - row.t1_t2_TTpairMvaMetPhi)))
-                    mt_2[0] = math.sqrt( 2*row.t2Pt*row.t1_t2_TTpairMvaMet* (1 - math.cos( row.t2Phi - row.t1_t2_TTpairMvaMetPhi)))
+                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.mvamet, row.mvametphi)[1]
+                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.t1Pt, row.t1Phi )
+                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.t2Pt, row.t2Phi )
                 else :
-                    pzetamiss[0] = -999
-                    mt_1[0] = -999
-                    mt_2[0] = -999
+                    pzetamiss[0] = -9999
+                    mt_1[0] = -9999
+                    mt_2[0] = -9999
             if channel == 'em' :
-                mvamet[0] = getattr( row, "e_m_EMpairMvaMet" )
-                mvametphi[0] = getattr( row, "e_m_EMpairMvaMetPhi" )
-                mvacov00[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix00" )
-                mvacov01[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix01" )
-                mvacov10[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix10" )
-                mvacov11[0] = getattr( row, "e_m_EMpairMvaMetCovMatrix11" )
-                if mvamet[0] >= 0 :
-                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.e_m_EMpairMvaMet, row.e_m_EMpairMvaMetPhi)[1]
-                    mt_1[0] = math.sqrt( 2*row.ePt*row.e_m_EMpairMvaMet* (1 - math.cos( row.ePhi - row.e_m_EMpairMvaMetPhi)))
-                    mt_2[0] = math.sqrt( 2*row.mPt*row.e_m_EMpairMvaMet* (1 - math.cos( row.mPhi - row.e_m_EMpairMvaMetPhi)))
+                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.mvamet, row.mvametphi)[1]
+                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.ePt, row.ePhi )
+                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.mPt, row.mPhi )
                 else :
-                    pzetamiss[0] = -999
-                    mt_1[0] = -999
-                    mt_2[0] = -999
+                    pzetamiss[0] = -9999
+                    mt_1[0] = -9999
+                    mt_2[0] = -9999
+            if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+                pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+
+
+            # With calculated transverse mass variables, do Mt_Total for mssm search
+            pt1 = getattr( row, l1+'Pt' )
+            pt2 = getattr( row, l2+'Pt' )
+            phi1 = getattr( row, l1+'Phi' )
+            phi2 = getattr( row, l2+'Phi' )
+            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
+            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
+                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+            else :
+                mt_tot_UP[0] = -10
+                mt_tot_DOWN[0] = -10
+            #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
+
 
             # Data specific vars
             if 'data' in sample :
                 puweight[0] = 1
+                tauPtWeightUp[0] = 1
+                tauPtWeightDown[0] = 1
                 trigweight_1[0] = 1
+                effweight[0] = 1
                 idisoweight_1[0] = 1
                 idisoweight_2[0] = 1
+                topWeight[0] = 1
+                zPtWeight[0] = 1
+                weight[0] = 1
                 XSecLumiWeight[0] = 1
                 isZEE[0] = -1
                 isZMM[0] = -1
                 isZLL[0] = -1
+                # Have the btag numbers correspond to actual values not
+                # Promote/Demote values
+                if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
+                    setattr(row, 'NBTagPDM_idL_jVeto', getattr(row, 'bjetCISVVeto20MediumZTT'))
+                if hasattr(row, 'NBTagPDL_idL_jVeto' ) :
+                    setattr(row, 'NBTagPDL_idL_jVeto', getattr(row, 'bjetCISVVeto20LooseZTT'))
+
+                # Calculate Fake Factors based on this work:
+                # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
+                # We start with applying QCD factors to each leg and sum for total
+                if channel == 'tt' :
+                    FFWeightQCD[0] = 0.
+                    FFWeightQCD_UP[0] = 0.
+                    FFWeightQCD_DOWN[0] = 0.
+                    FFWeightQCD1[0] = 0.
+                    FFWeightQCD1_UP[0] = 0.
+                    FFWeightQCD1_DOWN[0] = 0.
+                    FFWeightQCD2[0] = 0.
+                    FFWeightQCD2_UP[0] = 0.
+                    FFWeightQCD2_DOWN[0] = 0.
+                    muon_iso = 0.089 # this is an artifact of being based on MuTau channel
+                                    # 0.089 gives a correction value of 1.0
+                    # First leg FR
+                    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
+                        inputsqcd = ffqcd.inputs()
+                        inputsqcd = [row.t1Pt, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
+                        FFWeightQCD1[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
+                        FFWeightQCD1_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
+                        FFWeightQCD1_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
+                    # Second leg FR
+                    if row.t2ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
+                        inputsqcd = ffqcd.inputs()
+                        inputsqcd = [row.t2Pt, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
+                        FFWeightQCD2[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
+                        FFWeightQCD2_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
+                        FFWeightQCD2_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
+                    # Total
+                    FFWeightQCD[0] = FFWeightQCD1[0] + FFWeightQCD2[0] 
+                    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
+                    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
+                    
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
@@ -686,27 +906,67 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
 
                 # Trigger Weights
+                effweight[0] = 1
                 if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
-                elif channel == 'tt' : trigweight_1[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
+                elif channel == 'tt' :
+                    trigweight_1[0] = 1
+                    effweight[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
                 else : trigweight_1[0] = 1
+                
+                # top pt reweighting, only for ttbar events
+                # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
+                if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
+                    top1Pt = row.topQuarkPt1
+                    if top1Pt > 400 : top1Pt = 400
+                    top2Pt = row.topQuarkPt2
+                    if top2Pt > 400 : top2Pt = 400
+                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
+                else : topWeight[0] = 1
+
+                # Apply z Pt Reweighting to LO DYJets samples
+                # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
+                zPtWeight[0] = 1
+                if 'DYJets' in sample and 'Low' not in sample :
+                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
+                        zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
+
+                weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
+                weight[0] *= trigweight_1[0] * effweight[0] * topWeight[0]
+                weight[0] *= zPtWeight[0]
 
                 # Special weighting for WJets and DYJets
-                if shortName == 'DYJets' :
-                    #xsec = getXSec( shortName, sampDict, row.genHTT )
+                if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
                     xsec = getXSec( shortName, sampDict, row.numGenJets )
-                    #print "\n Sampe: %s    xsec: %f     numGenJets %i" % (sample, xsec, row.numGenJets)
+                    if xsec not in xsecList : xsecList.append( xsec )
+                    #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
- 
+
+            # Tau Pt Weighting
+            if 'data' not in sample :
+                if channel == 'em' :
+                    tauPtWeightUp[0] = 1
+                    tauPtWeightDown[0] = 1
+                if channel == 'tt' :
+                    tauPtWeightUp[0] = getTauPtWeight( sample, channel, row, 0.2 )
+                    tauPtWeightDown[0] = getTauPtWeight( sample, channel, row, -0.2 )
+
+
 
             tnew.Fill()
             count2 += 1
 
+    # For xsec debugging:
+    #if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
+        #print "Cross Sections in sample: ",xsecList
+
 
     #print "Count: %i count2: %i" % (count, count2)
     #print "%25s : %10i" % ('Iso Selected', count2)
+
+
     isoQty = "%25s : %10i" % ('Iso Selected', count2)
     # write to disk
     tnew.write()

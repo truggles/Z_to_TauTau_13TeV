@@ -1,1 +1,3 @@
-/data/truggles/svFitComplete/feb23_fromFeb21SkimX/bbH600_0_em.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH600_2_em.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH600_1_em.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH600_0_em.root

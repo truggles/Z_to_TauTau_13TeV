@@ -40,9 +40,12 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
+    #'debug' : 'true',
+    'debug' : 'false',
     'bkgs' : 'None',
     'numCores' : 16,
-    'numFilesPerCycle' : 1,
+    'numFilesPerCycle' : 20,
+    #'numFilesPerCycle' : 1,
     'channels' : ['em', 'tt'],
     #'channels' : ['tt'],
     #'channels' : ['em'],
@@ -50,17 +53,19 @@ params = {
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb23a',
-    'mid2' : '2Feb23a',
-    'mid3' : '3Feb23a',
+    'mid1' : '1May01a',
+    'mid2' : '2May01a',
+    'mid3' : '3May01a',
     'additionalCut' : '',
-    #'svFitPost' : 'true',
-    'svFitPost' : 'false',
+    'svFitPost' : 'true',
+    #'svFitPost' : 'false',
     'svFitPrep' : 'false',
+    #'svFitPrep' : 'true',
+    'doFRMthd' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 
 

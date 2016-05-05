@@ -1,0 +1,2 @@
+/store/relval/CMSSW_8_0_0_pre6/SingleMuon/MINIAOD/80X_dataRun2_v4_RelVal_sgMuPrpt2015D-v1/10000/0EF0F0F9-63D0-E511-9F16-0CC47A4C8F0A.root
+/store/relval/CMSSW_8_0_0_pre6/SingleMuon/MINIAOD/80X_dataRun2_v4_RelVal_sgMuPrpt2015D-v1/10000/D63C72F5-63D0-E511-85AE-0CC47A4C8ECE.root

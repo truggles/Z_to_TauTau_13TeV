@@ -1,0 +1,5 @@
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH300_3_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH300_2_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH300_1_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH300_0_tt.root
+/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-bbH300_4_tt.root

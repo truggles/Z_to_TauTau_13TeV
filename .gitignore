@@ -10,6 +10,7 @@ dataCards*
 *_old
 meta/*/arch*
 ThreeProngTaus/2*
+ThreeProngTaus/9*
 ThreeProngTaus/arch*
 ThreeProngTaus/JetHT*
 qcdScale/*.root
@@ -17,3 +18,4 @@ qcdScale/roots
 util/*.txt
 lepSFdata/*
 tmp/
+plotsOut.txt

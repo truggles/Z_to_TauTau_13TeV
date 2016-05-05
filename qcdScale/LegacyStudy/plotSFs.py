@@ -1,32 +1,52 @@
 import ROOT
 import math
-import util.cumulativeDist as CDF
 ROOT.gROOT.SetBatch(True)
 
-isoPairs = [
-    ('Loose','Medium'),
+ssIsoPairs = [
+#    ('Loose','Medium'),
     #('Loose','Tight'),
-    #('Loose','VTight'),
-    ('Medium','Tight'),
+    ('Loose','VTight'),
+#    ('Medium','Tight'),
     #('Medium','VTight'),
-    ('Tight','VTight')
+#    ('Tight','VTight'),
+    ('VTight','')
+    ]
+osIsoPairs = [
+#    ('Loose','Medium'),
+    #('Loose','Tight'),
+    ('Loose','VTight'),
+#    ('Medium','Tight'),
+    #('Medium','VTight'),
+#    ('Tight','VTight'),
+    #('VTight','')
     ]
 
 def signalSamp( var, sign ) :
     print "\nSignal sample Var: %s    Sign: %s" % (var, sign)
-    f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCut.root' % sign,'r')
+    #f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCut.root' % sign,'r')
+    f = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%sIsoCutBT.root' % sign,'r')
     t = f.Get('tt_Histos')
     h = t.Get( var )
     h.SetFillColor( 0 )
     h.SetDirectory( 0 )
     return h
 
-def getShapes( var, sign ) :
+def getShapes( var, sign, isoPairs, l1='', btag='', njets='' ) :
     histos = []
+    #if sign == 'SS' : isoPairs = ssIsoPairs
+    #if sign == 'OS' : isoPairs = osIsoPairs
     for i,pair in enumerate(isoPairs) :
-        f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s_%s_%s.root' % (sign, pair[1], pair[0]),'r')
+        #f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s_%s_%s.root' % (sign, pair[1], pair[0]),'r')
+        if pair != ('VTight','') :
+            f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s%s.root' % (sign, l1, pair[1], pair[0], btag, njets),'r')
+        else :
+            f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root' % (sign, l1, pair[0], btag, njets),'r')
+        #    print "File name: '../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root'" %     (sign, '', pair[1], pair[0], btag)
+        #    f1 = ROOT.TFile('../../meta/dataCardsBackgrounds/tt_qcdShape_%s%s_%s_%s%s.root' % (sign, '', pair[1], pair[0], btag),'r')
         t1 = f1.Get('tt_Histos')
         h1 = t1.Get( var )
+        #h1.Sumw2()
+        #print h1.GetXaxis().GetNbins()
         h1.SetName( "%s%s" % (pair[0],pair[1]) )
         h1.SetDirectory( 0 )
         h1.SetFillColor( 0 )
@@ -34,171 +54,284 @@ def getShapes( var, sign ) :
         f1.Close()
     return histos
 
+def printStats( h ) :
+    print " -- Mean: %3.2f+/-%3.2f  StdDev: %3.2f+/-%3.2f  Skew: %3.2f+/-%3.2f Kurtosis %3.2f+/-%3.2f\n" % (h.GetMean(), h.GetMeanError(), h.GetStdDev(), h.GetStdDevError(), h.GetSkewness(), h.GetSkewness(11), h.GetKurtosis(), h.GetKurtosis(11) )
 
-def compareYield( osHistos, osh, ssh, histos ) :
-    ssSigInt = ssh.Integral()
-    osSigInt = osh.Integral()
-    ints = []
-    for h in histos :
-        ints.append( (h.Integral(),math.sqrt(h.Integral()) ) )
-    print "OS Signal yield = %3.2f +/- %3.2f" % (osSigInt, math.sqrt(osSigInt))
-    print "SS Signal yield = %3.2f +/- %3.2f" % (ssSigInt, math.sqrt(ssSigInt))
+def printYields( osHistos, ssHistos, l1='', btag='', ssIsoPairs=['',] ) :
+    isoPairs = osIsoPairs
+    ssInts = []
+    for h in ssHistos :
+        ssInts.append( (h.Integral(),math.sqrt(h.Integral()),1./math.sqrt(h.Integral()) ) )
+    osInts = []
+    for h in osHistos :
+        osInts.append( (h.Integral(),math.sqrt(h.Integral()),1./math.sqrt(h.Integral()) ) )
     for i,pair in enumerate(isoPairs) :
-        sf = math.sqrt( (math.sqrt(ssSigInt)/ssSigInt)**2 + (ints[i][1]/ints[i][0])**2 )
-        wUncert = ints[i][1]/ints[i][0]
-        print "\n%s %s yield = %3.2f +/- %3.2fper" % (pair[0], pair[1], ints[i][0], wUncert)
-        print " --- SF = %3.2f +/- %3.2fper" % (ssSigInt/ints[i][0], sf)
-        fYield = (osHistos[i].Integral())*ssSigInt/ints[i][0]
-        print " --- SF applied yield << %f +/- %3.2f>>" % (fYield, fYield*sf)
+        ssWUncert = ssInts[i][1]
+#XXX        print "SS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], ssInts[i][0], ssWUncert)
+#XXX        printStats( ssHistos[i] )
+        osWUncert = osInts[i][1]
+#XXX        print "OS %s %s yield = %3.2f +/- %3.2f" % (pair[0], pair[1], osInts[i][0], osWUncert)
+#XXX        printStats( osHistos[i] )
+    if ('VTight','') in ssIsoPairs :
+        ssSigInt = ssHistos[-1].Integral()
+#XXX        print "SS VTight yield = %3.2f +/- %3.2f" % (ssSigInt, math.sqrt(ssSigInt))
+#XXX        printStats( ssHistos[-1] )
+#XXX    print "\n"
+
+    #if l1 == '' :
+    #tags = {0:'MT/LM',1:'TVT/MT',2:'VT/TVT'}
+#    tags = {(0,1):'MT/LM',(0,2):'TVT/LT',(1,2):'TVT/MT',len(osIsoPairs)-1:'VT/TVT'}
+#    #tags = {0:'LT/LM',1:'LVT/LT',2:'MT/LVT',3:'MVT/MT',4:'TVT/MVT'}
+#    print "%s %s          SS                       OS" % (l1, btag)
+#    for i in range( len(isoPairs) ) :
+#        for j in range(i+1, len(isoPairs) ) :
+#            if i < len(isoPairs)-1:
+#                ssr = ssInts[j][0]/ssInts[i][0]
+#                sse = math.sqrt( (1./ssInts[j][1])**2 + (1./ssInts[i][1])**2 )
+#                osr = osInts[j][0]/osInts[i][0]
+#                ose = math.sqrt( (1./osInts[j][1])**2 + (1./osInts[i][1])**2 )
+#                print "%8s   %3.2f+/-%3.2f        %3.2f+/-%3.2f" % (tags[(i,j)],ssr,sse,osr,ose)
+#        if i == len(isoPairs)-1 :
+#            ssr = ssSigInt/ssInts[i][0]
+#            sse = math.sqrt( (1./math.sqrt(ssSigInt))**2 + (1./ssInts[i][1])**2 )
+#            print "%8s   %3.2f+/-%3.2f" % (tags[i],ssr,sse)
+#
+    print "\n"
+    for i,pair in enumerate(isoPairs) :
+        uncert = math.sqrt( osInts[i][2]**2 + ssInts[i][2]**2 )
+        ratio = ssInts[i][0]/osInts[i][0]
+        print "%s %s   SS/OS   %3.2f +/- %3.3f" % ( pair[0], pair[1], ratio, ratio*uncert )
+    print "\n"
 
 
-def makeCDFs( histos, sign, zeroNeg ) :
-    cdfs = []
-    for hist in histos :
-        cdfs.append( CDF.CDF( hist, zeroNeg, sign ) )
-    return cdfs
-
-
-def KSTests( cdf1, eCDF1, cdfs, histos ) :
-    ksVals = []
-    for i,cdf in enumerate(cdfs) :
-        maxDiff = 0
-        for k in range( 1, cdf.GetXaxis().GetNbins() + 2 ) :
-            diff = abs(cdf.GetBinContent( k ) - cdf1.GetBinContent( k ))
-            if diff > maxDiff : maxDiff = diff
-        #print "cdf %i: KS max diff %f" % (i, maxDiff)
-        e2 =  histos[i].GetEntries()
-        #ksVals.append( maxDiff * histos[i].Integral() )
-        ksVals.append( maxDiff * math.sqrt((eCDF1*e2)/(eCDF1+e2)))
-        #print " --- Crit Val: %f" % ( ksVals[i] )
-    return ksVals
-
-def ksTest( shape, h1, h2, n0, n1, n2, zeroed='' ) :
+def ksTest( shape, h1, h2, n0, n1, n2, l1, btag, zeroed='' ) :
+    ksProbX = h1.KolmogorovTest( h2, 'X' )
     ksProb = h1.KolmogorovTest( h2 )
-    print "%s: KS Prop = %f" % (n0, ksProb )
+    #print "%s: KS Prop = %3.2f" % (n0, ksProb )
     c1 = ROOT.TCanvas( 'c1%s' % n0, 'c1', 600, 600 )
     p1 = ROOT.TPad('p1%s' % n0, 'p1', 0, 0, 1, 1 )
     p1.Draw()
     p1.SetGrid()
     p1.cd()
-    #osSigCDF.SetStats( 0 )
-    #osSigCDF.SetLineWidth( 2 )
-    #osSigCDF.SetLineColor( ROOT.kBlack )
-    #osSigCDF.SetTitle( "%s %s" % (shape, n))
-    #osSigCDF.Draw('hist')
-    #for i,h in enumerate(h2) :
-    #    h.SetLineColor( i+1 )
-    #    h.Draw('hist same')
     
     h1.SetLineColor( ROOT.kRed )
-    h1.SetTitle( '%s %s %s KS Prob = %f' % (n0, shape, zeroed, ksProb ) )
+    h1.SetTitle( '%s %s %s KS Prob = %3.3f, PseudoExp = %3.3f' % (n0, l1, btag, ksProb, ksProbX ) )
     h2.SetLineColor( ROOT.kBlue )
-    #h2.SetTitle( n2 )
     h1.SetStats(0)
-    h1.Draw('HIST')
-    h2.Draw('same HIST')
+    if shape == 'm_sv' : title = 'svFit M_{#tau#tau}'
+    if shape == 'mt_sv' : title = 'svFit Transverse M_{#tau#tau}'
+    if shape == 'm_vis' : title = 'Visible M_{#tau#tau}'
+    h1.GetXaxis().SetTitle('%s (GeV)' % title)
+    h1.GetYaxis().SetTitle('A.U.')
+    #h1.Draw('')
+    #h2.Draw('same')
 
-    h1.SetMaximum( max(h1.GetMaximum(), h2.GetMaximum()) * 1.1 )
-    h1.SetMinimum( min(h1.GetMinimum(), h2.GetMinimum()) * 1.2 )
+    ''' Rebin for viewing '''
+    #RebinValGeV = 10.0
+    #currentBinW = float(h1.GetXaxis().GetBinWidth( 1 ))
+    #print RebinValGeV,currentBinW
+    #rebinNum = RebinValGeV / currentBinW
+    #print RebinValGeV,currentBinW,rebinNum
+    rebinNum = 2000
+    h1new = h1.Clone( h1.GetTitle()+'new' )
+    h2new = h2.Clone( h2.GetTitle()+'new' )
+    h1new.Rebin( rebinNum )
+    h2new.Rebin( rebinNum )
+
+    h1new.Draw('HIST e1')
+    h2new.Draw('same HIST e1')
+
+    h1new.SetMaximum( max(h1new.GetMaximum(), h2new.GetMaximum()) * 1.1 )
+    h1new.SetMinimum( min(h1new.GetMinimum(), h2new.GetMinimum()) * 1.2 )
     
     
     ''' Build the legend explicitly so we can specify marker styles '''
     legend = ROOT.TLegend(0.60, 0.75, 0.90, 0.9)
     legend.SetMargin(0.3)
     #legend.SetBorderSize(0)
-    legend.AddEntry( h1, n1, 'l')
-    legend.AddEntry( h2, n2, 'l')
-    #for i,cdf in enumerate(h2) :
-    #    legend.AddEntry( cdf, "%s-%s KS=%f" % (isoPairs[i][0],isoPairs[i][1],ksVals[i]), 'l')
+    legend.AddEntry( h1new, n1, 'l')
+    legend.AddEntry( h2new, n2, 'l')
     legend.Draw()
     
-    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/moreQCD/%s_%s_%s%s%s.png' % (shape, n, n0,n1,n2))
+    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/moreQCD/%s_%s_%s_%s_%s_%s%s.png' % (shape, n, l1, btag, n0,n1,n2))
+    return ksProb
         
+def runAllKS( osIsoPairs, ssIsoPairs, osHistos, ssHistos, l1, btag, normalize=True ) :
+
+    
+
+    ''' rebin! '''
+    rBin = 1
+    for i in range( len( osIsoPairs ) ) :
+        osHistos[i].Rebin(rBin)
+        if normalize :
+            osHistos[i].Scale(1./osHistos[i].Integral())
+    for i in range( len( ssIsoPairs ) ) :
+        ssHistos[i].Rebin(rBin)
+        if normalize :
+            ssHistos[i].Scale(1./ssHistos[i].Integral())
+
+    print "\nROOT KS Tests"
+    ''' SS vs OS '''
+    log1 = []
+    cnt = 0
+    for i in range( len( ssIsoPairs ) ) :
+        for j in range( len( osIsoPairs ) ) :
+            n0 = "SSvsOS"
+            n1 = "SS_%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "OS_%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            log1.append( ksTest( shape, ssHistos[i], osHistos[j], n0, n1, n2, l1, btag ) )
+            cnt += 1
+
+    ''' iso Binning '''
+    log2 = []
+    cnt = 0
+    for i in range( len( ssIsoPairs )-1 ) :
+        for j in range(i+1, len( ssIsoPairs ) ) :
+            n0 = "SS"
+            n1 = "%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "%s->%s" % (ssIsoPairs[j][0], ssIsoPairs[j][1] )
+            log2.append( ksTest( shape, ssHistos[i], ssHistos[j], n0, n1, n2, l1, btag ) )
+            cnt += 1
+    log3 = []
+    cnt = 0
+    for i in range( len( osIsoPairs )-1 ) :
+        for j in range(i+1, len( osIsoPairs ) ) :
+            n0 = "OS"
+            n1 = "%s->%s" % (osIsoPairs[i][0], osIsoPairs[i][1] )
+            n2 = "%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            log3.append( ksTest( shape, osHistos[i], osHistos[j], n0, n1, n2, l1, btag ) )
+            cnt += 1
+    print "\n\n"   
+
+    cnt = 0
+    for i in range( len( ssIsoPairs ) ) :
+        for j in range( len( osIsoPairs ) ) :
+            n0 = "SSvsOS"
+            n1 = "SS_%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "OS_%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            print "%20s %20s %20s KS: %3.4f" % (n0, n1, n2, log1[cnt])
+            cnt += 1
+    cnt = 0
+    for i in range( len( ssIsoPairs )-1 ) :
+        for j in range(i+1, len( ssIsoPairs ) ) :
+            n0 = "SS"
+            n1 = "%s->%s" % (ssIsoPairs[i][0], ssIsoPairs[i][1] )
+            n2 = "%s->%s" % (ssIsoPairs[j][0], ssIsoPairs[j][1] )
+            print "%20s %20s %20s KS: %3.4f" % (n0, n1, n2, log2[cnt])
+            cnt += 1
+    cnt = 0
+    for i in range( len( osIsoPairs )-1 ) :
+        for j in range(i+1, len( osIsoPairs ) ) :
+            n0 = "OS"
+            n1 = "%s->%s" % (osIsoPairs[i][0], osIsoPairs[i][1] )
+            n2 = "%s->%s" % (osIsoPairs[j][0], osIsoPairs[j][1] )
+            print "%20s %20s %20s KS: %3.4f" % (n0, n1, n2, log3[cnt])
+            cnt += 1
+
+    print "\n\n"
+
+
+def runAllPtCompKS( isoPairs, HPt1, HPt2, l1, sign, btag, normalize=True, zero=True ) :
+    ''' rebin! '''
+    ks = True
+    if ks:
+        rBin = 1
+        for i in range( len( isoPairs ) ) :
+            HPt2[i].Rebin(rBin)
+            if normalize :
+                HPt2[i].Scale(1./HPt2[i].Integral())
+            HPt1[i].Rebin(rBin)
+            if normalize :
+                HPt1[i].Scale(1./HPt1[i].Integral())
+
+    ''' zero out neg bins and add poisson errors to zero bins '''
+    #totBins = HPt1[0].GetXaxis().GetNbins()
+    #for i in range( len( isoPairs ) ) :
+    #    for j in range( 0, int(totBins)+1 ) :
+    #        if HPt1[i].GetBinContent( j ) < 0 :
+                
+        
+
+    print "\nROOT KS Tests"
+    ''' SS vs OS '''
+    log1 = []
+    cnt = 0
+    for i in range( len( isoPairs ) ) :
+        n0 = sign+"_Pt1GtrvsPt2Gtr"
+        n1 = "Pt1Gtr_%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+        n2 = "Pt2Gtr_%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+        log1.append( ksTest( shape, HPt1[i], HPt2[i], n0, n1, n2, l1, btag ) )
+        cnt += 1
+
+    print "\n\n"   
+
+    cnt = 0
+    for i in range( len( isoPairs ) ) :
+        n0 = "Pt1GtrvsPt2Gtr"
+        n1 = "Pt1Gtr_%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+        n2 = "Pt2Gtr_%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
+        print "%20s %20s %20s KS: %3.4f" % (n0, n1, n2, log1[cnt])
+        cnt += 1
+
+    print "\n\n"
+
+
 if __name__ == '__main__' :
 
-    for shape in ['m_sv', 'm_vis']:
-        for zero in [False,]:# True] :
-            if zero : n = 'zeroed'
-            else : n = 'incNeg'
+    #for shape in ['m_sv',]:# 'm_vis']:
+    #    for zero in [False,]:# True] :
+    #        if zero : n = 'zeroed'
+    #        else : n = 'incNeg'
+    shape = 'm_sv'
+    #shape = 'mt_sv'
+    n = 'incNeg'
 
-            ssh = signalSamp( shape, 'SS' )
-            ssHistos = getShapes( shape, 'SS' )
-            osh = signalSamp( shape, 'OS' )
-            print "\n ###   OS QCD Yield %f +/- %3.2f   ###" % (osh.Integral(), math.sqrt(osh.Integral()))
-            osHistos = getShapes( shape, 'OS' )
-            compareYield( osHistos, osh, ssh, ssHistos )
-            ssCDFs = makeCDFs( ssHistos, 'SS', zero )
-            osCDFs = makeCDFs( osHistos, 'OS', zero )
-            ssSigCDF = CDF.CDF( ssh, zero, 'SS' )
-            osSigCDF = CDF.CDF( osh, zero, 'OS' )
-            #KSTests( ssSigCDF, ssCDFs, ssHistos )
-            ksVals = KSTests( osSigCDF, osh.GetEntries(), osCDFs, osHistos )
+    #ssh = signalSamp( shape, 'SS' )
+    #osh = signalSamp( shape, 'OS' )
 
-            ''' rebin! '''
-            rBin = 2
-            for i in range( len( isoPairs ) ) :
-                osCDFs[i].Sumw2()
-                ssCDFs[i].Sumw2()
-                osCDFs[i].Rebin(rBin)
-                osCDFs[i].Scale(1./rBin)
-                ssCDFs[i].Rebin(rBin)
-                ssCDFs[i].Scale(1./rBin)
-                #osHistos[i].Sumw2()
-                #ssHistos[i].Sumw2()
-                osHistos[i].Rebin(rBin)
-                osHistos[i].Scale(1./osHistos[i].Integral())
-                ssHistos[i].Rebin(rBin)
-                ssHistos[i].Scale(1./ssHistos[i].Integral())
-            ssSigCDF.Sumw2()
-            osSigCDF.Sumw2()
-            ssSigCDF.Rebin(rBin)
-            ssSigCDF.Scale(1./rBin)
-            osSigCDF.Rebin(rBin)
-            osSigCDF.Scale(1./rBin)
-            #ssh.Sumw2()
-            #osh.Sumw2()
-            ssh.Rebin(rBin)
-            ssh.Scale(1./ssh.Integral())
-            osh.Rebin(rBin)
-            osh.Scale(1./osh.Integral())
-    
-            
-            
+    #for l1 in ['', 'l1t', 'l1m'] :
+    #for l1 in ['l1l','l1m','l1t','l1vt'] :
+    for l1 in ['l1m',] :
+        #for btag in ['', 'BT'] :
+        #for btag in ['BTM','BTL', 'NoBTM', 'NoBTL'] :
+        for btag in ['BTM', 'BTL'] :
+            for njets in ['allJ','jl1'] :
+                ssIsoPairs_ = ssIsoPairs
+                osIsoPairs_ = osIsoPairs
+                #if l1 != '' : ssIsoPairs_ = osIsoPairs
+                #print "################"
+                print "\n"
+                print "### %s %s %s ###" % (l1, btag, njets)
+                #print "################"
+                ssHistos = getShapes( shape, 'SS', ssIsoPairs_, l1, btag, njets )
+                print "VT/LtoVT: %3.1f / %3.1f = %f3.3" % (ssHistos[-1].Integral(),ssHistos[0].Integral(),ssHistos[-1].Integral()/ssHistos[0].Integral())
+            #osHistos = getShapes( shape, 'OS', osIsoPairs_, l1, btag )
+            #printYields( osHistos, ssHistos, l1, btag, ssIsoPairs_ )
+            #runAllKS( osIsoPairs_, ssIsoPairs_, osHistos, ssHistos, l1, btag )
+                
+                
+    #for l1 in ['l1t', 'l1m'] :
+    #    btag = ''
+    #    ssIsoPairs_ = ssIsoPairs
+    #    osIsoPairs_ = osIsoPairs
+    #    if l1 != '' : ssIsoPairs_ = osIsoPairs
 
-            print "\nROOT KS Tests"
-            for i in range( len( isoPairs ) ) :
-                n0 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-                ksTest( shape, ssHistos[i], osHistos[i], n0, 'SS', 'OS' )
-            for i in range( len( isoPairs )-1 ) :
-                n0 = "SS"
-                n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-                n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-                ksTest( shape, ssHistos[i], ssHistos[i+1], n0, n1, n2 )
-            for i in range( len( isoPairs )-1 ) :
-                n0 = "OS"
-                n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-                n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-                ksTest( shape, osHistos[i], osHistos[i+1], n0, n1, n2 )
-            #for i in range( len( isoPairs ) ) :
-            #    n0 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-            #    ksTest( shape, ssCDFs[i], osCDFs[i], n0, 'SS', 'OS' )
-            #for i in range( len( isoPairs )-1 ) :
-            #    n0 = "SS"
-            #    n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-            #    n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-            #    ksTest( shape, ssCDFs[i], ssCDFs[i+1], n0, n1, n2 )
-            #for i in range( len( isoPairs )-1 ) :
-            #    n0 = "OS"
-            #    n1 = "%s->%s" % (isoPairs[i][0], isoPairs[i][1] )
-            #    n2 = "%s->%s" % (isoPairs[i+1][0], isoPairs[i+1][1] )
-            #    ksTest( shape, osCDFs[i], osCDFs[i+1], n0, n1, n2 )
-            
-            #ksTest( shape, ssCDFs[-1], ssSigCDF, 'T->VTvsSig(VT)', 'SS T->VT', 'SS Signal' )
-            #print "T->VT vs Sig in SS %f" % ssSigCDF.KolmogorovTest( ssCDFs[-1] ) 
-            #print "\n\n"   
-            ksTest( shape, ssHistos[-1], ssh, 'T->VTvsSig(VT)', 'SS T->VT', 'SS Signal' )
-            print "T->VT vs Sig in SS %f" % ssh.KolmogorovTest( ssHistos[-1] ) 
-            print "\n\n"   
+    #    ssHPt1 = getShapes( shape, 'SS', ssIsoPairs_, 'Pt1Gtr'+l1, btag )
+    #    osHPt1 = getShapes( shape, 'OS', osIsoPairs_, 'Pt1Gtr'+l1, btag )
+    #    ssHPt2 = getShapes( shape, 'SS', ssIsoPairs_, 'Pt2Gtr'+l1, btag )
+    #    osHPt2 = getShapes( shape, 'OS', osIsoPairs_, 'Pt2Gtr'+l1, btag )
+    #    #for pt in ['Pt1Gtr', 'Pt2Gtr'] :
+    #    print "################"
+    #    print "### %s %s ###" % (l1, btag)
+    #    print "################"
+    #    print "\n OS "
+    #    printYields( osHPt1, osHPt2, l1, btag, osIsoPairs_ )
+    #    print "\n SS "
+    #    printYields( ssHPt1, ssHPt2, l1, btag, ssIsoPairs_ )
+    #    normalize = True
+    #    runAllPtCompKS( osIsoPairs_, osHPt1, osHPt2, 'OS', l1, btag, normalize )
+    #    runAllPtCompKS( ssIsoPairs_, ssHPt1, ssHPt2, 'SS', l1, btag, normalize )
 
 
 
