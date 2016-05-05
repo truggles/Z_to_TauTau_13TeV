@@ -117,7 +117,7 @@ def makeDYJetsPUTemplate( grouping ) :
 def PUreweight( channel ) :
     # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2015#PU_reweighting
     #datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
-    datafile = ROOT.TFile('meta/PileUpInfo/Data_Pileup_2015D_Nov17.root', 'READ') # Made by Adinda
+    datafile = ROOT.TFile('meta/PileUpInfo/Data_Pileup_2015D_Feb02.root', 'READ') # Made by Adinda
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 

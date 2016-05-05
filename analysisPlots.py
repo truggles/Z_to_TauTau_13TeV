@@ -17,12 +17,12 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
     histosDir.cd()
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
-    histos2 = {}
+    #histos2 = {}
     for var, cv in newVarMap.iteritems() :
         #if var != 'npv' : continue
-        var2 = '%s%i' % (var, 2)
+        #var2 = '%s%i' % (var, 2)
     	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
-    	histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
+    	#histos2[ var2 ] = makeHisto( var2, cv[1], cv[2], cv[3])
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # Taus are currently filled with 1 for all SFs
@@ -30,39 +30,44 @@ def plotHistosProof( outFile, chain, channel, isData, additionalCut, blind ) :
         xsec = '*(XSecLumiWeight)'
 
         # the >> sends the output to a predefined histo
-        if isData : # Data has no GenWeight and by def has puweight = 1
-            if var == 'm_vis' and blind :
-                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
-                histos[ var ] = gPad.GetPrimitive( "%s" % var )
+        try :
+            if isData : # Data has no GenWeight and by def has puweight = 1
+                if var == 'm_vis' and blind :
+                    chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
+                    histos[ var ] = gPad.GetPrimitive( "%s" % var )
+                else :
+                    chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
+                    histos[ var ] = gPad.GetPrimitive( "%s" % var )
+                    if var == 'm_vis' :
+                        print 'm_vis'
+                        print "Data Count:", histos[ var ].Integral()
             else :
-                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s' % additionalCut )
-                histos[ var ] = gPad.GetPrimitive( "%s" % var )
-                if var == 'm_vis' :
-                    print 'm_vis'
-                    print "Data Count:", histos[ var ].Integral()
-        else :
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'weight/abs( weight )%s%s%s' % (additionalCut, sfs, xsec) )
-            histos2[ var ] = gPad.GetPrimitive( var2 )
+                #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var2), 'weight/abs( weight )%s%s%s' % (additionalCut, sfs, xsec) )
+                #histos2[ var ] = gPad.GetPrimitive( var2 )
 
-            chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (weight/abs( weight ))%s%s%s' % (additionalCut, sfs, xsec) )
-            ''' No reweighting at the moment! '''
-            #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(weight/abs( weight ))%s' % additionalCut )
-            histos[ var ] = gPad.GetPrimitive( var )
-            if chain.GetEntries() > 0 :
-                integralPre = histos2[ var ].Integral()
-                integralPost = histos[ var ].Integral()
-                if var == 'm_vis' :
-                    print 'm_vis'
-                    print "intPre: %f" % integralPre
-                    print "tmpIntPost: %f" % integralPost
-                    if integralPre != 0 :
-                        print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
-                #    print "  ---!!! UNSCALING !!!--- "
-                #if integralPost != 0 :
-                #    histos[ var ].Scale( integralPre / integralPost )
-            else :
-                print " #### ENTRIES = 0 #### "
-                histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
+                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), 'puweight * (weight/abs( weight ))%s%s%s' % (additionalCut, sfs, xsec) )
+                ''' No reweighting at the moment! '''
+                #chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(weight/abs( weight ))%s' % additionalCut )
+                histos[ var ] = gPad.GetPrimitive( var )
+                if chain.GetEntries() > 0 :
+                    #integralPre = histos2[ var ].Integral()
+                    integralPost = histos[ var ].Integral()
+                    if var == 'm_vis' :
+                        print 'm_vis'
+                        #print "intPre: %f" % integralPre
+                        print "tmpIntPost: %f" % integralPost
+                        #if integralPre != 0 :
+                        #    print " --- percent increase w/ PU reweight %f" % ( integralPost / ( integralPre ) )
+                    #    print "  ---!!! UNSCALING !!!--- "
+                    #if integralPost != 0 :
+                    #    histos[ var ].Scale( integralPre / integralPost )
+                else :
+                    print " #### ENTRIES = 0 #### "
+                    histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
+        except AttributeError :
+            print "AttributeError: %s   called: %s in analysisPlots.py" % (newVarMap[ var ][0], var)
+            del histos[ var ]
+            continue
         histos[ var ].Write()
 
     #outFile.Write()
@@ -101,6 +106,12 @@ def getHistoDict( channel ) :
         'm_vis_mssm' : ('m_vis', 3500, 0, 3500),
         'm_vis_varB' : ('m_vis', 600, 0, 600),
         'm_vis' : ('m_vis', 350, 0, 350),
+        'm_sv_mssm' : ('m_sv', 3500, 0, 3500),
+        'm_sv_varB' : ('m_sv', 600, 0, 600),
+        'm_sv' : ('m_sv', 350, 0, 350),
+        'mt_sv_mssm' : ('mt_sv', 3500, 0, 3500),
+        'mt_sv_varB' : ('mt_sv', 600, 0, 600),
+        'mt_sv' : ('mt_sv', 3500, 0, 3500),
         'pt_1' : ('pt_1', 400, 0, 400),
         'eta_1' : ('eta_1', 80, -4, 4),
         'iso_1' : ('iso_1', 100, 0, 1),
@@ -111,8 +122,9 @@ def getHistoDict( channel ) :
         'mt_2' : ('mt_2', 400, 0, 400),
         'Z_DEta' : ('eta_1 - eta_2', 1000, -5, 5),
         'pzetavis' : ('pzetavis', 1000, -100, 900),
-        'pzetamis' : ('pzetamis', 1000, -400, 600),
-        'pZeta-0.85pZetaVis' : ('pzetamis - 0.85 * pzetavis', 1000, -500, 500),
+        'pfpzetamis' : ('pfpzetamis', 1000, -100, 900),
+        'pzetamiss' : ('pzetamiss', 1000, -400, 600),
+        'pZeta-0.85pZetaVis' : ('pzetamiss - 0.85 * pzetavis', 1000, -500, 500),
     }
 
     if channel == 'em' :
@@ -153,6 +165,12 @@ def getPlotDetails( channel ) :
         'm_vis_mssm' : (0, 3500, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
+        'm_sv_mssm' : (0, 3500, 10, 'Z svFit Mass [GeV]', ' GeV'),
+        'm_sv_varB' : (0, 600, 10, 'Z svFit Mass [GeV]', ' GeV'),
+        'm_sv' : (0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
+        'mt_sv_mssm' : (0, 3500, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv_varB' : (0, 600, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        'mt_sv' : (0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
         'Z_Pt' : (0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
         'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
         'met' : (0, 250, 20, 'pfMet [GeV]', ' GeV'),
@@ -177,7 +195,8 @@ def getPlotDetails( channel ) :
         'npv' : (0, 40, 2, 'Number of Vertices', ''),
         'npu' : (0, 40, 2, 'Number of True PU Vertices', ''),
         'pzetavis' : (0, 300, 20, 'pZetaVis', ' GeV'),
-        'pzetamis' : (-200, 300, 20, 'pZetaMis', ' GeV'),
+        'pfpzetamis' : (0, 300, 20, 'pfpZetaMis', ' GeV'),
+        'pzetamiss' : (-200, 300, 20, 'pZetaMis', ' GeV'),
         'pZeta-0.85pZetaVis' : (-300, 300, 20, 'pZetaMis - 0.85 x pZetaVis', ' GeV'),
         'Z_DR' : (0, 5, 20, 'Z dR', ' dR'),
         'Z_DPhi' : (-4, 4, 40, 'Z dPhi', ' dPhi'),

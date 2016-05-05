@@ -1,5 +1,5 @@
-/data/truggles/jan25_mssmAndHiggs76x/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-08B1A21C-29B8-E511-BBAD-001517FA7A98/make_ntuples_cfg-08B1A21C-29B8-E511-BBAD-001517FA7A98.root
-/data/truggles/jan25_mssmAndHiggs76x/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-108DCD21-29B8-E511-B1CF-90B11C0506C6/make_ntuples_cfg-108DCD21-29B8-E511-B1CF-90B11C0506C6.root
-/data/truggles/jan25_mssmAndHiggs76x/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-A6E20517-29B8-E511-AD01-842B2B17F73D/make_ntuples_cfg-A6E20517-29B8-E511-AD01-842B2B17F73D.root
-/data/truggles/jan25_mssmAndHiggs76x/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-BAB56F11-29B8-E511-A72B-14187733AD89/make_ntuples_cfg-BAB56F11-29B8-E511-A72B-14187733AD89.root
-/data/truggles/jan25_mssmAndHiggs76x/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-E0AAE115-29B8-E511-B10E-001E675A622F/make_ntuples_cfg-E0AAE115-29B8-E511-B10E-001E675A622F.root
+/data/truggles/feb20_bkgsAndSignals/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-08B1A21C-29B8-E511-BBAD-001517FA7A98/make_ntuples_cfg-08B1A21C-29B8-E511-BBAD-001517FA7A98.root
+/data/truggles/feb20_bkgsAndSignals/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-108DCD21-29B8-E511-B1CF-90B11C0506C6/make_ntuples_cfg-108DCD21-29B8-E511-B1CF-90B11C0506C6.root
+/data/truggles/feb20_bkgsAndSignals/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-A6E20517-29B8-E511-AD01-842B2B17F73D/make_ntuples_cfg-A6E20517-29B8-E511-AD01-842B2B17F73D.root
+/data/truggles/feb20_bkgsAndSignals/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-BAB56F11-29B8-E511-A72B-14187733AD89/make_ntuples_cfg-BAB56F11-29B8-E511-A72B-14187733AD89.root
+/data/truggles/feb20_bkgsAndSignals/SUSYGluGluToBBHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-E0AAE115-29B8-E511-B10E-001E675A622F/make_ntuples_cfg-E0AAE115-29B8-E511-B10E-001E675A622F.root

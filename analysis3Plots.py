@@ -10,6 +10,7 @@ import analysisPlots
 from util.splitCanvas import fixFontSize
 import os
 from array import array
+import math
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
@@ -28,6 +29,8 @@ p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
+p.add_argument('--addUncert', action='store', default=True, dest='addUncert', help="What channels?")
+p.add_argument('--qcdSF', action='store', default=1.9, dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -38,16 +41,21 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2260.0 # / fb 25ns
-mssmMass = 180
+cmsLumi = float(os.getenv('LUMI'))
+print "Lumi = %i" % cmsLumi
+
+mssmMass = 500
 mssmSF = 100
 higgsSF = 10
-#qcdTTScaleFactor = 1.06
-qcdEMScaleFactor = 1.06
-qcdTTScaleFactor = 1.25
+qcdTTScaleFactor = 1.06
+qcdTTScaleFactor = 504.5 / 676.6 # Feb24, no2p, Medium -> VTight
+#qcdEMScaleFactor = 1.06
+qcdEMScaleFactor = 1.9
+#qcdTTScaleFactor = 1.25
+#qcdTTScaleFactorNew = 499.075601 / 684.737359 
 #qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
-qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
-qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
+#qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
+#qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
 #qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
@@ -63,56 +71,81 @@ qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
     sampDict = json.load( sampFile )
 
+chans = {
+    'tt' : '#tau_{h}#tau_{h}',
+    'em' : 'e#mu',
+}
+
+
                 # Sample : Color
 samples = OrderedDict()
 #samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
 #samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
-samples['DYJets']   = ('kOrange-4', 'dyj')
-samples['DYJets100-200']   = ('kOrange-4', 'dyj')
-samples['DYJets200-400']   = ('kOrange-4', 'dyj')
-samples['DYJets400-600']   = ('kOrange-4', 'dyj')
-samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
-#samples['DYJetsLow']   = ('kOrange-4', 'dyj')
-#samples['T-tW']     = ('kYellow+2', 'dib')
+samples['DYJets-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets1-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets1-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets1-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets1-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets2-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets2-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets2-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets2-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets3-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets3-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets3-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets3-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJets4-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets4-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets4-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets4-ZLL']   = ('kOrange-4', 'zll')
+samples['DYJetsLow-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJetsLow-ZL']   = ('kOrange-4', 'zl')
+samples['DYJetsLow-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJetsLow-ZLL']   = ('kOrange-4', 'zll')
+#samples['DYJets100-200']   = ('kOrange-4', 'dyj')
+#samples['DYJets200-400']   = ('kOrange-4', 'dyj')
+#samples['DYJets400-600']   = ('kOrange-4', 'dyj')
+#samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
+samples['T-tW']     = ('kYellow+2', 'dib')
 samples['T-tchan']     = ('kYellow+2', 'dib')
 samples['TT']       = ('kBlue-8', 'top')
 samples['Tbar-tW']  = ('kYellow-2', 'dib')
-#samples['Tbar-tchan']  = ('kYellow-2', 'dib')
+samples['Tbar-tchan']  = ('kYellow-2', 'dib')
 samples['WJets']    = ('kAzure+2', 'wjets')
-samples['WJets100-200']    = ('kAzure+2', 'wjets')
-samples['WJets200-400']    = ('kAzure+2', 'wjets')
-samples['WJets400-600']    = ('kAzure+2', 'wjets')
-samples['WJets600-Inf']    = ('kAzure+2', 'wjets')
+#samples['WJets100-200']    = ('kAzure+2', 'wjets')
+#samples['WJets200-400']    = ('kAzure+2', 'wjets')
+#samples['WJets400-600']    = ('kAzure+2', 'wjets')
+#samples['WJets600-Inf']    = ('kAzure+2', 'wjets')
 samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
 #samples['WW2l2nu']       = ('kAzure+8', 'dib')
-#samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
+samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
 samples['WZ1l3nu'] = ('kAzure-6', 'dib')
-#samples['WZ2l2q'] = ('kAzure-6', 'dib')
+samples['WZ2l2q'] = ('kAzure-6', 'dib')
 #samples['WZ3l1nu'] = ('kAzure-6', 'dib')
 #samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
-#samples['ZZ2l2q'] = ('kAzure-12', 'dib')
+samples['ZZ2l2q'] = ('kAzure-12', 'dib')
 samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
-#samples['QCD15-20']        = ('kMagenta-10', 'qcd')
-#samples['QCD20-30']        = ('kMagenta-10', 'qcd')
-#samples['QCD30-80']        = ('kMagenta-10', 'qcd')
-#samples['QCD80-170']        = ('kMagenta-10', 'qcd')
-#samples['QCD170-250']        = ('kMagenta-10', 'qcd')
-#samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
 samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
 samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
-    'dib' : 'kRed+2',
-    'top' : 'kBlue-8',
-    'qcd' : 'kMagenta-10',
-    'dyj' : 'kOrange-4',
-    'wjets' : 'kAzure+2',
-    'higgs' : 'kBlue',
-    'mssm' : 'kPink',
-    'data' : 'kBlack',
+    'dib' : ROOT.kRed+2,
+    'top' : ROOT.kBlue-8,
+    'qcd' : ROOT.TColor.GetColor(250,202,255), #kMagenta-10
+    'ztt' : ROOT.TColor.GetColor(248,206,104), #kOrange-4,
+    'zl' : ROOT.kAzure+2,
+    'zj' : ROOT.kGreen+2,
+    'zll' : ROOT.TColor.GetColor(100,182,232),
+    'wjets' : ROOT.kAzure+6,
+    'higgs' : ROOT.kBlue,
+    'mssm' : ROOT.kPink,
+    'data' : ROOT.kBlack,
 }
 
 
@@ -155,8 +188,9 @@ for channel in ['em', 'tt'] :
     #print newVarMap
     for var, info in newVarMap.iteritems() :
 
+        if 'mt_sv' in var : continue
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
-        #if not 'm_vis' in var : continue
+        #if not 'm_vis_mssm' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
@@ -167,7 +201,10 @@ for channel in ['em', 'tt'] :
         """
         if var == 'm_vis_mssm' :
             varBinned = True
-            xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            xBins = array( 'd', [] )
+            for i in range(0, 351 ) :
+                xBins.append( i * 10 )
         elif var == 'm_vis_varB' :
             varBinned = True
             xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
@@ -188,7 +225,10 @@ for channel in ['em', 'tt'] :
 
         append = var + channel
         stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
-        dyj = ROOT.TH1F("All Backgrounds dyj %s" % append, "dyj", xNum, xBins )
+        ztt = ROOT.TH1F("All Backgrounds ztt %s" % append, "ztt", xNum, xBins )
+        zl = ROOT.TH1F("All Backgrounds zl %s" % append, "zl", xNum, xBins )
+        zj = ROOT.TH1F("All Backgrounds zj %s" % append, "zj", xNum, xBins )
+        zll = ROOT.TH1F("All Backgrounds zll %s" % append, "zll", xNum, xBins )
         dib = ROOT.TH1F("All Backgrounds dib %s" % append, "dib", xNum, xBins )
         top = ROOT.TH1F("All Backgrounds top %s" % append, "top", xNum, xBins )
         higgs = ROOT.TH1F("All Backgrounds higgs %s" % append, "higgs", xNum, xBins )
@@ -202,11 +242,14 @@ for channel in ['em', 'tt'] :
         for sample in samples:
 
             if channel == 'tt' and sample == 'data_em' : continue
+            if channel == 'tt' and '-ZLL' in sample : continue
             if channel == 'em' and sample == 'data_tt' : continue
+            if channel == 'em' and '-ZJ' in sample : continue
+            if channel == 'em' and '-ZL' in sample and not '-ZLL' in sample : continue
             if options.qcdMC and sample == 'QCD' : continue
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
-            print sample
+            if var == 'm_vis' : print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
@@ -283,13 +326,27 @@ for channel in ['em', 'tt'] :
                     hist = ROOT.TH1F( preHist )
             # If we use this option we specify a scaling factor
             elif sample == 'QCD' and options.useQCDMakeName :
-                print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
-                preHist.Scale( qcdTTScaleFactorNew )
+                print "Using QCD SCALE FACTOR <<<< NEW >>>>"
+                #if channel == 'em' :
+                #    print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
+                #    preHist.Scale( qcdEMScaleFactor )
+                #
+                #if channel == 'tt' :
+                #    print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                #    preHist.Scale( qcdTTScaleFactor )
+                print "Using qcdSF from command line: %s" % options.qcdSF
+                preHist.Scale( float(options.qcdSF) )
+                #print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactorNew
+                #preHist.Scale( qcdTTScaleFactorNew )
                 print "QCD yield: %f" % preHist.Integral()
                 hist = ROOT.TH1F( preHist )
             else :
                 #preHist.Rebin( plotDetails[ var ][2] )
+                #print "Rebinning"
+                #print xNum
+                #print xBins
                 hist = preHist.Rebin( xNum, "rebinned", xBins )
+                #print "Done Rebinning"
 
 
 
@@ -322,38 +379,35 @@ for channel in ['em', 'tt'] :
 
 
             #print "Hist int: %s %f" % (sample, hist.Integral() )
-            if samples[ sample ][1] == 'dyj' :
-                hist.SetTitle('Z #rightarrow #tau#tau')
-                dyj.Add( hist )
+            if samples[ sample ][1] == 'ztt' :
+                ztt.Add( hist )
+            if samples[ sample ][1] == 'zl' :
+                zl.Add( hist )
+            if samples[ sample ][1] == 'zj' :
+                zj.Add( hist )
+            if samples[ sample ][1] == 'zll' :
+                zll.Add( hist )
             if samples[ sample ][1] == 'qcd' :
-                hist.SetTitle('QCD')
                 qcd.Add( hist )
                 #print "qcd Stack yield: %f" % qcd.GetStack().Last().Integral()
                 print "qcd Stack yield: %f" % qcd.Integral()
             if samples[ sample ][1] == 'top' :
-                hist.SetTitle('TT')
                 top.Add( hist )
             if samples[ sample ][1] == 'dib' :
-                hist.SetTitle('VV')
                 dib.Add( hist )
             if samples[ sample ][1] == 'wjets' :
-                hist.SetTitle('WJets')
                 wjets.Add( hist )
             if samples[ sample ][1] == 'mssm' :
-                hist.SetTitle('MSSM(%i) x %i' % (mssmMass, mssmSF))
                 mssm.Add( hist )
             if samples[ sample ][1] == 'higgs' :
-                hist.SetTitle('SM Higgs(125)')
                 higgs.Add( hist )
             if samples[ sample ][1] == 'data' :
-                hist.SetTitle('Data')
                 data.Add( hist )
             tFile.Close()
 
-        Ary = { qcd : "qcd", top : "top", dib : "dib", wjets : "wjets", dyj : "dyj", }
+        Ary = { qcd : "qcd", top : "top", dib : "dib", wjets : "wjets", ztt : "ztt", zl :  "zl", zj : "zj", zll : "zll" }
         for h in Ary.keys() :
-            color = "ROOT.%s" % sampColors[ Ary[h] ]
-            h.SetFillColor( eval( color ) )
+            h.SetFillColor( sampColors[ Ary[h] ] )
             h.SetLineColor( ROOT.kBlack )
             h.SetLineWidth( 2 )
         data.SetLineColor( ROOT.kBlack )
@@ -384,22 +438,45 @@ for channel in ['em', 'tt'] :
                 h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( h.GetBinWidth(1) / h.GetBinWidth( bin_ ) ) )
 
         # Set hist Names
-        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "t#bar{t}", "dib" : "VV", "wjets" : "WJets", "ztt" : "Z#rightarrow#tau#tau", "zl" : "Z#rightarrowee (lepton)", "zj" : "Z#rightarrowee (jet)", "zll" : "Z#rightarrowee" }
         if options.mssm : Names["higgs"] = "SM Higgs(125)"
         else : Names["higgs"] = "SM Higgs(125) x %i" % higgsSF
         for h in Ary.keys() :
             h.SetTitle( Names[ Ary[h] ] )
             
 
-        if options.mssm :
-            stack.Add( higgs )
+        #if options.mssm :
+        #    stack.Add( higgs )
         if not options.qcdMake :
             print "Adding QCD: ",qcd.Integral()
             stack.Add( qcd )
         stack.Add( top )
         stack.Add( dib )
         stack.Add( wjets )
-        stack.Add( dyj )
+        if channel != 'em' :
+            stack.Add( zl )
+            stack.Add( zj )
+        if channel == 'em' :
+            stack.Add( zll )
+        stack.Add( ztt )
+
+
+        """
+        Calculate rough bin-by-bin uncertainties
+        """
+        binErrors = []
+        for k in range( top.GetNbinsX()+1 ) :
+            toRoot = (top.GetBinContent( k )*.1)**2
+            toRoot += (dib.GetBinContent(k)*.1)**2
+            toRoot += (wjets.GetBinContent(k)*.1)**2
+            toRoot += (ztt.GetBinContent(k)*.1)**2
+            toRoot += (qcd.GetBinContent(k)*.2)**2
+            if channel != 'em' :
+                toRoot += (zj.GetBinContent(k)*.1)**2
+                toRoot += (zl.GetBinContent(k)*.1)**2
+            if channel == 'em' :
+                toRoot += (zll.GetBinContent(k)*.1)**2
+            binErrors.append( math.sqrt(toRoot) )
 
 
         # Scale Higgs samples for viewing
@@ -417,6 +494,8 @@ for channel in ['em', 'tt'] :
             qcdVar.SetLineWidth( 2 )
             # Add the shape estimated here to the stack pre-scaling!!!
             stack.Add( qcdVar ) 
+            if var == 'm_vis_mssm' :
+                print "M_VIS_MSSM plot details: %f %f" % (plotDetails[ var ][0], plotDetails[ var ][1])
             qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
             print "qcdVar: %f" % qcdVar.Integral()
             qcdDir.cd()
@@ -479,8 +558,8 @@ for channel in ['em', 'tt'] :
             stack.Draw('hist')
             if options.mssm :
                 mssm.Draw('same')
-            else :
-                higgs.Draw('same')
+            #else :
+            #    higgs.Draw('same')
             data.Draw('esamex0')
 
 
@@ -495,7 +574,7 @@ for channel in ['em', 'tt'] :
         #    else :
         #        stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
 
-        stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % luminosity )
+        stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % cmsLumi )
 
         # Set axis and viewing area
         #higgsMin = higgs.GetMaximum()
@@ -517,8 +596,8 @@ for channel in ['em', 'tt'] :
         legend.SetMargin(0.3)
         legend.SetBorderSize(0)
         legend.AddEntry( data, "Data", 'lep')
-        if not options.mssm :
-            legend.AddEntry( higgs, "SM Higgs(125) x %i" % higgsSF, 'l')
+        #if not options.mssm :
+        #    legend.AddEntry( higgs, "SM Higgs(125) x %i" % higgsSF, 'l')
         if options.mssm :
             legend.AddEntry( mssm, "MSSM(%i) x %i" % (mssmMass, mssmSF), 'l')
         for j in range(0, stack.GetStack().GetLast() + 1) :
@@ -531,13 +610,13 @@ for channel in ['em', 'tt'] :
         logo.SetTextSize(0.03)
         logo.DrawTextNDC(.2, .89,"CMS Preliminary")
 
-        chan = ROOT.TText(.2, .80,"x")
+        chan = ROOT.TLatex(.2, .80,"x")
         chan.SetTextSize(0.05)
-        chan.DrawTextNDC(.2, .84,"Channel: %s" % channel.upper() )
+        chan.DrawLatexNDC(.2, .84,"Channel: %s" % chans[channel] )
 
-        lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(luminosity/1000,2) )
+        lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
         lumi.SetTextSize(0.03)
-        lumi.DrawTextNDC(.7,.96,"%f / fb (13 TeV)" % round(luminosity/1000,2) )
+        lumi.DrawTextNDC(.7,.96,"2.3 / fb (13 TeV)" )
 
         ''' Random print outs on plots '''
         if options.text and not varBinned :
@@ -565,12 +644,30 @@ for channel in ['em', 'tt'] :
             ratioHist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
 
 
+        """
+        Add uncertainty bands on background stack
+        """
+        if options.addUncert :
+            e1 = ROOT.TH1F("e1 %s" % append, "e1", xNum, xBins )
+            e1.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+            for k in range( e1.GetNbinsX()+1 ) :
+                e1.SetBinContent( k, stack.GetStack().Last().GetBinContent( k ) )
+                e1.SetBinError(k, binErrors[k] )
+                #print "Qcd Error:",qcd.GetBinError(k)
+            e1.SetLineColor( 0 )
+            e1.SetLineWidth( 0 )
+            e1.SetMarkerSize( 0 )
+            e1.SetFillStyle( 3002 )
+            #e1.SetFillStyle( 3244 )
+            e1.SetFillColor( 15 )
+            e1.Draw('same e2')
+
 
         """ Blinding Data """
-        if options.blind and 'm_vis' in var :
+        if options.blind and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var) :
             nBins = stack.GetStack().Last().GetXaxis().GetNbins()
             for k in range( nBins+1 ) :
-                if data.GetXaxis().GetBinLowEdge(k+1)>150 :
+                if data.GetXaxis().GetBinLowEdge(k+1)>170 :
                     data.SetBinContent(k, 0.)
                     data.SetBinError(k, 0.)
                     if options.ratio :
@@ -580,7 +677,7 @@ for channel in ['em', 'tt'] :
                 ratioPad.cd()
                 ratioHist.Draw('esamex0')
             pad1.cd()
-            data.Draw('esamex0')
+        data.Draw('esamex0')
             
 
 
@@ -589,17 +686,17 @@ for channel in ['em', 'tt'] :
 
 
         """ Additional views for Visible Mass """
-        if 'm_vis' in var :
-            pad1.SetLogy()
-            stack.SetMaximum( stack.GetMaximum() * 10 )
-            stack.SetMinimum( higgs.GetMaximum() * .1 )
-            if var == 'm_vis_mssm' :
-                pad1.SetLogx()
-                if options.ratio : ratioPad.SetLogx()
-            pad1.Update()
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (grouping, channel, var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (grouping, channel, var ) )
-            htmlFile.write( '<img src="%s_LogY.png">\n' % var )
+        #if 'm_vis' in var :
+        #    pad1.SetLogy()
+        #    stack.SetMaximum( stack.GetMaximum() * 10 )
+        #    stack.SetMinimum( higgs.GetMaximum() * .1 )
+        #    if var == 'm_vis_mssm' :
+        #        pad1.SetLogx()
+        #        if options.ratio : ratioPad.SetLogx()
+        #    pad1.Update()
+        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (grouping, channel, var ) )
+        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (grouping, channel, var ) )
+        #    htmlFile.write( '<img src="%s_LogY.png">\n' % var )
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )

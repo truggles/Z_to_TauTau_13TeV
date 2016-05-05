@@ -18,19 +18,15 @@ ROOT.gROOT.Reset()
 ''' Set grouping (25ns or Sync) '''
 grouping = 'Sync'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-cmsLumi = '2260.0'
 print "zHome: ",zHome
 os.environ['_GROUPING_'] = grouping
 os.environ['_ZHOME_'] = zHome
-os.environ['_LUMI_'] = cmsLumi
-lumiCert = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2.11/fb - all of 2015 25ns golden
-puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-makeMetaJSON( grouping )
+#makeMetaJSON( grouping )
 os.chdir('..')
 
 
@@ -45,20 +41,27 @@ of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
     'bkgs' : 'None',
-    'numCores' : 10,
-    'numFilesPerCycle' : 25,
+    'numCores' : 16,
+    'numFilesPerCycle' : 1,
     'channels' : ['em', 'tt'],
+    #'channels' : ['tt'],
+    #'channels' : ['em'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     'cutMapper' : 'syncCutsNtuple',
+    #'cutMapper' : 'crazyCutsNtuple',
     'cutName' : 'BaseLine',
-    'mid1' : '1Feb08Sync',
-    'mid2' : '2Feb08Sync',
-    'mid3' : '3Feb08Sync',
+    'mid1' : '1Feb23a',
+    'mid2' : '2Feb23a',
+    'mid3' : '3Feb23a',
     'additionalCut' : '',
+    #'svFitPost' : 'true',
+    'svFitPost' : 'false',
+    'svFitPrep' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 
 
 

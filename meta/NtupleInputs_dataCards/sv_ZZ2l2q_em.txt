@@ -1,0 +1,7 @@
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ2l2q_5_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ2l2q_4_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ2l2q_0_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ2l2q_2_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ2l2q_6_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ2l2q_1_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/ZZ2l2q_3_em.root

@@ -1,0 +1,11 @@
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_5_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_6_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_1_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_4_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_0_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_7_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_10_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_2_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_8_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_3_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/data_9_em.root

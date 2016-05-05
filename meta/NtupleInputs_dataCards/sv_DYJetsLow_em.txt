@@ -1,0 +1,4 @@
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJetsLow_2_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJetsLow_1_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJetsLow_3_em.root
+/data/truggles/svFitComplete/feb23_fromFeb21SkimX/DYJetsLow_0_em.root

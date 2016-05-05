@@ -1,1 +1,2 @@
-/data/truggles/jan25_mssmAndHiggs76x/SUSYGluGluToHToTauTau_M-1400_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-6C3A061F-1BB9-E511-B905-0025905C446E/make_ntuples_cfg-6C3A061F-1BB9-E511-B905-0025905C446E.root
+/data/truggles/feb20_bkgsAndSignals/SUSYGluGluToHToTauTau_M-1400_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-6C3A061F-1BB9-E511-B905-0025905C446E/make_ntuples_cfg-6C3A061F-1BB9-E511-B905-0025905C446E.root
+/data/truggles/feb20_bkgsAndSignals/SUSYGluGluToHToTauTau_M-1400_TuneCUETP8M1_13TeV-pythia8/submit/make_ntuples_cfg-8EB44BCC-1DB9-E511-8860-0025905AC804/make_ntuples_cfg-8EB44BCC-1DB9-E511-8860-0025905AC804.root

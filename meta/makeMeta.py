@@ -41,55 +41,54 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     
     # For QCD samples: https://github.com/cms-sw/genproductions/blob/master/python/ThirteenTeV/QCD_Pt_15to20_bcToE_TuneCUETP8M1_13TeV_pythia8_cff.py
     samplesDataCards = { 
-                'data_em' : ('', -999.0),
-                'data_tt' : ('', -999.0),
-                'ggHtoTauTau120' : ('/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 43.92 * 0.0632 ),
-                'ggHtoTauTau125' : ('/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 43.92 * 0.0632 ),
-                'ggHtoTauTau130' : ('/GluGluHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 43.92 * 0.0632 ),
-                'VBFHtoTauTau120' : ('/VBFHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 3.748 * 0.0632 ),
-                'VBFHtoTauTau125' : ('/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 3.748 * 0.0632 ),
-                'VBFHtoTauTau130' : ('/VBFHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 3.748 * 0.0632 ),
-                #'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 6025.2 ), 
-                #'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 18610.0 ), 
-                'T-tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%sv2/MINIAODSIM' % c76x, 35.6 ),
-                'T-tchan' : ('/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 136.02 * 0.108*3 ),
-                'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c76x, 831.76 ),
-                'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 35.6),
-                #XXX#'Tbar-tchan' : ('/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 80.95 * 0.108*3 ),
-                #'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 61526.7 ),
-                'WW1l1nu2q' : ('/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 49.997 ),
-                'WZJets' : ('/WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 5.26 ),
-                #'WW2l2nu' : ('/WWTo2L2Nu_13TeV-powheg/%s-v1/MINIAODSIM' % c74x, 12.178 ),
-                #XXX#'WZ1l1nu2q' : ('/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 10.71 ),
-                'WZ1l3nu' : ('/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 3.05 ),
-                #'WZ2l2q' : ('/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 5.595 ),
-                'WZ3l1nu' : ('/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c74x, 4.42965 ),
-                #'ZZ2l2nu' : ('/ZZTo2L2Nu_13TeV_powheg_pythia8/%sv2/MINIAODSIM' % c74x, 0.564 ),
-                #XXX#'ZZ2l2q' : ('/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c74x, 3.22 ),
-                'ZZ4l' : ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 1.212 ),
-                #XXX#'QCD15-20' : ('/QCD_Pt_15to20_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 1.27298e+09 * 0.00020 ), 
-                #XXX#'QCD20-30' : ('/QCD_Pt_20to30_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 5.57627e+08 * 0.00059 ),
-                #XXX#'QCD30-80' : ('/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 1.59068e+08 * 0.00255 ), 
-                #XXX#'QCD80-170' : ('/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 3.221e+06 * 0.01183 ), 
-                #XXX#'QCD170-250' : ('/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 105771 * 0.02492 ), 
-                #XXX#'QCD250-Inf' : ('/QCD_Pt_250toInf_bcToE_TuneCUETP8M1_13TeV_pythia8/%s-v1/MINIAODSIM' % c74x, 21094.1 * 0.03375 ), 
-                # The scale factor is for LO -> NNLO scaling see excel sheet below https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_samples
-                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 50690 * 1.213783784),
-                'WJets100-200' : ('/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 1345.0 * 1.213783784),
-                'WJets200-400' : ('/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 359.7 * 1.213783784),
-                'WJets400-600' : ('/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 48.91 * 1.213783784),
-                'WJets600-Inf' : ('/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 18.77 * 1.213783784),
-                'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 4895.0 * 1.230888662), 
-                'DYJets100-200' : ('/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 139.4 * 1.230888662 ), 
-                'DYJets200-400' : ('/DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 42.75 * 1.230888662 ), 
-                'DYJets400-600' : ('/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 5.497 * 1.230888662 ), 
-                'DYJets600-Inf' : ('/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 2.21 * 1.230888662 ), 
-
-                'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 71310.0 ), 
-                #'DYJetsLow100-200' : ('/DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 224.2 ), 
-                #'DYJetsLow200-400' : ('/DYJetsToLL_M-5to50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 37.2 ), 
-                #'DYJetsLow400-600' : ('/DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 3.581 ), 
-                #'DYJetsLow600-Inf' : ('/DYJetsToLL_M-5to50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 1.124 ), 
+##                'data_em' : ('', -999.0),
+##                'data_tt' : ('', -999.0),
+##                'ggHtoTauTau120' : ('/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 43.92 * 0.0632 ),
+##                'ggHtoTauTau125' : ('/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 43.92 * 0.0632 ),
+##                'ggHtoTauTau130' : ('/GluGluHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 43.92 * 0.0632 ),
+##                'VBFHtoTauTau120' : ('/VBFHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 3.748 * 0.0632 ),
+##                'VBFHtoTauTau125' : ('/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 3.748 * 0.0632 ),
+##                'VBFHtoTauTau130' : ('/VBFHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c76x, 3.748 * 0.0632 ),
+##                #'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 6025.2 ), 
+##                #'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 18610.0 ), 
+##                'T-tW' : ('/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 35.6 ),
+##                'T-tchan' : ('/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 136.02 * 0.108*3 ),
+##                'TT' : ('/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c76x, 831.76 ),
+##                'Tbar-tW' : ('/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 35.6),
+##                'Tbar-tchan' : ('/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c76x, 80.95 * 0.108*3 ),
+##                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 61526.7 ),
+##                'WW1l1nu2q' : ('/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 49.997 ),
+##                'WZJets' : ('/WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 5.26 ),
+##                #'WW2l2nu' : ('/WWTo2L2Nu_13TeV-powheg/%s-v1/MINIAODSIM' % c76x, 12.178 ),
+##                'WZ1l1nu2q' : ('/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 10.71 ),
+##                'WZ1l3nu' : ('/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 3.05 ),
+                'WZ2l2q' : ('/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 5.595 ),
+##                #XXX#'WZ3l1nu' : ('/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c76x, 4.42965 ),
+##                #'ZZ2l2nu' : ('/ZZTo2L2Nu_13TeV_powheg_pythia8/%sv2/MINIAODSIM' % c76x, 0.564 ),
+##                'ZZ2l2q' : ('/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c76x, 3.22 ),
+##                'ZZ4l' : ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 1.212 ),
+##                # The scale factor is for LO -> NNLO scaling see excel sheet below https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_samples
+##                'WJets' : ('/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 50690 * 1.213783784),
+##                'WJets100-200' : ('/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 1345.0 * 1.213783784),
+##                'WJets200-400' : ('/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 359.7 * 1.213783784),
+##                'WJets400-600' : ('/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 48.91 * 1.213783784),
+##                'WJets600-Inf' : ('/WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 18.77 * 1.213783784),
+##                'DYJets' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 4895.0 * 1.230888662), 
+##                'DYJets100-200' : ('/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 139.4 * 1.230888662 ), 
+##                'DYJets200-400' : ('/DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 42.75 * 1.230888662 ), 
+##                'DYJets400-600' : ('/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 5.497 * 1.230888662 ), 
+##                'DYJets600-Inf' : ('/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 2.21 * 1.230888662 ), 
+##                'DYJets1' : ('/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 1012.5 * 1.23 ),
+##                'DYJets2' : ('/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 332.8 * 1.23 ),
+##                'DYJets3' : ('/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 101.8 * 1.23 ),
+##                'DYJets4' : ('/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c76x, 54.8 * 1.23 ),
+##                'DYJetsFXFX' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 6025.2 ),
+##
+##                'DYJetsLow' : ('/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c76x, 71310.0 ), 
+##                #'DYJetsLow100-200' : ('/DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 224.2 ), 
+##                #'DYJetsLow200-400' : ('/DYJetsToLL_M-5to50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 37.2 ), 
+##                #'DYJetsLow400-600' : ('/DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 3.581 ), 
+##                #'DYJetsLow600-Inf' : ('/DYJetsToLL_M-5to50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c74x, 1.124 ), 
     }
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
     #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2000, 2900, 3200]
@@ -97,8 +96,8 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     for mass in masses :
        samplesMSSM['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
        samplesMSSM['bbH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
-       samplesDataCards['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
-       samplesDataCards['bbH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+##       samplesDataCards['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
+##       samplesDataCards['bbH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c76x), 1 )
 
     samplesTrigger = {
                 'data_mt' : ('', -999.0),
@@ -126,7 +125,12 @@ def makeMetaJSON( grouping, ch = 'em' ) :
                 'DYJets200-400' : ( 95, 1),
                 'DYJets400-600' : ( 96, 1),
                 'DYJets600-Inf' : ( 97, 1),
+                'DYJets1' : ( 90, 1),
+                'DYJets2' : ( 91, 1),
+                'DYJets3' : ( 92, 1),
+                'DYJets4' : ( 93, 1),
                 'DYJetsLow' : ( 98, 1),
+                'DYJetsFXFX' : ( 99, 1),
                 'T-tW' : ( 5, 3),
                 'T-tchan' : ( 6, 3),
                 'TT' : ( 7, 2),
@@ -200,11 +204,16 @@ def makeMetaJSON( grouping, ch = 'em' ) :
         summedWeights = 0
         summedWeightsNorm = 0
         inFiles = open('NtupleInputs_%s/%s.txt' % (grouping, k), 'r')
-        for fileName in inFiles :
-            eventCount += getEventCount( fileName.strip(), ch )
-            w = getSummedWeights( fileName.strip(), ch )
-            summedWeights += w[0]
-            summedWeightsNorm += w[1]
+        try :
+            for fileName in inFiles :
+                eventCount += getEventCount( fileName.strip(), ch )
+                w = getSummedWeights( fileName.strip(), ch )
+                summedWeights += w[0]
+                summedWeightsNorm += w[1]
+        except AttributeError :
+            print "\nAttributeError\n"
+            continue
+            inFiles.close()
         inFiles.close()
     
         # Check that DAS and FSA events and file numbers match

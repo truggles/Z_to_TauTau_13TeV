@@ -19,33 +19,33 @@ class LepWeights :
         self.iter1 = 0
         self.channel = channel
         if channel == 'em' :
-            self.elecIdIso0p15Map = self.getSF( 'Electron_IdIso0p15_eff' )
+            self.elecIdIso0p15Map = self.getSF( 'Electron_IdIso0p15_fall15' )
             self.eIdIsoSF = self.sfHistos( self.elecIdIso0p15Map )
-            self.muonIdIso0p15Map = self.getSF( 'Muon_IdIso0p15_eff' )
+            self.muonIdIso0p15Map = self.getSF( 'Muon_IdIso0p15_fall15' )
             self.mIdIsoSF = self.sfHistos( self.muonIdIso0p15Map )
 
-            self.elec12TrigMap = self.getSF( 'Electron_Ele12_eff' )
+            self.elec12TrigMap = self.getSF( 'Electron_Ele12_fall15' )
             self.e12TrigData = self.sfHistos( self.elec12TrigMap, 'data' )
             self.e12TrigMC = self.sfHistos( self.elec12TrigMap, 'mc' )
-            self.muon8TrigMap = self.getSF( 'Muon_Mu8_eff' )
+            self.muon8TrigMap = self.getSF( 'Muon_Mu8_fall15' )
             self.m8TrigData = self.sfHistos( self.muon8TrigMap, 'data' )
             self.m8TrigMC = self.sfHistos( self.muon8TrigMap, 'mc' )
-            self.muon17TrigMap = self.getSF( 'Muon_Mu17_eff' )
+            self.muon17TrigMap = self.getSF( 'Muon_Mu17_fall15' )
             self.m17TrigData = self.sfHistos( self.muon17TrigMap, 'data' )
             self.m17TrigMC = self.sfHistos( self.muon17TrigMap, 'mc' )
-            self.elec17TrigMap = self.getSF( 'Electron_Ele17_eff' )
+            self.elec17TrigMap = self.getSF( 'Electron_Ele17_fall15' )
             self.e17TrigData = self.sfHistos( self.elec17TrigMap, 'data' )
             self.e17TrigMC = self.sfHistos( self.elec17TrigMap, 'mc' )
             #print self.elec12TrigMap
         if channel == 'et' :
-            self.elecIdIso0p10Map = self.getSF( 'Electron_IdIso0p10_eff' )
+            self.elecIdIso0p10Map = self.getSF( 'Electron_IdIso0p1_fall15' )
             self.eIdIsoSF = self.sfHistos( self.elecIdIso0p10Map )
-            self.elecSingleEffMap = self.getSF( 'Electron_SingleEle_eff' )
+            self.elecSingleEffMap = self.getSF( 'Electron_Ele23_fall15' )
             self.eSingleEffSF = self.sfHistos( self.elecSingleEffMap )
         if channel == 'mt' :
-            self.muonIdIso0p10Map = self.getSF( 'Muon_IdIso0p10_eff' )
+            self.muonIdIso0p10Map = self.getSF( 'Muon_IdIso0p1_fall15' )
             self.mIdIsoSF = self.sfHistos( self.muonIdIso0p10Map )
-            self.muonSingleEffMap = self.getSF( 'Muon_SingleMu_eff' )
+            self.muonSingleEffMap = self.getSF( 'Muon_IsoMu18_fall15' )
             self.mSingleEffSF = self.sfHistos( self.muonSingleEffMap )
 
 
