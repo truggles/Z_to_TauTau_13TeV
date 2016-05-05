@@ -304,9 +304,10 @@ for channel in ['em', 'tt'] :
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
                     hxx = tFile.Get('%s_Histos/metphi' % channel)
                     print "QCD MC: %s Integral %f" % (sample, hxx.Integral() )
-                else :
+                elif not options.qcdMakeDM :
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
-                    #continue
+                else :
+                    continue
                     #tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
                 #print "File: '%s%s/%s_%s.root'" % (grouping, folderDetails, sample, channel)
@@ -420,6 +421,8 @@ for channel in ['em', 'tt'] :
 
             #if var == 'mt_sv' :
             if var == 'mt_sv_mssm' :
+                if 'data' in sample and options.qcdMake : finalDataYield = hist.Integral()
+            if var == 'eta_1' and finalDataYield == 0. :
                 if 'data' in sample and options.qcdMake : finalDataYield = hist.Integral()
 
             ''' Good Debugging stuff '''
@@ -550,6 +553,8 @@ for channel in ['em', 'tt'] :
             if var == 'mt_sv_mssm' :
                 #print "QCD Binning"
                 #print xBins
+                finalQCDYield = qcdVar.Integral()
+            if var == 'eta_1' and finalQCDYield == 0.0 :
                 finalQCDYield = qcdVar.Integral()
             qcdDir.cd()
             qcdVar.Write()

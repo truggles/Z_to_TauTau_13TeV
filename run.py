@@ -43,7 +43,7 @@ os.chdir('..')
 ''' Preset samples '''
 SamplesSync = ['Sync-HtoTT']
 SamplesData = ['data_em', 'data_tt']
-SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
+SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
 
 #SamplesDataCards = []
 masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
@@ -65,12 +65,12 @@ params = {
     #'debug' : 'true',
     'debug' : 'false',
     'bkgs' : 'None',
-    'numCores' : 20,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
-    'channels' : ['em', 'tt'],
+    #'channels' : ['em', 'tt'],
     #'channels' : ['em', 'tt', 'et', 'mt'],
     #'channels' : ['em',],
-    #'channels' : ['tt',],
+    'channels' : ['tt',],
     #'cutMapper' : 'signalCutsNoIsoNoSign', #!
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalCuts', #!
@@ -78,12 +78,13 @@ params = {
     #'cutName' : 'PostSync', #!
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
-    'cutMapper' : 'syncCutsDCqcdTES',
+#XXX    'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'crazyCutsNtuple',
 #XXX    'cutMapper' : 'svFitCuts',
     #'cutMapper' : 'syncCutsNtuple',
+    'cutMapper' : 'signalCuts',
+#XXX    'cutMapper' : 'fakeFactorCutsTT',
     'cutName' : 'BaseLine',
-#XXX    'cutMapper' : 'signalCuts',
     'mid1' : '1May01',
     'mid2' : '2May01',
     'mid3' : '3May01',
@@ -92,6 +93,7 @@ params = {
     #'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
+    'doFRMthd' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )

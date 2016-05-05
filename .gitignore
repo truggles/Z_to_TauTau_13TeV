@@ -18,3 +18,4 @@ qcdScale/roots
 util/*.txt
 lepSFdata/*
 tmp/
+plotsOut.txt

@@ -35,7 +35,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     
     
     ''' Preset samples '''
-    SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_em', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April24, removed LO DYJets small sample and DYJets m-150
+    SamplesDataCards = ['data_em', 'data_tt', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April24, removed LO DYJets small sample and DYJets m-150
     
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
     for mass in masses :
@@ -53,7 +53,8 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
         'mid1' : '1Feb24a',
         'mid2' : folder,
         'additionalCut' : '',
-        'svFitPost' : 'true'
+        'svFitPost' : 'true',
+        'doFRMthd' : 'false',
     }
 
     isoL2loose = '(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT < 0.5 && t2By%sIsolationMVArun2v1DBoldDMwLT > 0.5)' % (isoT, isoL)
