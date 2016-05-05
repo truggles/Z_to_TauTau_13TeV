@@ -348,6 +348,8 @@ def drawHistos(grouping, samples, **fargs ) :
                 'tt' : '*(gen_match_2 == 6 || gen_match_1 == 6)'},
         'ZLL' : {'em' : '*(gen_match_1 < 3 || gen_match_2 < 4)',
                 'tt' : '*(gen_match_1 != 5 && gen_match_2 != 5)'},
+        'QCD' : {'em' : '*(FFWeightQCD)',
+                'tt' : '*(FFWeightQCD)'},
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -363,11 +365,16 @@ def drawHistos(grouping, samples, **fargs ) :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
             loopList.append( sample ) 
+        elif 'data' in sample and fargs['doFRMthd'] == 'true' :
+            loopList.append( sample )
+            loopList.append( 'QCD' )
         else : loopList.append( sample )
+
     
         for subName in loopList :
             print "SubName:",subName
-            if subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
+            if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
+            elif subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
             else : saveName = sample.split('_')[0]
             
             for channel in channels :

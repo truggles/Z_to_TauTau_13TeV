@@ -31,7 +31,7 @@ p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot 
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
 p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
 p.add_argument('--addUncert', action='store', default=True, dest='addUncert', help="What channels?")
-p.add_argument('--qcdSF', action='store', default='1.9/1.0', dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
+p.add_argument('--qcdSF', action='store', default='1.0/1.0', dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
 p.add_argument('--btag', action='store', default=False, dest='btag', help="BTagging has specific binning")
 options = p.parse_args()
 grouping = options.sampleName
@@ -82,8 +82,8 @@ chans = {
 
                 # Sample : Color
 samples = OrderedDict()
-#samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
-#samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
+samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
+samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
 samples['DYJetsBig-ZTT']   = ('kOrange-4', 'ztt')
 samples['DYJetsBig-ZL']   = ('kOrange-4', 'zl')
 samples['DYJetsBig-ZJ']   = ('kOrange-4', 'zj')
@@ -131,8 +131,8 @@ samples['VV'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
-samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
+#samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
+#samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : ROOT.kRed+2,
@@ -305,7 +305,8 @@ for channel in ['em', 'tt'] :
                     hxx = tFile.Get('%s_Histos/metphi' % channel)
                     print "QCD MC: %s Integral %f" % (sample, hxx.Integral() )
                 else :
-                    continue
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
+                    #continue
                     #tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
                 #print "File: '%s%s/%s_%s.root'" % (grouping, folderDetails, sample, channel)
@@ -314,27 +315,28 @@ for channel in ['em', 'tt'] :
 
             if not options.useQCDMakeDM or 'QCD' not in sample :
                 dic = tFile.Get("%s_Histos" % channel )
-            if 'm_vis' in var :
-                if 'QCD' in sample and options.useQCDMake :
-                    if options.useQCDMakeDM :
-                        print "multiple dics"
-                        dic1 = tFile1.Get("%s_Histos" % channel )
-                        dic2 = tFile2.Get("%s_Histos" % channel )
-                        dic3 = tFile3.Get("%s_Histos" % channel )
-                        preHist = dic1.Get( var )
-                        preHist.Scale( dm0sf )
-                        preHist.Add( dic2.Get( var ) * dm1sf )
-                        preHist.Add( dic3.Get( var ) * dm10sf )
-                        #preHist2 = dic2.Get( var )
-                        #preHist3 = dic3.Get( var )
-                        #preHist =
-                    else :
-                        preHist = dic.Get( var )
-                elif 'data' in sample :
-                    preHist = dic.Get( 'm_vis' )
-                else :
-                    preHist = dic.Get( var )
-            elif 'QCD' in sample and options.useQCDMakeDM :
+            #if 'm_vis' in var :
+            #    if 'QCD' in sample and options.useQCDMake :
+            #        if options.useQCDMakeDM :
+            #            print "multiple dics"
+            #            dic1 = tFile1.Get("%s_Histos" % channel )
+            #            dic2 = tFile2.Get("%s_Histos" % channel )
+            #            dic3 = tFile3.Get("%s_Histos" % channel )
+            #            preHist = dic1.Get( var )
+            #            preHist.Scale( dm0sf )
+            #            preHist.Add( dic2.Get( var ) * dm1sf )
+            #            preHist.Add( dic3.Get( var ) * dm10sf )
+            #            #preHist2 = dic2.Get( var )
+            #            #preHist3 = dic3.Get( var )
+            #            #preHist =
+            #        else :
+            #            preHist = dic.Get( var )
+            #    elif 'data' in sample :
+            #        preHist = dic.Get( 'm_vis' )
+            #    else :
+            #        preHist = dic.Get( var )
+            #elif 'QCD' in sample and options.useQCDMakeDM :
+            if 'QCD' in sample and options.useQCDMakeDM :
                 print "multiple dics"
                 dic1 = tFile1.Get("%s_Histos" % channel )
                 dic2 = tFile2.Get("%s_Histos" % channel )
@@ -359,7 +361,7 @@ for channel in ['em', 'tt'] :
                     print "QCD yield: %f" % preHist.Integral()
                     hist = ROOT.TH1F( preHist )
             # If we use this option we specify a scaling factor
-            elif sample == 'QCD' and options.useQCDMakeName :
+            elif sample == 'QCD' and options.useQCDMakeName != 'x' :
                 print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                 #if channel == 'em' :
                 #    print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
@@ -391,16 +393,16 @@ for channel in ['em', 'tt'] :
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
             #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
-            if sample == 'QCD' and hist.Integral() != 0 :
-                if not options.useQCDMake or options.QCDYield :
-                    if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
-                    if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
-                    print "Using QCD Yield numbers from this file, QCD Int: %f" % hist.Integral()
-            elif 'data' not in sample and hist.Integral() != 0:
-                if 'TT' in sample :
-                    hist.Scale( bkgsTTScaleFactor )
-                elif 'QCD' in sample :
-                    if channel == 'em' : hist.Scale( qcdEMScaleFactor )
+            #if sample == 'QCD' and hist.Integral() != 0 :
+            #    if not options.useQCDMake or options.QCDYield :
+            #        if channel == 'em' : hist.Scale( qcdYieldEM / hist.Integral() )
+            #        if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
+            #        print "Using QCD Yield numbers from this file, QCD Int: %f" % hist.Integral()
+            #elif 'data' not in sample and hist.Integral() != 0:
+            #    if 'TT' in sample :
+            #        hist.Scale( bkgsTTScaleFactor )
+            #    elif 'QCD' in sample :
+            #        if channel == 'em' : hist.Scale( qcdEMScaleFactor )
 
 
             ''' For TT rescaling studies in pZeta distributions '''
@@ -419,6 +421,11 @@ for channel in ['em', 'tt'] :
             #if var == 'mt_sv' :
             if var == 'mt_sv_mssm' :
                 if 'data' in sample and options.qcdMake : finalDataYield = hist.Integral()
+
+            ''' Good Debugging stuff '''
+            #nBins = hist.GetNbinsX()
+            #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 0 ), hist.GetBinLowEdge( nBins+1 ))
+
 
             if samples[ sample ][1] == 'ztt' :
                 ztt.Add( hist )

@@ -41,7 +41,7 @@ os.chdir('..')
 
 
 ''' Fake Factors '''
-SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'Tbar-tW', 'T-tW', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Fake Factor List, May 02 
+SamplesDataCards = ['TT', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'DYJetsLow', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh', 'T-tchan', 'Tbar-tchan', 'Tbar-tW', 'T-tW', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Fake Factor List, May 02 
 #SamplesDataCards = ['data_tt',]
 samples = SamplesDataCards
 
@@ -79,19 +79,29 @@ params = {
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
+    'doFRMthd' : 'true',
 }
 
 #samples = checkBkgs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+analysis1BaselineCuts.drawHistos( grouping, samples, **params)
 
 SamplesDataCards = ['data_tt',]
 samples = SamplesDataCards
 samples = checkBkgs( samples, params, grouping )
 params['cutMapper'] = 'fakeFactorCutsTT'
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+analysis1BaselineCuts.drawHistos( grouping, samples, **params)
 
 
 
+SamplesDataCards = ['data_tt',]
+params['doFRMthd'] = 'false'
+params['additionalCut'] = '*(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
+samples = SamplesDataCards
+samples = checkBkgs( samples, params, grouping )
+params['cutMapper'] = 'fakeFactorCutsTT'
+analysis1BaselineCuts.drawHistos( grouping, samples, **params)
 

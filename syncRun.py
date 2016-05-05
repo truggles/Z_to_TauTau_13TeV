@@ -61,6 +61,7 @@ params = {
     #'svFitPost' : 'false',
     'svFitPrep' : 'false',
     #'svFitPrep' : 'true',
+    'doFRMthd' : 'false',
 }
 
 samples = checkBkgs( samples, params, grouping )
