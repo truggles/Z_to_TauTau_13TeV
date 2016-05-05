@@ -16,6 +16,8 @@ p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDe
 p.add_argument('--blind', action='store', default=True, dest='blind', help="blind data above 150 GeV?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
+p.add_argument('--ztt', action='store', default=False, dest='ztt', help="Is Z->tautau the signal POI?")
+p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Is this the MSSM H->TauTau search?")
 options = p.parse_args()
 grouping = options.sampleName
 folderDetails = options.folderDetails
@@ -25,11 +27,13 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2170.0 # / fb 25ns - Final 2015 25ns Golden JSON
+luminosity = 2200.0 # / fb 25ns - Final 2015 25ns Golden JSON
 
 # Scaling = 1 for data card sync
-qcdTTScaleFactor = 1.06
-qcdEMScaleFactor = 1.06
+#qcdTTScaleFactor = 1.06
+#qcdEMScaleFactor = 1.06
+qcdTTScaleFactor = 1.3
+qcdEMScaleFactor = 1.5
 bkgsTTScaleFactor = 1.0
 
 with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
@@ -37,8 +41,8 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
-samples['DYJets']   = ('kOrange-4', '_ZTT120_')
-samples['DYJetsLow']   = ('kOrange-4', '_ZTT120_')
+samples['DYJets']   = ('kOrange-4', '_ZTT_')
+samples['DYJetsLow']   = ('kOrange-4', '_ZTT_')
 samples['T-tW']     = ('kYellow+2', '_VV_')
 samples['T-tchan']     = ('kYellow+2', '_VV_')
 samples['TT']       = ('kBlue-8', '_TT_')
@@ -57,16 +61,50 @@ samples['ZZ4l'] = ('kAzure-12', '_VV_')
 samples['QCD']        = ('kMagenta-10', '_QCD_')
 samples['data_tt']  = ('kBlack', '_data_obs_')
 samples['data_em']  = ('kBlack', '_data_obs_')
-samples['VBFHtoTauTau'] = ('kGreen', '_ggH125_')
-samples['ggHtoTauTau'] = ('kGreen', '_vbfH125_')
+samples['VBFHtoTauTau125'] = ('kGreen', '_ggH125_')
+samples['ggHtoTauTau125'] = ('kGreen', '_vbfH125_')
 
-nameArray = ['_data_obs_','_ZTT120_','_TT_','_QCD_','_VV_','_W_']#,'_ggH125_','_vbfH125_']
+nameArray = ['_data_obs_','_ZTT_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH125_']
 
-if options.sync :
-    samples['DYJets']   = ('kOrange-4', '_ZTT_')
-    del samples['DYJetsLow']
-    nameArray.remove('_ZTT120_')
-    nameArray.append('_ZTT_')
+if options.mssm :
+    masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 600, 900, 1000, 1200, 1500, 2900, 3200]
+    for mssmMass in masses :
+        samples['SUSYggH%i' % mssmMass] = ('kPink', '_SUSYggH%i_' % mssmMass)
+        samples['SUSYbbH%i' % mssmMass] = ('kPink', '_SUSYbbH%i_' % mssmMass) 
+        nameArray.append('_SUSYggH%i_' % mssmMass)
+        nameArray.append('_SUSYbbH%i_' % mssmMass)
+    del samples['VBFHtoTauTau125']
+    del samples['ggHtoTauTau125']
+    nameArray.remove('_vbfH125_')
+    nameArray.remove('_ggH125_')
+
+
+extra = ''
+if not os.path.exists( '%sShapes' % grouping ) :
+    os.makedirs( '%sShapes' % grouping )
+if options.ztt : 
+    if not os.path.exists( '%sShapes/ztt' % grouping ) :
+        os.makedirs( '%sShapes/ztt' % grouping )
+    extra = 'ztt'
+elif options.mssm : 
+    if not os.path.exists( '%sShapes/mssm' % grouping ) :
+        os.makedirs( '%sShapes/mssm' % grouping )
+    extra = 'mssm'
+#if not options.ztt : 
+else : 
+    if not os.path.exists( '%sShapes/htt' % grouping ) :
+        os.makedirs( '%sShapes/htt' % grouping )
+    extra = 'htt'
+
+if options.ztt :
+    del samples['VBFHtoTauTau125']
+    del samples['ggHtoTauTau125']
+    samples['DYJets'] = ('kOrange-4', '_ZTT90_')
+    samples['DYJetsLow'] = ('kOrange-4', '_ZTT90_')
+    nameArray.remove('_vbfH125_')
+    nameArray.remove('_ggH125_')
+    nameArray.remove('_ZTT_')
+    nameArray.append('_ZTT90_')
 
 channels = { 'em' : 'EMu',
              'tt' : 'TauTau',}
@@ -74,11 +112,8 @@ channels = { 'em' : 'EMu',
 for channel in channels.keys() :
 
     #if channel == 'tt' : continue
-    if channel == 'em' : continue
+    #if channel == 'em' : continue
 
-    # Make an index file for web viewing
-    if not os.path.exists( '%sShapes' % grouping ) :
-        os.makedirs( '%sShapes' % grouping )
 
     print channel
 
@@ -87,11 +122,11 @@ for channel in channels.keys() :
 
     for var, info in newVarMap.iteritems() :
         if not var == 'm_vis' : continue
-        print "\n Output shapes file: %sShapes/htt_%s.inputs-sm-13TeV.root \n" % (grouping, channel)
-        shapeFile = ROOT.TFile('%sShapes/htt_%s.inputs-sm-13TeV.root' % (grouping, channel), 'RECREATE')
+        print "\n Output shapes file: %sShapes/%s/%s_%s.inputs-sm-13TeV.root \n" % (grouping, extra, extra, channel)
+        shapeFile = ROOT.TFile('%sShapes/%s/%s_%s.inputs-sm-13TeV.root' % (grouping, extra, extra, channel), 'RECREATE')
         #shapeDir = shapeFile.mkdir( channels[ channel ] + '_inclusive' )
-        shapeDir = shapeFile.mkdir( channel + '_boostedZ' )
-        #shapeDir = shapeFile.mkdir( channel + '_inclusive' )
+        #shapeDir = shapeFile.mkdir( channel + '_boostedZ' )
+        shapeDir = shapeFile.mkdir( channel + '_inclusive' )
 
         # Defined out here for large scope
         name = info[0]
@@ -99,7 +134,9 @@ for channel in channels.keys() :
 
         if not options.sync :
             binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
-        if options.sync :
+        if options.mssm :
+            binArray = array.array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+        else :
             binArray = array.array( 'd', [] )
             for i in range(0, 61 ) :
                 binArray.append( i * 10 )
@@ -109,7 +146,6 @@ for channel in channels.keys() :
         for name in nameArray :
             title = name.strip('_')
             histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
-            #histos[ name ] = ROOT.TH1F( name, name, 60, 0, 600 )
 
 
         for sample in samples:
@@ -117,7 +153,7 @@ for channel in channels.keys() :
             if channel == 'tt' and sample == 'data_em' : continue
             if channel == 'em' and sample == 'data_tt' : continue
             #if sample == 'DYJetsLow' : continue
-            if 'HtoTauTau' in sample : continue
+            #if 'HtoTauTau' in sample : continue
             print sample
 
             if sample == 'data_em' :
@@ -127,6 +163,7 @@ for channel in channels.keys() :
             elif sample == 'QCD' :
                 if options.useQCDMake :
                     tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                    print "Got 'useQCDMake' QCD Shape"
                 else :
                     print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
             else :
@@ -147,11 +184,8 @@ for channel in channels.keys() :
                 if channel == 'em' : hist.Scale( qcdEMScaleFactor )
                 if channel == 'tt' : hist.Scale( qcdTTScaleFactor )
             elif 'data' not in sample and hist.Integral() != 0:
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
-                    hist.Scale( scaler * bkgsTTScaleFactor )
-                else :
-                    hist.Scale( scaler )
+                    hist.Scale( bkgsTTScaleFactor )
 
             if 'QCD' not in sample :
                 #hist.Rebin( 10 )
@@ -160,7 +194,10 @@ for channel in channels.keys() :
                 #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
                 histos[ samples[ sample ][1] ].Add( hNew )
             else :
-                histos[ samples[ sample ][1] ].Add( hist )
+                #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
+                hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+                #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
+                histos[ samples[ sample ][1] ].Add( hNew )
 
             #print "Hist yield ",hist.Integral()
             #hist2 = hist.Rebin( 18, 'rebinned', binArray )
@@ -170,15 +207,16 @@ for channel in channels.keys() :
 
         shapeDir.cd()
         for name in histos :
-            print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
+            #print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
             # Make sure we have no negative bins
-            for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins() ) :
+            for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
                 setVal = 0.001
                 if histos[ name ].GetBinContent( bin_ ) < 0 :
                     histos[ name ].SetBinContent( bin_, setVal )
-                    print "Set bin %i to value: %f" % (bin_, setVal)
-            print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
-            histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
+                    print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
+            #print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
+            if not options.mssm :
+                histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
             histos[ name ].SetTitle( name.strip('_') )
             histos[ name ].SetName( name.strip('_') )
             histos[ name ].Write()

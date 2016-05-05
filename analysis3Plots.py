@@ -13,18 +13,17 @@ from array import array
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
 p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
-p.add_argument('--ratio', action='store', default=False, dest='ratio', help="Include ratio plots? Defaul = False")
+p.add_argument('--ratio', action='store', default=True, dest='ratio', help="Include ratio plots? Defaul = False")
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
-p.add_argument('--qcd', action='store', default=True, dest='plotQCD', help="Plot QCD?")
 p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
-p.add_argument('--www', action='store', default=True, dest='www', help="Save to Tyler's public 'www' space?")
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
-p.add_argument('--sync', action='store', default=False, dest='sync', help="Is this for data card sync?")
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
+p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
+p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -35,19 +34,16 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2170.0 # / fb 25ns - Final 2015 25ns Golden JSON, adjusted 4% upwards by https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/544.html
-#qcdTTScaleFactor = 1.07 # see http://truggles.web.cern.ch/truggles/Oct29/
-qcdTTScaleFactor = 1.06 # see http://truggles.web.cern.ch/truggles/Oct29/
-#qcdTTScaleFactor = 1.23 # http://truggles.web.cern.ch/truggles/qcdScale/dec02_singleBinnedQCD/OSvsSS-ddQCD.png
-#qcdTTScaleFactor = 1.27 # dm0
-#qcdTTScaleFactor = 1.26 # dm1
-#qcdTTScaleFactor = 1.18 # dm10
-#qcdTTScaleFactor = 1.38 # http://truggles.web.cern.ch/truggles/qcdScale/dec02_singleBinnedQCD/OSvsSS-ddQCD.png
-qcdEMScaleFactor = 1.06
-#bkgsTTScaleFactor = (1.11 + 0.99) / 2 # see pZeta_TT_Control.xlsx 
-#bkgsTTScaleFactor = 1.14 # see pZeta_TT_Control.xlsx 
+luminosity = 2200.0 # / fb 25ns - Final 2015 25ns Golden JSON, adjusted 4% upwards by https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/544.html
+mssmMass = 180
+mssmSF = 100
+higgsSF = 10
+#qcdTTScaleFactor = 1.06
+#qcdEMScaleFactor = 1.06
+qcdTTScaleFactor = 1.3
+qcdEMScaleFactor = 1.5
+#qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
-#bkgsTTScaleFactor = 0.96
 qcdYieldTT = 35.7 * qcdTTScaleFactor
 qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 
@@ -56,6 +52,8 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
+samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
+samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
 samples['DYJets']   = ('kOrange-4', 'dyj')
 samples['DYJetsLow']   = ('kOrange-4', 'dyj')
 samples['T-tW']     = ('kYellow+2', 'dib')
@@ -82,6 +80,8 @@ samples['QCD170-250']        = ('kMagenta-10', 'qcd')
 samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
+samples['SUSYggH%i' % mssmMass] = ('kPink', 'mssm')
+samples['SUSYbbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : 'kRed+2',
@@ -89,6 +89,8 @@ sampColors = {
     'qcd' : 'kMagenta-10',
     'dyj' : 'kOrange-4',
     'wjets' : 'kAzure+2',
+    'higgs' : 'kBlue',
+    'mssm' : 'kPink',
     'data' : 'kBlack',
 }
 
@@ -96,7 +98,8 @@ sampColors = {
 for channel in ['em', 'tt'] :
 
     #if channel == 'tt' : continue
-    if channel == 'em' : continue
+    #if channel == 'em' : continue
+    if channel == 'tt' : mssmSF = int(mssmSF / 10)
 
     # Make an index file for web viewing
     if not os.path.exists( '%sPlots' % grouping ) :
@@ -105,10 +108,7 @@ for channel in ['em', 'tt'] :
     if not os.path.exists( '%sPlotsList' % grouping ) :
         os.makedirs( '%sPlotsList/em' % grouping )
         os.makedirs( '%sPlotsList/tt' % grouping )
-    if options.www :
-        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (grouping, channel), 'w')
-    else :
-        htmlFile = open('%sPlots/%s/index.html' % (grouping, channel), 'w')
+    htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (grouping, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
     htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
     htmlFile.write( '<body>\n' )
@@ -120,18 +120,28 @@ for channel in ['em', 'tt'] :
     plotDetails = analysisPlots.getPlotDetails( channel )
 
     if options.qcdMake :
+        if not os.path.exists('meta/%sBackgrounds' % grouping) :
+            os.makedirs('meta/%sBackgrounds' % grouping)
         qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
         qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
 
+    #print newVarMap
     for var, info in newVarMap.iteritems() :
 
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
-        #if not var == 'm_vis' : continue
+        #if not 'm_vis' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
         name = info[0]
         print "Var: %s      Name: %s" % (var, name)
 
-        if not options.sync and var == 'm_vis' and channel == 'tt' :
+
+        """
+        Handle variable binning and longer ranges for visible mass
+        """
+        if var == 'm_vis_mssm' :
+            varBinned = True
+            xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+        elif var == 'm_vis_varB' :
             varBinned = True
             xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
         else :
@@ -155,18 +165,11 @@ for channel in ['em', 'tt'] :
         dib = ROOT.TH1F("All Backgrounds dib %s" % append, "dib", xNum, xBins )
         top = ROOT.TH1F("All Backgrounds top %s" % append, "top", xNum, xBins )
         higgs = ROOT.TH1F("All Backgrounds higgs %s" % append, "higgs", xNum, xBins )
+        mssm = ROOT.TH1F("All Backgrounds mssm %s" % append, "mssm", xNum, xBins )
         qcd = ROOT.TH1F("All Backgrounds qcd %s" % append, "qcd", xNum, xBins )
         wjets = ROOT.TH1F("All Backgrounds wjets %s" % append, "wjets", xNum, xBins )
         data = ROOT.TH1F("All Backgrounds data %s" % append, "data", xNum, xBins )
 
-        #stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
-        #dyj = ROOT.THStack("All Backgrounds dyj", "dyj" )
-        #dib = ROOT.THStack("All Backgrounds dib", "dib" )
-        #top = ROOT.THStack("All Backgrounds top", "top" )
-        #higgs = ROOT.THStack("All Backgrounds higgs", "higgs" )
-        #qcd = ROOT.THStack("All Backgrounds qcd", "qcd" )
-        #wjets = ROOT.THStack("All Backgrounds wjets", "wjets" )
-        #data = ROOT.THStack("All Backgrounds data", "data" )
 
         pZetaTot = 0
         for sample in samples:
@@ -176,7 +179,7 @@ for channel in ['em', 'tt'] :
             if options.qcdMC and sample == 'QCD' : continue
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
-            print sample
+            #print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
@@ -193,13 +196,19 @@ for channel in ['em', 'tt'] :
                     hxx = tFile.Get('%s_Histos/metphi' % channel)
                     print "QCD MC: %s Integral %f" % (sample, hxx.Integral() )
                 else :
-                    tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
+                    continue
+                    #tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
             else :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
 
             dic = tFile.Get("%s_Histos" % channel )
-            preHist = dic.Get( "%s" % var )
+            if 'm_vis' in var :
+                if 'QCD' in sample and options.useQCDMake :
+                    preHist = dic.Get( var )
+                else :
+                    preHist = dic.Get( "m_vis" )
+            else : preHist = dic.Get( var )
             preHist.SetDirectory( 0 )
 
             if sample == 'QCD' and options.useQCDMake :
@@ -217,20 +226,7 @@ for channel in ['em', 'tt'] :
                 #preHist.Rebin( plotDetails[ var ][2] )
                 hist = preHist.Rebin( xNum, "rebinned", xBins )
 
-            #if 'data' not in sample and samples[ sample ][1] != 'higgs' :
-            #    color = "ROOT.%s" % sampColors[ samples[ sample ][1] ]
-            #    hist.SetFillColor( eval( color ) )
-            #    hist.SetLineColor( ROOT.kBlack )
-            #    hist.SetLineWidth( 2 )
-            #elif samples[ sample ][1] == 'higgs' :
-            #    hist.SetLineColor( ROOT.kBlue )
-            #    hist.SetLineWidth( 4 )
-            #    hist.SetLineStyle( 7 )
-            #else :
-            #    hist.SetLineColor( ROOT.kBlack )
-            #    hist.SetLineWidth( 2 )
-            #    hist.SetMarkerStyle( 21 )
-            #hist.SaveAs('plots/%s/%s.root' % (channel, sample) )
+
 
             ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
             QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
@@ -241,15 +237,13 @@ for channel in ['em', 'tt'] :
                     if channel == 'tt' : hist.Scale( qcdYieldTT / hist.Integral() )
                     print "Using QCD Yield numbers from this file, QCD Int: %f" % hist.Integral()
             elif 'data' not in sample and hist.Integral() != 0:
-                scaler = luminosity * sampDict[ sample ]['Cross Section (pb)'] / ( sampDict[ sample ]['summedWeightsNorm'] )
                 if 'TT' in sample :
-                    hist.Scale( scaler * bkgsTTScaleFactor )
-                if 'QCD' in sample :
-                    if channel == 'em' : hist.Scale( scaler * qcdEMScaleFactor )
-                    if channel == 'tt' : hist.Scale( scaler * qcdTTScaleFactor )
-                else :
-                    hist.Scale( scaler )
+                    hist.Scale( bkgsTTScaleFactor )
+                elif 'QCD' in sample :
+                    if channel == 'em' : hist.Scale( qcdEMScaleFactor )
 
+
+            ''' For TT rescaling studies in pZeta distributions '''
             #if var == 'pZeta-0.85pZetaVis' :
             #    #print " --- Sample %s Int %f" % ( sample, hist.Integral() )
             #    lower = hist.GetXaxis().FindBin( -300. )
@@ -260,6 +254,7 @@ for channel in ['em', 'tt'] :
             #    #hist.GetXaxis().SetRangeUser( 11, upper )
             #    pZetaTot += integral
             #    print " --- pZeta running total = ",pZetaTot
+
 
             #print "Hist int: %s %f" % (sample, hist.Integral() )
             if samples[ sample ][1] == 'dyj' :
@@ -279,6 +274,9 @@ for channel in ['em', 'tt'] :
             if samples[ sample ][1] == 'wjets' :
                 hist.SetTitle('WJets')
                 wjets.Add( hist )
+            if samples[ sample ][1] == 'mssm' :
+                hist.SetTitle('MSSM(%i) x %i' % (mssmMass, mssmSF))
+                mssm.Add( hist )
             if samples[ sample ][1] == 'higgs' :
                 hist.SetTitle('SM Higgs(125)')
                 higgs.Add( hist )
@@ -297,6 +295,21 @@ for channel in ['em', 'tt'] :
         data.SetLineWidth( 2 )
         data.SetMarkerStyle( 21 )
         Ary[ data ] = "data"
+        if not options.mssm :
+            higgs.SetLineColor( ROOT.kBlue )
+            higgs.SetLineWidth( 4 )
+            higgs.SetLineStyle( 7 )
+            higgs.SetMarkerStyle( 0 )
+        else :
+            higgs.SetFillColor( ROOT.kGreen )
+            higgs.SetLineColor( ROOT.kBlack )
+            higgs.SetLineWidth( 2 )
+        Ary[ higgs ] = "higgs"
+        mssm.SetLineColor( ROOT.kPink )
+        mssm.SetLineWidth( 4 )
+        mssm.SetLineStyle( 7 )
+        mssm.SetMarkerStyle( 0 )
+        Ary[ mssm ] = "mssm"
         
         # With Variable binning, need to set bin content appropriately
         for h in Ary.keys() :
@@ -306,18 +319,28 @@ for channel in ['em', 'tt'] :
                 h.SetBinContent( bin_, h.GetBinContent( bin_ ) * ( h.GetBinWidth(1) / h.GetBinWidth( bin_ ) ) )
 
         # Set hist Names
-        Names = { "data" : "Data", "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        Names = { "data" : "Data", "mssm" : "MSSM(%i) x %i" % (mssmMass, mssmSF), "qcd" : "QCD", "top" : "TT", "dib" : "VV", "wjets" : "WJets", "dyj" : "Z #rightarrow #tau#tau" }
+        if options.mssm : Names["higgs"] = "SM Higgs(125)"
+        else : Names["higgs"] = "SM Higgs(125) x %i" % higgsSF
         for h in Ary.keys() :
             h.SetTitle( Names[ Ary[h] ] )
             
 
-        if options.plotQCD == True :
+        if options.mssm :
+            stack.Add( higgs )
+        if not options.qcdMake :
             print "Adding QCD"
             stack.Add( qcd )
         stack.Add( top )
         stack.Add( dib )
         stack.Add( wjets )
         stack.Add( dyj )
+
+
+        # Scale Higgs samples for viewing
+        if not options.mssm :
+            higgs.Scale( higgsSF )
+        mssm.Scale( mssmSF )
 
             
         if options.qcdMake :
@@ -343,6 +366,10 @@ for channel in ['em', 'tt'] :
             pad1.Draw()
             pad1.cd()
             stack.Draw('hist')
+            if options.mssm :
+                mssm.Draw('same')
+            else :
+                higgs.Draw('same')
             data.Draw('esamex0')
             # X Axis!
             stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
@@ -377,22 +404,18 @@ for channel in ['em', 'tt'] :
             # X Axis!
             ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
             ratioHist.GetYaxis().SetTitle("Data / MC")
-            #yAxis = ratioHist.GetYaxis()
-            #xAxis = ratioHist.GetXaxis()
-            #fixFontSize( yAxis, (1-.8))
-            #fixFontSize( xAxis  (1-.8))
             ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
-            #ratioHist.GetYaxis().SetTextSize( ratioHist.GetYaxis().GetTextSize()*( 1/smlPadSize) )
             ratioHist.GetYaxis().SetNdivisions( 5, True )
-            #ratioHist.GetYaxis().SetTitleSize( ratioHist.GetYaxis().GetTitleSize()*( 1/smlPadSize/2) )
             ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
             ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
-            #ratioHist.GetXaxis().SetTitleOffset( ratioHist.GetXaxis().GetTitleOffset()*( 1/smlPadSize/2.5) )
-            #ratioHist.GetYaxis().SetTickSize( .25 )
-            #ratioHist.GetYaxis().SetTickLength( .03 )
+
 
             pad1.cd()
             stack.Draw('hist')
+            if options.mssm :
+                mssm.Draw('same')
+            else :
+                higgs.Draw('same')
             data.Draw('esamex0')
 
 
@@ -429,6 +452,10 @@ for channel in ['em', 'tt'] :
         legend.SetMargin(0.3)
         legend.SetBorderSize(0)
         legend.AddEntry( data, "Data", 'lep')
+        if not options.mssm :
+            legend.AddEntry( higgs, "SM Higgs(125) x %i" % higgsSF, 'l')
+        if options.mssm :
+            legend.AddEntry( mssm, "MSSM(%i) x %i" % (mssmMass, mssmSF), 'l')
         for j in range(0, stack.GetStack().GetLast() + 1) :
             last = stack.GetStack().GetLast()
             legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')
@@ -462,20 +489,52 @@ for channel in ['em', 'tt'] :
             #text4.SetTextSize(0.05)
             #text4.DrawTextNDC(.65,.45,"SS Selection" )
 
-        if (var == 't1DecayMode' or var == 't2DecayMode') :
-            print var + " DATA: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( data.GetBinContent( 1), data.GetBinContent( 2), data.GetBinContent( 11 ) )
-            print var + " MC: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( stack.GetStack().Last().GetBinContent( 1), stack.GetStack().Last().GetBinContent( 2), stack.GetStack().Last().GetBinContent( 11 ) )
+        #if (var == 't1DecayMode' or var == 't2DecayMode') :
+        #    print var + " DATA: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( data.GetBinContent( 1), data.GetBinContent( 2), data.GetBinContent( 11 ) )
+        #    print var + " MC: 1p0pi0: %f   1p1pi0: %f   3p0pi0: %f" % ( stack.GetStack().Last().GetBinContent( 1), stack.GetStack().Last().GetBinContent( 2), stack.GetStack().Last().GetBinContent( 11 ) )
+
 
         pad1.Update()
         stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
         if options.ratio :
             ratioHist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
-        if options.www :
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
-        else :
-            c1.SaveAs('%sPlots/%s/%s.png' % (grouping, channel, var ) )
-            c1.SaveAs('%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
+
+
+
+        """ Blinding Data """
+        if options.blind :
+            nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+            for k in range( nBins+1 ) :
+                if data.GetXaxis().GetBinLowEdge(k+1)>150 :
+                    data.SetBinContent(k, 0.)
+                    data.SetBinError(k, 0.)
+                    if options.ratio :
+                        ratioHist.SetBinContent(k, 0.)
+                        ratioHist.SetBinError(k, 0.)
+            if options.ratio : 
+                ratioPad.cd()
+                ratioHist.Draw('esamex0')
+            pad1.cd()
+            data.Draw('esamex0')
+            
+
+
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
+
+
+        """ Additional views for Visible Mass """
+        if 'm_vis' in var :
+            pad1.SetLogy()
+            stack.SetMaximum( stack.GetMaximum() * 10 )
+            stack.SetMinimum( higgs.GetMaximum() * .1 )
+            if var == 'm_vis_mssm' :
+                pad1.SetLogx()
+                if options.ratio : ratioPad.SetLogx()
+            pad1.Update()
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (grouping, channel, var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (grouping, channel, var ) )
+            htmlFile.write( '<img src="%s_LogY.png">\n' % var )
         c1.Close()
 
         htmlFile.write( '<img src="%s.png">\n' % var )
