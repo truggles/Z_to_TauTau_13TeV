@@ -3,16 +3,16 @@
     "STATUS": "Good to Go!", 
     "UniqueID": 100, 
     "DAS status": "ok", 
-    "nEvents": 499610, 
-    "DAS Path": "/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM", 
-    "nfiles": 12, 
-    "nblocks": 3, 
+    "nEvents": 469976, 
+    "DAS Path": "/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", 
+    "nfiles": 15, 
+    "nblocks": 7, 
     "Cross Section (pb)": 999, 
     "BkgGroup": 100, 
-    "summedWeightsNorm": 499610.0, 
-    "summedWeights": 499610.0, 
-    "nevents": 499610, 
-    "nNtupleFiles": 12, 
-    "nlumis": 2563
+    "summedWeightsNorm": 469976.0, 
+    "summedWeights": 469976.0, 
+    "nevents": 469976, 
+    "nNtupleFiles": 15, 
+    "nlumis": 2545
   }
 }

@@ -27,9 +27,7 @@ emOS    = 'e_m_SS == 0'
 emSS    = 'e_m_SS == 1'
 emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.15'
 emIsoLoose   = 'eIsoDB03 < 0.3 && mIsoDB03 < 0.3'
-extraVeto   = 'eVetoZTT10new2 == 0 && muVetoZTT10new2 == 0'
-emMTFix = '( eMtToPfMet_Raw > 5 && mMtToPfMet_Raw > 5 )'
-#emMTFix = '( (type1_pfMetEt > 1) || ( eMtToPfMet_Raw > 5 && mMtToPfMet_Raw > 5 ) )' # Looking at this it isn't cutting the data / MC excess region
+extraVeto   = 'eVetoZTTp001dxyz == 0 && muVetoZTTp001dxyz == 0'
 # EM Studies
 emQCDPreIso = 'eIsoDB03 < 0.2 && mIsoDB03 < 1.0'
 emIsoInvertM    = 'eIsoDB03 < 0.15 && mIsoDB03 > 0.15'
@@ -39,7 +37,8 @@ emIsoInvert    = 'eIsoDB03 > 0.5 && mIsoDB03 > 0.25'
 mtKin   = 'mPt > 19 && mAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'
 mtDR    = 'm_t_DR > 0.5'
 mtVtx   = 'abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045 && abs(tPVDZ) < 0.2'
-mtTrig   = '(singleMu18Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && (mIsoMu17Filter > 0 || mIsoMu18Filter > 0) && mPt > 18)'
+mtTrig   = '(singleIsoMu17eta2p1Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && (mIsoMu17Filter > 0 || mIsoMu18Filter > 0) && mPt > 18)'
+mtTrigData   = '(singleIsoMu18Pass > 0 && (mMatchesIsoMu18Path == 1 || mMatchesIsoMu17Path == 1) && (mIsoMu17Filter > 0 || mIsoMu18Filter > 0) && mPt > 18)'
 
 # ET Baseline
 etKin   = 'ePt > 24 && eAbsEta < 2.1 && tPt > 20 && tAbsEta < 2.3'
@@ -49,7 +48,8 @@ etTrig   = '(singleE23Pass > 0 && (eMatchesEle23Path == 1 || eMatchesEle22Path =
 
 # TT Baseline
 DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
-ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
+ttKin   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
+#ttKin   = 't1Pt > 45 && t1AbsEta < 2.1 && t2Pt > 45 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
@@ -61,7 +61,6 @@ ttSS    = 't1_t2_SS == 1'
 ttIso   = 't1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5'
 ttIsoLoose   = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
 ttDisc  = 't1AgainstElectronVLooseMVA5 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA5 > 0.5 && t2AgainstMuonLoose3 > 0.5'
-ttMTFix = '( (type1_pfMetEt > 1) || ( t1MtToPfMet_Raw > 5 && t2MtToPfMet_Raw > 5 ) )'
 # TT Studies
 ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0'
 ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0'
@@ -69,32 +68,32 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalExtractionNoSign( ch ) :
-    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, emMTFix, 'e_m_PZeta > -25']
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, ttMTFix, DecayMode, 't1_t2_Pt > 100']
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, 'e_m_PZeta > -25']
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode, 't1_t2_Pt > 100']
     cutMap = {'PostSync' : cuts}
     return cutMap
 
 
 # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
 def signalCutsNoSign( ch ) :
-    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto, emMTFix]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40, ttMTFix, DecayMode]
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35, DecayMode]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
 
 # A version which applies all cuts at once RunII
 def signalCuts( ch ) :
-    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emOS, emIso, extraVeto, emMTFix]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt40, DecayMode, ttMTFix]
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emOS, emIso, extraVeto]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVeto, tt35, DecayMode]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
 
 # Data card sync, no Decay Mode cut 
 def signalCutsNoIsoNoSign( ch ) :
-    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', extraVeto, emMTFix]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt40, DecayMode, ttMTFix]
+    if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', extraVeto]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVeto, tt35, DecayMode]
     cutMap = {'PostSync' : cuts}
     return cutMap
 
@@ -102,7 +101,8 @@ def signalCutsNoIsoNoSign( ch ) :
 # Selection which only does baseline for sync data cards, NO SIGN for QCD
 def syncCutsDC( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')', emIso, extraVeto]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt40]
+    #if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVeto, tt35]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, ttIsoLoose, ttDisc, extraVeto, tt35]
     cutMap = {'BaseLine' : cuts}
     return cutMap
     
@@ -112,7 +112,7 @@ def syncCutsNtuple( ch ) :
     if ch == 'em' : cuts = [emKin, emDR, emVtx, eID, mID, '('+e17m8+'||'+m17e12+')']
     if ch == 'et' : cuts = [etKin, etDR, etVtx, eID, etTrig]
     if ch == 'mt' : cuts = [mtKin, mtDR, mtVtx, mID, mtTrig]
-    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt40]
+    if ch == 'tt' : cuts = [ttKin, ttCharge, ttDR, ttVtx, tt35]
     cutMap = {'BaseLine' : cuts}
     return cutMap
 

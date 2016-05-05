@@ -19,11 +19,15 @@ p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDe
 p.add_argument('--text', action='store', default=False, dest='text', help="Add text?")
 p.add_argument('--qcdShape', action='store', default='Sync', dest='qcdShape', help="Which QCD shape to use? Sync or Loose triggers")
 p.add_argument('--qcdMake', action='store', default=False, dest='qcdMake', help="Make a data - MC qcd shape?")
-p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
+p.add_argument('--qcdMakeDM', action='store', default='x', dest='qcdMakeDM', help="Make a data - MC qcd shape for a specific DM?")
+p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Use a data - MC qcd shape?")
+p.add_argument('--useQCDMakeName', action='store', default='x', dest='useQCDMakeName', help="Use a specific qcd shape?")
+p.add_argument('--useQCDMakeDM', action='store', default=False, dest='useQCDMakeDM', help="Use a data - MC qcd shape for DM 0, 1, 10?")
 p.add_argument('--QCDYield', action='store', default=False, dest='QCDYield', help="Define a QCD yield even when using a shape file?")
 p.add_argument('--qcdMC', action='store', default=False, dest='qcdMC', help="Use QCD from MC?")
 p.add_argument('--mssm', action='store', default=False, dest='mssm', help="Plot MSSM?")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="Blind Data?")
+p.add_argument('--channels', action='store', default='em,tt', dest='channels', help="What channels?")
 options = p.parse_args()
 grouping = options.sampleName
 ratio = options.ratio
@@ -34,16 +38,25 @@ print "Running over %s samples" % grouping
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 
-luminosity = 2200.0 # / fb 25ns - Final 2015 25ns Golden JSON, adjusted 4% upwards by https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/544.html
+luminosity = 2260.0 # / fb 25ns
 mssmMass = 180
 mssmSF = 100
 higgsSF = 10
 #qcdTTScaleFactor = 1.06
-#qcdEMScaleFactor = 1.06
-qcdTTScaleFactor = 1.3
-qcdEMScaleFactor = 1.5
+qcdEMScaleFactor = 1.06
+qcdTTScaleFactor = 1.25
+#qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
+qcdTTScaleFactorNew = 430./628. # no 2 prong, boosted Z, pt > 100
+qcdTTScaleFactorNew = 430./978. # no 2 prong, boosted Z, pt > 100, rlx iso2 to 5
+#qcdEMScaleFactor = 1.5
 #qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
+
+# DM specific scaling
+dm0sf = 1.27
+dm1sf = 1.21
+dm10sf = 1.14
+
 qcdYieldTT = 35.7 * qcdTTScaleFactor
 qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 
@@ -52,36 +65,44 @@ with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
 
                 # Sample : Color
 samples = OrderedDict()
-samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
-samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
+#samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
+#samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
 samples['DYJets']   = ('kOrange-4', 'dyj')
-samples['DYJetsLow']   = ('kOrange-4', 'dyj')
-samples['T-tW']     = ('kYellow+2', 'dib')
+samples['DYJets100-200']   = ('kOrange-4', 'dyj')
+samples['DYJets200-400']   = ('kOrange-4', 'dyj')
+samples['DYJets400-600']   = ('kOrange-4', 'dyj')
+samples['DYJets600-Inf']   = ('kOrange-4', 'dyj')
+#samples['DYJetsLow']   = ('kOrange-4', 'dyj')
+#samples['T-tW']     = ('kYellow+2', 'dib')
 samples['T-tchan']     = ('kYellow+2', 'dib')
 samples['TT']       = ('kBlue-8', 'top')
 samples['Tbar-tW']  = ('kYellow-2', 'dib')
-samples['Tbar-tchan']  = ('kYellow-2', 'dib')
+#samples['Tbar-tchan']  = ('kYellow-2', 'dib')
 samples['WJets']    = ('kAzure+2', 'wjets')
+samples['WJets100-200']    = ('kAzure+2', 'wjets')
+samples['WJets200-400']    = ('kAzure+2', 'wjets')
+samples['WJets400-600']    = ('kAzure+2', 'wjets')
+samples['WJets600-Inf']    = ('kAzure+2', 'wjets')
 samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
-samples['WW2l2nu']       = ('kAzure+8', 'dib')
-samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
+#samples['WW2l2nu']       = ('kAzure+8', 'dib')
+#samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
 samples['WZ1l3nu'] = ('kAzure-6', 'dib')
-samples['WZ2l2q'] = ('kAzure-6', 'dib')
-samples['WZ3l1nu'] = ('kAzure-6', 'dib')
-samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
-samples['ZZ2l2q'] = ('kAzure-12', 'dib')
+#samples['WZ2l2q'] = ('kAzure-6', 'dib')
+#samples['WZ3l1nu'] = ('kAzure-6', 'dib')
+#samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
+#samples['ZZ2l2q'] = ('kAzure-12', 'dib')
 samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
-samples['QCD15-20']        = ('kMagenta-10', 'qcd')
-samples['QCD20-30']        = ('kMagenta-10', 'qcd')
-samples['QCD30-80']        = ('kMagenta-10', 'qcd')
-samples['QCD80-170']        = ('kMagenta-10', 'qcd')
-samples['QCD170-250']        = ('kMagenta-10', 'qcd')
-samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
+#samples['QCD15-20']        = ('kMagenta-10', 'qcd')
+#samples['QCD20-30']        = ('kMagenta-10', 'qcd')
+#samples['QCD30-80']        = ('kMagenta-10', 'qcd')
+#samples['QCD80-170']        = ('kMagenta-10', 'qcd')
+#samples['QCD170-250']        = ('kMagenta-10', 'qcd')
+#samples['QCD250-Inf']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
 samples['data_em']  = ('kBlack', 'data')
-samples['SUSYggH%i' % mssmMass] = ('kPink', 'mssm')
-samples['SUSYbbH%i' % mssmMass] = ('kPink', 'mssm') 
+samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
+samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
 sampColors = {
     'dib' : 'kRed+2',
@@ -99,6 +120,8 @@ for channel in ['em', 'tt'] :
 
     #if channel == 'tt' : continue
     #if channel == 'em' : continue
+    if 'tt' not in options.channels and channel == 'tt' : continue
+    if 'em' not in options.channels and channel == 'em' : continue
     if channel == 'tt' : mssmSF = int(mssmSF / 10)
 
     # Make an index file for web viewing
@@ -122,7 +145,11 @@ for channel in ['em', 'tt'] :
     if options.qcdMake :
         if not os.path.exists('meta/%sBackgrounds' % grouping) :
             os.makedirs('meta/%sBackgrounds' % grouping)
-        qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
+        if options.qcdMakeDM != 'x' :
+            print "qcdMakeDM called: ",options.qcdMakeDM
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.qcdMakeDM), 'RECREATE')
+        else :
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
         qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
 
     #print newVarMap
@@ -179,7 +206,7 @@ for channel in ['em', 'tt'] :
             if options.qcdMC and sample == 'QCD' : continue
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
-            #print sample
+            print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
 
             if sample == 'data_em' :
@@ -188,8 +215,16 @@ for channel in ['em', 'tt'] :
                 tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
             elif 'QCD' in sample :
                 if options.useQCDMake :
-                    tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
-                    print "Got QCD make file:", sample
+                    if options.useQCDMakeName != 'x'  :
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.useQCDMakeName), 'READ')
+                    elif options.useQCDMakeDM  :
+                        tFile1 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm0.root' % (grouping, channel), 'READ')
+                        tFile2 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm1.root' % (grouping, channel), 'READ')
+                        tFile3 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm10.root' % (grouping, channel), 'READ')
+                        print "Got QCD make file DM specific:", sample
+                    else :
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                        print "Got QCD make file:", sample
                 elif options.qcdMC :
                     print "Got QCD MC file", sample
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
@@ -202,16 +237,40 @@ for channel in ['em', 'tt'] :
                 tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
 
 
-            dic = tFile.Get("%s_Histos" % channel )
+            if not options.useQCDMakeDM or 'QCD' not in sample :
+                dic = tFile.Get("%s_Histos" % channel )
             if 'm_vis' in var :
                 if 'QCD' in sample and options.useQCDMake :
-                    preHist = dic.Get( var )
+                    if options.useQCDMakeDM :
+                        print "multiple dics"
+                        dic1 = tFile1.Get("%s_Histos" % channel )
+                        dic2 = tFile2.Get("%s_Histos" % channel )
+                        dic3 = tFile3.Get("%s_Histos" % channel )
+                        preHist = dic1.Get( var )
+                        preHist.Scale( dm0sf )
+                        preHist.Add( dic2.Get( var ) * dm1sf )
+                        preHist.Add( dic3.Get( var ) * dm10sf )
+                        #preHist2 = dic2.Get( var )
+                        #preHist3 = dic3.Get( var )
+                        #preHist =
+                    else :
+                        preHist = dic.Get( var )
                 else :
                     preHist = dic.Get( "m_vis" )
+            elif 'QCD' in sample and options.useQCDMakeDM :
+                print "multiple dics"
+                dic1 = tFile1.Get("%s_Histos" % channel )
+                dic2 = tFile2.Get("%s_Histos" % channel )
+                dic3 = tFile3.Get("%s_Histos" % channel )
+                preHist = dic1.Get( var )
+                preHist.Scale( dm0sf )
+                preHist.Add( dic2.Get( var ) * dm1sf )
+                preHist.Add( dic3.Get( var ) * dm10sf )
+
             else : preHist = dic.Get( var )
             preHist.SetDirectory( 0 )
 
-            if sample == 'QCD' and options.useQCDMake :
+            if sample == 'QCD' and options.useQCDMake and not options.useQCDMakeDM and not options.useQCDMakeName :
                 if channel == 'em' :
                     print "Skip rebin; Scale QCD shape by %f" % qcdEMScaleFactor
                     preHist.Scale( qcdEMScaleFactor )
@@ -222,6 +281,12 @@ for channel in ['em', 'tt'] :
                     preHist.Scale( qcdTTScaleFactor )
                     print "QCD yield: %f" % preHist.Integral()
                     hist = ROOT.TH1F( preHist )
+            # If we use this option we specify a scaling factor
+            elif sample == 'QCD' and options.useQCDMakeName :
+                print "Skip rebin; Scale QCD shape by %f" % qcdTTScaleFactor
+                preHist.Scale( qcdTTScaleFactorNew )
+                print "QCD yield: %f" % preHist.Integral()
+                hist = ROOT.TH1F( preHist )
             else :
                 #preHist.Rebin( plotDetails[ var ][2] )
                 hist = preHist.Rebin( xNum, "rebinned", xBins )
@@ -329,7 +394,7 @@ for channel in ['em', 'tt'] :
         if options.mssm :
             stack.Add( higgs )
         if not options.qcdMake :
-            print "Adding QCD"
+            print "Adding QCD: ",qcd.Integral()
             stack.Add( qcd )
         stack.Add( top )
         stack.Add( dib )
@@ -391,8 +456,8 @@ for channel in ['em', 'tt'] :
                 ratioHist.SetMaximum( 1.5 )
                 ratioHist.SetMinimum( 0.5 )
             if channel == 'tt' :
-                ratioHist.SetMaximum( 2. )
-                ratioHist.SetMinimum( 0. )
+                ratioHist.SetMaximum( 1.5 )
+                ratioHist.SetMinimum( 0.5 )
             ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
@@ -502,7 +567,7 @@ for channel in ['em', 'tt'] :
 
 
         """ Blinding Data """
-        if options.blind :
+        if options.blind and 'm_vis' in var :
             nBins = stack.GetStack().Last().GetXaxis().GetNbins()
             for k in range( nBins+1 ) :
                 if data.GetXaxis().GetBinLowEdge(k+1)>150 :
