@@ -327,8 +327,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         #XXX'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
         #'bjetCISVVeto20MediumZTT' : 'nbtag',
-        'NBTagPDM_idL_jVeto' : 'nbtag',
-        'NBTagPDL_idL_jVeto' : 'nbtagLoose',
+        #XXX 'NBTagPDM_idL_jVeto' : 'nbtag',
+        #XXX 'NBTagPDL_idL_jVeto' : 'nbtagLoose',
         'jetVeto20ZTT' : 'njetspt20',
         'jetVeto30RecoilZTT' : 'njets',
         #'jetVeto30ZTT' : 'njets',
@@ -403,10 +403,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
-        'cand_ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
-        #'cand_ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
-        'cand_ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
-        #'cand_ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
         'cand_MtToPfMet_Raw' : 'pfmt',
         }
 
@@ -787,10 +783,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
             
-            mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
-            mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
-            mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
-            mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
+            if hasattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) ):
+                mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
+                mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
+                mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
+                mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
 
             # Channel specific pairwise mvaMet
             if channel == 'tt' :
