@@ -15,18 +15,18 @@ ROOT.gROOT.Reset()
 
 
 
-''' Set grouping (25ns or Sync) '''
-grouping = 'dataCards'
+''' Set analysis (25ns or Sync) '''
+analysis = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = grouping
+os.environ['_GROUPING_'] = analysis
 os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-#makeMetaJSON( grouping )
+#makeMetaJSON( analysis )
 os.chdir('..')
 
 
@@ -37,7 +37,7 @@ os.chdir('..')
 #    os.makedirs( 'meta/PileUpInfo' )
 #makeMCPUTemplate()
 #makeDataPUTemplate( lumiCert, puJson ) 
-#makeDYJetsPUTemplate( grouping )
+#makeDYJetsPUTemplate( analysis )
 
 
 ''' Preset samples '''
@@ -95,10 +95,10 @@ params = {
     'doFRMthd' : 'false',
 }
 
-samples = setUpDirs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
-#analysis1BaselineCuts.drawHistos( grouping, samples, **params )
+samples = setUpDirs( samples, params, analysis )
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
 
 

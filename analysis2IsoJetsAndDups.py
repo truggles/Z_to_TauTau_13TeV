@@ -277,8 +277,8 @@ def calcDR( eta1, phi1, eta2, phi2 ) :
 
 
 
-def renameBranches( grouping, mid1, mid2, sample, channel, count ) :
-    with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
+def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
+    with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
         sampDict = json.load( sampFile )
 
     shortName = sample.split('_')[0]
@@ -431,8 +431,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, count ) :
     for key in l2Map.keys() :
         branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
 
-    oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
-    newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
+    oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
+    newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
 
     dirName = channel
     treeName = 'Ntuple'

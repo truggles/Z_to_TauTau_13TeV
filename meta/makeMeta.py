@@ -8,7 +8,7 @@ from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson, getS
 
 
 
-def makeMetaJSON( grouping, ch = 'em' ) :
+def makeMetaJSON( analysis, ch = 'tt' ) :
     samplesSync = { 'Sync-HtoTT': ('/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM', 999) # c76x
     }
     
@@ -87,10 +87,10 @@ def makeMetaJSON( grouping, ch = 'em' ) :
     }
 
 
-    if grouping == 'Sync': samples = samplesSync
-    if grouping == 'dataCards': samples = samplesDataCards
-    if grouping == 'Trigger': samples = samplesTrigger
-    if grouping == 'MSSM': samples = samplesMSSM
+    if analysis == 'Sync': samples = samplesSync
+    if analysis == 'htt': samples = samplesDataCards
+    if analysis == 'Trigger': samples = samplesTrigger
+    if analysis == 'MSSM': samples = samplesMSSM
      
     dataSamples = {
                 'data_em' : ['/MuonEG/Run2015D-16Dec2015-v1/MINIAOD'],
@@ -188,11 +188,11 @@ def makeMetaJSON( grouping, ch = 'em' ) :
         print infoDAS
     
         # Get the Ntuple info that FSA created
-        numFiles = getNumberOfFiles( k, grouping )
+        numFiles = getNumberOfFiles( k, analysis )
         eventCount = 0
         summedWeights = 0
         summedWeightsNorm = 0
-        inFiles = open('NtupleInputs_%s/%s.txt' % (grouping, k), 'r')
+        inFiles = open('NtupleInputs_%s/%s.txt' % (analysis, k), 'r')
         try :
             for fileName in inFiles :
                 eventCount += getEventCount( fileName.strip(), ch )
@@ -218,8 +218,8 @@ def makeMetaJSON( grouping, ch = 'em' ) :
         jDict[ k ] = {'DAS Path' : v[0], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEvents' : infoNtup[1], 'summedWeights' : infoNtup[2], 'summedWeightsNorm' : infoNtup[3], 'STATUS' : infoNtup[4], 'Cross Section (pb)' : v[1], 'UniqueID' : sampleCodes[k][0], 'BkgGroup' : sampleCodes[k][1] }
     
     # Print the dictionary to a JSON file
-    printJson( jDict, grouping )
+    printJson( jDict, analysis )
 
 if __name__ == '__main__' :
-    grouping = os.getenv('_GROUPING_', '25ns') # 25ns is default
-    makeMetaJSON( grouping )
+    analysis = os.getenv('_GROUPING_', 'htt') # 25ns is default
+    makeMetaJSON( analysis )

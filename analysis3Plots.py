@@ -14,7 +14,7 @@ import math
 from analysisPlots import skipSystShapeVar
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
-p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+p.add_argument('--samples', action='store', default='htt', dest='sampleName', help="Which analysis should we run? : htt, Sync, azh")
 p.add_argument('--ratio', action='store', default=True, dest='ratio', help="Include ratio plots? Defaul = False")
 p.add_argument('--log', action='store', default=False, dest='log', help="Plot Log Y?")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
@@ -34,12 +34,12 @@ p.add_argument('--addUncert', action='store', default=True, dest='addUncert', he
 p.add_argument('--qcdSF', action='store', default='1.0/1.0', dest='qcdSF', help="Choose QCD SF, default is 1.9 for EMu, TT must be specified")
 p.add_argument('--btag', action='store', default=False, dest='btag', help="BTagging has specific binning")
 options = p.parse_args()
-grouping = options.sampleName
+analysis = options.sampleName
 ratio = options.ratio
 folderDetails = options.folderDetails
 
 
-print "Running over %s samples" % grouping
+print "Running over %s samples" % analysis
 
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
@@ -71,7 +71,7 @@ dm10sf = 1.14
 qcdYieldTT = 35.7 * qcdTTScaleFactor
 qcdYieldEM = 1586.0 *  qcdEMScaleFactor
 
-with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
+with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
     sampDict = json.load( sampFile )
 
 chans = {
@@ -158,13 +158,13 @@ for channel in ['em', 'tt'] :
     if channel == 'tt' : mssmSF = int(mssmSF / 10)
 
     # Make an index file for web viewing
-    if not os.path.exists( '%sPlots' % grouping ) :
-        os.makedirs( '%sPlots/em' % grouping )
-        os.makedirs( '%sPlots/tt' % grouping )
-    if not os.path.exists( '%sPlotsList' % grouping ) :
-        os.makedirs( '%sPlotsList/em' % grouping )
-        os.makedirs( '%sPlotsList/tt' % grouping )
-    htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (grouping, channel), 'w')
+    if not os.path.exists( '%sPlots' % analysis ) :
+        os.makedirs( '%sPlots/em' % analysis )
+        os.makedirs( '%sPlots/tt' % analysis )
+    if not os.path.exists( '%sPlotsList' % analysis ) :
+        os.makedirs( '%sPlotsList/em' % analysis )
+        os.makedirs( '%sPlotsList/tt' % analysis )
+    htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (analysis, channel), 'w')
     htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
     htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
     htmlFile.write( '<body>\n' )
@@ -178,13 +178,13 @@ for channel in ['em', 'tt'] :
     if options.qcdMake :
         finalQCDYield = 0.0
         finalDataYield = 0.0
-        if not os.path.exists('meta/%sBackgrounds' % grouping) :
-            os.makedirs('meta/%sBackgrounds' % grouping)
+        if not os.path.exists('meta/%sBackgrounds' % analysis) :
+            os.makedirs('meta/%sBackgrounds' % analysis)
         if options.qcdMakeDM != 'x' :
             print "qcdMakeDM called: ",options.qcdMakeDM
-            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.qcdMakeDM), 'RECREATE')
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, options.qcdMakeDM), 'RECREATE')
         else :
-            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'RECREATE')
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (analysis, channel), 'RECREATE')
         qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
 
     #print newVarMap
@@ -281,37 +281,37 @@ for channel in ['em', 'tt'] :
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
             #if var == 'm_vis' : print sample
-            #print '%s2IsoOrderAndDups/%s_%s.root' % (grouping, sample, channel)
+            #print '%s2IsoOrderAndDups/%s_%s.root' % (analysis, sample, channel)
 
             if sample == 'data_em' :
-                tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (analysis, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
-                tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (analysis, folderDetails, sample), 'READ')
             elif 'QCD' in sample :
                 if options.useQCDMake :
                     if options.useQCDMakeName != 'x'  :
-                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.useQCDMakeName), 'READ')
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, options.useQCDMakeName), 'READ')
                     elif options.useQCDMakeDM  :
-                        tFile1 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm0.root' % (grouping, channel), 'READ')
-                        tFile2 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm1.root' % (grouping, channel), 'READ')
-                        tFile3 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm10.root' % (grouping, channel), 'READ')
+                        tFile1 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm0.root' % (analysis, channel), 'READ')
+                        tFile2 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm1.root' % (analysis, channel), 'READ')
+                        tFile3 = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_dm10.root' % (analysis, channel), 'READ')
                         print "Got QCD make file DM specific:", sample
                     else :
-                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (analysis, channel), 'READ')
                         print "Got QCD make file:", sample
                 elif options.qcdMC :
                     print "Got QCD MC file", sample
-                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                     hxx = tFile.Get('%s_Histos/metphi' % channel)
                     print "QCD MC: %s Integral %f" % (sample, hxx.Integral() )
                 elif not options.qcdMakeDM :
-                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                 else :
                     continue
-                    #tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (grouping, options.qcdShape, channel), 'READ')
+                    #tFile = ROOT.TFile('meta/%sBackgrounds/QCDShape%s/shape/data_%s.root' % (analysis, options.qcdShape, channel), 'READ')
             else :
-                #print "File: '%s%s/%s_%s.root'" % (grouping, folderDetails, sample, channel)
-                tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
+                #print "File: '%s%s/%s_%s.root'" % (analysis, folderDetails, sample, channel)
+                tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
 
 
             if not options.useQCDMakeDM or 'QCD' not in sample :
@@ -742,8 +742,8 @@ for channel in ['em', 'tt'] :
             
 
 
-        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (grouping, channel, var ) )
-        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (grouping, channel, var ) )
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (analysis, channel, var ) )
+        c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (analysis, channel, var ) )
 
 
         """ Additional views for Visible Mass """
@@ -755,8 +755,8 @@ for channel in ['em', 'tt'] :
         #        pad1.SetLogx()
         #        if options.ratio : ratioPad.SetLogx()
         #    pad1.Update()
-        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (grouping, channel, var ) )
-        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (grouping, channel, var ) )
+        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s_LogY.png' % (analysis, channel, var ) )
+        #    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s_LogY.png' % (analysis, channel, var ) )
         #    htmlFile.write( '<img src="%s_LogY.png">\n' % var )
         c1.Close()
 

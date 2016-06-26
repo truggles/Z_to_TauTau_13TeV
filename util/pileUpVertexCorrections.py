@@ -87,10 +87,10 @@ def makeMCPUTemplate( ) :
         dHist.SetBinContent( i, MCDist[i] )
     dHist.SaveAs('meta/PileUpInfo/MCTemplate.root')
 
-def makeDYJetsPUTemplate( grouping ) :
+def makeDYJetsPUTemplate( analysis ) :
     import util.buildTChain as chainer
     from ROOT import gPad
-    inFiles = 'meta/NtupleInputs_%s/DYJets.txt' % grouping
+    inFiles = 'meta/NtupleInputs_%s/DYJets.txt' % analysis
     #avgHist = ROOT.TH1F('nTruePU', 'avgHist', 52, 0, 52)
 
     for channel in ['em', 'tt'] :
@@ -111,7 +111,7 @@ def makeDYJetsPUTemplate( grouping ) :
         tmpHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU_%s.root' % channel )
         #avgHist.Add( tmpHist )
     #avgHist.Scale( 1 / avgHist.Integral() )
-    #avgHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU.root' % (grouping) )
+    #avgHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU.root' % (analysis) )
 
 
 def PUreweight( channel ) :
@@ -142,12 +142,12 @@ def PUreweight( channel ) :
     return reweightDict
 
 
-def addNvtxWeight( grouping, sample, fileName, channel ) :
+def addNvtxWeight( analysis, sample, fileName, channel ) :
     
     tfile = ROOT.TFile('%s.root' % fileName, 'update')
     tree = tfile.Get('%s/Ntuple' % channel )
 
-    puDict = PUreweight( grouping, sample, channel )
+    puDict = PUreweight( analysis, sample, channel )
 
     nvtxWeight = array('f', [ 0 ] )
     nvtxWeightB = tree.Branch('nvtxWeight', nvtxWeight, 'nvtxWeight/F')

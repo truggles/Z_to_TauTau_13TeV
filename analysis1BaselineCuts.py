@@ -13,7 +13,7 @@ from ROOT import gPad, gROOT
 
 
 #for sample in samples :
-def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, analysis, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
     #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -22,12 +22,12 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
     #print "Channel:  %s" % channel
     if svFitPost == 'true' :
         if 'data' in sample :
-            sampleList = 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample)
+            sampleList = 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample)
         else :
-            sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel)
+            sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel)
         path = '%s/Ntuple' % channel
     else :
-        sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
+        sampleList = 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample)
         path = '%s/final/Ntuple' % channel
     #print "sample List and path", sampleList, path
     # This should allow us to run over sections of files
@@ -67,7 +67,7 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
 
 
 
-def runCuts(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle,svFitPrep,svFitPost) :
+def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle,svFitPrep,svFitPost) :
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
@@ -77,11 +77,11 @@ def runCuts(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutName,
     ''' 1. Make cuts and save '''
     #print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
     if svFitPrep == 'true' :
-        outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
+        outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     else :
-        outFile1 = ROOT.TFile('%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
+        outFile1 = ROOT.TFile('%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
-    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
     cutOut[1].Write()
@@ -96,7 +96,7 @@ def runCuts(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutName,
         print "Over 1000 iterations.  Summary skipped"
 
 
-def runIsoOrder(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
+def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
 
     #if svFitPost == 'true' : SVF = True
     #else : SVF = False
@@ -108,8 +108,8 @@ def runIsoOrder(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutN
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( grouping, mid1, mid2, save, channel, count )
-    #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
+    isoQty = renameBranches( analysis, mid1, mid2, save, channel, count )
+    #output.put( '%s%s/%s.root' % (analysis, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
     #output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
@@ -119,7 +119,7 @@ def runIsoOrder(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutN
 
 
 
-def doInitialCuts(grouping, samples, **fargs) :
+def doInitialCuts(analysis, samples, **fargs) :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -131,8 +131,8 @@ def doInitialCuts(grouping, samples, **fargs) :
 
     import os
     if fargs[ 'svFitPrep' ] == 'true' :
-        if not os.path.exists( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1']) ) :
-            os.makedirs( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1' ]) )
+        if not os.path.exists( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1']) ) :
+            os.makedirs( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1' ]) )
     
     num = 0
     for sample in samples :
@@ -141,13 +141,13 @@ def doInitialCuts(grouping, samples, **fargs) :
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
             if 'data' in sample :
-                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
+                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample) )
             else :
-                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
-                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
+                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
+                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
                 fileLen = max( fileLenEM, fileLenTT )
         else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
         go = True
         count = 0
         while go :
@@ -160,9 +160,9 @@ def doInitialCuts(grouping, samples, **fargs) :
                 if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
                 if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
                 if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
-                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
+                print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
-                multiprocessingOutputs.append( pool.apply_async(runCuts, args=(grouping,
+                multiprocessingOutputs.append( pool.apply_async(runCuts, args=(analysis,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
@@ -194,9 +194,9 @@ def doInitialCuts(grouping, samples, **fargs) :
 
     print " --- CutTable used: %s" % fargs['cutMapper']
     print " --- Cut used: %s" % fargs['cutName']
-    print " --- Grouping: %s" % grouping
-    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+    print " --- Analysis: %s" % analysis
+    print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
+    print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])
     print "\n"
     
     totalIn = 0
@@ -216,7 +216,7 @@ def doInitialCuts(grouping, samples, **fargs) :
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
-def doInitialOrder(grouping, samples, **fargs) :
+def doInitialOrder(analysis, samples, **fargs) :
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -233,13 +233,13 @@ def doInitialOrder(grouping, samples, **fargs) :
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
             if 'data' in sample :
-                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
+                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample) )
             else :
-                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
-                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
+                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
+                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
                 fileLen = max( fileLenEM, fileLenTT )
         else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
         go = True
         count = 0
         while go :
@@ -252,10 +252,10 @@ def doInitialOrder(grouping, samples, **fargs) :
                 if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
                 if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
                 if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
-                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
+                print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
                 if not fargs['debug'] == 'true' :
-                    multiprocessingOutputs.append( pool.apply_async(runIsoOrder, args=(grouping,
+                    multiprocessingOutputs.append( pool.apply_async(runIsoOrder, args=(analysis,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
@@ -267,7 +267,7 @@ def doInitialOrder(grouping, samples, **fargs) :
                                                                                     fargs['numFilesPerCycle'])) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
-                    runIsoOrder(grouping,
+                    runIsoOrder(analysis,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
@@ -303,9 +303,9 @@ def doInitialOrder(grouping, samples, **fargs) :
         
         print " --- CutTable used: %s" % fargs['cutMapper']
         print " --- Cut used: %s" % fargs['cutName']
-        print " --- Grouping: %s" % grouping
-        print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-        print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+        print " --- Analysis: %s" % analysis
+        print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
+        print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])
         print "\n"
         
         mpResults.sort()
@@ -323,7 +323,7 @@ def doInitialOrder(grouping, samples, **fargs) :
 
 
 
-def drawHistos(grouping, samples, **fargs ) :
+def drawHistos(analysis, samples, **fargs ) :
     genMap = {
         # sample : em , tt
         'ZTT' : {'em' : '*(gen_match_1 > 2 && gen_match_2 > 3)',
@@ -371,24 +371,24 @@ def drawHistos(grouping, samples, **fargs ) :
 
                 if fargs['svFitPost'] == 'true' :
                     if 'data' in sample :
-                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
+                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample) )
                     else :
-                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel) )
+                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel) )
                 else :
-                    fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+                    fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen
                 numIters = int( math.ceil( fileLen / fargs['numFilesPerCycle'] ) )
                 print "Num Iters: %i" % numIters
 
 
-                print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, saveName, channel)
+                print " ====>  Starting Plots For %s_%s_%s  <==== " % (analysis, saveName, channel)
     
                 chain = ROOT.TChain('Ntuple')
-                outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
+                outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
                 for i in range( numIters ) :
                     #print "%s_%i" % ( sample, i)
-                    #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
-                    chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
+                    #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (analysis, fargs['mid2'], sample.split('_')[0], i, channel)
+                    chain.Add('%s%s/%s_%i_%s.root' % (analysis, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True
                 else : isData = False

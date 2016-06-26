@@ -15,12 +15,12 @@ ROOT.gROOT.Reset()
 
 os.chdir('..')
 
-''' Set grouping for Trigger Studies '''
-grouping = 'Trigger'
+''' Set analysis for Trigger Studies '''
+analysis = 'Trigger'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 cmsLumi = '2200.0'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = grouping
+os.environ['_GROUPING_'] = analysis
 os.environ['_ZHOME_'] = zHome
 os.environ['_LUMI_'] = cmsLumi
 lumiCert = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2.11/fb - all of 2015 25ns golden
@@ -30,7 +30,7 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 ''' Uncomment to make out starting JSON file of meta data! '''
 #from meta.makeMeta import makeMetaJSON
 #os.chdir('meta')
-#makeMetaJSON( grouping, 'mt' )
+#makeMetaJSON( analysis, 'mt' )
 #os.chdir('..')
 
 
@@ -40,7 +40,7 @@ puJson = 'pileup_latest.txt' # Symlinked to newest pile_JSON_xxxxx.txt
 #    os.makedirs( 'meta/PileUpInfo' )
 #makeMCPUTemplate()
 #makeDataPUTemplate( lumiCert, puJson ) 
-#makeDYJetsPUTemplate( grouping )
+#makeDYJetsPUTemplate( analysis )
 
 
 ''' Preset samples '''
@@ -64,8 +64,8 @@ params = {
     'additionalCut' : '',
 }
 
-samples = setUpDirs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
+samples = setUpDirs( samples, params, analysis )
+analysis1BaselineCuts.doInitialCutsAndOrder(analysis, samples, **params)
 
 
 

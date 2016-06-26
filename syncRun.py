@@ -15,18 +15,18 @@ ROOT.gROOT.Reset()
 
 
 
-''' Set grouping (25ns or Sync) '''
-grouping = 'Sync'
+''' Set analysis (htt, Sync, azh) '''
+analysis = 'Sync'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = grouping
+os.environ['_GROUPING_'] = analysis
 os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-#makeMetaJSON( grouping )
+#makeMetaJSON( analysis )
 os.chdir('..')
 
 
@@ -63,9 +63,9 @@ params = {
     'doFRMthd' : 'false',
 }
 
-samples = setUpDirs( samples, params, grouping )
-analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+samples = setUpDirs( samples, params, analysis )
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 

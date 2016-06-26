@@ -17,7 +17,7 @@ Load from GitHub the measured lepton efficiencies for scale factors
 If any FSA ntuples have been updated, make a list of the backgrounds and data 
 samples in:
 ```bash
-    meta/NtupleInputs_[dataCards/Sync]
+    meta/NtupleInputs_[htt/Sync/azh]
 ```
 And, make sure DAS paths and updated cross sections are all in 
 ```bash
