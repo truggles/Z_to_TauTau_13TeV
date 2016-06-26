@@ -1,0 +1,2 @@
+/data/truggles/june25_AtoZh80X/ZHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-1A9C695A-6227-E611-A170-0090FAA58084/make_ntuples_cfg-1A9C695A-6227-E611-A170-0090FAA58084.root
+/data/truggles/june25_AtoZh80X/ZHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-B26652EC-3F26-E611-BB30-0090FAA59EE4/make_ntuples_cfg-B26652EC-3F26-E611-BB30-0090FAA59EE4.root
