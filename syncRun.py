@@ -40,8 +40,8 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
-    #'debug' : 'true',
-    'debug' : 'false',
+    'debug' : 'true',
+    #'debug' : 'false',
     'bkgs' : 'None',
     'numCores' : 16,
     'numFilesPerCycle' : 20,
@@ -65,7 +65,7 @@ params = {
 }
 
 samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
+analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 
 

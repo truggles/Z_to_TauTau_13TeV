@@ -290,16 +290,16 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
 
-    from util.lepSF import LepWeights
+    #from util.lepSF import LepWeights
     from util.doubleTauSF import doubleTauTriggerEff
-    lepWeights = LepWeights( channel, count )
+    #lepWeights = LepWeights( channel, count )
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
 
-    cmssw_base = os.getenv('CMSSW_BASE')
-    ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
-    ffqcd = ff_file.Get('ff_qcd_os') 
+    #cmssw_base = os.getenv('CMSSW_BASE')
+    #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
+    #ffqcd = ff_file.Get('ff_qcd_os') 
 
     branchMapping = {
         'run' : 'run',
@@ -602,24 +602,24 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
-    FFWeightQCD = array('f', [ 0 ] )
-    FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
-    FFWeightQCD_UP = array('f', [ 0 ] )
-    FFWeightQCD_UPB = tnew.Branch('FFWeightQCD_UP', FFWeightQCD_UP, 'FFWeightQCD_UP/F')
-    FFWeightQCD_DOWN = array('f', [ 0 ] )
-    FFWeightQCD_DOWNB = tnew.Branch('FFWeightQCD_DOWN', FFWeightQCD_DOWN, 'FFWeightQCD_DOWN/F')
-    FFWeightQCD1 = array('f', [ 0 ] )
-    FFWeightQCD1B = tnew.Branch('FFWeightQCD1', FFWeightQCD1, 'FFWeightQCD1/F')
-    FFWeightQCD1_UP = array('f', [ 0 ] )
-    FFWeightQCD1_UPB = tnew.Branch('FFWeightQCD1_UP', FFWeightQCD1_UP, 'FFWeightQCD1_UP/F')
-    FFWeightQCD1_DOWN = array('f', [ 0 ] )
-    FFWeightQCD1_DOWNB = tnew.Branch('FFWeightQCD1_DOWN', FFWeightQCD1_DOWN, 'FFWeightQCD1_DOWN/F')
-    FFWeightQCD2 = array('f', [ 0 ] )
-    FFWeightQCD2B = tnew.Branch('FFWeightQCD2', FFWeightQCD2, 'FFWeightQCD2/F')
-    FFWeightQCD2_UP = array('f', [ 0 ] )
-    FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
-    FFWeightQCD2_DOWN = array('f', [ 0 ] )
-    FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
+    #FFWeightQCD = array('f', [ 0 ] )
+    #FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
+    #FFWeightQCD_UP = array('f', [ 0 ] )
+    #FFWeightQCD_UPB = tnew.Branch('FFWeightQCD_UP', FFWeightQCD_UP, 'FFWeightQCD_UP/F')
+    #FFWeightQCD_DOWN = array('f', [ 0 ] )
+    #FFWeightQCD_DOWNB = tnew.Branch('FFWeightQCD_DOWN', FFWeightQCD_DOWN, 'FFWeightQCD_DOWN/F')
+    #FFWeightQCD1 = array('f', [ 0 ] )
+    #FFWeightQCD1B = tnew.Branch('FFWeightQCD1', FFWeightQCD1, 'FFWeightQCD1/F')
+    #FFWeightQCD1_UP = array('f', [ 0 ] )
+    #FFWeightQCD1_UPB = tnew.Branch('FFWeightQCD1_UP', FFWeightQCD1_UP, 'FFWeightQCD1_UP/F')
+    #FFWeightQCD1_DOWN = array('f', [ 0 ] )
+    #FFWeightQCD1_DOWNB = tnew.Branch('FFWeightQCD1_DOWN', FFWeightQCD1_DOWN, 'FFWeightQCD1_DOWN/F')
+    #FFWeightQCD2 = array('f', [ 0 ] )
+    #FFWeightQCD2B = tnew.Branch('FFWeightQCD2', FFWeightQCD2, 'FFWeightQCD2/F')
+    #FFWeightQCD2_UP = array('f', [ 0 ] )
+    #FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
+    #FFWeightQCD2_DOWN = array('f', [ 0 ] )
+    #FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     pzeta = array('f', [ 0 ] )
@@ -729,15 +729,15 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             isZMM[0] = 0
             isZTT[0] = 0
             isZLL[0] = 0
-            FFWeightQCD[0] = -1
-            FFWeightQCD_UP[0] = -1
-            FFWeightQCD_DOWN[0] = -1
-            FFWeightQCD1[0] = -1
-            FFWeightQCD1_UP[0] = -1
-            FFWeightQCD1_DOWN[0] = -1
-            FFWeightQCD2[0] = -1
-            FFWeightQCD2_UP[0] = -1
-            FFWeightQCD2_DOWN[0] = -1
+            #FFWeightQCD[0] = -1
+            #FFWeightQCD_UP[0] = -1
+            #FFWeightQCD_DOWN[0] = -1
+            #FFWeightQCD1[0] = -1
+            #FFWeightQCD1_UP[0] = -1
+            #FFWeightQCD1_DOWN[0] = -1
+            #FFWeightQCD2[0] = -1
+            #FFWeightQCD2_UP[0] = -1
+            #FFWeightQCD2_DOWN[0] = -1
 
             # Decay final states
             if channel == 'tt' :
@@ -860,36 +860,36 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 # Calculate Fake Factors based on this work:
                 # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
                 # We start with applying QCD factors to each leg and sum for total
-                if channel == 'tt' :
-                    FFWeightQCD[0] = 0.
-                    FFWeightQCD_UP[0] = 0.
-                    FFWeightQCD_DOWN[0] = 0.
-                    FFWeightQCD1[0] = 0.
-                    FFWeightQCD1_UP[0] = 0.
-                    FFWeightQCD1_DOWN[0] = 0.
-                    FFWeightQCD2[0] = 0.
-                    FFWeightQCD2_UP[0] = 0.
-                    FFWeightQCD2_DOWN[0] = 0.
-                    muon_iso = 0.089 # this is an artifact of being based on MuTau channel
-                                    # 0.089 gives a correction value of 1.0
-                    # First leg FR
-                    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
-                        inputsqcd = ffqcd.inputs()
-                        inputsqcd = [row.t1Pt, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
-                        FFWeightQCD1[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
-                        FFWeightQCD1_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
-                        FFWeightQCD1_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
-                    # Second leg FR
-                    if row.t2ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
-                        inputsqcd = ffqcd.inputs()
-                        inputsqcd = [row.t2Pt, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
-                        FFWeightQCD2[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
-                        FFWeightQCD2_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
-                        FFWeightQCD2_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
-                    # Total
-                    FFWeightQCD[0] = FFWeightQCD1[0] + FFWeightQCD2[0] 
-                    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
-                    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
+                #if channel == 'tt' :
+                #    FFWeightQCD[0] = 0.
+                #    FFWeightQCD_UP[0] = 0.
+                #    FFWeightQCD_DOWN[0] = 0.
+                #    FFWeightQCD1[0] = 0.
+                #    FFWeightQCD1_UP[0] = 0.
+                #    FFWeightQCD1_DOWN[0] = 0.
+                #    FFWeightQCD2[0] = 0.
+                #    FFWeightQCD2_UP[0] = 0.
+                #    FFWeightQCD2_DOWN[0] = 0.
+                #    muon_iso = 0.089 # this is an artifact of being based on MuTau channel
+                #                    # 0.089 gives a correction value of 1.0
+                #    # First leg FR
+                #    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
+                #        inputsqcd = ffqcd.inputs()
+                #        inputsqcd = [row.t1Pt, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
+                #        FFWeightQCD1[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
+                #        FFWeightQCD1_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
+                #        FFWeightQCD1_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
+                #    # Second leg FR
+                #    if row.t2ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
+                #        inputsqcd = ffqcd.inputs()
+                #        inputsqcd = [row.t2Pt, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
+                #        FFWeightQCD2[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
+                #        FFWeightQCD2_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
+                #        FFWeightQCD2_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
+                #    # Total
+                #    FFWeightQCD[0] = FFWeightQCD1[0] + FFWeightQCD2[0] 
+                #    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
+                #    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
                     
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
@@ -901,16 +901,17 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
 
                 # Isolation / ID weights
                 if 't' in l1 : idisoweight_1[0] = 1
-                else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
+                #else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
                 if 't' in l2 : idisoweight_2[0] = 1
-                else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
+                #else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
 
                 # Trigger Weights
                 effweight[0] = 1
-                if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
-                elif channel == 'tt' :
+                #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
+                #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
+                #elif channel == 'tt' :
+                if channel == 'tt' :
                     trigweight_1[0] = 1
                     effweight[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
                 else : trigweight_1[0] = 1
