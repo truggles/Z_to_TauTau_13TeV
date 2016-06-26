@@ -10,7 +10,7 @@ from time import gmtime, strftime
 import ROOT
 from ROOT import gPad, gROOT
 import analysis1BaselineCuts
-from util.helpers import checkBkgs 
+from util.helpers import setUpDirs 
 ROOT.gROOT.Reset()
 
 
@@ -53,7 +53,6 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'bkgs' : 'None',
     'numCores' : 10,
     'numFilesPerCycle' : 10,
     'channels' : ['tt',],
@@ -82,14 +81,14 @@ params = {
     'doFRMthd' : 'true',
 }
 
-#samples = checkBkgs( samples, params, grouping )
+#samples = setUpDirs( samples, params, grouping )
 #analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 analysis1BaselineCuts.drawHistos( grouping, samples, **params)
 
 SamplesDataCards = ['data_tt',]
 samples = SamplesDataCards
-samples = checkBkgs( samples, params, grouping )
+samples = setUpDirs( samples, params, grouping )
 params['cutMapper'] = 'fakeFactorCutsTT'
 #analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
@@ -101,7 +100,7 @@ SamplesDataCards = ['data_tt',]
 params['doFRMthd'] = 'false'
 params['additionalCut'] = '*(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
 samples = SamplesDataCards
-samples = checkBkgs( samples, params, grouping )
+samples = setUpDirs( samples, params, grouping )
 params['cutMapper'] = 'fakeFactorCutsTT'
 analysis1BaselineCuts.drawHistos( grouping, samples, **params)
 

@@ -10,15 +10,6 @@ import multiprocessing
 import math
 from ROOT import gPad, gROOT
 
-def getBkgMap() :
-    bkgMap = {
-                # cutMapper       samples
-        'WJets' : ['wJetsShape', ['WJets',]],
-        'QCDSync'   : ['QCDShapeSync', ['data_em', 'data_tt',]],
-        'QCDLoose'   : ['QCDShapeLoose', ['data_em', 'data_tt',]],
-        'None'  : ['', '', '', '']
-        }
-    return bkgMap
 
 
 #for sample in samples :
@@ -76,11 +67,10 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
 
 
 
-def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle,svFitPrep,svFitPost) :
+def runCuts(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle,svFitPrep,svFitPost) :
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
-    bkgMap = getBkgMap()
     #print "save",save
     print "%5i %20s %10s %3i: ====>>> START Cuts <<<====" % (num, sample, channel, count)
 
@@ -106,20 +96,19 @@ def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cu
         print "Over 1000 iterations.  Summary skipped"
 
 
-def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
+def runIsoOrder(grouping, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
 
     #if svFitPost == 'true' : SVF = True
     #else : SVF = False
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
-    bkgMap = getBkgMap()
     #print "save",save
     print "%5i %20s %10s %3i: ====>>> START Iso Order <<<====" % (num, sample, channel, count)
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
+    isoQty = renameBranches( grouping, mid1, mid2, save, channel, count )
     #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
@@ -178,7 +167,6 @@ def doInitialCuts(grouping, samples, **fargs) :
                                                                                     channel,
                                                                                     count,
                                                                                     num,
-                                                                                    fargs['bkgs'],
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
@@ -272,7 +260,6 @@ def doInitialOrder(grouping, samples, **fargs) :
                                                                                     channel,
                                                                                     count,
                                                                                     num,
-                                                                                    fargs['bkgs'],
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
@@ -285,7 +272,6 @@ def doInitialOrder(grouping, samples, **fargs) :
                                                                                     channel,
                                                                                     count,
                                                                                     num,
-                                                                                    fargs['bkgs'],
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
@@ -355,7 +341,6 @@ def drawHistos(grouping, samples, **fargs ) :
     ''' Start PROOF multiprocessing Draw '''
     ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']) ) )
     gROOT.SetBatch(True)
-    bkgMap = getBkgMap()
     
     for sample in samples :
 
@@ -399,18 +384,11 @@ def drawHistos(grouping, samples, **fargs ) :
                 print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, saveName, channel)
     
                 chain = ROOT.TChain('Ntuple')
-                if fargs['bkgs'] != 'None' :
-                    print "Why are we here?"
-                    outFile = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], channel), 'RECREATE')
-                    for i in range( numIters+1 ) :
-                        #print "%s_%i" % ( sample, i)
-                        chain.Add('meta/%sBackgrounds/%s/iso/%s_%i_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], i, channel) )
-                else :
-                    outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
-                    for i in range( numIters ) :
-                        #print "%s_%i" % ( sample, i)
-                        #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
-                        chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
+                outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
+                for i in range( numIters ) :
+                    #print "%s_%i" % ( sample, i)
+                    #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
+                    chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True
                 else : isData = False
@@ -420,8 +398,6 @@ def drawHistos(grouping, samples, **fargs ) :
                     if additionalCut == '' : additionalCut = genMap[subName][channel] 
                     else : additionalCut += genMap[subName][channel] 
                 print "AdditionalCuts",additionalCut
-                #if fargs['bkgs'] != 'None' : blind = False
-                #else : blind = True
                 blind = False
                 analysisPlots.plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind )
                 outFile.Close()

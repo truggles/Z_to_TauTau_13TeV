@@ -9,7 +9,7 @@ import os
 from time import gmtime, strftime
 import ROOT
 from ROOT import gPad, gROOT
-from util.helpers import checkBkgs 
+from util.helpers import setUpDirs 
 import analysis1BaselineCuts
 ROOT.gROOT.Reset()
 
@@ -53,7 +53,6 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
-    'bkgs' : 'None',
     'numCores' : 20,
     'numFilesPerCycle' : 25,
     'channels' : ['mt'],
@@ -65,7 +64,7 @@ params = {
     'additionalCut' : '',
 }
 
-samples = checkBkgs( samples, params, grouping )
+samples = setUpDirs( samples, params, grouping )
 analysis1BaselineCuts.doInitialCutsAndOrder(grouping, samples, **params)
 
 

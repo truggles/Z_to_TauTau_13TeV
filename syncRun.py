@@ -10,7 +10,7 @@ from time import gmtime, strftime
 import ROOT
 from ROOT import gPad, gROOT
 import analysis1BaselineCuts
-from util.helpers import checkBkgs 
+from util.helpers import setUpDirs 
 ROOT.gROOT.Reset()
 
 
@@ -42,7 +42,6 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     'debug' : 'true',
     #'debug' : 'false',
-    'bkgs' : 'None',
     'numCores' : 16,
     'numFilesPerCycle' : 20,
     #'numFilesPerCycle' : 1,
@@ -64,7 +63,7 @@ params = {
     'doFRMthd' : 'false',
 }
 
-samples = checkBkgs( samples, params, grouping )
+samples = setUpDirs( samples, params, grouping )
 analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
 analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
 
