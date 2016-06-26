@@ -148,6 +148,9 @@ def doInitialCuts(analysis, samples, **fargs) :
                 fileLen = max( fileLenEM, fileLenTT )
         else :
             fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
+        if fileLen == 0 : 
+            print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
+            continue
         go = True
         count = 0
         while go :
@@ -240,6 +243,9 @@ def doInitialOrder(analysis, samples, **fargs) :
                 fileLen = max( fileLenEM, fileLenTT )
         else :
             fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
+        if fileLen == 0 : 
+            print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
+            continue
         go = True
         count = 0
         while go :
