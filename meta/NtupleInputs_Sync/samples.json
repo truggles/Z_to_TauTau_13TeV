@@ -1,18 +1,16 @@
 {
   "Sync-HtoTT": {
     "STATUS": "Good to Go!", 
-    "UniqueID": 100, 
     "DAS status": "ok", 
-    "nEvents": 469976, 
-    "DAS Path": "/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", 
-    "nfiles": 15, 
-    "nblocks": 7, 
-    "Cross Section (pb)": 999, 
-    "BkgGroup": 100, 
-    "summedWeightsNorm": 469976.0, 
-    "summedWeights": 469976.0, 
-    "nevents": 469976, 
-    "nNtupleFiles": 15, 
-    "nlumis": 2545
+    "nEvents": 498892, 
+    "DAS Path": "/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM", 
+    "nfiles": 14, 
+    "nblocks": 5, 
+    "Cross Section (pb)": 999.0, 
+    "summedWeightsNorm": 498892.0, 
+    "summedWeights": 498892.0, 
+    "nevents": 498892, 
+    "nNtupleFiles": 14, 
+    "nlumis": 2702
   }
 }
