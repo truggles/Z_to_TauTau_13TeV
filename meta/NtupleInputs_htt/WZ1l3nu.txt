@@ -18,6 +18,7 @@
 /data/truggles/june26_ztt_MC/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-7E00F5A7-E304-E611-B7AF-3417EBE527EF/make_ntuples_cfg-7E00F5A7-E304-E611-B7AF-3417EBE527EF.root
 /data/truggles/june26_ztt_MC/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-7E6BD2B6-4B04-E611-8445-3417EBE6471D/make_ntuples_cfg-7E6BD2B6-4B04-E611-8445-3417EBE6471D.root
 /data/truggles/june26_ztt_MC/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-8C0206CF-4B04-E611-B430-00266CFAE764/make_ntuples_cfg-8C0206CF-4B04-E611-B430-00266CFAE764.root
+/data/truggles/june26_ztt_MC/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-903C15D2-4B04-E611-A857-008CFA002028/make_ntuples_cfg-903C15D2-4B04-E611-A857-008CFA002028.root
 /data/truggles/june26_ztt_MC/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-9215CBBA-AE04-E611-B767-02163E015182/make_ntuples_cfg-9215CBBA-AE04-E611-B767-02163E015182.root
 /data/truggles/june26_ztt_MC/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-9A114DD6-DA04-E611-AE11-00266CF9B1C4/make_ntuples_cfg-9A114DD6-DA04-E611-AE11-00266CF9B1C4.root
 /data/truggles/june26_ztt_MC/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-A024F64A-0404-E611-93A9-02163E016521/make_ntuples_cfg-A024F64A-0404-E611-93A9-02163E016521.root

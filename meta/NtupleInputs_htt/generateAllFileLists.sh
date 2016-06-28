@@ -1,5 +1,5 @@
 
-DATA=june26_ztt_data
+DATA=june27_ztt_data
 TT=june26_ztt_TT
 BKGS=june26_ztt_MC
 SIGNALS=april08_signals
