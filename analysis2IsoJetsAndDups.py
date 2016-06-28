@@ -30,9 +30,9 @@ def getXSec( shortName, sampDict, numGenJets=0 ) :
     #if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
-        if shortName in ['DYJets', 'DYJetsBig'] or shortName[:6] == 'DYJets' :
+        if shortName in ['DYJets', 'DYJets'] or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
-            scalar1 = cmsLumi * sampDict[ 'DYJetsBig' ]['Cross Section (pb)'] / sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] # removing LO small DYJets
+            scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ]['summedWeightsNorm'] # removing LO small DYJets
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
@@ -305,8 +305,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'run' : 'run',
         'lumi' : 'lumi',
         'evt' : 'evt',
+        'GenWeight' : 'GenWeight',
         'nvtx' : 'npv',
         'nTruePU' : 'npu',
+        'LT' : 'LT',
         'charge' : 'charge',
         'j1pt' : 'jpt_1',
         'j1phi' : 'jphi_1',
@@ -330,8 +332,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         #XXX 'NBTagPDM_idL_jVeto' : 'nbtag',
         #XXX 'NBTagPDL_idL_jVeto' : 'nbtagLoose',
         'jetVeto20ZTT' : 'njetspt20',
-        'jetVeto30RecoilZTT' : 'njets',
-        #'jetVeto30ZTT' : 'njets',
+        #'jetVeto30RecoilZTT' : 'njets',
+        'jetVeto30ZTT' : 'njets',
+        'jetVeto30' : 'jetVeto30',
+        'jetVeto40' : 'jetVeto40',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
@@ -381,6 +385,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     branchMappingTau = {
         'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
+        'cand_DecayMode' : 'decayMode',
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
         'cand_Mass' : 'm',
@@ -404,6 +409,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
         'cand_MtToPfMet_Raw' : 'pfmt',
+        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'ByIsolationMVArun2v1DBoldDMwLTraw',
+        'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
         }
 
     # Generate our mapping for double candidate variables
@@ -461,12 +471,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     for old in told.branchnames:
         name = branchMapping[old] if old in branchMapping else old
         branchType = IntCol() if old in intBranches else FloatCol()
-        ###if old in branchMapping.keys() :
-        ###    name = branchMapping[old]
-        ###    branchType = IntCol() if old in intBranches else FloatCol()
-        ###    newBranches[name] = branchType
+        if old in branchMapping.keys() :
+            name = branchMapping[old]
+            branchType = IntCol() if old in intBranches else FloatCol()
+            newBranches[name] = branchType
     
-        newBranches[name] = branchType
+        #XXX newBranches[name] = branchType
     
     NewTreeModel = type("NewTreeModel", (TreeModel,), newBranches)
     
@@ -640,10 +650,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     idisoweight_1B = tnew.Branch('idisoweight_1', idisoweight_1, 'idisoweight_1/F')
     idisoweight_2 = array('f', [ 0 ] )
     idisoweight_2B = tnew.Branch('idisoweight_2', idisoweight_2, 'idisoweight_2/F')
-    UniqueID = array('f', [ 0 ] )
-    UniqueIDB = tnew.Branch('UniqueID', UniqueID, 'UniqueID/F')
-    BkgGroup = array('f', [ 0 ] )
-    BkgGroupB = tnew.Branch('BkgGroup', BkgGroup, 'BkgGroup/F')
     extramuon_veto = array('f', [ 0 ] )
     extramuon_vetoB = tnew.Branch('extramuon_veto', extramuon_veto, 'extramuon_veto/F')
     extraelec_veto = array('f', [ 0 ] )
@@ -748,8 +754,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             if row.isZtautau == 1 :#or row.isHtautau == 1 : 
                 isZTT[0] = 1
             if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
-            UniqueID[0] = sampDict[ shortName ]['UniqueID']
-            BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
 
             # TES Shifted M_Vis
             if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
