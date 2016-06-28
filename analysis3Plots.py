@@ -82,12 +82,12 @@ chans = {
 
                 # Sample : Color
 samples = OrderedDict()
-samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
-samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
-samples['DYJetsBig-ZTT']   = ('kOrange-4', 'ztt')
-samples['DYJetsBig-ZL']   = ('kOrange-4', 'zl')
-samples['DYJetsBig-ZJ']   = ('kOrange-4', 'zj')
-samples['DYJetsBig-ZLL']   = ('kOrange-4', 'zll')
+#samples['ggHtoTauTau125'] = ('kBlue', 'higgs')
+#samples['VBFHtoTauTau125'] = ('kBlue', 'higgs')
+samples['DYJets-ZTT']   = ('kOrange-4', 'ztt')
+samples['DYJets-ZL']   = ('kOrange-4', 'zl')
+samples['DYJets-ZJ']   = ('kOrange-4', 'zj')
+samples['DYJets-ZLL']   = ('kOrange-4', 'zll')
 samples['DYJets1-ZTT']   = ('kOrange-4', 'ztt')
 samples['DYJets1-ZL']   = ('kOrange-4', 'zl')
 samples['DYJets1-ZJ']   = ('kOrange-4', 'zj')
@@ -104,12 +104,12 @@ samples['DYJets4-ZTT']   = ('kOrange-4', 'ztt')
 samples['DYJets4-ZL']   = ('kOrange-4', 'zl')
 samples['DYJets4-ZJ']   = ('kOrange-4', 'zj')
 samples['DYJets4-ZLL']   = ('kOrange-4', 'zll')
-samples['DYJetsLow-ZTT']   = ('kOrange-4', 'ztt')
-samples['DYJetsLow-ZL']   = ('kOrange-4', 'zl')
-samples['DYJetsLow-ZJ']   = ('kOrange-4', 'zj')
-samples['DYJetsLow-ZLL']   = ('kOrange-4', 'zll')
+#samples['DYJetsLow-ZTT']   = ('kOrange-4', 'ztt')
+#samples['DYJetsLow-ZL']   = ('kOrange-4', 'zl')
+#samples['DYJetsLow-ZJ']   = ('kOrange-4', 'zj')
+#samples['DYJetsLow-ZLL']   = ('kOrange-4', 'zll')
 samples['T-tW']     = ('kYellow+2', 'dib')
-samples['T-tchan']     = ('kYellow+2', 'dib')
+#samples['T-tchan']     = ('kYellow+2', 'dib')
 samples['TT']       = ('kBlue-8', 'top')
 samples['Tbar-tW']  = ('kYellow-2', 'dib')
 samples['Tbar-tchan']  = ('kYellow-2', 'dib')
@@ -123,14 +123,14 @@ samples['WW1l1nu2q']       = ('kAzure+8', 'dib')
 samples['WZ1l1nu2q'] = ('kAzure-6', 'dib')
 samples['WZ1l3nu'] = ('kAzure-6', 'dib')
 samples['WZ2l2q'] = ('kAzure-6', 'dib')
-samples['WZ3l1nu'] = ('kAzure-6', 'dib')
+#samples['WZ3l1nu'] = ('kAzure-6', 'dib')
 #samples['ZZ2l2nu'] = ('kAzure-12', 'dib')
 samples['ZZ2l2q'] = ('kAzure-12', 'dib')
-samples['ZZ4l'] = ('kAzure-12', 'dib')
+#samples['ZZ4l'] = ('kAzure-12', 'dib')
 samples['VV'] = ('kAzure-12', 'dib')
 samples['QCD']        = ('kMagenta-10', 'qcd')
 samples['data_tt']  = ('kBlack', 'data')
-samples['data_em']  = ('kBlack', 'data')
+#samples['data_em']  = ('kBlack', 'data')
 #samples['ggH%i' % mssmMass] = ('kPink', 'mssm')
 #samples['bbH%i' % mssmMass] = ('kPink', 'mssm') 
 
@@ -175,6 +175,8 @@ for channel in ['em', 'tt'] :
     newVarMap = analysisPlots.getHistoDict( channel )
     plotDetails = analysisPlots.getPlotDetails( channel )
 
+    finalQCDYield = 0.0
+    finalDataYield = 0.0
     if options.qcdMake :
         finalQCDYield = 0.0
         finalDataYield = 0.0
@@ -281,6 +283,7 @@ for channel in ['em', 'tt'] :
             if not options.qcdMC and 'QCD' in sample and '-' in sample : continue
 
             #if var == 'm_vis' : print sample
+            #print sample
             #print '%s2IsoOrderAndDups/%s_%s.root' % (analysis, sample, channel)
 
             if sample == 'data_em' :
@@ -430,6 +433,10 @@ for channel in ['em', 'tt'] :
             #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 0 ), hist.GetBinLowEdge( nBins+1 ))
 
 
+            #print "%s    ---    %f" % (sample, hist.Integral() )
+            #if 'data' in sample :
+            #    for b in range( 0, hist.GetNbinsX() ) :
+            #        print "bin %f   qty %f" % (hist.GetXaxis().GetBinCenter(b), hist.GetBinContent(b))
             if samples[ sample ][1] == 'ztt' :
                 ztt.Add( hist )
             if samples[ sample ][1] == 'zl' :
@@ -461,6 +468,7 @@ for channel in ['em', 'tt'] :
             h.SetFillColor( sampColors[ Ary[h] ] )
             h.SetLineColor( ROOT.kBlack )
             h.SetLineWidth( 2 )
+            print "%s --- yield %f" % ( Ary[h], h.Integral() )
         data.SetLineColor( ROOT.kBlack )
         data.SetLineWidth( 2 )
         data.SetMarkerStyle( 21 )
@@ -676,7 +684,7 @@ for channel in ['em', 'tt'] :
 
         lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
         lumi.SetTextSize(0.03)
-        lumi.DrawTextNDC(.7,.96,"2.3 / fb (13 TeV)" )
+        lumi.DrawTextNDC(.7,.96,"4.0 / fb (13 TeV)" )
 
         ''' Random print outs on plots '''
         if options.text and not varBinned :

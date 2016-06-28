@@ -24,10 +24,10 @@ os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-from meta.makeMeta import makeMetaJSON
-os.chdir('meta')
+#from meta.makeMeta import makeMetaJSON
+#os.chdir('meta')
 #makeMetaJSON( analysis )
-os.chdir('..')
+#os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -42,14 +42,14 @@ os.chdir('..')
 
 ''' Preset samples '''
 SamplesData = ['data_tt',]
-SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'data_tt'] # As of April23, removed DYJets LO small sample
+#SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
+SamplesDataCards = ['data_tt', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV'] # As of June28
 #SamplesDataCards = ['DYJetsHigh', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
 
 
 #SamplesDataCards = ['data_tt','data_em']
 #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh'] # LO DYJets
-#SamplesDataCards = ['DYJets',]
+#SamplesDataCards = ['DYJets4',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -58,29 +58,19 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
-    'debug' : 'true',
-    #'debug' : 'false',
-    'numCores' : 1,
-    'numFilesPerCycle' : 20,
-    #'channels' : ['em', 'tt'],
-    #'channels' : ['em', 'tt', 'et', 'mt'],
-    #'channels' : ['em',],
+    #'debug' : 'true',
+    'debug' : 'false',
+    'numCores' : 10,
+    'numFilesPerCycle' : 10,
     'channels' : ['tt',],
-    #'cutMapper' : 'signalCutsNoIsoNoSign', #!
-    #'cutMapper' : 'signalCutsNoSign', #!
-    #'cutMapper' : 'signalCuts', #!
-    #'cutMapper' : 'signalExtractionNoSign', #!
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
-#XXX    'cutMapper' : 'syncCutsDCqcdTES',
-    #'cutMapper' : 'crazyCutsNtuple',
-#XXX    'cutMapper' : 'svFitCuts',
-    #'cutMapper' : 'syncCutsNtuple',
-    'cutMapper' : 'signalCuts',
-#XXX    'cutMapper' : 'fakeFactorCutsTT',
-    'mid1' : '1June26',
-    'mid2' : '2June26',
-    'mid3' : '3June26',
+    'cutMapper' : 'syncCutsNtupleBuilding',
+    #'cutMapper' : 'signalCuts',
+    #'cutMapper' : 'fakeFactorCutsTT',
+    'mid1' : '1June26c',
+    'mid2' : '2June26c',
+    'mid3' : '3June26c',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -90,7 +80,7 @@ params = {
 }
 
 samples = setUpDirs( samples, params, analysis )
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 

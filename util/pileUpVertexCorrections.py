@@ -11,17 +11,17 @@ def makeDataPUTemplate( cert, puJson ) :
     executeArray = [
         'pileupCalc.py',
         '-i',
-        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/%s' % cert,
+        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/%s' % cert,
         '--inputLumiJSON',
-        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/%s' % puJson,
+        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/PileUp/%s' % puJson,
         '--calcMode',
         'true',
         '--minBiasXsec',
         '69000',
         '--maxPileupBin',
-        '52',
+        '60',
         '--numPileupBins',
-        '52',
+        '60',
         'DataTemplate.root']
     subprocess.call( executeArray )
     os.chdir( zHome )
@@ -167,15 +167,15 @@ def addNvtxWeight( analysis, sample, fileName, channel ) :
 
 
 if __name__ == '__main__' :
-    #zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-    #os.environ['_ZHOME_'] = zHome
+    zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
+    os.environ['_ZHOME_'] = zHome
     #print zHome
-    #makeDataPUTemplate( 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt', 'pileup_JSON_10-23-2015.txt' )
+    makeDataPUTemplate( 'Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt', 'pileup_latest.txt' )
     #makeMCPUTemplate()
-    ary = PUreweight( 'em' )
-    tot = 0
-    for key in ary.keys() :
-        print key, ary[key]
-        tot += ary[key]
-    print tot
+    #ary = PUreweight( 'em' )
+    #tot = 0
+    #for key in ary.keys() :
+    #    print key, ary[key]
+    #    tot += ary[key]
+    #print tot
     #makeDYJetsPUTemplate( 'dataCards' )

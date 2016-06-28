@@ -68,7 +68,7 @@ def HighPtTauWeight( var ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind ) :
+def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind=False ) :
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMap = getHistoDict( channel )
 
@@ -116,14 +116,19 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         dataES = '*(pt_1 > 40 && pt_2 > 40)'
         #print var,es
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
-        #if var == 'mt_sv_mssm' : print "\n\n total cut and weight MC : %s \n\n" % totalCutAndWeightMC
+        #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s' % (xsec, additionalCut)
 
-        # the >> sends the output to a predefined histo
+
         # Check if the variable to plot is in the chain, if not, skip it
-        print "Right before try"
-        if hasattr( chain, var ) :
-            print "trying"
+        # don't crash on systematics based variables
+        varBase = var
+        if 'Up' in var or 'Down' in var :
+            varBase = var.split('_')[0]
+        if '_sv' in var :
+            varBase += '_sv'
+        if hasattr( chain, varBase ) :
+            #print "trying"
             if isData : # Data has no GenWeight and by def has puweight = 1
                 if var == 'm_vis' and blind :
                     chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
@@ -163,31 +168,31 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
 def getHistoDict( channel ) :
     genVarMap = {
 #        'Z_SS' : ('Z_SS', 20, 0, 2),
-#        'Z_Pt' : ('Z_Pt', 400, 0, 400),
-#        'Z_DR' : ('Z_DR', 500, 0, 5),
-#        'Z_DPhi' : ('Z_DPhi', 800, -4, 4),
-#        'LT' : ('LT', 600, 0, 600),
+        'Z_Pt' : ('Z_Pt', 400, 0, 400),
+        'Z_DR' : ('Z_DR', 500, 0, 5),
+        'Z_DPhi' : ('Z_DPhi', 800, -4, 4),
+        #'LT' : ('LT', 600, 0, 600),
 #        'Mt' : ('Mt', 600, 0, 600),
 #        'met' : ('met', 400, 0, 400),
 #        'metphi' : ('metphi', 80, -4, 4),
 #        'mvamet' : ('mvamet', 100, 0, 400),
 #        'mvametphi' : ('mvametphi', 100, -5, 5),
-#        #'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
-#        'njetspt20' : ('njetspt20', 100, 0, 10),
-#        'jetVeto30' : ('jetVeto30', 100, 0, 10),
-#        'jetVeto40' : ('jetVeto40', 100, 0, 10),
+        #'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
+        #'njetspt20' : ('njetspt20', 100, 0, 10),
+        #'jetVeto30' : ('jetVeto30', 100, 0, 10),
+        #'jetVeto40' : ('jetVeto40', 100, 0, 10),
 #        'nbtag' : ('nbtag', 6, 0, 6),
-#        'bjetCISVVeto30Medium' : ('bjetCISVVeto30Medium', 6, 0, 6),
-#        'bjetCISVVeto30Tight' : ('bjetCISVVeto30Tight', 6, 0, 6),
+        #'bjetCISVVeto30Medium' : ('bjetCISVVeto30Medium', 6, 0, 6),
+        #'bjetCISVVeto30Tight' : ('bjetCISVVeto30Tight', 6, 0, 6),
 #        'extraelec_veto' : ('extraelec_veto', 20, 0, 2),
 #        'extramuon_veto' : ('extramuon_veto', 20, 0, 2),
-#        'jpt_1' : ('jpt_1', 400, 0, 400),
-#        'jeta_1' : ('jeta_1', 100, -5, 5),
-#        'jpt_2' : ('jpt_2', 400, 0, 400),
-#        'jeta_2' : ('jeta_2', 100, -5, 5),
+        #'jpt_1' : ('jpt_1', 400, 0, 400),
+        #'jeta_1' : ('jeta_1', 100, -5, 5),
+        #'jpt_2' : ('jpt_2', 400, 0, 400),
+        #'jeta_2' : ('jeta_2', 100, -5, 5),
 #        'weight' : ('weight', 60, -30, 30),
         'npv' : ('npv', 50, 0, 50),
-        'npu' : ('npu', 50, 0, 50),
+        #'npu' : ('npu', 50, 0, 50),
 #        'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
 #        'm_vis_varB' : ('m_vis', 600, 0, 600),
         'm_vis' : ('m_vis', 350, 0, 350),
@@ -198,13 +203,13 @@ def getHistoDict( channel ) :
 #        'mt_tot_mssm' : ('mt_tot', 3900, 0, 3900),
 #        'mt_sv_varB' : ('mt_sv', 600, 0, 600),
 #XX        'mt_sv' : ('mt_sv', 350, 0, 350),
-#        'pt_1' : ('pt_1', 400, 0, 400),
-#        'eta_1' : ('eta_1', 80, -4, 4),
+        'pt_1' : ('pt_1', 400, 0, 400),
+        'eta_1' : ('eta_1', 80, -4, 4),
 #XXX        'iso_1' : ('iso_1', 100, 0, 1),
  #XXX       'iso_1' : ('byIsolationMVArun2v1DBoldDMwLTraw_1', 200, -1, 1),
 #        'mt_1' : ('mt_1', 400, 0, 400),
-#        'pt_2' : ('pt_2', 400, 0, 400),
-#        'eta_2' : ('eta_2', 80, -4, 4),
+        'pt_2' : ('pt_2', 400, 0, 400),
+        'eta_2' : ('eta_2', 80, -4, 4),
 #XXX        'iso_2' : ('iso_2', 100, 0, 1),
  #XXX       'iso_2' : ('byIsolationMVArun2v1DBoldDMwLTraw_2', 200, -1, 1),
 #        'mt_2' : ('mt_2', 400, 0, 400),
@@ -250,12 +255,12 @@ def getHistoDict( channel ) :
         chanVarMapTT = {
             #'m_sv' : ('m_sv', 1000, 0, 1000),
             #'pt_H' : ('t1_t2_Pt + mvamet', 1000, 0, 1000),
-#            't1DecayMode' : ('t1DecayMode', 12, 0, 12),
+            #'decayMode_1' : ('decayMode_1', 12, 0, 12),
 #            't1JetPt' : ('t1JetPt', 400, 0, 400),
-#            'm_1' : ('m_1', 60, 0, 3),
-#            't2DecayMode' : ('t2DecayMode', 12, 0, 12),
+            'm_1' : ('m_1', 60, 0, 3),
+            #'decayMode_2' : ('decayMode_2', 12, 0, 12),
 #            't2JetPt' : ('t2JetPt', 400, 0, 400),
-#            'm_2' : ('m_2', 60, 0, 3),
+            'm_2' : ('m_2', 60, 0, 3),
         }
         for key in chanVarMapTT.keys() :
             genVarMap[ key ] = chanVarMapTT[ key ]
@@ -353,16 +358,16 @@ def getPlotDetails( channel ) :
         plotDetailsTT = {
         'iso_1' : (-1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
         'eta_1' : ( -3, 3, 4, '#tau_{1} Eta', ' Eta'),
-        'pt_1' : (0, 200, 20, '#tau_{1} p_{T} [GeV]', ' GeV'),
+        'pt_1' : (0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
         'mt_1' : (0, 200, 20, '#tau_{1} m_{T} [GeV]', ' GeV'),
         'm_1' : (0, 3, 4, 't1 Mass', ' GeV'),
-        't1DecayMode' : (0, 15, 1, 't1 Decay Mode', ''),
+        'decayMode_1' : (0, 15, 1, 't1 Decay Mode', ''),
         'iso_2' : (-1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
         'eta_2' : ( -3, 3, 4, '#tau_{2} Eta', ' Eta'),
-        'pt_2' : (0, 200, 20, '#tau_{2} p_{T} [GeV]', ' GeV'),
+        'pt_2' : (0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
         'mt_2' : (0, 200, 20, '#tau_{2} m_{T} [GeV]', ' GeV'),
         'm_2' : (0, 3, 4, 't2 Mass', ' GeV'),
-        't2DecayMode' : (0, 15, 1, 't2 Decay Mode', ''),
+        'decayMode_2' : (0, 15, 1, 't2 Decay Mode', ''),
         't1JetPt' : (0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
         't2JetPt' : (0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
         't1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
