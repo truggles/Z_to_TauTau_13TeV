@@ -57,7 +57,6 @@ params = {
     'numFilesPerCycle' : 25,
     'channels' : ['mt'],
     'cutMapper' : 'trigCuts',
-    'cutName' : 'BaseLine',
     'mid1' : '1Jan13_denom',
     'mid2' : '2Jan13_denom',
     'mid3' : '3Jan13_denom',

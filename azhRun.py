@@ -62,7 +62,6 @@ params = {
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalCuts', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
-    #'cutName' : 'PostSync', #!
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
 #XXX    'cutMapper' : 'syncCutsDCqcdTES',
@@ -71,7 +70,6 @@ params = {
     #'cutMapper' : 'syncCutsNtuple',
     'cutMapper' : 'signalCuts',
 #XXX    'cutMapper' : 'fakeFactorCutsTT',
-    'cutName' : 'BaseLine',
     'mid1' : '1June26',
     'mid2' : '2June26',
     'mid3' : '3June26',

@@ -13,7 +13,7 @@ from ROOT import gPad, gROOT
 
 
 #for sample in samples :
-def initialCut( outFile, analysis, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
     #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -48,17 +48,15 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, cutName, svFitPre
     
     
     ''' Get channel specific general cuts '''
-    exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
+    #exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
+    cutString = analysisCuts.getCut( analysis, channel, cutMapper )
     	
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
     
-    cutString = ' && '.join(cutMap[ cutName ])
-    cutString = '('+cutString+')'
     chainNew = analysisCuts.makeGenCut( chain, cutString )
     numEntries = chainNew.GetEntries()
-    #print "%25s : %10i" % (cutName, numEntries)
-    postCutQty = "%25s : %10i" % (cutName, numEntries)
+    postCutQty = "%25s : %10i" % (cutMapper, numEntries)
     
     #treeOutDir.cd()
     #chainNew.Write()
@@ -67,7 +65,7 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, cutName, svFitPre
 
 
 
-def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle,svFitPrep,svFitPost) :
+def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost) :
 
     if 'data' in sample : save = 'data_%i_%s' % (count, channel)
     else : save = '%s_%i_%s' % (sample, count, channel)
@@ -81,7 +79,7 @@ def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,cutName,
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
-    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
     cutOut[1].Write()
@@ -96,7 +94,7 @@ def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,cutName,
         print "Over 1000 iterations.  Summary skipped"
 
 
-def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
+def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle) :
 
     #if svFitPost == 'true' : SVF = True
     #else : SVF = False
@@ -173,7 +171,6 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['cutName'],
                                                                                     fargs['numFilesPerCycle'],
                                                                                     fargs['svFitPrep'],
                                                                                     fargs['svFitPost'])) )
@@ -195,8 +192,7 @@ def doInitialCuts(analysis, samples, **fargs) :
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
     print "\n"
 
-    print " --- CutTable used: %s" % fargs['cutMapper']
-    print " --- Cut used: %s" % fargs['cutName']
+    print " --- Cut used: %s" % fargs['cutMapper']
     print " --- Analysis: %s" % analysis
     print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
     print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])
@@ -269,7 +265,6 @@ def doInitialOrder(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['cutName'],
                                                                                     fargs['numFilesPerCycle'])) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
@@ -281,7 +276,6 @@ def doInitialOrder(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['cutName'],
                                                                                     fargs['numFilesPerCycle'])
                 num +=  1
     
@@ -307,8 +301,7 @@ def doInitialOrder(analysis, samples, **fargs) :
         print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
         print "\n"
         
-        print " --- CutTable used: %s" % fargs['cutMapper']
-        print " --- Cut used: %s" % fargs['cutName']
+        print " --- Cut used: %s" % fargs['cutMapper']
         print " --- Analysis: %s" % analysis
         print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
         print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])

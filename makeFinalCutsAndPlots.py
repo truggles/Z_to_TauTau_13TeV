@@ -36,6 +36,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     
     ''' Preset samples '''
     SamplesDataCards = ['data_em', 'data_tt', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April24, removed LO DYJets small sample and DYJets m-150
+    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'data_tt'] # As of April23, removed DYJets LO small sample
     
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
     for mass in masses :
@@ -47,7 +48,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     samples = SamplesDataCards
     params = {
         'numCores' : 15,
-        'numFilesPerCycle' : 1,
+        'numFilesPerCycle' : 20,
         'channels' : ['tt',],
         'mid1' : '1Feb24a',
         'mid2' : folder,
@@ -84,17 +85,17 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
         Inclusive
     """
     ''' FINAL SELECTIONS MSSM '''
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_%sl1ml2_%s_%sBTL' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose>0)*(njets<=1)' % (Zsign, isoL1ML2loose)
-    samples = setUpDirs( samples, params, analysis )
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_%sl1ml2_%s_%sBTL' % (sign, isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose>0)*(njets<=1)' % (Zsign, isoL1ML2loose)
+    #samples = setUpDirs( samples, params, analysis )
+    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    params['channels'] = ['tt',]
-    params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose==0)' % (Zsign, isoL1ML2loose)
-    samples = setUpDirs( samples, params, analysis )
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    #params['channels'] = ['tt',]
+    #params['mid3'] = folder+'_%sl1ml2_%s_%sNoBTL' % (sign, isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose==0)' % (Zsign, isoL1ML2loose)
+    #samples = setUpDirs( samples, params, analysis )
+    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ''' FINAL SELECTIONS ZTT && HIG-15-007 ZTT '''
     params['channels'] = ['tt',]
@@ -257,10 +258,8 @@ def makeCuts( folder ) :
         #'cutMapper' : 'signalCutsNoIsoNoSign', #!
         #'cutMapper' : 'signalCutsNoSign', #!
         #'cutMapper' : 'signalExtractionNoSign', #!
-        #'cutName' : 'PostSync', #!
         #'cutMapper' : 'syncCutsDC',
         #'cutMapper' : 'syncCutsNtuple',
-        #'cutName' : 'BaseLine',
         'mid1' : '1Feb24a',
         'mid2' : folder,
         'additionalCut' : '',
