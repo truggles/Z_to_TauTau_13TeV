@@ -49,7 +49,12 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
     
     ''' Get channel specific general cuts '''
     #exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
-    cutString = analysisCuts.getCut( analysis, channel, cutMapper )
+    cutString = ''
+    if 'data' in sample :
+        isData = True
+        cutString = analysisCuts.getCut( analysis, channel, cutMapper, isData )
+    else :
+        cutString = analysisCuts.getCut( analysis, channel, cutMapper )
     	
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
@@ -210,7 +215,7 @@ def doInitialCuts(analysis, samples, **fargs) :
         totalOut += int(item[5].split(' ')[-1])
     
     print "\nTotal In:", totalIn
-    print "Total Out:", totalIn,"\n"
+    print "Total Out:", totalOut,"\n"
     print "Start Time: %s" % str( begin )
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
@@ -376,6 +381,7 @@ def drawHistos(analysis, samples, **fargs ) :
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen
+                print "Num files / cycle:",fargs['numFilesPerCycle']
                 numIters = int( math.ceil( fileLen / fargs['numFilesPerCycle'] ) )
                 print "Num Iters: %i" % numIters
 
