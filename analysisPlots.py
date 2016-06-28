@@ -186,16 +186,16 @@ def getHistoDict( channel ) :
 #        'jpt_2' : ('jpt_2', 400, 0, 400),
 #        'jeta_2' : ('jeta_2', 100, -5, 5),
 #        'weight' : ('weight', 60, -30, 30),
-#        'npv' : ('npv', 50, 0, 50),
-#        'npu' : ('npu', 50, 0, 50),
-        'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
+        'npv' : ('npv', 50, 0, 50),
+        'npu' : ('npu', 50, 0, 50),
+#        'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
 #        'm_vis_varB' : ('m_vis', 600, 0, 600),
         'm_vis' : ('m_vis', 350, 0, 350),
-        'm_sv_mssm' : ('m_sv', 3900, 0, 3900),
+#        'm_sv_mssm' : ('m_sv', 3900, 0, 3900),
 #        'm_sv_varB' : ('m_sv', 600, 0, 600),
-        'm_sv' : ('m_sv', 350, 0, 350),
-        'mt_sv_mssm' : ('mt_sv', 3900, 0, 3900),
-        'mt_tot_mssm' : ('mt_tot', 3900, 0, 3900),
+#        'm_sv' : ('m_sv', 350, 0, 350),
+#        'mt_sv_mssm' : ('mt_sv', 3900, 0, 3900),
+#        'mt_tot_mssm' : ('mt_tot', 3900, 0, 3900),
 #        'mt_sv_varB' : ('mt_sv', 600, 0, 600),
 #XX        'mt_sv' : ('mt_sv', 350, 0, 350),
 #        'pt_1' : ('pt_1', 400, 0, 400),
@@ -216,18 +216,18 @@ def getHistoDict( channel ) :
     }
 
     ''' added shape systematics '''
-    toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
-    varsForShapeSyst = []
-    for item in toAdd :
-        varsForShapeSyst.append( item )
-        varsForShapeSyst.append( item+'_mssm' )
-    shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-    for var in genVarMap.keys() :
-        if var in varsForShapeSyst :
-            for shape in shapesToAdd :
-                genVarMap[ var+'_'+shape+'Up' ] = genVarMap[ var ]
-                genVarMap[ var+'_'+shape+'Down' ] = genVarMap[ var ]
-        
+    #toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
+    #varsForShapeSyst = []
+    #for item in toAdd :
+    #    varsForShapeSyst.append( item )
+    #    varsForShapeSyst.append( item+'_mssm' )
+    #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
+    #for var in genVarMap.keys() :
+    #    if var in varsForShapeSyst :
+    #        for shape in shapesToAdd :
+    #            genVarMap[ var+'_'+shape+'Up' ] = genVarMap[ var ]
+    #            genVarMap[ var+'_'+shape+'Down' ] = genVarMap[ var ]
+    #    
 
     if channel == 'em' :
         # Provides a list of histos to create for 'EM' channel
