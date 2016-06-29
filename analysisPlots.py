@@ -76,7 +76,7 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
     histosDir.cd()
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
-    for var, cv in newVarMap.iteritems() :
+    for var, info in newVarMap.iteritems() :
 
 
         ''' Skip plotting unused shape systematics '''
@@ -105,19 +105,20 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
         shapeSyst += ESCuts( sample, channel, var )
 
 
-    	histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
+    	histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # and, top pt reweighting
         # weight is a composition of all applied MC/Data corrections
-        sfs = '*(weight)' 
+        #sfs = '*(weight)' 
+        sfs = '*(effweight*puweight)' 
         xsec = '*(XSecLumiWeight)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         dataES = '*(pt_1 > 40 && pt_2 > 40)'
         #print var,es
         #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s' % (xsec, additionalCut)
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
 
 
         # Check if the variable to plot is in the chain, if not, skip it
@@ -127,21 +128,22 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
             varBase = var.split('_')[0]
         if '_sv' in var :
             varBase += '_sv'
+        #print "Var: %s   VarBase: %s" % (var, varBase)
         if hasattr( chain, varBase ) :
             #print "trying"
             if isData : # Data has no GenWeight and by def has puweight = 1
                 if var == 'm_vis' and blind :
-                    chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '(m_vis < 150)%s' % additionalCut )
+                    chain.Draw( '%s>>%s' % (var, var), '(m_vis < 150)%s' % additionalCut )
                     histos[ var ] = gPad.GetPrimitive( "%s" % var )
                 else :
-                    chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '1%s%s' % (additionalCut, dataES) )
+                    chain.Draw( '%s>>%s' % (var, var), '1%s%s' % (additionalCut, dataES) )
                     histos[ var ] = gPad.GetPrimitive( "%s" % var )
                     if var == 'm_vis' :
                         print 'm_vis'
                         print "Data Count:", histos[ var ].Integral()
             else :
 
-                chain.Draw( '%s>>%s' % (newVarMap[ var ][0], var), '%s' % totalCutAndWeightMC )
+                chain.Draw( '%s>>%s' % (var, var), '%s' % totalCutAndWeightMC )
                 ''' No reweighting at the moment! '''
                 histos[ var ] = gPad.GetPrimitive( var )
                 if chain.GetEntries() > 0 :
@@ -151,7 +153,7 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
                         print "tmpIntPost: %f" % integralPost
                 else :
                     print " #### ENTRIES = 0 #### "
-                    histos[ var ] = makeHisto( var, cv[1], cv[2], cv[3])
+                    histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
         # didn't have var in chain
         else : 
@@ -167,57 +169,44 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
 # Provides a list of histos to create for both channels
 def getHistoDict( channel ) :
     genVarMap = {
-#        'Z_SS' : ('Z_SS', 20, 0, 2),
-        'Z_Pt' : ('Z_Pt', 400, 0, 400),
-        'Z_DR' : ('Z_DR', 500, 0, 5),
-        'Z_DPhi' : ('Z_DPhi', 800, -4, 4),
-        #'LT' : ('LT', 600, 0, 600),
-#        'Mt' : ('Mt', 600, 0, 600),
-#        'met' : ('met', 400, 0, 400),
-#        'metphi' : ('metphi', 80, -4, 4),
-#        'mvamet' : ('mvamet', 100, 0, 400),
-#        'mvametphi' : ('mvametphi', 100, -5, 5),
-        #'bjetCISVVeto20Medium' : ('bjetCISVVeto20Medium', 60, 0, 5),
-        #'njetspt20' : ('njetspt20', 100, 0, 10),
-        #'jetVeto30' : ('jetVeto30', 100, 0, 10),
-        #'jetVeto40' : ('jetVeto40', 100, 0, 10),
-#        'nbtag' : ('nbtag', 6, 0, 6),
-        #'bjetCISVVeto30Medium' : ('bjetCISVVeto30Medium', 6, 0, 6),
-        #'bjetCISVVeto30Tight' : ('bjetCISVVeto30Tight', 6, 0, 6),
-#        'extraelec_veto' : ('extraelec_veto', 20, 0, 2),
-#        'extramuon_veto' : ('extramuon_veto', 20, 0, 2),
-        #'jpt_1' : ('jpt_1', 400, 0, 400),
-        #'jeta_1' : ('jeta_1', 100, -5, 5),
-        #'jpt_2' : ('jpt_2', 400, 0, 400),
-        #'jeta_2' : ('jeta_2', 100, -5, 5),
-#        'weight' : ('weight', 60, -30, 30),
-        'npv' : ('npv', 50, 0, 50),
-        #'npu' : ('npu', 50, 0, 50),
-#        'm_vis_mssm' : ('m_vis', 3900, 0, 3900),
-#        'm_vis_varB' : ('m_vis', 600, 0, 600),
-        'm_vis' : ('m_vis', 350, 0, 350),
-#        'm_sv_mssm' : ('m_sv', 3900, 0, 3900),
-#        'm_sv_varB' : ('m_sv', 600, 0, 600),
-#        'm_sv' : ('m_sv', 350, 0, 350),
-#        'mt_sv_mssm' : ('mt_sv', 3900, 0, 3900),
-#        'mt_tot_mssm' : ('mt_tot', 3900, 0, 3900),
-#        'mt_sv_varB' : ('mt_sv', 600, 0, 600),
-#XX        'mt_sv' : ('mt_sv', 350, 0, 350),
-        'pt_1' : ('pt_1', 400, 0, 400),
-        'eta_1' : ('eta_1', 80, -4, 4),
-#XXX        'iso_1' : ('iso_1', 100, 0, 1),
- #XXX       'iso_1' : ('byIsolationMVArun2v1DBoldDMwLTraw_1', 200, -1, 1),
-#        'mt_1' : ('mt_1', 400, 0, 400),
-        'pt_2' : ('pt_2', 400, 0, 400),
-        'eta_2' : ('eta_2', 80, -4, 4),
-#XXX        'iso_2' : ('iso_2', 100, 0, 1),
- #XXX       'iso_2' : ('byIsolationMVArun2v1DBoldDMwLTraw_2', 200, -1, 1),
-#        'mt_2' : ('mt_2', 400, 0, 400),
-#        'Z_DEta' : ('eta_1 - eta_2', 1000, -5, 5),
-#        'pzetavis' : ('pzetavis', 1000, -100, 900),
-#        'pfpzetamis' : ('pfpzetamis', 1000, -100, 900),
-#        'pzetamiss' : ('pzetamiss', 1000, -400, 600),
-#        'pZeta-0.85pZetaVis' : ('pzetamiss - 0.85 * pzetavis', 1000, -500, 500),
+#        'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
+        'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
+        'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
+        'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
+        'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
+        'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
+        'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
+#        'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+#        'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
+#        'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+#        'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
+        'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
+        'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
+        'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
+        'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+        #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
+        #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
+        'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
+        #'extraelec_veto' : (20, 0, 2, 1, 'Extra Electron Veto', ''),
+        #'extramuon_veto' : (20, 0, 2, 1, 'Extra Muon Veto', ''),
+        'jpt_1' : (400, 0, 200, 20, 'Leading Jet Pt', ' GeV'),
+        'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
+        'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
+        'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
+#        'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
+        'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
+        #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
+#        'm_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
+        'm_vis' : (350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
+#        'm_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
+#        'm_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
+#        'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
+#        'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+#XX        'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
+#        'mt_tot' : (350, 0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+#        'pzetavis' : (300, 0, 300, 20, 'pZetaVis', ' GeV'),
+#        'pfpzetamis' : (300, 0, 300, 20, 'pfpZetaMis', ' GeV'),
+#        'pzetamiss' : (500, -200, 300, 20, 'pZetaMis', ' GeV'),
     }
 
     ''' added shape systematics '''
@@ -237,14 +226,21 @@ def getHistoDict( channel ) :
     if channel == 'em' :
         # Provides a list of histos to create for 'EM' channel
         chanVarMapEM = {
-            'eJetPt' : ('eJetPt', 400, 0, 400),
-            'mJetPt' : ('mJetPt', 400, 0, 400),
-            #'m_sv' : ('m_sv', 1000, 0, 1000),
-            #'pt_H' : ('e_m_Pt + mvamet', 1000, 0, 1000),
-            #'ePVDZ' : ('ePVDZ', 100, -1, 1),
-            #'ePVDXY' : ('ePVDXY', 100, -.2, .2),
-            #'mPVDZ' : ('mPVDZ', 100, -1, 1),
-            #'mPVDXY' : ('mPVDXY', 100, -.2, .2),
+            'pt_1' : (200, 0, 200, 10, 'e p_{T} [GeV]', ' GeV'),
+            'eta_1' : (60, -3, 3, 2, 'e Eta', ' Eta'),
+            #'iso_1' : (20, 0, 0.2, 1, 'e RelIsoDB03', ''),
+            'mt_1' : (200, 0, 200, 5, 'e m_{T} [GeV]', ' GeV'),
+            'pt_2' : (200, 0, 200, 10, 'm p_{T} [GeV]', ' GeV'),
+            'eta_2' : (60, -3, 3, 2, 'm Eta', ' Eta'),
+            #'iso_2' : (20, 0, 0.2, 1, 'm RelIsoDB03', ''),
+            'mt_2' : (200, 0, 200, 5, 'm m_{T} [GeV]', ' GeV'),
+            'eJetPt' : (200, 0, 200, 10, 'e Overlapping Jet Pt', ' GeV'),
+            'mJetPt' : (200, 0, 200, 10, 'm Overlapping Jet Pt', ' GeV'),
+            #'e_m_Pt + mvamet' : (400, 0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
+            #'ePVDZ' : (25, -.25, .25, 1, "e PVDZ [cm]", " cm"),
+            #'ePVDXY' : (50, -.1, .1, 2, "e PVDXY [cm]", " cm"),
+            #'mPVDZ' : (25, -.25, .25, 1, "m PVDZ [cm]", " cm"),
+            #'mPVDXY' : (50, -.1, .1, 2, "m PVDXY [cm]", " cm"),
         }
         for key in chanVarMapEM.keys() :
             genVarMap[ key ] = chanVarMapEM[ key ]
@@ -253,131 +249,28 @@ def getHistoDict( channel ) :
     # Provides a list of histos to create for 'TT' channel
     if channel == 'tt' :
         chanVarMapTT = {
-            #'m_sv' : ('m_sv', 1000, 0, 1000),
-            #'pt_H' : ('t1_t2_Pt + mvamet', 1000, 0, 1000),
-            #'decayMode_1' : ('decayMode_1', 12, 0, 12),
-#            't1JetPt' : ('t1JetPt', 400, 0, 400),
-            'm_1' : ('m_1', 60, 0, 3),
-            #'decayMode_2' : ('decayMode_2', 12, 0, 12),
-#            't2JetPt' : ('t2JetPt', 400, 0, 400),
-            'm_2' : ('m_2', 60, 0, 3),
+            'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
+            'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
+            'byIsolationMVArun2v1DBoldDMwLTraw_1' : (200, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
+            'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
+            'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
+            'byIsolationMVArun2v1DBoldDMwLTraw_2' : (200, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
+            'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
+#            't1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
+            'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
+            'decayMode_2' : (15, 0, 15, 1, 't2 Decay Mode', ''),
+#            't2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
+            'm_2' : (60, 0, 3, 4, 't2 Mass', ' GeV'),
+            #'t1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
+            #'t1NeutralIsoPtSum' : (0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'),
+            #'t1PuCorrPtSum' : (0, 40, 4, 't1 PuCorrPtSum', ' GeV'),
+            #'t2ChargedIsoPtSum' : (0, 10, 8, 't2 ChargedIsoPtSum', ' GeV'),
+            #'t2NeutralIsoPtSum' : (0, 10, 8, 't2 NeutralIsoPtSum', ' GeV'),
+            #'t2PuCorrPtSum' : (0, 40, 4, 't2 PuCorrPtSum', ' GeV'),
         }
         for key in chanVarMapTT.keys() :
             genVarMap[ key ] = chanVarMapTT[ key ]
         return genVarMap
 
 
-def getPlotDetails( channel ) :
-    plotDetails = {
-        'm_vis_mssm' : (0, 3900, 10, 'Z Vis Mass [GeV]', ' GeV'),
-#XXX        'm_vis_varB' : (0, 600, 10, 'Z Vis Mass [GeV]', ' GeV'),
-        'm_vis' : (0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
-#XXX        'm_vis' : (0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'),
-        'm_sv_mssm' : (0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
-#XXX        'm_sv_varB' : (0, 600, 10, 'Z svFit Mass [GeV]', ' GeV'),
-        'm_sv' : (0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
-#XXX        'm_sv' : (0, 350, 1, 'Z svFit Mass [GeV]', ' GeV'),
-        'mt_sv_mssm' : (0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-#XXX        'mt_sv_varB' : (0, 600, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_sv' : (0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-#XXX        'mt_sv' : (0, 350, 1, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_tot_mssm' : (0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'mt_tot' : (0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-        'Z_Pt' : (0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
-        'Z_SS' : (-1, 1, 1, 'Z Same Sign', ''),
-        'met' : (0, 250, 20, 'pfMet [GeV]', ' GeV'),
-        'metphi' : (-4, 4, 10, 'pfMetPhi', ''),
-        'mvamet' : (0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-        'mvametphi' : (-5, 5, 2, 'mvaMetPhi', ''),
-        'LT' : (0, 300, 20, 'Total LT [GeV]', ' GeV'),
-        'Mt' : (0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-        'nbtag' : (0, 6, 1, 'nBTag', ''),
-        'bjetCISVVeto30Medium' : (0, 6, 1, 'nBTag_30Medium', ''),
-        'bjetCISVVeto30Tight' : (0, 6, 1, 'nBTag_30Tight', ''),
-        'njetspt20' : (0, 10, 10, 'nJetPt20', ''),
-        'jetVeto30' : (0, 10, 10, 'nJetPt30', ''),
-        'jetVeto40' : (0, 10, 10, 'nJetPt40', ''),
-        'jpt_1' : (0, 200, 20, 'Leading Jet Pt', ' GeV'),
-        'jeta_1' : (-5, 5, 10, 'Leading Jet Eta', ' Eta'),
-        'jpt_2' : (0, 200, 20, 'Second Jet Pt', ' GeV'),
-        'jeta_2' : (-5, 5, 10, 'Second Jet Eta', ' Eta'),
-        'extraelec_veto' : (0, 2, 1, 'Extra Electron Veto', ''),
-        'extramuon_veto' : (0, 2, 1, 'Extra Muon Veto', ''),
-        'weight' : (-30, 30, 1, 'Gen Weight', ''),
-        'npv' : (0, 40, 2, 'Number of Vertices', ''),
-        'npu' : (0, 40, 2, 'Number of True PU Vertices', ''),
-        'pzetavis' : (0, 300, 20, 'pZetaVis', ' GeV'),
-        'pfpzetamis' : (0, 300, 20, 'pfpZetaMis', ' GeV'),
-        'pzetamiss' : (-200, 300, 20, 'pZetaMis', ' GeV'),
-        'pZeta-0.85pZetaVis' : (-300, 300, 20, 'pZetaMis - 0.85 x pZetaVis', ' GeV'),
-        'Z_DR' : (0, 5, 20, 'Z dR', ' dR'),
-        'Z_DPhi' : (-4, 4, 40, 'Z dPhi', ' dPhi'),
-        'Z_DEta' : (-5, 5, 40, 'Z dEta', ' dEta'),
-        #'m_sv' : (0, 600, 20, 'ditau svFit Mass', ' GeV'),
-        #'pt_H' : (0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
-        }
-
-    ''' added shape systematics '''
-    toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
-    varsForShapeSyst = []
-    for item in toAdd :
-        varsForShapeSyst.append( item )
-        varsForShapeSyst.append( item+'_mssm' )
-    shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-    for var in plotDetails.keys() :
-        if var in varsForShapeSyst :
-            for shape in shapesToAdd :
-                plotDetails[ var+'_'+shape+'Up' ] = plotDetails[ var ]
-                plotDetails[ var+'_'+shape+'Down' ] = plotDetails[ var ]
-        
-
-    if channel == 'em' :
-        plotDetailsEM  = {
-        'eta_1' : (-3, 3, 2, 'e Eta', ' Eta'),
-        'pt_1' : (0, 200, 10, 'e p_{T} [GeV]', ' GeV'),
-        'mt_1' : (0, 200, 5, 'e m_{T} [GeV]', ' GeV'),
-        'ePVDXY' : (-.1, .1, 2, "e PVDXY [cm]", " cm"),
-        'ePVDZ' : (-.25, .25, 1, "e PVDZ [cm]", " cm"),
-        'eRelPFIsoDB' : (0, 0.2, 1, 'e RelPFIsoDB', ''),
-        'iso_1' : (0, 0.2, 1, 'e RelIsoDB03', ''),
-        'eJetPt' : (0, 200, 10, 'e Overlapping Jet Pt', ' GeV'),
-        'eta_2' : (-3, 3, 2, 'm Eta', ' Eta'),
-        'pt_2' : (0, 200, 10, 'm p_{T} [GeV]', ' GeV'),
-        'mt_2' : (0, 200, 5, 'm m_{T} [GeV]', ' GeV'),
-        'mPVDXY' : (-.1, .1, 2, "m PVDXY [cm]", " cm"),
-        'mPVDZ' : (-.25, .25, 1, "m PVDZ [cm]", " cm"),
-        'mRelPFIsoDBDefault' : (0, 0.3, 1, 'm RelPFIsoDB', ''),
-        'iso_2' : (0, 0.2, 1, 'm RelIsoDB03', ''),
-        'mJetPt' : (0, 200, 10, 'm Overlapping Jet Pt', ' GeV'),
-        }
-        for key in plotDetailsEM.keys() :
-            plotDetails[ key ] = plotDetailsEM[ key ]
-        return plotDetails
-
-    if channel == 'tt' :
-        plotDetailsTT = {
-        'iso_1' : (-1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
-        'eta_1' : ( -3, 3, 4, '#tau_{1} Eta', ' Eta'),
-        'pt_1' : (0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
-        'mt_1' : (0, 200, 20, '#tau_{1} m_{T} [GeV]', ' GeV'),
-        'm_1' : (0, 3, 4, 't1 Mass', ' GeV'),
-        'decayMode_1' : (0, 15, 1, 't1 Decay Mode', ''),
-        'iso_2' : (-1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
-        'eta_2' : ( -3, 3, 4, '#tau_{2} Eta', ' Eta'),
-        'pt_2' : (0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
-        'mt_2' : (0, 200, 20, '#tau_{2} m_{T} [GeV]', ' GeV'),
-        'm_2' : (0, 3, 4, 't2 Mass', ' GeV'),
-        'decayMode_2' : (0, 15, 1, 't2 Decay Mode', ''),
-        't1JetPt' : (0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
-        't2JetPt' : (0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
-        't1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
-        't1NeutralIsoPtSum' : (0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'),
-        't1PuCorrPtSum' : (0, 40, 4, 't1 PuCorrPtSum', ' GeV'),
-        't2ChargedIsoPtSum' : (0, 10, 8, 't2 ChargedIsoPtSum', ' GeV'),
-        't2NeutralIsoPtSum' : (0, 10, 8, 't2 NeutralIsoPtSum', ' GeV'),
-        't2PuCorrPtSum' : (0, 40, 4, 't2 PuCorrPtSum', ' GeV'),
-        }
-        for key in plotDetailsTT.keys() :
-            plotDetails[ key ] = plotDetailsTT [ key ]
-        return plotDetails
 

@@ -163,7 +163,6 @@ for channel in ['em', 'tt'] :
     print channel
 
     newVarMap = analysisPlots.getHistoDict( channel )
-    plotDetails = analysisPlots.getPlotDetails( channel )
 
     baseVar = options.fitShape
     if 'data' in sample : print "Fitting",baseVar
@@ -186,7 +185,7 @@ for channel in ['em', 'tt'] :
     shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
     print shapeDir
 
-    for var, info in newVarMap.iteritems() :
+    for var in newVarMap.keys() :
 
         if not baseVar in var : continue
         if options.allShapes :
@@ -207,8 +206,7 @@ for channel in ['em', 'tt'] :
 
 
         # Defined out here for large scope
-        name = info[0]
-        print "Var: %s      Name: %s" % (var, name)
+        print "Var: %s",var
 
         #if not options.sync :
         #    binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )

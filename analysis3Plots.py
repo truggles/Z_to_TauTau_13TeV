@@ -173,7 +173,6 @@ for channel in ['em', 'tt'] :
     print channel
 
     newVarMap = analysisPlots.getHistoDict( channel )
-    plotDetails = analysisPlots.getPlotDetails( channel )
 
     finalQCDYield = 0.0
     finalDataYield = 0.0
@@ -196,8 +195,7 @@ for channel in ['em', 'tt'] :
         #if not (var == 'pZeta-0.85pZetaVis' or var == 'm_vis') : continue
         #if not 'm_vis_mssm' in var : continue
         #if not (var == 't1DecayMode' or var == 't2DecayMode') : continue
-        name = info[0]
-        print "Var: %s      Name: %s" % (var, name)
+        print "Var:",var
 
 
         """
@@ -226,9 +224,9 @@ for channel in ['em', 'tt'] :
             xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
         else :
             varBinned = False
-            first = info[2] * 1.
-            last = info[3] * 1.
-            totBins = ( info[1] / (plotDetails[ var ][2]) ) * 1.
+            first = info[1] * 1.
+            last = info[2] * 1.
+            totBins = ( info[0] / (info[3]) ) * 1.
             binWidth = (last - first)/totBins
             #print first, last, totBins, binWidth
             xBins = array('d', []) 
@@ -385,7 +383,7 @@ for channel in ['em', 'tt'] :
                 print "QCD yield: %f" % preHist.Integral()
                 hist = ROOT.TH1F( preHist )
             else :
-                #preHist.Rebin( plotDetails[ var ][2] )
+                #preHist.Rebin( info[2] )
                 #print "Rebinning"
                 #print xNum
                 #print xBins
@@ -555,8 +553,8 @@ for channel in ['em', 'tt'] :
             # Add the shape estimated here to the stack pre-scaling!!!
             stack.Add( qcdVar ) 
             if var == 'm_vis_mssm' :
-                print "M_VIS_MSSM plot details: %f %f" % (plotDetails[ var ][0], plotDetails[ var ][1])
-            qcdVar.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+                print "M_VIS_MSSM plot details: %f %f" % (info[1], info[2])
+            qcdVar.GetXaxis().SetRangeUser( info[1], info[2] )
             print "qcdVar: %f   mean %f" % (qcdVar.Integral(), qcdVar.GetMean() )
             if var == 'mt_sv_mssm' :
                 #print "QCD Binning"
@@ -582,7 +580,7 @@ for channel in ['em', 'tt'] :
                 higgs.Draw('same')
             data.Draw('esamex0')
             # X Axis!
-            stack.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
+            stack.GetXaxis().SetTitle("%s" % info[ 4 ])
 
         if options.ratio :
             smlPadSize = .25
@@ -606,13 +604,13 @@ for channel in ['em', 'tt'] :
             ratioHist.SetMarkerStyle( 21 )
             ratioPad.cd()
             ratioHist.Draw('ex0')
-            line = ROOT.TLine( plotDetails[ var ][0], 1, plotDetails[ var ][1], 1 )
+            line = ROOT.TLine( info[1], 1, info[2], 1 )
             line.SetLineColor(ROOT.kBlack)
             line.SetLineWidth( 1 )
             line.Draw()
             ratioHist.Draw('esamex0')
             # X Axis!
-            ratioHist.GetXaxis().SetTitle("%s" % plotDetails[ var ][ 3 ])
+            ratioHist.GetXaxis().SetTitle("%s" % info[ 4 ])
             ratioHist.GetYaxis().SetTitle("Data / MC")
             ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
             ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
@@ -633,14 +631,14 @@ for channel in ['em', 'tt'] :
 
         # Set Y axis titles appropriately
         #binWidth = str( round( hist.GetBinWidth(1), 0) )
-        if plotDetails[ var ][ 4 ] == '' :
+        if info[ 5 ] == '' :
             stack.GetYaxis().SetTitle("Events")
         else :
-            stack.GetYaxis().SetTitle("Events / %s%s" % (str(round(stack.GetStack().Last().GetBinWidth(1),1)), plotDetails[ var ][ 4 ])  )
+            stack.GetYaxis().SetTitle("Events / %s%s" % (str(round(stack.GetStack().Last().GetBinWidth(1),1)), info[ 5 ])  )
         #    if hist.GetBinWidth(1) < .5 :
-        #        stack.GetYaxis().SetTitle("Events / %s%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
+        #        stack.GetYaxis().SetTitle("Events / %s%s" % ( binWidth, info[ 5 ] ) )
         #    else :
-        #        stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, plotDetails[ var ][ 4 ] ) )
+        #        stack.GetYaxis().SetTitle("Events / %i%s" % ( binWidth, info[ 5 ] ) )
 
         stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % cmsLumi )
 
@@ -707,9 +705,9 @@ for channel in ['em', 'tt'] :
 
 
         pad1.Update()
-        stack.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+        stack.GetXaxis().SetRangeUser( info[1], info[2] )
         if options.ratio :
-            ratioHist.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+            ratioHist.GetXaxis().SetRangeUser( info[1], info[2] )
 
 
         """
@@ -718,7 +716,7 @@ for channel in ['em', 'tt'] :
         if options.addUncert :
             e1 = ROOT.TH1F("e1 %s" % append, "e1", xNum, xBins )
             e1.Sumw2()
-            e1.GetXaxis().SetRangeUser( plotDetails[ var ][0], plotDetails[ var ][1] )
+            e1.GetXaxis().SetRangeUser( info[1], info[2] )
             for k in range( e1.GetNbinsX()+1 ) :
                 e1.SetBinContent( k, stack.GetStack().Last().GetBinContent( k ) )
                 e1.SetBinError(k, binErrors[k] )
