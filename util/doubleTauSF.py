@@ -35,22 +35,50 @@ def CBeff(x, m0, sigma, alpha, n, norm):
         return norm * (leftArea + a * (1/ROOT.TMath.Power(t-b,n-1) - \
             1/ROOT.TMath.Power(absAlpha - b,n-1)) / (1-n)) / area
 
-def doubleTauTriggerEff( pt ) :
+def doubleTauTriggerEff( pt, iso ) :
 
     # Fit values from Riccardo
-    m0_d     = 3.45412e+01
-    sigma_d  = 5.63353e+00
-    alpha_d  = 2.49242e+00
-    n_d      = 3.35896e+00
-    norm_d   = 1.00000e+00
-    m0_mc    = 3.60274e+01
-    sigma_mc = 5.89434e+00
-    alpha_mc = 5.82870e+00
-    n_mc     = 1.83737e+00
-    norm_mc  = 9.58000e-01
+    # 2016B, 2 fb^-1
+    # https://indico.cern.ch/event/544712/contributions/2213574/attachments/1295299/1930984/htt_tau_trigger_17_6_2016.pdf
+    coefMap = {
+        'VTight' : {
+            'm0'     : 3.96158e+01,
+            'sigma'  : 7.87478e+00,
+            'alpha'  : 3.99837e+01,
+            'n'      : 6.70004e+01,
+            'norm'   : 7.57548e-01 },
+        'Tight' : {
+            'm0'     : 3.99131e+01,
+            'sigma'  : 7.77317e+00,
+            'alpha'  : 3.99403e+01,
+            'n'      : 1.40999e+02,
+            'norm'   : 7.84025e-01 },
+        'Medium' : {
+            'm0'     : 4.04241e+01,
+            'sigma'  : 7.95194e+00,
+            'alpha'  : 3.99649e+01,
+            'n'      : 1.41000e+02,
+            'norm'   : 8.00926e-01 },
+        'Loose' : {
+            'm0'     : 4.05980e+01,
+            'sigma'  : 7.87581e+00,
+            'alpha'  : 3.98818e+01,
+            'n'      : 1.41000e+02,
+            'norm'   : 7.98198e-01 },
+        'NoIso' : {
+            'm0'     : 4.14353e+01,
+            'sigma'  : 8.10732e+00,
+            'alpha'  : 9.58501e+00,
+            'n'      : 1.41000e+02,
+            'norm'   : 7.99738e-01 },
+    }
+
+    if iso not in coefMap.keys() :
+        print "\n\n Provided isolation for doubleTauTriggerEff is not valid\n\n"
+        return 1.
 
 
-    return CBeff( pt, m0_d, sigma_d, alpha_d, n_d, norm_d ) / CBeff( pt, m0_mc, sigma_mc, alpha_mc, n_mc, norm_mc )
+    return CBeff( pt, coefMap[iso]['m0'], coefMap[iso]['sigma'], coefMap[iso]['alpha'], coefMap[iso]['n'], coefMap[iso]['norm'] )
 
 
 

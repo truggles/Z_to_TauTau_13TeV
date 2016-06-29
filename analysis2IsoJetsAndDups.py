@@ -646,6 +646,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     trigweight_1B = tnew.Branch('trigweight_1', trigweight_1, 'trigweight_1/F')
     effweight = array('f', [ 0 ] )
     effweightB = tnew.Branch('effweight', effweight, 'effweight/F')
+    doubleTauTrigWeightL1 = array('f', [ 0 ] )
+    doubleTauTrigWeightL1B = tnew.Branch('doubleTauTrigWeightL1', doubleTauTrigWeightL1, 'doubleTauTrigWeightL1/F')
+    doubleTauTrigWeightL2 = array('f', [ 0 ] )
+    doubleTauTrigWeightL2B = tnew.Branch('doubleTauTrigWeightL2', doubleTauTrigWeightL2, 'doubleTauTrigWeightL2/F')
     idisoweight_1 = array('f', [ 0 ] )
     idisoweight_1B = tnew.Branch('idisoweight_1', idisoweight_1, 'idisoweight_1/F')
     idisoweight_2 = array('f', [ 0 ] )
@@ -838,6 +842,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 tauPtWeightDown[0] = 1
                 trigweight_1[0] = 1
                 effweight[0] = 1
+                doubleTauTrigWeightL1[0] = 1
+                doubleTauTrigWeightL2[0] = 1
                 idisoweight_1[0] = 1
                 idisoweight_2[0] = 1
                 topWeight[0] = 1
@@ -904,13 +910,36 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                 # Trigger Weights
                 effweight[0] = 1
+                doubleTauTrigWeightL1[0] = 1
+                doubleTauTrigWeightL2[0] = 1
                 #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
                 #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
                 #elif channel == 'tt' :
                 if channel == 'tt' :
                     trigweight_1[0] = 1
-                    effweight[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
+                    # L1 trigger efficiency is dependent on tau isolation
+                    # find tau iso and pass string for mapping appropriately
+                    tauIso = 'NoIso'
+                    if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Loose'
+                    if getattr( row, l1+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Medium'
+                    if getattr( row, l1+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Tight'
+                    if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'VTight'
+                    doubleTauTrigWeightL1[0] = doubleTauTriggerEff( l1Pt, tauIso )
+                    tauIso = 'NoIso'
+                    if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Loose'
+                    if getattr( row, l2+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Medium'
+                    if getattr( row, l2+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Tight'
+                    if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'VTight'
+                    doubleTauTrigWeightL2[0] = doubleTauTriggerEff( l2Pt, tauIso )
                 else : trigweight_1[0] = 1
                 
                 # top pt reweighting, only for ttbar events
@@ -929,7 +958,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
-
+                effweight[0] = doubleTauTrigWeightL1[0] * doubleTauTrigWeightL2[0]
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * effweight[0] * topWeight[0]
                 weight[0] *= zPtWeight[0]
