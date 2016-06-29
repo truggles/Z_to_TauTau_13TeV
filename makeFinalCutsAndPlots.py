@@ -47,7 +47,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     #SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
     samples = SamplesDataCards
     params = {
-        'numCores' : 10,
+        'numCores' : 5,
         'numFilesPerCycle' : 10,
         'channels' : ['tt',],
         'mid1' : '1Feb24a',
@@ -100,7 +100,8 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     ''' FINAL SELECTIONS ZTT && HIG-15-007 ZTT '''
     params['channels'] = ['tt',]
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*%s*(pt_1 > 60 && pt_2 > 60)' % (Zsign, isoL1ML2loose)
+    #params['additionalCut'] = '*(Z_SS==%i)*%s*(pt_1 > 60 && pt_2 > 60)' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
     samples = setUpDirs( samples, params, analysis )
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
     

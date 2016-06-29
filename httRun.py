@@ -11,6 +11,7 @@ import ROOT
 from ROOT import gPad, gROOT
 import analysis1BaselineCuts
 from util.helpers import setUpDirs 
+import subprocess
 ROOT.gROOT.Reset()
 
 
@@ -60,7 +61,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 10,
+    'numCores' : 15,
     'numFilesPerCycle' : 10,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
@@ -69,8 +70,8 @@ params = {
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
     'mid1' : '1June26c',
-    'mid2' : '2June26c',
-    'mid3' : '3June26c',
+    'mid2' : '2June29a',
+    'mid3' : '3June29a',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -80,11 +81,48 @@ params = {
 }
 
 samples = setUpDirs( samples, params, analysis )
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-
-
-
-
+runPlots = True
+if runPlots :
+    """ Make our folders with directories of histos for each bkg """
+    subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
+    
+    
+    """ Get samples with map of attributes """
+    import analysis3Plots
+    from meta.sampleNames import returnSampleDetails
+    samples = returnSampleDetails( analysis, samples )
+    
+    qcdYields = {}
+    for sign in ['SS', 'OS'] :
+        for name in ['VTight_Loose', 'VTight_'] :
+            kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT', }
+            folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'
+            qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
+            qcdYields[ sign+name ] = qcdYield
+    
+    print qcdYields
+    looseToTightRatio = qcdYields['SSVTight_'] / qcdYields['SSVTight_Loose']
+    qcdFile = open('httQCDYields.txt','w')
+    qcdFile.write( str(looseToTightRatio)+"\n" )
+    for key in qcdYields :
+        qcdFile.write( "%s : %.2f" % (key, qcdYields[key]) )
+    qcdFile.close()
+    
+    """ Final plots """
+    qcdSF = 1.0
+    with open('httQCDYields.txt') as qcdFile :
+        cnt = 0
+        for line in qcdFile :
+            qcdSF = float(line)
+            break
+    print qcdSF
+    
+    kwargs = { 'text':True, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_VTight_LooseZTT', 'qcdSF':qcdSF }
+    analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_VTight_ZTT' % params['mid2'], **kwargs  )
+    
+    
+    

@@ -112,6 +112,7 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
         # weight is a composition of all applied MC/Data corrections
         #sfs = '*(weight)' 
         sfs = '*(effweight*puweight)' 
+        sfs = '*(effweight)' 
         xsec = '*(XSecLumiWeight)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
@@ -169,17 +170,17 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
 # Provides a list of histos to create for both channels
 def getHistoDict( channel ) :
     genVarMap = {
-#        'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
+        #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
         'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
         'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
         'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
         'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
         'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
         'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-#        'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
-#        'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
-#        'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-#        'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
+        #'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+        #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
+        #'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+        #'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
         'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
         'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
         'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
@@ -193,20 +194,20 @@ def getHistoDict( channel ) :
         'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
         'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
         'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
-#        'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
+        #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
         'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
         #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
-#        'm_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
+        #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
         'm_vis' : (350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
-#        'm_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
-#        'm_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
-#        'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-#        'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-#XX        'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-#        'mt_tot' : (350, 0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-#        'pzetavis' : (300, 0, 300, 20, 'pZetaVis', ' GeV'),
-#        'pfpzetamis' : (300, 0, 300, 20, 'pfpZetaMis', ' GeV'),
-#        'pzetamiss' : (500, -200, 300, 20, 'pZetaMis', ' GeV'),
+        #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
+        #'m_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
+        #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
+        #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        #'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
+        #'mt_tot' : (350, 0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+        #'pzetavis' : (300, 0, 300, 20, 'pZetaVis', ' GeV'),
+        #'pfpzetamis' : (300, 0, 300, 20, 'pfpZetaMis', ' GeV'),
+        #'pzetamiss' : (500, -200, 300, 20, 'pZetaMis', ' GeV'),
     }
 
     ''' added shape systematics '''
@@ -250,16 +251,18 @@ def getHistoDict( channel ) :
     if channel == 'tt' :
         chanVarMapTT = {
             'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
+            'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
             'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
             'byIsolationMVArun2v1DBoldDMwLTraw_1' : (200, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
             'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
+            'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
             'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
             'byIsolationMVArun2v1DBoldDMwLTraw_2' : (200, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
             'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
-#            't1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
+            #'t1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
             'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
             'decayMode_2' : (15, 0, 15, 1, 't2 Decay Mode', ''),
-#            't2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
+            #'t2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
             'm_2' : (60, 0, 3, 4, 't2 Mass', ' GeV'),
             #'t1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
             #'t1NeutralIsoPtSum' : (0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'),

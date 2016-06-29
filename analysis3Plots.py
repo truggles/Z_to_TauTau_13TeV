@@ -54,8 +54,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 samples[ sample+'-'+gen ]['group'] = genApp
                 #print newSamples[ sample+'-'+gen ]
     #print newSamples
+
+    # Clean the samples list
     for dyJet in dyJets :
-        del samples[ dyJet ]
+        if dyJet in samples.keys() :
+            del samples[ dyJet ]
     samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
 
@@ -712,3 +715,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
         #if qcdVarIntegral :
         #    print "\n\n     QCD yield: %f           QCD Make: %s\n\n" % (qcdVarIntegral ,ops['qcdMakeDM'])
+    return finalQCDYield
+
+
+
