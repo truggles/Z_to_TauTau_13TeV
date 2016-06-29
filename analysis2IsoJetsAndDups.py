@@ -301,15 +301,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
     #ffqcd = ff_file.Get('ff_qcd_os') 
 
+    sameNameVars = [
+    'run','lumi','evt','GenWeight','LT','charge','jetVeto30','jetVeto40',
+    'bjetCISVVeto20Medium','Mt','bjetCISVVeto30Medium','bjetCISVVeto30Tight',]
+
     branchMapping = {
-        'run' : 'run',
-        'lumi' : 'lumi',
-        'evt' : 'evt',
-        'GenWeight' : 'GenWeight',
         'nvtx' : 'npv',
         'nTruePU' : 'npu',
-        'LT' : 'LT',
-        'charge' : 'charge',
         'j1pt' : 'jpt_1',
         'j1phi' : 'jphi_1',
         'j1eta' : 'jeta_1',
@@ -334,8 +332,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'jetVeto20ZTT' : 'njetspt20',
         #'jetVeto30RecoilZTT' : 'njets',
         'jetVeto30ZTT' : 'njets',
-        'jetVeto30' : 'jetVeto30',
-        'jetVeto40' : 'jetVeto40',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
@@ -409,13 +405,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
         'cand_MtToPfMet_Raw' : 'pfmt',
-        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'ByIsolationMVArun2v1DBoldDMwLTraw',
+        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
         'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
         'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
         }
 
+    # Add in the vars which won't change names
+    for var in sameNameVars :
+        branchMapping[ var ] = var
     # Generate our mapping for double candidate variables
     for key in doubleProds :
         branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
@@ -588,7 +587,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.pZeta import compZeta
     from util.pileUpVertexCorrections import PUreweight
     from array import array
-    puDict = PUreweight( channel )
+    puDict = PUreweight()
 
     ''' We are calculating and adding these below variables to our new tree
     PU Weighting '''
@@ -626,6 +625,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     pzeta = array('f', [ 0 ] )
     pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    Z_DEta = array('f', [ 0 ] )
+    Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
     m_vis_UP = array('f', [ 0 ] )
     m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
     m_vis_DOWN = array('f', [ 0 ] )
@@ -759,6 +760,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 isZTT[0] = 1
             if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
 
+            # For easy use later
+            pt1 = getattr( row, l1+'Pt' )
+            pt2 = getattr( row, l2+'Pt' )
+            phi1 = getattr( row, l1+'Phi' )
+            phi2 = getattr( row, l2+'Phi' )
+            eta1 = getattr( row, l1+'Eta' )
+            eta2 = getattr( row, l2+'Eta' )
+
+            Z_DEta[0] = (eta1 - eta2)
+
             # TES Shifted M_Vis
             if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
                 m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
@@ -800,18 +811,18 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             # Channel specific pairwise mvaMet
             if channel == 'tt' :
                 if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.mvamet, row.mvametphi)[1]
-                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.t1Pt, row.t1Phi )
-                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.t2Pt, row.t2Phi )
+                    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
+                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
+                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
                 else :
                     pzetamiss[0] = -9999
                     mt_1[0] = -9999
                     mt_2[0] = -9999
             if channel == 'em' :
                 if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.mvamet, row.mvametphi)[1]
-                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.ePt, row.ePhi )
-                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.mPt, row.mPhi )
+                    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
+                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
+                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
                 else :
                     pzetamiss[0] = -9999
                     mt_1[0] = -9999
@@ -821,10 +832,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
             # With calculated transverse mass variables, do Mt_Total for mssm search
-            pt1 = getattr( row, l1+'Pt' )
-            pt2 = getattr( row, l2+'Pt' )
-            phi1 = getattr( row, l1+'Phi' )
-            phi2 = getattr( row, l2+'Phi' )
             mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
             if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
                 mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
@@ -878,14 +885,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #    # First leg FR
                 #    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
                 #        inputsqcd = ffqcd.inputs()
-                #        inputsqcd = [row.t1Pt, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
+                #        inputsqcd = [pt1, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
                 #        FFWeightQCD1[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
                 #        FFWeightQCD1_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
                 #        FFWeightQCD1_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
                 #    # Second leg FR
                 #    if row.t2ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
                 #        inputsqcd = ffqcd.inputs()
-                #        inputsqcd = [row.t2Pt, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
+                #        inputsqcd = [pt2, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
                 #        FFWeightQCD2[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
                 #        FFWeightQCD2_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
                 #        FFWeightQCD2_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
@@ -897,29 +904,27 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
-                l1Pt = getattr( row, '%sPt' % l1 )
-                l1Eta = getattr( row, '%sEta' % l1 )
-                l2Pt = getattr( row, '%sPt' % l2 )
-                l2Eta = getattr( row, '%sEta' % l2 )
 
                 # Isolation / ID weights
                 if 't' in l1 : idisoweight_1[0] = 1
-                #else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
+                #else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', pt1, eta1 )
                 if 't' in l2 : idisoweight_2[0] = 1
-                #else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
+                #else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', pt2, eta2 )
 
                 # Trigger Weights
                 effweight[0] = 1
                 doubleTauTrigWeightL1[0] = 1
                 doubleTauTrigWeightL2[0] = 1
-                #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
+                #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
+                #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
+                #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( pt1, eta1, pt2, eta2 )
                 #elif channel == 'tt' :
                 if channel == 'tt' :
                     trigweight_1[0] = 1
                     # L1 trigger efficiency is dependent on tau isolation
+                    # and real / fake tau status
                     # find tau iso and pass string for mapping appropriately
+                    t1Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'Loose'
@@ -929,7 +934,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'Tight'
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTight'
-                    doubleTauTrigWeightL1[0] = doubleTauTriggerEff( l1Pt, tauIso )
+                    doubleTauTrigWeightL1[0] = doubleTauTriggerEff( pt1, tauIso, t1Gen )
+                    t2Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'Loose'
@@ -939,7 +945,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'Tight'
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTight'
-                    doubleTauTrigWeightL2[0] = doubleTauTriggerEff( l2Pt, tauIso )
+                    doubleTauTrigWeightL2[0] = doubleTauTriggerEff( pt2, tauIso, t2Gen )
                 else : trigweight_1[0] = 1
                 
                 # top pt reweighting, only for ttbar events
