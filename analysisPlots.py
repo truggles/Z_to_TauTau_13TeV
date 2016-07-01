@@ -1,5 +1,4 @@
 import ROOT
-from collections import OrderedDict
 from ROOT import gPad
 
 
@@ -112,7 +111,6 @@ def plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, bli
         # weight is a composition of all applied MC/Data corrections
         #sfs = '*(weight)' 
         sfs = '*(effweight*puweight)' 
-        sfs = '*(effweight)' 
         xsec = '*(XSecLumiWeight)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)

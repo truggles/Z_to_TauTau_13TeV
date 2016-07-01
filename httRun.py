@@ -67,11 +67,12 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
     'cutMapper' : 'syncCutsNtupleBuilding',
+    'cutMapper' : 'syncCutsNtupleLoose',
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    'mid1' : '1June26c',
-    'mid2' : '2June29a',
-    'mid3' : '3June29a',
+    'mid1' : '1June30a',
+    'mid2' : '2June30c',
+    'mid3' : '3June30c',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -80,21 +81,22 @@ params = {
     'doFRMthd' : 'false',
 }
 
+
 samples = setUpDirs( samples, params, analysis )
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
-#analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+
+
+""" Get samples with map of attributes """
+import analysis3Plots
+from meta.sampleNames import returnSampleDetails
+samples = returnSampleDetails( analysis, samples )
+    
 
 runPlots = True
 if runPlots :
     """ Make our folders with directories of histos for each bkg """
-    subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
-    
-    
-    """ Get samples with map of attributes """
-    import analysis3Plots
-    from meta.sampleNames import returnSampleDetails
-    samples = returnSampleDetails( analysis, samples )
+    #subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
     
     qcdYields = {}
     for sign in ['SS', 'OS'] :
@@ -106,22 +108,24 @@ if runPlots :
     
     print qcdYields
     looseToTightRatio = qcdYields['SSVTight_'] / qcdYields['SSVTight_Loose']
-    qcdFile = open('httQCDYields.txt','w')
+    qcdFile = open('httQCDYields_%s.txt' % params['mid2'],'w')
     qcdFile.write( str(looseToTightRatio)+"\n" )
     for key in qcdYields :
-        qcdFile.write( "%s : %.2f" % (key, qcdYields[key]) )
+        qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
     qcdFile.close()
     
     """ Final plots """
     qcdSF = 1.0
-    with open('httQCDYields.txt') as qcdFile :
+    with open('httQCDYields_%s.txt' % params['mid2']) as qcdFile :
         cnt = 0
         for line in qcdFile :
             qcdSF = float(line)
             break
     print qcdSF
     
-    kwargs = { 'text':True, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_VTight_LooseZTT', 'qcdSF':qcdSF }
+    text=False
+    #text=True
+    kwargs = { 'text':text, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_VTight_LooseZTT', 'qcdSF':qcdSF }
     analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_VTight_ZTT' % params['mid2'], **kwargs  )
     
     

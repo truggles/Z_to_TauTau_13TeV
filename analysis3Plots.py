@@ -1,7 +1,6 @@
 from util.buildTChain import makeTChain
 import ROOT
 import json
-from collections import OrderedDict
 import pyplotter.plot_functions as pyplotter #import setTDRStyle, getCanvas
 import pyplotter.tdrstyle as tdr
 import argparse
@@ -153,7 +152,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if not os.path.exists('meta/%sBackgrounds' % analysis) :
                 os.makedirs('meta/%sBackgrounds' % analysis)
             print "qcdMakeDM called: ",ops['qcdMakeDM']
-            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['qcdMakeDM']), 'RECREATE')
+            qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['qcdMakeDM']), 'RECREATE')
             qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
     
         #print newVarMap
@@ -236,7 +235,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             pZetaTot = 0
             for sample in samples.keys() :
-                print sample
+                #print sample
                 #print samples[sample]
     
                 ''' Skip plotting unused shape systematics '''
@@ -260,9 +259,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 elif 'QCD' in sample :
                     print "qcd in sample"
                     if ops['useQCDMakeName'] != 'x'  :
-                        fName = 'meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['useQCDMakeName'])
+                        fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
                         print fName 
-                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['useQCDMakeName']), 'READ')
+                        tFile = ROOT.TFile(fName, 'READ')
                         print 1
                     elif ops['qcdMC'] :
                         print "Got QCD MC file", sample

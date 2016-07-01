@@ -1,7 +1,7 @@
 
 
 # For l1 medium
-folder=2June26c
+folder=2June29a
 rm plotsOut.txt
 echo `date` >> plotsOut.txt
 for sign in SS OS; do

@@ -924,6 +924,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # L1 trigger efficiency is dependent on tau isolation
                     # and real / fake tau status
                     # find tau iso and pass string for mapping appropriately
+                    # also possibly depends on SS vs OS
+                    if getattr( row, 't1_t2_SS' ) == 1 : ttSS = True
+                    else : ttSS = False
                     t1Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
@@ -934,7 +937,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'Tight'
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTight'
-                    doubleTauTrigWeightL1[0] = doubleTauTriggerEff( pt1, tauIso, t1Gen )
+                    doubleTauTrigWeightL1[0] = doubleTauTriggerEff( pt1, tauIso, t1Gen, ttSS )
                     t2Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
@@ -945,7 +948,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'Tight'
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTight'
-                    doubleTauTrigWeightL2[0] = doubleTauTriggerEff( pt2, tauIso, t2Gen )
+                    doubleTauTrigWeightL2[0] = doubleTauTriggerEff( pt2, tauIso, t2Gen, ttSS )
                 else : trigweight_1[0] = 1
                 
                 # top pt reweighting, only for ttbar events

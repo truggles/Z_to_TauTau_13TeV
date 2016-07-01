@@ -6,11 +6,12 @@
 # See Kenneth's Log Book for how to find this stuff on MCM: https://twiki.cern.ch/twiki/bin/view/Main/KDLLogBook#LogDay20150106
 # The scale factor is for LO -> NNLO scaling see excel sheet below https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_samples
 
+from collections import OrderedDict
 
 def returnSampleDetails( analysis, samples=[] ) :
     sampleMap = sampleDetails( analysis )
     #print sampleMap
-    returnMap = {}
+    returnMap = OrderedDict()
     for sample in samples :
         if sample in sampleMap.keys() :
             returnMap[ sample ] = sampleMap[ sample ]

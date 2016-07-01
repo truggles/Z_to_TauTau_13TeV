@@ -75,6 +75,7 @@ def getCut( analysis, channel, cutName, isData=False ) :
             #'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
             'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
             'syncCutsNtupleBuilding' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode, extraVetoTT, ttDisc, ttIsoTight, tt35],
+            'syncCutsNtupleLoose' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode, extraVetoTT, ttDisc, ttIsoLooseMVA, tt35],
             # Selection which only does a loose version of the sync Ntuple cuts
             # incase we need to do tau energy scaling later
             'svFitCuts' : [ttKinLoose, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt32, DecayMode, ttIsoLooseMVA],
