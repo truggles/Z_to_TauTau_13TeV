@@ -22,6 +22,7 @@ def sampleDetails( analysis ) :
     c74x = 'RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2'
     c76x = 'RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12'
     c80x = 'RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3'
+    c80xReHLT = 'RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14'
     sampleMap = {
         'Sync' : {
             'Sync-HtoTT': {
@@ -209,10 +210,16 @@ def sampleDetails( analysis ) :
                 'group' : ''}
         } # end AtoZh
     } # end sample Map
-    
+
+    # A to Zh sample masses
+    for mass in [220, 240, 300, 320, 350, 400] :
+        sampleMap['azh']['azh%i' % mass] = {
+                'DASPath' : '/AToZhToLLTauTau_M-%i_13TeV_madgraph_4f_LO/%s-v1/MINIAODSIM' % (mass, c80xReHLT),
+                'xsec' : -999.,
+                'group' : 'azh'}
+            
     return sampleMap[ analysis ]
     
-
     #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
     #for mass in masses :
     #    samplesHTT['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c80x), 1 )

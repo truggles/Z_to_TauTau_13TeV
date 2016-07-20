@@ -17,6 +17,10 @@ def makeMetaJSON( analysis, ch = 'tt' ) :
         'azh' : ['data_ee', 'data_mm', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4e', 'ggZZ4m', 'ggZZ2m2t', 'TTJ', 'TTZ', 'TTTT', 'WZ3l1nu', 'WminusHtoTauTau', 'WplusHtoTauTau', 'ZHtoTauTau', 'ZZ2l2q', 'ZZ4l'],
     }
 
+    # A to Zh sample masses
+    for mass in [220, 240, 300, 320, 350, 400] :
+        currentDASSamples['azh'].append('azh%i' % mass)
+
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
     
     # A dictionary to store each samples info
@@ -59,7 +63,7 @@ def makeMetaJSON( analysis, ch = 'tt' ) :
                 summedWeights += w[0]
                 summedWeightsNorm += w[1]
         except AttributeError :
-            print "\nAttributeError\n"
+            print "\nAttributeError, maybe channel is wrong: %s\n" % ch
             continue
             inFiles.close()
         inFiles.close()

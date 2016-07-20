@@ -1,16 +1,17 @@
 '''#################################################################
-##     Analysis run file for Z or Higgs -> TauTau                 ##
+##     Analysis run file for A -> Z + sm-Higgs -> ll TauTau       ##
 ##     Tyler Ruggles                                              ##
-##     Oct 11, 2015                                               ##
+##     June 27, 2016                                              ##
 #################################################################'''
 
 
 import os
 from time import gmtime, strftime
 import ROOT
-from ROOT import gPad, gROOT
+from ROOT import gROOT
 import analysis1BaselineCuts
 from util.helpers import setUpDirs 
+import subprocess
 ROOT.gROOT.Reset()
 
 
@@ -19,14 +20,12 @@ ROOT.gROOT.Reset()
 analysis = 'azh'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = analysis
-os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-#makeMetaJSON( analysis )
+makeMetaJSON( analysis, 'eeet' )
 os.chdir('..')
 
 
@@ -41,7 +40,10 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-azhSamples = ['data_ee', 'data_mm', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4e', 'ggZZ4m', 'ggZZ2m2t', 'TTJ', 'TTZ', 'TTTT', 'WZ3l1nu', 'WminusHtoTauTau', 'WplusHtoTauTau', 'ZHtoTauTau', 'ZZ2l2q', 'ZZ4l'],
+azhSamples = ['data_ee', 'data_mm', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4e', 'ggZZ4m', 'ggZZ2m2t', 'TTJ', 'TTZ', 'TTTT', 'WZ3l1nu', 'WminusHtoTauTau', 'WplusHtoTauTau', 'ZHtoTauTau', 'ZZ2l2q', 'ZZ4l']
+for mass in [220, 240, 300, 320, 350, 400] :
+    azhSamples.append('azh%i' % mass)
+
 samples = azhSamples
 
 ''' These parameters are fed into the 2 main function calls.
@@ -50,8 +52,8 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
-    'debug' : 'true',
-    #'debug' : 'false',
+    #'debug' : 'true',
+    'debug' : 'false',
     'numCores' : 10,
     'numFilesPerCycle' : 20,
     #'channels' : ['em', 'tt'],
@@ -83,7 +85,7 @@ params = {
 
 samples = setUpDirs( samples, params, analysis )
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
 
