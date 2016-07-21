@@ -23,6 +23,7 @@ def sampleDetails( analysis ) :
     c76x = 'RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12'
     c80x = 'RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3'
     c80xReHLT = 'RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14'
+    c80xMAOD2 = 'RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0'
     sampleMap = {
         'Sync' : {
             'Sync-HtoTT': {
@@ -136,78 +137,90 @@ def sampleDetails( analysis ) :
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
             #'WZ3l1nu' : ('/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/%s-v1/MINIAODSIM' % c80x, 4.666 ),
             #'ZZ4l' :    ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80x, 1.212 ),
+            'data_ee' : {
+                'DASPath' : '/DoubleEG/Run2016E-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'data_mm' : {
+                'DASPath' : '/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
             'ZZ4l' : {
                 'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
                 'xsec' : 1.256,
-                'group' : ''},
-            'TTZ' : {
-                'DASPath' : '/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v3/MINIAODSIM' % c80x,
-                'xsec' : 999.,
-                'group' : ''},
+                'group' : 'zz'},
             'WZ3l1nu' : {
-                'DASPath' : '/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 999.,
-                'group' : ''},
-            'ZZ2l2q' : { 
-                'DASPath' : '/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 999.,
-                'group' : ''},
-            'TTTT' : {
-                'DASPath' : '/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s_ext1-v2/MINIAODSIM' % c80x,
-                'xsec' : 999.,
-                'group' : ''},
-            'DYJets1' :    { 
-                'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 1012.5 * 1.216229,
-                'group' : 'dyj'},
-            'DYJets2' :    { 
-                'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 332.8 * 1.216229,
-                'group' : 'dyj'},
-            'DYJets3' :    { 
-                'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 101.8 * 1.216229,
-                'group' : 'dyj'},
-            'DYJets4' :    { 
-                'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 54.8 * 1.216229,
-                'group' : 'dyj'},
-            'ggZZ4l' : {
-                'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v3/MINIAODSIM',
-                'xsec' : 999.,
-                'group' : ''},
-            'ggZZ4e' : {
-                'DASPath' : '/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
-                'xsec' : 0.001586,
-                'group' : ''},
-            'ggZZ4m' : {
-                'DASPath' : '/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
-                'xsec' : 0.001586,
-                'group' : ''},
-            'ggZZ2m2tau' : {
-                'DASPath' : '/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
-                'xsec' : 0.003194,
-                'group' : ''},
-            'WplusHtoTauTau' : {
-                'DASPath' : '/WplusHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 999.,
-                'group' : ''},
-            'WminusHtoTauTau' : {
-                'DASPath' : '/WminusHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 999.,
-                'group' : ''},
-            'ZHToTauTau' : {
-                'DASPath' : '/ZHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
-                'xsec' : 999.,
-                'group' : ''},
-            'ttHtoTauTau' : {
-                'DASPath' : '/ttHToTT_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
-                'xsec' : 999.,
-                'group' : ''},
-            'ggHtoZZ4l' : {
-                'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv1-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
-                'xsec' : 0.01212,
-                'group' : ''}
+                'DASPath' : '/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 4.42965, # Devin's
+                'group' : 'wz'}
+            #'TTZ' : {
+            #    'DASPath' : '/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v3/MINIAODSIM' % c80x,
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'WZ3l1nu' : {
+            #    'DASPath' : '/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'ZZ2l2q' : { 
+            #    'DASPath' : '/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'TTTT' : {
+            #    'DASPath' : '/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s_ext1-v2/MINIAODSIM' % c80x,
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'DYJets1' :    { 
+            #    'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 1012.5 * 1.216229,
+            #    'group' : 'dyj'},
+            #'DYJets2' :    { 
+            #    'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 332.8 * 1.216229,
+            #    'group' : 'dyj'},
+            #'DYJets3' :    { 
+            #    'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 101.8 * 1.216229,
+            #    'group' : 'dyj'},
+            #'DYJets4' :    { 
+            #    'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 54.8 * 1.216229,
+            #    'group' : 'dyj'},
+            #'ggZZ4l' : {
+            #    'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v3/MINIAODSIM',
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'ggZZ4e' : {
+            #    'DASPath' : '/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
+            #    'xsec' : 0.001586,
+            #    'group' : ''},
+            #'ggZZ4m' : {
+            #    'DASPath' : '/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
+            #    'xsec' : 0.001586,
+            #    'group' : ''},
+            #'ggZZ2m2tau' : {
+            #    'DASPath' : '/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
+            #    'xsec' : 0.003194,
+            #    'group' : ''},
+            #'WplusHtoTauTau' : {
+            #    'DASPath' : '/WplusHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'WminusHtoTauTau' : {
+            #    'DASPath' : '/WminusHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'ZHToTauTau' : {
+            #    'DASPath' : '/ZHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'ttHtoTauTau' : {
+            #    'DASPath' : '/ttHToTT_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
+            #    'xsec' : 999.,
+            #    'group' : ''},
+            #'ggHtoZZ4l' : {
+            #    'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv1-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+            #    'xsec' : 0.01212,
+            #    'group' : ''}
         } # end AtoZh
     } # end sample Map
 

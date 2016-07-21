@@ -22,6 +22,26 @@ def makeMetaJSON( analysis, ch = 'tt' ) :
         currentDASSamples['azh'].append('azh%i' % mass)
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
+
+    # Data samples where we have multipl runs
+    dataSamples = {
+        'data_ee' : [
+            '/DoubleEG/Run2016B-PromptReco-v2/MINIAOD',
+            '/DoubleEG/Run2016C-PromptReco-v2/MINIAOD',
+            '/DoubleEG/Run2016D-PromptReco-v2/MINIAOD',
+            '/DoubleEG/Run2016E-PromptReco-v2/MINIAOD'],
+        'data_mm' : [
+            '/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD',
+            '/DoubleMuon/Run2016C-PromptReco-v2/MINIAOD',
+            '/DoubleMuon/Run2016D-PromptReco-v2/MINIAOD',
+            '/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD'],
+        'data_tt' : [
+            '/Tau/Run2016B-PromptReco-v2/MINIAOD',
+            '/Tau/Run2016C-PromptReco-v2/MINIAOD',
+            '/Tau/Run2016D-PromptReco-v2/MINIAOD',
+            '/Tau/Run2016E-PromptReco-v2/MINIAOD'],
+    }
+
     
     # A dictionary to store each samples info
     jDict = {}
@@ -29,26 +49,26 @@ def makeMetaJSON( analysis, ch = 'tt' ) :
     for k, v in samples.iteritems() :
         # Get the DAS info from DBS
         # Sum up data sets by channels
-        #if 'data' in k :
-        #    dataSamps = dataSamples[ k ]
-        #    infoDAS = [0, 0, 0, 0, u'ok']
-        #    for samp in dataSamps :
-        #        infoDAStmp = getDBSInfo( k, samp )
-        #        infoDAS[0] += infoDAStmp[0]
-        #        infoDAS[1] += infoDAStmp[1]
-        #        infoDAS[2] += infoDAStmp[2]
-        #        infoDAS[3] += infoDAStmp[3]
-        #        if infoDAStmp[4] != u'ok' :
-        #            infoDAS[4] = 'error'
-        #        print "Data: ", infoDAStmp
-        #else :
-        try : infoDAS = getDBSInfo( k, v['DASPath'] )
-        except IndexError :
-            print "\n#######################################"
-            print "IndexError for sample: %s" % k
-            print "#######################################\n"
-            continue
-        print infoDAS
+        if 'data' in k :
+            dataSamps = dataSamples[ k ]
+            infoDAS = [0, 0, 0, 0, u'ok']
+            for samp in dataSamps :
+                infoDAStmp = getDBSInfo( k, samp )
+                infoDAS[0] += infoDAStmp[0]
+                infoDAS[1] += infoDAStmp[1]
+                infoDAS[2] += infoDAStmp[2]
+                infoDAS[3] += infoDAStmp[3]
+                if infoDAStmp[4] != u'ok' :
+                    infoDAS[4] = 'error'
+                print "Data: ", infoDAStmp
+        else :
+            try : infoDAS = getDBSInfo( k, v['DASPath'] )
+            except IndexError :
+                print "\n#######################################"
+                print "IndexError for sample: %s" % k
+                print "#######################################\n"
+                continue
+            print infoDAS
     
         # Get the Ntuple info that FSA created
         numFiles = getNumberOfFiles( k, analysis )
