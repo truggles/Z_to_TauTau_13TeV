@@ -411,7 +411,7 @@ def drawHistos(analysis, samples, **fargs ) :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen
                 print "Num files / cycle:",fargs['numFilesPerCycle']
-                numIters = int( math.ceil( fileLen / fargs['numFilesPerCycle'] ) )
+                numIters = int( math.ceil( 1. * fileLen / fargs['numFilesPerCycle'] ) )
                 print "Num Iters: %i" % numIters
 
 
@@ -433,7 +433,7 @@ def drawHistos(analysis, samples, **fargs ) :
                     else : additionalCut += genMap[subName][channel] 
                 print "AdditionalCuts",additionalCut
                 blind = False
-                analysisPlots.plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind )
+                analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind )
                 outFile.Close()
          
 

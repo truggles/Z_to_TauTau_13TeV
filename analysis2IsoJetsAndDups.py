@@ -35,7 +35,7 @@ prodMap = {
 
 def getXSec( shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
-    #if 'data' in shortName : return 1.0 #XXX#
+    if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
         if shortName in ['DYJets', 'DYJets'] or shortName[:6] == 'DYJets' :

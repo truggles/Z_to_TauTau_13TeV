@@ -46,9 +46,9 @@ SamplesDataCards = ['data_tt', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJet
 #SamplesDataCards = ['DYJetsHigh', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
 
 
-#SamplesDataCards = ['data_tt','data_em']
+SamplesDataCards = ['data_tt','data_em','DYJets']
 #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh'] # LO DYJets
-SamplesDataCards = ['DYJets',]
+#SamplesDataCards = ['DYJets',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -81,7 +81,7 @@ params = {
 
 
 samples = setUpDirs( samples, params, analysis )
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
