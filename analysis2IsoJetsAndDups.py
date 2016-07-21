@@ -22,6 +22,14 @@ prodMap = {
     'et' : ('e', 't'),
     'mt' : ('m', 't'),
     'tt' : ('t1', 't2'),
+    'eeem' : ('e1', 'e2', 'e3', 'm'),
+    'eeet' : ('e1', 'e2', 'e3', 't'),
+    'eemt' : ('e1', 'e2', 'm', 't'),
+    'eett' : ('e1', 'e2', 't1', 't2'),
+    'emmm' : ('m1', 'm2', 'e', 'm3'),
+    'emmt' : ('m1', 'm2', 'e', 't'),
+    'mmmt' : ('m1', 'm2', 'm3', 't'),
+    'mmtt' : ('m1', 'm2', 't1', 't2'),
 }
 
 
@@ -289,6 +297,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
+    if len( channel ) == 4 :
+        l3 = prodMap[channel][2]
+        l4 = prodMap[channel][3]
 
     #from util.lepSF import LepWeights
     from util.doubleTauSF import doubleTauTriggerEff
@@ -419,18 +430,52 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     for key in doubleProds :
         branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
     # Map all of the variables based on their FSA names to Sync names leg by leg
-    if channel == 'em' :
-        l1Map = branchMappingElec
-        l2Map = branchMappingMuon
-    elif channel == 'et' :
-        l1Map = branchMappingElec
-        l2Map = branchMappingTau
-    elif channel == 'mt' :
-        l1Map = branchMappingMuon
-        l2Map = branchMappingTau
-    elif channel == 'tt' :
-        l1Map = branchMappingTau
-        l2Map = branchMappingTau
+    if len( channel ) == 2 :
+        if channel == 'em' :
+            l1Map = branchMappingElec
+            l2Map = branchMappingMuon
+        elif channel == 'et' :
+            l1Map = branchMappingElec
+            l2Map = branchMappingTau
+        elif channel == 'mt' :
+            l1Map = branchMappingMuon
+            l2Map = branchMappingTau
+        elif channel == 'tt' :
+            l1Map = branchMappingTau
+            l2Map = branchMappingTau
+    if len( channel ) == 4 :
+        # Channel naming gets confusing with FSA, e first, m second, t last
+        if channel[:2] == 'ee' :
+            l1Map = branchMappingElec
+            l2Map = branchMappingElec
+        elif channel[:2] == 'mm' or channel == 'emmt' or channel == 'emmm' :
+            l1Map = branchMappingMuon
+            l2Map = branchMappingMuon
+
+        if channel[-2:] == 'ee' :
+            l3Map = branchMappingElec
+            l4Map = branchMappingElec
+        if channel[-2:] == 'mm' :
+            l3Map = branchMappingMuon
+            l4Map = branchMappingMuon
+        if channel[-2:] == 'tt' :
+            l3Map = branchMappingTau
+            l4Map = branchMappingTau
+        elif channel[-2:] == 'mt' :
+            l3Map = branchMappingMuon
+            l4Map = branchMappingTau
+        elif channel == 'eeet' or channel == 'emmt' :
+            l3Map = branchMappingElec
+            l4Map = branchMappingTau
+        elif channel == 'eeem' or channel == 'emmm' :
+            l3Map = branchMappingElec
+            l4Map = branchMappingMuon
+
+        for key in l3Map.keys() :
+            branchMapping[ key.replace('cand_', l3) ] = l3Map[ key ]+'_3'
+        for key in l4Map.keys() :
+            branchMapping[ key.replace('cand_', l4) ] = l4Map[ key ]+'_4'
+    # applies to all channels of len 2 and 4
     for key in l1Map.keys() :
         branchMapping[ key.replace('cand_', l1) ] = l1Map[ key ]+'_1'
     for key in l2Map.keys() :
@@ -475,7 +520,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             branchType = IntCol() if old in intBranches else FloatCol()
             newBranches[name] = branchType
     
-        #XXX newBranches[name] = branchType
+        newBranches[name] = branchType
     
     NewTreeModel = type("NewTreeModel", (TreeModel,), newBranches)
     
@@ -621,26 +666,26 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
     #FFWeightQCD2_DOWN = array('f', [ 0 ] )
     #FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
-    pzetamiss = array('f', [ 0 ] )
-    pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
-    pzeta = array('f', [ 0 ] )
-    pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    #pzetamiss = array('f', [ 0 ] )
+    #pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    #pzeta = array('f', [ 0 ] )
+    #pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
     Z_DEta = array('f', [ 0 ] )
     Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
-    m_vis_UP = array('f', [ 0 ] )
-    m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
-    m_vis_DOWN = array('f', [ 0 ] )
-    m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
+    #m_vis_UP = array('f', [ 0 ] )
+    #m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
+    #m_vis_DOWN = array('f', [ 0 ] )
+    #m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
     mt_tot = array('f', [ 0 ] )
     mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
-    mt_tot_UP = array('f', [ 0 ] )
-    mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
-    mt_tot_DOWN = array('f', [ 0 ] )
-    mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
-    mt_1 = array('f', [ 0 ] )
-    mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
-    mt_2 = array('f', [ 0 ] )
-    mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
+    #mt_tot_UP = array('f', [ 0 ] )
+    #mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
+    #mt_tot_DOWN = array('f', [ 0 ] )
+    #mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
+    #mt_1 = array('f', [ 0 ] )
+    #mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
+    #mt_2 = array('f', [ 0 ] )
+    #mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
@@ -667,37 +712,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     mvacov10B = tnew.Branch('mvacov10', mvacov10, 'mvacov10/F')
     mvacov11 = array('f', [ 0 ] )
     mvacov11B = tnew.Branch('mvacov11', mvacov11, 'mvacov11/F')
-    isZtt = array('f', [ 0 ] )
-    isZttB = tnew.Branch('isZtt', isZtt, 'isZtt/F')
-    isZmt = array('f', [ 0 ] )
-    isZmtB = tnew.Branch('isZmt', isZmt, 'isZmt/F')
-    isZet = array('f', [ 0 ] )
-    isZetB = tnew.Branch('isZet', isZet, 'isZet/F')
-    isZee = array('f', [ 0 ] )
-    isZeeB = tnew.Branch('isZee', isZee, 'isZee/F')
-    isZmm = array('f', [ 0 ] )
-    isZmmB = tnew.Branch('isZmm', isZmm, 'isZmm/F')
-    isZem = array('f', [ 0 ] )
-    isZemB = tnew.Branch('isZem', isZem, 'isZem/F')
-    isZEE = array('f', [ 0 ] )
-    isZEEB = tnew.Branch('isZEE', isZEE, 'isZEE/F')
-    isZMM = array('f', [ 0 ] )
-    isZMMB = tnew.Branch('isZMM', isZMM, 'isZMM/F')
-    isZTT = array('f', [ 0 ] )
-    isZTTB = tnew.Branch('isZTT', isZTT, 'isZTT/F')
-    isZLL = array('f', [ 0 ] )
-    isZLLB = tnew.Branch('isZLL', isZLL, 'isZLL/F')
 
 
-    # add dummy decaymode vars in to EMu channel for cut strings later
-    if channel != 'tt' :
-        t1DecayMode = array('f', [ 0 ] )
-        t1DecayModeB = tnew.Branch('t1DecayMode', t1DecayMode, 't1DecayMode/F')
-        t2DecayMode = array('f', [ 0 ] )
-        t2DecayModeB = tnew.Branch('t2DecayMode', t2DecayMode, 't2DecayMode/F')
-    if channel == 'em' or channel == 'tt' :
-        tDecayMode = array('f', [ 0 ] )
-        tDecayModeB = tnew.Branch('tDecayMode', tDecayMode, 'tDecayMode/F')
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -722,16 +738,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             vbfClean( row )
 
 
-            isZtt[0] = 0
-            isZmt[0] = 0
-            isZet[0] = 0
-            isZee[0] = 0
-            isZmm[0] = 0
-            isZem[0] = 0
-            isZEE[0] = 0
-            isZMM[0] = 0
-            isZTT[0] = 0
-            isZLL[0] = 0
             #FFWeightQCD[0] = -1
             #FFWeightQCD_UP[0] = -1
             #FFWeightQCD_DOWN[0] = -1
@@ -742,23 +748,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #FFWeightQCD2_UP[0] = -1
             #FFWeightQCD2_DOWN[0] = -1
 
-            # Decay final states
-            if channel == 'tt' :
-                isZtt[0] = 1
-            if channel == 'et' :
-                isZet[0] = 1
-            if channel == 'mt' :
-                isZmt[0] = 1
-            if channel == 'em' :
-                isZem[0] = 1
-            # Generator states, combine Z & sm-H into 1 var
-            if row.isZee == 1 :#or row.isHee == 1 : 
-                isZEE[0] = 1
-            if row.isZmumu == 1 :#or row.isHmumu == 1 : 
-                isZMM[0] = 1
-            if row.isZtautau == 1 :#or row.isHtautau == 1 : 
-                isZTT[0] = 1
-            if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
 
             # For easy use later
             pt1 = getattr( row, l1+'Pt' )
@@ -771,17 +760,17 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             Z_DEta[0] = (eta1 - eta2)
 
             # TES Shifted M_Vis
-            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
-                m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
-                m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
-            else :
-                m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-                m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-                if hasattr( row, 'm_sv_UP' ) :
-                    setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
-                    setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
-                    setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
-                    setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
+            #    m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
+            #    m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
+            #else :
+            #    m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+            #    m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+            #    if hasattr( row, 'm_sv_UP' ) :
+            #        setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+            #        setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+            #        setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+            #        setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
 
 
             # Channel specific vetoes
@@ -809,36 +798,39 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
 
             # Channel specific pairwise mvaMet
-            if channel == 'tt' :
-                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-                    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
-                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
-                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
-                else :
-                    pzetamiss[0] = -9999
-                    mt_1[0] = -9999
-                    mt_2[0] = -9999
-            if channel == 'em' :
-                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-                    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
-                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
-                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
-                else :
-                    pzetamiss[0] = -9999
-                    mt_1[0] = -9999
-                    mt_2[0] = -9999
-            if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
-                pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+            #if channel == 'tt' :
+            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
+            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
+            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
+            #    else :
+            #        pzetamiss[0] = -9999
+            #        mt_1[0] = -9999
+            #        mt_2[0] = -9999
+            #if channel == 'em' :
+            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
+            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
+            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
+            #    else :
+            #        pzetamiss[0] = -9999
+            #        mt_1[0] = -9999
+            #        mt_2[0] = -9999
+            #if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+            #    pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
 
 
             # With calculated transverse mass variables, do Mt_Total for mssm search
-            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
-            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
-                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
-                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
-            else :
-                mt_tot_UP[0] = -10
-                mt_tot_DOWN[0] = -10
+            mt_1 = getattr( row, l1+'MtToPfMet_Raw' )
+            mt_2 = getattr( row, l2+'MtToPfMet_Raw' )
+            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1, mt_2 ) # Using wrong mt
+            #XXX mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
+            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
+            #    mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+            #    mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+            #else :
+            #    mt_tot_UP[0] = -10
+            #    mt_tot_DOWN[0] = -10
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
 
 
@@ -857,9 +849,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 zPtWeight[0] = 1
                 weight[0] = 1
                 XSecLumiWeight[0] = 1
-                isZEE[0] = -1
-                isZMM[0] = -1
-                isZLL[0] = -1
                 # Have the btag numbers correspond to actual values not
                 # Promote/Demote values
                 if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
@@ -953,13 +942,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
-                if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
-                    top1Pt = row.topQuarkPt1
-                    if top1Pt > 400 : top1Pt = 400
-                    top2Pt = row.topQuarkPt2
-                    if top2Pt > 400 : top2Pt = 400
-                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
-                else : topWeight[0] = 1
+                #if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
+                #    top1Pt = row.topQuarkPt1
+                #    if top1Pt > 400 : top1Pt = 400
+                #    top2Pt = row.topQuarkPt2
+                #    if top2Pt > 400 : top2Pt = 400
+                #    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
+                #else : topWeight[0] = 1
+                topWeight[0] = 1
 
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting

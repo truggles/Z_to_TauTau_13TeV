@@ -21,7 +21,7 @@ def skipChanDataCombo( channel, sample, analysis ) :
     # AZH
     if analysis == 'azh' :
         if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and (sample != 'data_ee') : return True
-        if (channel in ['mmmm', 'mmem', 'mmet', 'mmmt', 'mmtt']) and ('data' in sample) and (sample != 'data_mm') : return True
+        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt']) and ('data' in sample) and (sample != 'data_mm') : return True
     return False
 
 
@@ -178,7 +178,13 @@ def doInitialCuts(analysis, samples, **fargs) :
 
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
-                multiprocessingOutputs.append( pool.apply_async(runCuts, args=(analysis,
+
+
+
+
+
+                if not fargs['debug'] == 'true' :
+                    multiprocessingOutputs.append( pool.apply_async(runCuts, args=(analysis,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
@@ -189,43 +195,62 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     fargs['numFilesPerCycle'],
                                                                                     fargs['svFitPrep'],
                                                                                     fargs['svFitPost'])) )
+                """ for debugging without multiprocessing """
+                if fargs['debug'] == 'true' :
+                    runCuts(analysis,
+                                                                                    sample,
+                                                                                    channel,
+                                                                                    count,
+                                                                                    num,
+                                                                                    fargs['mid1'],
+                                                                                    fargs['mid2'],
+                                                                                    fargs['cutMapper'],
+                                                                                    fargs['numFilesPerCycle'],
+                                                                                    fargs['svFitPrep'],
+                                                                                    fargs['svFitPost'])
+
                 num +=  1
     
             count += 1
             
             # Make sure we loop over large samples to get all files
             if count * fargs['numFilesPerCycle'] >= fileLen : go = False
+    if fargs['debug'] == 'true' :
+        print "#################################################################"
+        print "###               Finished, summary below                     ###"
+        print "#################################################################"
     
     
-    mpResults = [p.get() for p in multiprocessingOutputs]
+    if fargs['debug'] != 'true' :
+        mpResults = [p.get() for p in multiprocessingOutputs]
     
-    print "#################################################################"
-    print "###               Finished, summary below                     ###"
-    print "#################################################################"
-    
-    print "\nStart Time: %s" % str( begin )
-    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-    print "\n"
+        print "#################################################################"
+        print "###               Finished, summary below                     ###"
+        print "#################################################################"
+        
+        print "\nStart Time: %s" % str( begin )
+        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+        print "\n"
 
-    print " --- Cut used: %s" % fargs['cutMapper']
-    print " --- Analysis: %s" % analysis
-    print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
-    print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])
-    print "\n"
+        print " --- Cut used: %s" % fargs['cutMapper']
+        print " --- Analysis: %s" % analysis
+        print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
+        print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])
+        print "\n"
+        
+        totalIn = 0
+        totalOut = 0
+        mpResults.sort()
+        for item in mpResults :
+            if item is None : continue
+            print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+            print item[4]
+            print item[5]
+            totalIn += int(item[4].split(' ')[-1])
+            totalOut += int(item[5].split(' ')[-1])
     
-    totalIn = 0
-    totalOut = 0
-    mpResults.sort()
-    for item in mpResults :
-        if item is None : continue
-        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-        print item[4]
-        print item[5]
-        totalIn += int(item[4].split(' ')[-1])
-        totalOut += int(item[5].split(' ')[-1])
-    
-    print "\nTotal In:", totalIn
-    print "Total Out:", totalOut,"\n"
+        print "\nTotal In:", totalIn
+        print "Total Out:", totalOut,"\n"
     print "Start Time: %s" % str( begin )
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
@@ -328,8 +353,8 @@ def doInitialOrder(analysis, samples, **fargs) :
             
         print "\nTotal Iso:", totalIso
         
-        print "\nStart Time: %s" % str( begin )
-        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
 

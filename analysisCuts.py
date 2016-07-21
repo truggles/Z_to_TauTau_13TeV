@@ -39,7 +39,7 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 ZMass = 'LEG1_LEG2_Mass > 60 && LEG1_LEG2_Mass < 120'
 
 # EE for Z cand legs
-eeTrig = '(doubleEPass > 0 && LEG1MatchesDoubleE > 0 && LEG2MAtchesDoubleE > 0)'
+eeTrig = '(doubleEPass > 0 && LEG1MatchesDoubleE > 0 && LEG2MatchesDoubleE > 0)'
 eePt = '(LEG1Pt > 20 && LEG2Pt > 15 && LEG1Pt > LEG2Pt) || (LEG2Pt > 20 && LEG1Pt > 15 && LEG2Pt > LEG1Pt)'
 eeEta = 'abs(LEG1Eta) < 2.5 && abs(LEG2Eta) < 2.5'
 
@@ -84,9 +84,39 @@ def getCut( analysis, channel, cutName, isData=False ) :
         }, # end tt channel
         }, # end HTT analysis cuts
         'azh' : # analysis
-        { 'eeet' : {
+        { 'eeee' : {
             'goodZ' : [ZMass, eeTrig, eePt, eeEta]
-        } # end EEET
+        }, # end EEEE
+         'eeet' : {
+            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+        }, # end EEET
+         'eett' : {
+            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+        }, # end EETT
+         'eemt' : {
+            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+        }, # end EEMT
+         'eeem' : {
+            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+        }, # end EEEM
+         'eemm' : {
+            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+        }, # end EEMM
+         'mmmm' : {
+            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+        }, # end MMMM
+         'emmt' : {
+            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+        }, # end MMET
+         'mmtt' : {
+            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+        }, # end MMTT
+         'mmmt' : {
+            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+        }, # end MMMT
+         'emmm' : {
+            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+        } # end MMEM
         } # end AZH analysis cuts
     } # end cutMap
     
@@ -103,7 +133,10 @@ def getCut( analysis, channel, cutName, isData=False ) :
 
     cutString = ''
     for item in cuts1 :
-        tmp = item.replace( 'LEG1', 'e1').replace( 'LEG2', 'e2' )
+        if channel[:2] == 'ee' :
+            tmp = item.replace( 'LEG1', 'e1').replace( 'LEG2', 'e2' )
+        else :
+            tmp = item.replace( 'LEG1', 'm1').replace( 'LEG2', 'm2' )
         if cutString != '' :
             cutString += ' && '
         cutString += tmp

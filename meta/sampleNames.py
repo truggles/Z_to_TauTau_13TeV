@@ -215,7 +215,7 @@ def sampleDetails( analysis ) :
     for mass in [220, 240, 300, 320, 350, 400] :
         sampleMap['azh']['azh%i' % mass] = {
                 'DASPath' : '/AToZhToLLTauTau_M-%i_13TeV_madgraph_4f_LO/%s-v1/MINIAODSIM' % (mass, c80xReHLT),
-                'xsec' : -999.,
+                'xsec' : 1.,
                 'group' : 'azh'}
             
     return sampleMap[ analysis ]
