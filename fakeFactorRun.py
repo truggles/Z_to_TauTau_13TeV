@@ -19,8 +19,6 @@ ROOT.gROOT.Reset()
 analysis = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = analysis
-os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''

@@ -8,7 +8,7 @@
 import os
 from time import gmtime, strftime
 import ROOT
-from ROOT import gPad, gROOT
+from ROOT import gROOT
 import analysis1BaselineCuts
 from util.helpers import setUpDirs 
 import subprocess
@@ -20,8 +20,6 @@ ROOT.gROOT.Reset()
 analysis = 'htt'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = analysis
-os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
@@ -50,7 +48,7 @@ SamplesDataCards = ['data_tt', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJet
 
 #SamplesDataCards = ['data_tt','data_em']
 #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh'] # LO DYJets
-#SamplesDataCards = ['DYJets4',]
+SamplesDataCards = ['DYJets',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -66,13 +64,13 @@ params = {
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
-    'cutMapper' : 'syncCutsNtupleBuilding',
-    'cutMapper' : 'syncCutsNtupleLoose',
-    #'cutMapper' : 'signalCuts',
+    #'cutMapper' : 'syncCutsNtupleBuilding',
+    #'cutMapper' : 'syncCutsNtupleLoose',       # !
+    'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    'mid1' : '1June30a',
-    'mid2' : '2June30c',
-    'mid3' : '3June30c',
+    'mid1' : '1July18a',
+    'mid2' : '2July18a',
+    'mid3' : '3July18a',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -83,8 +81,8 @@ params = {
 
 
 samples = setUpDirs( samples, params, analysis )
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -94,9 +92,10 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
+runPlots = False
 if runPlots :
     """ Make our folders with directories of histos for each bkg """
-    #subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
+    subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
     
     qcdYields = {}
     for sign in ['SS', 'OS'] :
