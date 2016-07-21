@@ -11,6 +11,20 @@ import math
 from ROOT import gPad, gROOT
 
 
+def skipChanDataCombo( channel, sample, analysis ) :
+    # HTT
+    if analysis == 'htt' :
+        if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : return True
+        if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : return True
+        if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : return True
+        if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : return True
+    # AZH
+    if analysis == 'azh' :
+        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and (sample != 'data_ee') : return True
+        if (channel in ['mmmm', 'mmem', 'mmet', 'mmmt', 'mmtt']) and ('data' in sample) and (sample != 'data_mm') : return True
+    return False
+
+
 
 #for sample in samples :
 def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
@@ -159,13 +173,9 @@ def doInitialCuts(analysis, samples, **fargs) :
         while go :
             for channel in channels :
 
-                if channel == 'tt' and count >= fileLenTT : continue 
-                if channel == 'em' and count >= fileLenEM : continue 
-    
-                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+                # Check if we should skip running over data set
+                if skipChanDataCombo( channel, sample, analysis ) : continue
+
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
                 multiprocessingOutputs.append( pool.apply_async(runCuts, args=(analysis,
@@ -252,13 +262,9 @@ def doInitialOrder(analysis, samples, **fargs) :
         while go :
             for channel in channels :
     
-                if channel == 'tt' and count >= fileLenTT : continue 
-                if channel == 'em' and count >= fileLenEM : continue 
-    
-                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+                # Check if we should skip running over data set
+                if skipChanDataCombo( channel, sample, analysis ) : continue
+
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
                 if not fargs['debug'] == 'true' :
@@ -350,7 +356,7 @@ def drawHistos(analysis, samples, **fargs ) :
 
         # the gen matching samples are: based off of the DYJets samples
         loopList = []
-        if 'DYJets' in sample :
+        if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
             loopList.append( sample ) 
@@ -368,10 +374,8 @@ def drawHistos(analysis, samples, **fargs ) :
             
             for channel in channels :
 
-                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+                # Check if we should skip running over data set
+                if skipChanDataCombo( channel, sample, analysis ) : continue
 
                 if fargs['svFitPost'] == 'true' :
                     if 'data' in sample :
@@ -407,5 +411,6 @@ def drawHistos(analysis, samples, **fargs ) :
                 analysisPlots.plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind )
                 outFile.Close()
          
+
 if __name__ == '__main__' :
     runCutsAndIso('25ns', 'data_em', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)
