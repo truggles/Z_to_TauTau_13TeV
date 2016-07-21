@@ -39,8 +39,8 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 ZMass = 'LEG1_LEG2_Mass > 60 && LEG1_LEG2_Mass < 120'
 
 # EE for Z cand legs
-eeTrig = '(doubleEPass > 0 && LEG1MatchesDoubleE > 0 && LEG2MatchesDoubleE > 0)'
-eePt = '(LEG1Pt > 20 && LEG2Pt > 15 && LEG1Pt > LEG2Pt) || (LEG2Pt > 20 && LEG1Pt > 15 && LEG2Pt > LEG1Pt)'
+eeTrig = '(doubleE_23_12Pass > 0 && LEG1MatchesDoubleE23_12Path > 0 && LEG2MatchesDoubleE23_12Path > 0)'
+eePt = '(LEG1Pt > 28 && LEG2Pt > 20 && LEG1Pt > LEG2Pt) || (LEG2Pt > 28 && LEG1Pt > 20 && LEG2Pt > LEG1Pt)'
 eeEta = 'abs(LEG1Eta) < 2.5 && abs(LEG2Eta) < 2.5'
 
 # MM for Z cand legs
@@ -50,7 +50,7 @@ mmEta = 'abs(LEG1Eta) < 2.4 && abs(LEG2Eta) < 2.4'
 
 def getCut( analysis, channel, cutName, isData=False ) :
     
-    triggers = [tt40, tt35, tt32]
+    triggers = [tt40, tt35, tt32, eeTrig, mmTrig]
 
     cutMap = { 
         'htt' : # analysis
