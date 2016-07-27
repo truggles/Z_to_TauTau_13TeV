@@ -6,6 +6,7 @@ import subprocess
 from collections import OrderedDict
 import math
 
+# New minBias xsec: https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/611/2.html
 def makeDataPUTemplate( cert, puJson ) :
     zHome = os.getenv('_ZHOME_')
     os.chdir( zHome + 'meta/PileUpInfo/' )
@@ -18,7 +19,7 @@ def makeDataPUTemplate( cert, puJson ) :
         '--calcMode',
         'true',
         '--minBiasXsec',
-        '69000',
+        '63000',
         '--maxPileupBin',
         '50',
         '--numPileupBins',
