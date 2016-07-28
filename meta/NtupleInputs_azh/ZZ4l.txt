@@ -135,6 +135,7 @@
 /data/truggles/july19_azh_ZZ/ZZTo4L_13TeV_powheg_pythia8/submit/make_ntuples_cfg-BEBC5FB2-7F1A-E611-9247-002590DE6E3E/make_ntuples_cfg-BEBC5FB2-7F1A-E611-9247-002590DE6E3E.root
 /data/truggles/july19_azh_ZZ/ZZTo4L_13TeV_powheg_pythia8/submit/make_ntuples_cfg-C0560D03-811A-E611-A83A-0025904B6004/make_ntuples_cfg-C0560D03-811A-E611-A83A-0025904B6004.root
 /data/truggles/july19_azh_ZZ/ZZTo4L_13TeV_powheg_pythia8/submit/make_ntuples_cfg-C250E4B8-7F1A-E611-B4FF-00266CF94A4C/make_ntuples_cfg-C250E4B8-7F1A-E611-B4FF-00266CF94A4C.root
+/data/truggles/july19_azh_ZZ/ZZTo4L_13TeV_powheg_pythia8/submit/make_ntuples_cfg-CC441438-7D1A-E611-95AC-0025904B6004/make_ntuples_cfg-CC441438-7D1A-E611-95AC-0025904B6004.root
 /data/truggles/july19_azh_ZZ/ZZTo4L_13TeV_powheg_pythia8/submit/make_ntuples_cfg-CE71737E-7B1A-E611-9E41-002590DE6DE4/make_ntuples_cfg-CE71737E-7B1A-E611-9E41-002590DE6DE4.root
 /data/truggles/july19_azh_ZZ/ZZTo4L_13TeV_powheg_pythia8/submit/make_ntuples_cfg-CE9D8F40-7B1A-E611-85F4-0CC47A7FC6F8/make_ntuples_cfg-CE9D8F40-7B1A-E611-85F4-0CC47A7FC6F8.root
 /data/truggles/july19_azh_ZZ/ZZTo4L_13TeV_powheg_pythia8/submit/make_ntuples_cfg-D00ABF47-7B1A-E611-9544-00266CF3E128/make_ntuples_cfg-D00ABF47-7B1A-E611-9544-00266CF3E128.root

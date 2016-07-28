@@ -125,7 +125,7 @@
     "nNtupleFiles": 98, 
     "nlumis": 22664
   }, 
-  "data_tt": {
+  "dataTT": {
     "STATUS": "Error", 
     "DAS status": "ok", 
     "nEvents": 46505522, 

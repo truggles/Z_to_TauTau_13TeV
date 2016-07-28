@@ -40,23 +40,24 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
 
     """ Add in the gen matched DY catagorization """
-    genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-    dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
-    newSamples = {}
-    for sample in samples.keys() :
-        #print sample
-        if sample in dyJets :
-            for gen in genList :
-                #print gen, sample+'-'+gen
-                samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
-                genApp = gen.lower()
-                samples[ sample+'-'+gen ]['group'] = genApp
+    if analysis == 'htt' :
+        genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
+        dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
+        newSamples = {}
+        for sample in samples.keys() :
+            #print sample
+            if sample in dyJets :
+                for gen in genList :
+                    #print gen, sample+'-'+gen
+                    samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
+                    genApp = gen.lower()
+                    samples[ sample+'-'+gen ]['group'] = genApp
 
-    # Clean the samples list
-    for dyJet in dyJets :
-        if dyJet in samples.keys() :
-            del samples[ dyJet ]
-    samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
+        # Clean the samples list
+        for dyJet in dyJets :
+            if dyJet in samples.keys() :
+                del samples[ dyJet ]
+        samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
 
 
@@ -244,15 +245,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ''' Skip plotting unused shape systematics '''
                 if skipSystShapeVar( var, sample, channel ) : continue
     
-                # Remember data samples are called 'data_ee' and 'data_mm'
-                if channel in ['eeet', 'eemt', 'eett', 'eeem'] and sample == 'data_mm' : continue
-                if channel in ['emmt', 'mmmt', 'mmtt', 'emmm'] and sample == 'data_ee' : continue
-                if channel in ['ZEE',] and sample == 'data_mm' : continue
-                if channel in ['ZMM', 'ZXX'] and sample == 'data_ee' : continue
+                # Remember data samples are called 'dataEE' and 'dataMM'
+                if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and sample == 'dataMM' : continue
+                if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm'] and sample == 'dataEE' : continue
+                if channel in ['ZEE',] and sample == 'dataMM' : continue
+                if channel in ['ZMM', 'ZXX'] and sample == 'dataEE' : continue
             
-                if channel == 'tt' and sample == 'data_em' : continue
+                if channel == 'tt' and sample == 'dataEM' : continue
                 if channel == 'tt' and '-ZLL' in sample : continue
-                if channel == 'em' and sample == 'data_tt' : continue
+                if channel == 'em' and sample == 'dataTT' : continue
                 if channel == 'em' and '-ZJ' in sample : continue
                 if channel == 'em' and '-ZL' in sample and not '-ZLL' in sample : continue
                 if ops['qcdMC'] and sample == 'QCD' : continue
@@ -261,9 +262,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #if var == 'm_vis' : print sample
                 #print '%s2IsoOrderAndDups/%s_%s.root' % (analysis, sample, channel)
     
-                if 'data' in sample :
-                    tFile = ROOT.TFile('%s%s/data_%s.root' % (analysis, folderDetails, channel), 'READ')
-                elif 'QCD' in sample :
+                if 'QCD' in sample :
                     print "qcd in sample",sample
                     if ops['useQCDMakeName'] != 'x'  :
                         fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
@@ -339,8 +338,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             # A to Zh stuff
             if analysis == 'azh' :
-                stack.Add( sampHistos['zz'] )
+                stack.Add( sampHistos['top'] )
+                stack.Add( sampHistos['dyj'] )
                 stack.Add( sampHistos['wz'] )
+                stack.Add( sampHistos['zz'] )
     
             # Scale signal samples for viewing
             sampHistos[ signal ].Scale( signalSF )

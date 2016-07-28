@@ -7,8 +7,8 @@ WZ=july21_azh_WZ_2
 TT=july28_azh_TT
 DY=july28_azh_DY
 
-ls /data/truggles/${DATA}/data_DoubleMuon_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                    > data_mm.txt 
-ls /data/truggles/${DATA}/data_DoubleEG_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                      > data_ee.txt 
+ls /data/truggles/${DATA}/data_DoubleMuon_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                    > dataMM.txt 
+ls /data/truggles/${DATA}/data_DoubleEG_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                      > dataEE.txt 
 #ls /data/truggles/${BKGS}/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets1.txt 
 #ls /data/truggles/${BKGS}/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets2.txt 
 #ls /data/truggles/${BKGS}/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets3.txt 

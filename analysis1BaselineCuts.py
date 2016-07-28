@@ -14,14 +14,14 @@ from ROOT import gPad, gROOT
 def skipChanDataCombo( channel, sample, analysis ) :
     # HTT
     if analysis == 'htt' :
-        if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : return True
-        if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : return True
-        if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : return True
-        if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : return True
+        if (channel == 'em') and ('data' in sample) and (sample != 'dataEM') : return True
+        if (channel == 'et') and ('data' in sample) and (sample != 'dataE') : return True
+        if (channel == 'mt') and ('data' in sample) and (sample != 'dataM') : return True
+        if (channel == 'tt') and ('data' in sample) and (sample != 'dataTT') : return True
     # AZH
     if analysis == 'azh' :
-        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and (sample != 'data_ee') : return True
-        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt']) and ('data' in sample) and (sample != 'data_mm') : return True
+        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and (sample != 'dataEE') : return True
+        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt']) and ('data' in sample) and (sample != 'dataMM') : return True
     return False
 
 
@@ -35,10 +35,7 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
     #print "###   %s  ###" % sample
     #print "Channel:  %s" % channel
     if svFitPost == 'true' :
-        if 'data' in sample :
-            sampleList = 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample)
-        else :
-            sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel)
+        sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel)
         path = '%s/Ntuple' % channel
     else :
         sampleList = 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample)
@@ -86,8 +83,7 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
 
 def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost) :
 
-    if 'data' in sample : save = 'data_%i_%s' % (count, channel)
-    else : save = '%s_%i_%s' % (sample, count, channel)
+    save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
     print "%5i %20s %10s %3i: ====>>> START Cuts <<<====" % (num, sample, channel, count)
 
@@ -118,8 +114,7 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
     #if svFitPost == 'true' : SVF = True
     #else : SVF = False
 
-    if 'data' in sample : save = 'data_%i_%s' % (count, channel)
-    else : save = '%s_%i_%s' % (sample, count, channel)
+    save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
     print "%5i %20s %10s %3i: ====>>> START Iso Order <<<====" % (num, sample, channel, count)
 
@@ -157,12 +152,9 @@ def doInitialCuts(analysis, samples, **fargs) :
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
-            if 'data' in sample :
-                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample) )
-            else :
-                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
-                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
-                fileLen = max( fileLenEM, fileLenTT )
+            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
+            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
+            fileLen = max( fileLenEM, fileLenTT )
         else :
             fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
         if fileLen == 0 : 
@@ -271,12 +263,9 @@ def doInitialOrder(analysis, samples, **fargs) :
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
-            if 'data' in sample :
-                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample) )
-            else :
-                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
-                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
-                fileLen = max( fileLenEM, fileLenTT )
+            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
+            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
+            fileLen = max( fileLenEM, fileLenTT )
         else :
             fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
         if fileLen == 0 : 
@@ -403,10 +392,7 @@ def drawHistos(analysis, samples, **fargs ) :
                 if skipChanDataCombo( channel, sample, analysis ) : continue
 
                 if fargs['svFitPost'] == 'true' :
-                    if 'data' in sample :
-                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (analysis, sample) )
-                    else :
-                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel) )
+                    fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel) )
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen
@@ -438,4 +424,4 @@ def drawHistos(analysis, samples, **fargs ) :
          
 
 if __name__ == '__main__' :
-    runCutsAndIso('25ns', 'data_em', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)
+    runCutsAndIso('25ns', 'dataEM', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)

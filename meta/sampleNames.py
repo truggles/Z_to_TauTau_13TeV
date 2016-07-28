@@ -33,7 +33,7 @@ def sampleDetails( analysis ) :
         }}, # end Sync sample
 
         'htt' : {
-            'data_tt' : {
+            'dataTT' : {
                 'DASPath' : '/Tau/Run2015D-16Dec2015-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
@@ -137,11 +137,11 @@ def sampleDetails( analysis ) :
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
             #'WZ3l1nu' : ('/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/%s-v1/MINIAODSIM' % c80x, 4.666 ),
             #'ZZ4l' :    ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80x, 1.212 ),
-            'data_ee' : {
+            'dataEE' : {
                 'DASPath' : '/DoubleEG/Run2016E-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
-            'data_mm' : {
+            'dataMM' : {
                 'DASPath' : '/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},

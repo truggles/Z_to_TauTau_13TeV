@@ -7,8 +7,8 @@ DYBIG=april08_DYJets250Mil
 
 
 
-ls /data/truggles/${DATA}/data_Tau_Run2016B_25ns/submit/make_ntuples_cfg-*/*.root                           > data_tt.txt 
-#ls /data/truggles/${DATA}/data_MuonEG_Run2015D_16Dec2015_25ns/submit/make_ntuples_cfg-*/*.root              > data_em.txt 
+ls /data/truggles/${DATA}/data_Tau_Run2016B_25ns/submit/make_ntuples_cfg-*/*.root                           > dataTT.txt 
+#ls /data/truggles/${DATA}/data_MuonEG_Run2015D_16Dec2015_25ns/submit/make_ntuples_cfg-*/*.root              > dataEM.txt 
 #ls /data/truggles/${DYBIG}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJetsBig.txt 
 ls /data/truggles/${BKGS}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                 > DYJets.txt 
 ls /data/truggles/${BKGS}/DYJetsToLL_M-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJetsHigh.txt 

@@ -13,8 +13,8 @@ def makeMetaJSON( analysis, ch = 'tt' ) :
 
     currentDASSamples = {
         'Sync' : ['Sync-HtoTT',],
-        'htt' : ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'data_tt', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
-        'azh' : ['data_ee', 'data_mm', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4e', 'ggZZ4m', 'ggZZ2m2t', 'TTJ', 'TTZ', 'TTTT', 'WZ3l1nu', 'WminusHtoTauTau', 'WplusHtoTauTau', 'ZHtoTauTau', 'ZZ2l2q', 'ZZ4l'],
+        'htt' : ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
+        'azh' : ['dataEE', 'dataMM', 'DYJets', 'TT', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4e', 'ggZZ4m', 'ggZZ2m2t', 'TTJ', 'TTZ', 'TTTT', 'WZ3l1nu', 'WminusHtoTauTau', 'WplusHtoTauTau', 'ZHtoTauTau', 'ZZ2l2q', 'ZZ4l'],
     }
 
     # A to Zh sample masses
@@ -25,17 +25,17 @@ def makeMetaJSON( analysis, ch = 'tt' ) :
 
     # Data samples where we have multipl runs
     dataSamples = {
-        'data_ee' : [
+        'dataEE' : [
             '/DoubleEG/Run2016B-PromptReco-v2/MINIAOD',
             '/DoubleEG/Run2016C-PromptReco-v2/MINIAOD',
             '/DoubleEG/Run2016D-PromptReco-v2/MINIAOD',
             '/DoubleEG/Run2016E-PromptReco-v2/MINIAOD'],
-        'data_mm' : [
+        'dataMM' : [
             '/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD',
             '/DoubleMuon/Run2016C-PromptReco-v2/MINIAOD',
             '/DoubleMuon/Run2016D-PromptReco-v2/MINIAOD',
             '/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD'],
-        'data_tt' : [
+        'dataTT' : [
             '/Tau/Run2016B-PromptReco-v2/MINIAOD',
             '/Tau/Run2016C-PromptReco-v2/MINIAOD',
             '/Tau/Run2016D-PromptReco-v2/MINIAOD',

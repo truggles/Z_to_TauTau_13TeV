@@ -1,17 +1,45 @@
 {
-  "data_ee": {
+  "DYJets": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 228986905, 
-    "DAS Path": "/DoubleEG/Run2016E-PromptReco-v2/MINIAOD", 
-    "nfiles": 3025, 
-    "nblocks": 209, 
-    "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -2961036, 
-    "summedWeights": 0.0, 
-    "nevents": 262640367, 
-    "nNtupleFiles": 2964, 
-    "nlumis": 124466
+    "nEvents": 20920902, 
+    "DAS Path": "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext1-v1/MINIAODSIM", 
+    "nfiles": 1257, 
+    "nblocks": 90, 
+    "Cross Section (pb)": 6025.198466, 
+    "summedWeightsNorm": 20920902.0, 
+    "summedWeights": 20920902.0, 
+    "nevents": 49868990, 
+    "nNtupleFiles": 529, 
+    "nlumis": 720965
+  }, 
+  "TT": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 12204218, 
+    "DAS Path": "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext3-v1/MINIAODSIM", 
+    "nfiles": 843, 
+    "nblocks": 153, 
+    "Cross Section (pb)": 831.76, 
+    "summedWeightsNorm": 12204218.0, 
+    "summedWeights": 12204218.0, 
+    "nevents": 33364899, 
+    "nNtupleFiles": 313, 
+    "nlumis": 167457
+  }, 
+  "azh320": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 20000, 
+    "DAS Path": "/AToZhToLLTauTau_M-320_13TeV_madgraph_4f_LO/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM", 
+    "nfiles": 1, 
+    "nblocks": 1, 
+    "Cross Section (pb)": 1.0, 
+    "summedWeightsNorm": 20000.0, 
+    "summedWeights": 20000.0, 
+    "nevents": 20000, 
+    "nNtupleFiles": 1, 
+    "nlumis": 100
   }, 
   "azh400": {
     "STATUS": "Good to Go!", 
@@ -26,6 +54,20 @@
     "nevents": 20000, 
     "nNtupleFiles": 2, 
     "nlumis": 100
+  }, 
+  "dataMM": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 135996828, 
+    "DAS Path": "/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD", 
+    "nfiles": 2038, 
+    "nblocks": 227, 
+    "Cross Section (pb)": 999.0, 
+    "summedWeightsNorm": -1785213, 
+    "summedWeights": 0.0, 
+    "nevents": 172304515, 
+    "nNtupleFiles": 1787, 
+    "nlumis": 138881
   }, 
   "WZ3l1nu": {
     "STATUS": "Error", 
@@ -69,47 +111,19 @@
     "nNtupleFiles": 2, 
     "nlumis": 100
   }, 
-  "azh320": {
-    "STATUS": "Good to Go!", 
-    "DAS status": "ok", 
-    "nEvents": 20000, 
-    "DAS Path": "/AToZhToLLTauTau_M-320_13TeV_madgraph_4f_LO/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM", 
-    "nfiles": 1, 
-    "nblocks": 1, 
-    "Cross Section (pb)": 1.0, 
-    "summedWeightsNorm": 20000.0, 
-    "summedWeights": 20000.0, 
-    "nevents": 20000, 
-    "nNtupleFiles": 1, 
-    "nlumis": 100
-  }, 
   "ZZ4l": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 6555284, 
+    "nEvents": 6596760, 
     "DAS Path": "/ZZTo4L_13TeV_powheg_pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM", 
     "nfiles": 191, 
     "nblocks": 39, 
     "Cross Section (pb)": 1.256, 
-    "summedWeightsNorm": 6555284.0, 
-    "summedWeights": 6555284.0, 
+    "summedWeightsNorm": 6596760.0, 
+    "summedWeights": 6596760.0, 
     "nevents": 6617344, 
-    "nNtupleFiles": 165, 
+    "nNtupleFiles": 166, 
     "nlumis": 34228
-  }, 
-  "data_mm": {
-    "STATUS": "Error", 
-    "DAS status": "ok", 
-    "nEvents": 135996828, 
-    "DAS Path": "/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD", 
-    "nfiles": 1812, 
-    "nblocks": 194, 
-    "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1785213, 
-    "summedWeights": 0.0, 
-    "nevents": 153153975, 
-    "nNtupleFiles": 1787, 
-    "nlumis": 120823
   }, 
   "azh240": {
     "STATUS": "Good to Go!", 
@@ -124,6 +138,20 @@
     "nevents": 20000, 
     "nNtupleFiles": 1, 
     "nlumis": 100
+  }, 
+  "dataEE": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 229175832, 
+    "DAS Path": "/DoubleEG/Run2016E-PromptReco-v2/MINIAOD", 
+    "nfiles": 3409, 
+    "nblocks": 234, 
+    "Cross Section (pb)": 999.0, 
+    "summedWeightsNorm": -2963034, 
+    "summedWeights": 0.0, 
+    "nevents": 295667344, 
+    "nNtupleFiles": 2966, 
+    "nlumis": 142728
   }, 
   "azh220": {
     "STATUS": "Good to Go!", 
