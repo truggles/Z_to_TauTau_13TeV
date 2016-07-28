@@ -152,7 +152,15 @@ def sampleDetails( analysis ) :
             'WZ3l1nu' : {
                 'DASPath' : '/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 4.42965, # Devin's
-                'group' : 'wz'}
+                'group' : 'wz'},
+            'DYJets' :     { 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 
+                'xsec' : 4954.0 * 1.216229,
+                'group' : 'dyj'},
+            'TT' :         { 
+                'DASPath' : '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c80x,
+                'xsec' : 831.76,
+                'group' : 'top'},
             #'TTZ' : {
             #    'DASPath' : '/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v3/MINIAODSIM' % c80x,
             #    'xsec' : 999.,

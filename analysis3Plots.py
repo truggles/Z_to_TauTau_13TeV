@@ -114,8 +114,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         }, # htt
             'azh' : {
         'obs' : [ROOT.kBlack, 'Data'],
-        'zz' : [ROOT.TColor.GetColor(100,182,232), 'ZZ'],
-        'wz' : [ROOT.kAzure+6, 'WZ'],
+        'zz' : [ROOT.kGreen, 'ZZ'],
+        'wz' : [ROOT.kAzure, 'WZ'],
+        'dyj' : [ROOT.kRed, 'ZJets'],
+        'top' : [ROOT.kYellow, 't#bar{t}'],
         'azh' : [ROOT.kBlue, 'A#rightarrowZh (%s)' % azhMass],
         } # azh
     } # sampInfo
@@ -242,6 +244,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ''' Skip plotting unused shape systematics '''
                 if skipSystShapeVar( var, sample, channel ) : continue
     
+                # Remember data samples are called 'data_ee' and 'data_mm'
+                if channel in ['eeet', 'eemt', 'eett', 'eeem'] and sample == 'data_mm' : continue
+                if channel in ['emmt', 'mmmt', 'mmtt', 'emmm'] and sample == 'data_ee' : continue
+                if channel in ['ZEE',] and sample == 'data_mm' : continue
+                if channel in ['ZMM', 'ZXX'] and sample == 'data_ee' : continue
+            
                 if channel == 'tt' and sample == 'data_em' : continue
                 if channel == 'tt' and '-ZLL' in sample : continue
                 if channel == 'em' and sample == 'data_tt' : continue
@@ -256,7 +264,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if 'data' in sample :
                     tFile = ROOT.TFile('%s%s/data_%s.root' % (analysis, folderDetails, channel), 'READ')
                 elif 'QCD' in sample :
-                    print "qcd in sample"
+                    print "qcd in sample",sample
                     if ops['useQCDMakeName'] != 'x'  :
                         fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
                         print fName 
@@ -273,7 +281,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 else :
                     #print "File: '%s%s/%s_%s.root'" % (analysis, folderDetails, sample, channel)
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
-                print tFile
+                #print tFile
     
     
                 dic = tFile.Get("%s_Histos" % channel )
@@ -402,7 +410,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioHist.Sumw2()
                 ratioHist.Add( sampHistos['obs'] )
                 ratioHist.Divide( stack.GetStack().Last() )
-                ratioHist.SetMaximum( 2. )
+                ratioHist.SetMaximum( 4. )
                 ratioHist.SetMinimum( 0. )
                 if channel == 'tt' :
                     ratioHist.SetMaximum( 1.5 )

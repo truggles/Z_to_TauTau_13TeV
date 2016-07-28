@@ -4,7 +4,8 @@ BKGS=june25_AtoZh80X
 SIG=july19_azh_sig3
 ZZ=july19_azh_ZZ
 WZ=july21_azh_WZ_2
-
+TT=july28_azh_TT
+DY=july28_azh_DY
 
 ls /data/truggles/${DATA}/data_DoubleMuon_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                    > data_mm.txt 
 ls /data/truggles/${DATA}/data_DoubleEG_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                      > data_ee.txt 
@@ -24,6 +25,8 @@ ls /data/truggles/${WZ}/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/*/*/*.root   
 #ls /data/truggles/${BKGS}/ZHToTauTau_M125_13TeV_powheg_pythia8/*/*/*.root                                   > ZHtoTauTau.txt
 #ls /data/truggles/${BKGS}/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/*/*/*.root                            > ZZ2l2q.txt
 ls /data/truggles/${ZZ}/ZZTo4L_13TeV_powheg_pythia8/*/*/*.root                                            > ZZ4l.txt
+ls /data/truggles/${TT}/TT_TuneCUETP8M1_13TeV-powheg-pythia8/*/*/*.root                                   > TT.txt
+ls /data/truggles/${DY}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                 > DYJets.txt
 
 
 

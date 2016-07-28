@@ -17,7 +17,6 @@ def setUpDirs( samples, params, analysis ) :
     for key in params :
         ofile.write( "%s : %s\n" % (key, params[key]) )
     ofile.close() 
-    return samples
 
 
 # Can use to return all hists in a dir

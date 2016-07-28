@@ -116,7 +116,6 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         xsec = '*(XSecLumiWeight)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
-        dataES = '*(pt_1 > 40 && pt_2 > 40)'
         #print var,es
         #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
         totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
@@ -133,15 +132,13 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         if hasattr( chain, varBase ) :
             #print "trying"
             if isData : # Data has no GenWeight and by def has puweight = 1
-                if var == 'm_vis' and blind :
-                    chain.Draw( '%s>>%s' % (var, var), '(m_vis < 150)%s' % additionalCut )
-                    histos[ var ] = gPad.GetPrimitive( "%s" % var )
-                else :
-                    chain.Draw( '%s>>%s' % (var, var), '1%s%s' % (additionalCut, dataES) )
-                    histos[ var ] = gPad.GetPrimitive( "%s" % var )
-                    if var == 'm_vis' :
-                        print 'm_vis'
-                        print "Data Count:", histos[ var ].Integral()
+                dataES = ESCuts( 'data', channel, var )
+                #print 'dataES',dataES
+                chain.Draw( '%s>>%s' % (var, var), '1%s%s' % (additionalCut, dataES) )
+                histos[ var ] = gPad.GetPrimitive( "%s" % var )
+                if var == 'm_vis' :
+                    print 'm_vis'
+                    print "Data Count:", histos[ var ].Integral()
             else :
 
                 chain.Draw( '%s>>%s' % (var, var), '%s' % totalCutAndWeightMC )
@@ -281,16 +278,28 @@ def getHistoDict( analysis, channel ) :
             'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
             'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
             'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
-            'm_vis' : (350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
-            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
-            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
+            'm_vis' : (80, 50, 130, 2, 'Z Mass [GeV]', ' GeV'),
+            'LT' : (600, 0, 600, 40, 'Total LT [GeV]', ' GeV'),
+            'Mt' : (600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'),
             'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+            'pt_1' : (200, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'),
+            'pt_2' : (200, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'),
+            'pt_3' : (200, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'),
+            'pt_4' : (200, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'),
+            'eta_1' : (60, -3, 3, 4, 'Leg1 Eta', ' Eta'),
+            'eta_2' : (60, -3, 3, 4, 'Leg2 Eta', ' Eta'),
+            'eta_3' : (60, -3, 3, 4, 'Leg3 Eta', ' Eta'),
+            'eta_4' : (60, -3, 3, 4, 'Leg4 Eta', ' Eta'),
+            'iso_1' : (20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''),
+            'iso_2' : (20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''),
             #'jpt_1' : (400, 0, 200, 20, 'Leading Jet Pt', ' GeV'),
             #'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
             #'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
             #'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
             #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
             'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
+            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
+            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
         }
         return genVarMap
 

@@ -48,15 +48,16 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 10,
+    'numCores' : 20,
     'numFilesPerCycle' : 20,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'],
     #'channels' : ['eeet','eett','eemt','eeem'],
-    #'channels' : ['eeet',],
+    #'channels' : ['eeem','emmm'],
     'cutMapper' : 'goodZ',
-    'mid1' : '1July27f',
-    'mid2' : '2July27f',
-    'mid3' : '3July27f',
+    #'cutMapper' : 'goodZTest2',
+    'mid1' : '1July28h_addIDs',
+    'mid2' : '2July28h_addIDs',
+    'mid3' : '3July28h_addIDs',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -65,27 +66,36 @@ params = {
     'doFRMthd' : 'false',
 }
 
-samples = setUpDirs( samples, params, analysis )
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
-
-
 """ Get samples with map of attributes """
+setUpDirs( samples, params, analysis ) # Print config file and set up dirs
 import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
-    
+
+
+#analysis1BaselineCuts.doInitialCuts(analysis, samples.keys(), **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples.keys(), **params)
+
 
 runPlots = True
 #runPlots = False
-useMerge = True
-#useMerge = False
-merge = ['ZEE', 'ZMM', 'ZXX']
 if runPlots :
     print params
+    ''' Draw histos from TTrees '''
     #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ''' merge channels '''
+    useMerge = False
+    merge = []
+    if len( params['channels'] ) > 3 :
+        if 'eeet' in params['channels'] and 'eemt' in params['channels'] and 'eett' in params['channels'] and 'eeem' in params['channels'] :
+            useMerge = True
+            merge.append( 'ZEE' )
+        if 'emmt' in params['channels'] and 'mmmt' in params['channels'] and 'mmtt' in params['channels'] and 'emmm' in params['channels'] :
+            useMerge = True
+            merge.append( 'ZMM' )
+        if len( params['channels'] ) > 7 :
+            merge.append( 'ZXX' )
     if useMerge :
         if 'ZEE' in merge :
             mergeChannels( analysis, params['mid3'], samples.keys(), ['eeet','eett','eemt','eeem'], 'ZEE' )
@@ -96,8 +106,8 @@ if runPlots :
         for m in merge :
             params['channels'].append( m )
 
-    text=False
-    #text=True
+    #text=False
+    text=True
     kwargs = { 'text':text, }
     print params
     #analysis3Plots.makeLotsOfPlots( analysis, samples, ['eeet',], params['mid3'], **kwargs  )
