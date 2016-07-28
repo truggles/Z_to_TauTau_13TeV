@@ -37,16 +37,41 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 
 # AtoZh
 ZMass = 'LEG1_LEG2_Mass > 60 && LEG1_LEG2_Mass < 120'
+ZDXYZ = 'LEG1PVDXY < 0.045 && LEG1PVDZ < 0.2 && LEG2PVDXY < 0.045 && LEG2PVDZ < 0.2'
+HDXYZ = 'LEG3PVDXY < 0.045 && LEG3PVDZ < 0.2 && LEG4PVDXY < 0.045 && LEG4PVDZ < 0.2'
+ZOS = 'LEG1_LEG2_SS == 0'
 
 # EE for Z cand legs
+# Preselection
 eeTrig = '(doubleE_23_12Pass > 0 && LEG1MatchesDoubleE23_12Path > 0 && LEG2MatchesDoubleE23_12Path > 0)'
-eePt = '(LEG1Pt > 28 && LEG2Pt > 20 && LEG1Pt > LEG2Pt) || (LEG2Pt > 28 && LEG1Pt > 20 && LEG2Pt > LEG1Pt)'
+eePt = '((LEG1Pt > 28 && LEG2Pt > 20 && LEG1Pt > LEG2Pt) || (LEG2Pt > 28 && LEG1Pt > 20 && LEG2Pt > LEG1Pt))'
 eeEta = 'abs(LEG1Eta) < 2.5 && abs(LEG2Eta) < 2.5'
+eeIso = 'e1IsoDB03 < 0.3 && e2IsoDB03 < 0.3'
+eeHits = 'e1PassesConversionVeto > 0 && e1MissingHits < 2 && e2PassesConversionVeto > 0 && e2MissingHits < 2'
+eeIDL = 'LEG1MVANonTrigWP90 > 0 && LEG2MVANonTrigWP90 > 0'
 
 # MM for Z cand legs
 mmTrig = 'doubleMuPass > 0 && LEG1MatchesDoubleMu > 0 && LEG2MatchesDoubleMu > 0'
-mmPt = '(LEG1Pt > 20 && LEG2Pt > 10 && LEG1Pt > LEG2Pt) || (LEG2Pt > 20 && LEG1Pt > 10 && LEG2Pt > LEG1Pt)'
+mmPt = '((LEG1Pt > 20 && LEG2Pt > 10 && LEG1Pt > LEG2Pt) || (LEG2Pt > 20 && LEG1Pt > 10 && LEG2Pt > LEG1Pt))'
 mmEta = 'abs(LEG1Eta) < 2.4 && abs(LEG2Eta) < 2.4'
+mmIso = 'm1IsoDB03 < 0.3 && m2IsoDB03 < 0.3'
+mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0'
+
+# ET Higgs
+eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3'
+mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3'
+xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
+# MT Higgs
+eemtM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.3'
+mmmtM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3'
+xxmtT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
+# TT Higgs
+xxttTT = 't1Pt > 20 && abs(t1Eta) < 2.5 && t2Pt > 20 && abs(t2Eta) < 2.5 && t1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
+# EM Higgs
+eeemE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3'
+mmemE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3'
+eeemM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.3'
+mmemM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3'
 
 def getCut( analysis, channel, cutName, isData=False ) :
     
@@ -85,37 +110,37 @@ def getCut( analysis, channel, cutName, isData=False ) :
         }, # end HTT analysis cuts
         'azh' : # analysis
         { 'eeee' : {
-            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eePt, eeEta]
         }, # end EEEE
          'eeet' : {
-            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeIDL, eePt, eeEta, ZDXYZ, eeetE, xxetT]
         }, # end EEET
          'eett' : {
-            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeIDL, eePt, eeEta, ZDXYZ, xxttTT]
         }, # end EETT
          'eemt' : {
-            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeIDL, eePt, eeEta, ZDXYZ, eemtM, xxmtT]
         }, # end EEMT
          'eeem' : {
-            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeIDL, eePt, eeEta, ZDXYZ, eeemE, eeemM]
         }, # end EEEM
          'eemm' : {
-            'goodZ' : [ZMass, eeTrig, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeIDL, eePt, eeEta]
         }, # end EEMM
          'mmmm' : {
-            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIDL, mmPt, mmEta]
         }, # end MMMM
          'emmt' : {
-            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIDL, mmPt, mmEta, ZDXYZ, mmetE, xxetT]
         }, # end MMET
          'mmtt' : {
-            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIDL, mmPt, mmEta, ZDXYZ, xxttTT]
         }, # end MMTT
          'mmmt' : {
-            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIDL, mmPt, mmEta, ZDXYZ, mmmtM, xxmtT]
         }, # end MMMT
          'emmm' : {
-            'goodZ' : [ZMass, mmTrig, mmPt, mmEta]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIDL, mmPt, mmEta, ZDXYZ, mmemE, mmemM]
         } # end MMEM
         } # end AZH analysis cuts
     } # end cutMap
@@ -131,16 +156,34 @@ def getCut( analysis, channel, cutName, isData=False ) :
             if trig in cuts1 :
                 cuts1.remove( trig )
 
+    prodMap = {
+        'em' : ('e', 'm'),
+        'et' : ('e', 't'),
+        'mt' : ('m', 't'),
+        'tt' : ('t1', 't2'),
+        'eeem' : ('e1', 'e2', 'e3', 'm'),
+        'eeet' : ('e1', 'e2', 'e3', 't'),
+        'eemt' : ('e1', 'e2', 'm', 't'),
+        'eett' : ('e1', 'e2', 't1', 't2'),
+        'emmm' : ('m1', 'm2', 'e', 'm3'),
+        'emmt' : ('m1', 'm2', 'e', 't'),
+        'mmmt' : ('m1', 'm2', 'm3', 't'),
+        'mmtt' : ('m1', 'm2', 't1', 't2'),
+    }
+
     cutString = ''
     for item in cuts1 :
-        if channel[:2] == 'ee' :
-            tmp = item.replace( 'LEG1', 'e1').replace( 'LEG2', 'e2' )
-        else :
-            tmp = item.replace( 'LEG1', 'm1').replace( 'LEG2', 'm2' )
+        tmp = item.replace( 'LEG1', prodMap[channel][0] )
+        tmp = tmp.replace( 'LEG2', prodMap[channel][1] )
+        if analysis == 'azh' :
+            tmp = tmp.replace( 'LEG3', prodMap[channel][2] )
+            tmp = tmp.replace( 'LEG4', prodMap[channel][3] )
+
         if cutString != '' :
             cutString += ' && '
         cutString += tmp
     cutString = '('+cutString+')'
+    #print cutString
     return cutString
 
 

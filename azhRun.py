@@ -10,7 +10,7 @@ from time import gmtime, strftime
 import ROOT
 from ROOT import gROOT
 import analysis1BaselineCuts
-from util.helpers import setUpDirs 
+from util.helpers import setUpDirs, mergeChannels
 import subprocess
 ROOT.gROOT.Reset()
 
@@ -37,6 +37,7 @@ for mass in [220, 240, 300, 320, 350, 400] :
     azhSamples.append('azh%i' % mass)
 
 #azhSamples=['azh350',]
+#azhSamples=['data_ee', 'data_mm']
 samples = azhSamples
 
 ''' These parameters are fed into the 2 main function calls.
@@ -47,14 +48,15 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 25,
+    'numCores' : 10,
     'numFilesPerCycle' : 20,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'],
+    #'channels' : ['eeet','eett','eemt','eeem'],
     #'channels' : ['eeet',],
     'cutMapper' : 'goodZ',
-    'mid1' : '1July20a',
-    'mid2' : '2July20a',
-    'mid3' : '3July20a',
+    'mid1' : '1July27f',
+    'mid2' : '2July27f',
+    'mid3' : '3July27f',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -76,12 +78,31 @@ samples = returnSampleDetails( analysis, samples )
 
 runPlots = True
 #runPlots = False
+useMerge = True
+#useMerge = False
+merge = ['ZEE', 'ZMM', 'ZXX']
 if runPlots :
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    print params
+    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+
+    ''' merge channels '''
+    if useMerge :
+        if 'ZEE' in merge :
+            mergeChannels( analysis, params['mid3'], samples.keys(), ['eeet','eett','eemt','eeem'], 'ZEE' )
+        if 'ZMM' in merge :
+            mergeChannels( analysis, params['mid3'], samples.keys(), ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
+        if 'ZXX' in merge :
+            mergeChannels( analysis, params['mid3'], samples.keys(), ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
+        for m in merge :
+            params['channels'].append( m )
+
     text=False
     #text=True
     kwargs = { 'text':text, }
-    analysis3Plots.makeLotsOfPlots( analysis, samples, ['eeet',], params['mid3'], **kwargs  )
+    print params
+    #analysis3Plots.makeLotsOfPlots( analysis, samples, ['eeet',], params['mid3'], **kwargs  )
+    #analysis3Plots.makeLotsOfPlots( analysis, samples, ['ZEE',], params['mid3'], **kwargs  )
+    analysis3Plots.makeLotsOfPlots( analysis, samples, params['channels'], params['mid3'], **kwargs  )
     
     
     

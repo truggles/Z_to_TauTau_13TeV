@@ -73,7 +73,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     azhMass = 350
     mssmSF = 100
     higgsSF = 10
-    azhSF = 10
+    azhSF = .1
     
 
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
@@ -82,7 +82,20 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     chans = {
         'tt' : '#tau_{h}#tau_{h}',
         'em' : 'e#mu',
-        'eeet' : 'eee#tau_h',
+        'eeet' : 'eee#tau_{h}',
+        'eemt' : 'ee#mu#tau_{h}',
+        'eett' : 'ee#tau_{h}#tau_{h}',
+        'eeem' : 'eee#mu',
+        'eeee' : 'eeee',
+        'eemm' : 'ee#mu#mu',
+        'emmt' : '#mu#mue#tau_{h}',
+        'mmmt' : '#mu#mu#mu#tau_{h}',
+        'mmtt' : '#mu#mu#tau_{h}#tau_{h}',
+        'emmm' : '#mu#mue#mu',
+        'mmmm' : '#mu#mu#mu#mu',
+        'ZEE' : 'Z#rightarrowee',
+        'ZMM' : 'Z#rightarrow#mu#mu',
+        'ZXX' : 'Z#rightarrowee/#mu#mu',
     }
     
     
@@ -260,6 +273,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 else :
                     #print "File: '%s%s/%s_%s.root'" % (analysis, folderDetails, sample, channel)
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                print tFile
     
     
                 dic = tFile.Get("%s_Histos" % channel )
@@ -388,8 +402,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioHist.Sumw2()
                 ratioHist.Add( sampHistos['obs'] )
                 ratioHist.Divide( stack.GetStack().Last() )
-                ratioHist.SetMaximum( 1.5 )
-                ratioHist.SetMinimum( 0.5 )
+                ratioHist.SetMaximum( 2. )
+                ratioHist.SetMinimum( 0. )
                 if channel == 'tt' :
                     ratioHist.SetMaximum( 1.5 )
                     ratioHist.SetMinimum( 0.5 )
