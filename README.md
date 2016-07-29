@@ -10,6 +10,7 @@ Additionally, before you get going, make sure that you install the
     recipe/install_python.sh
 ```
 Load from GitHub the measured lepton efficiencies for scale factors
+and HLT DoubleTau35 efficiencies
 ```bash
     source setup.py
 ```
