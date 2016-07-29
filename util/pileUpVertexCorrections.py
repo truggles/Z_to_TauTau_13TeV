@@ -6,7 +6,7 @@ import subprocess
 from collections import OrderedDict
 import math
 
-# New minBias xsec: https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/611/2.html
+# New minBias xsec: https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/613/2/1/1/1.html
 def makeDataPUTemplate( cert, puJson ) :
     zHome = os.getenv('_ZHOME_')
     os.chdir( zHome + 'meta/PileUpInfo/' )
@@ -19,7 +19,7 @@ def makeDataPUTemplate( cert, puJson ) :
         '--calcMode',
         'true',
         '--minBiasXsec',
-        '63000',
+        '69200',
         '--maxPileupBin',
         '50',
         '--numPileupBins',
@@ -145,7 +145,7 @@ if __name__ == '__main__' :
     zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
     os.environ['_ZHOME_'] = zHome
     makeDataPUTemplate( 'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt', 'pileup_latest.txt' ) # July 22, 12.9/fb
-    makeMCPUTemplate()
+    #makeMCPUTemplate()
     print PUreweight()
 
 
