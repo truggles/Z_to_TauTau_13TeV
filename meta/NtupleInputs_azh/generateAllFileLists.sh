@@ -6,13 +6,14 @@ ZZ=july19_azh_ZZ
 WZ=july21_azh_WZ_2
 TT=july28_azh_TT
 DY=july28_azh_DY
+DYJB=july29_azh_DYjb
 
 ls /data/truggles/${DATA}/data_DoubleMuon_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                    > dataMM.txt 
 ls /data/truggles/${DATA}/data_DoubleEG_Run2016*_25ns/submit/make_ntuples_cfg-*/*.root                      > dataEE.txt 
-#ls /data/truggles/${BKGS}/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets1.txt 
-#ls /data/truggles/${BKGS}/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets2.txt 
-#ls /data/truggles/${BKGS}/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets3.txt 
-#ls /data/truggles/${BKGS}/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets4.txt 
+ls /data/truggles/${DYJB}/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets1.txt 
+ls /data/truggles/${DYJB}/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets2.txt 
+ls /data/truggles/${DYJB}/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets3.txt 
+ls /data/truggles/${DYJB}/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets4.txt 
 #ls /data/truggles/${BKGS}/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/*/*/*.root                      > ggZZ2m2t.txt
 #ls /data/truggles/${BKGS}/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/*/*/*.root                           > ggZZ4e.txt
 #ls /data/truggles/${BKGS}/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/*/*/*.root                          > ggZZ4m.txt

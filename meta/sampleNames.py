@@ -161,6 +161,22 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c80x,
                 'xsec' : 831.76,
                 'group' : 'top'},
+            'DYJets1' :    { 
+                'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'xsec' : 1012.5 * 1.216229,
+                'group' : 'dyj'},
+            'DYJets2' :    { 
+                'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'xsec' : 332.8 * 1.216229,
+                'group' : 'dyj'},
+            'DYJets3' :    { 
+                'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'xsec' : 101.8 * 1.216229,
+                'group' : 'dyj'},
+            'DYJets4' :    { 
+                'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'xsec' : 54.8 * 1.216229,
+                'group' : 'dyj'},
             #'TTZ' : {
             #    'DASPath' : '/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v3/MINIAODSIM' % c80x,
             #    'xsec' : 999.,
@@ -177,22 +193,6 @@ def sampleDetails( analysis ) :
             #    'DASPath' : '/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s_ext1-v2/MINIAODSIM' % c80x,
             #    'xsec' : 999.,
             #    'group' : ''},
-            #'DYJets1' :    { 
-            #    'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-            #    'xsec' : 1012.5 * 1.216229,
-            #    'group' : 'dyj'},
-            #'DYJets2' :    { 
-            #    'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-            #    'xsec' : 332.8 * 1.216229,
-            #    'group' : 'dyj'},
-            #'DYJets3' :    { 
-            #    'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-            #    'xsec' : 101.8 * 1.216229,
-            #    'group' : 'dyj'},
-            #'DYJets4' :    { 
-            #    'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
-            #    'xsec' : 54.8 * 1.216229,
-            #    'group' : 'dyj'},
             #'ggZZ4l' : {
             #    'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v3/MINIAODSIM',
             #    'xsec' : 999.,
