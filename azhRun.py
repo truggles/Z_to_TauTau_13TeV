@@ -30,9 +30,7 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-#azhSamples = ['dataEE', 'dataMM', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4e', 'ggZZ4m', 'ggZZ2m2t', 'TTJ', 'TTZ', 'TTTT', 'WZ3l1nu', 'WminusHtoTauTau', 'WplusHtoTauTau', 'ZHtoTauTau', 'ZZ2l2q', 'ZZ4l']
-azhSamples = ['dataEE', 'dataMM', 'WZ3l1nu', 'ZZ4l', 'DYJets', 'TT']
-#azhSamples = []
+azhSamples = ['dataEE', 'dataMM', 'WZ3l1nu', 'ZZ4l', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'TT']
 for mass in [220, 240, 300, 320, 350, 400] :
     azhSamples.append('azh%i' % mass)
 
@@ -48,16 +46,15 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 25,
+    'numCores' : 15,
     'numFilesPerCycle' : 20,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'],
     #'channels' : ['eeet','eett','eemt','eeem'],
-    'channels' : ['eett',],
+    #'channels' : ['eett',],
     'cutMapper' : 'goodZ',
-    #'cutMapper' : 'goodZTest2',
-    'mid1' : '1July28i',
-    'mid2' : '2July28i',
-    'mid3' : '3July28i',
+    'mid1' : '1July29a',
+    'mid2' : '2July29a',
+    'mid3' : '3July29a',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -74,7 +71,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples.keys(), **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples.keys(), **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples.keys(), **params)
 
 
 runPlots = True
@@ -82,7 +79,7 @@ runPlots = True
 if runPlots :
     print params
     ''' Draw histos from TTrees '''
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ''' merge channels '''
     useMerge = False
@@ -94,7 +91,10 @@ if runPlots :
         if 'emmt' in params['channels'] and 'mmmt' in params['channels'] and 'mmtt' in params['channels'] and 'emmm' in params['channels'] :
             useMerge = True
             merge.append( 'ZMM' )
-        if len( params['channels'] ) > 7 :
+        ZXX = True
+        for channel in ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] :
+            if channel not in params['channels'] : ZXX = False
+        if ZXX == True :
             merge.append( 'ZXX' )
     if useMerge :
         if 'ZEE' in merge :
@@ -110,8 +110,8 @@ if runPlots :
     text=True
     kwargs = { 'text':text, }
     print params
-    #analysis3Plots.makeLotsOfPlots( analysis, samples, ['eeet',], params['mid3'], **kwargs  )
-    #analysis3Plots.makeLotsOfPlots( analysis, samples, ['ZEE',], params['mid3'], **kwargs  )
+
+    ''' Make the final plots '''
     analysis3Plots.makeLotsOfPlots( analysis, samples, params['channels'], params['mid3'], **kwargs  )
     
     

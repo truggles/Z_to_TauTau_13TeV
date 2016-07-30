@@ -33,7 +33,7 @@ prodMap = {
 }
 
 
-def getXSec( shortName, sampDict, numGenJets=0 ) :
+def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
     if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
@@ -290,9 +290,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         sampDict = json.load( sampFile )
 
     shortName = sample.split('_')[0]
-    if shortName == 'data' : shortName = 'data_%s' % channel
 
-    xsec = getXSec( shortName, sampDict )
+    xsec = getXSec( analysis, shortName, sampDict )
     print "\n Sampe: %s    shortName: %s    xsec: %f" % (sample, shortName, xsec)
 
     l1 = prodMap[channel][0]
@@ -302,8 +301,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         l4 = prodMap[channel][3]
 
     #from util.lepSF import LepWeights
-    from util.doubleTauSF import doubleTauTriggerEff
+    from util.doubleTauSF import DoubleTau35Efficiencies
     #lepWeights = LepWeights( channel, count )
+    doublTau35 = DoubleTau35Efficiencies( channel )
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
@@ -926,7 +926,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'Tight'
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTight'
-                    doubleTauTrigWeightL1[0] = doubleTauTriggerEff( pt1, tauIso, t1Gen, ttSS )
+                    doubleTauTrigWeightL1[0] = DoubleTau35Efficiencies.doubleTauTriggerEff( pt1, tauIso, t1Gen, ttSS )
                     t2Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
@@ -937,7 +937,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'Tight'
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTight'
-                    doubleTauTrigWeightL2[0] = doubleTauTriggerEff( pt2, tauIso, t2Gen, ttSS )
+                    doubleTauTrigWeightL2[0] = DoubleTau35Efficiencies.doubleTauTriggerEff( pt2, tauIso, t2Gen, ttSS )
                 else : trigweight_1[0] = 1
                 
                 # top pt reweighting, only for ttbar events
@@ -964,7 +964,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
-                    xsec = getXSec( shortName, sampDict, row.numGenJets )
+                    xsec = getXSec( analysis, shortName, sampDict, row.numGenJets )
                     if xsec not in xsecList : xsecList.append( xsec )
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before

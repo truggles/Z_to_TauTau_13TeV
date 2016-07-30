@@ -74,7 +74,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     azhMass = 350
     mssmSF = 100
     higgsSF = 10
-    azhSF = .1
+    azhSF = .025
     
 
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
@@ -115,11 +115,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         }, # htt
             'azh' : {
         'obs' : [ROOT.kBlack, 'Data'],
-        'zz' : [ROOT.kGreen, 'ZZ'],
-        'wz' : [ROOT.kAzure, 'WZ'],
-        'dyj' : [ROOT.kRed, 'ZJets'],
-        'top' : [ROOT.kYellow, 't#bar{t}'],
-        'azh' : [ROOT.kBlue, 'A#rightarrowZh (%s)' % azhMass],
+        'zz' : [ROOT.kGreen-9, 'ZZ'],
+        'wz' : [ROOT.kRed-4, 'WZ'],
+        'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
+        'top' : [ROOT.kBlue-8, 't#bar{t}'],
+        'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
         } # azh
     } # sampInfo
     if not ops['mssm'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %i" % higgsSF
@@ -136,9 +136,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     for channel in channels :
         print channel
-    
-        #if channel == 'tt' : continue
-        #if channel == 'em' : continue
     
         # Make an index file for web viewing
         if not os.path.exists( '%sPlots' % analysis ) :
@@ -249,7 +246,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and sample == 'dataMM' : continue
                 if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm'] and sample == 'dataEE' : continue
                 if channel in ['ZEE',] and sample == 'dataMM' : continue
-                if channel in ['ZMM', 'ZXX'] and sample == 'dataEE' : continue
+                if channel in ['ZMM',] and sample == 'dataEE' : continue
             
                 if channel == 'tt' and sample == 'dataEM' : continue
                 if channel == 'tt' and '-ZLL' in sample : continue
@@ -411,7 +408,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioHist.Sumw2()
                 ratioHist.Add( sampHistos['obs'] )
                 ratioHist.Divide( stack.GetStack().Last() )
-                ratioHist.SetMaximum( 4. )
+                ratioHist.SetMaximum( 2. )
                 ratioHist.SetMinimum( 0. )
                 if channel == 'tt' :
                     ratioHist.SetMaximum( 1.5 )
@@ -419,6 +416,24 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioHist.SetMarkerStyle( 21 )
                 ratioPad.cd()
                 ratioHist.Draw('ex0')
+
+                """ Add uncertainty bands on ratio """
+                er = ROOT.TH1F("er %s" % append, "er", xNum, xBins )
+                er.Sumw2()
+                er.GetXaxis().SetRangeUser( info[1], info[2] )
+                for k in range( er.GetNbinsX()+1 ) :
+                    er.SetBinContent( k, 1. )
+                    if stack.GetStack().Last().GetBinContent(k) > 0. : 
+                        er.SetBinError(k, binErrors[k]/stack.GetStack().Last().GetBinContent(k) )
+                    #print "Qcd Error:",qcd.GetBinError(k)
+                er.SetLineColor( 0 )
+                er.SetLineWidth( 0 )
+                er.SetMarkerSize( 0 )
+                er.SetFillStyle( 3002 )
+                er.SetFillColor( 15 )
+                er.Draw('same e2')
+                ratioHist.Draw('esamex0')
+
                 line = ROOT.TLine( info[1], 1, info[2], 1 )
                 line.SetLineColor(ROOT.kBlack)
                 line.SetLineWidth( 1 )
@@ -482,7 +497,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
             lumi.SetTextSize(0.03)
-            lumi.DrawTextNDC(.7,.96,"4.0 / fb (13 TeV)" )
+            lumi.DrawTextNDC(.7,.96,"12.9 / fb (13 TeV)" )
     
 
             ''' Random print outs on plots '''
