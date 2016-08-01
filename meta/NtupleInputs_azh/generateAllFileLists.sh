@@ -1,7 +1,7 @@
 
 DATA=july21_azh_data
 BKGS=june25_AtoZh80X
-SIG=july19_azh_sig3
+SIG=july31_azh
 ZZ=july19_azh_ZZ
 WZ=july21_azh_WZ_2
 TT=july28_azh_TT

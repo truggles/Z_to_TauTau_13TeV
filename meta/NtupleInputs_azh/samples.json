@@ -1,16 +1,16 @@
 {
   "DYJets1": {
-    "STATUS": "Error", 
+    "STATUS": "Good to Go!", 
     "DAS status": "ok", 
-    "nEvents": 65370387, 
+    "nEvents": 65457747, 
     "DAS Path": "/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM", 
     "nfiles": 1634, 
     "nblocks": 100, 
     "Cross Section (pb)": 1231.4318625, 
-    "summedWeightsNorm": 65370387.0, 
-    "summedWeights": 65370387.0, 
+    "summedWeightsNorm": 65457747.0, 
+    "summedWeights": 65457747.0, 
     "nevents": 65457747, 
-    "nNtupleFiles": 1632, 
+    "nNtupleFiles": 1634, 
     "nlumis": 330310
   }, 
   "DYJets2": {
@@ -70,17 +70,17 @@
     "nlumis": 10003
   }, 
   "TT": {
-    "STATUS": "Error", 
+    "STATUS": "Good to Go!", 
     "DAS status": "ok", 
-    "nEvents": 32385075, 
+    "nEvents": 33364899, 
     "DAS Path": "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext3-v1/MINIAODSIM", 
     "nfiles": 843, 
     "nblocks": 153, 
     "Cross Section (pb)": 831.76, 
-    "summedWeightsNorm": 32385075.0, 
-    "summedWeights": 32385075.0, 
+    "summedWeightsNorm": 33364899.0, 
+    "summedWeights": 33364899.0, 
     "nevents": 33364899, 
-    "nNtupleFiles": 822, 
+    "nNtupleFiles": 843, 
     "nlumis": 167457
   }, 
   "azh350": {
