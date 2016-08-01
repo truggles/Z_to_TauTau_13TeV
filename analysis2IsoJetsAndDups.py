@@ -30,6 +30,9 @@ prodMap = {
     'emmt' : ('m1', 'm2', 'e', 't'),
     'mmmt' : ('m1', 'm2', 'm3', 't'),
     'mmtt' : ('m1', 'm2', 't1', 't2'),
+    'eeee' : ('e1', 'e2', 'e3', 'e4'),
+    'eemm' : ('e1', 'e2', 'm1', 'm2'),
+    'mmmm' : ('m1', 'm2', 'm3', 'm4'),
 }
 
 
@@ -364,6 +367,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         #XXX#'pt_tt' : 'pp_tt',
         #XXX#'MtTotal' : 'mt_tot',
         }
+    quadFSDoubleProds = {
+        'Mass' : 'H_vis',
+        #'SVfitMass' : 'm_sv',
+        'SS' : 'H_SS',
+        'Pt' : 'H_Pt',
+        'DR' : 'H_DR',
+        'DPhi' : 'H_DPhi',
+        }
     branchMappingElec = {
         'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt', # rename ePt to pt_1
@@ -429,6 +440,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     # Generate our mapping for double candidate variables
     for key in doubleProds :
         branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
+    if len( channel ) == 4 :
+        for key in quadFSDoubleProds :
+            branchMapping[ l3+'_'+l4+'_'+key ] = quadFSDoubleProds[ key ]
     # Map all of the variables based on their FSA names to Sync names leg by leg
     if len( channel ) == 2 :
         if channel == 'em' :

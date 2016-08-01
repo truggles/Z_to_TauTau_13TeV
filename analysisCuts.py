@@ -48,8 +48,7 @@ HSS = 'LEG3_LEG4_SS == 1'
 eeTrig = '(doubleE_23_12Pass > 0 && LEG1MatchesDoubleE23_12Path > 0 && LEG2MatchesDoubleE23_12Path > 0)'
 eePt = '((LEG1Pt > 28 && LEG2Pt > 20) || (LEG2Pt > 28 && LEG1Pt > 20))'
 eeEta = 'abs(LEG1Eta) < 2.5 && abs(LEG2Eta) < 2.5'
-eeIso = 'e1IsoDB03 < 0.15 && e2IsoDB03 < 0.15'
-eeIso2 = 'e1IsoDB03 < 0.1 && e2IsoDB03 < 0.1'
+eeIso = 'e1IsoDB03 < 0.3 && e2IsoDB03 < 0.3'
 eeHits = 'e1PassesConversionVeto > 0 && e1MissingHits < 2 && e2PassesConversionVeto > 0 && e2MissingHits < 2'
 eeIDL = 'LEG1MVANonTrigWP90 > 0 && LEG2MVANonTrigWP90 > 0'
 
@@ -58,35 +57,27 @@ mmTrig = 'doubleMuPass > 0 && LEG1MatchesDoubleMu > 0 && LEG2MatchesDoubleMu > 0
 mmPt = '((LEG1Pt > 20 && LEG2Pt > 10) || (LEG2Pt > 20 && LEG1Pt > 10))'
 mmEta = 'abs(LEG1Eta) < 2.4 && abs(LEG2Eta) < 2.4'
 mmIso = 'm1IsoDB03 < 0.3 && m2IsoDB03 < 0.3'
-mmIso2 = 'm1IsoDB03 < 0.1 && m2IsoDB03 < 0.1'
-mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0'
+mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0 && LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 
 # ET Higgs
-eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.15 && e3MVANonTrigWP90 > 0'
-eeetE2 = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.1 && e3MVANonTrigWP90 > 0'
-mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.15'
-mmetE2 = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.1 && eMVANonTrigWP80 > 0'
-xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && tDecayModeFinding == 1'
-xxetT2 = 'tPt > 20 && abs(tEta) < 2.1 && tByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && tDecayModeFinding == 1'
+eeetE = 'e3Pt > 15 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.15 && e3MVANonTrigWP90 > 0'
+mmetE = 'ePt > 15 && abs(eEta) < 2.5 && eIsoDB03 < 0.15 && eMVANonTrigWP90 > 0'
+xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1'
 # MT Higgs
-eemtM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.3'
-eemtM2 = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.1 && mIsTracker > 0 && mIsGlobal > 0'
-mmmtM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3'
-mmmtM2 = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.1 && m3IsTracker > 0 && m3IsGlobal > 0'
-xxmtT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
-xxmtT2 = 'tPt > 20 && abs(tEta) < 2.1 && tByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && tDecayModeFinding == 1'
+eemtM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.15 && mIsTracker > 0 && mIsGlobal > 0 && mPFIDLoose > 0'
+mmmtM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.15 && m3IsTracker > 0 && m3IsGlobal > 0 && m3PFIDLoose > 0'
+xxmtT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1'
 # TT Higgs
-xxttTT = 't1Pt > 20 && abs(t1Eta) < 2.5 && t2Pt > 20 && abs(t2Eta) < 2.5 && t1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1'
-xxttTT2 = 't1Pt > 20 && abs(t1Eta) < 2.5 && t2Pt > 20 && abs(t2Eta) < 2.5 && t1ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1'
+xxttTT = 't1Pt > 20 && abs(t1Eta) < 2.5 && t2Pt > 20 && abs(t2Eta) < 2.5 && t1ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1'
 # EM Higgs
-eeemE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3'
-eeemE2 = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
-mmemE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3'
-mmemE2 = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
-eeemM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.3'
-eeemM2 = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.1 && mIsTracker > 0 && mIsGlobal > 0'
-mmemM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3'
-mmemM2 = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.1 && m3IsTracker > 0 && m3IsGlobal > 0'
+eeemE = 'e3Pt > 15 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
+mmemE = 'ePt > 15 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
+eeemM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.3 && mIsTracker > 0 && mIsGlobal > 0 && mPFIDLoose > 0'
+mmemM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3 && m3IsTracker > 0 && m3IsGlobal > 0 && m3PFIDLoose > 0'
+# EE & MM Higgs (ZZ control region)
+eeee = 'e3Pt > 15 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0 && e4Pt > 15 && abs(e4Eta) < 2.5 && e4IsoDB03 < 0.3 && e4MVANonTrigWP90 > 0'
+mmmm = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3 && m3IsTracker > 0 && m3IsGlobal > 0 && m3PFIDLoose> 0 && m4Pt > 10 && abs(m4Eta) < 2.4 && m4IsoDB03 < 0.3 && m4IsTracker > 0 && m4IsGlobal > 0 && m4PFIDLoose > 0'
+eemm = 'm1Pt > 10 && abs(m1Eta) < 2.4 && m1IsoDB03 < 0.3 && m1IsTracker > 0 && m1IsGlobal > 0 m1PFIDLoose > 0 && m2Pt > 10 && abs(m2Eta) < 2.4 && m2IsoDB03 < 0.3 && m2IsTracker > 0 && m2IsGlobal > 0 && m2PFIDLoose > 0'
 
 def getCut( analysis, channel, cutName, isData=False ) :
     
@@ -125,40 +116,48 @@ def getCut( analysis, channel, cutName, isData=False ) :
         }, # end HTT analysis cuts
         'azh' : # analysis
         { 'eeee' : {
-            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso2, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeee],
+            'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeee],
         }, # end EEEE
          'eeet' : {
-            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso2, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeetE2, xxetT2],
-            'goodZTest2' : [ZOS, ZMass, eeTrig, eeIso2, eeIDL, eePt, eeEta, HOS, eeetE2, xxetT2],
-            'goodZTest' : [eeTrig, eeHits, eeIso2,]#ZOS, ZMass, eeTrig]#, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeetE, xxetT],
+            'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeetE, xxetT],
         }, # end EEET
          'eett' : {
-            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso2, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, xxttTT2]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, xxttTT],
+            'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, xxttTT],
         }, # end EETT
          'eemt' : {
-            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso2, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtM2, xxmtT2]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtM, xxmtT],
+            'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemtM, xxmtT],
         }, # end EEMT
          'eeem' : {
-            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso2, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeemE2, eeemM2]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeemE, eeemM],
+            'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeemE, eeemM],
         }, # end EEEM
          'eemm' : {
-            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso2, eeIDL, eePt, eeEta]
+            'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemm],
+            'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemm],
         }, # end EEMM
          'mmmm' : {
-            'goodZ' : [ZOS, ZMass, mmTrig, mmIso2, mmIDL, mmPt, mmEta]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmmm],
+            'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmm],
         }, # end MMMM
          'emmt' : {
-            'goodZ' : [ZOS, ZMass, mmTrig, mmIso2, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetE2, xxetT2]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetE, xxetT],
+            'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmetE, xxetT],
         }, # end MMET
          'mmtt' : {
-            'goodZ' : [ZOS, ZMass, mmTrig, mmIso2, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, xxttTT2]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, xxttTT],
+            'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, xxttTT],
         }, # end MMTT
          'mmmt' : {
-            'goodZ' : [ZOS, ZMass, mmTrig, mmIso2, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmmtM2, xxmtT2],
-            'goodZTest2' : [ZOS, ZMass, mmTrig, mmIso2, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmmtM2, xxmtT2]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmmtM, xxmtT],
+            'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmtM, xxmtT],
         }, # end MMMT
          'emmm' : {
-            'goodZ' : [ZOS, ZMass, mmTrig, mmIso2, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmemE2, mmemM2]
+            'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmemE, mmemM],
+            'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmemE, mmemM],
         } # end MMEM
         } # end AZH analysis cuts
     } # end cutMap
@@ -187,6 +186,9 @@ def getCut( analysis, channel, cutName, isData=False ) :
         'emmt' : ('m1', 'm2', 'e', 't'),
         'mmmt' : ('m1', 'm2', 'm3', 't'),
         'mmtt' : ('m1', 'm2', 't1', 't2'),
+        'eeee' : ('e1', 'e2', 'e3', 'e4'),
+        'eemm' : ('e1', 'e2', 'm1', 'm2'),
+        'mmmm' : ('m1', 'm2', 'm3', 'm4'),
     }
 
     cutString = ''

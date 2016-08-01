@@ -31,8 +31,8 @@ os.chdir('..')
 
 ''' Preset samples '''
 azhSamples = ['dataEE', 'dataMM', 'WZ3l1nu', 'ZZ4l', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'TT']
-for mass in [220, 240, 300, 320, 350, 400] :
-    azhSamples.append('azh%i' % mass)
+#for mass in [220, 240, 300, 320, 350, 400] :
+#    azhSamples.append('azh%i' % mass)
 
 #azhSamples=['azh350',]
 #azhSamples=['dataEE', 'dataMM']
@@ -48,13 +48,16 @@ params = {
     'debug' : 'false',
     'numCores' : 15,
     'numFilesPerCycle' : 20,
-    'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'],
+    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
+    'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeet','eett','eemt','eeem'],
-    #'channels' : ['eett',],
-    'cutMapper' : 'goodZ',
-    'mid1' : '1July29a',
-    'mid2' : '2July29a',
-    'mid3' : '3July29a',
+    #'channels' : ['eeee','mmmm'],
+    #'channels' : ['eeem',],
+    #'cutMapper' : 'goodZ',
+    'cutMapper' : 'HSS',
+    'mid1' : '1Aug01b_HSS',
+    'mid2' : '2Aug01b_HSS',
+    'mid3' : '3Aug01b_HSS',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -79,7 +82,7 @@ runPlots = True
 if runPlots :
     print params
     ''' Draw histos from TTrees '''
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ''' merge channels '''
     useMerge = False

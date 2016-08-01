@@ -129,13 +129,21 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         if '_sv' in var :
             varBase += '_sv'
         #print "Var: %s   VarBase: %s" % (var, varBase)
-        if hasattr( chain, varBase ) :
+
+        ### Make sure that if we have no events
+        ### we still save a blank histo for use later
+        if chain.GetEntries() == 0 :
+             print " #### ENTRIES = 0 #### "
+             histos[ var ] = makeHisto( var, info[0], info[1], info[2])
+
+        ### Check that the target var is in the TTrees
+        elif hasattr( chain, varBase ) :
             #print "trying"
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
                 chain.Draw( '%s>>%s' % (var, var), '1%s%s' % (additionalCut, dataES) )
-                histos[ var ] = gPad.GetPrimitive( "%s" % var )
+                histos[ var ] = gPad.GetPrimitive( var )
                 if var == 'm_vis' :
                     print 'm_vis'
                     print "Data Count:", histos[ var ].Integral()
@@ -144,14 +152,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 chain.Draw( '%s>>%s' % (var, var), '%s' % totalCutAndWeightMC )
                 ''' No reweighting at the moment! '''
                 histos[ var ] = gPad.GetPrimitive( var )
-                if chain.GetEntries() > 0 :
-                    integralPost = histos[ var ].Integral()
-                    if var == 'm_vis' :
-                        print 'm_vis'
-                        print "tmpIntPost: %f" % integralPost
-                else :
-                    print " #### ENTRIES = 0 #### "
-                    histos[ var ] = makeHisto( var, info[0], info[1], info[2])
+                integralPost = histos[ var ].Integral()
+                if var == 'm_vis' :
+                    print 'm_vis'
+                    print "tmpIntPost: %f" % integralPost
 
         # didn't have var in chain
         else : 
@@ -279,6 +283,8 @@ def getHistoDict( analysis, channel ) :
             'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
             'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
             'm_vis' : (80, 50, 130, 4, 'Z Mass [GeV]', ' GeV'),
+            'H_vis' : (400, 0, 400, 10, 'H Visible Mass [GeV]', ' GeV'),
+            'Mass' : (600, 0, 600, 20, 'M_{ll#tau#tau} [GeV]', ' GeV'),
             'LT' : (600, 0, 600, 40, 'Total LT [GeV]', ' GeV'),
             'Mt' : (600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'),
             'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),

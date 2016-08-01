@@ -24,7 +24,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'qcdMC' : False,
     'qcdSF' : 1.0,
     'ratio' : True,
-    'blind' : False,
+    'blind' : True,
     'text' : False,
     'mssm' : False,
     'log' : False,}
@@ -540,19 +540,22 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             """ Blinding Data """
-            if ops['blind'] and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var or 'mt_tot' in var) :
-                nBins = stack.GetStack().Last().GetXaxis().GetNbins()
-                for k in range( nBins+1 ) :
-                    if sampHistos['obs'].GetXaxis().GetBinLowEdge(k+1)>170 :
-                        sampHistos['obs'].SetBinContent(k, 0.)
-                        sampHistos['obs'].SetBinError(k, 0.)
-                        if ops['ratio'] :
-                            ratioHist.SetBinContent(k, 0.)
-                            ratioHist.SetBinError(k, 0.)
-                if ops['ratio'] : 
-                    ratioPad.cd()
-                    ratioHist.Draw('esamex0')
-                pad1.cd()
+            if ops['blind'] :
+                if (analysis == 'htt' and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var or 'mt_tot' in var) ) or (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
+                    targetMass = 170
+                    if 'Mass' in var : targetMass = 220
+                    nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+                    for k in range( nBins+1 ) :
+                        if sampHistos['obs'].GetXaxis().GetBinLowEdge(k+1)>targetMass :
+                            sampHistos['obs'].SetBinContent(k, 0.)
+                            sampHistos['obs'].SetBinError(k, 0.)
+                            if ops['ratio'] :
+                                ratioHist.SetBinContent(k, 0.)
+                                ratioHist.SetBinError(k, 0.)
+                    if ops['ratio'] : 
+                        ratioPad.cd()
+                        ratioHist.Draw('esamex0')
+                    pad1.cd()
             sampHistos['obs'].Draw('esamex0')
                 
     
