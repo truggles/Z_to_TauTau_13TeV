@@ -305,8 +305,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     #from util.lepSF import LepWeights
     from util.doubleTauSF import DoubleTau35Efficiencies
+    from util.muonSF import MuonSF
+    from util.electronSF import ElectronSF
     #lepWeights = LepWeights( channel, count )
     doublTau35 = DoubleTau35Efficiencies( channel )
+    muonSF = MuonSF()
+    electronSF = ElectronSF()
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
@@ -652,6 +656,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     PU Weighting '''
     weight = array('f', [ 0 ] )
     weightB = tnew.Branch('weight', weight, 'weight/F')
+    azhWeight = array('f', [ 0 ] )
+    azhWeightB = tnew.Branch('azhWeight', azhWeight, 'azhWeight/F')
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     tauPtWeightUp = array('f', [ 0 ] )
@@ -662,6 +668,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
+    muonSF1 = array('f', [ 0 ] )
+    muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
+    muonSF2 = array('f', [ 0 ] )
+    muonSF2B = tnew.Branch('muonSF2', muonSF2, 'muonSF2/F')
+    muonSF3 = array('f', [ 0 ] )
+    muonSF3B = tnew.Branch('muonSF3', muonSF3, 'muonSF3/F')
+    muonSF4 = array('f', [ 0 ] )
+    muonSF4B = tnew.Branch('muonSF4', muonSF4, 'muonSF4/F')
+    electronSF1 = array('f', [ 0 ] )
+    electronSF1B = tnew.Branch('electronSF1', electronSF1, 'electronSF1/F')
+    electronSF2 = array('f', [ 0 ] )
+    electronSF2B = tnew.Branch('electronSF2', electronSF2, 'electronSF2/F')
+    electronSF3 = array('f', [ 0 ] )
+    electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
+    electronSF4 = array('f', [ 0 ] )
+    electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
     #FFWeightQCD = array('f', [ 0 ] )
     #FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
     #FFWeightQCD_UP = array('f', [ 0 ] )
@@ -765,11 +787,19 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
             # For easy use later
             pt1 = getattr( row, l1+'Pt' )
-            pt2 = getattr( row, l2+'Pt' )
             phi1 = getattr( row, l1+'Phi' )
-            phi2 = getattr( row, l2+'Phi' )
             eta1 = getattr( row, l1+'Eta' )
+            pt2 = getattr( row, l2+'Pt' )
+            phi2 = getattr( row, l2+'Phi' )
             eta2 = getattr( row, l2+'Eta' )
+            if len( channel ) > 2 :
+                pt3 = getattr( row, l3+'Pt' )
+                phi3 = getattr( row, l3+'Phi' )
+                eta3 = getattr( row, l3+'Eta' )
+            if len( channel ) > 3 :
+                pt4 = getattr( row, l4+'Pt' )
+                phi4 = getattr( row, l4+'Phi' )
+                eta4 = getattr( row, l4+'Eta' )
 
             Z_DEta[0] = (eta1 - eta2)
 
@@ -847,6 +877,15 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #    mt_tot_DOWN[0] = -10
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
 
+            muonSF1[0] = 1
+            muonSF2[0] = 1
+            muonSF3[0] = 1
+            muonSF4[0] = 1
+            electronSF1[0] = 1
+            electronSF2[0] = 1
+            electronSF3[0] = 1
+            electronSF4[0] = 1
+            azhWeight[0] = 1
 
             # Data specific vars
             if 'data' in sample :
@@ -904,9 +943,36 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
                 #    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
                     
+            ### Not Data
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
+
+                if analysis == 'azh' :
+                    nvtx = row.nvtx
+                    # Currently using PFIDLoose and Loose RelIso for all muons
+                    
+                    if 'm' in l1 :
+                        muonSF1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
+                        muonSF1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
+                    if 'm' in l2 :
+                        muonSF2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
+                        muonSF2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
+                    if 'm' in l3 :
+                        muonSF3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
+                        muonSF3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
+                    if 'm' in l4 :
+                        muonSF4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
+                        muonSF4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
+                    # Currently using WP90 in all electrons
+                    if 'e' in l1 :
+                        electronSF1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
+                    if 'e' in l2 :
+                        electronSF2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
+                    if 'e' in l3 :
+                        electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
+                    if 'e' in l4 :
+                        electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
 
                 # Isolation / ID weights
                 if 't' in l1 : idisoweight_1[0] = 1
@@ -967,6 +1033,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
+
                 zPtWeight[0] = 1
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
@@ -975,6 +1042,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * effweight[0] * topWeight[0]
                 weight[0] *= zPtWeight[0]
+                # Below set to 1. for HTT
+                azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
+                azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
+
+
 
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
