@@ -56,28 +56,29 @@ eeIDL = 'LEG1MVANonTrigWP90 > 0 && LEG2MVANonTrigWP90 > 0'
 mmTrig = 'doubleMuPass > 0 && LEG1MatchesDoubleMu > 0 && LEG2MatchesDoubleMu > 0'
 mmPt = '((LEG1Pt > 20 && LEG2Pt > 10) || (LEG2Pt > 20 && LEG1Pt > 10))'
 mmEta = 'abs(LEG1Eta) < 2.4 && abs(LEG2Eta) < 2.4'
-mmIso = 'm1IsoDB03 < 0.3 && m2IsoDB03 < 0.3'
-mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0 && LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
+mmIso = 'm1IsoDB04 < 0.25 && m2IsoDB04 < 0.25'
+mmIDL = 'LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
+#mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0 && LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 
 # ET Higgs
-eeetE = 'e3Pt > 15 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.15 && e3MVANonTrigWP90 > 0'
-mmetE = 'ePt > 15 && abs(eEta) < 2.5 && eIsoDB03 < 0.15 && eMVANonTrigWP90 > 0'
+eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.15 && e3MVANonTrigWP90 > 0'
+mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.15 && eMVANonTrigWP90 > 0'
 xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1'
 # MT Higgs
-eemtM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.15 && mIsTracker > 0 && mIsGlobal > 0 && mPFIDLoose > 0'
-mmmtM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.15 && m3IsTracker > 0 && m3IsGlobal > 0 && m3PFIDLoose > 0'
+eemtM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB04 < 0.25 && mPFIDLoose > 0'
+mmmtM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose > 0'
 xxmtT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1'
 # TT Higgs
 xxttTT = 't1Pt > 20 && abs(t1Eta) < 2.5 && t2Pt > 20 && abs(t2Eta) < 2.5 && t1ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1'
 # EM Higgs
-eeemE = 'e3Pt > 15 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
-mmemE = 'ePt > 15 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
-eeemM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB03 < 0.3 && mIsTracker > 0 && mIsGlobal > 0 && mPFIDLoose > 0'
-mmemM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3 && m3IsTracker > 0 && m3IsGlobal > 0 && m3PFIDLoose > 0'
+eeemE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
+mmemE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
+eeemM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB04 < 0.25 && mPFIDLoose > 0'
+mmemM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose > 0'
 # EE & MM Higgs (ZZ control region)
-eeee = 'e3Pt > 15 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0 && e4Pt > 15 && abs(e4Eta) < 2.5 && e4IsoDB03 < 0.3 && e4MVANonTrigWP90 > 0'
-mmmm = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB03 < 0.3 && m3IsTracker > 0 && m3IsGlobal > 0 && m3PFIDLoose> 0 && m4Pt > 10 && abs(m4Eta) < 2.4 && m4IsoDB03 < 0.3 && m4IsTracker > 0 && m4IsGlobal > 0 && m4PFIDLoose > 0'
-eemm = 'm1Pt > 10 && abs(m1Eta) < 2.4 && m1IsoDB03 < 0.3 && m1IsTracker > 0 && m1IsGlobal > 0 m1PFIDLoose > 0 && m2Pt > 10 && abs(m2Eta) < 2.4 && m2IsoDB03 < 0.3 && m2IsTracker > 0 && m2IsGlobal > 0 && m2PFIDLoose > 0'
+eeee = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0 && e4Pt > 20 && abs(e4Eta) < 2.5 && e4IsoDB03 < 0.3 && e4MVANonTrigWP90 > 0'
+mmmm = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose> 0 && m4Pt > 10 && abs(m4Eta) < 2.4 && m4IsoDB04 < 0.25 && m4PFIDLoose > 0'
+eemm = 'm1Pt > 10 && abs(m1Eta) < 2.4 && m1IsoDB04 < 0.25 &&  m1PFIDLoose > 0 && m2Pt > 10 && abs(m2Eta) < 2.4 && m2IsoDB04 < 0.25 && m2PFIDLoose > 0'
 
 def getCut( analysis, channel, cutName, isData=False ) :
     
