@@ -15,7 +15,7 @@ class MuonSF :
     def __init__( self ):
 
         ### Load the ICHEP SFs provided by the Muon POG
-        self.muonIDFile = ROOT.TFile( 'lepSFdata/MuonID_Z_RunBCD_prompt80X_7p65.root', 'r' )
+        self.muonIDFile = ROOT.TFile( 'data/MuonID_Z_RunBCD_prompt80X_7p65.root', 'r' )
         self.ID_L_eta = self.muonIDFile.Get( 'MC_NUM_LooseID_DEN_genTracks_PAR_eta/eta_ratio' )
         self.ID_L_pt = self.muonIDFile.Get( 'MC_NUM_LooseID_DEN_genTracks_PAR_pt_alleta_bin1/pt_ratio' )
         self.ID_L_vtx = self.muonIDFile.Get( 'MC_NUM_LooseID_DEN_genTracks_PAR_pt_vtx/tag_nVertices_ratio' )
@@ -25,13 +25,21 @@ class MuonSF :
 
 
 
-        self.muonIsoFile = ROOT.TFile( 'lepSFdata/MuonIso_Z_RunBCD_prompt80X_7p65.root', 'r' )
+        self.muonIsoFile = ROOT.TFile( 'data/MuonIso_Z_RunBCD_prompt80X_7p65.root', 'r' )
         self.RelIso_L_eta = self.muonIsoFile.Get( 'MC_NUM_LooseRelIso_DEN_TightID_PAR_eta/eta_ratio' )
         self.RelIso_L_pt = self.muonIsoFile.Get( 'MC_NUM_LooseRelIso_DEN_TightID_PAR_pt_alleta_bin1/pt_ratio' )
         self.RelIso_L_vtx = self.muonIsoFile.Get( 'MC_NUM_LooseRelIso_DEN_TightID_PAR_vtx/tag_nVertices_ratio' )
         self.RelIso_T_eta = self.muonIsoFile.Get( 'MC_NUM_TightRelIso_DEN_TightID_PAR_eta/eta_ratio' )
         self.RelIso_T_pt = self.muonIsoFile.Get( 'MC_NUM_TightRelIso_DEN_TightID_PAR_pt_alleta_bin1/pt_ratio' )
         self.RelIso_T_vtx = self.muonIsoFile.Get( 'MC_NUM_TightRelIso_DEN_TightID_PAR_vtx/tag_nVertices_ratio' )
+
+
+
+        # https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffsRun2#Tracking_efficiency_provided_by
+        self.muonTkFile = ROOT.TFile( 'data/2016_Tk_POG_Muon_Ratios.root', 'r' )
+        self.Tk_eta = self.muonTkFile.Get( 'ratio_eta' )
+        self.Tk_vtx = self.muonTkFile.Get( 'ratio_vtx' )
+
 
 
     def getRelIsoScaleFactor( self, Iso, pt, eta, vtx ) :
@@ -74,6 +82,19 @@ class MuonSF :
             return SF
         else :
             return SF
+
+
+    def getTkScaleFactor( self, eta, vtx ) :
+        #print "Tk",Tk
+        SF = 1.
+        # Make sure we stay on our histograms
+        if eta > 2.39 : eta = 2.39
+        elif eta < -2.39 : eta = -2.39
+        if vtx > 32 : vtx = 32
+        elif vtx < 1 : vtx = 1
+        SF = self.Tk_eta.GetBinContent( self.Tk_eta.FindBin( eta ) )
+        SF *= self.Tk_vtx.GetBinContent( self.Tk_vtx.FindBin( vtx ) )
+        return SF
         
 
 if __name__ == '__main__' :

@@ -127,7 +127,7 @@ class LepWeights :
         for eta in etas :
             #print eta
             sfs = []
-            iFile = ROOT.TFile('lepSFdata/%s/%s.root' % (particle, file_), 'r' )
+            iFile = ROOT.TFile('data/%s/%s.root' % (particle, file_), 'r' )
             eff1 = iFile.Get('ZMassEta%s_Data' % eta)
             eff2 = iFile.Get('ZMassEta%s_MC' % eta)
             nPts = eff1.GetN()

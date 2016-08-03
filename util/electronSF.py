@@ -16,13 +16,13 @@ class ElectronSF :
     def __init__( self ):
 
         ### Load the ICHEP SFs provided by the Electron POG
-        self.electronGSFFile = ROOT.TFile( 'lepSFdata/egammaEffiGSF.txt_SF2D.root', 'r' )
+        self.electronGSFFile = ROOT.TFile( 'data/egammaEffiGSF.txt_SF2D.root', 'r' )
         self.gsfSF = self.electronGSFFile.Get( 'EGamma_SF2D' )
 
-        self.electronWP80File = ROOT.TFile( 'lepSFdata/egammaEffiWP80.txt_SF2D.root', 'r' )
+        self.electronWP80File = ROOT.TFile( 'data/egammaEffiWP80.txt_SF2D.root', 'r' )
         self.wp80SF = self.electronWP80File.Get( 'EGamma_SF2D' )
 
-        self.electronWP90File = ROOT.TFile( 'lepSFdata/egammaEffiWP90.txt_SF2D.root', 'r' )
+        self.electronWP90File = ROOT.TFile( 'data/egammaEffiWP90.txt_SF2D.root', 'r' )
         self.wp90SF = self.electronWP90File.Get( 'EGamma_SF2D' )
 
 
