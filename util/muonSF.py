@@ -6,6 +6,7 @@ Currently using PF ID Loose and Medium WPs
 
 
 import ROOT
+from util.helpers import getTH1FfromTGraphAsymmErrors
 
 class MuonSF :
     """A class to provide muon SFs for
@@ -37,9 +38,12 @@ class MuonSF :
 
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffsRun2#Tracking_efficiency_provided_by
         self.muonTkFile = ROOT.TFile( 'data/2016_Tk_POG_Muon_Ratios.root', 'r' )
-        self.Tk_eta = self.muonTkFile.Get( 'ratio_eta' )
-        self.Tk_vtx = self.muonTkFile.Get( 'ratio_vtx' )
-
+        Tk_eta_Asym = self.muonTkFile.Get( 'ratio_eta' )
+        Tk_vtx_Asym = self.muonTkFile.Get( 'ratio_vtx' )
+        self.Tk_eta = getTH1FfromTGraphAsymmErrors( Tk_eta_Asym, 'ratio_etaH' )
+        self.Tk_vtx = getTH1FfromTGraphAsymmErrors( Tk_vtx_Asym, 'ratio_vtxH' )
+        
+        
 
 
     def getRelIsoScaleFactor( self, Iso, pt, eta, vtx ) :

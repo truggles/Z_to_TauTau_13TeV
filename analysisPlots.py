@@ -298,6 +298,8 @@ def getHistoDict( analysis, channel ) :
             'eta_4' : (60, -3, 3, 10, 'Leg4 Eta', ' Eta'),
             'iso_1' : (20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''),
             'iso_2' : (20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''),
+            'iso_3' : (20, 0, 1, 1, 'Leg3 Iso', ''),
+            'iso_4' : (20, 0, 1, 1, 'Leg4 Iso', ''),
             #'jpt_1' : (400, 0, 200, 20, 'Leading Jet Pt', ' GeV'),
             #'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
             #'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
@@ -307,7 +309,34 @@ def getHistoDict( analysis, channel ) :
             'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
             'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
             'azhWeight' : (50, 0, 2, 1, 'Muon + Electron Weights', ''),
+            'muVetoZTTp001dxyz' : (6, -1, 5, 1, 'muVetoZTTp001dxyz', ''),
+            'eVetoZTTp001dxyz' : (6, -1, 5, 1, 'eVetoZTTp001dxyz', ''),
+            'muVetoZTTp001dxyzR0' : (6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''),
+            'eVetoZTTp001dxyzR0' : (6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''),
+            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
+            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
+            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
         }
+        llltMap = {
+            'againstElectronVLooseMVA6_4' : (9, -1, 2, 1, 'Against E VL MVA6 Leg 4', ''),
+            'againstElectronLooseMVA6_4' : (9, -1, 2, 1, 'Against E L MVA6 Leg 4', ''),
+            'againstMuonLoose3_4' : (9, -1, 2, 1, 'Against M Loose 3 Leg 4', ''),
+            'againstMuonTight3_4' : (9, -1, 2, 1, 'Against M Tight 3 Leg 4', ''),
+        }
+        llttMap = {
+            'againstElectronVLooseMVA6_3' : (9, -1, 2, 1, 'Against E VL MVA6 Leg 3', ''),
+            'againstElectronLooseMVA6_3' : (9, -1, 2, 1, 'Against E L MVA6 Leg 3', ''),
+            'againstMuonLoose3_3' : (9, -1, 2, 1, 'Against M Loose 3 Leg 3', ''),
+            'againstMuonTight3_3' : (9, -1, 2, 1, 'Against M Tight 3 Leg 3', ''),
+        }
+        if channel == 'xxxx' :
+            return genVarMap
+        if channel in ['eeet', 'eemt', 'eett', 'emmt', 'mmmt', 'mmtt'] :
+            for var in llltMap.keys() :
+                genVarMap[var] = llltMap[ var ]
+        if channel in ['eett', 'mmtt'] :
+            for var in llttMap.keys() :
+                genVarMap[var] = llttMap[ var ]
         return genVarMap
 
 

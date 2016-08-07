@@ -431,7 +431,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
         'cand_MtToPfMet_Raw' : 'pfmt',
-        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
         'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
@@ -955,15 +954,19 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if 'm' in l1 :
                         muonSF1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
                         muonSF1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
+                        muonSF1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
                     if 'm' in l2 :
                         muonSF2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
                         muonSF2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
+                        muonSF2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
                     if 'm' in l3 :
                         muonSF3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
                         muonSF3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
+                        muonSF3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
                     if 'm' in l4 :
                         muonSF4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
                         muonSF4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
+                        muonSF4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
                     # Currently using WP90 in all electrons
                     if 'e' in l1 :
                         electronSF1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )

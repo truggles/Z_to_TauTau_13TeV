@@ -11,6 +11,30 @@ import math
 from ROOT import gPad, gROOT
 
 
+
+# For defining numFilesPerCycle for specific samples
+def getMergeMap( analysis ) :
+    mergeMap = {
+        'azh' : {
+            'dataEE' : 200,
+            'dataMM' : 200,
+            'DYJets' : 200,
+            'DYJets1' : 200,
+            'DYJets2' : 200,
+            'DYJets3' : 200,
+            'DYJets4' : 200,
+            'WZ3l1nu' : 100,
+            'ZZ4lAMCNLO' : 5,
+            'TT' : 100,
+            'ggZZ4m' : 2,
+            'ggZZ4e' : 2,
+            'ggZZ2e2m' : 2,
+        } # end azh
+    }
+    return mergeMap[ analysis ]
+
+
+
 def skipChanDataCombo( channel, sample, analysis ) :
     # HTT
     if analysis == 'htt' :
@@ -132,6 +156,8 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
 
 
 def doInitialCuts(analysis, samples, **fargs) :
+
+    mergeMap = getMergeMap(analysis)
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -148,7 +174,11 @@ def doInitialCuts(analysis, samples, **fargs) :
     
     num = 0
     for sample in samples :
-    
+   
+        numFilesPerCycle = fargs['numFilesPerCycle']
+        if sample in mergeMap.keys() :
+            numFilesPerCycle = mergeMap[sample]
+
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
@@ -184,7 +214,7 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['numFilesPerCycle'],
+                                                                                    numFilesPerCycle,
                                                                                     fargs['svFitPrep'],
                                                                                     fargs['svFitPost'])) )
                 """ for debugging without multiprocessing """
@@ -197,7 +227,7 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['numFilesPerCycle'],
+                                                                                    numFilesPerCycle,
                                                                                     fargs['svFitPrep'],
                                                                                     fargs['svFitPost'])
 
@@ -206,7 +236,7 @@ def doInitialCuts(analysis, samples, **fargs) :
             count += 1
             
             # Make sure we loop over large samples to get all files
-            if count * fargs['numFilesPerCycle'] >= fileLen : go = False
+            if count * numFilesPerCycle >= fileLen : go = False
     if fargs['debug'] == 'true' :
         print "#################################################################"
         print "###               Finished, summary below                     ###"
@@ -248,6 +278,8 @@ def doInitialCuts(analysis, samples, **fargs) :
 
 
 def doInitialOrder(analysis, samples, **fargs) :
+
+    mergeMap = getMergeMap(analysis)
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -260,6 +292,10 @@ def doInitialOrder(analysis, samples, **fargs) :
     num = 0
     for sample in samples :
     
+        numFilesPerCycle = fargs['numFilesPerCycle']
+        if sample in mergeMap.keys() :
+            numFilesPerCycle = mergeMap[sample]
+
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
@@ -290,7 +326,7 @@ def doInitialOrder(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['numFilesPerCycle'])) )
+                                                                                    numFilesPerCycle)) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
                     runIsoOrder(analysis,
@@ -301,13 +337,13 @@ def doInitialOrder(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['numFilesPerCycle'])
+                                                                                    numFilesPerCycle)
                 num +=  1
     
             count += 1
             
             # Make sure we loop over large samples to get all files
-            if count * fargs['numFilesPerCycle']+1 > fileLen : go = False
+            if count * numFilesPerCycle+1 > fileLen : go = False
     
     
     if fargs['debug'] == 'true' :
@@ -348,6 +384,9 @@ def doInitialOrder(analysis, samples, **fargs) :
 
 
 def drawHistos(analysis, samples, **fargs ) :
+
+    mergeMap = getMergeMap(analysis)
+
     genMap = {
         # sample : em , tt
         'ZTT' : {'em' : '*(gen_match_1 > 2 && gen_match_2 > 3)',
@@ -367,6 +406,10 @@ def drawHistos(analysis, samples, **fargs ) :
     gROOT.SetBatch(True)
     
     for sample in samples :
+    
+        numFilesPerCycle = fargs['numFilesPerCycle']
+        if sample in mergeMap.keys() :
+            numFilesPerCycle = mergeMap[sample]
 
         # the gen matching samples are: based off of the DYJets samples
         loopList = []
@@ -396,8 +439,8 @@ def drawHistos(analysis, samples, **fargs ) :
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen
-                print "Num files / cycle:",fargs['numFilesPerCycle']
-                numIters = int( math.ceil( 1. * fileLen / fargs['numFilesPerCycle'] ) )
+                print "Num files / cycle:",numFilesPerCycle
+                numIters = int( math.ceil( 1. * fileLen / numFilesPerCycle ) )
                 print "Num Iters: %i" % numIters
 
 

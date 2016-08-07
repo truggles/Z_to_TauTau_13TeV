@@ -119,6 +119,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'wz' : [ROOT.kRed-4, 'WZ'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
+        'sm' : [ROOT.kGreen, 'SM Higgs (125)'],
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
         } # azh
     } # sampInfo
@@ -351,10 +352,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
-                    if samp != 'qcd' :
+                    if samp != 'qcd' and samp != 'zz' :
                         toRoot += (sampHistos[samp].GetBinContent(k)*.1)**2
-                    else : # QCD has higher uncertainties
+                    elif samp == 'qcd' : # QCD has higher uncertainties
                         toRoot += (sampHistos[samp].GetBinContent(k)*.1)**2
+                    elif samp == 'zz' : # ZZ has higher uncertainties in AZH
+                        toRoot += (sampHistos[samp].GetBinContent(k)*.25)**2
                 binErrors.append( math.sqrt(toRoot) )
     
     
@@ -497,7 +500,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
             lumi.SetTextSize(0.03)
-            lumi.DrawTextNDC(.7,.96,"12.9 / fb (13 TeV)" )
+            lumi.DrawTextNDC(.7,.96,"15.9 / fb (13 TeV)" )
     
 
             ''' Random print outs on plots '''
