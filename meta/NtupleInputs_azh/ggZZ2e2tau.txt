@@ -1,0 +1,7 @@
+/data/truggles/aug03_azh/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/submit/make_ntuples_cfg-1C46C6FC-854E-E611-926B-0CC47A4C8EB6/make_ntuples_cfg-1C46C6FC-854E-E611-926B-0CC47A4C8EB6.root
+/data/truggles/aug03_azh/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/submit/make_ntuples_cfg-42E4B23B-5F49-E611-9FE0-00238BCE4634/make_ntuples_cfg-42E4B23B-5F49-E611-9FE0-00238BCE4634.root
+/data/truggles/aug03_azh/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/submit/make_ntuples_cfg-6A20C8EB-6249-E611-9545-008CFAFBF576/make_ntuples_cfg-6A20C8EB-6249-E611-9545-008CFAFBF576.root
+/data/truggles/aug03_azh/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/submit/make_ntuples_cfg-946DDBA4-1549-E611-A0C8-A0369F7F9B10/make_ntuples_cfg-946DDBA4-1549-E611-A0C8-A0369F7F9B10.root
+/data/truggles/aug03_azh/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/submit/make_ntuples_cfg-C2A7EEFE-854E-E611-B6FC-0CC47A4D762A/make_ntuples_cfg-C2A7EEFE-854E-E611-B6FC-0CC47A4D762A.root
+/data/truggles/aug03_azh/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/submit/make_ntuples_cfg-C6DF2211-864E-E611-AE4B-0CC47A4D76D2/make_ntuples_cfg-C6DF2211-864E-E611-AE4B-0CC47A4D76D2.root
+/data/truggles/aug03_azh/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/submit/make_ntuples_cfg-E8D883DA-5949-E611-A3A9-549F35AE500A/make_ntuples_cfg-E8D883DA-5949-E611-A3A9-549F35AE500A.root
