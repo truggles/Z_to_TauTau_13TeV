@@ -1,13 +1,13 @@
 
-DATA=june27_ztt_data
-TT=june26_ztt_TT
+DATA=july29x_htt
+TT=aug10_htt
 BKGS=june26_ztt_MC
 SIGNALS=april08_signals
 DYBIG=april08_DYJets250Mil
 
 
 
-ls /data/truggles/${DATA}/data_Tau_Run2016B_25ns/submit/make_ntuples_cfg-*/*.root                           > dataTT.txt 
+ls /data/truggles/${DATA}/data_Tau_Run2016[B,D,E]_25ns/submit/make_ntuples_cfg-*/*.root                           > dataTT.txt 
 #ls /data/truggles/${DATA}/data_MuonEG_Run2015D_16Dec2015_25ns/submit/make_ntuples_cfg-*/*.root              > dataEM.txt 
 #ls /data/truggles/${DYBIG}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJetsBig.txt 
 ls /data/truggles/${BKGS}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                 > DYJets.txt 
@@ -17,7 +17,7 @@ ls /data/truggles/${BKGS}/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia
 ls /data/truggles/${BKGS}/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets3.txt 
 ls /data/truggles/${BKGS}/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root                > DYJets4.txt 
 #ls /data/truggles/${BKGS}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/*/*/*.root                > DYJetsFXFX.txt 
-ls /data/truggles/${BKGS}/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root             > DYJetsLow.txt 
+#ls /data/truggles/${BKGS}/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/*/*/*.root             > DYJetsLow.txt 
 ls /data/truggles/${BKGS}/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root     > T-tchan.txt 
 ls /data/truggles/${BKGS}/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root > Tbar-tchan.txt 
 ls /data/truggles/${BKGS}/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/*/*/*.root     > Tbar-tW.txt 

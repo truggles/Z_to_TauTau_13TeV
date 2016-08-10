@@ -128,17 +128,17 @@
   "dataTT": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 46505522, 
+    "nEvents": 122148377, 
     "DAS Path": "/Tau/Run2015D-16Dec2015-v1/MINIAOD", 
-    "nfiles": 354, 
-    "nblocks": 27, 
+    "nfiles": 2885, 
+    "nblocks": 254, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -888111, 
+    "summedWeightsNorm": -2050947, 
     "summedWeights": 0.0, 
-    "nevents": 16345128, 
-    "nNtupleFiles": 889, 
-    "nlumis": 46362
-  }, 
+    "nevents": 247910943, 
+    "nNtupleFiles": 2053, 
+    "nlumis": 144759
+  },
   "Tbar-tchan": {
     "STATUS": "Error", 
     "DAS status": "ok", 
@@ -324,15 +324,15 @@
   "TT": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 19515626, 
+    "nEvents": 32845334, 
     "DAS Path": "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext3-v1/MINIAODSIM", 
     "nfiles": 843, 
     "nblocks": 153, 
     "Cross Section (pb)": 831.76, 
-    "summedWeightsNorm": 19515626.0, 
-    "summedWeights": 19515626.0, 
+    "summedWeightsNorm": 32845334.0, 
+    "summedWeights": 32845334.0, 
     "nevents": 33364899, 
-    "nNtupleFiles": 487, 
+    "nNtupleFiles": 832, 
     "nlumis": 167457
   }
 }
