@@ -23,10 +23,10 @@ print "zHome: ",zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-#from meta.makeMeta import makeMetaJSON
-#os.chdir('meta')
+from meta.makeMeta import makeMetaJSON
+os.chdir('meta')
 #makeMetaJSON( analysis )
-#os.chdir('..')
+os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -46,9 +46,10 @@ SamplesDataCards = ['dataTT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets
 #SamplesDataCards = ['DYJetsHigh', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April23, removed DYJets LO small sample
 
 
-SamplesDataCards = ['dataTT','dataEM','DYJets']
+#SamplesDataCards = ['dataTT','dataEM','DYJets']
 #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh'] # LO DYJets
 #SamplesDataCards = ['DYJets',]
+#SamplesDataCards = ['TT',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -59,18 +60,18 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 15,
+    'numCores' : 10,
     'numFilesPerCycle' : 10,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
-    #'cutMapper' : 'syncCutsDCqcd',
+    'cutMapper' : 'syncCutsDCqcd',
     #'cutMapper' : 'syncCutsNtupleBuilding',
     #'cutMapper' : 'syncCutsNtupleLoose',       # !
-    'cutMapper' : 'signalCuts',
+    #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    'mid1' : '1July18a',
-    'mid2' : '2July18a',
-    'mid3' : '3July18a',
+    'mid1' : '1Aug10',
+    'mid2' : '2Aug10',
+    'mid3' : '3Aug10',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -78,11 +79,15 @@ params = {
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
 }
+""" Get samples with map of attributes """
+setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+import analysis3Plots
+from meta.sampleNames import returnSampleDetails
+samples = returnSampleDetails( analysis, samples )
 
 
-samples = setUpDirs( samples, params, analysis )
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -92,28 +97,29 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 if runPlots :
     """ Make our folders with directories of histos for each bkg """
-    subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
-    
-    qcdYields = {}
-    for sign in ['SS', 'OS'] :
-        for name in ['VTight_Loose', 'VTight_'] :
-            kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT', }
-            folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'
-            qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
-            qcdYields[ sign+name ] = qcdYield
-    
-    print qcdYields
-    looseToTightRatio = qcdYields['SSVTight_'] / qcdYields['SSVTight_Loose']
-    qcdFile = open('httQCDYields_%s.txt' % params['mid2'],'w')
-    qcdFile.write( str(looseToTightRatio)+"\n" )
-    for key in qcdYields :
-        qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
-    qcdFile.close()
+    #subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
+    #
+    #qcdYields = {}
+    #for sign in ['SS', 'OS'] :
+    #    for name in ['VTight_Loose', 'VTight_'] :
+    #        kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT', }
+    #        folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'
+    #        qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
+    #        qcdYields[ sign+name ] = qcdYield
+    #
+    #print qcdYields
+    #looseToTightRatio = qcdYields['SSVTight_'] / qcdYields['SSVTight_Loose']
+    #qcdFile = open('httQCDYields_%s.txt' % params['mid2'],'w')
+    #qcdFile.write( str(looseToTightRatio)+"\n" )
+    #for key in qcdYields :
+    #    qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
+    #qcdFile.close()
     
     """ Final plots """
+    samples = returnSampleDetails( analysis, samples )
     qcdSF = 1.0
     with open('httQCDYields_%s.txt' % params['mid2']) as qcdFile :
         cnt = 0
@@ -121,9 +127,9 @@ if runPlots :
             qcdSF = float(line)
             break
     print qcdSF
-    
-    text=False
-    #text=True
+
+    #text=False
+    text=True
     kwargs = { 'text':text, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_VTight_LooseZTT', 'qcdSF':qcdSF }
     analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_VTight_ZTT' % params['mid2'], **kwargs  )
     

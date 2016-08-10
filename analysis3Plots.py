@@ -60,6 +60,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
 
+    for sample in samples :
+        print sample
 
 
     print "Running over %s samples" % analysis
@@ -288,7 +290,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
                     print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                     preHist.Scale( ops['qcdSF'] )
-                    print "QCD yield: %f" % preHist.Integral()
+                    #print "QCD yield: %f" % preHist.Integral()
                     hist = ROOT.TH1F( preHist )
                 else :
                     hist = preHist.Rebin( xNum, "rebinned", xBins )
@@ -304,8 +306,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 0 ), hist.GetBinLowEdge( nBins+1 ))
     
     
-                if samples[ sample ]['group'] == 'qcd' :
-                    print "qcd Stack yield: %f" % qcd.Integral()
+                #if samples[ sample ]['group'] == 'qcd' :
+                #    print "qcd Stack yield: %f" % hist.Integral()
                 sampHistos[ samples[ sample ]['group'] ].Add( hist )
                 tFile.Close()
     
@@ -322,7 +324,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Some specific HTT stuff
             if analysis == 'htt' :
                 if not qcdMake :
-                    print "Adding QCD: ",sampHistos['qcd'].Integral()
+                    #print "Adding QCD: ",sampHistos['qcd'].Integral()
                     stack.Add( sampHistos['qcd'] )
                 stack.Add( sampHistos['top'] )
                 stack.Add( sampHistos['dib'] )

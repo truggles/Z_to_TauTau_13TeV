@@ -33,15 +33,15 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     
     
     ''' Preset samples '''
-    SamplesDataCards = ['data_em', 'data_tt', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April24, removed LO DYJets small sample and DYJets m-150
-    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'data_tt'] # As of April23, removed DYJets LO small sample
+    SamplesDataCards = ['dataEM', 'dataTT', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April24, removed LO DYJets small sample and DYJets m-150
+    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT'] # As of April23, removed DYJets LO small sample
     
     #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
     #for mass in masses :
     #       SamplesDataCards.append( 'ggH%i' % mass )
     #       SamplesDataCards.append( 'bbH%i' % mass )
     #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh',] # As of April03
-    #SamplesDataCards = ['DYJetsLow',] # As of April03
+    #SamplesDataCards = ['DYJets',] # As of April03
     #SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
     samples = SamplesDataCards
     params = {
@@ -100,7 +100,10 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
     #params['additionalCut'] = '*(Z_SS==%i)*%s*(pt_1 > 60 && pt_2 > 60)' % (Zsign, isoL1ML2loose)
     params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
-    samples = setUpDirs( samples, params, analysis )
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    import analysis3Plots
+    from meta.sampleNames import returnSampleDetails
+    samples = returnSampleDetails( analysis, samples )
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
     
     return

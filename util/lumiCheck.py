@@ -24,7 +24,9 @@ echo "\n\nInfo for reinstalling brilcalc SW is here: http://cms-service-lumi.web
 import json
 
 
-with open('Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt') as jsonFile :
+#with open('Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt') as jsonFile :
+base = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/'
+with open(base+'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt') as jsonFile :
     jsonDict = json.load( jsonFile )
 
 runsIn2016C = [
@@ -119,7 +121,7 @@ for run in jsonDict :
     print run, jsonDict[run]
     outJson[run] = jsonDict[run]
 
-with open('Cert_271036-277148_Sans2016C.txt', 'w') as outFile :
+with open('Cert_271036-276811_Sans2016C.txt', 'w') as outFile :
 	json.dump( outJson, outFile, indent=2 )
 	outFile.close()
 

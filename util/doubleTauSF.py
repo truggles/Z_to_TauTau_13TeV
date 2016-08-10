@@ -26,7 +26,6 @@ class DoubleTau35Efficiencies :
                 self.real_taus_cumlative = json.load(f2)
             with open('data/di-tau/same_sign_cumulative.json') as f3 :
                 self.high_mt_cumlative = json.load(f3)
-            print self.real_taus_cumlative
         else :
             self.high_mt_cumlative = ''
             self.real_taus_cumlative = ''

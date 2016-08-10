@@ -15,6 +15,7 @@ from ROOT import gPad, gROOT
 # For defining numFilesPerCycle for specific samples
 def getMergeMap( analysis ) :
     mergeMap = {
+        'htt' : {'xxx' : 100,},
         'azh' : {
             'dataEE' : 200,
             'dataMM' : 200,

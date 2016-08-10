@@ -427,6 +427,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
         'cand_AgainstMuonTight3' : 'againstMuonTight3',
         'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
+        'cand_ChargedIsoPtSumdR03' : 'chargedIsoPtSumdR03',
         'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
@@ -1002,25 +1003,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     t1Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'Loose'
+                        tauIso = 'LooseIso'
                     if getattr( row, l1+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'Medium'
+                        tauIso = 'MediumIso'
                     if getattr( row, l1+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'Tight'
+                        tauIso = 'TightIso'
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'VTight'
-                    doubleTauTrigWeightL1[0] = DoubleTau35Efficiencies.doubleTauTriggerEff( pt1, tauIso, t1Gen, ttSS )
+                        tauIso = 'VTightIso'
+                    doubleTauTrigWeightL1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, t1Gen, ttSS )
                     t2Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'Loose'
+                        tauIso = 'LooseIso'
                     if getattr( row, l2+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'Medium'
+                        tauIso = 'MediumIso'
                     if getattr( row, l2+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'Tight'
+                        tauIso = 'TightIso'
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'VTight'
-                    doubleTauTrigWeightL2[0] = DoubleTau35Efficiencies.doubleTauTriggerEff( pt2, tauIso, t2Gen, ttSS )
+                        tauIso = 'VTightIso'
+                    doubleTauTrigWeightL2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, t2Gen, ttSS )
                 else : trigweight_1[0] = 1
                 
                 # top pt reweighting, only for ttbar events
