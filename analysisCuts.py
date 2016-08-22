@@ -6,7 +6,33 @@ def makeGenCut( inTree, cutString ) :
 	return outTree
 
 
-# TT Baseline
+#######################
+### HTT-EM Baseline ###
+#######################
+emKin   = 'ePt > 13 && eAbsEta < 2.5 && mPt > 10 && mAbsEta < 2.4'
+eID     = 'ePassesConversionVeto == 1 && eMissingHits <= 1 && eMVANonTrigWP80 == 1' #eCBIDMedium == 1
+mID     = 'mPFIDMedium == 1'
+emDR    = 'e_m_DR > 0.3'
+emVtx   = 'abs(ePVDZ) < 0.2 && abs(ePVDXY) < 0.045 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
+#e23m8   = '(singleESingleMuPass > 0 && eMatchesMu8Ele23Path == 1 && mMatchesMu8Ele23Path == 1 && eMu8Ele23Filter == 1 && mMu8Ele23Filter == 1 && ePt > 24)'
+#m23e12  = '(singleMuSingleEPass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu23Ele12Path == 1 && eMu23Ele12Filter == 1 && mMu23Ele12Filter == 1 && mPt > 24)'
+e23m8   = '(singleE23SingleMu8Pass > 0 && eMatchesMu8Ele23Path == 1 && mMatchesMu8Ele23Path == 1  && ePt > 24)'
+m23e12  = '(singleMu23SingleE12Pass > 0 && eMatchesMu23Ele12Path == 1 && mMatchesMu23Ele12Path == 1  && mPt > 24)'
+### I have MUCH better sync with IC without filters applied in EMu ###
+#e17m8   = '(singleE17SingleMu8Pass > 0 && eMatchesMu8Ele17Path == 1 && mMatchesMu8Ele17Path == 1 && eMu8Ele23Filter > 0 && mMu8Ele23Filter > 0 && ePt > 18)'
+#m17e12  = '(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatchesMu17Ele12Path == 1 && eMu17Ele12Filter > 0 && mMu17Ele12Filter > 0 && mPt > 18)'
+e17m8   = '(singleE17SingleMu8Pass > 0 && eMatchesMu8Ele17Path == 1 && mMatchesMu8Ele17Path == 1 && ePt > 18)'
+m17e12  = '(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatchesMu17Ele12Path == 1 && mPt > 18)'
+# EM PostSync
+emOS    = 'e_m_SS == 0'
+emSS    = 'e_m_SS == 1'
+emIso   = 'eIsoDB03 < 0.15 && mIsoDB03 < 0.2'
+extraVeto   = 'eVetoZTTp001dxyz == 0 && muVetoZTTp001dxyz == 0'
+
+
+#######################
+### HTT-TT Baseline ###
+#######################
 extraVetoTT   = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0'
 #DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
 DecayMode = 't1DecayModeFinding == 1 && t2DecayModeFinding == 1'
@@ -93,7 +119,7 @@ eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
 
 def getCut( analysis, channel, cutName, isData=False ) :
     
-    triggers = [tt40, tt35, tt32, eeTrig, mmTrig]
+    triggers = [tt40, tt35, tt32, '('+e23m8+'||'+m23e12+')', eeTrig, mmTrig]
 
     cutMap = { 
         'htt' : # analysis
@@ -125,6 +151,9 @@ def getCut( analysis, channel, cutName, isData=False ) :
             # Selection which only does baseline for sync sample
             'crazyCutsNtuple' : [ttKin, ttCharge, ttDR, ttVtx, tt32, DecayMode, 't1Pt>150&&t2Pt>150'],
         }, # end tt channel
+          'em' : {
+            'syncCutsNtuple' : [emKin, emDR, emVtx, '('+e23m8+'||'+m23e12+')'],
+        }, # end em channel
         }, # end HTT analysis cuts
         'azh' : # analysis
         { 'eeee' : {

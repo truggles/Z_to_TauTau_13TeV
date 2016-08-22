@@ -40,15 +40,16 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 8,
-    'numFilesPerCycle' : 2,
-    #'numFilesPerCycle' : 1,
-    'channels' : ['tt'],
-    'cutMapper' : 'syncCutsNtupleTmp',
+    'numCores' : 14,
+    #'numFilesPerCycle' : 2,
+    'numFilesPerCycle' : 1,
+    'channels' : ['tt','em',],
+    'channels' : ['em',],
+    'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
-    'mid1' : '1June29a',
-    'mid2' : '2June29a',
-    'mid3' : '3June29a',
+    'mid1' : '1Aug21',
+    'mid2' : '2Aug21',
+    'mid3' : '3Aug21',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -57,7 +58,12 @@ params = {
     'doFRMthd' : 'false',
 }
 
-samples = setUpDirs( samples, params, analysis )
+""" Get samples with map of attributes """
+setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+import analysis3Plots
+from meta.sampleNames import returnSampleDetails
+samples = returnSampleDetails( analysis, samples )
+
 analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 

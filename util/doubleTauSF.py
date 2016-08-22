@@ -20,11 +20,11 @@ class DoubleTau35Efficiencies :
     def __init__( self, channel ):
         if channel == 'tt' :
             #print "Initializing LepWeight class for channel ",channel
-            with open('data/di-tau/high_mt_cumulative.json') as f1 :
+            with open('data/triggerSF/di-tau/high_mt_cumulative.json') as f1 :
                 self.high_mt_cumlative = json.load(f1)
-            with open('data/di-tau/real_taus_cumulative.json') as f2 :
+            with open('data/triggerSF/di-tau/real_taus_cumulative.json') as f2 :
                 self.real_taus_cumlative = json.load(f2)
-            with open('data/di-tau/same_sign_cumulative.json') as f3 :
+            with open('data/triggerSF/di-tau/same_sign_cumulative.json') as f3 :
                 self.high_mt_cumlative = json.load(f3)
         else :
             self.high_mt_cumlative = ''
