@@ -1,0 +1,5 @@
+/hdfs/store/user/caillol/SMHTT_aug16_v2/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-0A3C48B2-FC48-E611-91FC-002590D9D9F0.root
+/hdfs/store/user/caillol/SMHTT_aug16_v2/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-462C9E71-3948-E611-8595-6CC2173D4980.root
+/hdfs/store/user/caillol/SMHTT_aug16_v2/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-AAEEBBAC-E148-E611-AC8C-B499BAA6776E.root
+/hdfs/store/user/caillol/SMHTT_aug16_v2/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-EC339131-FB48-E611-AE4F-485B39897242.root
+/hdfs/store/user/caillol/SMHTT_aug16_v2/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-EE666F87-FB48-E611-AA4B-00269E95AF28.root
