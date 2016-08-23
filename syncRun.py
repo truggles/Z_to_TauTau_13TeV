@@ -38,13 +38,13 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
-    #'debug' : 'true',
-    'debug' : 'false',
-    'numCores' : 14,
-    #'numFilesPerCycle' : 2,
-    'numFilesPerCycle' : 1,
+    'debug' : 'true',
+    #'debug' : 'false',
+    'numCores' : 1,
+    'numFilesPerCycle' : 2,
+    #'numFilesPerCycle' : 1,
     'channels' : ['tt','em',],
-    'channels' : ['em',],
+    #'channels' : ['em',],
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
     'mid1' : '1Aug21',
@@ -56,6 +56,8 @@ params = {
     'svFitPrep' : 'false',
     #'svFitPrep' : 'true',
     'doFRMthd' : 'false',
+    'hdfs' : 'false',
+    #'hdfs' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -65,7 +67,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 
