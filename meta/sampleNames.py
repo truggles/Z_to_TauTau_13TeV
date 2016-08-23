@@ -129,9 +129,31 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x, 
                 'xsec' : 18610.,
                 'group' : 'dyj'},
+             'ggHtoTauTau120': {
+                'DASPath' : '/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 47.38 * 0.0698,
+                'group' : 'ggh'},
+             'ggHtoTauTau125': {
+                'DASPath' : '/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 44.14 * 0.0627,
+                'group' : 'ggh'},
+             'ggHtoTauTau130': {
+                'DASPath' : '/GluGluHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 41.23 * 0.0541,
+                'group' : 'ggh'},
+             'VBFHtoTauTau120': {
+                'DASPath' : '/VBFHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 3.935 * 0.0698,
+                'group' : 'vbf'},
+             'VBFHtoTauTau125': {
+                'DASPath' : '/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 3.782 * 0.0627,
+                'group' : 'vbf'},
+             'VBFHtoTauTau130': {
+                'DASPath' : '/VBFHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 3.637 * 0.0541,
+                'group' : 'vbf'},
             #'DYJetsBig' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 4954.0 * 1.216229 ), 
-            #'ggHtoTauTau125' : ('/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x, 43.92 * 0.0632 ),
-            #'VBFHtoTauTau125' : ('/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x, 3.748 * 0.0632 ),
         }, # end HTT
         'azh' : {
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
