@@ -33,6 +33,34 @@ def makeTChain( sampleList, treePath, maxFiles=0, startFile=0, maxFile=9999 ) :
 
 
 
+def getEventCount( sampleList, channel, maxFiles=0, startFile=0, maxFile=9999 ) :
+    #print "makeTChain: startFile: %i   maxFile: %i" % (startFile, maxFile)
+    files = open( sampleList, 'r' )	
+    startFile += 1
+    maxFile += 1
+    
+    line = 1
+    eventCount = 0
+    for file_ in files :
+        if line >= startFile and line <= maxFile :
+            #print " -- line %3i  %s" % (line, file_)
+	    f = ROOT.TFile( file_.strip(), 'r' )
+	    eventCount += f.Get( channel+'/eventCount' ).Integral()
+        
+        # Just in case we want to debug with a limited amount of files
+        line += 1
+        if line >= maxFiles and maxFiles != 0:
+            #print "Loaded line %i --> line %i" % (startFile, maxFile)
+            break
+        if line > maxFile :
+            #print "reached maxFile = %i" % maxFile
+            break
+
+    files.close()
+    return eventCount
+
+
+
 def makeTChainFromGlob( sampleList, treePath, ) :
     #print "makeTChain: startFile: %i   maxFile: %i" % (startFile, maxFile)
     tree = ROOT.TChain( treePath )
