@@ -1,3 +1,0 @@
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-T-tchan_1_em.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-T-tchan_2_em.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-T-tchan_0_em.root

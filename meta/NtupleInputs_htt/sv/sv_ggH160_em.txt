@@ -1,6 +1,0 @@
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_1_em.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_0_em.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_3_em.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_4_em.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_2_em.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_5_em.root

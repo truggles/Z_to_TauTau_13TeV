@@ -1,5 +1,0 @@
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-WZJets_0_tt.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-WZJets_2_tt.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-WZJets_3_tt.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-WZJets_1_tt.root
-/data/truggles/svFitComplete/april24/TauTau_13_Recoil0_TESType0_isWJ0-WZJets_4_tt.root
