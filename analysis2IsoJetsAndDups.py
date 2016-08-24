@@ -726,12 +726,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
     trigweight_1B = tnew.Branch('trigweight_1', trigweight_1, 'trigweight_1/F')
-    effweight = array('f', [ 0 ] )
-    effweightB = tnew.Branch('effweight', effweight, 'effweight/F')
-    doubleTauTrigWeightL1 = array('f', [ 0 ] )
-    doubleTauTrigWeightL1B = tnew.Branch('doubleTauTrigWeightL1', doubleTauTrigWeightL1, 'doubleTauTrigWeightL1/F')
-    doubleTauTrigWeightL2 = array('f', [ 0 ] )
-    doubleTauTrigWeightL2B = tnew.Branch('doubleTauTrigWeightL2', doubleTauTrigWeightL2, 'doubleTauTrigWeightL2/F')
+    trigweight_2 = array('f', [ 0 ] )
+    trigweight_2B = tnew.Branch('trigweight_2', trigweight_2, 'trigweight_2/F')
+    tauIDweight_1 = array('f', [ 0 ] )
+    tauIDweight_1B = tnew.Branch('tauIDweight_1', tauIDweight_1, 'tauIDweight_1/F')
+    tauIDweight_2 = array('f', [ 0 ] )
+    tauIDweight_2B = tnew.Branch('tauIDweight_2', tauIDweight_2, 'tauIDweight_2/F')
     idisoweight_1 = array('f', [ 0 ] )
     idisoweight_1B = tnew.Branch('idisoweight_1', idisoweight_1, 'idisoweight_1/F')
     idisoweight_2 = array('f', [ 0 ] )
@@ -886,22 +886,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             electronSF3[0] = 1
             electronSF4[0] = 1
             azhWeight[0] = 1
+            puweight[0] = 1
+            tauPtWeightUp[0] = 1
+            tauPtWeightDown[0] = 1
+            trigweight_1[0] = 1
+            trigweight_2[0] = 1
+            idisoweight_1[0] = 1
+            idisoweight_2[0] = 1
+            tauIDweight_1[0] = 1
+            tauIDweight_2[0] = 1
+            topWeight[0] = 1
+            zPtWeight[0] = 1
+            weight[0] = 1
+            XSecLumiWeight[0] = 1
 
             # Data specific vars
             if 'data' in sample :
-                puweight[0] = 1
-                tauPtWeightUp[0] = 1
-                tauPtWeightDown[0] = 1
-                trigweight_1[0] = 1
-                effweight[0] = 1
-                doubleTauTrigWeightL1[0] = 1
-                doubleTauTrigWeightL2[0] = 1
-                idisoweight_1[0] = 1
-                idisoweight_2[0] = 1
-                topWeight[0] = 1
-                zPtWeight[0] = 1
-                weight[0] = 1
-                XSecLumiWeight[0] = 1
                 # Have the btag numbers correspond to actual values not
                 # Promote/Demote values
                 if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
@@ -985,21 +985,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', pt2, eta2 )
 
                 # Trigger Weights
-                effweight[0] = 1
-                doubleTauTrigWeightL1[0] = 1
-                doubleTauTrigWeightL2[0] = 1
                 #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
                 #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
                 #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( pt1, eta1, pt2, eta2 )
                 #elif channel == 'tt' :
                 if channel == 'tt' :
-                    trigweight_1[0] = 1
                     # L1 trigger efficiency is dependent on tau isolation
                     # and real / fake tau status
                     # find tau iso and pass string for mapping appropriately
-                    # also possibly depends on SS vs OS
-                    if getattr( row, 't1_t2_SS' ) == 1 : ttSS = True
-                    else : ttSS = False
                     t1Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
@@ -1010,8 +1003,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'TightIso'
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
-                    doubleTauTrigWeightL1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, t1Gen, ttSS )
-                    t2Gen = getattr( row, l1+'ZTTGenMatching' )
+                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, t1Gen )
+                    t2Gen = getattr( row, l2+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'LooseIso'
@@ -1021,8 +1014,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'TightIso'
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
-                    doubleTauTrigWeightL2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, t2Gen, ttSS )
-                else : trigweight_1[0] = 1
+                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, t2Gen )
+                    tauIDweight_1[0] = 0.84
+                    tauIDweight_2[0] = 0.84
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
@@ -1042,10 +1036,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
-                effweight[0] = doubleTauTrigWeightL1[0] * doubleTauTrigWeightL2[0]
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
-                weight[0] *= trigweight_1[0] * effweight[0] * topWeight[0]
-                weight[0] *= zPtWeight[0]
+                weight[0] *= trigweight_1[0] * trigweight_2[0]
+                weight[0] *= zPtWeight[0]* topWeight[0]
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]

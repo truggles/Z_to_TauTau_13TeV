@@ -25,7 +25,7 @@ class DoubleTau35Efficiencies :
             with open('data/triggerSF/di-tau/real_taus_cumulative.json') as f2 :
                 self.real_taus_cumlative = json.load(f2)
             with open('data/triggerSF/di-tau/same_sign_cumulative.json') as f3 :
-                self.high_mt_cumlative = json.load(f3)
+                self.same_sign_cumlative = json.load(f3)
         else :
             self.high_mt_cumlative = ''
             self.real_taus_cumlative = ''
@@ -61,16 +61,32 @@ class DoubleTau35Efficiencies :
 
 
 
-    def doubleTauTriggerEff(self, pt, iso, genCode, ttSS ) :
+    def doubleTauTriggerEff(self, pt, iso, genCode ) :
 
-        # Call all taus 'real' taus for now
-        cat = 'Real Tau'
+        # For Sync, they want all taus considered as "VTight" 
+        iso = 'TightIso'
 
-        m0 = self.real_taus_cumlative[iso]['m_{0}']
-        sigma = self.real_taus_cumlative[iso]['sigma']
-        alpha = self.real_taus_cumlative[iso]['alpha']
-        n = self.real_taus_cumlative[iso]['n']
-        norm = self.real_taus_cumlative[iso]['norm']
+
+        if genCode == 5 : # Real Hadronically decay Tau
+            m0 = self.real_taus_cumlative[iso]['m_{0}']
+            sigma = self.real_taus_cumlative[iso]['sigma']
+            alpha = self.real_taus_cumlative[iso]['alpha']
+            n = self.real_taus_cumlative[iso]['n']
+            norm = self.real_taus_cumlative[iso]['norm']
+            ''' for the moment stick with real vs. fake '''
+        #elif genCode == 6 : # Fake Tau (measurements were done in SS region)
+        else : # Fake Tau (measurements were done in SS region)
+            m0 = self.same_sign_cumlative[iso]['m_{0}']
+            sigma = self.same_sign_cumlative[iso]['sigma']
+            alpha = self.same_sign_cumlative[iso]['alpha']
+            n = self.same_sign_cumlative[iso]['n']
+            norm = self.same_sign_cumlative[iso]['norm']
+        #else : # Not real and not fake, so high mt?
+        #    m0 = self.high_mt_cumlative[iso]['m_{0}']
+        #    sigma = self.high_mt_cumlative[iso]['sigma']
+        #    alpha = self.high_mt_cumlative[iso]['alpha']
+        #    n = self.high_mt_cumlative[iso]['n']
+        #    norm = self.high_mt_cumlative[iso]['norm']
         
     
         return self.CBeff( pt, m0, sigma, alpha, n, norm )

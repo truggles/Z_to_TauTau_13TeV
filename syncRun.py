@@ -24,7 +24,10 @@ print "zHome: ",zHome
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-#makeMetaJSON( analysis )
+''' General samples.json file from /data/truggles files '''
+#makeMetaJSON( analysis, channel='tt' )
+''' samples.json for post /hdfs skim -> uwlogin samples '''
+#makeMetaJSON( analysis, channel='tt', skimmed=True )
 os.chdir('..')
 
 
@@ -42,22 +45,25 @@ params = {
     'debug' : 'false',
     'numCores' : 14,
     #'numFilesPerCycle' : 2,
-    'numFilesPerCycle' : 20,
-    'channels' : ['tt','em',],
+    'numFilesPerCycle' : 1,
+    #'channels' : ['tt','em',],
+    'channels' : ['tt',],
     #'channels' : ['em',],
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
-    'mid1' : '1Aug23',
-    'mid2' : '2Aug23',
-    'mid3' : '3Aug23',
+    'mid1' : '1Aug24',
+    'mid2' : '2Aug24',
+    'mid3' : '3Aug24',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     #'svFitPrep' : 'true',
     'doFRMthd' : 'false',
-    'hdfs' : 'false',
-    #'hdfs' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true',
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -66,8 +72,8 @@ import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 

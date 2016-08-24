@@ -111,8 +111,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # and, top pt reweighting
         # weight is a composition of all applied MC/Data corrections
-        #sfs = '*(weight)' 
-        sfs = '*(effweight*puweight*azhWeight)' 
+        sfs = '*(1)'
+        if analysis == 'htt' :
+            sfs = '*(weight)'
+            if channel == 'tt' :
+                # Not currently included in weight for sync ntuple
+                sfs += '*(tauIDweight_1 * tauIDweight_2)'
+        if analysis == 'azh' :
+            sfs = '*(puweight*azhWeight)' 
         xsec = '*(XSecLumiWeight)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
