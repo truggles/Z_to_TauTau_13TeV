@@ -1,2 +1,4 @@
 /data/truggles/httAug24FromHdfsSkimmed/TT_0_tt.root
 /data/truggles/httAug24FromHdfsSkimmed/TT_1_tt.root
+/data/truggles/httAug24FromHdfsSkimmed/TT_2_tt.root
+/data/truggles/httAug24FromHdfsSkimmed/TT_3_tt.root

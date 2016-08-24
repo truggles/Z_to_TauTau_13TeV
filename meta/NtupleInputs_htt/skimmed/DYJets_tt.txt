@@ -1,2 +1,4 @@
 /data/truggles/httAug24FromHdfsSkimmed/DYJets_0_tt.root
 /data/truggles/httAug24FromHdfsSkimmed/DYJets_1_tt.root
+/data/truggles/httAug24FromHdfsSkimmed/DYJets_2_tt.root
+/data/truggles/httAug24FromHdfsSkimmed/DYJets_3_tt.root
