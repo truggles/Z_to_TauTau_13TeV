@@ -27,7 +27,7 @@ def sampleDetails( analysis ) :
     sampleMap = {
         'Sync' : {
             'Sync-HtoTT': {
-                'DASPath' : '/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 999.,
                 'group' : 'sync'
         }}, # end Sync sample

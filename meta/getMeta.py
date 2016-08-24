@@ -28,20 +28,24 @@ def getDBSInfo( key, name ) :
     infoVect = [ nfiles, nblocks, nevents, nlumis, status ]
     return infoVect
 
-def getNumberOfFiles( name, sampPrefix ) :
+
+
+def getNumberOfFiles( fileName ) :
     try:
-        ifile = open('NtupleInputs_%s/%s.txt' % (sampPrefix, name), 'r')
+        ifile = open( fileName, 'r')
         fileCount = 0
         for line in ifile:
         	fileCount += 1
     except IOError :
         time.sleep( 10 )
-        ifile = open('NtupleInputs_%s/%s.txt' % (sampPrefix, name), 'r')
+        ifile = open( fileName, 'r')
         fileCount = 0
         for line in ifile:
         	fileCount += 1
         
     return fileCount
+
+
 
 def getEventCount( fileName, channel ) :
 	ifile = ROOT.TFile('%s' % fileName, 'r')
@@ -52,13 +56,12 @@ def getEventCount( fileName, channel ) :
 	ifile.Close()
 	return eventCount
 
+
+
 def getSummedWeights( fileName, channel ) :
     ifile = ROOT.TFile('%s' % fileName, 'r')
     summedWeights = 0
-    tree = ifile.Get( '%s/metaInfo' % channel )
-    for row in tree :
-        summedWeights += row.summedWeights
-    #print "summed weights: ",summedWeights
+    summedWeights = ifile.Get( '%s/summedWeights' % channel ).Integral()
 
     # Normalize summedWeights by GenWeight value
     tree2 = ifile.Get( '%s/final/Ntuple' % channel )
@@ -73,8 +76,12 @@ def getSummedWeights( fileName, channel ) :
     ifile.Close()
     return (summedWeights,weightedSum)
 
+
+
 def printJson( jDict, sampPrefix ) :
 	with open('NtupleInputs_%s/samples.json' % sampPrefix, 'w') as outFile :
 		json.dump( jDict, outFile, indent=2 )
 		outFile.close()
+
+
 
