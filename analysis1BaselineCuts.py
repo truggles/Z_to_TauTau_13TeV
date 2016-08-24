@@ -73,7 +73,9 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
     chain = makeTChain( sampleList, path, 0, fileMin, fileMax )
 
     # Store eventCount
-    eventCount = getEventCount( sampleList, channel, 0, fileMin, fileMax )
+    getEvtInfo = getEventCount( sampleList, channel, 0, fileMin, fileMax )
+    eventCount = getEvtInfo[0]
+    summedWeights = getEvtInfo[1]
 
     numEntries = chain.GetEntries()
     #print "%25s : %10i" % ('Initial', numEntries)
@@ -98,7 +100,7 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
     
     #treeOutDir.cd()
     #chainNew.Write()
-    return (outFile, chainNew, initialQty, postCutQty, eventCount)
+    return (outFile, chainNew, initialQty, postCutQty, eventCount, summedWeights)
 
 
 
@@ -122,12 +124,16 @@ def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFiles
     initialQty = cutOut[2]
     postCutQty = cutOut[3]
     eventCount = cutOut[4]
+    summedWeights = cutOut[5]
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
     # Make a histo with "eventCount" for making meta stats after initial cut
     eventCountH = ROOT.TH1D('eventCount','eventCount',1,-0.5,0.5)
     eventCountH.SetBinContent( 1, eventCount )
     eventCountH.Write()
+    summedWeightsH = ROOT.TH1D('summedWeights','summedWeights',1,-0.5,0.5)
+    summedWeightsH.SetBinContent( 1, summedWeights )
+    summedWeightsH.Write()
     dir2 = dir1.mkdir( 'final' )
     dir2.cd()
     cutOut[1].Write()

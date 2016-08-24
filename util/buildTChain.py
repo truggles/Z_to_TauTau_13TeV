@@ -41,11 +41,13 @@ def getEventCount( sampleList, channel, maxFiles=0, startFile=0, maxFile=9999 ) 
     
     line = 1
     eventCount = 0
+    summedWeights = 0
     for file_ in files :
         if line >= startFile and line <= maxFile :
             #print " -- line %3i  %s" % (line, file_)
 	    f = ROOT.TFile( file_.strip(), 'r' )
 	    eventCount += f.Get( channel+'/eventCount' ).Integral()
+	    summedWeights += f.Get( channel+'/summedWeights' ).Integral()
         
         # Just in case we want to debug with a limited amount of files
         line += 1
@@ -57,7 +59,7 @@ def getEventCount( sampleList, channel, maxFiles=0, startFile=0, maxFile=9999 ) 
             break
 
     files.close()
-    return eventCount
+    return [eventCount, summedWeights]
 
 
 
