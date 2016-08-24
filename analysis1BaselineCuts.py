@@ -10,19 +10,48 @@ import multiprocessing
 import math
 from ROOT import gPad, gROOT
 
-def getBkgMap() :
-    bkgMap = {
-                # cutMapper       samples
-        'WJets' : ['wJetsShape', ['WJets',]],
-        'QCDSync'   : ['QCDShapeSync', ['data_em', 'data_tt',]],
-        'QCDLoose'   : ['QCDShapeLoose', ['data_em', 'data_tt',]],
-        'None'  : ['', '', '', '']
-        }
-    return bkgMap
+
+
+# For defining numFilesPerCycle for specific samples
+def getMergeMap( analysis ) :
+    mergeMap = {
+        'azh' : {
+            'dataEE' : 200,
+            'dataMM' : 200,
+            'DYJets' : 200,
+            'DYJets1' : 200,
+            'DYJets2' : 200,
+            'DYJets3' : 200,
+            'DYJets4' : 200,
+            'WZ3l1nu' : 100,
+            'ZZ4lAMCNLO' : 5,
+            'TT' : 100,
+            'ggZZ4m' : 2,
+            'ggZZ4e' : 2,
+            'ggZZ2e2m' : 2,
+        } # end azh
+    }
+    return mergeMap[ analysis ]
+
+
+
+def skipChanDataCombo( channel, sample, analysis ) :
+    # HTT
+    if analysis == 'htt' :
+        if (channel == 'em') and ('data' in sample) and (sample != 'dataEM') : return True
+        if (channel == 'et') and ('data' in sample) and (sample != 'dataE') : return True
+        if (channel == 'mt') and ('data' in sample) and (sample != 'dataM') : return True
+        if (channel == 'tt') and ('data' in sample) and (sample != 'dataTT') : return True
+    # AZH
+    if analysis == 'azh' :
+        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and (sample != 'dataEE') : return True
+        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt']) and ('data' in sample) and (sample != 'dataMM') : return True
+    return False
+
 
 
 #for sample in samples :
-def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
     #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -30,13 +59,10 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
     #print "###   %s  ###" % sample
     #print "Channel:  %s" % channel
     if svFitPost == 'true' :
-        if 'data' in sample :
-            sampleList = 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample)
-        else :
-            sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel)
+        sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel)
         path = '%s/Ntuple' % channel
     else :
-        sampleList = 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample)
+        sampleList = 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample)
         path = '%s/final/Ntuple' % channel
     #print "sample List and path", sampleList, path
     # This should allow us to run over sections of files
@@ -57,17 +83,20 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
     
     
     ''' Get channel specific general cuts '''
-    exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
+    #exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
+    cutString = ''
+    if 'data' in sample :
+        isData = True
+        cutString = analysisCuts.getCut( analysis, channel, cutMapper, isData )
+    else :
+        cutString = analysisCuts.getCut( analysis, channel, cutMapper )
     	
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
     
-    cutString = ' && '.join(cutMap[ cutName ])
-    cutString = '('+cutString+')'
     chainNew = analysisCuts.makeGenCut( chain, cutString )
     numEntries = chainNew.GetEntries()
-    #print "%25s : %10i" % (cutName, numEntries)
-    postCutQty = "%25s : %10i" % (cutName, numEntries)
+    postCutQty = "%25s : %10i" % (cutMapper, numEntries)
     
     #treeOutDir.cd()
     #chainNew.Write()
@@ -76,22 +105,20 @@ def initialCut( outFile, grouping, sample, channel, cutMapper, cutName, svFitPre
 
 
 
-def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle,svFitPrep,svFitPost) :
+def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost) :
 
-    if 'data' in sample : save = 'data_%i_%s' % (count, channel)
-    else : save = '%s_%i_%s' % (sample, count, channel)
-    bkgMap = getBkgMap()
+    save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
     print "%5i %20s %10s %3i: ====>>> START Cuts <<<====" % (num, sample, channel, count)
 
     ''' 1. Make cuts and save '''
     #print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
     if svFitPrep == 'true' :
-        outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
+        outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     else :
-        outFile1 = ROOT.TFile('%s%s/%s.root' % (grouping, mid1, save), 'RECREATE')
+        outFile1 = ROOT.TFile('%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
-    cutOut = initialCut( outFile1, grouping, sample, channel, cutMapper, cutName, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     dir1 = cutOut[0].mkdir( channel )
     dir1.cd()
     cutOut[1].Write()
@@ -106,21 +133,19 @@ def runCuts(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cu
         print "Over 1000 iterations.  Summary skipped"
 
 
-def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMapper,cutName,numFilesPerCycle) :
+def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle) :
 
     #if svFitPost == 'true' : SVF = True
     #else : SVF = False
 
-    if 'data' in sample : save = 'data_%i_%s' % (count, channel)
-    else : save = '%s_%i_%s' % (sample, count, channel)
-    bkgMap = getBkgMap()
+    save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
     print "%5i %20s %10s %3i: ====>>> START Iso Order <<<====" % (num, sample, channel, count)
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( grouping, mid1, mid2, save, channel, bkgMap[ bkgs ][0], count )
-    #output.put( '%s%s/%s.root' % (grouping, mid2, save) )
+    isoQty = renameBranches( analysis, mid1, mid2, save, channel, count )
+    #output.put( '%s%s/%s.root' % (analysis, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
     #output.put((num, sample, channel, count, initialQty, postCutQty, isoQty ))
@@ -130,7 +155,9 @@ def runIsoOrder(grouping, sample, channel, count, num, bkgs, mid1, mid2,cutMappe
 
 
 
-def doInitialCuts(grouping, samples, **fargs) :
+def doInitialCuts(analysis, samples, **fargs) :
+
+    mergeMap = getMergeMap(analysis)
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -142,93 +169,117 @@ def doInitialCuts(grouping, samples, **fargs) :
 
     import os
     if fargs[ 'svFitPrep' ] == 'true' :
-        if not os.path.exists( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1']) ) :
-            os.makedirs( '/data/truggles/svFitPrep/%s%s' % (grouping, fargs[ 'mid1' ]) )
+        if not os.path.exists( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1']) ) :
+            os.makedirs( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1' ]) )
     
     num = 0
     for sample in samples :
-    
+   
+        numFilesPerCycle = fargs['numFilesPerCycle']
+        if sample in mergeMap.keys() :
+            numFilesPerCycle = mergeMap[sample]
+
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
-            if 'data' in sample :
-                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
-            else :
-                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
-                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
-                fileLen = max( fileLenEM, fileLenTT )
+            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
+            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
+            fileLen = max( fileLenEM, fileLenTT )
         else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
+        if fileLen == 0 : 
+            print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
+            continue
         go = True
         count = 0
         while go :
             for channel in channels :
 
-                if channel == 'tt' and count >= fileLenTT : continue 
-                if channel == 'em' and count >= fileLenEM : continue 
+                # Check if we should skip running over data set
+                if skipChanDataCombo( channel, sample, analysis ) : continue
+
+                print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
-                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
-                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
-    
-                multiprocessingOutputs.append( pool.apply_async(runCuts, args=(grouping,
+
+
+
+
+
+                if not fargs['debug'] == 'true' :
+                    multiprocessingOutputs.append( pool.apply_async(runCuts, args=(analysis,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
                                                                                     num,
-                                                                                    fargs['bkgs'],
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['cutName'],
-                                                                                    fargs['numFilesPerCycle'],
+                                                                                    numFilesPerCycle,
                                                                                     fargs['svFitPrep'],
                                                                                     fargs['svFitPost'])) )
+                """ for debugging without multiprocessing """
+                if fargs['debug'] == 'true' :
+                    runCuts(analysis,
+                                                                                    sample,
+                                                                                    channel,
+                                                                                    count,
+                                                                                    num,
+                                                                                    fargs['mid1'],
+                                                                                    fargs['mid2'],
+                                                                                    fargs['cutMapper'],
+                                                                                    numFilesPerCycle,
+                                                                                    fargs['svFitPrep'],
+                                                                                    fargs['svFitPost'])
+
                 num +=  1
     
             count += 1
             
             # Make sure we loop over large samples to get all files
-            if count * fargs['numFilesPerCycle'] >= fileLen : go = False
+            if count * numFilesPerCycle >= fileLen : go = False
+    if fargs['debug'] == 'true' :
+        print "#################################################################"
+        print "###               Finished, summary below                     ###"
+        print "#################################################################"
     
     
-    mpResults = [p.get() for p in multiprocessingOutputs]
+    if fargs['debug'] != 'true' :
+        mpResults = [p.get() for p in multiprocessingOutputs]
     
-    print "#################################################################"
-    print "###               Finished, summary below                     ###"
-    print "#################################################################"
-    
-    print "\nStart Time: %s" % str( begin )
-    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
-    print "\n"
+        print "#################################################################"
+        print "###               Finished, summary below                     ###"
+        print "#################################################################"
+        
+        print "\nStart Time: %s" % str( begin )
+        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+        print "\n"
 
-    print " --- CutTable used: %s" % fargs['cutMapper']
-    print " --- Cut used: %s" % fargs['cutName']
-    print " --- Grouping: %s" % grouping
-    print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-    print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
-    print "\n"
+        print " --- Cut used: %s" % fargs['cutMapper']
+        print " --- Analysis: %s" % analysis
+        print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
+        print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])
+        print "\n"
+        
+        totalIn = 0
+        totalOut = 0
+        mpResults.sort()
+        for item in mpResults :
+            if item is None : continue
+            print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
+            print item[4]
+            print item[5]
+            totalIn += int(item[4].split(' ')[-1])
+            totalOut += int(item[5].split(' ')[-1])
     
-    totalIn = 0
-    totalOut = 0
-    mpResults.sort()
-    for item in mpResults :
-        if item is None : continue
-        print "%5s %10s %5s count %s:" % (item[0], item[1], item[2], item[3])
-        print item[4]
-        print item[5]
-        totalIn += int(item[4].split(' ')[-1])
-        totalOut += int(item[5].split(' ')[-1])
-    
-    print "\nTotal In:", totalIn
-    print "Total Out:", totalIn,"\n"
+        print "\nTotal In:", totalIn
+        print "Total Out:", totalOut,"\n"
     print "Start Time: %s" % str( begin )
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
-def doInitialOrder(grouping, samples, **fargs) :
+def doInitialOrder(analysis, samples, **fargs) :
+
+    mergeMap = getMergeMap(analysis)
         
     begin = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print begin
@@ -241,62 +292,58 @@ def doInitialOrder(grouping, samples, **fargs) :
     num = 0
     for sample in samples :
     
+        numFilesPerCycle = fargs['numFilesPerCycle']
+        if sample in mergeMap.keys() :
+            numFilesPerCycle = mergeMap[sample]
+
         fileLenEM = 9999
         fileLenTT = 9999
         if fargs['svFitPost'] == 'true' :
-            if 'data' in sample :
-                fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
-            else :
-                fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (grouping, sample) )
-                fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (grouping, sample) )
-                fileLen = max( fileLenEM, fileLenTT )
+            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
+            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
+            fileLen = max( fileLenEM, fileLenTT )
         else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
+        if fileLen == 0 : 
+            print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
+            continue
         go = True
         count = 0
         while go :
             for channel in channels :
     
-                if channel == 'tt' and count >= fileLenTT : continue 
-                if channel == 'em' and count >= fileLenEM : continue 
-    
-                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
-                print " ====>  Adding %s_%s_%i_%s  <==== " % (grouping, sample, count, channel)
+                # Check if we should skip running over data set
+                if skipChanDataCombo( channel, sample, analysis ) : continue
+
+                print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
                 if not fargs['debug'] == 'true' :
-                    multiprocessingOutputs.append( pool.apply_async(runIsoOrder, args=(grouping,
+                    multiprocessingOutputs.append( pool.apply_async(runIsoOrder, args=(analysis,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
                                                                                     num,
-                                                                                    fargs['bkgs'],
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['cutName'],
-                                                                                    fargs['numFilesPerCycle'])) )
+                                                                                    numFilesPerCycle)) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
-                    runIsoOrder(grouping,
+                    runIsoOrder(analysis,
                                                                                     sample,
                                                                                     channel,
                                                                                     count,
                                                                                     num,
-                                                                                    fargs['bkgs'],
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    fargs['cutName'],
-                                                                                    fargs['numFilesPerCycle'])
+                                                                                    numFilesPerCycle)
                 num +=  1
     
             count += 1
             
             # Make sure we loop over large samples to get all files
-            if count * fargs['numFilesPerCycle']+1 > fileLen : go = False
+            if count * numFilesPerCycle+1 > fileLen : go = False
     
     
     if fargs['debug'] == 'true' :
@@ -315,11 +362,10 @@ def doInitialOrder(grouping, samples, **fargs) :
         print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
         print "\n"
         
-        print " --- CutTable used: %s" % fargs['cutMapper']
-        print " --- Cut used: %s" % fargs['cutName']
-        print " --- Grouping: %s" % grouping
-        print " --- Cut folder: %s%s" % (grouping, fargs['mid1'])
-        print " --- Iso folder: %s%s" % (grouping, fargs['mid2'])
+        print " --- Cut used: %s" % fargs['cutMapper']
+        print " --- Analysis: %s" % analysis
+        print " --- Cut folder: %s%s" % (analysis, fargs['mid1'])
+        print " --- Iso folder: %s%s" % (analysis, fargs['mid2'])
         print "\n"
         
         mpResults.sort()
@@ -332,12 +378,15 @@ def doInitialOrder(grouping, samples, **fargs) :
             
         print "\nTotal Iso:", totalIso
         
-        print "\nStart Time: %s" % str( begin )
-        print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
+    print "\nStart Time: %s" % str( begin )
+    print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
 
-def drawHistos(grouping, samples, **fargs ) :
+def drawHistos(analysis, samples, **fargs ) :
+
+    mergeMap = getMergeMap(analysis)
+
     genMap = {
         # sample : em , tt
         'ZTT' : {'em' : '*(gen_match_1 > 2 && gen_match_2 > 3)',
@@ -355,13 +404,16 @@ def drawHistos(grouping, samples, **fargs ) :
     ''' Start PROOF multiprocessing Draw '''
     ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']) ) )
     gROOT.SetBatch(True)
-    bkgMap = getBkgMap()
     
     for sample in samples :
+    
+        numFilesPerCycle = fargs['numFilesPerCycle']
+        if sample in mergeMap.keys() :
+            numFilesPerCycle = mergeMap[sample]
 
         # the gen matching samples are: based off of the DYJets samples
         loopList = []
-        if 'DYJets' in sample :
+        if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
             loopList.append( sample ) 
@@ -379,38 +431,27 @@ def drawHistos(grouping, samples, **fargs ) :
             
             for channel in channels :
 
-                if (channel == 'em') and ('data' in sample) and (sample != 'data_em') : continue
-                if (channel == 'et') and ('data' in sample) and (sample != 'data_et') : continue
-                if (channel == 'mt') and ('data' in sample) and (sample != 'data_mt') : continue
-                if (channel == 'tt') and ('data' in sample) and (sample != 'data_tt') : continue
+                # Check if we should skip running over data set
+                if skipChanDataCombo( channel, sample, analysis ) : continue
 
                 if fargs['svFitPost'] == 'true' :
-                    if 'data' in sample :
-                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s.txt' % (grouping, sample) )
-                    else :
-                        fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (grouping, sample, channel) )
+                    fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel) )
                 else :
-                    fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (grouping, sample) )
+                    fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen
-                numIters = int( math.ceil( fileLen / fargs['numFilesPerCycle'] ) )
+                print "Num files / cycle:",numFilesPerCycle
+                numIters = int( math.ceil( 1. * fileLen / numFilesPerCycle ) )
                 print "Num Iters: %i" % numIters
 
 
-                print " ====>  Starting Plots For %s_%s_%s  <==== " % (grouping, saveName, channel)
+                print " ====>  Starting Plots For %s_%s_%s  <==== " % (analysis, saveName, channel)
     
                 chain = ROOT.TChain('Ntuple')
-                if fargs['bkgs'] != 'None' :
-                    print "Why are we here?"
-                    outFile = ROOT.TFile('meta/%sBackgrounds/%s/shape/%s_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], channel), 'RECREATE')
-                    for i in range( numIters+1 ) :
-                        #print "%s_%i" % ( sample, i)
-                        chain.Add('meta/%sBackgrounds/%s/iso/%s_%i_%s.root' % (grouping, bkgMap[ fargs['bkgs'] ][0], sample.split('_')[0], i, channel) )
-                else :
-                    outFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, fargs['mid3'], saveName , channel), 'RECREATE')
-                    for i in range( numIters ) :
-                        #print "%s_%i" % ( sample, i)
-                        #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (grouping, fargs['mid2'], sample.split('_')[0], i, channel)
-                        chain.Add('%s%s/%s_%i_%s.root' % (grouping, fargs['mid2'], sample.split('_')[0], i, channel) )
+                outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
+                for i in range( numIters ) :
+                    #print "%s_%i" % ( sample, i)
+                    #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (analysis, fargs['mid2'], sample.split('_')[0], i, channel)
+                    chain.Add('%s%s/%s_%i_%s.root' % (analysis, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True
                 else : isData = False
@@ -420,11 +461,10 @@ def drawHistos(grouping, samples, **fargs ) :
                     if additionalCut == '' : additionalCut = genMap[subName][channel] 
                     else : additionalCut += genMap[subName][channel] 
                 print "AdditionalCuts",additionalCut
-                #if fargs['bkgs'] != 'None' : blind = False
-                #else : blind = True
                 blind = False
-                analysisPlots.plotHistosProof( outFile, chain, sample, channel, isData, additionalCut, blind )
+                analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind )
                 outFile.Close()
          
+
 if __name__ == '__main__' :
-    runCutsAndIso('25ns', 'data_em', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)
+    runCutsAndIso('25ns', 'dataEM', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)

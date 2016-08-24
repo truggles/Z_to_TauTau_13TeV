@@ -1,2 +1,0 @@
-../Trigger2Jan13_denom/ggHtoTauTau_0_mt.root
-../Trigger2Jan13_denom/ggHtoTauTau_1_mt.root

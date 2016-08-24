@@ -4,24 +4,26 @@ from util.buildTChain import makeTChain
 import os
 import subprocess
 from collections import OrderedDict
+import math
 
+# New minBias xsec: https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/613/2/1/1/1.html
 def makeDataPUTemplate( cert, puJson ) :
     zHome = os.getenv('_ZHOME_')
     os.chdir( zHome + 'meta/PileUpInfo/' )
     executeArray = [
         'pileupCalc.py',
         '-i',
-        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/%s' % cert,
+        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/%s' % cert,
         '--inputLumiJSON',
-        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/%s' % puJson,
+        '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/PileUp/%s' % puJson,
         '--calcMode',
         'true',
         '--minBiasXsec',
-        '69000',
+        '69200',
         '--maxPileupBin',
-        '52',
+        '50',
         '--numPileupBins',
-        '52',
+        '500',
         'DataTemplate.root']
     subprocess.call( executeArray )
     os.chdir( zHome )
@@ -30,106 +32,79 @@ def makeDataPUTemplate( cert, puJson ) :
 
 def makeMCPUTemplate( ) :
     # 25ns pileup distributions found here: https://github.com/cms-sw/cmssw/blob/CMSSW_7_4_X/SimGeneral/MixingModule/python/mix_2015_25ns_Startup_PoissonOOTPU_cfi.py
-    MCDist = [4.8551E-07,
-              1.74806E-06,
-              3.30868E-06,
-              1.62972E-05,
-              4.95667E-05,
-              0.000606966,
-              0.003307249,
-              0.010340741,
-              0.022852296,
-              0.041948781,
-              0.058609363,
-              0.067475755,
-              0.072817826,
-              0.075931405,
-              0.076782504,
-              0.076202319,
-              0.074502547,
-              0.072355135,
-              0.069642102,
-              0.064920999,
-              0.05725576,
-              0.047289348,
-              0.036528446,
-              0.026376131,
-              0.017806872,
-              0.011249422,
-              0.006643385,
-              0.003662904,
-              0.001899681,
-              0.00095614,
-              0.00050028,
-              0.000297353,
-              0.000208717,
-              0.000165856,
-              0.000139974,
-              0.000120481,
-              0.000103826,
-              8.88868E-05,
-              7.53323E-05,
-              6.30863E-05,
-              5.21356E-05,
-              4.24754E-05,
-              3.40876E-05,
-              2.69282E-05,
-              2.09267E-05,
-              1.5989E-05,
-              4.8551E-06,
-              2.42755E-06,
-              4.8551E-07,
-              2.42755E-07,
-              1.21378E-07,
-              4.8551E-08]
-    dHist = ROOT.TH1F('nTruePU', 'dhist', 52, 0, 52)
-    for i in range( 0, 52 ) :
-        dHist.SetBinContent( i, MCDist[i] )
+    # 25ns PU for 80X (this is out of time, so we add a 0 at the bottom: https://github.com/cms-sw/cmssw/blob/CMSSW_8_0_X/SimGeneral/MixingModule/python/mix_2016_25ns_SpringMC_PUScenarioV1_PoissonOOTPU_cfi.py#L25
+    MCDist = [
+        0.000829312873542,
+        0.00124276120498,
+        0.00339329181587,
+        0.00408224735376,
+        0.00383036590008,
+        0.00659159288946,
+        0.00816022734493,
+        0.00943640833116,
+        0.0137777376066,
+        0.017059392038,
+        0.0213193035468,
+        0.0247343174676,
+        0.0280848773878,
+        0.0323308476564,
+        0.0370394341409,
+        0.0456917721191,
+        0.0558762890594,
+        0.0576956187107,
+        0.0625325287017,
+        0.0591603758776,
+        0.0656650815128,
+        0.0678329011676,
+        0.0625142146389,
+        0.0548068448797,
+        0.0503893295063,
+        0.040209818868,
+        0.0374446988111,
+        0.0299661572042,
+        0.0272024759921,
+        0.0219328403791,
+        0.0179586571619,
+        0.0142926728247,
+        0.00839941654725,
+        0.00522366397213,
+        0.00224457976761,
+        0.000779274977993,
+        0.000197066585944,
+        7.16031761328e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0]
+    nBins = len(MCDist)
+    print "MC # Bins:",nBins
+    dHist = ROOT.TH1F('pileup', 'pileup', nBins*10, 0, nBins)
+    for i in range( 1, (nBins*10)+1 ) :
+        #print "bin: %i, MC position: %i" % (i, math.floor((i-1)/10) )
+        dHist.SetBinContent( i, MCDist[ (i-1)/10 ] )
     dHist.SaveAs('meta/PileUpInfo/MCTemplate.root')
 
-def makeDYJetsPUTemplate( grouping ) :
-    import util.buildTChain as chainer
-    from ROOT import gPad
-    inFiles = 'meta/NtupleInputs_%s/DYJets.txt' % grouping
-    #avgHist = ROOT.TH1F('nTruePU', 'avgHist', 52, 0, 52)
-
-    for channel in ['em', 'tt'] :
-        chain = chainer.makeTChain( inFiles, '%s/final/Ntuple' % channel )
-        prevEvt = (0,0,0)
-        tmpHist = ROOT.TH1F('nTruePU', 'tmpHist', 52, 0, 52)
-        for row in chain :
-            currentEvt = (row.lumi, row.run, row.evt)
-            if currentEvt != prevEvt :
-                if row.GenWeight > 0 :
-                    genW = 1
-                else : # this is for data
-                    genW = -1
-                #print "Filling - nvtx:%i    genW:%i" % (row.nvtx, genW)
-                tmpHist.Fill( row.nTruePU * genW )
-                prevEvt = currentEvt
-        tmpHist.Scale( 1 / tmpHist.Integral() )
-        tmpHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU_%s.root' % channel )
-        #avgHist.Add( tmpHist )
-    #avgHist.Scale( 1 / avgHist.Integral() )
-    #avgHist.SaveAs('meta/PileUpInfo/DYJetsNTruePU.root' % (grouping) )
 
 
-def PUreweight( channel ) :
+def PUreweight() :
     # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2015#PU_reweighting
-    #datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
-    datafile = ROOT.TFile('meta/PileUpInfo/Data_Pileup_2015D_Feb02.root', 'READ') # Made by Adinda
+    datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 
-    samplefile = ROOT.TFile('meta/PileUpInfo/MC_Fall15_PU25_V1.root', 'READ') # Made by Adinda, same as mine but shifter up 1 bin
-    #samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
-    #sHist = samplefile.Get('nTruePU')
+    samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
     sHist = samplefile.Get('pileup')
     sHist.Scale( 1 / sHist.Integral() )
 
     reweightDict = OrderedDict()
-    #i_data = 0
-    #i_mc = 0
     for i in range( 1, dHist.GetXaxis().GetNbins()+1 ) :
         # dHist has exactly 600 bins, not 601 w/ over/underflow
         if sHist.GetBinContent( i ) > 0 :
@@ -142,12 +117,12 @@ def PUreweight( channel ) :
     return reweightDict
 
 
-def addNvtxWeight( grouping, sample, fileName, channel ) :
+def addNvtxWeight( analysis, sample, fileName, channel ) :
     
     tfile = ROOT.TFile('%s.root' % fileName, 'update')
     tree = tfile.Get('%s/Ntuple' % channel )
 
-    puDict = PUreweight( grouping, sample, channel )
+    puDict = PUreweight( analysis, sample, channel )
 
     nvtxWeight = array('f', [ 0 ] )
     nvtxWeightB = tree.Branch('nvtxWeight', nvtxWeight, 'nvtxWeight/F')
@@ -167,15 +142,11 @@ def addNvtxWeight( grouping, sample, fileName, channel ) :
 
 
 if __name__ == '__main__' :
-    #zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
-    #os.environ['_ZHOME_'] = zHome
-    #print zHome
-    #makeDataPUTemplate( 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt', 'pileup_JSON_10-23-2015.txt' )
+    zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
+    os.environ['_ZHOME_'] = zHome
+    makeDataPUTemplate( 'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt', 'pileup_latest.txt' ) # July 22, 12.9/fb
     #makeMCPUTemplate()
-    ary = PUreweight( 'em' )
-    tot = 0
-    for key in ary.keys() :
-        print key, ary[key]
-        tot += ary[key]
-    print tot
-    #makeDYJetsPUTemplate( 'dataCards' )
+    print PUreweight()
+
+
+

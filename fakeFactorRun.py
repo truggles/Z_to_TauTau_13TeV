@@ -10,23 +10,21 @@ from time import gmtime, strftime
 import ROOT
 from ROOT import gPad, gROOT
 import analysis1BaselineCuts
-from util.helpers import checkBkgs 
+from util.helpers import setUpDirs 
 ROOT.gROOT.Reset()
 
 
 
-''' Set grouping (25ns or Sync) '''
-grouping = 'dataCards'
+''' Set analysis (25ns or Sync) '''
+analysis = 'dataCards'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = grouping
-os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-#makeMetaJSON( grouping )
+#makeMetaJSON( analysis )
 os.chdir('..')
 
 
@@ -37,7 +35,7 @@ os.chdir('..')
 #    os.makedirs( 'meta/PileUpInfo' )
 #makeMCPUTemplate()
 #makeDataPUTemplate( lumiCert, puJson ) 
-#makeDYJetsPUTemplate( grouping )
+#makeDYJetsPUTemplate( analysis )
 
 
 ''' Fake Factors '''
@@ -53,7 +51,6 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'bkgs' : 'None',
     'numCores' : 10,
     'numFilesPerCycle' : 10,
     'channels' : ['tt',],
@@ -61,7 +58,6 @@ params = {
     #'cutMapper' : 'signalCutsNoSign', #!
     #'cutMapper' : 'signalCuts', #!
     #'cutMapper' : 'signalExtractionNoSign', #!
-    #'cutName' : 'PostSync', #!
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'syncCutsDCqcd',
 #XXX    'cutMapper' : 'syncCutsDCqcdTES',
@@ -70,7 +66,6 @@ params = {
     #'cutMapper' : 'syncCutsNtuple',
     'cutMapper' : 'signalCuts',
 #XXX    'cutMapper' : 'fakeFactorCutsTT',
-    'cutName' : 'BaseLine',
     'mid1' : '1May02_FakeFactors',
     'mid2' : '2May02_FakeFactors',
     'mid3' : '3May02_FakeFactors',
@@ -82,18 +77,18 @@ params = {
     'doFRMthd' : 'true',
 }
 
-#samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
-analysis1BaselineCuts.drawHistos( grouping, samples, **params)
+#samples = setUpDirs( samples, params, analysis )
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.drawHistos( analysis, samples, **params)
 
 SamplesDataCards = ['data_tt',]
 samples = SamplesDataCards
-samples = checkBkgs( samples, params, grouping )
+samples = setUpDirs( samples, params, analysis )
 params['cutMapper'] = 'fakeFactorCutsTT'
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
-analysis1BaselineCuts.drawHistos( grouping, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.drawHistos( analysis, samples, **params)
 
 
 
@@ -101,7 +96,7 @@ SamplesDataCards = ['data_tt',]
 params['doFRMthd'] = 'false'
 params['additionalCut'] = '*(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
 samples = SamplesDataCards
-samples = checkBkgs( samples, params, grouping )
+samples = setUpDirs( samples, params, analysis )
 params['cutMapper'] = 'fakeFactorCutsTT'
-analysis1BaselineCuts.drawHistos( grouping, samples, **params)
+analysis1BaselineCuts.drawHistos( analysis, samples, **params)
 

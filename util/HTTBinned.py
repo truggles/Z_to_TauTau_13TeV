@@ -7,8 +7,8 @@ scroll to "Stitching of W+jets and Z+jets background samples binned in HT"
 import json
 
 
-def openMetaJson( grouping ) :
-    with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
+def openMetaJson( analysis ) :
+    with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
         sampDict = json.load( sampFile )
     return sampDict
 
@@ -72,9 +72,9 @@ def ZJetsLowHTTWeight( lumi, sampDict ) :
     
 
 if __name__ == '__main__' :
-    grouping = '25ns'
+    analysis = 'htt'
     lumi = 2.2
-    sampDict = openMetaJson( grouping )
+    sampDict = openMetaJson( analysis )
     print sampDict
     print WJetsHTTWeight( lumi, sampDict )
 

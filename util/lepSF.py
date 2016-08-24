@@ -64,19 +64,19 @@ class LepWeights :
         etaCode = self.getEtaCode( lepType, eta )
         if lepType == 'e' :
             if self.channel not in ['em', 'et'] : 
-                print "ERROR: Instanciated with channel:", self.chanel
+                print "ERROR: Instanciated with channel:", self.channel
                 return
             if wType == 'IdIso' : return self.calcWeight( self.eIdIsoSF, pt, etaCode )
             if wType == 'Trig' : 
                 if self.channel == 'et' : return self.calcWeight( self.eSingleEffSF, pt, etaCode )
         if lepType == 'm' :
             if self.channel not in ['em', 'mt'] : 
-                print "ERROR: Instanciated with channel:", self.chanel
+                print "ERROR: Instanciated with channel:", self.channel
                 return
             if wType == 'IdIso' : return self.calcWeight( self.mIdIsoSF, pt, etaCode )
             if wType == 'Trig' : 
                 if self.channel == 'mt' : return self.calcWeight( self.mSingleEffSF, pt, etaCode )
-        else : print "ERROR: LepSF Instanciated with channel:", self.chanel," did not find a \
+        else : print "ERROR: LepSF Instanciated with channel:", self.channel," did not find a \
             corresponding SF to return."
         
 
@@ -127,7 +127,7 @@ class LepWeights :
         for eta in etas :
             #print eta
             sfs = []
-            iFile = ROOT.TFile('lepSFdata/%s/%s.root' % (particle, file_), 'r' )
+            iFile = ROOT.TFile('data/%s/%s.root' % (particle, file_), 'r' )
             eff1 = iFile.Get('ZMassEta%s_Data' % eta)
             eff2 = iFile.Get('ZMassEta%s_MC' % eta)
             nPts = eff1.GetN()

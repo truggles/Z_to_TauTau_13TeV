@@ -10,23 +10,21 @@ from time import gmtime, strftime
 import ROOT
 from ROOT import gPad, gROOT
 import analysis1BaselineCuts
-from util.helpers import checkBkgs 
+from util.helpers import setUpDirs 
 ROOT.gROOT.Reset()
 
 
 
-''' Set grouping (25ns or Sync) '''
-grouping = 'Sync'
+''' Set analysis (htt, Sync, azh) '''
+analysis = 'Sync'
 zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
 print "zHome: ",zHome
-os.environ['_GROUPING_'] = grouping
-os.environ['_ZHOME_'] = zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-#makeMetaJSON( grouping )
+#makeMetaJSON( analysis )
 os.chdir('..')
 
 
@@ -42,31 +40,26 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'bkgs' : 'None',
-    'numCores' : 16,
-    'numFilesPerCycle' : 20,
+    'numCores' : 8,
+    'numFilesPerCycle' : 2,
     #'numFilesPerCycle' : 1,
-    'channels' : ['em', 'tt'],
-    #'channels' : ['tt'],
-    #'channels' : ['em'],
-    #'channels' : ['em', 'tt', 'et', 'mt'],
-    'cutMapper' : 'syncCutsNtuple',
+    'channels' : ['tt'],
+    'cutMapper' : 'syncCutsNtupleTmp',
     #'cutMapper' : 'crazyCutsNtuple',
-    'cutName' : 'BaseLine',
-    'mid1' : '1May01a',
-    'mid2' : '2May01a',
-    'mid3' : '3May01a',
+    'mid1' : '1June29a',
+    'mid2' : '2June29a',
+    'mid3' : '3June29a',
     'additionalCut' : '',
-    'svFitPost' : 'true',
-    #'svFitPost' : 'false',
+    #'svFitPost' : 'true',
+    'svFitPost' : 'false',
     'svFitPrep' : 'false',
     #'svFitPrep' : 'true',
     'doFRMthd' : 'false',
 }
 
-samples = checkBkgs( samples, params, grouping )
-#analysis1BaselineCuts.doInitialCuts(grouping, samples, **params)
-analysis1BaselineCuts.doInitialOrder(grouping, samples, **params)
+samples = setUpDirs( samples, params, analysis )
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 

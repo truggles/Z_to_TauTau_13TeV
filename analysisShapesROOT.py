@@ -12,7 +12,7 @@ from array import array
 from analysisPlots import skipSystShapeVar
 
 p = argparse.ArgumentParser(description="A script to set up json files with necessary metadata.")
-p.add_argument('--samples', action='store', default='dataCards', dest='sampleName', help="Which samples should we run over? : 25ns, 50ns, Sync")
+p.add_argument('--samples', action='store', default='htt', dest='sampleName', help="Which analysis should we run? : htt, Sync, azh")
 p.add_argument('--folder', action='store', default='2SingleIOAD', dest='folderDetails', help="What's our post-prefix folder name?")
 p.add_argument('--blind', action='store', default=True, dest='blind', help="blind data above 150 GeV?")
 p.add_argument('--useQCDMake', action='store', default=False, dest='useQCDMake', help="Make a data - MC qcd shape?")
@@ -29,10 +29,10 @@ p.add_argument('--ES', action='store', default=False, dest='ES', help="Add ES sh
 p.add_argument('--tauPt', action='store', default=False, dest='tauPt', help="Add tau pt weighting shapes?")
 p.add_argument('--allShapes', action='store', default=True, dest='allShapes', help="Do energy scale, tau pt, z pt and top pt shape systematics?")
 options = p.parse_args()
-grouping = options.sampleName
+analysis = options.sampleName
 folderDetails = options.folderDetails
 
-print "Running over %s samples" % grouping
+print "Running over %s samples" % analysis
 print "BTAGGIN????",options.btag
 doBTagging = options.btag
 
@@ -48,7 +48,7 @@ qcdEMScaleFactor = 1.9
 bkgsTTScaleFactor = 1.0
 qcdTTScaleFactorNew = 0.49 # no 2 prong, baseline
 
-with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
+with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
     sampDict = json.load( sampFile )
 
                 # Sample : Color
@@ -119,20 +119,20 @@ if options.mssm :
 
 
 extra = ''
-if not os.path.exists( '%sShapes' % grouping ) :
-    os.makedirs( '%sShapes' % grouping )
+if not os.path.exists( '%sShapes' % analysis ) :
+    os.makedirs( '%sShapes' % analysis )
 if options.ztt : 
-    if not os.path.exists( '%sShapes/ztt' % grouping ) :
-        os.makedirs( '%sShapes/ztt' % grouping )
+    if not os.path.exists( '%sShapes/ztt' % analysis ) :
+        os.makedirs( '%sShapes/ztt' % analysis )
     extra = 'ztt'
 elif options.mssm : 
-    if not os.path.exists( '%sShapes/mssm' % grouping ) :
-        os.makedirs( '%sShapes/mssm' % grouping )
+    if not os.path.exists( '%sShapes/mssm' % analysis ) :
+        os.makedirs( '%sShapes/mssm' % analysis )
     extra = 'mssm'
 #if not options.ztt : 
 else : 
-    if not os.path.exists( '%sShapes/htt' % grouping ) :
-        os.makedirs( '%sShapes/htt' % grouping )
+    if not os.path.exists( '%sShapes/htt' % analysis ) :
+        os.makedirs( '%sShapes/htt' % analysis )
     extra = 'htt'
 
 if options.ztt :
@@ -163,7 +163,6 @@ for channel in ['em', 'tt'] :
     print channel
 
     newVarMap = analysisPlots.getHistoDict( channel )
-    plotDetails = analysisPlots.getPlotDetails( channel )
 
     baseVar = options.fitShape
     if 'data' in sample : print "Fitting",baseVar
@@ -182,11 +181,11 @@ for channel in ['em', 'tt'] :
     else :
         mid = 'sm'
 
-    shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (grouping, extra, channel, mid, append), 'UPDATE')
+    shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, channel, mid, append), 'UPDATE')
     shapeDir = shapeFile.mkdir( channel + '_%s' % options.category )
     print shapeDir
 
-    for var, info in newVarMap.iteritems() :
+    for var in newVarMap.keys() :
 
         if not baseVar in var : continue
         if options.allShapes :
@@ -207,8 +206,7 @@ for channel in ['em', 'tt'] :
 
 
         # Defined out here for large scope
-        name = info[0]
-        print "Var: %s      Name: %s" % (var, name)
+        print "Var: %s",var
 
         #if not options.sync :
         #    binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
@@ -282,21 +280,21 @@ for channel in ['em', 'tt'] :
             #print sample
 
             if sample == 'data_em' :
-                tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (analysis, folderDetails, sample), 'READ')
             elif sample == 'data_tt' :
-                tFile = ROOT.TFile('%s%s/%s.root' % (grouping, folderDetails, sample), 'READ')
+                tFile = ROOT.TFile('%s%s/%s.root' % (analysis, folderDetails, sample), 'READ')
             elif sample == 'QCD' :
                 if options.useQCDMake :
                     if options.useQCDMakeName != 'x'  :
                         print "Use QCD MAKE NAME: ",options.useQCDMakeName
-                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (grouping, channel, options.useQCDMakeName), 'READ')
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, options.useQCDMakeName), 'READ')
                     else :
-                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (grouping, channel), 'READ')
+                        tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape.root' % (analysis, channel), 'READ')
                     print "Got 'useQCDMake' QCD Shape"
                 else :
                     print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
             else :
-                tFile = ROOT.TFile('%s%s/%s_%s.root' % (grouping, folderDetails, sample, channel), 'READ')
+                tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
 
 
             dic = tFile.Get("%s_Histos" % channel )
@@ -406,6 +404,6 @@ for channel in ['em', 'tt'] :
     shapeFile.Close()
 
 
-    print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (grouping, extra, channel, mid, append)
+    print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (analysis, extra, channel, mid, append)
 
 

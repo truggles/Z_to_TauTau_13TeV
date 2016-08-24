@@ -22,17 +22,28 @@ prodMap = {
     'et' : ('e', 't'),
     'mt' : ('m', 't'),
     'tt' : ('t1', 't2'),
+    'eeem' : ('e1', 'e2', 'e3', 'm'),
+    'eeet' : ('e1', 'e2', 'e3', 't'),
+    'eemt' : ('e1', 'e2', 'm', 't'),
+    'eett' : ('e1', 'e2', 't1', 't2'),
+    'emmm' : ('m1', 'm2', 'e', 'm3'),
+    'emmt' : ('m1', 'm2', 'e', 't'),
+    'mmmt' : ('m1', 'm2', 'm3', 't'),
+    'mmtt' : ('m1', 'm2', 't1', 't2'),
+    'eeee' : ('e1', 'e2', 'e3', 'e4'),
+    'eemm' : ('e1', 'e2', 'm1', 'm2'),
+    'mmmm' : ('m1', 'm2', 'm3', 'm4'),
 }
 
 
-def getXSec( shortName, sampDict, numGenJets=0 ) :
+def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
-    #if 'data' in shortName : return 1.0 #XXX#
+    if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
-        if shortName in ['DYJets', 'DYJetsBig'] or shortName[:6] == 'DYJets' :
+        if shortName in ['DYJets', 'DYJets'] or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
-            scalar1 = cmsLumi * sampDict[ 'DYJetsBig' ]['Cross Section (pb)'] / sampDict[ 'DYJetsBig' ]['summedWeightsNorm'] # removing LO small DYJets
+            scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ]['summedWeightsNorm'] # removing LO small DYJets
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
@@ -277,37 +288,44 @@ def calcDR( eta1, phi1, eta2, phi2 ) :
 
 
 
-def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
-    with open('meta/NtupleInputs_%s/samples.json' % grouping) as sampFile :
+def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
+    with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
         sampDict = json.load( sampFile )
 
     shortName = sample.split('_')[0]
-    if shortName == 'data' : shortName = 'data_%s' % channel
 
-    xsec = getXSec( shortName, sampDict )
+    xsec = getXSec( analysis, shortName, sampDict )
     print "\n Sampe: %s    shortName: %s    xsec: %f" % (sample, shortName, xsec)
 
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
+    if len( channel ) == 4 :
+        l3 = prodMap[channel][2]
+        l4 = prodMap[channel][3]
 
-    from util.lepSF import LepWeights
-    from util.doubleTauSF import doubleTauTriggerEff
-    lepWeights = LepWeights( channel, count )
+    #from util.lepSF import LepWeights
+    from util.doubleTauSF import DoubleTau35Efficiencies
+    from util.muonSF import MuonSF
+    from util.electronSF import ElectronSF
+    #lepWeights = LepWeights( channel, count )
+    doublTau35 = DoubleTau35Efficiencies( channel )
+    muonSF = MuonSF()
+    electronSF = ElectronSF()
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
 
-    cmssw_base = os.getenv('CMSSW_BASE')
-    ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
-    ffqcd = ff_file.Get('ff_qcd_os') 
+    #cmssw_base = os.getenv('CMSSW_BASE')
+    #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
+    #ffqcd = ff_file.Get('ff_qcd_os') 
+
+    sameNameVars = [
+    'run','lumi','evt','GenWeight','LT','charge','jetVeto30','jetVeto40',
+    'bjetCISVVeto20Medium','Mt','bjetCISVVeto30Medium','bjetCISVVeto30Tight',]
 
     branchMapping = {
-        'run' : 'run',
-        'lumi' : 'lumi',
-        'evt' : 'evt',
         'nvtx' : 'npv',
         'nTruePU' : 'npu',
-        'charge' : 'charge',
         'j1pt' : 'jpt_1',
         'j1phi' : 'jphi_1',
         'j1eta' : 'jeta_1',
@@ -327,11 +345,11 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         #XXX'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
         #'bjetCISVVeto20MediumZTT' : 'nbtag',
-        'NBTagPDM_idL_jVeto' : 'nbtag',
-        'NBTagPDL_idL_jVeto' : 'nbtagLoose',
+        #XXX 'NBTagPDM_idL_jVeto' : 'nbtag',
+        #XXX 'NBTagPDL_idL_jVeto' : 'nbtagLoose',
         'jetVeto20ZTT' : 'njetspt20',
-        'jetVeto30RecoilZTT' : 'njets',
-        #'jetVeto30ZTT' : 'njets',
+        #'jetVeto30RecoilZTT' : 'njets',
+        'jetVeto30ZTT' : 'njets',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
@@ -352,6 +370,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'DPhi' : 'Z_DPhi',
         #XXX#'pt_tt' : 'pp_tt',
         #XXX#'MtTotal' : 'mt_tot',
+        }
+    quadFSDoubleProds = {
+        'Mass' : 'H_vis',
+        #'SVfitMass' : 'm_sv',
+        'SS' : 'H_SS',
+        'Pt' : 'H_Pt',
+        'DR' : 'H_DR',
+        'DPhi' : 'H_DPhi',
         }
     branchMappingElec = {
         'cand_ZTTGenMatching' : 'gen_match',
@@ -381,6 +407,7 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     branchMappingTau = {
         'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
+        'cand_DecayMode' : 'decayMode',
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
         'cand_Mass' : 'm',
@@ -403,40 +430,76 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
         'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
-        'cand_ByIsolationMVA3newDMwLTraw' : 'byIsolationMVA3newDMwLTraw',
-        #'cand_ByIsolationMVA3newDMwoLTraw' : 'byIsolationMVA3newDMwoLTraw',
-        'cand_ByIsolationMVA3oldDMwLTraw' : 'byIsolationMVA3oldDMwLTraw',
-        #'cand_ByIsolationMVA3oldDMwoLTraw' : 'byIsolationMVA3oldDMwoLTraw',
         'cand_MtToPfMet_Raw' : 'pfmt',
+        'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
         }
 
+    # Add in the vars which won't change names
+    for var in sameNameVars :
+        branchMapping[ var ] = var
     # Generate our mapping for double candidate variables
     for key in doubleProds :
         branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
+    if len( channel ) == 4 :
+        for key in quadFSDoubleProds :
+            branchMapping[ l3+'_'+l4+'_'+key ] = quadFSDoubleProds[ key ]
     # Map all of the variables based on their FSA names to Sync names leg by leg
-    if channel == 'em' :
-        l1Map = branchMappingElec
-        l2Map = branchMappingMuon
-    elif channel == 'et' :
-        l1Map = branchMappingElec
-        l2Map = branchMappingTau
-    elif channel == 'mt' :
-        l1Map = branchMappingMuon
-        l2Map = branchMappingTau
-    elif channel == 'tt' :
-        l1Map = branchMappingTau
-        l2Map = branchMappingTau
+    if len( channel ) == 2 :
+        if channel == 'em' :
+            l1Map = branchMappingElec
+            l2Map = branchMappingMuon
+        elif channel == 'et' :
+            l1Map = branchMappingElec
+            l2Map = branchMappingTau
+        elif channel == 'mt' :
+            l1Map = branchMappingMuon
+            l2Map = branchMappingTau
+        elif channel == 'tt' :
+            l1Map = branchMappingTau
+            l2Map = branchMappingTau
+    if len( channel ) == 4 :
+        # Channel naming gets confusing with FSA, e first, m second, t last
+        if channel[:2] == 'ee' :
+            l1Map = branchMappingElec
+            l2Map = branchMappingElec
+        elif channel[:2] == 'mm' or channel == 'emmt' or channel == 'emmm' :
+            l1Map = branchMappingMuon
+            l2Map = branchMappingMuon
+
+        if channel[-2:] == 'ee' :
+            l3Map = branchMappingElec
+            l4Map = branchMappingElec
+        if channel[-2:] == 'mm' :
+            l3Map = branchMappingMuon
+            l4Map = branchMappingMuon
+        if channel[-2:] == 'tt' :
+            l3Map = branchMappingTau
+            l4Map = branchMappingTau
+        elif channel[-2:] == 'mt' :
+            l3Map = branchMappingMuon
+            l4Map = branchMappingTau
+        elif channel == 'eeet' or channel == 'emmt' :
+            l3Map = branchMappingElec
+            l4Map = branchMappingTau
+        elif channel == 'eeem' or channel == 'emmm' :
+            l3Map = branchMappingElec
+            l4Map = branchMappingMuon
+
+        for key in l3Map.keys() :
+            branchMapping[ key.replace('cand_', l3) ] = l3Map[ key ]+'_3'
+        for key in l4Map.keys() :
+            branchMapping[ key.replace('cand_', l4) ] = l4Map[ key ]+'_4'
+    # applies to all channels of len 2 and 4
     for key in l1Map.keys() :
         branchMapping[ key.replace('cand_', l1) ] = l1Map[ key ]+'_1'
     for key in l2Map.keys() :
         branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
 
-    if bkgFlag == '' :
-        oldFileName = '%s%s/%s.root' % (grouping, mid1, sample)
-        newFileName = '%s%s/%s.root' % (grouping, mid2, sample)
-    else :
-        oldFileName = 'meta/%sBackgrounds/%s/cut/%s.root' % (grouping, bkgFlag, sample)
-        newFileName = 'meta/%sBackgrounds/%s/iso/%s.root' % (grouping, bkgFlag, sample)
+    oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
+    newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
 
     dirName = channel
     treeName = 'Ntuple'
@@ -469,10 +532,10 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     for old in told.branchnames:
         name = branchMapping[old] if old in branchMapping else old
         branchType = IntCol() if old in intBranches else FloatCol()
-        ###if old in branchMapping.keys() :
-        ###    name = branchMapping[old]
-        ###    branchType = IntCol() if old in intBranches else FloatCol()
-        ###    newBranches[name] = branchType
+        if old in branchMapping.keys() :
+            name = branchMapping[old]
+            branchType = IntCol() if old in intBranches else FloatCol()
+            newBranches[name] = branchType
     
         newBranches[name] = branchType
     
@@ -586,12 +649,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     from util.pZeta import compZeta
     from util.pileUpVertexCorrections import PUreweight
     from array import array
-    puDict = PUreweight( channel )
+    puDict = PUreweight()
 
     ''' We are calculating and adding these below variables to our new tree
     PU Weighting '''
     weight = array('f', [ 0 ] )
     weightB = tnew.Branch('weight', weight, 'weight/F')
+    azhWeight = array('f', [ 0 ] )
+    azhWeightB = tnew.Branch('azhWeight', azhWeight, 'azhWeight/F')
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
     tauPtWeightUp = array('f', [ 0 ] )
@@ -602,56 +667,74 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
-    FFWeightQCD = array('f', [ 0 ] )
-    FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
-    FFWeightQCD_UP = array('f', [ 0 ] )
-    FFWeightQCD_UPB = tnew.Branch('FFWeightQCD_UP', FFWeightQCD_UP, 'FFWeightQCD_UP/F')
-    FFWeightQCD_DOWN = array('f', [ 0 ] )
-    FFWeightQCD_DOWNB = tnew.Branch('FFWeightQCD_DOWN', FFWeightQCD_DOWN, 'FFWeightQCD_DOWN/F')
-    FFWeightQCD1 = array('f', [ 0 ] )
-    FFWeightQCD1B = tnew.Branch('FFWeightQCD1', FFWeightQCD1, 'FFWeightQCD1/F')
-    FFWeightQCD1_UP = array('f', [ 0 ] )
-    FFWeightQCD1_UPB = tnew.Branch('FFWeightQCD1_UP', FFWeightQCD1_UP, 'FFWeightQCD1_UP/F')
-    FFWeightQCD1_DOWN = array('f', [ 0 ] )
-    FFWeightQCD1_DOWNB = tnew.Branch('FFWeightQCD1_DOWN', FFWeightQCD1_DOWN, 'FFWeightQCD1_DOWN/F')
-    FFWeightQCD2 = array('f', [ 0 ] )
-    FFWeightQCD2B = tnew.Branch('FFWeightQCD2', FFWeightQCD2, 'FFWeightQCD2/F')
-    FFWeightQCD2_UP = array('f', [ 0 ] )
-    FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
-    FFWeightQCD2_DOWN = array('f', [ 0 ] )
-    FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
-    pzetamiss = array('f', [ 0 ] )
-    pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
-    pzeta = array('f', [ 0 ] )
-    pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
-    m_vis_UP = array('f', [ 0 ] )
-    m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
-    m_vis_DOWN = array('f', [ 0 ] )
-    m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
+    muonSF1 = array('f', [ 0 ] )
+    muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
+    muonSF2 = array('f', [ 0 ] )
+    muonSF2B = tnew.Branch('muonSF2', muonSF2, 'muonSF2/F')
+    muonSF3 = array('f', [ 0 ] )
+    muonSF3B = tnew.Branch('muonSF3', muonSF3, 'muonSF3/F')
+    muonSF4 = array('f', [ 0 ] )
+    muonSF4B = tnew.Branch('muonSF4', muonSF4, 'muonSF4/F')
+    electronSF1 = array('f', [ 0 ] )
+    electronSF1B = tnew.Branch('electronSF1', electronSF1, 'electronSF1/F')
+    electronSF2 = array('f', [ 0 ] )
+    electronSF2B = tnew.Branch('electronSF2', electronSF2, 'electronSF2/F')
+    electronSF3 = array('f', [ 0 ] )
+    electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
+    electronSF4 = array('f', [ 0 ] )
+    electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
+    #FFWeightQCD = array('f', [ 0 ] )
+    #FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
+    #FFWeightQCD_UP = array('f', [ 0 ] )
+    #FFWeightQCD_UPB = tnew.Branch('FFWeightQCD_UP', FFWeightQCD_UP, 'FFWeightQCD_UP/F')
+    #FFWeightQCD_DOWN = array('f', [ 0 ] )
+    #FFWeightQCD_DOWNB = tnew.Branch('FFWeightQCD_DOWN', FFWeightQCD_DOWN, 'FFWeightQCD_DOWN/F')
+    #FFWeightQCD1 = array('f', [ 0 ] )
+    #FFWeightQCD1B = tnew.Branch('FFWeightQCD1', FFWeightQCD1, 'FFWeightQCD1/F')
+    #FFWeightQCD1_UP = array('f', [ 0 ] )
+    #FFWeightQCD1_UPB = tnew.Branch('FFWeightQCD1_UP', FFWeightQCD1_UP, 'FFWeightQCD1_UP/F')
+    #FFWeightQCD1_DOWN = array('f', [ 0 ] )
+    #FFWeightQCD1_DOWNB = tnew.Branch('FFWeightQCD1_DOWN', FFWeightQCD1_DOWN, 'FFWeightQCD1_DOWN/F')
+    #FFWeightQCD2 = array('f', [ 0 ] )
+    #FFWeightQCD2B = tnew.Branch('FFWeightQCD2', FFWeightQCD2, 'FFWeightQCD2/F')
+    #FFWeightQCD2_UP = array('f', [ 0 ] )
+    #FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
+    #FFWeightQCD2_DOWN = array('f', [ 0 ] )
+    #FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
+    #pzetamiss = array('f', [ 0 ] )
+    #pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    #pzeta = array('f', [ 0 ] )
+    #pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    Z_DEta = array('f', [ 0 ] )
+    Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
+    #m_vis_UP = array('f', [ 0 ] )
+    #m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
+    #m_vis_DOWN = array('f', [ 0 ] )
+    #m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
     mt_tot = array('f', [ 0 ] )
     mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
-    mt_tot_UP = array('f', [ 0 ] )
-    mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
-    mt_tot_DOWN = array('f', [ 0 ] )
-    mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
-    mt_1 = array('f', [ 0 ] )
-    mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
-    mt_2 = array('f', [ 0 ] )
-    mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
+    #mt_tot_UP = array('f', [ 0 ] )
+    #mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
+    #mt_tot_DOWN = array('f', [ 0 ] )
+    #mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
+    #mt_1 = array('f', [ 0 ] )
+    #mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
+    #mt_2 = array('f', [ 0 ] )
+    #mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
     trigweight_1B = tnew.Branch('trigweight_1', trigweight_1, 'trigweight_1/F')
     effweight = array('f', [ 0 ] )
     effweightB = tnew.Branch('effweight', effweight, 'effweight/F')
+    doubleTauTrigWeightL1 = array('f', [ 0 ] )
+    doubleTauTrigWeightL1B = tnew.Branch('doubleTauTrigWeightL1', doubleTauTrigWeightL1, 'doubleTauTrigWeightL1/F')
+    doubleTauTrigWeightL2 = array('f', [ 0 ] )
+    doubleTauTrigWeightL2B = tnew.Branch('doubleTauTrigWeightL2', doubleTauTrigWeightL2, 'doubleTauTrigWeightL2/F')
     idisoweight_1 = array('f', [ 0 ] )
     idisoweight_1B = tnew.Branch('idisoweight_1', idisoweight_1, 'idisoweight_1/F')
     idisoweight_2 = array('f', [ 0 ] )
     idisoweight_2B = tnew.Branch('idisoweight_2', idisoweight_2, 'idisoweight_2/F')
-    UniqueID = array('f', [ 0 ] )
-    UniqueIDB = tnew.Branch('UniqueID', UniqueID, 'UniqueID/F')
-    BkgGroup = array('f', [ 0 ] )
-    BkgGroupB = tnew.Branch('BkgGroup', BkgGroup, 'BkgGroup/F')
     extramuon_veto = array('f', [ 0 ] )
     extramuon_vetoB = tnew.Branch('extramuon_veto', extramuon_veto, 'extramuon_veto/F')
     extraelec_veto = array('f', [ 0 ] )
@@ -664,37 +747,8 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
     mvacov10B = tnew.Branch('mvacov10', mvacov10, 'mvacov10/F')
     mvacov11 = array('f', [ 0 ] )
     mvacov11B = tnew.Branch('mvacov11', mvacov11, 'mvacov11/F')
-    isZtt = array('f', [ 0 ] )
-    isZttB = tnew.Branch('isZtt', isZtt, 'isZtt/F')
-    isZmt = array('f', [ 0 ] )
-    isZmtB = tnew.Branch('isZmt', isZmt, 'isZmt/F')
-    isZet = array('f', [ 0 ] )
-    isZetB = tnew.Branch('isZet', isZet, 'isZet/F')
-    isZee = array('f', [ 0 ] )
-    isZeeB = tnew.Branch('isZee', isZee, 'isZee/F')
-    isZmm = array('f', [ 0 ] )
-    isZmmB = tnew.Branch('isZmm', isZmm, 'isZmm/F')
-    isZem = array('f', [ 0 ] )
-    isZemB = tnew.Branch('isZem', isZem, 'isZem/F')
-    isZEE = array('f', [ 0 ] )
-    isZEEB = tnew.Branch('isZEE', isZEE, 'isZEE/F')
-    isZMM = array('f', [ 0 ] )
-    isZMMB = tnew.Branch('isZMM', isZMM, 'isZMM/F')
-    isZTT = array('f', [ 0 ] )
-    isZTTB = tnew.Branch('isZTT', isZTT, 'isZTT/F')
-    isZLL = array('f', [ 0 ] )
-    isZLLB = tnew.Branch('isZLL', isZLL, 'isZLL/F')
 
 
-    # add dummy decaymode vars in to EMu channel for cut strings later
-    if channel != 'tt' :
-        t1DecayMode = array('f', [ 0 ] )
-        t1DecayModeB = tnew.Branch('t1DecayMode', t1DecayMode, 't1DecayMode/F')
-        t2DecayMode = array('f', [ 0 ] )
-        t2DecayModeB = tnew.Branch('t2DecayMode', t2DecayMode, 't2DecayMode/F')
-    if channel == 'em' or channel == 'tt' :
-        tDecayMode = array('f', [ 0 ] )
-        tDecayModeB = tnew.Branch('tDecayMode', tDecayMode, 'tDecayMode/F')
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -719,58 +773,47 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
             vbfClean( row )
 
 
-            isZtt[0] = 0
-            isZmt[0] = 0
-            isZet[0] = 0
-            isZee[0] = 0
-            isZmm[0] = 0
-            isZem[0] = 0
-            isZEE[0] = 0
-            isZMM[0] = 0
-            isZTT[0] = 0
-            isZLL[0] = 0
-            FFWeightQCD[0] = -1
-            FFWeightQCD_UP[0] = -1
-            FFWeightQCD_DOWN[0] = -1
-            FFWeightQCD1[0] = -1
-            FFWeightQCD1_UP[0] = -1
-            FFWeightQCD1_DOWN[0] = -1
-            FFWeightQCD2[0] = -1
-            FFWeightQCD2_UP[0] = -1
-            FFWeightQCD2_DOWN[0] = -1
+            #FFWeightQCD[0] = -1
+            #FFWeightQCD_UP[0] = -1
+            #FFWeightQCD_DOWN[0] = -1
+            #FFWeightQCD1[0] = -1
+            #FFWeightQCD1_UP[0] = -1
+            #FFWeightQCD1_DOWN[0] = -1
+            #FFWeightQCD2[0] = -1
+            #FFWeightQCD2_UP[0] = -1
+            #FFWeightQCD2_DOWN[0] = -1
 
-            # Decay final states
-            if channel == 'tt' :
-                isZtt[0] = 1
-            if channel == 'et' :
-                isZet[0] = 1
-            if channel == 'mt' :
-                isZmt[0] = 1
-            if channel == 'em' :
-                isZem[0] = 1
-            # Generator states, combine Z & sm-H into 1 var
-            if row.isZee == 1 :#or row.isHee == 1 : 
-                isZEE[0] = 1
-            if row.isZmumu == 1 :#or row.isHmumu == 1 : 
-                isZMM[0] = 1
-            if row.isZtautau == 1 :#or row.isHtautau == 1 : 
-                isZTT[0] = 1
-            if isZEE[0] == 1 or isZMM[0] == 1 : isZLL[0] = 1
-            UniqueID[0] = sampDict[ shortName ]['UniqueID']
-            BkgGroup[0] = sampDict[ shortName ]['BkgGroup']
+
+            # For easy use later
+            pt1 = getattr( row, l1+'Pt' )
+            phi1 = getattr( row, l1+'Phi' )
+            eta1 = getattr( row, l1+'Eta' )
+            pt2 = getattr( row, l2+'Pt' )
+            phi2 = getattr( row, l2+'Phi' )
+            eta2 = getattr( row, l2+'Eta' )
+            if len( channel ) > 2 :
+                pt3 = getattr( row, l3+'Pt' )
+                phi3 = getattr( row, l3+'Phi' )
+                eta3 = getattr( row, l3+'Eta' )
+            if len( channel ) > 3 :
+                pt4 = getattr( row, l4+'Pt' )
+                phi4 = getattr( row, l4+'Phi' )
+                eta4 = getattr( row, l4+'Eta' )
+
+            Z_DEta[0] = (eta1 - eta2)
 
             # TES Shifted M_Vis
-            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
-                m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
-                m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
-            else :
-                m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-                m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-                if hasattr( row, 'm_sv_UP' ) :
-                    setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
-                    setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
-                    setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
-                    setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
+            #    m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
+            #    m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
+            #else :
+            #    m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+            #    m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+            #    if hasattr( row, 'm_sv_UP' ) :
+            #        setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+            #        setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+            #        setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+            #        setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
 
 
             # Channel specific vetoes
@@ -791,48 +834,57 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
             
-            mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
-            mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
-            mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
-            mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
+            if hasattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) ):
+                mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
+                mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
+                mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
+                mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
 
             # Channel specific pairwise mvaMet
-            if channel == 'tt' :
-                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-                    pzetamiss[0] = compZeta(row.t1Pt, row.t1Phi, row.t2Pt, row.t2Phi, row.mvamet, row.mvametphi)[1]
-                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.t1Pt, row.t1Phi )
-                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.t2Pt, row.t2Phi )
-                else :
-                    pzetamiss[0] = -9999
-                    mt_1[0] = -9999
-                    mt_2[0] = -9999
-            if channel == 'em' :
-                if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-                    pzetamiss[0] = compZeta(row.ePt, row.ePhi, row.mPt, row.mPhi, row.mvamet, row.mvametphi)[1]
-                    mt_1[0] = getTransMass( row.mvamet, row.mvametphi, row.ePt, row.ePhi )
-                    mt_2[0] = getTransMass( row.mvamet, row.mvametphi, row.mPt, row.mPhi )
-                else :
-                    pzetamiss[0] = -9999
-                    mt_1[0] = -9999
-                    mt_2[0] = -9999
-            if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
-                pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+            #if channel == 'tt' :
+            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
+            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
+            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
+            #    else :
+            #        pzetamiss[0] = -9999
+            #        mt_1[0] = -9999
+            #        mt_2[0] = -9999
+            #if channel == 'em' :
+            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
+            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
+            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
+            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
+            #    else :
+            #        pzetamiss[0] = -9999
+            #        mt_1[0] = -9999
+            #        mt_2[0] = -9999
+            #if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+            #    pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
 
 
             # With calculated transverse mass variables, do Mt_Total for mssm search
-            pt1 = getattr( row, l1+'Pt' )
-            pt2 = getattr( row, l2+'Pt' )
-            phi1 = getattr( row, l1+'Phi' )
-            phi2 = getattr( row, l2+'Phi' )
-            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
-            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
-                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
-                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
-            else :
-                mt_tot_UP[0] = -10
-                mt_tot_DOWN[0] = -10
+            mt_1 = getattr( row, l1+'MtToPfMet_Raw' )
+            mt_2 = getattr( row, l2+'MtToPfMet_Raw' )
+            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1, mt_2 ) # Using wrong mt
+            #XXX mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
+            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
+            #    mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+            #    mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+            #else :
+            #    mt_tot_UP[0] = -10
+            #    mt_tot_DOWN[0] = -10
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
 
+            muonSF1[0] = 1
+            muonSF2[0] = 1
+            muonSF3[0] = 1
+            muonSF4[0] = 1
+            electronSF1[0] = 1
+            electronSF2[0] = 1
+            electronSF3[0] = 1
+            electronSF4[0] = 1
+            azhWeight[0] = 1
 
             # Data specific vars
             if 'data' in sample :
@@ -841,15 +893,14 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 tauPtWeightDown[0] = 1
                 trigweight_1[0] = 1
                 effweight[0] = 1
+                doubleTauTrigWeightL1[0] = 1
+                doubleTauTrigWeightL2[0] = 1
                 idisoweight_1[0] = 1
                 idisoweight_2[0] = 1
                 topWeight[0] = 1
                 zPtWeight[0] = 1
                 weight[0] = 1
                 XSecLumiWeight[0] = 1
-                isZEE[0] = -1
-                isZMM[0] = -1
-                isZLL[0] = -1
                 # Have the btag numbers correspond to actual values not
                 # Promote/Demote values
                 if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
@@ -860,85 +911,149 @@ def renameBranches( grouping, mid1, mid2, sample, channel, bkgFlag, count ) :
                 # Calculate Fake Factors based on this work:
                 # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
                 # We start with applying QCD factors to each leg and sum for total
-                if channel == 'tt' :
-                    FFWeightQCD[0] = 0.
-                    FFWeightQCD_UP[0] = 0.
-                    FFWeightQCD_DOWN[0] = 0.
-                    FFWeightQCD1[0] = 0.
-                    FFWeightQCD1_UP[0] = 0.
-                    FFWeightQCD1_DOWN[0] = 0.
-                    FFWeightQCD2[0] = 0.
-                    FFWeightQCD2_UP[0] = 0.
-                    FFWeightQCD2_DOWN[0] = 0.
-                    muon_iso = 0.089 # this is an artifact of being based on MuTau channel
-                                    # 0.089 gives a correction value of 1.0
-                    # First leg FR
-                    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
-                        inputsqcd = ffqcd.inputs()
-                        inputsqcd = [row.t1Pt, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
-                        FFWeightQCD1[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
-                        FFWeightQCD1_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
-                        FFWeightQCD1_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
-                    # Second leg FR
-                    if row.t2ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
-                        inputsqcd = ffqcd.inputs()
-                        inputsqcd = [row.t2Pt, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
-                        FFWeightQCD2[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
-                        FFWeightQCD2_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
-                        FFWeightQCD2_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
-                    # Total
-                    FFWeightQCD[0] = FFWeightQCD1[0] + FFWeightQCD2[0] 
-                    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
-                    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
+                #if channel == 'tt' :
+                #    FFWeightQCD[0] = 0.
+                #    FFWeightQCD_UP[0] = 0.
+                #    FFWeightQCD_DOWN[0] = 0.
+                #    FFWeightQCD1[0] = 0.
+                #    FFWeightQCD1_UP[0] = 0.
+                #    FFWeightQCD1_DOWN[0] = 0.
+                #    FFWeightQCD2[0] = 0.
+                #    FFWeightQCD2_UP[0] = 0.
+                #    FFWeightQCD2_DOWN[0] = 0.
+                #    muon_iso = 0.089 # this is an artifact of being based on MuTau channel
+                #                    # 0.089 gives a correction value of 1.0
+                #    # First leg FR
+                #    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
+                #        inputsqcd = ffqcd.inputs()
+                #        inputsqcd = [pt1, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
+                #        FFWeightQCD1[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
+                #        FFWeightQCD1_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
+                #        FFWeightQCD1_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
+                #    # Second leg FR
+                #    if row.t2ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
+                #        inputsqcd = ffqcd.inputs()
+                #        inputsqcd = [pt2, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
+                #        FFWeightQCD2[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
+                #        FFWeightQCD2_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
+                #        FFWeightQCD2_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
+                #    # Total
+                #    FFWeightQCD[0] = FFWeightQCD1[0] + FFWeightQCD2[0] 
+                #    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
+                #    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
                     
+            ### Not Data
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
-                l1Pt = getattr( row, '%sPt' % l1 )
-                l1Eta = getattr( row, '%sEta' % l1 )
-                l2Pt = getattr( row, '%sPt' % l2 )
-                l2Eta = getattr( row, '%sEta' % l2 )
+
+                if analysis == 'azh' :
+                    nvtx = row.nvtx
+                    # Currently using PFIDLoose and Loose RelIso for all muons
+                    
+                    if 'm' in l1 :
+                        muonSF1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
+                        muonSF1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
+                        muonSF1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
+                    if 'm' in l2 :
+                        muonSF2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
+                        muonSF2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
+                        muonSF2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
+                    if 'm' in l3 :
+                        muonSF3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
+                        muonSF3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
+                        muonSF3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
+                    if 'm' in l4 :
+                        muonSF4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
+                        muonSF4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
+                        muonSF4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
+                    # Currently using WP90 in all electrons
+                    if 'e' in l1 :
+                        electronSF1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
+                    if 'e' in l2 :
+                        electronSF2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
+                    if 'e' in l3 :
+                        electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
+                    if 'e' in l4 :
+                        electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
 
                 # Isolation / ID weights
                 if 't' in l1 : idisoweight_1[0] = 1
-                else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', l1Pt, l1Eta )
+                #else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', pt1, eta1 )
                 if 't' in l2 : idisoweight_2[0] = 1
-                else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', l2Pt, l2Eta )
+                #else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', pt2, eta2 )
 
                 # Trigger Weights
                 effweight[0] = 1
-                if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', l1Pt, l1Eta )
-                elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( l1Pt, l1Eta, l2Pt, l2Eta )
-                elif channel == 'tt' :
+                doubleTauTrigWeightL1[0] = 1
+                doubleTauTrigWeightL2[0] = 1
+                #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
+                #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
+                #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( pt1, eta1, pt2, eta2 )
+                #elif channel == 'tt' :
+                if channel == 'tt' :
                     trigweight_1[0] = 1
-                    effweight[0] = doubleTauTriggerEff( l1Pt ) * doubleTauTriggerEff( l2Pt )
+                    # L1 trigger efficiency is dependent on tau isolation
+                    # and real / fake tau status
+                    # find tau iso and pass string for mapping appropriately
+                    # also possibly depends on SS vs OS
+                    if getattr( row, 't1_t2_SS' ) == 1 : ttSS = True
+                    else : ttSS = False
+                    t1Gen = getattr( row, l1+'ZTTGenMatching' )
+                    tauIso = 'NoIso'
+                    if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Loose'
+                    if getattr( row, l1+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Medium'
+                    if getattr( row, l1+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Tight'
+                    if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'VTight'
+                    doubleTauTrigWeightL1[0] = DoubleTau35Efficiencies.doubleTauTriggerEff( pt1, tauIso, t1Gen, ttSS )
+                    t2Gen = getattr( row, l1+'ZTTGenMatching' )
+                    tauIso = 'NoIso'
+                    if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Loose'
+                    if getattr( row, l2+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Medium'
+                    if getattr( row, l2+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'Tight'
+                    if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'VTight'
+                    doubleTauTrigWeightL2[0] = DoubleTau35Efficiencies.doubleTauTriggerEff( pt2, tauIso, t2Gen, ttSS )
                 else : trigweight_1[0] = 1
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
-                if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
-                    top1Pt = row.topQuarkPt1
-                    if top1Pt > 400 : top1Pt = 400
-                    top2Pt = row.topQuarkPt2
-                    if top2Pt > 400 : top2Pt = 400
-                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
-                else : topWeight[0] = 1
+                #if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
+                #    top1Pt = row.topQuarkPt1
+                #    if top1Pt > 400 : top1Pt = 400
+                #    top2Pt = row.topQuarkPt2
+                #    if top2Pt > 400 : top2Pt = 400
+                #    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
+                #else : topWeight[0] = 1
+                topWeight[0] = 1
 
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
+
                 zPtWeight[0] = 1
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
-
+                effweight[0] = doubleTauTrigWeightL1[0] * doubleTauTrigWeightL2[0]
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * effweight[0] * topWeight[0]
                 weight[0] *= zPtWeight[0]
+                # Below set to 1. for HTT
+                azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
+                azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
+
+
 
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
-                    xsec = getXSec( shortName, sampDict, row.numGenJets )
+                    xsec = getXSec( analysis, shortName, sampDict, row.numGenJets )
                     if xsec not in xsecList : xsecList.append( xsec )
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before

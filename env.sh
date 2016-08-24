@@ -1,5 +1,5 @@
 
 
-export LUMI=2301.0
+export LUMI=15900.0
 
 echo "Set lumi = $LUMI"

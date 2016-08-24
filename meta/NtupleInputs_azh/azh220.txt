@@ -1,0 +1,2 @@
+/data/truggles/aug04_azh/AToZhToLLTauTau_M-220_13TeV_madgraph_4f_LO/submit/make_ntuples_cfg-AEE86594-AC43-E611-8FE6-38EAA78D8F98/make_ntuples_cfg-AEE86594-AC43-E611-8FE6-38EAA78D8F98.root
+/data/truggles/aug04_azh/AToZhToLLTauTau_M-220_13TeV_madgraph_4f_LO/submit/make_ntuples_cfg-B02B55BE-A343-E611-A6CF-0CC47A6C0716/make_ntuples_cfg-B02B55BE-A343-E611-A6CF-0CC47A6C0716.root

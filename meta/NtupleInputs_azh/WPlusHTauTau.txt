@@ -1,0 +1,11 @@
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-0EE48480-694D-E611-A482-002590DE39F0/make_ntuples_cfg-0EE48480-694D-E611-A482-002590DE39F0.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-4426B4A7-9052-E611-A9E5-0025905B858C/make_ntuples_cfg-4426B4A7-9052-E611-A9E5-0025905B858C.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-44A440C0-2C57-E611-AE79-0025905A60F2/make_ntuples_cfg-44A440C0-2C57-E611-AE79-0025905A60F2.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-70333386-4A4D-E611-9CD7-00259057469C/make_ntuples_cfg-70333386-4A4D-E611-9CD7-00259057469C.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-98DAC937-6A4D-E611-AD53-0CC47A7FC6F8/make_ntuples_cfg-98DAC937-6A4D-E611-AD53-0CC47A7FC6F8.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-C4536100-8352-E611-97C3-0025905B85B2/make_ntuples_cfg-C4536100-8352-E611-97C3-0025905B85B2.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-C68D62DD-7C52-E611-8A99-0CC47A78A3EE/make_ntuples_cfg-C68D62DD-7C52-E611-8A99-0CC47A78A3EE.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-E281C834-B64B-E611-861D-0022194FEBF5/make_ntuples_cfg-E281C834-B64B-E611-861D-0022194FEBF5.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-E4706BCC-0A53-E611-ADAB-0CC47A4C8E20/make_ntuples_cfg-E4706BCC-0A53-E611-ADAB-0CC47A4C8E20.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-F0CC30C4-2C57-E611-BF09-0025905B858C/make_ntuples_cfg-F0CC30C4-2C57-E611-BF09-0025905B858C.root
+/data/truggles/aug04_azh/WplusHToTauTau_M125_13TeV_powheg_pythia8/submit/make_ntuples_cfg-FA68B71B-0E4C-E611-ABEA-0022194FE826/make_ntuples_cfg-FA68B71B-0E4C-E611-ABEA-0022194FE826.root
