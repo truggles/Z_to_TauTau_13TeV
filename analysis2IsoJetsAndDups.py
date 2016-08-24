@@ -502,7 +502,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
     newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
 
-    dirName = channel+'final'
+    dirName = channel+'/final'
     treeName = 'Ntuple'
     
     # A few branches are ints instead of floats and must be treated specially

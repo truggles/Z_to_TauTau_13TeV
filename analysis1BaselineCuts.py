@@ -54,7 +54,7 @@ def skipChanDataCombo( channel, sample, analysis ) :
 
 
 #for sample in samples :
-def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, hdfs, count, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, skimHdfs, skimmed, count, fileMin=0, fileMax=9999 ) :
     #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -63,8 +63,9 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
     #print "Channel:  %s" % channel
     sampF = ''
     if svFitPost == 'true' : sampF = 'sv/'
-    if hdfs == 'true' : sampF = 'hdfs/'
-    if svFitPost == 'true' :
+    if skimHdfs == 'true' : sampF = 'hdfs/'
+    if skimmed == 'true' : sampF = 'skimmed/'
+    if svFitPost == 'true' or skimmed == 'true' :
         sampleList = 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel)
     else :
         sampleList = 'meta/NtupleInputs_%s/%s%s.txt' % (analysis, sampF, sample)
@@ -105,7 +106,7 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
 
 
 
-def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost,hdfs) :
+def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost,skimHdfs,skimmed) :
 
     save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
@@ -115,12 +116,12 @@ def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFiles
     #print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
     if svFitPrep == 'true' :
         outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
-    elif hdfs == 'true' :
+    elif skimHdfs == 'true' :
         outFile1 = ROOT.TFile('/nfs_scratch/truggles/%s%s/%s.root' % (analysis, mid1.strip('1'), save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
-    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, hdfs, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, skimHdfs, skimmed, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     initialQty = cutOut[2]
     postCutQty = cutOut[3]
     eventCount = cutOut[4]
@@ -184,7 +185,7 @@ def doInitialCuts(analysis, samples, **fargs) :
     import os
     if fargs[ 'svFitPrep' ] == 'true' :
 	checkDir( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1']) )
-    if fargs[ 'hdfs' ] == 'true' :
+    if fargs[ 'skimHdfs' ] == 'true' :
 	checkDir( '/nfs_scratch/truggles/%s%s' % (analysis, fargs[ 'mid1'].strip('1')) )
     
     num = 0
@@ -198,8 +199,9 @@ def doInitialCuts(analysis, samples, **fargs) :
         fileLenTT = 9999
         sampF = ''
         if fargs['svFitPost'] == 'true' : sampF = 'sv/'
-        if fargs['hdfs'] == 'true' : sampF = 'hdfs/'
-        if fargs['svFitPost'] == 'true' :
+        if fargs['skimHdfs'] == 'true' : sampF = 'hdfs/'
+        if fargs['skimmed'] == 'true' : sampF = 'skimmed/'
+        if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
             fileLenEM = file_len( 'meta/NtupleInputs_%s/%s%s_em.txt' % (analysis, sampF, sample) )
             fileLenTT = file_len( 'meta/NtupleInputs_%s/%s%s_tt.txt' % (analysis, sampF, sample) )
             fileLen = max( fileLenEM, fileLenTT )
@@ -232,7 +234,8 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     numFilesPerCycle,
                                                                                     fargs['svFitPrep'],
                                                                                     fargs['svFitPost'],
-                                                                                    fargs['hdfs'])) )
+                                                                                    fargs['skimHdfs'],
+                                                                                    fargs['skimmed'])) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
                     runCuts(analysis,
@@ -246,7 +249,8 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     numFilesPerCycle,
                                                                                     fargs['svFitPrep'],
                                                                                     fargs['svFitPost'],
-                                                                                    fargs['hdfs'])
+                                                                                    fargs['skimHdfs'],
+                                                                                    fargs['skimmed'])
 
                 num +=  1
     
@@ -316,13 +320,10 @@ def doInitialOrder(analysis, samples, **fargs) :
         fileLenEM = 9999
         fileLenTT = 9999
         sampF = ''
-        if svFitPost == 'true' : sampF = 'sv/'
-        if hdfs == 'true' : sampF = 'hdfs/'
-        if fargs['svFitPost'] == 'true' or fargs['hdfs'] == 'true' :
-	    fileLenEM, fileLenTT = 0, 0
-	    #try :
+        if fargs['svFitPost'] == 'true' : sampF = 'sv/'
+        if fargs['skimmed'] == 'true' : sampF = 'skimmed/'
+        if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
             fileLenEM = file_len( 'meta/NtupleInputs_%s/%s%s_em.txt' % (analysis, sampF, sample) )
-	    #try :
             fileLenTT = file_len( 'meta/NtupleInputs_%s/%s%s_tt.txt' % (analysis, sampF, sample) )
             fileLen = max( fileLenEM, fileLenTT )
         else :
@@ -448,7 +449,8 @@ def drawHistos(analysis, samples, **fargs ) :
     
         sampF = ''
         if svFitPost == 'true' : sampF = 'sv/'
-        if hdfs == 'true' : sampF = 'hdfs/'
+        if skimHdfs == 'true' : sampF = 'hdfs/'
+        if fargs['skimmed'] == 'true' : sampF = 'skimmed/'
         for subName in loopList :
             print "SubName:",subName
             if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
@@ -460,7 +462,7 @@ def drawHistos(analysis, samples, **fargs ) :
                 # Check if we should skip running over data set
                 if skipChanDataCombo( channel, sample, analysis ) : continue
 
-                if fargs['svFitPost'] == 'true' or fargs['hdfs'] == 'true' :
+                if fargs['svFitPost'] == 'true' or fargs['skimHdfs'] == 'true' :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel) )
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
