@@ -1,4 +1,4 @@
-from util.buildTChain import makeTChain, getTree
+from util.buildTChain import makeTChain, getTree, getEventCount
 from util.fileLength import file_len
 import util.pileUpVertexCorrections
 from analysis2IsoJetsAndDups import renameBranches
@@ -9,6 +9,7 @@ import analysisPlots
 import multiprocessing
 import math
 from ROOT import gPad, gROOT
+from util.helpers import checkDir
 
 
 
@@ -53,32 +54,27 @@ def skipChanDataCombo( channel, sample, analysis ) :
 
 
 #for sample in samples :
-def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, count, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, hdfs, count, fileMin=0, fileMax=9999 ) :
     #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
     ''' Get initial chain '''
     #print "###   %s  ###" % sample
     #print "Channel:  %s" % channel
+    sampF = ''
+    if svFitPost == 'true' : sampF = 'sv/'
+    if hdfs == 'true' : sampF = 'hdfs/'
     if svFitPost == 'true' :
-        sampleList = 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel)
-        path = '%s/Ntuple' % channel
+        sampleList = 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel)
     else :
-        sampleList = 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample)
-        path = '%s/final/Ntuple' % channel
+        sampleList = 'meta/NtupleInputs_%s/%s%s.txt' % (analysis, sampF, sample)
+    path = '%s/final/Ntuple' % channel
     #print "sample List and path", sampleList, path
-    # This should allow us to run over sections of files
-    if svFitPrep == 'true' :
-        files = open( sampleList, 'r' )	
-        i = 0
-        for file_ in files :
-            if i == count :
-                f = ROOT.TFile( file_.strip() )
-                chain = f.Get( path )
-            i += 1
-    else :
-        #print "svFitPrep not true"
-        chain = makeTChain( sampleList, path, 0, fileMin, fileMax )
+    chain = makeTChain( sampleList, path, 0, fileMin, fileMax )
+
+    # Store eventCount
+    eventCount = getEventCount( sampleList, channel, 0, fileMin, fileMax )
+
     numEntries = chain.GetEntries()
     #print "%25s : %10i" % ('Initial', numEntries)
     initialQty = "%25s : %10i" % ('Initial', numEntries)
@@ -102,12 +98,12 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
     
     #treeOutDir.cd()
     #chainNew.Write()
-    return (outFile, chainNew, initialQty, postCutQty)
+    return (outFile, chainNew, initialQty, postCutQty, eventCount)
 
 
 
 
-def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost) :
+def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost,hdfs) :
 
     save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
@@ -117,16 +113,26 @@ def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFiles
     #print "%5i %20s %10s %3i: Started Cuts" % (num, sample, channel, count)
     if svFitPrep == 'true' :
         outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
+    elif hdfs == 'true' :
+        outFile1 = ROOT.TFile('/nfs_scratch/truggles/%s%s/%s.root' % (analysis, mid1.strip('1'), save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
-    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
-    dir1 = cutOut[0].mkdir( channel )
-    dir1.cd()
-    cutOut[1].Write()
-    outFile1.Close()
+    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, hdfs, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     initialQty = cutOut[2]
     postCutQty = cutOut[3]
+    eventCount = cutOut[4]
+    dir1 = cutOut[0].mkdir( channel )
+    dir1.cd()
+    # Make a histo with "eventCount" for making meta stats after initial cut
+    eventCountH = ROOT.TH1D('eventCount','eventCount',1,-0.5,0.5)
+    eventCountH.SetBinContent( 1, eventCount )
+    eventCountH.Write()
+    dir2 = dir1.mkdir( 'final' )
+    dir2.cd()
+    cutOut[1].Write()
+
+    outFile1.Close()
     print "%5i %20s %10s %3i: Finished Cuts" % (num, sample, channel, count)
 
     if num < 1000 :
@@ -171,8 +177,9 @@ def doInitialCuts(analysis, samples, **fargs) :
 
     import os
     if fargs[ 'svFitPrep' ] == 'true' :
-        if not os.path.exists( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1']) ) :
-            os.makedirs( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1' ]) )
+	checkDir( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1']) )
+    if fargs[ 'hdfs' ] == 'true' :
+	checkDir( '/nfs_scratch/truggles/%s%s' % (analysis, fargs[ 'mid1'].strip('1')) )
     
     num = 0
     for sample in samples :
@@ -183,15 +190,19 @@ def doInitialCuts(analysis, samples, **fargs) :
 
         fileLenEM = 9999
         fileLenTT = 9999
+        sampF = ''
+        if fargs['svFitPost'] == 'true' : sampF = 'sv/'
+        if fargs['hdfs'] == 'true' : sampF = 'hdfs/'
         if fargs['svFitPost'] == 'true' :
-            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
-            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
+            fileLenEM = file_len( 'meta/NtupleInputs_%s/%s%s_em.txt' % (analysis, sampF, sample) )
+            fileLenTT = file_len( 'meta/NtupleInputs_%s/%s%s_tt.txt' % (analysis, sampF, sample) )
             fileLen = max( fileLenEM, fileLenTT )
         else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
+            fileLen = file_len( 'meta/NtupleInputs_%s/%s%s.txt' % (analysis, sampF, sample) )
         if fileLen == 0 : 
             print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
             continue
+
         go = True
         count = 0
         while go :
@@ -202,10 +213,6 @@ def doInitialCuts(analysis, samples, **fargs) :
 
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
-
-
-
-
 
                 if not fargs['debug'] == 'true' :
                     multiprocessingOutputs.append( pool.apply_async(runCuts, args=(analysis,
@@ -218,7 +225,8 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     fargs['cutMapper'],
                                                                                     numFilesPerCycle,
                                                                                     fargs['svFitPrep'],
-                                                                                    fargs['svFitPost'])) )
+                                                                                    fargs['svFitPost'],
+                                                                                    fargs['hdfs'])) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
                     runCuts(analysis,
@@ -231,7 +239,8 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     fargs['cutMapper'],
                                                                                     numFilesPerCycle,
                                                                                     fargs['svFitPrep'],
-                                                                                    fargs['svFitPost'])
+                                                                                    fargs['svFitPost'],
+                                                                                    fargs['hdfs'])
 
                 num +=  1
     
@@ -300,9 +309,15 @@ def doInitialOrder(analysis, samples, **fargs) :
 
         fileLenEM = 9999
         fileLenTT = 9999
-        if fargs['svFitPost'] == 'true' :
-            fileLenEM = file_len( 'meta/NtupleInputs_%s/sv_%s_em.txt' % (analysis, sample) )
-            fileLenTT = file_len( 'meta/NtupleInputs_%s/sv_%s_tt.txt' % (analysis, sample) )
+        sampF = ''
+        if svFitPost == 'true' : sampF = 'sv/'
+        if hdfs == 'true' : sampF = 'hdfs/'
+        if fargs['svFitPost'] == 'true' or fargs['hdfs'] == 'true' :
+	    fileLenEM, fileLenTT = 0, 0
+	    #try :
+            fileLenEM = file_len( 'meta/NtupleInputs_%s/%s%s_em.txt' % (analysis, sampF, sample) )
+	    #try :
+            fileLenTT = file_len( 'meta/NtupleInputs_%s/%s%s_tt.txt' % (analysis, sampF, sample) )
             fileLen = max( fileLenEM, fileLenTT )
         else :
             fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
@@ -425,6 +440,9 @@ def drawHistos(analysis, samples, **fargs ) :
         else : loopList.append( sample )
 
     
+        sampF = ''
+        if svFitPost == 'true' : sampF = 'sv/'
+        if hdfs == 'true' : sampF = 'hdfs/'
         for subName in loopList :
             print "SubName:",subName
             if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
@@ -436,8 +454,8 @@ def drawHistos(analysis, samples, **fargs ) :
                 # Check if we should skip running over data set
                 if skipChanDataCombo( channel, sample, analysis ) : continue
 
-                if fargs['svFitPost'] == 'true' :
-                    fileLen = file_len( 'meta/NtupleInputs_%s/sv_%s_%s.txt' % (analysis, sample, channel) )
+                if fargs['svFitPost'] == 'true' or fargs['hdfs'] == 'true' :
+                    fileLen = file_len( 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel) )
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen

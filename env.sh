@@ -1,11 +1,8 @@
 
 
-#export LUMI=15900.0
-#
-#echo "Lumi for Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt 15.9 / fb"
-#echo "Set lumi = $LUMI"
+echo "BASED OFF OF CECILE'S /hdfs/store/user/caillol/SMHTT_aug16_v2 SUBMIT"
+export LUMI=20100.0
 
-export LUMI=10664.0
 echo "Set lumi = $LUMI"
 
-echo "Lumi for Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt WITHOUT 2016C 10.664 / fb"
+echo "Lumi for /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt 20.1 / fb"

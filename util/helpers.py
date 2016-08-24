@@ -2,6 +2,11 @@ import os, glob, subprocess
 import ROOT
 
 
+# Check if directory exists, make it if not
+def checkDir( dirName ) :
+    if not os.path.exists( dirName ) : os.makedirs( dirName )
+
+
 # Function to create TH1Fs from TGraphAsymmErrors
 def getTH1FfromTGraphAsymmErrors( asym, name ) :
     from array import array
