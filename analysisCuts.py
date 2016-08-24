@@ -23,6 +23,7 @@ m23e12  = '(singleMu23SingleE12Pass > 0 && eMatchesMu23Ele12Path == 1 && mMatche
 #m17e12  = '(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatchesMu17Ele12Path == 1 && eMu17Ele12Filter > 0 && mMu17Ele12Filter > 0 && mPt > 18)'
 e17m8   = '(singleE17SingleMu8Pass > 0 && eMatchesMu8Ele17Path == 1 && mMatchesMu8Ele17Path == 1 && ePt > 18)'
 m17e12  = '(singleMu17SingleE12Pass > 0 && eMatchesMu17Ele12Path == 1 && mMatchesMu17Ele12Path == 1 && mPt > 18)'
+emTrig = '('+e17m8+'||'+m17e12+')'
 # EM PostSync
 emOS    = 'e_m_SS == 0'
 emSS    = 'e_m_SS == 1'
@@ -87,8 +88,8 @@ mmIDL = 'LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 #mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0 && LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 
 # ET Higgs
-eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.15 && e3MVANonTrigWP90 > 0'
-mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.15 && eMVANonTrigWP90 > 0'
+eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.25 && e3MVANonTrigWP90 > 0'
+mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.25 && eMVANonTrigWP90 > 0'
 xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1 && tAgainstElectronVLooseMVA6 == 1'
 eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
 mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
@@ -119,7 +120,8 @@ eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
 
 def getCut( analysis, channel, cutName, isData=False ) :
     
-    triggers = [tt40, tt35, tt32, '('+e23m8+'||'+m23e12+')', eeTrig, mmTrig]
+    #triggers = [tt40, tt35, tt32, '('+e23m8+'||'+m23e12+')', eeTrig, mmTrig]
+    triggers = [tt40, tt35, tt32, '('+e23m8+'||'+m23e12+')', emTrig]
 
     cutMap = { 
         'htt' : # analysis
@@ -140,7 +142,7 @@ def getCut( analysis, channel, cutName, isData=False ) :
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
             'syncCutsDCqcdTES' : [ttKinTES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt32, DecayMode, ttIsoLooseMVA],
             # Selection which only does baseline for sync sample
-            'syncCutsNtuple' : [ttKin, ttCharge, ttDR, ttVtx, tt32, DecayMode],
+            'syncCutsNtuple' : [ttKinOld, ttCharge, ttDR, ttVtx, tt35, DecayMode],
             #'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
             'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
             'syncCutsNtupleBuilding' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode, extraVetoTT, ttDisc, ttIsoTight, tt35],
@@ -152,7 +154,7 @@ def getCut( analysis, channel, cutName, isData=False ) :
             'crazyCutsNtuple' : [ttKin, ttCharge, ttDR, ttVtx, tt32, DecayMode, 't1Pt>150&&t2Pt>150'],
         }, # end tt channel
           'em' : {
-            'syncCutsNtuple' : [emKin, emDR, emVtx, '('+e23m8+'||'+m23e12+')'],
+            'syncCutsNtuple' : [emKin, emDR, emVtx, emTrig,],#'('+e23m8+'||'+m23e12+')'],
         }, # end em channel
         }, # end HTT analysis cuts
         'azh' : # analysis

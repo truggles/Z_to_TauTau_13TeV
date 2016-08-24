@@ -37,7 +37,7 @@ for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
 
 #azhSamples=['ZZ4lAMCNLO',]
 #azhSamples=['dataEE', 'dataMM']
-#azhSamples=['TT',]
+azhSamples=['azh300',]
 samples = azhSamples
 
 ''' These parameters are fed into the 2 main function calls.
@@ -51,15 +51,16 @@ params = {
     'numCores' : 15,
     'numFilesPerCycle' : 20,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
-    'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
+    #'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
     #'channels' : ['eeet','eett','eemt','eeem'],
     #'channels' : ['eeee','mmmm','eemm'],
     #'channels' : ['eeee',],
+    'channels' : ['eemt','emmt'],
     'cutMapper' : 'goodZ',
     #'cutMapper' : 'HSS',
-    'mid1' : '1Aug07a',
-    'mid2' : '2Aug07a',
-    'mid3' : '3Aug07a',
+    'mid1' : '1Aug21',
+    'mid2' : '2Aug21',
+    'mid3' : '3Aug21',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -80,7 +81,7 @@ analysis1BaselineCuts.doInitialOrder(analysis, samples.keys(), **params)
 
 
 runPlots = True
-#runPlots = False
+runPlots = False
 #skipMerge = False
 skipMerge = True
 if runPlots :
