@@ -21,4 +21,6 @@ util/*.txt
 lepSFdata/*
 tmp/
 plotsOut.txt
-data/di-tau/
+data/triggerSF/
+data/LeptonEfficiencies/
+
