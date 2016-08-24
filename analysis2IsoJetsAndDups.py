@@ -768,9 +768,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            if channel == 'tt' and 'Sync-HtoTT' in sample : 
-                #print "### Iso Ordering %s ###" % sample
-                isoOrder( channel, row )
+            #if channel == 'tt' and 'Sync-HtoTT' in sample : 
+            #    #print "### Iso Ordering %s ###" % sample
+            #    isoOrder( channel, row )
             vbfClean( row )
 
 
