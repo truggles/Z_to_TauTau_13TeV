@@ -21,3 +21,6 @@ util/*.txt
 lepSFdata/*
 tmp/
 plotsOut.txt
+data/triggerSF/
+data/LeptonEfficiencies/
+

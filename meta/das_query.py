@@ -6,7 +6,7 @@ def das_query ( query ) :
   returns json object with result of query
   '''
   import subprocess
-  cmd = ['das_client.py',
+  cmd = ['das_client',
       '--limit=0',
       '--format=json',
       '--query="%s"' % query]
