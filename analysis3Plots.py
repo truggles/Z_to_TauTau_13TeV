@@ -12,6 +12,7 @@ from array import array
 import math
 from analysisPlots import skipSystShapeVar
 from copy import deepcopy
+from util.helpers import checkDir
 
 
 
@@ -42,7 +43,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
         genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-        dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
+        dyJets = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
         newSamples = {}
         for sample in samples.keys() :
             #print sample
@@ -145,12 +146,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         print channel
     
         # Make an index file for web viewing
-        if not os.path.exists( '%sPlots' % analysis ) :
-            os.makedirs( '%sPlots/em' % analysis )
-            os.makedirs( '%sPlots/tt' % analysis )
-        if not os.path.exists( '%sPlotsList' % analysis ) :
-            os.makedirs( '%sPlotsList/em' % analysis )
-            os.makedirs( '%sPlotsList/tt' % analysis )
+        checkDir( '%sPlots/em' % analysis )
+        checkDir( '%sPlots/tt' % analysis )
+        checkDir( '%sPlotsList/em' % analysis )
+        checkDir( '%sPlotsList/tt' % analysis )
         htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (analysis, channel), 'w')
         htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
         htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
@@ -166,8 +165,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             qcdMake = True
             finalQCDYield = 0.0
             finalDataYield = 0.0
-            if not os.path.exists('meta/%sBackgrounds' % analysis) :
-                os.makedirs('meta/%sBackgrounds' % analysis)
+            checkDir('meta/%sBackgrounds' % analysis)
             print "qcdMakeDM called: ",ops['qcdMakeDM']
             qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['qcdMakeDM']), 'RECREATE')
             qcdDir = qcdMaker.mkdir('%s_Histos' % channel)

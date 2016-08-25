@@ -44,7 +44,9 @@ os.chdir('..')
 
 ''' Preset samples '''
 SamplesData = ['dataTT',]
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
+#SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
+#SamplesDataCards = ['DYJets', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
+SamplesDataCards = ['DYJets', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
 
 
 #SamplesDataCards = ['dataTT','dataEM','DYJets']
@@ -68,9 +70,9 @@ params = {
     'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    'mid1' : '1Aug24a',
-    'mid2' : '2Aug24a',
-    'mid3' : '3Aug24a',
+    'mid1' : '1Aug25x5pt45b',
+    'mid2' : '2Aug25x5pt45b',
+    'mid3' : '3Aug25x5pt45b',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -89,8 +91,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -99,42 +101,82 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
     
 
-#runPlots = True
+runPlots = True
 runPlots = False
+makeQCDBkg = True
+makeQCDBkg = False
+makeFinalPlots = True
+#makeFinalPlots = False
+text=True
+text=False
+makeDataCards = True
+#makeDataCards = False
 if runPlots :
+    process = ["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2'], "--skimmed=%s" % params['skimmed'], "--samples"]
+    for sample in samples.keys() :
+        process.append( sample )
     """ Make our folders with directories of histos for each bkg """
-    #subprocess.call(["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2']])
-    #
-    #qcdYields = {}
-    #for sign in ['SS', 'OS'] :
-    #    for name in ['VTight_Loose', 'VTight_'] :
-    #        kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT', }
-    #        folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'
-    #        qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
-    #        qcdYields[ sign+name ] = qcdYield
-    #
-    #print qcdYields
-    #looseToTightRatio = qcdYields['SSVTight_'] / qcdYields['SSVTight_Loose']
-    #qcdFile = open('httQCDYields_%s.txt' % params['mid2'],'w')
-    #qcdFile.write( str(looseToTightRatio)+"\n" )
-    #for key in qcdYields :
-    #    qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
-    #qcdFile.close()
+    subprocess.call( process )
+   
+if makeQCDBkg :    
+    qcdYields = {}
+    for sign in ['SS', 'OS'] :
+        #XXX for name in ['VTight_Loose', 'VTight_'] :
+        for name in ['Tight_Loose', 'Tight_'] :
+            ROOT.gROOT.Reset()
+            kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT', }
+            folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'
+            qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
+            qcdYields[ sign+name ] = qcdYield
     
-    """ Final plots """
-    samples = returnSampleDetails( analysis, samples )
-    qcdSF = 1.0
-    with open('httQCDYields_%s.txt' % params['mid2']) as qcdFile :
-        cnt = 0
-        for line in qcdFile :
-            qcdSF = float(line)
-            break
-    print qcdSF
+    print qcdYields
+    #XXX looseToTightRatio = qcdYields['SSVTight_'] / qcdYields['SSVTight_Loose']
+    looseToTightRatio = qcdYields['SSTight_'] / qcdYields['SSTight_Loose']
+    qcdFile = open('httQCDYields_%s.txt' % params['mid2'],'w')
+    qcdFile.write( str(looseToTightRatio)+"\n" )
+    for key in qcdYields :
+        qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
+    qcdFile.close()
+    
 
-    #text=False
-    text=True
-    kwargs = { 'text':text, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_VTight_LooseZTT', 'qcdSF':qcdSF }
-    analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_VTight_ZTT' % params['mid2'], **kwargs  )
+""" QCD SF for final plots / DCs """
+ROOT.gROOT.Reset()
+qcdSF = 1.0
+with open('httQCDYields_%s.txt' % params['mid2']) as qcdFile :
+    cnt = 0
+    for line in qcdFile :
+        qcdSF = float(line)
+        break
+print "Calculated QCD SF: ",qcdSF
+
+
+if makeFinalPlots :
+    #XXX kwargs = { 'text':text, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_VTight_LooseZTT', 'qcdSF':qcdSF }
+    #XXX analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_VTight_ZTT' % params['mid2'], **kwargs  )
+    kwargs = { 'text':text, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_Tight_LooseZTT', 'qcdSF':qcdSF }
+    analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_Tight_ZTT' % params['mid2'], **kwargs  )
     
     
+if makeDataCards :
+    from analysisShapesROOT import makeDataCards
+    folderDetails = '%s_OSl1ml2_Tight_ZTT' % params['mid2']
+    kwargs = {
+    'useQCDMakeName' : '%s_OSl1ml2_Tight_LooseZTT' % params['mid2'],
+    'qcdSF' : qcdSF,
+    'category' : 'inclusive',
+    'fitShape' : 'm_vis',
+    'ES' : True,
+    }
+    makeDataCards( analysis, samples, ['tt',], folderDetails, **kwargs )
+
+
+
+
+
+
+
+
+
+
+
     
