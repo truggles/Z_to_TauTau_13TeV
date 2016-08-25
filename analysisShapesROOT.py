@@ -247,23 +247,23 @@ for channel in ['em', 'tt'] :
             title = name.strip('_')
             if options.ES or options.tauPt :
                 if '_energyScaleUp' in var :
-                    histos[ name ] = ROOT.TH1F( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
                 elif '_energyScaleDown' in var :
-                    histos[ name ] = ROOT.TH1F( name+'energyScaleDown', name+'energyScaleDown', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'energyScaleDown', name+'energyScaleDown', numBins, binArray )
                 elif '_tauPtUp' in var :
-                    histos[ name ] = ROOT.TH1F( name+'tauPtUp', name+'tauPtUp', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'tauPtUp', name+'tauPtUp', numBins, binArray )
                 elif '_tauPtDown' in var :
-                    histos[ name ] = ROOT.TH1F( name+'tauPtDown', name+'tauPtDown', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'tauPtDown', name+'tauPtDown', numBins, binArray )
                 elif '_zPtUp' in var :
-                    histos[ name ] = ROOT.TH1F( name+'zPtUp', name+'zPtUp', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'zPtUp', name+'zPtUp', numBins, binArray )
                 elif '_zPtDown' in var :
-                    histos[ name ] = ROOT.TH1F( name+'zPtDown', name+'zPtDown', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'zPtDown', name+'zPtDown', numBins, binArray )
                 elif '_topPtUp' in var :
-                    histos[ name ] = ROOT.TH1F( name+'topPtUp', name+'topPtUp', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'topPtUp', name+'topPtUp', numBins, binArray )
                 elif '_topPtDown' in var :
-                    histos[ name ] = ROOT.TH1F( name+'topPtDown', name+'topPtDown', numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name+'topPtDown', name+'topPtDown', numBins, binArray )
                 else :
-                    histos[ name ] = ROOT.TH1F( name, name, numBins, binArray )
+                    histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
             histos[ name ].Sumw2()
 
 

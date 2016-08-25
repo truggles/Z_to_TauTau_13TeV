@@ -59,6 +59,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 del samples[ dyJet ]
         samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
+        # Don't plot sm higgs 120, 130 and cut out WJets b jet binned for the moment
+        smHiggs = ['ggHtoTauTau120', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau130', 'WJets1', 'WJets2', 'WJets3', 'WJets4']
+        for higgs in smHiggs :
+            if higgs in samples : del samples[ higgs ]
 
     for sample in samples :
         print sample
@@ -69,8 +73,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
     
-    cmsLumi = float(os.getenv('LUMI'))
-    print "Lumi = %i" % cmsLumi
+    cmsLumi = float(os.getenv('LUMI'))/1000
+    print "Lumi = %.1f / fb" % cmsLumi
     
     mssmMass = 250
     azhMass = 350
@@ -226,7 +230,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     if samp in ['zl', 'zj'] : continue
                 if analysis == 'htt' and channel == 'tt' :
                     if samp == 'zll' : continue
-                sampHistos[samp] = ROOT.TH1F("All Backgrounds %s %s" % (samp, append), samp, xNum, xBins )
+                sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s" % (samp, append), samp, xNum, xBins )
                 sampHistos[samp].Sumw2()
                 sampHistos[samp].SetFillColor( sampInfo[analysis][samp][0] )
                 sampHistos[samp].SetLineColor( ROOT.kBlack )
@@ -291,7 +295,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                     preHist.Scale( ops['qcdSF'] )
                     #print "QCD yield: %f" % preHist.Integral()
-                    hist = ROOT.TH1F( preHist )
+                    hist = ROOT.TH1D( preHist )
                 else :
                     hist = preHist.Rebin( xNum, "rebinned", xBins )
     
@@ -364,7 +368,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             if qcdMake :
-                qcdVar = ROOT.TH1F( var, 'qcd%s%s' % (append,var), xNum, xBins )
+                qcdVar = ROOT.TH1D( var, 'qcd%s%s' % (append,var), xNum, xBins )
                 qcdVar.Sumw2()
                 qcdVar.Add( sampHistos['obs'] )
                 qcdVar.Add( -1 * stack.GetStack().Last() )
@@ -409,7 +413,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioPad.SetBottomMargin(0.3)
                 pad1.SetBottomMargin(0.00)
                 ratioPad.SetGridy()
-                ratioHist = ROOT.TH1F('ratio %s' % append, 'ratio', xNum, xBins )
+                ratioHist = ROOT.TH1D('ratio %s' % append, 'ratio', xNum, xBins )
                 ratioHist.Sumw2()
                 ratioHist.Add( sampHistos['obs'] )
                 ratioHist.Divide( stack.GetStack().Last() )
@@ -423,7 +427,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioHist.Draw('ex0')
 
                 """ Add uncertainty bands on ratio """
-                er = ROOT.TH1F("er %s" % append, "er", xNum, xBins )
+                er = ROOT.TH1D("er %s" % append, "er", xNum, xBins )
                 er.Sumw2()
                 er.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( er.GetNbinsX()+1 ) :
@@ -466,7 +470,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.GetYaxis().SetTitle("Events")
             else :
                 stack.GetYaxis().SetTitle("Events / %s%s" % (str(round(stack.GetStack().Last().GetBinWidth(1),1)), info[ 5 ])  )
-            stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % cmsLumi )
     
 
             # Set axis and viewing area
@@ -500,9 +503,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             chan.SetTextSize(0.05)
             chan.DrawLatexNDC(.2, .84,"Channel: %s" % chans[channel] )
     
-            lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
+            lumi = ROOT.TText(.7,1.05,"X fb^{-1} (13 TeV)")
             lumi.SetTextSize(0.03)
-            lumi.DrawTextNDC(.7,.96,"15.9 / fb (13 TeV)" )
+            lumi.DrawTextNDC(.7,.96,"%.1f / fb (13 TeV)" % cmsLumi )
     
 
             ''' Random print outs on plots '''
@@ -528,7 +531,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             Add uncertainty bands on background stack
             """
             if ops['addUncert'] :
-                e1 = ROOT.TH1F("e1 %s" % append, "e1", xNum, xBins )
+                e1 = ROOT.TH1D("e1 %s" % append, "e1", xNum, xBins )
                 e1.Sumw2()
                 e1.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( e1.GetNbinsX()+1 ) :

@@ -5,7 +5,7 @@ from ROOT import gPad
 
 # Make a histo, but fill it later so we can keep track of events for ALL histos at once
 def makeHisto( cutName, varBins, varMin, varMax ) :
-    hist = ROOT.TH1F( cutName, cutName, varBins, varMin, varMax )
+    hist = ROOT.TH1D( cutName, cutName, varBins, varMin, varMax )
     return hist
 
 
@@ -125,6 +125,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         #print var,es
         #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
         totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
+        #print totalCutAndWeightMC
 
 
         # Check if the variable to plot is in the chain, if not, skip it
@@ -179,12 +180,12 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
-            'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
-            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
-            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
-            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
-            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
-            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
+#            'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
+#            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
+#            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
+#            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
+#            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
+#            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
             #'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
             #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
             #'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
@@ -259,23 +260,23 @@ def getHistoDict( analysis, channel ) :
         if channel == 'tt' :
             chanVarMapTT = {
                 'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
-                'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
+#                'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
                 'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
-                'iso_1' : (200, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
-                'chargedIsoPtSum_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'),
-                'chargedIsoPtSum_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'),
-                'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
-                'chargedIsoPtSumdR03_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'),
+#                'iso_1' : (200, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
+#                'chargedIsoPtSum_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'),
+#                'chargedIsoPtSum_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'),
+#                'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
+#                'chargedIsoPtSumdR03_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'),
                 'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
-                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
-                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
-                'iso_2' : (200, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
-                'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
-                #'t1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
-                'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
-                'decayMode_2' : (15, 0, 15, 1, 't2 Decay Mode', ''),
-                #'t2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
-                'm_2' : (60, 0, 3, 4, 't2 Mass', ' GeV'),
+#                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
+#                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
+#                'iso_2' : (200, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
+#                'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
+#                #'t1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
+#                'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
+#                'decayMode_2' : (15, 0, 15, 1, 't2 Decay Mode', ''),
+#                #'t2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
+#                'm_2' : (60, 0, 3, 4, 't2 Mass', ' GeV'),
                 #'t1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
                 #'t1NeutralIsoPtSum' : (0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'),
                 #'t1PuCorrPtSum' : (0, 40, 4, 't1 PuCorrPtSum', ' GeV'),
