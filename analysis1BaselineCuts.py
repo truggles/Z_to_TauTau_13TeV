@@ -54,7 +54,7 @@ def skipChanDataCombo( channel, sample, analysis ) :
 
 
 #for sample in samples :
-def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, skimHdfs, skimmed, count, fileMin=0, fileMax=9999 ) :
+def initialCut( outFile, analysis, sample, samples, channel, cutMapper, svFitPrep, svFitPost, skimHdfs, skimmed, count, fileMin=0, fileMax=9999 ) :
     #print "initialCut fileMin: %i, fileMax %i" % (fileMin, fileMax)
     #treeOutDir = outFile.mkdir( path.split('/')[0] )
 
@@ -86,11 +86,14 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
     ''' Get channel specific general cuts '''
     #exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
     cutString = ''
+    isData = False
+    isReHLT = False
     if 'data' in sample :
         isData = True
-        cutString = analysisCuts.getCut( analysis, channel, cutMapper, isData )
-    else :
-        cutString = analysisCuts.getCut( analysis, channel, cutMapper )
+    elif 'reHLT' in samples[sample]['DASPath'] :
+        isReHLT = True
+        if analysis == 'Sync' : isReHLT = False # Want to keep trigger cut out for now
+    cutString = analysisCuts.getCut( analysis, channel, cutMapper, isData, isReHLT )
     	
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile
@@ -106,7 +109,7 @@ def initialCut( outFile, analysis, sample, channel, cutMapper, svFitPrep, svFitP
 
 
 
-def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost,skimHdfs,skimmed) :
+def runCuts(analysis, sample, samples, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,svFitPrep,svFitPost,skimHdfs,skimmed) :
 
     save = '%s_%i_%s' % (sample, count, channel)
     #print "save",save
@@ -121,7 +124,7 @@ def runCuts(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFiles
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
-    cutOut = initialCut( outFile1, analysis, sample, channel, cutMapper, svFitPrep, svFitPost, skimHdfs, skimmed, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
+    cutOut = initialCut( outFile1, analysis, sample, samples, channel, cutMapper, svFitPrep, svFitPost, skimHdfs, skimmed, count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
     initialQty = cutOut[2]
     postCutQty = cutOut[3]
     eventCount = cutOut[4]
@@ -225,6 +228,7 @@ def doInitialCuts(analysis, samples, **fargs) :
                 if not fargs['debug'] == 'true' :
                     multiprocessingOutputs.append( pool.apply_async(runCuts, args=(analysis,
                                                                                     sample,
+                                                                                    samples,
                                                                                     channel,
                                                                                     count,
                                                                                     num,
@@ -240,6 +244,7 @@ def doInitialCuts(analysis, samples, **fargs) :
                 if fargs['debug'] == 'true' :
                     runCuts(analysis,
                                                                                     sample,
+                                                                                    samples,
                                                                                     channel,
                                                                                     count,
                                                                                     num,
@@ -448,8 +453,7 @@ def drawHistos(analysis, samples, **fargs ) :
 
     
         sampF = ''
-        if svFitPost == 'true' : sampF = 'sv/'
-        if skimHdfs == 'true' : sampF = 'hdfs/'
+        if fargs['svFitPost'] == 'true' : sampF = 'sv/'
         if fargs['skimmed'] == 'true' : sampF = 'skimmed/'
         for subName in loopList :
             print "SubName:",subName
@@ -462,7 +466,7 @@ def drawHistos(analysis, samples, **fargs ) :
                 # Check if we should skip running over data set
                 if skipChanDataCombo( channel, sample, analysis ) : continue
 
-                if fargs['svFitPost'] == 'true' or fargs['skimHdfs'] == 'true' :
+                if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel) )
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
