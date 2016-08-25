@@ -132,27 +132,27 @@ def sampleDetails( analysis ) :
              'ggHtoTauTau120': {
                 'DASPath' : '/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 47.38 * 0.0698,
-                'group' : 'ggh'},
+                'group' : 'higgs'},
              'ggHtoTauTau125': {
                 'DASPath' : '/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 44.14 * 0.0627,
-                'group' : 'ggh'},
+                'group' : 'higgs'},
              'ggHtoTauTau130': {
                 'DASPath' : '/GluGluHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 41.23 * 0.0541,
-                'group' : 'ggh'},
+                'group' : 'higgs'},
              'VBFHtoTauTau120': {
                 'DASPath' : '/VBFHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.935 * 0.0698,
-                'group' : 'vbf'},
+                'group' : 'higgs'},
              'VBFHtoTauTau125': {
                 'DASPath' : '/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.782 * 0.0627,
-                'group' : 'vbf'},
+                'group' : 'higgs'},
              'VBFHtoTauTau130': {
                 'DASPath' : '/VBFHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.637 * 0.0541,
-                'group' : 'vbf'},
+                'group' : 'higgs'},
             #'DYJetsBig' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 4954.0 * 1.216229 ), 
         }, # end HTT
         'azh' : {

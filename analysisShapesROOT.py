@@ -100,10 +100,14 @@ samples['VV'] = ('kAzure-12', '_VV_')
 samples['QCD']        = ('kMagenta-10', '_QCD_')
 samples['data_tt']  = ('kBlack', '_data_obs_')
 samples['data_em']  = ('kBlack', '_data_obs_')
-samples['VBFHtoTauTau125'] = ('kGreen', '_ggH125_')
-samples['ggHtoTauTau125'] = ('kGreen', '_vbfH125_')
+samples['VBFHtoTauTau120'] = ('kGreen', '_vbf120_')
+samples['VBFHtoTauTau125'] = ('kGreen', '_vbf125_')
+samples['VBFHtoTauTau130'] = ('kGreen', '_vbf130_')
+samples['ggHtoTauTau120'] = ('kGreen', '_ggH120_')
+samples['ggHtoTauTau125'] = ('kGreen', '_ggH125_')
+samples['ggHtoTauTau130'] = ('kGreen', '_ggH130_')
 
-nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH125_','_vbfH125_']
+nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH120_','_ggH125_','_ggH130_','_vbfH120_','_vbfH125_','_vbfH130_']
 
 if options.mssm :
     masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
