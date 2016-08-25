@@ -48,7 +48,6 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
-            return scalar1 # FIXME
         else :
             scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
             #print "DYJets not in shortName, scalar1 =",scalar1
@@ -59,11 +58,10 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     #return scalar1 #XXX#
     
     """
-    Commented out for HT bin samples, we're switching to
-    jet binned samples
+    Using jet binned samples
     """
     # If inclusive sample
-    if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
+    if shortName in ['DYJets', 'WJets'] :
         binPartner = ''
         if numGenJets == 0 :
             return scalar1
@@ -78,10 +76,7 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
         else :
             return scalar1
 
-        if shortName in ['DYJetsBig','DYJets'] :
-            scalar2 = cmsLumi * sampDict[ 'DYJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'DYJets'+binPartner ]['summedWeightsNorm'] )
-        elif shortName == 'WJets' :
-            scalar2 = cmsLumi * sampDict[ 'WJets'+binPartner ]['Cross Section (pb)'] / ( sampDict[ 'WJets'+binPartner ]['summedWeightsNorm'] )
+        scalar2 = cmsLumi * sampDict[ shortName+binPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+binPartner ]['summedWeightsNorm'] )
         return (1.0/( (1./scalar1) + (1./scalar2) ))
 
     # If exclusive sample
@@ -314,8 +309,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     muonSF = MuonSF()
     electronSF = ElectronSF()
 
-    #from util.zPtReweight import ZPtReweighter
-    #zPtWeighter = ZPtReweighter()
+    from util.zPtReweight import ZPtReweighter
+    zPtWeighter = ZPtReweighter()
 
     #cmssw_base = os.getenv('CMSSW_BASE')
     #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
@@ -1005,6 +1000,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'TightIso'
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
+                    if analysis == 'Sync' : tauIso == 'TightIso'
                     trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, t1Gen )
                     t2Gen = getattr( row, l2+'ZTTGenMatching' )
                     tauIso = 'NoIso'
@@ -1016,6 +1012,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'TightIso'
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
+                    if analysis == 'Sync' : tauIso == 'TightIso'
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, t2Gen )
                     tauIDweight_1[0] = 0.84
                     tauIDweight_2[0] = 0.84
@@ -1034,12 +1031,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
 
-                #if 'DYJets' in sample and 'Low' not in sample :
-                #    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
-                #        zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
+                if 'DYJets' in sample and 'Low' not in sample :
+                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
+                        zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
-                weight[0] *= zPtWeight[0]* topWeight[0]
+                #weight[0] *= zPtWeight[0]* topWeight[0]
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
@@ -1047,7 +1044,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
                 # Special weighting for WJets and DYJets
-                if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
+                if shortName in ['DYJets', 'WJets'] :
                     xsec = getXSec( analysis, shortName, sampDict, row.numGenJets )
                     if xsec not in xsecList : xsecList.append( xsec )
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
@@ -1069,7 +1066,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             count2 += 1
 
     # For xsec debugging:
-    #if shortName in ['DYJets', 'DYJetsBig', 'WJets'] :
+    #if shortName in ['DYJets', 'WJets'] :
         #print "Cross Sections in sample: ",xsecList
 
 
