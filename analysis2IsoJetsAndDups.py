@@ -35,7 +35,7 @@ prodMap = {
     'mmmm' : ('m1', 'm2', 'm3', 'm4'),
 }
 
-
+#XXX XXX XXX FIXME so that this does N Jet binned correct once we have ReHLT
 def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
     if 'data' in shortName : return 1.0 #XXX#
@@ -44,9 +44,11 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
         if shortName in ['DYJets', 'DYJets'] or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
             scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ]['summedWeightsNorm'] # removing LO small DYJets
+            return scalar1 # FIXME
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
+            return scalar1 # FIXME
         else :
             scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
             #print "DYJets not in shortName, scalar1 =",scalar1
@@ -312,8 +314,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     muonSF = MuonSF()
     electronSF = ElectronSF()
 
-    from util.zPtReweight import ZPtReweighter
-    zPtWeighter = ZPtReweighter()
+    #from util.zPtReweight import ZPtReweighter
+    #zPtWeighter = ZPtReweighter()
 
     #cmssw_base = os.getenv('CMSSW_BASE')
     #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
@@ -1032,10 +1034,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
 
-                zPtWeight[0] = 1
-                if 'DYJets' in sample and 'Low' not in sample :
-                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
-                        zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
+                #if 'DYJets' in sample and 'Low' not in sample :
+                #    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
+                #        zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
                 weight[0] *= zPtWeight[0]* topWeight[0]
