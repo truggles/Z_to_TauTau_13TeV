@@ -363,6 +363,20 @@
     "nNtupleFiles": 1, 
     "nlumis": 1003
   }, 
+  "DYJetsAMCNLO": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 28654912, 
+    "DAS Path": "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM", 
+    "nfiles": 1185, 
+    "nblocks": 33, 
+    "Cross Section (pb)": 6025.198466, 
+    "summedWeightsNorm": 19195771.683960214, 
+    "summedWeights": 450014611295.0, 
+    "nevents": 49877138, 
+    "nNtupleFiles": 2, 
+    "nlumis": 721082
+  },
   "DYJets": {
     "STATUS": "Error", 
     "DAS status": "ok", 

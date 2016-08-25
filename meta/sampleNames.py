@@ -102,7 +102,7 @@ def sampleDetails( analysis ) :
                 'xsec' : 485.6 * 1.221252,
                 'group' : 'wjets'},
             'DYJetsAMCNLO' :     { 
-                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xMAOD2, 
                 'xsec' : 4954.0 * 1.216229,
                 'group' : 'dyj'},
             'DYJets' :     { 
