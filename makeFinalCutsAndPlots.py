@@ -50,7 +50,8 @@ def testQCDCuts( folder, samples, isoL, isoT, sign ) :
         'skimmed' : skimmed,
     }
 
-    isoL2loose = '(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
+    #XXX isoL2loose = '(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
+    isoL2loose = '(byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
     isoL1TL2loose = '(byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
     isoL1ML2loose = '(byMediumIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
     isoL1LL2loose = '(byLooseIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
@@ -61,7 +62,8 @@ def testQCDCuts( folder, samples, isoL, isoT, sign ) :
     isoPt2GtrL1ML2loose = '(pt_1 < pt_2)*(byMediumIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
 
     if isoL == '' :
-        isoL2loose = '(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
+        #XXX isoL2loose = '(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
+        isoL2loose = '(byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
         isoL1TL2loose = isoL2loose
         isoL1ML2loose = isoL2loose
         isoL1LL2loose = isoL2loose
@@ -71,7 +73,7 @@ def testQCDCuts( folder, samples, isoL, isoT, sign ) :
     else : 
         Zsign = 1
         
-    print "IsoL2Loose: %s" % isoL2loose
+    print "\n\nIsoL2Loose: %s\n\n" % isoL2loose
 
     """
     Double Hardonic baseline with good QCD estimation
@@ -94,7 +96,7 @@ def testQCDCuts( folder, samples, isoL, isoT, sign ) :
     params['channels'] = ['tt',]
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
     #params['additionalCut'] = '*(Z_SS==%i)*%s*(pt_1 > 60 && pt_2 > 60)' % (Zsign, isoL1ML2loose)
-    params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1TL2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     import analysis3Plots
     from meta.sampleNames import returnSampleDetails
@@ -199,11 +201,13 @@ if __name__ == '__main__' :
     isoPairs = [
 #        ('Loose','Medium'),
         #('Loose','Tight'),
-        ('Loose','VTight'),
+        #XXX('Loose','VTight'),
+        ('Loose','Tight'),
 #        ('Medium','Tight'),
         #('Medium','VTight'),
 #        ('Tight','VTight'),
-        ('','VTight'),
+        #XXX('','VTight'),
+        ('','Tight'),
     ]
 
     for pair in isoPairs :

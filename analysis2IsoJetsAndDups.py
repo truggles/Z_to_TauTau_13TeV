@@ -41,7 +41,7 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
-        if shortName in ['DYJets', 'DYJets'] or shortName[:6] == 'DYJets' :
+        if shortName in ['DYJets',] or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
             scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ]['summedWeightsNorm'] # removing LO small DYJets
             return scalar1 # FIXME

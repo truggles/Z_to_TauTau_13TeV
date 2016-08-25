@@ -39,7 +39,7 @@ extraVetoTT   = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0'
 DecayMode = 't1DecayModeFinding == 1 && t2DecayModeFinding == 1'
 ttKin   = 't1Pt > 37 && t1AbsEta < 2.1 && t2Pt > 37 && t2AbsEta < 2.1'
 ttKinOld   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
-ttKinTES   = '(t1Pt*1.03) > 40 && t1AbsEta < 2.1 && (t2Pt*1.03) > 40 && t2AbsEta < 2.1'
+ttKinTES45   = '(t1Pt*1.03) > 45 && t1AbsEta < 2.1 && (t2Pt*1.03) > 45 && t2AbsEta < 2.1'
 ttKinLoose   = 't1Pt > 35 && t1AbsEta < 2.1 && t2Pt > 35 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
@@ -138,7 +138,7 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
             'syncCutsDCqcd' : [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
-            'syncCutsDCqcdTES' : [ttKinTES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
+            'syncCutsDCqcdTES' : [ttKinTES45, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
             # Selection which only does baseline for sync sample
             'syncCutsNtuple' : [ttKinOld, ttCharge, ttDR, ttVtx, tt35, DecayMode],
             #'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
@@ -210,10 +210,10 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
 
     # Remove trigger requirements if MC except reHLT samples
     if not isData :
-        if not isReHLT : 
-            for trig in triggers :
-                if trig in cuts1 :
-                    cuts1.remove( trig )
+        #if not isReHLT : 
+        for trig in triggers :
+            if trig in cuts1 :
+                cuts1.remove( trig )
 
     prodMap = {
         'em' : ('e', 'm'),
