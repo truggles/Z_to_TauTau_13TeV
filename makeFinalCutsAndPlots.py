@@ -16,11 +16,15 @@ import subprocess
 
 p = argparse.ArgumentParser(description="A script to apply additional cuts and plot.")
 p.add_argument('--folder', action='store', default='xxx', dest='folder', help="What is the full folder name for extracting root files?")
+p.add_argument('--skimmed', action='store', default='false', dest='skimmed', help="Using skimmed samples?")
+p.add_argument('--samples', action='store', dest='samples', nargs='+', type=str, help="Pass in a list of space separated samples")
 options = p.parse_args()
 folder = options.folder
+skimmed = options.skimmed
+samples = options.samples
+print "samples: ",samples
 
-
-def testQCDCuts( folder, isoL, isoT, sign ) :
+def testQCDCuts( folder, samples, isoL, isoT, sign ) :
     if folder == 'xxx' :
         print "ERROR: Folder was not choosen"
         return
@@ -33,17 +37,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
     
     
     ''' Preset samples '''
-    SamplesDataCards = ['dataEM', 'dataTT', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # As of April24, removed LO DYJets small sample and DYJets m-150
-    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT'] # As of April23, removed DYJets LO small sample
     
-    #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
-    #for mass in masses :
-    #       SamplesDataCards.append( 'ggH%i' % mass )
-    #       SamplesDataCards.append( 'bbH%i' % mass )
-    #SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh',] # As of April03
-    #SamplesDataCards = ['DYJets',] # As of April03
-    #SamplesDataCards = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4'] # As of April03
-    samples = SamplesDataCards
     params = {
         'numCores' : 5,
         'numFilesPerCycle' : 10,
@@ -53,6 +47,7 @@ def testQCDCuts( folder, isoL, isoT, sign ) :
         'additionalCut' : '',
         'svFitPost' : 'false',
         'doFRMthd' : 'false',
+        'skimmed' : skimmed,
     }
 
     isoL2loose = '(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoT, isoL)
@@ -213,7 +208,7 @@ if __name__ == '__main__' :
 
     for pair in isoPairs :
         for sign in ['OS', 'SS']:
-            testQCDCuts( folder, pair[0], pair[1], sign )
+            testQCDCuts( folder, samples, pair[0], pair[1], sign )
 
 #XXX    testQCDCuts( folder, '', 'VTight', 'OS' )
 
