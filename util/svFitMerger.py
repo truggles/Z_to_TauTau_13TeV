@@ -15,7 +15,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
 		print size, " KB ", file_
 		runningSize += size
 		toMerge.append( file_ )
-		if runningSize > 25000 :
+		if runningSize > 7500 : # 7.5 MB is reasonal for doing duplicate removal later
 			runningSize = 0
 			mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
 			for f in toMerge :
@@ -63,9 +63,10 @@ if __name__ == '__main__' :
 	#		mergeSample( jobId, sample, channel, origianlDir, targetDir )
 
 	# HTT Aug 23, hdfs -> UW
-	samples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
-	originalDir = '/nfs_scratch/truggles/httAug23'
-	targetDir = '/nfs_scratch/truggles/httAug23Merged'
+	samples = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
+	samples = ['DYJetsAMCNLO', 'dataTT']
+	originalDir = '/nfs_scratch/truggles/httAug24'
+	targetDir = '/nfs_scratch/truggles/httAug24Merged'
 	jobId = ''
 	channel = 'tt'
 	for sample in samples :
