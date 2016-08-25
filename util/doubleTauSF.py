@@ -64,7 +64,7 @@ class DoubleTau35Efficiencies :
     def doubleTauTriggerEff(self, pt, iso, genCode ) :
 
         # For Sync, they want all taus considered as "VTight" 
-        #iso = 'TightIso'
+        iso = 'TightIso'
 
 
         if genCode == 5 : # Real Hadronically decay Tau
