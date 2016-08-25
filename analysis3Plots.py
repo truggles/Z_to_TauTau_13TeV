@@ -59,8 +59,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 del samples[ dyJet ]
         samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
-        # Don't plot sm higgs 120, 130 and cut out WJets b jet binned for the moment
-        smHiggs = ['ggHtoTauTau120', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau130', 'WJets1', 'WJets2', 'WJets3', 'WJets4']
+        # Don't plot sm higgs 120, 130
+        smHiggs = ['ggHtoTauTau120', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau130']
         for higgs in smHiggs :
             if higgs in samples : del samples[ higgs ]
 
@@ -246,8 +246,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print sample
                 #print samples[sample]
     
-                ''' Skip plotting unused shape systematics '''
-                if skipSystShapeVar( var, sample, channel ) : continue
+                ''' Shape systematics are plotted with their 
+                    unshifted counterparts '''
+                getVar = var
+                if skipSystShapeVar( var, sample, channel ) :
+                    breakUp = var.split('_')
+                    breakUp.pop()
+                    getVar = '_'.join(breakUp)
     
                 # Remember data samples are called 'dataEE' and 'dataMM'
                 if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and sample == 'dataMM' : continue
@@ -288,7 +293,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
                 dic = tFile.Get("%s_Histos" % channel )
-                preHist = dic.Get( var )
+                preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
     
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :

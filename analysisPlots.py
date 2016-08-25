@@ -38,14 +38,14 @@ def ESCuts( sample, channel, var ) :
     if len( channel ) == 4 : return '*(1)'
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
         if channel == 'tt' :
-            return '*(pt_1 > 40 && pt_2 > 40)'
+            return '*(pt_1 > 45 && pt_2 > 45)'
         if channel == 'em' :
             return '*(pt_1 > 13 && pt_2 > 10)'
     ESMap = {
         'tt' : { 
-            '_energyScaleUp' : '*((pt_1*1.03) > 40 && (pt_2*1.03) > 40)',
-            '_energyScaleDown' : '*((pt_1*0.97) > 40 && (pt_2*0.97) > 40)',
-            '_NoShift' : '*(pt_1 > 40 && pt_2 > 40)'},
+            '_energyScaleUp' : '*((pt_1*1.03) > 45 && (pt_2*1.03) > 45)',
+            '_energyScaleDown' : '*((pt_1*0.97) > 45 && (pt_2*0.97) > 45)',
+            '_NoShift' : '*(pt_1 > 45 && pt_2 > 45)'},
         'em' : { 
             '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
             '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
@@ -122,9 +122,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         xsec = '*(XSecLumiWeight)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
-        #print var,es
-        #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
+        #print var,shapeSyst
+        #additionalCut += '*(Z_Pt>100)'
+        #additionalCut += '*(chargedIsoPtSum_2 < 0.5)'
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
+        #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
         #print totalCutAndWeightMC
 
 
@@ -132,9 +134,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # don't crash on systematics based variables
         varBase = var
         if 'Up' in var or 'Down' in var :
-            varBase = var.split('_')[0]
-        if '_sv' in var :
-            varBase += '_sv'
+            tmp = varBase.split('_')
+            tmp.pop()
+            varBase = '_'.join(tmp)
+                
         #print "Var: %s   VarBase: %s" % (var, varBase)
 
         ### Make sure that if we have no events
@@ -149,14 +152,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
-                chain.Draw( '%s>>%s' % (var, var), '1%s%s' % (additionalCut, dataES) )
+                chain.Draw( '%s>>%s' % (varBase, var), '1%s%s' % (additionalCut, dataES) )
                 histos[ var ] = gPad.GetPrimitive( var )
                 if var == 'm_vis' :
                     print 'm_vis'
                     print "Data Count:", histos[ var ].Integral()
             else :
 
-                chain.Draw( '%s>>%s' % (var, var), '%s' % totalCutAndWeightMC )
+                chain.Draw( '%s>>%s' % (varBase, var), '%s' % totalCutAndWeightMC )
                 ''' No reweighting at the moment! '''
                 histos[ var ] = gPad.GetPrimitive( var )
                 integralPost = histos[ var ].Integral()
@@ -207,7 +210,7 @@ def getHistoDict( analysis, channel ) :
             'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
             #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
-            'm_vis' : (350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
+            'm_vis' : [350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'m_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -221,16 +224,20 @@ def getHistoDict( analysis, channel ) :
 
         ''' added shape systematics '''
         #toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
-        #varsForShapeSyst = []
-        #for item in toAdd :
-        #    varsForShapeSyst.append( item )
-        #    varsForShapeSyst.append( item+'_mssm' )
+        toAdd = ['m_vis',]
+        varsForShapeSyst = []
+        for item in toAdd :
+            varsForShapeSyst.append( item )
+            #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        #for var in genVarMap.keys() :
-        #    if var in varsForShapeSyst :
-        #        for shape in shapesToAdd :
-        #            genVarMap[ var+'_'+shape+'Up' ] = genVarMap[ var ]
-        #            genVarMap[ var+'_'+shape+'Down' ] = genVarMap[ var ]
+        shapesToAdd = ['energyScale',]
+        for var in genVarMap.keys() :
+            if var in varsForShapeSyst :
+                for shape in shapesToAdd :
+                    genVarMap[ var+'_'+shape+'Up' ] = list(genVarMap[ var ])
+                    genVarMap[ var+'_'+shape+'Up' ][4] = genVarMap[ var+'_'+shape+'Up' ][4]+' TES UP'
+                    genVarMap[ var+'_'+shape+'Down' ] = list(genVarMap[ var ])
+                    genVarMap[ var+'_'+shape+'Down' ][4] = genVarMap[ var+'_'+shape+'Down' ][4]+' TES Down'
         #    
 
         if channel == 'em' :
@@ -268,15 +275,15 @@ def getHistoDict( analysis, channel ) :
 #                'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
 #                'chargedIsoPtSumdR03_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'),
                 'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
-#                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
-#                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
-#                'iso_2' : (200, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
-#                'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
-#                #'t1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
-#                'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
-#                'decayMode_2' : (15, 0, 15, 1, 't2 Decay Mode', ''),
-#                #'t2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
-#                'm_2' : (60, 0, 3, 4, 't2 Mass', ' GeV'),
+                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
+                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
+                'iso_2' : (200, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
+                'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
+                #'t1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
+                'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
+                'decayMode_2' : (15, 0, 15, 1, 't2 Decay Mode', ''),
+                #'t2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
+                'm_2' : (60, 0, 3, 4, 't2 Mass', ' GeV'),
                 #'t1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
                 #'t1NeutralIsoPtSum' : (0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'),
                 #'t1PuCorrPtSum' : (0, 40, 4, 't1 PuCorrPtSum', ' GeV'),
