@@ -225,7 +225,6 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 for i in range( 36 ) :
                     binArray.append( i * 10 )
                 #binArray.append( 600 )
-            print binArray
             numBins = len( binArray ) - 1
             histos = {}
             for name in nameArray :

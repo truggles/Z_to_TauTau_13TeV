@@ -28,7 +28,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'blind' : True,
     'text' : False,
     'mssm' : False,
-    'log' : False,}
+    'log' : False,
+    'targetDir' : ''}
 
     '''python analysis3Plots.py --folder=2June26_OSl1ml2_VTight_ZTT --channel=tt --text=True --useQCDMake=True --useQCDMakeName=OSl1ml2_VTight_LooseZTT --qcdSF=0.147 --btag=False'''
 
@@ -36,7 +37,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         #print "another keyword arg: %s: %s" % (key, kwargs[key])
         if key in ops.keys() :
              ops[key] = kwargs[key]
-
     print ops
 
 
@@ -150,7 +150,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         checkDir( '%sPlots/tt' % analysis )
         checkDir( '%sPlotsList/em' % analysis )
         checkDir( '%sPlotsList/tt' % analysis )
-        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (analysis, channel), 'w')
+        checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir']))
+        checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/' % (analysis, channel, ops['targetDir']))
+        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/index.html' % (analysis, channel, ops['targetDir']), 'w')
         htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
         htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
         htmlFile.write( '<body>\n' )
@@ -571,8 +573,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
     
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (analysis, channel, var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (analysis, channel, var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
     
     
             """ Additional views for Visible Mass """

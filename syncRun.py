@@ -72,7 +72,7 @@ import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
