@@ -35,8 +35,6 @@ os.chdir('..')
 ''' Uncomment to make pile up vertex templates! '''
 ''' Not needed with HTT provided pu templates '''
 #from util.pileUpVertexCorrections import makeDataPUTemplate, makeMCPUTemplate, makeDYJetsPUTemplate
-#if not os.path.exists( 'meta/PileUpInfo' ) : 
-#    os.makedirs( 'meta/PileUpInfo' )
 #makeMCPUTemplate()
 #makeDataPUTemplate( lumiCert, puJson ) 
 #makeDYJetsPUTemplate( analysis )

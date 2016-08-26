@@ -9,7 +9,7 @@ import math
 # New minBias xsec: https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/613/2/1/1/1.html
 def makeDataPUTemplate( cert, puJson ) :
     zHome = os.getenv('_ZHOME_')
-    os.chdir( zHome + 'meta/PileUpInfo/' )
+    os.chdir( zHome + 'data/PileUpInfo/' )
     executeArray = [
         'pileupCalc.py',
         '-i',
@@ -90,17 +90,17 @@ def makeMCPUTemplate( ) :
     for i in range( 1, (nBins*10)+1 ) :
         #print "bin: %i, MC position: %i" % (i, math.floor((i-1)/10) )
         dHist.SetBinContent( i, MCDist[ (i-1)/10 ] )
-    dHist.SaveAs('meta/PileUpInfo/MCTemplate.root')
+    dHist.SaveAs('data/PileUpInfo/MCTemplate.root')
 
 
 
 def PUreweight() :
     # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2015#PU_reweighting
-    datafile = ROOT.TFile('meta/PileUpInfo/DataTemplate.root', 'READ')
+    datafile = ROOT.TFile('data/PileUpInfo/DataTemplate.root', 'READ')
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 
-    samplefile = ROOT.TFile('meta/PileUpInfo/MCTemplate.root', 'READ')
+    samplefile = ROOT.TFile('data/PileUpInfo/MCTemplate.root', 'READ')
     sHist = samplefile.Get('pileup')
     sHist.Scale( 1 / sHist.Integral() )
 
