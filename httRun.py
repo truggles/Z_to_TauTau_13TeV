@@ -110,64 +110,73 @@ makeFinalPlots = True
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
+
+cats = ['', '0Jet', '1Jet', 'VBF',]
+
 if runPlots :
     process = ["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2'], "--skimmed=%s" % params['skimmed'], "--samples"]
     for sample in samples.keys() :
         process.append( sample )
     """ Make our folders with directories of histos for each bkg """
     subprocess.call( process )
+
    
 if makeQCDBkg :    
     qcdYields = {}
     for sign in ['SS', 'OS'] :
         #XXX for name in ['VTight_Loose', 'VTight_'] :
         for name in ['Tight_Loose', 'Tight_'] :
-            ROOT.gROOT.Reset()
-            kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT', }
-            folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'
-            qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
-            qcdYields[ sign+name ] = qcdYield
+            for cat in cats :
+                ROOT.gROOT.Reset()
+                kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT'+cat, }
+                folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'+cat
+                qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
+                qcdYields[ sign+name+cat ] = qcdYield
     
     print qcdYields
-    #XXX looseToTightRatio = qcdYields['SSVTight_'] / qcdYields['SSVTight_Loose']
-    looseToTightRatio = qcdYields['SSTight_'] / qcdYields['SSTight_Loose']
     qcdFile = open('httQCDYields_%s.txt' % params['mid2'],'w')
-    qcdFile.write( str(looseToTightRatio)+"\n" )
+    for cat in cats :
+        qcdSF = qcdYields['SSTight_'+cat] / qcdYields['SSTight_Loose'+cat]
+        qcdFile.write( cat+":"+str(qcdSF)+"\n" )
     for key in qcdYields :
         qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
     qcdFile.close()
     
 
-""" QCD SF for final plots / DCs """
-ROOT.gROOT.Reset()
-qcdSF = 1.0
-with open('httQCDYields_%s.txt' % params['mid2']) as qcdFile :
-    cnt = 0
-    for line in qcdFile :
-        qcdSF = float(line)
-        break
-print "Calculated QCD SF: ",qcdSF
 
 
 if makeFinalPlots :
-    #XXX kwargs = { 'text':text, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_VTight_LooseZTT', 'qcdSF':qcdSF }
-    #XXX analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_VTight_ZTT' % params['mid2'], **kwargs  )
-    kwargs = { 'text':text, 'useQCDMake':True, 'useQCDMakeName':'OSl1ml2_Tight_LooseZTT', 'qcdSF':qcdSF }
-    analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], '%s_OSl1ml2_Tight_ZTT' % params['mid2'], **kwargs  )
+    from util.helpers import getQCDSF
+    for cat in cats :
+        ROOT.gROOT.Reset()
+        qcdSF = getQCDSF( 'httQCDYields_%s.txt' % params['mid2'], cat )
+        tDir = cat
+        if cat == '' : tDir = 'inclusive'
+        kwargs = { 'text':text, 'useQCDMake':True, 
+            'useQCDMakeName':'OSl1ml2_Tight_LooseZTT'+cat, 'qcdSF':qcdSF,
+            'targetDir':'/'+tDir }
+        analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], 
+            params['mid2']+'_OSl1ml2_Tight_ZTT'+cat, **kwargs  )
     
     
 if makeDataCards :
+    ROOT.gROOT.Reset()
+    from util.helpers import getQCDSF
     from analysisShapesROOT import makeDataCards
-    folderDetails = '%s_OSl1ml2_Tight_ZTT' % params['mid2']
-    kwargs = {
-    'useQCDMakeName' : '%s_OSl1ml2_Tight_LooseZTT' % params['mid2'],
-    'qcdSF' : qcdSF,
-    'category' : 'inclusive',
-    'fitShape' : 'm_vis',
-    'ES' : True,
-    }
-    makeDataCards( analysis, samples, ['tt',], folderDetails, **kwargs )
+    for cat in cats :
+        qcdSF = getQCDSF( 'httQCDYields_%s.txt' % params['mid2'], cat )
+        fitShape = cat
+        if cat == '' : fitShape = 'inclusive'
+        folderDetails = params['mid2']+'_OSl1ml2_Tight_ZTT'+cat
+        kwargs = {
+        'useQCDMakeName' : params['mid2']+'_OSl1ml2_Tight_LooseZTT'+cat,
+        'qcdSF' : qcdSF,
+        'category' : fitShape,
+        'fitShape' : 'm_vis',
+        'ES' : True,
+        }
+        makeDataCards( analysis, samples, ['tt',], folderDetails, **kwargs )
 
 
 
