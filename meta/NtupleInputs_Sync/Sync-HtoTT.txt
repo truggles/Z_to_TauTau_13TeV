@@ -1,6 +1,6 @@
-/data/truggles/httSyncReHLTAug21/make_ntuples_cfg-66445A95-3151-E611-AA07-0090FAA579F0.root
-/data/truggles/httSyncReHLTAug21/make_ntuples_cfg-8EBF2F49-5551-E611-A76B-0CC47A1E046A.root
-/data/truggles/httSyncReHLTAug21/make_ntuples_cfg-C60106AA-3F51-E611-92E1-00259073E42E.root
-/data/truggles/httSyncReHLTAug21/make_ntuples_cfg-CC21A5B7-3F51-E611-98B0-0025907B4F16.root
-/data/truggles/httSyncReHLTAug21/make_ntuples_cfg-DC070582-4751-E611-B401-002590D0B0B8.root
-/data/truggles/httSyncReHLTAug21/make_ntuples_cfg-E29D29F3-3851-E611-88F1-00259073E34E.root
+/hdfs/store/user/truggles/aug27_reHLT_htt_sync/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/make_ntuples_cfg-66445A95-3151-E611-AA07-0090FAA579F0.root
+/hdfs/store/user/truggles/aug27_reHLT_htt_sync/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/make_ntuples_cfg-8EBF2F49-5551-E611-A76B-0CC47A1E046A.root
+/hdfs/store/user/truggles/aug27_reHLT_htt_sync/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/make_ntuples_cfg-C60106AA-3F51-E611-92E1-00259073E42E.root
+/hdfs/store/user/truggles/aug27_reHLT_htt_sync/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/make_ntuples_cfg-CC21A5B7-3F51-E611-98B0-0025907B4F16.root
+/hdfs/store/user/truggles/aug27_reHLT_htt_sync/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/make_ntuples_cfg-DC070582-4751-E611-B401-002590D0B0B8.root
+/hdfs/store/user/truggles/aug27_reHLT_htt_sync/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/make_ntuples_cfg-E29D29F3-3851-E611-88F1-00259073E34E.root

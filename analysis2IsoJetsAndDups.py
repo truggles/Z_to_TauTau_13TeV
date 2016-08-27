@@ -655,10 +655,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
     #FFWeightQCD2_DOWN = array('f', [ 0 ] )
     #FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
-    #pzetamiss = array('f', [ 0 ] )
-    #pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
-    #pzeta = array('f', [ 0 ] )
-    #pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    pzetamiss = array('f', [ 0 ] )
+    pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    pzeta = array('f', [ 0 ] )
+    pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
     Z_DEta = array('f', [ 0 ] )
     Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
     #m_vis_UP = array('f', [ 0 ] )
@@ -671,10 +671,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
     #mt_tot_DOWN = array('f', [ 0 ] )
     #mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
-    #mt_1 = array('f', [ 0 ] )
-    #mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
-    #mt_2 = array('f', [ 0 ] )
-    #mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
+    mt_1 = array('f', [ 0 ] )
+    mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
+    mt_2 = array('f', [ 0 ] )
+    mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
@@ -701,6 +701,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     mvacov10B = tnew.Branch('mvacov10', mvacov10, 'mvacov10/F')
     mvacov11 = array('f', [ 0 ] )
     mvacov11B = tnew.Branch('mvacov11', mvacov11, 'mvacov11/F')
+    mvamet = array('f', [ 0 ] )
+    mvametB = tnew.Branch('mvamet', mvamet, 'mvamet/F')
+    mvametphi = array('f', [ 0 ] )
+    mvametphiB = tnew.Branch('mvametphi', mvametphi, 'mvametphi/F')
     gen_match_1 = array('f', [ 0 ] )
     gen_match_1B = tnew.Branch('gen_match_1', gen_match_1, 'gen_match_1/F')
     gen_match_2 = array('f', [ 0 ] )
@@ -711,6 +715,17 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     gen_match_4B = tnew.Branch('gen_match_4', gen_match_4, 'gen_match_4/F')
 
 
+    ''' Set MvaMet base vars defaults in case we didn't fill that value '''
+    mvacov00[0] = -999
+    mvacov10[0] = -999
+    mvacov01[0] = -999
+    mvacov11[0] = -999
+    mvamet[0] = -999
+    mvametphi[0] = -999
+    mt_1[0] = -999
+    mt_2[0] = -999
+    pzeta[0] = -999
+    pzetamiss[0] = -999
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -796,40 +811,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
             
-            if hasattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) ):
+            if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
                 mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
                 mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
                 mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
                 mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
-
-            # Channel specific pairwise mvaMet
-            #if channel == 'tt' :
-            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
-            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
-            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
-            #    else :
-            #        pzetamiss[0] = -9999
-            #        mt_1[0] = -9999
-            #        mt_2[0] = -9999
-            #if channel == 'em' :
-            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
-            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
-            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
-            #    else :
-            #        pzetamiss[0] = -9999
-            #        mt_1[0] = -9999
-            #        mt_2[0] = -9999
-            #if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
-            #    pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+                mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
+                mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
+                mt_1[0]= getTransMass( mvamet[0], mvametphi[0], pt1, phi1 )
+                mt_2[0]= getTransMass( mvamet[0], mvametphi[0], pt2, phi2 )
+                pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
+                if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+                    pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+            else : # Not l1_l2_MvaMet
+                mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
+                mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
 
 
             # With calculated transverse mass variables, do Mt_Total for mssm search
-            mt_1 = getattr( row, l1+'MtToPfMet_Raw' )
-            mt_2 = getattr( row, l2+'MtToPfMet_Raw' )
-            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1, mt_2 ) # Using wrong mt
-            #XXX mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
+            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
             #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
             #    mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
             #    mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
