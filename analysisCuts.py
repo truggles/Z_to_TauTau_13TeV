@@ -37,15 +37,15 @@ extraVeto   = 'eVetoZTTp001dxyz == 0 && muVetoZTTp001dxyz == 0'
 extraVetoTT   = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0'
 #DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
 DecayMode = 't1DecayModeFinding == 1 && t2DecayModeFinding == 1'
-ttKin   = 't1Pt > 37 && t1AbsEta < 2.1 && t2Pt > 37 && t2AbsEta < 2.1'
-ttKinOld   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
-ttKinTES45   = '(t1Pt*1.03) > 45 && t1AbsEta < 2.1 && (t2Pt*1.03) > 45 && t2AbsEta < 2.1'
-ttKinLoose   = 't1Pt > 35 && t1AbsEta < 2.1 && t2Pt > 35 && t2AbsEta < 2.1'
+ttKin37   = 't1Pt > 37 && t1AbsEta < 2.1 && t2Pt > 37 && t2AbsEta < 2.1'
+ttKin40   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
+ttKin40TES   = '(t1Pt*1.03) > 40 && t1AbsEta < 2.1 && (t2Pt*1.03) > 40 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
 tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1MatchesDoubleTau40Filter > 0 && t2MatchesDoubleTau40Filter > 0'
-tt35    = 'doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0'
+tt35    = 'doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0'
+tt32    = 'doubleTau32Pass > 0 && t1MatchesDoubleTau32Path > 0 && t2MatchesDoubleTau32Path > 0 && t1MatchesDoubleTau32Filter > 0 && t2MatchesDoubleTau32Filter > 0'
 # TT PostSync
 ttL1IsoTaus = 't1L1IsoTauMatch > 0 && t2L1IsoTauMatch > 0 && doubleL1IsoTauMatch > 0' # Used in 2015 for double tau trigger screw up
 ttOS    = 't1_t2_SS == 0'
@@ -53,7 +53,6 @@ ttSS    = 't1_t2_SS == 1'
 #ttIso   = 't1ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 && t2ByTightCombinedIsolationDeltaBetaCorr3Hits > 0.5'
 ttIso   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoTight   = 't1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByTightIsolationMVArun2v1DBoldDMwLT > 0.5'
-ttIsoLoose   = 't1ByIsolationMVArun2v1DBoldDMwLTraw > 0.0 && t2ByIsolationMVArun2v1DBoldDMwLTraw > 0.0'
 ttIsoLooseMVA   = 't1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoFakeFactor   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttDisc  = 't1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5'
@@ -124,32 +123,14 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     cutMap = { 
         'htt' : # analysis
         { 'tt' : {
-            # A version which applies all cuts at once RunII - NO SIGN SO WE CAN DO QCD
-            'signalCutsNoSign' : [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode],
             # A version which applies all cuts at once RunII
-            'signalCuts' : [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttIso, ttDisc, extraVetoTT, tt35, DecayMode],
-            # Data card sync, no Decay Mode cut 
-            'signalCutsNoIsoNoSign' : [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode],
-            # Baseline inclusive cuts with Sign applied
+            'signalCuts' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode],
             # Not isolation for full QCD estimation
-            'fakeFactorCutsTT' : [ttKin, ttCharge, ttDR, ttVtx, ttOS, ttDisc, extraVetoTT, tt35, DecayMode],
-            # Selection which only does baseline for sync data cards, NO SIGN for QCD
-            'syncCutsDC' : [ttKin, ttCharge, ttDR, ttVtx, ttIso, ttDisc, extraVetoTT, tt35, DecayMode],
+            'fakeFactorCutsTT' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttDisc, extraVetoTT, tt35, DecayMode],
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
-            'syncCutsDCqcd' : [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
-            # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
-            'syncCutsDCqcdTES' : [ttKinTES45, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
+            'syncCutsDCqcdTES' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
             # Selection which only does baseline for sync sample
-            'syncCutsNtuple' : [ttKinOld, ttCharge, ttDR, ttVtx, tt35, DecayMode],
-            #'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
-            'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
-            'syncCutsNtupleBuilding' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode, extraVetoTT, ttDisc, ttIsoTight, tt35],
-            'syncCutsNtupleLoose' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode, extraVetoTT, ttDisc, ttIsoLooseMVA, tt35],
-            # Selection which only does a loose version of the sync Ntuple cuts
-            # incase we need to do tau energy scaling later
-            'svFitCuts' : [ttKinLoose, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
-            # Selection which only does baseline for sync sample
-            'crazyCutsNtuple' : [ttKin, ttCharge, ttDR, ttVtx, tt35, DecayMode, 't1Pt>150&&t2Pt>150'],
+            'syncCutsNtuple' : [ttKin40, ttCharge, ttDR, ttVtx, tt35, DecayMode],
         }, # end tt channel
           'em' : {
             'syncCutsNtuple' : [emKin, emDR, emVtx, emTrig,],#'('+e23m8+'||'+m23e12+')'],
