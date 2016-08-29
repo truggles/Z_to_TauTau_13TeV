@@ -556,11 +556,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """ Blinding Data """
             if ops['blind'] :
                 if (analysis == 'htt' and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var or 'mt_tot' in var) ) or (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
-                    targetMass = 170
-                    if 'Mass' in var : targetMass = 220
+                    if ops['mssm'] :
+                        targetMass = 170
+                        targetMassUp = 9999
+                    else :
+                        targetMassLow = 60
+                        targetMassUp = 130
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( nBins+1 ) :
-                        if sampHistos['obs'].GetXaxis().GetBinLowEdge(k+1)>targetMass :
+                        if sampHistos['obs'].GetXaxis().GetBinLowEdge(k+1)>targetMassLow and \
+                        sampHistos['obs'].GetXaxis().GetBinLowEdge(k+1)<targetMassUp :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] :
