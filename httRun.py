@@ -42,14 +42,9 @@ os.chdir('..')
 
 ''' Preset samples '''
 SamplesData = ['dataTT',]
-#SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
-#SamplesDataCards = ['DYJets', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
-SamplesDataCards = ['DYJets', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
-
-
-#SamplesDataCards = ['dataTT','dataEM','DYJets']
-#SamplesDataCards = ['DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsHigh'] # LO DYJets
-#SamplesDataCards = ['DYJets4',]
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
+#SamplesDataCards = ['DYJets', 'DYJetsOld', 'DYJetsAMCNLO', 'DYJetsAMCNLOReHLT','dataTT',]  # All inclusive DYJets samples
+#SamplesDataCards = ['dataTT',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 samples = SamplesDataCards
 
@@ -65,12 +60,12 @@ params = {
     'numFilesPerCycle' : 1,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
-    'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    'mid1' : '1Aug25x5pt45b',
-    'mid2' : '2Aug25x5pt45b',
-    'mid3' : '3Aug25x5pt45b',
+    'cutMapper' : 'syncCutsDCqcdTES',
+    'mid1' : '1Aug29e20p1',
+    'mid2' : '2Aug29e20p1',
+    'mid3' : '3Aug29e20p1',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -150,8 +145,14 @@ if makeFinalPlots :
         ROOT.gROOT.Reset()
         qcdSF = getQCDSF( 'httQCDYields_%s.txt' % params['mid2'], cat )
         tDir = cat
-        if cat == '' : tDir = 'inclusive'
-        kwargs = { 'text':text, 'useQCDMake':True, 
+        blind = True
+        if cat == '' :
+            tDir = 'inclusive'
+            blind = False
+        if cat == '0Jet' :
+            blind = False
+        
+        kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
             'useQCDMakeName':'OSl1ml2_Tight_LooseZTT'+cat, 'qcdSF':qcdSF,
             'targetDir':'/'+tDir }
         analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], 
