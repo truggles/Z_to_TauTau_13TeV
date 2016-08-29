@@ -456,7 +456,7 @@ def drawHistos(analysis, samples, **fargs ) :
         if fargs['svFitPost'] == 'true' : sampF = 'sv/'
         if fargs['skimmed'] == 'true' : sampF = 'skimmed/'
         for subName in loopList :
-            print "SubName:",subName
+            #print "SubName:",subName
             if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
             elif subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
             else : saveName = sample.split('_')[0]
@@ -471,9 +471,9 @@ def drawHistos(analysis, samples, **fargs ) :
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
                 print "File len:",fileLen
-                print "Num files / cycle:",numFilesPerCycle
+                #print "Num files / cycle:",numFilesPerCycle
                 numIters = int( math.ceil( 1. * fileLen / numFilesPerCycle ) )
-                print "Num Iters: %i" % numIters
+                #print "Num Iters: %i" % numIters
 
 
                 print " ====>  Starting Plots For %s_%s_%s  <==== " % (analysis, saveName, channel)
@@ -492,7 +492,7 @@ def drawHistos(analysis, samples, **fargs ) :
                     if genMap[subName][channel] == '' : continue
                     if additionalCut == '' : additionalCut = genMap[subName][channel] 
                     else : additionalCut += genMap[subName][channel] 
-                print "AdditionalCuts",additionalCut
+                #print "AdditionalCuts",additionalCut
                 blind = False
                 analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind )
                 outFile.Close()

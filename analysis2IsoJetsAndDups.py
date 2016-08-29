@@ -37,16 +37,16 @@ prodMap = {
 
 #XXX XXX XXX FIXME so that this does N Jet binned correct once we have ReHLT
 def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
-    print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
-    if shortName == 'DYJetsAMCNLO' :
+    #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
+    if shortName == 'DYJetsAMCNLO' or shortName == 'DYJetsAMCNLOReHLT' or shortName == 'DYJetsOld' : # or shortName == 'DYJets' : # Uncomment last part to study relations between all 4
         return cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
     if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
-        if shortName in ['DYJets',] or shortName[:6] == 'DYJets' :
+        if 'DYJets' == shortName or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
             scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ]['summedWeightsNorm'] # removing LO small DYJets
-            return scalar1 # FIXME
+            #return scalar1 # FIXME
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
