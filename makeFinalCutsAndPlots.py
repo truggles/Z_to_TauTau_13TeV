@@ -22,6 +22,7 @@ options = p.parse_args()
 folder = options.folder
 skimmed = options.skimmed
 samples = options.samples
+print "Options Skimmed:",skimmed
 print "samples: ",samples
 
 def testQCDCuts( folder, samples, isoL, isoT, sign ) :
@@ -40,7 +41,7 @@ def testQCDCuts( folder, samples, isoL, isoT, sign ) :
     
     params = {
         'numCores' : 5,
-        'numFilesPerCycle' : 10,
+        'numFilesPerCycle' : 1,
         'channels' : ['tt',],
         'mid1' : '1Feb24a',
         'mid2' : folder,
