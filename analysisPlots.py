@@ -35,17 +35,19 @@ def skipSystShapeVar( var, sample, channel ) :
 
 # Make specific extra cuts for different TES requirements
 def ESCuts( sample, channel, var ) :
+    #tauPtCut = 45.
+    tauPtCut = 40.
     if len( channel ) == 4 : return '*(1)'
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
         if channel == 'tt' :
-            return '*(pt_1 > 45 && pt_2 > 45)'
+            return '*(pt_1 > %s && pt_2 > %s)' % (tauPtCut, tauPtCut)
         if channel == 'em' :
             return '*(pt_1 > 13 && pt_2 > 10)'
     ESMap = {
         'tt' : { 
-            '_energyScaleUp' : '*((pt_1*1.03) > 45 && (pt_2*1.03) > 45)',
-            '_energyScaleDown' : '*((pt_1*0.97) > 45 && (pt_2*0.97) > 45)',
-            '_NoShift' : '*(pt_1 > 45 && pt_2 > 45)'},
+            '_energyScaleUp' : '*((pt_1*1.03) > %s && (pt_2*1.03) > %s)' % (tauPtCut, tauPtCut),
+            '_energyScaleDown' : '*((pt_1*0.97) > %s && (pt_2*0.97) > %s)' % (tauPtCut, tauPtCut),
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s)' % (tauPtCut, tauPtCut)},
         'em' : { 
             '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
             '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
@@ -114,9 +116,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         sfs = '*(1)'
         if analysis == 'htt' :
             sfs = '*(weight)'
-            if channel == 'tt' :
+            #if channel == 'tt' :
                 # Not currently included in weight for sync ntuple
-                sfs += '*(tauIDweight_1 * tauIDweight_2)'
+                #sfs += '*(tauIDweight_1 * tauIDweight_2)'
+                #sfs += '*(0.9)'
         if analysis == 'azh' :
             sfs = '*(puweight*azhWeight)' 
         xsec = '*(XSecLumiWeight)'
@@ -157,6 +160,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if var == 'm_vis' :
                     print 'm_vis'
                     print "Data Count:", histos[ var ].Integral()
+                    #print "Cut: %s%s" % (additionalCut, dataES)
             else :
 
                 chain.Draw( '%s>>%s' % (varBase, var), '%s' % totalCutAndWeightMC )
@@ -166,6 +170,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if var == 'm_vis' :
                     print 'm_vis'
                     print "tmpIntPost: %f" % integralPost
+                    #print "Cut: %s" % totalCutAndWeightMC
 
         # didn't have var in chain
         else : 
@@ -183,6 +188,7 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
+            'mjj' : (50, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'),
             'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
             'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
             'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
@@ -191,8 +197,8 @@ def getHistoDict( analysis, channel ) :
             'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
             'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
             #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
-            #'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-            #'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
+            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
             'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
             'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
             'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
@@ -208,9 +214,9 @@ def getHistoDict( analysis, channel ) :
             'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
             #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
             'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
-            #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
+            'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
-            'm_vis' : [350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'],
+            'm_vis' : [35, 0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'m_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
