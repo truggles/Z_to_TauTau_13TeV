@@ -1,0 +1,3 @@
+/data/truggles/httAug28DYJetsStudy/DYJetsOld_0_tt.root
+/data/truggles/httAug28DYJetsStudy/DYJetsOld_1_tt.root
+/data/truggles/httAug28DYJetsStudy/DYJetsOld_2_tt.root

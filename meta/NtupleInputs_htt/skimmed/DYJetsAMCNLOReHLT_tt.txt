@@ -1,0 +1,5 @@
+/data/truggles/httAug28DYJetsStudy/DYJetsAMCNLOReHLT_0_tt.root
+/data/truggles/httAug28DYJetsStudy/DYJetsAMCNLOReHLT_1_tt.root
+/data/truggles/httAug28DYJetsStudy/DYJetsAMCNLOReHLT_2_tt.root
+/data/truggles/httAug28DYJetsStudy/DYJetsAMCNLOReHLT_3_tt.root
+/data/truggles/httAug28DYJetsStudy/DYJetsAMCNLOReHLT_4_tt.root

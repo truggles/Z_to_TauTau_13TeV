@@ -101,8 +101,16 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 485.6 * 1.221252,
                 'group' : 'wjets'},
+            'DYJetsAMCNLOReHLT' :     { 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80xReHLT, 
+                'xsec' : 4954.0 * 1.216229,
+                'group' : 'dyj'},
             'DYJetsAMCNLO' :     { 
                 'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2, 
+                'xsec' : 4954.0 * 1.216229,
+                'group' : 'dyj'},
+            'DYJetsOld' :     { 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xMAOD2, 
                 'xsec' : 4954.0 * 1.216229,
                 'group' : 'dyj'},
             'DYJets' :     { 
