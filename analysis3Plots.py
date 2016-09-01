@@ -293,6 +293,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
                 dic = tFile.Get("%s_Histos" % channel )
+
+                # Require var to be in file or print note and skip
+                keys = dic.GetListOfKeys()
+                inVars = []
+                for key in keys :
+                    inVars.append( key.GetName() )
+                if getVar not in inVars :
+                    print "\n\n"+getVar+" not in your root files!  Skipping...\n\n"
+                    continue
+
                 preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
     

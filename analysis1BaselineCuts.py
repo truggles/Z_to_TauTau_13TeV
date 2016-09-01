@@ -174,6 +174,7 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
 
 
 def doInitialCuts(analysis, samples, **fargs) :
+    assert isinstance(samples,dict)
 
     mergeMap = getMergeMap(analysis)
         
@@ -304,6 +305,7 @@ def doInitialCuts(analysis, samples, **fargs) :
 
 
 def doInitialOrder(analysis, samples, **fargs) :
+    assert isinstance(samples,dict)
 
     mergeMap = getMergeMap(analysis)
         

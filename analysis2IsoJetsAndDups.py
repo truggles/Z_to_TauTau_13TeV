@@ -159,7 +159,9 @@ def calcMTTotal( pt1, phi1, pt2, phi2, mt1, mt2 ) :
 
 
 def getTransMass( met, metphi, l1pt, l1phi ) :
-    return math.sqrt( 2 * l1pt * met * (1 - math.cos( l1phi - metphi)))
+    if met < 0. : metTmp = 0.
+    else : metTmp = met
+    return math.sqrt( 2 * l1pt * metTmp * (1 - math.cos( l1phi - metphi)))
 
 
 def getIso( cand, row ) :
