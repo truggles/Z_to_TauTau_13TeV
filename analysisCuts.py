@@ -88,11 +88,13 @@ mmIDL = 'LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 # ET Higgs
 eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.25 && e3MVANonTrigWP90 > 0'
 mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.25 && eMVANonTrigWP90 > 0'
+mmetEsync = 'ePt > 20 && abs(eEta) < 2.5 && eMVANonTrigWP90 > 0'
 xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1 && tAgainstElectronVLooseMVA6 == 1'
 eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
 mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
 # MT Higgs
 eemtM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB04 < 0.25 && mPFIDLoose > 0'
+eemtMsync = 'mPt > 10 && abs(mEta) < 2.4 && mPFIDLoose > 0'
 mmmtM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose > 0'
 xxmtT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1 && tAgainstMuonLoose3 == 1'
 eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 1'
@@ -151,6 +153,7 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
         }, # end EETT
          'eemt' : {
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtM, xxmtT, eemtVetos],
+            'sync' : [ZOS, ZMass, eeTrig, eeHits, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtMsync, xxmtT, eemtVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemtM, xxmtT, eemtVetos],
         }, # end EEMT
          'eeem' : {
@@ -167,6 +170,7 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
         }, # end MMMM
          'emmt' : {
             'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetE, xxetT, mmetVetos],
+            'sync' : [ZOS, ZMass, mmTrig, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetEsync, xxetT, mmetVetos],
             'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmetE, xxetT, mmetVetos],
         }, # end MMET
          'mmtt' : {
