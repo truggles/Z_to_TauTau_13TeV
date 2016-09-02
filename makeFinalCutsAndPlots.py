@@ -116,20 +116,23 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
     
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTVBF' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2 && mjj > 400 && jdeta > 3.5 && bjetCISVVeto30Medium == 0)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2 && mjj > 400 && abs(jdeta) > 3.5 && bjetCISVVeto30Medium == 0)*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     #''' CUTS TO MATCH ISOBEL'S '''
-    params['channels'] = ['tt',]
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1JetMedBoost' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*(Z_Pt>100)*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    params['channels'] = ['tt',]
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1JetHighBoost' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*(Z_Pt>170)*%s' % (Zsign, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTVBFTag' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2)*(Z_Pt>100)*(mjj>500 && abs(jdeta) > 3.5)*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
