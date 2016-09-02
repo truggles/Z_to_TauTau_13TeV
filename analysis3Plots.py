@@ -370,16 +370,28 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """
             Calculate rough bin-by-bin uncertainties
             """
+            uncertNormMap = { 'htt' : {
+            'qcd' : .20,
+            'top' : .15,
+            'dib' : .10,
+            'wjets' : ..10,
+            'ztt' : ..05,
+            'zl' : ..30,
+            'zj' : .30,},
+            'ash' : {
+            'top' : .15,
+            'dyj' : .10,
+            'wz' : .15,
+            'zz' : .25,}
+            }
             binErrors = []
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
-                    if samp != 'qcd' and samp != 'zz' :
-                        toRoot += (sampHistos[samp].GetBinContent(k)*.1)**2
-                    elif samp == 'qcd' : # QCD has higher uncertainties
-                        toRoot += (sampHistos[samp].GetBinContent(k)*.1)**2
-                    elif samp == 'zz' : # ZZ has higher uncertainties in AZH
-                        toRoot += (sampHistos[samp].GetBinContent(k)*.25)**2
+                    toRoot += (sampHistos[samp].GetBinContent(k)*\
+                        uncertNormMap[analysis][samp])**2
+                    toRoot += sampHistos[samp].GetBinError(k)**2
+
                 binErrors.append( math.sqrt(toRoot) )
     
     
