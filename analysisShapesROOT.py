@@ -112,14 +112,14 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['QCD']        = ('kMagenta-10', '_QCD_')
     samples['dataTT']  = ('kBlack', '_data_obs_')
     samples['dataEM']  = ('kBlack', '_data_obs_')
-    samples['VBFHtoTauTau120'] = ('kGreen', '_vbf120_')
-    samples['VBFHtoTauTau125'] = ('kGreen', '_vbf125_')
-    samples['VBFHtoTauTau130'] = ('kGreen', '_vbf130_')
+    samples['VBFHtoTauTau120'] = ('kGreen', '_VBF120_')
+    samples['VBFHtoTauTau125'] = ('kGreen', '_VBF125_')
+    samples['VBFHtoTauTau130'] = ('kGreen', '_VBF130_')
     samples['ggHtoTauTau120'] = ('kGreen', '_ggH120_')
     samples['ggHtoTauTau125'] = ('kGreen', '_ggH125_')
     samples['ggHtoTauTau130'] = ('kGreen', '_ggH130_')
     
-    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH120_','_ggH125_','_ggH130_','_vbf120_','_vbf125_','_vbf130_']
+    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH120_','_ggH125_','_ggH130_','_VBF120_','_VBF125_','_VBF130_']
     
     if ops['mssm'] : # FIXME - make sure SM Higgs 120 and 130 don't overlap?
         masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
