@@ -1,3 +1,4 @@
-/hdfs/store/user/caillol/SMHTT_aug16_v2/GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-4272B885-5359-E611-9581-FA163EDF489F.root
-/hdfs/store/user/caillol/SMHTT_aug16_v2/GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-DC5CF010-F358-E611-9809-008CFA06473C.root
-/hdfs/store/user/caillol/SMHTT_aug16_v2/GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-DCA69692-0359-E611-8C7D-549F35AC7DFB.root
+/hdfs/store/user/truggles/SMHTT_aug31//GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-4272B885-5359-E611-9581-FA163EDF489F.root
+/hdfs/store/user/truggles/SMHTT_aug31//GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-DC5CF010-F358-E611-9809-008CFA06473C.root
+/hdfs/store/user/truggles/SMHTT_aug31//GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-DCA69692-0359-E611-8C7D-549F35AC7DFB.root
+/hdfs/store/user/truggles/SMHTT_aug31//GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-F69B498A-5359-E611-BBE5-0025904B2C7E.root

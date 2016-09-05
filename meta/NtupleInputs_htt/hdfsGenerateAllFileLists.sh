@@ -1,6 +1,6 @@
 
-ALL=/hdfs/store/user/caillol/SMHTT_aug16_v2
-
+#ALL=/hdfs/store/user/caillol/SMHTT_aug16_v2
+ALL=/hdfs/store/user/truggles/SMHTT_aug31/
 
 ls ${ALL}/data_MuonEG_Run2016[B,C,D,E,F]/make_ntuples_cfg-*.root                                         > hdfs/dataEM.txt 
 ls ${ALL}/data_Tau_Run2016[B,C,D,E,F]/make_ntuples_cfg-*.root                                            > hdfs/dataTT.txt 
