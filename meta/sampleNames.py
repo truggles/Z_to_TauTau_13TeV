@@ -34,23 +34,23 @@ def sampleDetails( analysis ) :
 
         'htt' : {
             'dataTT-B' : {
-                'DASPath' : '/Tau/Run2015B-16Dec2015-v2/MINIAOD',
+                'DASPath' : '/Tau/Run2016B-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataTT-C' : {
-                'DASPath' : '/Tau/Run2015C-16Dec2015-v2/MINIAOD',
+                'DASPath' : '/Tau/Run2016C-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataTT-D' : {
-                'DASPath' : '/Tau/Run2015D-16Dec2015-v2/MINIAOD',
+                'DASPath' : '/Tau/Run2016D-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataTT-E' : {
-                'DASPath' : '/Tau/Run2015E-16Dec2015-v2/MINIAOD',
+                'DASPath' : '/Tau/Run2016E-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataTT-F' : {
-                'DASPath' : '/Tau/Run2015F-16Dec2015-v1/MINIAOD',
+                'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'VV' :         { 

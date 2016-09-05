@@ -374,15 +374,19 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             'qcd' : .20,
             'top' : .15,
             'dib' : .10,
-            'wjets' : ..10,
-            'ztt' : ..05,
-            'zl' : ..30,
-            'zj' : .30,},
-            'ash' : {
+            'wjets' : .10,
+            'ztt' : .05,
+            'zl' : .30,
+            'zj' : .30,
+            'higgs' : .0,
+            'obs' : .0,},
+            'azh' : {
             'top' : .15,
             'dyj' : .10,
             'wz' : .15,
-            'zz' : .25,}
+            'zz' : .25,
+            'azh' : .0,
+            'obs' : .0,}
             }
             binErrors = []
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :

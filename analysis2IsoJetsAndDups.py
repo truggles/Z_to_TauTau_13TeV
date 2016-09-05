@@ -107,6 +107,20 @@ def getTauPtWeight( sample, channel, t1GenID, t2GenID, row, ptScaler ) :
 
 
 
+# From Cecile Sept 05, 2016
+def collinearMass( pt1, phi1, pt2, phi2, met, metphi, mVis ) :
+    px1 = math.cos( phi1 ) * pt1
+    py1 = math.sin( phi1 ) * pt1
+    px2 = math.cos( phi2 ) * pt2
+    py2 = math.sin( phi2 ) * pt2
+    metx = math.cos( metphi ) * met
+    mety = math.sin( metphi ) * met
+    alpha = (metx * py1 - px1*mety)/(px2*py1 + px1*py2)
+    beta = (metx * py2 - px2 * mety)/(px1*py2 + px2*py1)
+    return mVis * (1 + alpha) * (1 + beta)
+
+
+
 
 def mVisTES( cand1, cand2, row, TES ) :
     pt1 = (1 + TES) * getattr( row, cand1+'Pt' )
@@ -663,16 +677,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
     Z_DEta = array('f', [ 0 ] )
     Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
-    #m_vis_UP = array('f', [ 0 ] )
-    #m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
-    #m_vis_DOWN = array('f', [ 0 ] )
-    #m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
+    m_vis_UP = array('f', [ 0 ] )
+    m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
+    m_vis_DOWN = array('f', [ 0 ] )
+    m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
     mt_tot = array('f', [ 0 ] )
     mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
-    #mt_tot_UP = array('f', [ 0 ] )
-    #mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
-    #mt_tot_DOWN = array('f', [ 0 ] )
-    #mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
+    mt_tot_UP = array('f', [ 0 ] )
+    mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
+    mt_tot_DOWN = array('f', [ 0 ] )
+    mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
+    m_coll = array('f', [ 0 ] )
+    m_collB = tnew.Branch('m_coll', m_coll, 'm_coll/F')
+    m_coll_UP = array('f', [ 0 ] )
+    m_coll_UPB = tnew.Branch('m_coll_UP', m_coll_UP, 'm_coll_UP/F')
+    m_coll_DOWN = array('f', [ 0 ] )
+    m_coll_DOWNB = tnew.Branch('m_coll_DOWN', m_coll_DOWN, 'm_coll_DOWN/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -781,19 +801,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
             Z_DEta[0] = (eta1 - eta2)
 
-            # TES Shifted M_Vis
-            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
-            #    m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
-            #    m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
-            #else :
-            #    m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-            #    m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-            #    if hasattr( row, 'm_sv_UP' ) :
-            #        setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
-            #        setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
-            #        setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
-            #        setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
-
 
             # Channel specific vetoes
             if channel == 'tt' :
@@ -830,15 +837,33 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
 
 
+
+
             # With calculated transverse mass variables, do Mt_Total for mssm search
             mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
-            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
-            #    mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
-            #    mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
-            #else :
-            #    mt_tot_UP[0] = -10
-            #    mt_tot_DOWN[0] = -10
+            # TES Shifted
+            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
+                m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
+                m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
+                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+                m_coll[0] = collinearMass( pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0], getattr( row, l1+'_'+l2+'_Mass' ) ) 
+                m_coll_UP[0] = collinearMass( pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0], getattr( row, l1+'_'+l2+'_Mass' ) ) 
+                m_coll_DOWN[0] = collinearMass( pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0], getattr( row, l1+'_'+l2+'_Mass' ) ) 
+            else :
+                m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                if hasattr( row, 'm_sv_UP' ) :
+                    setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+                    setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+                    setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+                    setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+                mt_tot_UP[0] = mt_tot[0]
+                mt_tot_DOWN[0] = mt_tot[0]
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
+
+
+
 
             muonSF1[0] = 1
             muonSF2[0] = 1

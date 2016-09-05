@@ -28,7 +28,7 @@ os.chdir('meta')
 ### General samples.json file from /data/truggles files
 #makeMetaJSON( analysis, channel='tt' )
 ### samples.json for post /hdfs skim -> uwlogin samples
-#makeMetaJSON( analysis, channel='tt', skimmed=True )
+makeMetaJSON( analysis, channel='tt', skimmed=True )
 os.chdir('..')
 
 
@@ -41,9 +41,9 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-SamplesData = ['dataTT',]
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
-#SamplesDataCards = ['DYJets', 'DYJetsOld', 'DYJetsAMCNLO', 'DYJetsAMCNLOReHLT','dataTT',]  # All inclusive DYJets samples
+SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # NO ZZ2L2Q
 #SamplesDataCards = ['dataTT',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 samples = SamplesDataCards
@@ -63,9 +63,9 @@ params = {
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
     'cutMapper' : 'syncCutsDCqcdTES',
-    'mid1' : '1Aug29e20p1',
-    'mid2' : '2Aug29e20p1',
-    'mid3' : '3Aug29e20p1',
+    'mid1' : '1Sept05newSVFit',
+    'mid2' : '2Sept05newSVFit',
+    'mid3' : '3Sept05newSVFit',
     #'mid1' : '1Aug29fVTight',
     #'mid2' : '2Aug29fVTight',
     #'mid3' : '3Aug29fVTight',
@@ -108,8 +108,8 @@ text=False
 makeDataCards = True
 makeDataCards = False
 #isoVal = 'Tight'
-#isoVal = 'VTight'
-isoVal = 'Medium'
+isoVal = 'VTight'
+#isoVal = 'Medium'
 
 cats = ['', '0Jet', '1Jet', 'VBF', '1JetMedBoost', '1JetHighBoost',]
 
