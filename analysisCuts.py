@@ -45,6 +45,7 @@ ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
 tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1MatchesDoubleTau40Filter > 0 && t2MatchesDoubleTau40Filter > 0'
 tt35    = 'doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0'
+ttBadRun = 'run != 2788808'
 tt32    = 'doubleTau32Pass > 0 && t1MatchesDoubleTau32Path > 0 && t2MatchesDoubleTau32Path > 0 && t1MatchesDoubleTau32Filter > 0 && t2MatchesDoubleTau32Filter > 0'
 # TT PostSync
 ttL1IsoTaus = 't1L1IsoTauMatch > 0 && t2L1IsoTauMatch > 0 && doubleL1IsoTauMatch > 0' # Used in 2015 for double tau trigger screw up
@@ -126,13 +127,14 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
         'htt' : # analysis
         { 'tt' : {
             # A version which applies all cuts at once RunII
-            'signalCuts' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode],
+            'signalCuts' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
             # Not isolation for full QCD estimation
-            'fakeFactorCutsTT' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttDisc, extraVetoTT, tt35, DecayMode],
+            'fakeFactorCutsTT' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
-            'syncCutsDCqcdTES' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
+            'syncCutsDCqcdTES' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA, ttBadRun],
+            'syncCutsDCqcdTESNoIso' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
             # Selection which only does baseline for sync sample
-            'syncCutsNtuple' : [ttKin40, ttCharge, ttDR, ttVtx, tt35, DecayMode],
+            'syncCutsNtuple' : [ttKin40, ttCharge, ttDR, ttVtx, tt35, DecayMode, ttBadRun],
         }, # end tt channel
           'em' : {
             'syncCutsNtuple' : [emKin, emDR, emVtx, emTrig,],#'('+e23m8+'||'+m23e12+')'],
