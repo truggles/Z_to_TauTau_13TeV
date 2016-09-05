@@ -2,8 +2,12 @@
 #ALL=/hdfs/store/user/caillol/SMHTT_aug16_v2
 ALL=/hdfs/store/user/truggles/SMHTT_aug31/
 
-ls ${ALL}/data_MuonEG_Run2016[B,C,D,E,F]/make_ntuples_cfg-*.root                                         > hdfs/dataEM.txt 
-ls ${ALL}/data_Tau_Run2016[B,C,D,E,F]/make_ntuples_cfg-*.root                                            > hdfs/dataTT.txt 
+#ls ${ALL}/data_MuonEG_Run2016[B,C,D,E,F]/make_ntuples_cfg-*.root                                         > hdfs/dataEM.txt 
+ls ${ALL}/data_Tau_Run2016B/make_ntuples_cfg-*.root                                            		 > hdfs/dataTT-B.txt 
+ls ${ALL}/data_Tau_Run2016C/make_ntuples_cfg-*.root                                            		 > hdfs/dataTT-C.txt 
+ls ${ALL}/data_Tau_Run2016D/make_ntuples_cfg-*.root                                            		 > hdfs/dataTT-D.txt 
+ls ${ALL}/data_Tau_Run2016E/make_ntuples_cfg-*.root                                            		 > hdfs/dataTT-E.txt 
+ls ${ALL}/data_Tau_Run2016F/make_ntuples_cfg-*.root                                            		 > hdfs/dataTT-F.txt 
 ls ${ALL}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/make_ntuples_cfg-*.root                 > hdfs/DYJets.txt 
 ls ${ALL}/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/make_ntuples_cfg-*.root                > hdfs/DYJets1.txt 
 ls ${ALL}/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/make_ntuples_cfg-*.root                > hdfs/DYJets2.txt 

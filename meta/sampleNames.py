@@ -33,8 +33,24 @@ def sampleDetails( analysis ) :
         }}, # end Sync sample
 
         'htt' : {
-            'dataTT' : {
-                'DASPath' : '/Tau/Run2015D-16Dec2015-v1/MINIAOD',
+            'dataTT-B' : {
+                'DASPath' : '/Tau/Run2015B-16Dec2015-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-C' : {
+                'DASPath' : '/Tau/Run2015C-16Dec2015-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-D' : {
+                'DASPath' : '/Tau/Run2015D-16Dec2015-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-E' : {
+                'DASPath' : '/Tau/Run2015E-16Dec2015-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-F' : {
+                'DASPath' : '/Tau/Run2015F-16Dec2015-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'VV' :         { 
