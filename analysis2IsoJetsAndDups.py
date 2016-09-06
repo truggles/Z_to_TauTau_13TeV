@@ -107,19 +107,42 @@ def getTauPtWeight( sample, channel, t1GenID, t2GenID, row, ptScaler ) :
 
 
 
-# From Cecile Sept 05, 2016
-def collinearMass( pt1, phi1, pt2, phi2, met, metphi, mVis ) :
+# From Cecile Sept 06, 2016
+def collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2, met, metphi, mVis ) :
     px1 = math.cos( phi1 ) * pt1
     py1 = math.sin( phi1 ) * pt1
     px2 = math.cos( phi2 ) * pt2
     py2 = math.sin( phi2 ) * pt2
     metx = math.cos( metphi ) * met
     mety = math.sin( metphi ) * met
-    alpha = (metx * py1 - px1*mety)/(px2*py1 + px1*py2)
-    beta = (metx * py2 - px2 * mety)/(px1*py2 + px2*py1)
-    return mVis * (1 + alpha) * (1 + beta)
+    pmis1=(metx*pt1*py2-mety*px2*pt1)/(px1*py2-px2*py1)
+    pmis2=(metx*pt2*py1-mety*px1*pt2)/(px1*py2-px2*py1)
+    if pmis1<0 : pmis1=0
+    if pmis2<0 : pmis2=0
+    alpha=(pt1)/(pt1+pmis1)
+    beta=(pt2)/(pt2+pmis2)
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
+    mcoll=(lorentz1 + lorentz2).M()
+    if alpha > 0 : mcoll=mcoll/math.sqrt(alpha)
+    if beta > 0 : mcoll=mcoll/math.sqrt(beta)
+
+    return mcoll 
 
 
+
+def getHiggsPt( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2, met, metphi) :
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
+    lorentz3 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz3.SetPtEtaPhiM( met, 0., metphi, 0. )
+    higgs = lorentz1 + lorentz2 + lorentz3
+    return higgs.Pt()
+    
 
 
 def mVisTES( cand1, cand2, row, TES ) :
@@ -131,9 +154,9 @@ def mVisTES( cand1, cand2, row, TES ) :
     eta2 = getattr( row, cand2+'Eta' )
     phi2 = getattr( row, cand2+'Phi' )
     m2 = getattr( row, cand2+'Mass' )
-    lorentz1 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
     lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
-    lorentz2 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
     lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
     shifted = lorentz1 + lorentz2
     return shifted.M()
@@ -675,6 +698,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     pzeta = array('f', [ 0 ] )
     pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    Higgs_Pt = array('f', [ 0 ] )
+    Higgs_PtB = tnew.Branch('Higgs_Pt', Higgs_Pt, 'Higgs_Pt/F')
     Z_DEta = array('f', [ 0 ] )
     Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
     m_vis_UP = array('f', [ 0 ] )
@@ -787,17 +812,21 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             pt1 = getattr( row, l1+'Pt' )
             phi1 = getattr( row, l1+'Phi' )
             eta1 = getattr( row, l1+'Eta' )
+            m1 = getattr( row, l1+'Mass' )
             pt2 = getattr( row, l2+'Pt' )
             phi2 = getattr( row, l2+'Phi' )
             eta2 = getattr( row, l2+'Eta' )
+            m2 = getattr( row, l2+'Mass' )
             if len( channel ) > 2 :
                 pt3 = getattr( row, l3+'Pt' )
                 phi3 = getattr( row, l3+'Phi' )
                 eta3 = getattr( row, l3+'Eta' )
+                m3 = getattr( row, l3+'Mass' )
             if len( channel ) > 3 :
                 pt4 = getattr( row, l4+'Pt' )
                 phi4 = getattr( row, l4+'Phi' )
                 eta4 = getattr( row, l4+'Eta' )
+                m4 = getattr( row, l4+'Mass' )
 
             Z_DEta[0] = (eta1 - eta2)
 
@@ -819,6 +848,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             if channel == 'mt' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+
+
             
             if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
                 mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
@@ -832,9 +863,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
                 if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
                     pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                         pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
             else : # Not l1_l2_MvaMet
                 mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
                 mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
+                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                        pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
 
 
 
@@ -847,9 +882,20 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
                 mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
                 mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
-                m_coll[0] = collinearMass( pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0], getattr( row, l1+'_'+l2+'_Mass' ) ) 
-                m_coll_UP[0] = collinearMass( pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0], getattr( row, l1+'_'+l2+'_Mass' ) ) 
-                m_coll_DOWN[0] = collinearMass( pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0], getattr( row, l1+'_'+l2+'_Mass' ) ) 
+                if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
+                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
+                            mvamet[0], mvametphi[0], getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
+                    m_coll_UP[0] = collinearMass( pt1*1.03, eta1, phi1, m1, pt2*1.03, eta2, phi2, m2,\
+                            mvamet[0], mvametphi[0], m_vis_UP[0] ) 
+                    m_coll_DOWN[0] = collinearMass( pt1*0.97, eta1, phi1, m1, pt2*0.97, eta2, phi2, m2,\
+                            mvamet[0], mvametphi[0], m_vis_DOWN[0] ) 
+                else :
+                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
+                            row.type1_pfMetEt, row.type1_pfMetPhi, getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
+                    m_coll_UP[0] = collinearMass( pt1*1.03, eta1, phi1, m1, pt2*1.03, eta2, phi2, m2,\
+                            row.type1_pfMetEt, row.type1_pfMetPhi, m_vis_UP[0] ) 
+                    m_coll_DOWN[0] = collinearMass( pt1*0.97, eta1, phi1, m1, pt2*0.97, eta2, phi2, m2,\
+                            row.type1_pfMetEt, row.type1_pfMetPhi, m_vis_DOWN[0] ) 
             else :
                 m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
                 m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
@@ -860,6 +906,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
                 mt_tot_UP[0] = mt_tot[0]
                 mt_tot_DOWN[0] = mt_tot[0]
+                if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
+                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
+                            mvamet[0], mvametphi[0], getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
+                else :
+                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
+                            row.type1_pfMetEt, row.type1_pfMetPhi, getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
+                m_coll_UP[0] = m_coll[0] 
+                m_coll_DOWN[0] = m_coll[0]
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
 
 
