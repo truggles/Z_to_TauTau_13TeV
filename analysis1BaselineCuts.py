@@ -41,10 +41,10 @@ def getMergeMap( analysis ) :
 def skipChanDataCombo( channel, sample, analysis ) :
     # HTT
     if analysis == 'htt' :
-        if (channel == 'em') and not ('dataEM' in sample) : return True
-        if (channel == 'et') and not ('dataET' in sample) : return True
-        if (channel == 'mt') and not ('dataMT' in sample) : return True
-        if (channel == 'tt') and not ('dataTT' in sample) : return True
+        if (channel == 'em') and ('data' in sample) and not ('dataEM' in sample) : return True
+        if (channel == 'et') and ('data' in sample) and not ('dataET' in sample) : return True
+        if (channel == 'mt') and ('data' in sample) and not ('dataMT' in sample) : return True
+        if (channel == 'tt') and ('data' in sample) and not ('dataTT' in sample) : return True
     # AZH
     if analysis == 'azh' :
         if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and (sample != 'dataEE') : return True
