@@ -163,14 +163,13 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
         baseVar = ops['fitShape']
         if 'data' in sample : print "Fitting",baseVar
-        if 'm_vis' in baseVar :
-            append = ''
-        elif 'm_sv' in baseVar :
-            append = '_svFit'
-        elif 'mt_sv' in baseVar :
-            append = '_MtsvFit'
-        elif 'mt_tot' in baseVar :
-            append = '_MtTot'
+        appendMap = {
+            'm_vis' : 'visMass',
+            'm_sv' : 'svFitMass',
+            'mt_sv' : 'svFitMt',
+            'mt_tot' : 'mtTot',
+            'm_coll' : 'collMass',}
+        append = '_'+appendMap[baseVar]
     
         if ops['mssm'] :
         #    if not var == baseVar+'_mssm' : continue
