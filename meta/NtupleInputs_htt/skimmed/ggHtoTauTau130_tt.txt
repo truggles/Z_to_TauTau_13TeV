@@ -1,1 +1,1 @@
-/data/truggles/httAug24FromHdfsSkimmed/ggHtoTauTau130_0_tt.root
+/data/truggles/httSept04svFitted/ggHtoTauTau130_0_tt.root

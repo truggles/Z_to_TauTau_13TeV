@@ -1,4 +1,13 @@
-/data/truggles/httAug24FromHdfsSkimmed/TT_0_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/TT_1_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/TT_2_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/TT_3_tt.root
+/data/truggles/httSept04svFitted/TT_0_tt.root
+/data/truggles/httSept04svFitted/TT_10_tt.root
+/data/truggles/httSept04svFitted/TT_11_tt.root
+/data/truggles/httSept04svFitted/TT_12_tt.root
+/data/truggles/httSept04svFitted/TT_1_tt.root
+/data/truggles/httSept04svFitted/TT_2_tt.root
+/data/truggles/httSept04svFitted/TT_3_tt.root
+/data/truggles/httSept04svFitted/TT_4_tt.root
+/data/truggles/httSept04svFitted/TT_5_tt.root
+/data/truggles/httSept04svFitted/TT_6_tt.root
+/data/truggles/httSept04svFitted/TT_7_tt.root
+/data/truggles/httSept04svFitted/TT_8_tt.root
+/data/truggles/httSept04svFitted/TT_9_tt.root

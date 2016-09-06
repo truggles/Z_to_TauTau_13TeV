@@ -1,2 +1,5 @@
-/data/truggles/httAug24FromHdfsSkimmed/DYJets2_0_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/DYJets2_1_tt.root
+/data/truggles/httSept04svFitted/DYJets2_0_tt.root
+/data/truggles/httSept04svFitted/DYJets2_1_tt.root
+/data/truggles/httSept04svFitted/DYJets2_2_tt.root
+/data/truggles/httSept04svFitted/DYJets2_3_tt.root
+/data/truggles/httSept04svFitted/DYJets2_4_tt.root
