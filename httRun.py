@@ -187,7 +187,7 @@ from the web directory so we can view easitly '''
 cleanPlots = True
 if cleanPlots :
     print "\nTrying to remove pngs used to build QCD Bkg\n"
-    subprocess.call(["bash", "cleanDirs.sh"])
+    subprocess.call(["bash", "util/cleanDirs.sh"])
     
 
 
