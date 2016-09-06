@@ -106,11 +106,15 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['WZ2l2q'] = ('kAzure-6', '_VV_')
     #samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
     #samples['ZZ2l2nu'] = ('kAzure-12', '_VV_')
-    samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
+    #samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
     #samples['ZZ4l'] = ('kAzure-12', '_VV_')
     samples['VV'] = ('kAzure-12', '_VV_')
     samples['QCD']        = ('kMagenta-10', '_QCD_')
-    samples['dataTT']  = ('kBlack', '_data_obs_')
+    samples['dataTT-B']  = ('kBlack', '_data_obs_')
+    samples['dataTT-C']  = ('kBlack', '_data_obs_')
+    samples['dataTT-D']  = ('kBlack', '_data_obs_')
+    samples['dataTT-E']  = ('kBlack', '_data_obs_')
+    samples['dataTT-F']  = ('kBlack', '_data_obs_')
     samples['dataEM']  = ('kBlack', '_data_obs_')
     samples['VBFHtoTauTau120'] = ('kGreen', '_VBF120_')
     samples['VBFHtoTauTau125'] = ('kGreen', '_VBF125_')
@@ -257,15 +261,15 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 if skipSystShapeVar( var, sample, channel ) : continue
                 if '_topPt' in var : print "Top Pt still in Var: "+var+" sample: "+sample
     
-                if channel == 'tt' and sample == 'dataEM' : continue
-                if channel == 'em' and sample == 'dataTT' : continue
+                if channel == 'tt' and 'dataEM' in sample : continue
+                if channel == 'em' and 'dataTT' in sample : continue
                 #if sample == 'DYJetsLow' : continue
                 #if 'HtoTauTau' in sample : continue
                 #print sample
     
                 if sample == 'dataEM' :
                     tFile = ROOT.TFile('%s%s/%s_em.root' % (analysis, folderDetails, sample), 'READ')
-                elif sample == 'dataTT' :
+                elif 'dataTT' in sample :
                     tFile = ROOT.TFile('%s%s/%s_tt.root' % (analysis, folderDetails, sample), 'READ')
                 elif sample == 'QCD' :
                     if ops['useQCDMakeName'] != 'x'  :
