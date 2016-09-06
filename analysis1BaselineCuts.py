@@ -416,7 +416,14 @@ def doInitialOrder(analysis, samples, **fargs) :
 
 def drawHistos(analysis, samples, **fargs ) :
 
+    print "\n%s\n" % fargs['mid3']
+
     mergeMap = getMergeMap(analysis)
+
+    skipSSQCDDetails = False
+    if 'skipSSQCDDetails' in fargs.keys() :
+        if fargs['skipSSQCDDetails'] :
+            skipSSQCDDetails = True
 
     genMap = {
         # sample : em , tt
@@ -496,7 +503,7 @@ def drawHistos(analysis, samples, **fargs ) :
                     else : additionalCut += genMap[subName][channel] 
                 #print "AdditionalCuts",additionalCut
                 blind = False
-                analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind )
+                analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind, skipSSQCDDetails )
                 outFile.Close()
          
 

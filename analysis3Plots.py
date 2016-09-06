@@ -21,6 +21,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     ops = {
     'qcdMakeDM' : 'x',
     'useQCDMakeName' : 'x',
+    'isSSQCD' : False,
     'addUncert' : True,
     'qcdMC' : False,
     'qcdSF' : 1.0,
@@ -175,6 +176,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         #print newVarMap
         for var, info in newVarMap.iteritems() :
     
+            # This is to speed up the Data Card making process by 2x and not
+            # create all the plots for SS when all we need it the yield from eta_1
+            if ops['isSSQCD'] and not (var == 'eta_1' or var == 'm_vis') : continue
             #if 'mt_sv' in var : continue
             print "Var:",var
     

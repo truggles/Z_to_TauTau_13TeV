@@ -88,8 +88,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -99,15 +99,15 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False
+makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 #isoVal = 'Tight'
 isoVal = 'VTight'
 #isoVal = 'Medium'
@@ -116,7 +116,10 @@ isoVal = 'VTight'
 cats = ['', 'vbf', '1jet_low', '1jet_high',]
 
 if runPlots :
-    process = ["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2'], "--isoVal=%s" % isoVal, "--skimmed=%s" % params['skimmed'], "--samples"]
+    skipSSQCDDetails=True
+    process = ["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2'],\
+        "--isoVal=%s" % isoVal, "--skimmed=%s" % params['skimmed'],\
+        "--skipSSQCDDetails=%r" % skipSSQCDDetails, "--samples"]
     for sample in samples.keys() :
         process.append( sample )
     """ Make our folders with directories of histos for each bkg """
@@ -128,8 +131,11 @@ if makeQCDBkg :
     for sign in ['SS', 'OS'] :
         for name in [isoVal+'_Loose', isoVal+'_'] :
             for cat in cats :
+                if sign == 'SS' : skipSSQCDDetails = True
+                else : skipSSQCDDetails = False
                 ROOT.gROOT.Reset()
-                kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT'+cat, }
+                kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT'+cat, 
+                    'isSSQCD':skipSSQCDDetails,}
                 folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'+cat
                 qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
                 qcdYields[ sign+name+cat ] = qcdYield
@@ -170,19 +176,21 @@ if makeDataCards :
     ROOT.gROOT.Reset()
     from util.helpers import getQCDSF
     from analysisShapesROOT import makeDataCards
-    for cat in cats :
-        qcdSF = getQCDSF( 'httQCDYields_%s.txt' % params['mid2'], cat )
-        fitShape = cat
-        if cat == '' : fitShape = 'inclusive'
-        folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
-        kwargs = {
-        'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
-        'qcdSF' : qcdSF,
-        'category' : fitShape,
-        'fitShape' : 'm_vis',
-        'ES' : True,
-        }
-        makeDataCards( analysis, samples, ['tt',], folderDetails, **kwargs )
+    for var in ['m_vis', 'm_sv', 'mt_sv', 'mt_tot', 'm_coll',] :
+        for cat in cats :
+            qcdSF = getQCDSF( 'httQCDYields_%s.txt' % params['mid2'], cat )
+            fitShape = cat
+            if cat == '' : fitShape = 'inclusive'
+            folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
+            kwargs = {
+            'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
+            'qcdSF' : qcdSF,
+            'category' : fitShape,
+            #'fitShape' : 'm_vis',
+            'fitShape' : var,
+            'ES' : True,
+            }
+            makeDataCards( analysis, samples, ['tt',], folderDetails, **kwargs )
 
 ''' Remove the .pngs used to build the QCD Bkg
 from the web directory so we can view easitly '''

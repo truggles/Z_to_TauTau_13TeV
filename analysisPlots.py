@@ -70,7 +70,7 @@ def HighPtTauWeight( var ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False ) :
+def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False ) :
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMap = getHistoDict( analysis, channel )
 
@@ -79,7 +79,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
     for var, info in newVarMap.iteritems() :
-        #print var
+        if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
+        print var
 
 
         ''' Skip plotting unused shape systematics '''
@@ -156,8 +157,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         ### Check that the target var is in the TTrees
         elif hasattr( chain, varBase ) :
-            print "trying"
-            print "Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
+            #print "trying"
+            #print "Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
@@ -196,6 +197,7 @@ def getHistoDict( analysis, channel ) :
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
 #            'mjj' : (50, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'),
 #            'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
+            'Higgs_Pt' : (400, 0, 400, 40, 'Higgs p_{T} [GeV]', ' GeV'),
 #            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
 #            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
 #            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
@@ -221,6 +223,7 @@ def getHistoDict( analysis, channel ) :
 #            #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
 #            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
             #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
+            'm_coll' : [35, 0, 350, 1, 'Collinear Mass [GeV]', ' GeV'],
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
             'm_vis' : [35, 0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
@@ -235,7 +238,7 @@ def getHistoDict( analysis, channel ) :
         }
 
         ''' added shape systematics '''
-        toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
+        toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot', 'm_coll']
         #toAdd = ['m_vis', 'm_sv', 'mt_sv',]
         varsForShapeSyst = []
         for item in toAdd :

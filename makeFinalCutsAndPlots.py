@@ -18,10 +18,12 @@ p = argparse.ArgumentParser(description="A script to apply additional cuts and p
 p.add_argument('--folder', action='store', default='xxx', dest='folder', help="What is the full folder name for extracting root files?")
 p.add_argument('--isoVal', action='store', default='Tight', dest='isoVal', help="What is the signal selection tau MVA isolation? Tight? VTight?")
 p.add_argument('--skimmed', action='store', default='false', dest='skimmed', help="Using skimmed samples?")
+p.add_argument('--skipSSQCDDetails', action='store', default=False, dest='skipSSQCDDetails', type=bool, help="Using skimmed samples?")
 p.add_argument('--samples', action='store', dest='samples', nargs='+', type=str, help="Pass in a list of space separated samples")
 options = p.parse_args()
 folder = options.folder
 skimmed = options.skimmed
+skipSSQCDDetails = options.skipSSQCDDetails
 isoVal = options.isoVal
 samples = options.samples
 print "Options Skimmed:",skimmed
@@ -39,6 +41,12 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     
     
     
+    if sign == 'OS' :
+        skipSSQCDDetailsX = False
+    else : 
+        skipSSQCDDetailsX = True
+
+
     ''' Preset samples '''
     
     params = {
@@ -51,6 +59,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
         'svFitPost' : 'false',
         'doFRMthd' : 'false',
         'skimmed' : skimmed,
+        'skipSSQCDDetails' : skipSSQCDDetailsX
     }
 
     isoL2loose = '(by%sIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoVal, isoT, isoL)
@@ -75,6 +84,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
         Zsign = 1
         
     print "\n\nIsoL2Loose: %s\n\n" % isoL2loose
+    print "skipSSQCDDetails:", skipSSQCDDetailsX
 
     """
     Double Hardonic baseline with good QCD estimation
