@@ -186,6 +186,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """
             Handle variable binning and longer ranges for visible mass
             """
+            isVBFCat = False
+            is1JetCat = False
+            if 'm_sv' in var :
+                if ('1jet_low' in ops['useQCDMakeName'] or '1jet_high' in ops['useQCDMakeName']\
+                        or '1jet_low' in ops['qcdMakeDM'] or '1jet_high' in ops['qcdMakeDM']) :
+                    is1JetCat = True
+                if ('vbf' in ops['useQCDMakeName'] or 'vbf' in ops['qcdMakeDM']) :
+                    isVBFCat = True
+
+
             if '_mssm' in var :
                 varBinned = True
                 if 'ZTT' in folderDetails :
@@ -207,6 +217,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             elif var == 'm_vis_varB' :
                 varBinned = True
                 xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
+            elif is1JetCat :
+                varBinned = True
+                xBins = array( 'd', [0,60,70,80,90,100,110,120,130,150,200,350] )
+            elif isVBFCat :
+                varBinned = True
+                xBins = array( 'd', [0,60,80,100,120,150,200,350] )
             else :
                 varBinned = False
                 first = info[1] * 1.
@@ -585,13 +601,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             """ Blinding Data """
             if ops['blind'] :
-                if (analysis == 'htt' and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var or 'mt_tot' in var) ) or (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
+                if (analysis == 'htt' and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var\
+                         or 'mt_tot' in var or 'm_coll' in var) ) or\
+                         (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
                     if ops['mssm'] :
                         targetMass = 170
                         targetMassUp = 9999
                     else :
                         targetMassLow = 60
-                        targetMassUp = 130
+                        targetMassUp = 160
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( nBins+1 ) :
                         if sampHistos['obs'].GetXaxis().GetBinLowEdge(k+1)>targetMassLow and \

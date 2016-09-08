@@ -116,14 +116,14 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['dataTT-E']  = ('kBlack', '_data_obs_')
     samples['dataTT-F']  = ('kBlack', '_data_obs_')
     samples['dataEM']  = ('kBlack', '_data_obs_')
-    samples['VBFHtoTauTau120'] = ('kGreen', '_VBF120_')
-    samples['VBFHtoTauTau125'] = ('kGreen', '_VBF125_')
-    samples['VBFHtoTauTau130'] = ('kGreen', '_VBF130_')
+    samples['VBFHtoTauTau120'] = ('kGreen', '_qqH120_')
+    samples['VBFHtoTauTau125'] = ('kGreen', '_qqH125_')
+    samples['VBFHtoTauTau130'] = ('kGreen', '_qqH130_')
     samples['ggHtoTauTau120'] = ('kGreen', '_ggH120_')
     samples['ggHtoTauTau125'] = ('kGreen', '_ggH125_')
     samples['ggHtoTauTau130'] = ('kGreen', '_ggH130_')
     
-    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH120_','_ggH125_','_ggH130_','_VBF120_','_VBF125_','_VBF130_']
+    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH120_','_ggH125_','_ggH130_','_qqH120_','_qqH125_','_qqH130_']
     
     if ops['mssm'] : # FIXME - make sure SM Higgs 120 and 130 don't overlap?
         masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
@@ -224,9 +224,14 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
 
             else :
-                binArray = array( 'd', [] )
-                for i in range( 36 ) :
-                    binArray.append( i * 10 )
+                if ops['category'] in ['1jet_low', '1jet_high'] :
+                    binArray = array( 'd', [0,60,70,80,90,100,110,120,130,150,200,350] )
+                elif ops['category'] == 'vbf' :
+                    binArray = array( 'd', [0,60,80,100,120,150,200,350] )
+                else :
+                    binArray = array( 'd', [] )
+                    for i in range( 36 ) :
+                        binArray.append( i * 10 )
                 #binArray.append( 600 )
             numBins = len( binArray ) - 1
             histos = {}
