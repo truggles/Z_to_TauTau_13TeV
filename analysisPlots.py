@@ -36,18 +36,19 @@ def skipSystShapeVar( var, sample, channel ) :
 # Make specific extra cuts for different TES requirements
 def ESCuts( sample, channel, var ) :
     #tauPtCut = 45.
-    tauPtCut = 40.
+    tau2PtCut = 40.
+    tau1PtCut = 50.
     if len( channel ) == 4 : return '*(1)'
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
         if channel == 'tt' :
-            return '*(pt_1 > %s && pt_2 > %s)' % (tauPtCut, tauPtCut)
+            return '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)
         if channel == 'em' :
             return '*(pt_1 > 13 && pt_2 > 10)'
     ESMap = {
         'tt' : { 
-            '_energyScaleUp' : '*((pt_1*1.03) > %s && (pt_2*1.03) > %s)' % (tauPtCut, tauPtCut),
-            '_energyScaleDown' : '*((pt_1*0.97) > %s && (pt_2*0.97) > %s)' % (tauPtCut, tauPtCut),
-            '_NoShift' : '*(pt_1 > %s && pt_2 > %s)' % (tauPtCut, tauPtCut)},
+            '_energyScaleUp' : '*((pt_1*1.03) > %s && (pt_2*1.03) > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleDown' : '*((pt_1*0.97) > %s && (pt_2*0.97) > %s)' % (tau1PtCut, tau2PtCut),
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)},
         'em' : { 
             '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
             '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
@@ -195,9 +196,9 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
-#            'mjj' : (50, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'),
-#            'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
-            'Higgs_Pt' : (400, 0, 400, 40, 'Higgs p_{T} [GeV]', ' GeV'),
+            'mjj' : (50, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'),
+            'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
+            'Higgs_Pt' : (400, 0, 400, 5, 'Higgs p_{T} [GeV]', ' GeV'),
 #            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
 #            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
 #            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
@@ -223,15 +224,15 @@ def getHistoDict( analysis, channel ) :
 #            #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
 #            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
             #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
-            'm_coll' : [35, 0, 350, 1, 'Collinear Mass [GeV]', ' GeV'],
+#            'm_coll' : [35, 0, 350, 1, 'Collinear Mass [GeV]', ' GeV'],
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
             'm_vis' : [35, 0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             'm_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-            'mt_tot' : (350, 0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+#            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
+#            'mt_tot' : (350, 0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
             #'pzetavis' : (300, 0, 300, 20, 'pZetaVis', ' GeV'),
             #'pfpzetamis' : (300, 0, 300, 20, 'pfpZetaMis', ' GeV'),
             #'pzetamiss' : (500, -200, 300, 20, 'pZetaMis', ' GeV'),
