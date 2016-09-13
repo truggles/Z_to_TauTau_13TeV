@@ -51,9 +51,9 @@ params = {
     #'channels' : ['em',],
     'cutMapper' : 'syncCutsNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
-    'mid1' : '1Aug27mvamet',
-    'mid2' : '2Aug27mvamet',
-    'mid3' : '3Aug27mvamet',
+    'mid1' : '1Sept13svFitMvaMet',
+    'mid2' : '2Sept13svFitMvaMet',
+    'mid3' : '3Sept13svFitMvaMet',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -62,8 +62,8 @@ params = {
     'doFRMthd' : 'false',
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true',
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -72,7 +72,7 @@ import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 

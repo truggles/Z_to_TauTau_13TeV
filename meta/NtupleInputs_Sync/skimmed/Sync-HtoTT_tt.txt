@@ -1,6 +1,6 @@
-/data/truggles/syncAug24_2HdfsSkimmed/Sync-HtoTT_0_tt.root
-/data/truggles/syncAug24_2HdfsSkimmed/Sync-HtoTT_1_tt.root
-/data/truggles/syncAug24_2HdfsSkimmed/Sync-HtoTT_2_tt.root
-/data/truggles/syncAug24_2HdfsSkimmed/Sync-HtoTT_3_tt.root
-/data/truggles/syncAug24_2HdfsSkimmed/Sync-HtoTT_4_tt.root
-/data/truggles/syncAug24_2HdfsSkimmed/Sync-HtoTT_5_tt.root
+/hdfs/store/user/truggles/svFitSyncSept13mvamet/syncSept13/TauTau_13_syncSept13-Sync-HtoTT_0_tt.root
+/hdfs/store/user/truggles/svFitSyncSept13mvamet/syncSept13/TauTau_13_syncSept13-Sync-HtoTT_1_tt.root
+/hdfs/store/user/truggles/svFitSyncSept13mvamet/syncSept13/TauTau_13_syncSept13-Sync-HtoTT_2_tt.root
+/hdfs/store/user/truggles/svFitSyncSept13mvamet/syncSept13/TauTau_13_syncSept13-Sync-HtoTT_3_tt.root
+/hdfs/store/user/truggles/svFitSyncSept13mvamet/syncSept13/TauTau_13_syncSept13-Sync-HtoTT_4_tt.root
+/hdfs/store/user/truggles/svFitSyncSept13mvamet/syncSept13/TauTau_13_syncSept13-Sync-HtoTT_5_tt.root
