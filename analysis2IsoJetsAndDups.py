@@ -428,6 +428,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
         'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByVLooseIsolationMVArun2v1DBoldDMwLT' : 'byVLooseIsolationMVArun2v1DBoldDMwLT',
         }
 
     # Add in the vars which won't change names
