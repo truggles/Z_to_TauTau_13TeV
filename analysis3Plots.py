@@ -30,6 +30,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'text' : False,
     'mssm' : False,
     'log' : False,
+    'sync' : False,
     'targetDir' : ''}
 
     '''python analysis3Plots.py --folder=2June26_OSl1ml2_VTight_ZTT --channel=tt --text=True --useQCDMake=True --useQCDMakeName=OSl1ml2_VTight_LooseZTT --qcdSF=0.147 --btag=False'''
@@ -217,6 +218,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             elif var == 'm_vis_varB' :
                 varBinned = True
                 xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
+            elif ops['sync'] :
+                varBinned = True
+                xBins = array( 'd', [] )
+                for i in range( 21 ) :
+                    xBins.append( i * 17.5 )
             elif is1JetCat :
                 varBinned = True
                 xBins = array( 'd', [0,60,70,80,90,100,110,120,130,150,200,350] )
@@ -386,6 +392,20 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Scale signal samples for viewing
             sampHistos[ signal ].Scale( signalSF )
     
+            ''' Print out yields for a given distribution '''
+            if var == "Higgs_Pt" or var == "pt_1" or var == "pt_2" :
+                print "\n\n Stack yields"
+                totBkgVar = 0.
+                totSig = 0.
+                top = stack.GetStack().Last().GetNbinsX()+1
+                for bin in range( 1, top ) :
+                    totBkgVar += stack.GetStack().Last().GetBinContent( top-bin )
+                    totSig += sampHistos[signal].GetBinContent( top-bin )
+                    if totBkgVar > 0. :
+                        sensitivity = totSig / math.sqrt( totBkgVar )
+                    else : sensitivity = 0.
+                    edge = stack.GetStack().Last().GetBinLowEdge( top-bin )
+                    print "Bin: %i     sensitivity: %.2f     signal %.2f    bkg: %.2f" % (edge, sensitivity, totSig, totBkgVar)
     
             """
             Calculate rough bin-by-bin uncertainties

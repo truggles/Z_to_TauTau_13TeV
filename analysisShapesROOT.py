@@ -23,6 +23,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     'btag' : False,
     'ES' : False,
     'tauPt' : False,
+    'sync' : False,
     'allShapes' : False,}
 
     for key in kwargs :
@@ -178,8 +179,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             mid = 'sm'
     
         shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, channel, mid, append), 'UPDATE')
-        shapeDir = shapeFile.mkdir( channel + '_%s' % ops['category'] )
-        print shapeDir
+        shapeDir = shapeFile.mkdir( channel + '_%s' % ops['category'], channel + '_%s' % ops['category'] )
     
         for var in newVarMap.keys() :
     
@@ -204,9 +204,6 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             # Defined out here for large scope
             print "Var: ",var
     
-            #if not ops['sync'] :
-            #    binArray = array( 'd', [0,20,40,60,80,100,150,200,250,350,600] )
-            #if ops['mssm'] and not ops['btag'] :
             print "MSSM btag option:",ops['btag']
             binArray = array( 'd', [] )
             if ops['mssm'] :
@@ -223,6 +220,10 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     print "BTAGGING"
                     binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
 
+            elif ops['sync'] :
+                binArray = array( 'd', [] )
+                for i in range( 21 ) :
+                    binArray.append( i * 17.5 )
             else :
                 if ops['category'] in ['1jet_low', '1jet_high'] :
                     binArray = array( 'd', [0,60,70,80,90,100,110,120,130,150,200,350] )
@@ -232,8 +233,10 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     binArray = array( 'd', [] )
                     for i in range( 36 ) :
                         binArray.append( i * 10 )
-                #binArray.append( 600 )
             numBins = len( binArray ) - 1
+            #print binArray
+            #print numBins
+
             histos = {}
             for name in nameArray :
                 title = name.strip('_')
