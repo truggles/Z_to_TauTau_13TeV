@@ -12,6 +12,7 @@ from ROOT import gROOT
 import analysis1BaselineCuts
 from util.helpers import setUpDirs 
 import subprocess
+import copy
 ROOT.gROOT.Reset()
 
 
@@ -101,103 +102,118 @@ samples = returnSampleDetails( analysis, samples )
 runPlots = True
 runPlots = False
 makeQCDBkg = True
-makeQCDBkg = False
+#makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+#makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
-#isoVal = 'Tight'
-isoVal = 'VTight'
+#makeDataCards = False
+#isoVal = 'Tight
+#isoVal = 'VTight'
 #isoVal = 'Medium'
+isoVals = ['VTight', 'Tight', 'Medium',]
+isoVals = ['Tight',]
+#isoVals = ['Medium',]
 
-#cats = ['', '0Jet', '1Jet', 'VBF', '1JetMedBoost', '1JetHighBoost',]
-cats = ['', 'vbf', '1jet_low', '1jet_high',]
+cats = ['', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
+cats = ['', 'vbf', '1jet_low', '1jet_high', '0jet',]
+cats = ['0jet',]
+cats = ['vbf', '1jet_low', '1jet_high',]
+pt = '5040'
+sync = True
 
-if runPlots :
-    skipSSQCDDetails=True
-    process = ["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2'],\
-        "--isoVal=%s" % isoVal, "--skimmed=%s" % params['skimmed'],\
-        "--skipSSQCDDetails=%r" % skipSSQCDDetails, "--samples"]
-    for sample in samples.keys() :
-        process.append( sample )
-    """ Make our folders with directories of histos for each bkg """
-    subprocess.call( process )
-
-   
-if makeQCDBkg :    
-    qcdYields = {}
-    for sign in ['SS', 'OS'] :
-        for name in [isoVal+'_Loose', isoVal+'_'] :
-            for cat in cats :
-                if sign == 'SS' : skipSSQCDDetails = True
-                else : skipSSQCDDetails = False
-                ROOT.gROOT.Reset()
-                kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT'+cat, 
-                    'isSSQCD':skipSSQCDDetails,}
-                folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'+cat
-                qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], folder, **kwargs  )
-                qcdYields[ sign+name+cat ] = qcdYield
+for isoVal in isoVals :
+    samplesX = copy.deepcopy(samples)
+    if runPlots :
+        skipSSQCDDetails=True
+        process = ["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2'],\
+            "--isoVal=%s" % isoVal, "--skimmed=%s" % params['skimmed'],\
+            "--skipSSQCDDetails=%r" % skipSSQCDDetails, "--samples"]
+        for sample in samplesX.keys() :
+            process.append( sample )
+        """ Make our folders with directories of histos for each bkg """
+        subprocess.call( process )
     
-    print qcdYields
-    qcdFile = open('httQCDYields_%s.txt' % params['mid2'],'w')
-    for cat in cats :
-        qcdSF = qcdYields['SS'+isoVal+'_'+cat] / qcdYields['SS'+isoVal+'_Loose'+cat]
-        qcdFile.write( cat+":"+str(qcdSF)+"\n" )
-    for key in qcdYields :
-        qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
-    qcdFile.close()
-    
-
-
-
-if makeFinalPlots :
-    from util.helpers import getQCDSF
-    for cat in cats :
-        ROOT.gROOT.Reset()
-        qcdSF = getQCDSF( 'httQCDYields_%s.txt' % params['mid2'], cat )
-        tDir = cat
-        blind = True
-        if cat == '' :
-            tDir = 'inclusive'
-            blind = False
-        if cat == '0Jet' :
-            blind = False
+       
+    if makeQCDBkg :    
+        qcdYields = {}
+        for sign in ['SS', 'OS'] :
+            for name in [isoVal+'_Loose', isoVal+'_'] :
+                for cat in cats :
+                    if sign == 'SS' : skipSSQCDDetails = True
+                    else : skipSSQCDDetails = False
+                    ROOT.gROOT.Reset()
+                    kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT'+cat, 
+                        'isSSQCD':skipSSQCDDetails,'sync':sync}
+                    folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'+cat
+                    qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], folder, **kwargs  )
+                    qcdYields[ sign+name+cat ] = qcdYield
         
-        kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
-            'useQCDMakeName':'OSl1ml2_'+isoVal+'_LooseZTT'+cat, 'qcdSF':qcdSF,
-            'targetDir':'/'+tDir }
-        analysis3Plots.makeLotsOfPlots( analysis, samples, ['tt',], 
-            params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
-    
-    
-if makeDataCards :
-    ROOT.gROOT.Reset()
-    from util.helpers import getQCDSF
-    from analysisShapesROOT import makeDataCards
-    for var in ['m_vis', 'm_sv', 'mt_sv', 'mt_tot', 'm_coll',] :
+        print qcdYields
+        qcdFile = open('httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']),'w')
         for cat in cats :
-            qcdSF = getQCDSF( 'httQCDYields_%s.txt' % params['mid2'], cat )
-            fitShape = cat
-            if cat == '' : fitShape = 'inclusive'
-            folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
-            kwargs = {
-            'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
-            'qcdSF' : qcdSF,
-            'category' : fitShape,
-            #'fitShape' : 'm_vis',
-            'fitShape' : var,
-            'ES' : True,
-            }
-            makeDataCards( analysis, samples, ['tt',], folderDetails, **kwargs )
-
-''' Remove the .pngs used to build the QCD Bkg
-from the web directory so we can view easitly '''
-cleanPlots = True
-if cleanPlots :
-    print "\nTrying to remove pngs used to build QCD Bkg\n"
-    subprocess.call(["bash", "util/cleanDirs.sh"])
+            qcdSF = qcdYields['SS'+isoVal+'_'+cat] / qcdYields['SS'+isoVal+'_Loose'+cat]
+            qcdFile.write( cat+":"+str(qcdSF)+"\n" )
+        for key in qcdYields :
+            qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
+        qcdFile.close()
+        
+    
+    
+    
+    if makeFinalPlots :
+        from util.helpers import getQCDSF
+        for cat in cats :
+            ROOT.gROOT.Reset()
+            qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
+            tDir = cat
+            blind = True
+            if cat == '' :
+                tDir = 'inclusive'
+                blind = False
+            if cat == '0jet_low' :
+                blind = False
+            
+            kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
+                'useQCDMakeName':'OSl1ml2_'+isoVal+'_LooseZTT'+cat, 'qcdSF':qcdSF,
+                'targetDir':'/'+tDir,'sync':sync }
+            analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
+                params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
+        subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/", "/afs/cern.ch/user/t/truggles/www/HTT_Sept08/%s" % isoVal] )
+        
+        
+    if makeDataCards :
+        ROOT.gROOT.Reset()
+        from util.helpers import getQCDSF
+        from analysisShapesROOT import makeDataCards
+        #for var in ['m_vis', 'm_sv', 'mt_sv', 'mt_tot', 'm_coll',] :
+        #for var in ['m_sv',] :
+        for var in ['m_vis',] :
+            for cat in cats :
+                qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
+                finalCat = cat
+                if cat == '' : finalCat = 'inclusive'
+                folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
+                kwargs = {
+                'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
+                'qcdSF' : qcdSF,
+                'category' : finalCat,
+                #'fitShape' : 'm_vis',
+                'fitShape' : var,
+                'ES' : True,
+                'sync' : sync,
+                }
+                makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
+    
+    ''' Remove the .pngs used to build the QCD Bkg
+    from the web directory so we can view easitly '''
+    cleanPlots = True
+    if cleanPlots :
+        print "\nTrying to remove pngs used to build QCD Bkg\n"
+        subprocess.call(["bash", "util/cleanDirs.sh"])
     
 
 
