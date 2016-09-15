@@ -46,43 +46,46 @@ def divideTH1( h1, h2 ) :
     return g
 
 if __name__ == '__main__' :
-    #f = ROOT.TFile('firstRound.root','r')
-    #t = f.Get('tauEvents/Ntuple')
-    f = ROOT.TFile('third.root','r')
-    t = f.Get('TagAndProbe/Ntuple')
 
-    cuts = {
-        'SSPass' : '(SS == 1 && IsoMu21MediumIsoTau32 == 1)',
-        'OSPass' : '(SS == 0 && IsoMu21MediumIsoTau32 == 1)',
-        'SSFail' : '(SS == 1 && IsoMu21MediumIsoTau32 == 0)',
-        'OSFail' : '(SS == 0 && IsoMu21MediumIsoTau32 == 0)',
-        'SSAll' : '(SS == 1)',
-        'OSAll' : '(SS == 0)',
-        }
+    for run in ['RunB', 'RunC', 'RunD', 'RunE', 'RunF', 'AllRuns', 'ICHEPRuns'] :
+        f = ROOT.TFile('/data/truggles/TAP_hadd/'+run+'.root','r')
+        t = f.Get('TagAndProbe/Ntuple')
 
-    hists = {}
-    for name, cut in cuts.iteritems() :
-        print name, cut
-        hists[ name ] = getHist( t, 'tPt', cut, name )
-        
-    ### Save all
-    c = ROOT.TCanvas('c','c',600,600)
-    saveLoop( c, hists )
+        cuts = {
+            'SSPass'+run: '(SS == 1 && IsoMu21MediumIsoTau32 == 1)',
+            'OSPass'+run: '(SS == 0 && IsoMu21MediumIsoTau32 == 1)',
+            'SSFail'+run: '(SS == 1 && IsoMu21MediumIsoTau32 == 0)',
+            'OSFail'+run: '(SS == 0 && IsoMu21MediumIsoTau32 == 0)',
+            'SSAll'+run: '(SS == 1)',
+            'OSAll'+run: '(SS == 0)',
+            }
 
-    ### Do OS - SS
-    groups = ['Pass','Fail','All']
-    subMap = {}
-    for group in groups :
-        subMap[ group ] = subtractTH1( hists['OS'+group], hists['SS'+group] )
-    saveLoop( c, subMap )
+        hists = {}
+        for name, cut in cuts.iteritems() :
+            print name, cut
+            hists[ name ] = getHist( t, 'tPt', cut, name )
+            
+        ### Save all
+        c = ROOT.TCanvas('c','c',600,600)
+        saveLoop( c, hists )
+
+        ### Do OS - SS
+        groups = ['Pass'+run,'Fail'+run,'All'+run]
+        subMap = {}
+        for group in groups :
+            subMap[ group ] = subtractTH1( hists['OS'+group], hists['SS'+group] )
+        saveLoop( c, subMap )
 
 
-    ### Make Eff Plot
-    g = divideTH1( subMap['Pass'], subMap['All'] )    
-    c.SetGrid()
-    g.SetMaximum( 1.2 )
-    g.Draw()
-    c.SaveAs('/afs/cern.ch/user/t/truggles/www/TAP/FinalEff.png')
+        ### Make Eff Plot
+        g = divideTH1( subMap['Pass'+run], subMap['All'+run] )    
+        c.SetGrid()
+        g.SetMaximum( 1.2 )
+        g.GetXaxis().SetTitle('#tau p_{T} (GeV)')
+        g.GetYaxis().SetTitle('HLT Efficiency')
+        g.SetTitle(run+' HLT MediumIso35Tau Eff. per Tau')
+        g.Draw()
+        c.SaveAs('/afs/cern.ch/user/t/truggles/www/TAP/FinalEff_'+run+'.png')
 
 
 

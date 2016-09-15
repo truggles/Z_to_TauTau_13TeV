@@ -91,7 +91,8 @@ def main(argv=None):
 # create bash script
     bash_name = '%s/%s_%i_%s.sh' % (dag_dir+'inputs', channel, period, sample_name)
 #SVFitStandAlone outputFile="WZ.root" newOutputFile=1.0 newFile="none"
-    bashScript = "#!/bin/bash\n value=$(<$INPUT)\n echo \"$value\"\n"
+    bashScript = "#!/bin/bash\n value=$(<$INPUT)\n echo \"INPUT $INPUT\"\n echo \"value $value\"\n"
+    #bashScript += 'python $CMSSW_BASE/src/Z_to_TauTau_13TeV/tagAndProbe/tagAndProbeLite.py --inputFiles=\'$INPUT\' --outputFile=\'$OUTPUT\''
     bashScript += 'python $CMSSW_BASE/src/Z_to_TauTau_13TeV/tagAndProbe/tagAndProbeLite.py --inputFiles $value --outputFile=\'$OUTPUT\''
     bashScript += ' --external=True'
     bashScript += '\n'
@@ -100,7 +101,7 @@ def main(argv=None):
     os.system('chmod +x %s' % bash_name)
                 
 # create farmout command
-    farmoutString = 'farmoutAnalysisJobs --infer-cmssw-path --fwklite --input-file-list=%s' % (input_name)
+    farmoutString = 'farmoutAnalysisJobs --infer-cmssw-path --assume-input-files-exist --fwklite --input-file-list=%s' % (input_name)
     farmoutString += ' --submit-dir=%s --output-dag-file=%s --output-dir=%s' % (submit_dir, dag_dir, output_dir)
 #if period == 8:
 #    farmoutString += ' --input-files-per-job=20 %s %s' % (jobName, bash_name)
