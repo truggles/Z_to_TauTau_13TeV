@@ -9,8 +9,8 @@ tdr.setTDRStyle()
 
 
 def getHist( tree, var, cut, name ) :
-    binning = array('d', [20,25,30,32.5,35,37.5,40,\
-        45,50,60,100])
+    binning = array('d', [20,22.5,25,27.5,30,32.5,35,37.5,40,\
+        42.5,45,47.5,50,55,60,65,70,80,90,100])
     #h = ROOT.TH1F( name, name, 20, 0, 100)
     h = ROOT.TH1F( name, name, len(binning)-1, binning)
     #doCut = '(IsoMu22 == 1 && mt < 30 && m_vis > 40 && m_vis < 80)*'+cut
@@ -48,7 +48,7 @@ def divideTH1( h1, h2 ) :
 if __name__ == '__main__' :
     #f = ROOT.TFile('firstRound.root','r')
     #t = f.Get('tauEvents/Ntuple')
-    f = ROOT.TFile('second.root','r')
+    f = ROOT.TFile('third.root','r')
     t = f.Get('TagAndProbe/Ntuple')
 
     cuts = {
@@ -62,7 +62,7 @@ if __name__ == '__main__' :
 
     hists = {}
     for name, cut in cuts.iteritems() :
-        #print name, cut
+        print name, cut
         hists[ name ] = getHist( t, 'tPt', cut, name )
         
     ### Save all
@@ -79,6 +79,8 @@ if __name__ == '__main__' :
 
     ### Make Eff Plot
     g = divideTH1( subMap['Pass'], subMap['All'] )    
+    c.SetGrid()
+    g.SetMaximum( 1.2 )
     g.Draw()
     c.SaveAs('/afs/cern.ch/user/t/truggles/www/TAP/FinalEff.png')
 
