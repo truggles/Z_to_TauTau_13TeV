@@ -3,7 +3,6 @@ import ROOT
 import json
 import pyplotter.plot_functions as pyplotter #import setTDRStyle, getCanvas
 import pyplotter.tdrstyle as tdr
-import argparse
 from util.ratioPlot import ratioPlot
 import analysisPlots
 from util.splitCanvas import fixFontSize
@@ -209,6 +208,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     print "BTAGGING"
                     xBins = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
     
+            elif var == 'mt_tot' :
+                varBinned = True
+                xBins = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
+                        80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
+                        170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
+                        350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
+                        1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
+                        3300.0,3500.0,3700.0,3900.0] )
             elif var == 'm_vis_mssm' :
                 varBinned = True
                 #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
