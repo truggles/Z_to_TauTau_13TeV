@@ -31,6 +31,7 @@ maxEvents = 999999
 
 
 doLumi=True
+doLumi=False
 localFile=False
 includeTrigger=True
 
@@ -63,9 +64,9 @@ muons, muonLabel = Handle("std::vector<pat::Muon>"), "slimmedMuons"
 electrons, electronLabel = Handle("std::vector<pat::Electron>"), "slimmedElectrons"
 mets, metLabel = Handle("std::vector<pat::MET>"), "slimmedMETs"
 vertices, vertexLabel = Handle("std::vector<reco::Vertex>"), "offlineSlimmedPrimaryVertices"
-verticesScore = Handle("edm::ValueMap<float>")
 if includeTrigger :
     triggerBits, triggerBitLabel = Handle("edm::TriggerResults"), ("TriggerResults","","HLT")
+    #triggerBits, triggerBitLabel = Handle("edm::TriggerResults"), ("TriggerResults","","HLT2")
 
 print "DEFINED DATA FORMATS"
 
@@ -141,7 +142,6 @@ print "Starting Events"
 for iev,event in enumerate(events):
     if iev > maxEvents: break
     event.getByLabel(vertexLabel, vertices)
-    event.getByLabel(vertexLabel, verticesScore)
     if includeTrigger :
         event.getByLabel(triggerBitLabel, triggerBits)
 

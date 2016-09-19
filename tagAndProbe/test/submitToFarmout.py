@@ -102,6 +102,7 @@ def main(argv=None):
                 
 # create farmout command
     farmoutString = 'farmoutAnalysisJobs --infer-cmssw-path --assume-input-files-exist --fwklite --input-file-list=%s' % (input_name)
+    farmoutString += ' --use-hdfs'
     farmoutString += ' --submit-dir=%s --output-dag-file=%s --output-dir=%s' % (submit_dir, dag_dir, output_dir)
 #if period == 8:
 #    farmoutString += ' --input-files-per-job=20 %s %s' % (jobName, bash_name)
