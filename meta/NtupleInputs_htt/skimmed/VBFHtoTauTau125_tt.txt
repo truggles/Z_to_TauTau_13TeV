@@ -1,4 +1,4 @@
-/data/truggles/httSept04svFitted/VBFHtoTauTau125_0_tt.root
-/data/truggles/httSept04svFitted/VBFHtoTauTau125_1_tt.root
-/data/truggles/httSept04svFitted/VBFHtoTauTau125_2_tt.root
-/data/truggles/httSept04svFitted/VBFHtoTauTau125_3_tt.root
+/data/truggles/svFitSept16withPFMet/VBFHtoTauTau125_0_tt.root
+/data/truggles/svFitSept16withPFMet/VBFHtoTauTau125_1_tt.root
+/data/truggles/svFitSept16withPFMet/VBFHtoTauTau125_2_tt.root
+/data/truggles/svFitSept16withPFMet/VBFHtoTauTau125_3_tt.root
