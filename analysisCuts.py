@@ -87,8 +87,8 @@ mmIDL = 'LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 #mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0 && LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 
 # ET Higgs
-eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.25 && e3MVANonTrigWP90 > 0'
-mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.25 && eMVANonTrigWP90 > 0'
+eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
+mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
 mmetEsync = 'ePt > 20 && abs(eEta) < 2.5 && eMVANonTrigWP90 > 0'
 xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1 && tAgainstElectronVLooseMVA6 == 1'
 eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
