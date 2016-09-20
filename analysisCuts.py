@@ -101,7 +101,7 @@ xxmtT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0
 eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 1'
 mmmtVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 3'
 # TT Higgs
-xxttTT = 't1Pt > 20 && abs(t1Eta) < 2.5 && t2Pt > 20 && abs(t2Eta) < 2.5 && t1ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1 && t1AgainstElectronVLooseMVA6 == 1 && t1AgainstMuonLoose3 == 1 && t2AgainstElectronVLooseMVA6 == 1 && t2AgainstMuonLoose3 == 1'
+xxttTT = 't1Pt > 20 && abs(t1Eta) < 2.1 && t2Pt > 20 && abs(t2Eta) < 2.1 && t1ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1 && t1AgainstElectronVLooseMVA6 == 1 && t1AgainstMuonLoose3 == 1 && t2AgainstElectronVLooseMVA6 == 1 && t2AgainstMuonLoose3 == 1'
 eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 == 0'
 mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 2'
 # EM Higgs
@@ -155,7 +155,6 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
         }, # end EETT
          'eemt' : {
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtM, xxmtT, eemtVetos],
-            'sync' : [ZOS, ZMass, eeTrig, eeHits, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtMsync, xxmtT, eemtVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemtM, xxmtT, eemtVetos],
         }, # end EEMT
          'eeem' : {
@@ -172,7 +171,6 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
         }, # end MMMM
          'emmt' : {
             'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetE, xxetT, mmetVetos],
-            'sync' : [ZOS, ZMass, mmTrig, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetEsync, xxetT, mmetVetos],
             'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmetE, xxetT, mmetVetos],
         }, # end MMET
          'mmtt' : {

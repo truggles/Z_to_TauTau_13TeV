@@ -57,7 +57,6 @@ params = {
     #'channels' : ['eeee',],
     'channels' : ['eemt','emmt'],
     'cutMapper' : 'goodZ',
-    'cutMapper' : 'sync',
     #'cutMapper' : 'HSS',
     'mid1' : '1Sept01',
     'mid2' : '2Sept01',
