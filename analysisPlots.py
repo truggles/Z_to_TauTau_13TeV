@@ -35,9 +35,8 @@ def skipSystShapeVar( var, sample, channel ) :
 
 # Make specific extra cuts for different TES requirements
 def ESCuts( sample, channel, var ) :
-    #tauPtCut = 45.
     tau2PtCut = 40.
-    tau1PtCut = 50.
+    tau1PtCut = 40.
     if len( channel ) == 4 : return '*(1)'
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
         if channel == 'tt' :
@@ -199,6 +198,7 @@ def getHistoDict( analysis, channel ) :
             'mjj' : (50, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'),
             'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
             'Higgs_Pt' : (400, 0, 400, 5, 'Higgs p_{T} [GeV]', ' GeV'),
+            'jdeta' : (1000, -5, 5, 40, 'VBF Jets dEta', ' dEta'),
 #            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
 #            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
 #            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
@@ -211,7 +211,8 @@ def getHistoDict( analysis, channel ) :
 #            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
 #            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
 #            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-#            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
 #            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
 #            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
 #            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
@@ -232,7 +233,7 @@ def getHistoDict( analysis, channel ) :
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
 #            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-#            'mt_tot' : (350, 0, 350, 10, 'Total Transverse Mass [GeV]', ' GeV'),
+#            'mt_tot' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
             #'pzetavis' : (300, 0, 300, 20, 'pZetaVis', ' GeV'),
             #'pfpzetamis' : (300, 0, 300, 20, 'pfpZetaMis', ' GeV'),
             #'pzetamiss' : (500, -200, 300, 20, 'pZetaMis', ' GeV'),
@@ -282,7 +283,7 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-#                'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
+                'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
 #                'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
                 'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
 #                'iso_1' : (100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
@@ -290,7 +291,7 @@ def getHistoDict( analysis, channel ) :
 #                'chargedIsoPtSum_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'),
 #                'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
 #                'chargedIsoPtSumdR03_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'),
-#                'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
+                'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
 #                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
 #                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
 #                'iso_2' : (100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),

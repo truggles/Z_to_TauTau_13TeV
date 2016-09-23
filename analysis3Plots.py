@@ -222,20 +222,19 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 xBins = array( 'd', [] )
                 for i in range(0, 351 ) :
                     xBins.append( i * 10 )
-            elif var == 'm_vis_varB' :
-                varBinned = True
-                xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
-            elif ops['sync'] :
+            elif ops['sync'] and 'm_vis' in var :
                 varBinned = True
                 xBins = array( 'd', [] )
                 for i in range( 21 ) :
                     xBins.append( i * 17.5 )
-            elif is1JetCat :
-                varBinned = True
-                xBins = array( 'd', [0,60,70,80,90,100,110,120,130,150,200,350] )
-            elif isVBFCat :
-                varBinned = True
-                xBins = array( 'd', [0,60,80,100,120,150,200,350] )
+            elif 'm_sv' in var :
+                if is1JetCat :
+                    varBinned = True
+                    xBins = array( 'd', [0,60,70,80,90,100,110,120,130,150,200,350] )
+                #elif isVBFCat :
+                else :
+                    varBinned = True
+                    xBins = array( 'd', [0,60,80,100,120,150,200,350] )
             else :
                 varBinned = False
                 first = info[1] * 1.
