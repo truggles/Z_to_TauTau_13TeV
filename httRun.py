@@ -43,11 +43,12 @@ os.chdir('..')
 
 ''' Preset samples '''
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # NO ZZ2L2Q
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Aug 24 samples from /hdfs @cecile
+#SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # NO ZZ2L2Q FIXME No data E/F
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # NO ZZ2L2Q  #XXX    ICHEP   12.9/fb   XXX
 #SamplesDataCards = ['dataTT',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
+#SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -65,12 +66,15 @@ params = {
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
     'cutMapper' : 'syncCutsDCqcdTES',
-    'mid1' : '1Sept06newSVFit20p1',
-    'mid2' : '2Sept06newSVFit20p1',
-    'mid3' : '3Sept06newSVFit20p1',
-    #'mid1' : '1Aug29fVTight',
-    #'mid2' : '2Aug29fVTight',
-    #'mid3' : '3Aug29fVTight',
+    'mid1' : '1Sept21pfMet',
+    'mid2' : '2Sept21pfMet',
+    'mid3' : '3Sept21pfMet',
+    #'mid1' : '1Sept13pt4040data12p9',
+    #'mid2' : '2Sept13pt4040data12p9',
+    #'mid3' : '3Sept13pt4040data12p9',
+    #'mid1' : '1Sept06newSVFit20p1',
+    #'mid2' : '2Sept06newSVFit20p1',
+    #'mid3' : '3Sept06newSVFit20p1',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -100,7 +104,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
 #makeQCDBkg = False
 makeFinalPlots = True
@@ -108,7 +112,7 @@ makeFinalPlots = True
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 #isoVal = 'Tight
 #isoVal = 'VTight'
 #isoVal = 'Medium'
@@ -118,10 +122,12 @@ isoVals = ['Tight',]
 
 cats = ['', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
 cats = ['', 'vbf', '1jet_low', '1jet_high', '0jet',]
-cats = ['0jet',]
-cats = ['vbf', '1jet_low', '1jet_high',]
+cats = ['', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
+cats = ['1jet_low','1jet_high']
 pt = '5040'
+#pt = '4040'
 sync = True
+sync = False
 
 for isoVal in isoVals :
     samplesX = copy.deepcopy(samples)
@@ -172,7 +178,7 @@ for isoVal in isoVals :
             if cat == '' :
                 tDir = 'inclusive'
                 blind = False
-            if cat == '0jet_low' :
+            if cat == '0jet' :
                 blind = False
             
             kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
@@ -188,8 +194,8 @@ for isoVal in isoVals :
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
         #for var in ['m_vis', 'm_sv', 'mt_sv', 'mt_tot', 'm_coll',] :
-        #for var in ['m_sv',] :
-        for var in ['m_vis',] :
+        for var in ['m_sv',] :
+        #for var in ['m_vis','m_sv'] :
             for cat in cats :
                 qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                 finalCat = cat
@@ -205,8 +211,8 @@ for isoVal in isoVals :
                 'sync' : sync,
                 }
                 makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''

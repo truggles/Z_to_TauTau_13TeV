@@ -53,6 +53,22 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
+            'EWKWMinus' :   { 
+                'DASPath' : '/EWKWMinus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/%s-v2/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 20.25,
+                'group' : 'dib'},
+            'EWKWPlus' :    { 
+                'DASPath' : '/EWKWPlus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 20.25,
+                'group' : 'dib'},
+            'EWKZ2l' :      { 
+                'DASPath' : '/EWKZ2Jets_ZToLL_M-50_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 3.987,
+                'group' : 'dib'},
+            'EWKZ2nu' :     { 
+                'DASPath' : '/EWKZ2Jets_ZToNuNu_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 10.01,
+                'group' : 'dib'},
             'VV' :         { 
                 'DASPath' : '/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 11.95,
