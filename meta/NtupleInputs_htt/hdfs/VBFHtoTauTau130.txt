@@ -1,5 +1,5 @@
-/hdfs/store/user/truggles/SMHTT_aug31//VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-1055977A-E24F-E611-A0C6-0CC47A4D7630.root
-/hdfs/store/user/truggles/SMHTT_aug31//VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-48602AB5-AD4B-E611-B4AB-002590E7D7E2.root
-/hdfs/store/user/truggles/SMHTT_aug31//VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-A00CB079-E24F-E611-96F6-0CC47A78A4B8.root
-/hdfs/store/user/truggles/SMHTT_aug31//VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-CC6BFA55-E94B-E611-AA3D-0022194FEB46.root
-/hdfs/store/user/truggles/SMHTT_aug31//VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-D6CC07FA-C74B-E611-BC88-008CFA1111CC.root
+/hdfs/store/user/truggles/SMHTT_aug31/VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-1055977A-E24F-E611-A0C6-0CC47A4D7630.root
+/hdfs/store/user/truggles/SMHTT_aug31/VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-48602AB5-AD4B-E611-B4AB-002590E7D7E2.root
+/hdfs/store/user/truggles/SMHTT_aug31/VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-A00CB079-E24F-E611-96F6-0CC47A78A4B8.root
+/hdfs/store/user/truggles/SMHTT_aug31/VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-CC6BFA55-E94B-E611-AA3D-0022194FEB46.root
+/hdfs/store/user/truggles/SMHTT_aug31/VBFHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-D6CC07FA-C74B-E611-BC88-008CFA1111CC.root

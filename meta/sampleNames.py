@@ -69,6 +69,22 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/EWKZ2Jets_ZToNuNu_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 10.01,
                 'group' : 'dib'},
+            'WWW' :     { 
+                'DASPath' : '/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 1.,
+                'group' : 'dib'},
+            'WWZ' :     { 
+                'DASPath' : '/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 1.,
+                'group' : 'dib'},
+            'WZZ' :     { 
+                'DASPath' : '/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 1.,
+                'group' : 'dib'},
+            'ZZZ' :     { 
+                'DASPath' : '/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 1.,
+                'group' : 'dib'},
             'VV' :         { 
                 'DASPath' : '/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 11.95,

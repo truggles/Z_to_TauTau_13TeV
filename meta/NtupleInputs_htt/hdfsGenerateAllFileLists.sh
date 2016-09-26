@@ -1,6 +1,9 @@
 
 #ALL=/hdfs/store/user/caillol/SMHTT_aug16_v2
-ALL=/hdfs/store/user/truggles/SMHTT_aug31/
+ALL=/hdfs/store/user/truggles/SMHTT_aug31
+ZZ2l2q=/hdfs/store/user/truggles/SMHTT_sept24_ZZ2l2q
+EWK=/hdfs/store/user/truggles/SMHTT_sept24_EWK
+WZZ=/hdfs/store/user/truggles/SMHTT_sept24_WZZ
 
 #ls ${ALL}/data_MuonEG_Run2016[B,C,D,E,F]/make_ntuples_cfg-*.root                                         > hdfs/dataEM.txt 
 ls ${ALL}/data_Tau_Run2016B/make_ntuples_cfg-*.root                                            		 > hdfs/dataTT-B.txt 
@@ -27,7 +30,16 @@ ls ${ALL}/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root
 ls ${ALL}/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root                         > hdfs/WZ1l1nu2q.txt 
 ls ${ALL}/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root                           > hdfs/WZ1l3nu.txt 
 ls ${ALL}/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root                            > hdfs/WZ2l2q.txt 
-ls ${ALL}/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root                            > hdfs/ZZ2l2q.txt 
+#ls ${ALL}/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root                            > hdfs/ZZ2l2q.txt 
+ls ${ZZ2l2q}/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root                         > hdfs/ZZ2l2q.txt
+ls ${EWK}/EWKWPlus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/make_ntuples_cfg-*.root                       > hdfs/EWKWPlus.txt
+ls ${EWK}/EWKWMinus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/make_ntuples_cfg-*.root                      > hdfs/EWKWMinus.txt
+ls ${EWK}/EWKZ2Jets_ZToLL_M-50_13TeV-madgraph-pythia8/make_ntuples_cfg-*.root                            > hdfs/EWKZ2l.txt
+ls ${EWK}/EWKZ2Jets_ZToNuNu_13TeV-madgraph-pythia8/make_ntuples_cfg-*.root                               > hdfs/EWKZ2nu.txt
+ls ${EWK}/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-*.root                             > hdfs/WWW.txt
+ls ${EWK}/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-*.root                                > hdfs/WWZ.txt
+ls ${EWK}/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-*.root                                > hdfs/ZZZ.txt
+ls ${WZZ}/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-*.root                                > hdfs/WZZ.txt
 ls ${ALL}/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-*.root                           > hdfs/VV.txt 
 #ls ${ALL}/WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/*/*/make_ntuples_cfg-*                         > hdfs/WZJets.txt
 #ls ${ALL}/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/*/*/make_ntuples_cfg-*                           > hdfs/WZ3l1nu.txt 

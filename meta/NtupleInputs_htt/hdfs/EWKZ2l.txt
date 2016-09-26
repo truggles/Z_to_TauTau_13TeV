@@ -1,0 +1,4 @@
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/EWKZ2Jets_ZToLL_M-50_13TeV-madgraph-pythia8/make_ntuples_cfg-32E51D4B-8C3D-E611-8481-0CC47A4F1D16.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/EWKZ2Jets_ZToLL_M-50_13TeV-madgraph-pythia8/make_ntuples_cfg-B048418C-8C3D-E611-9878-001E672489D0.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/EWKZ2Jets_ZToLL_M-50_13TeV-madgraph-pythia8/make_ntuples_cfg-CE43848E-8D3D-E611-9630-0CC47A4F1D16.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/EWKZ2Jets_ZToLL_M-50_13TeV-madgraph-pythia8/make_ntuples_cfg-DADB37CD-8D3D-E611-BBE5-001E672489F3.root
