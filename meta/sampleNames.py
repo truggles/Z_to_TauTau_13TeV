@@ -4,6 +4,8 @@
 
 # Excellent Source: https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
 # See Kenneth's Log Book for how to find this stuff on MCM: https://twiki.cern.ch/twiki/bin/view/Main/KDLLogBook#LogDay20150106
+# When in MCM, click "Select View", check "Generator Parameters" and there should be a cross section for one of
+# the versions of a given sample
 # The scale factor is for LO -> NNLO scaling see excel sheet below https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_samples
 
 from collections import OrderedDict
@@ -71,19 +73,19 @@ def sampleDetails( analysis ) :
                 'group' : 'dib'},
             'WWW' :     { 
                 'DASPath' : '/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 1.,
+                'xsec' : 0.2086,
                 'group' : 'dib'},
             'WWZ' :     { 
                 'DASPath' : '/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 1.,
+                'xsec' : 0.1651,
                 'group' : 'dib'},
             'WZZ' :     { 
                 'DASPath' : '/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 1.,
+                'xsec' : 0.05565,
                 'group' : 'dib'},
             'ZZZ' :     { 
                 'DASPath' : '/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 1.,
+                'xsec' : 0.01398,
                 'group' : 'dib'},
             'VV' :         { 
                 'DASPath' : '/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
