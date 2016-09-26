@@ -107,7 +107,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
 
     ''' FINAL SELECTIONS ZTT && HIG-15-007 ZTT '''
     params['channels'] = ['tt',]
-    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT' % (sign, isoT, isoL)
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTinclusive' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     import analysis3Plots

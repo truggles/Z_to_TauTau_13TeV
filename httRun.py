@@ -113,9 +113,9 @@ isoVals = ['VTight', 'Tight', 'Medium',]
 isoVals = ['Tight',]
 #isoVals = ['Medium',]
 
-cats = ['', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
-cats = ['', 'vbf', '1jet_low', '1jet_high', '0jet',]
-cats = ['', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
+cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
+cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet',]
+cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['1jet_low','1jet_high']
 pt = '5040'
 #pt = '4040'
@@ -168,10 +168,7 @@ for isoVal in isoVals :
             qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
             tDir = cat
             blind = True
-            if cat == '' :
-                tDir = 'inclusive'
-                blind = False
-            if cat == '0jet' :
+            if cat in ['inclusive', '0jet'] :
                 blind = False
             
             kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
@@ -192,7 +189,6 @@ for isoVal in isoVals :
             for cat in cats :
                 qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                 finalCat = cat
-                if cat == '' : finalCat = 'inclusive'
                 folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                 kwargs = {
                 'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
