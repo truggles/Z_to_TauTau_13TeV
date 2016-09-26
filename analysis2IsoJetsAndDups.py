@@ -107,32 +107,6 @@ def getTauPtWeight( sample, channel, t1GenID, t2GenID, row, ptScaler ) :
 
 
 
-# From Cecile Sept 06, 2016
-def collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2, met, metphi, mVis ) :
-    px1 = math.cos( phi1 ) * pt1
-    py1 = math.sin( phi1 ) * pt1
-    px2 = math.cos( phi2 ) * pt2
-    py2 = math.sin( phi2 ) * pt2
-    metx = math.cos( metphi ) * met
-    mety = math.sin( metphi ) * met
-    pmis1=(metx*pt1*py2-mety*px2*pt1)/(px1*py2-px2*py1)
-    pmis2=(metx*pt2*py1-mety*px1*pt2)/(px1*py2-px2*py1)
-    if pmis1<0 : pmis1=0
-    if pmis2<0 : pmis2=0
-    alpha=(pt1)/(pt1+pmis1)
-    beta=(pt2)/(pt2+pmis2)
-    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
-    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
-    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
-    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
-    mcoll=(lorentz1 + lorentz2).M()
-    if alpha > 0 : mcoll=mcoll/math.sqrt(alpha)
-    if beta > 0 : mcoll=mcoll/math.sqrt(beta)
-
-    return mcoll 
-
-
-
 def getHiggsPt( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2, met, metphi) :
     lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
     lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
@@ -713,12 +687,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
     mt_tot_DOWN = array('f', [ 0 ] )
     mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
-    m_coll = array('f', [ 0 ] )
-    m_collB = tnew.Branch('m_coll', m_coll, 'm_coll/F')
-    m_coll_UP = array('f', [ 0 ] )
-    m_coll_UPB = tnew.Branch('m_coll_UP', m_coll_UP, 'm_coll_UP/F')
-    m_coll_DOWN = array('f', [ 0 ] )
-    m_coll_DOWNB = tnew.Branch('m_coll_DOWN', m_coll_DOWN, 'm_coll_DOWN/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -883,20 +851,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
                 mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
                 mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
-                if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
-                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
-                            mvamet[0], mvametphi[0], getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
-                    m_coll_UP[0] = collinearMass( pt1*1.03, eta1, phi1, m1, pt2*1.03, eta2, phi2, m2,\
-                            mvamet[0], mvametphi[0], m_vis_UP[0] ) 
-                    m_coll_DOWN[0] = collinearMass( pt1*0.97, eta1, phi1, m1, pt2*0.97, eta2, phi2, m2,\
-                            mvamet[0], mvametphi[0], m_vis_DOWN[0] ) 
-                else :
-                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
-                            row.type1_pfMetEt, row.type1_pfMetPhi, getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
-                    m_coll_UP[0] = collinearMass( pt1*1.03, eta1, phi1, m1, pt2*1.03, eta2, phi2, m2,\
-                            row.type1_pfMetEt, row.type1_pfMetPhi, m_vis_UP[0] ) 
-                    m_coll_DOWN[0] = collinearMass( pt1*0.97, eta1, phi1, m1, pt2*0.97, eta2, phi2, m2,\
-                            row.type1_pfMetEt, row.type1_pfMetPhi, m_vis_DOWN[0] ) 
             else :
                 m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
                 m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
@@ -907,14 +861,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
                 mt_tot_UP[0] = mt_tot[0]
                 mt_tot_DOWN[0] = mt_tot[0]
-                if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
-                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
-                            mvamet[0], mvametphi[0], getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
-                else :
-                    m_coll[0] = collinearMass( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2,\
-                            row.type1_pfMetEt, row.type1_pfMetPhi, getattr( row, '%s_%s_Mass' % (l1,l2) ) ) 
-                m_coll_UP[0] = m_coll[0] 
-                m_coll_DOWN[0] = m_coll[0]
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
 
 

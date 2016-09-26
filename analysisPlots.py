@@ -36,7 +36,7 @@ def skipSystShapeVar( var, sample, channel ) :
 # Make specific extra cuts for different TES requirements
 def ESCuts( sample, channel, var ) :
     tau2PtCut = 40.
-    tau1PtCut = 40.
+    tau1PtCut = 50.
     if len( channel ) == 4 : return '*(1)'
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
         if channel == 'tt' :
@@ -195,10 +195,11 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
-            'mjj' : (50, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'),
-            'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
-            'Higgs_Pt' : (400, 0, 400, 5, 'Higgs p_{T} [GeV]', ' GeV'),
-            'jdeta' : (1000, -5, 5, 40, 'VBF Jets dEta', ' dEta'),
+            'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
+            'Z_Pt' : (100, 0, 500, 1, 'Z p_{T} [GeV]', ' GeV'),
+            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
+            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
+            'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
 #            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
 #            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
 #            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
@@ -211,8 +212,8 @@ def getHistoDict( analysis, channel ) :
 #            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
 #            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
 #            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
-            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
+#XXX            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+#XXX            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
 #            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
 #            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
 #            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
@@ -225,11 +226,10 @@ def getHistoDict( analysis, channel ) :
 #            #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
 #            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
             #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
-#            'm_coll' : [35, 0, 350, 1, 'Collinear Mass [GeV]', ' GeV'],
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
-            'm_vis' : [35, 0, 350, 1, 'Z Vis Mass [GeV]', ' GeV'],
+            'm_vis' : [30, 0, 300, 1, 'Z Vis Mass [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
-            'm_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
+            'm_sv' : (300, 0, 300, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
 #            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -240,7 +240,7 @@ def getHistoDict( analysis, channel ) :
         }
 
         ''' added shape systematics '''
-        toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot', 'm_coll']
+        toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot',]
         #toAdd = ['m_vis', 'm_sv', 'mt_sv',]
         varsForShapeSyst = []
         for item in toAdd :
