@@ -12,7 +12,7 @@ class ZPtReweighter :
 
     def __init__(self):
         #print "Initializing LepWeight class for channel ",channel
-        self.zptFile = ROOT.TFile('meta/mssm_files/zpt_weights.root','r')
+        self.zptFile = ROOT.TFile('data/zpt_weights_2016_mssm.root','r')
         self.zptHist = self.zptFile.Get('zptmass_histo')
 
 
