@@ -118,26 +118,23 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     ''' LEGACY HTT CATEGORIES '''
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_low' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(Higgs_Pt>100 && Higgs_Pt<170)*(jetVeto30==1 ||\
-        (jetVeto30==2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, isoL1ML2loose)
+        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_high' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(Higgs_Pt>170)*(jetVeto30==1 ||\
-        (jetVeto30==2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, isoL1ML2loose)
+        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf' % (sign, isoT, isoL)
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf_low' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2 && Higgs_Pt>100 && mjj>500 && abs(jdeta) > 3.5 && njetingap20 < 1)*%s' % (Zsign, isoL1ML2loose)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2 && Higgs_Pt>100 && mjj>300 && mjj < 700 && abs(jdeta) > 2.5 && njetingap20 < 1)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && abs(jdeta) > 2.5 && njetingap20 < 1)*((Higgs_Pt<100 && mjj>300) || (Higgs_Pt>100 && mjj>300 && mjj<500))*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf_high' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2 && Higgs_Pt>100 && mjj>500 && abs(jdeta) > 3.5 && njetingap20 < 1)*%s' % (Zsign, isoL1ML2loose)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2 && Higgs_Pt>100 && mjj>700 && abs(jdeta) > 2.5 && njetingap20 < 1)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && Higgs_Pt>100 && mjj>500 && abs(jdeta) > 2.5 && njetingap20 < 1)*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
@@ -147,15 +144,15 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ''' For checking distributions '''
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
-    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2)*%s' % (Zsign, isoL1ML2loose)
-    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2)*%s' % (Zsign, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
 
     
