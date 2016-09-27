@@ -189,7 +189,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
             if not baseVar in var : continue
             if ops['allShapes'] :
-                if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
+                print "\nAll Shapes Applied\n"
+                #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
+                if not (('_energyScale' in var) or ('_zPt' in var) or (baseVar == var)) :
                     continue
             #if ops['mssm'] :
             #    if not var == baseVar+'_mssm' : continue
@@ -206,7 +208,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             # Defined out here for large scope
-            print "Var: ",var
+            print "\nVar: ",var
     
             #print "MSSM btag option:",ops['btag']
             binArray = array( 'd', [] )
@@ -249,7 +251,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             histos = {}
             for name in nameArray :
                 title = name.strip('_')
-                if ops['ES'] or ops['tauPt'] :
+                if ops['ES'] or ops['tauPt'] or ops['allShapes'] :
                     if '_energyScaleUp' in var :
                         histos[ name ] = ROOT.TH1D( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
                     elif '_energyScaleDown' in var :
@@ -354,8 +356,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
                 # Proper naming of output histos
-                #if (ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var or '_topPt' in var) :
-                if (ops['ES']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var or '_topPt' in var) :
+                if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var or '_topPt' in var) :
                     if name in ['_data_obs_','_QCD_','_VV_','_W_'] : continue 
                     lep = 'x'
                     if channel == 'tt' : lep = 't'

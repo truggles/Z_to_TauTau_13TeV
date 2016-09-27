@@ -63,7 +63,8 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    'cutMapper' : 'syncCutsDCqcdTES',
+    #'cutMapper' : 'syncCutsDCqcdTES',
+    'cutMapper' : 'syncCutsDCqcdTES5040',
     'mid1' : '1Sept26a',
     'mid2' : '2Sept26a',
     'mid3' : '3Sept26a',
@@ -73,7 +74,7 @@ params = {
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimHdfs' : 'false',
+    'skimHdfs' : 'false',
     #'skimHdfs' : 'true',
     #'skimmed' : 'false',
     'skimmed' : 'true',
@@ -85,8 +86,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -104,21 +105,17 @@ makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
-#isoVal = 'Tight
-#isoVal = 'VTight'
-#isoVal = 'Medium'
-isoVals = ['VTight', 'Tight', 'Medium',]
+#makeDataCards = False
+#isoVals = ['VTight', 'Tight', 'Medium',]
 isoVals = ['Tight',]
-#isoVals = ['Medium',]
 
 cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
 cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet',]
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
-cats = ['1jet_low','1jet_high']
+cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
+#cats = ['1jet',]
 pt = '5040'
-#pt = '4040'
-sync = True
+#sync = True
 sync = False
 
 for isoVal in isoVals :
@@ -167,7 +164,7 @@ for isoVal in isoVals :
             qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
             tDir = cat
             blind = True
-            if cat in ['inclusive', '0jet'] :
+            if cat in ['inclusive', '0jet', '1jet'] :
                 blind = False
             
             kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
@@ -195,7 +192,7 @@ for isoVal in isoVals :
                 'category' : finalCat,
                 #'fitShape' : 'm_vis',
                 'fitShape' : var,
-                'ES' : True,
+                'allShapes' : True,
                 'sync' : sync,
                 }
                 makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
