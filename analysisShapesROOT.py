@@ -208,7 +208,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             # Defined out here for large scope
             print "Var: ",var
     
-            print "MSSM btag option:",ops['btag']
+            #print "MSSM btag option:",ops['btag']
             binArray = array( 'd', [] )
             if ops['mssm'] :
                 print "MSSM btag option:",ops['btag']
@@ -237,15 +237,13 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     binArray.append( i * 17.5 )
             else :
                 if ops['category'] in ['1jet_low', '1jet_high'] :
-                    binArray = array( 'd', [0,60,70,80,90,100,110,120,130,150,200,350] )
-                elif ops['category'] == 'vbf' :
-                    binArray = array( 'd', [0,60,80,100,120,150,200,350] )
+                    binArray = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+                elif 'vbf' in ops['category'] :
+                    binArray = array( 'd', [0,40,60,80,100,120,150,200,250] )
                 else :
-                    binArray = array( 'd', [] )
-                    for i in range( 36 ) :
-                        binArray.append( i * 10 )
+                    binArray = array( 'd', [i*10 for i in range( 31 )] )
             numBins = len( binArray ) - 1
-            #print binArray
+            print binArray
             #print numBins
 
             histos = {}
@@ -310,24 +308,26 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
                 #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
-                    print "Using QCD SCALE FACTOR <<<< NEW >>>>"
+                    #print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                     qcdScale = ops['qcdSF']
                     print "Skip rebin; Scale QCD shape by %f" % qcdScale
-                    print "QCD yield Pre: %f" % hist.Integral()
+                    #print "QCD yield Pre: %f" % hist.Integral()
                     hist.Scale( qcdScale )
-                    print "QCD yield Post Scale: %f" % hist.Integral()
+                    #print "QCD yield Post Scale: %f" % hist.Integral()
     
-                if 'QCD' not in sample :
-                    #hist.Rebin( 10 )
-                    #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
-                    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
-                    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
-                    histos[ samples[ sample ][1] ].Add( hNew )
-                else :
-                    #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
-                    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
-                    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
-                    histos[ samples[ sample ][1] ].Add( hNew )
+                #if 'QCD' not in sample :
+                #    #hist.Rebin( 10 )
+                #    #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
+                #    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+                #    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
+                #    histos[ samples[ sample ][1] ].Add( hNew )
+                #else :
+                #    #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
+                #    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+                #    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
+                #    histos[ samples[ sample ][1] ].Add( hNew )
+                hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+                histos[ samples[ sample ][1] ].Add( hNew )
     
                 if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
                     print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
@@ -342,15 +342,16 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             for name in histos :
                 #print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
                 # Make sure we have no negative bins
-                #for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
-                #    setVal = 0.0
-                #    if histos[ name ].GetBinContent( bin_ ) < 0 :
-                #        histos[ name ].SetBinContent( bin_, setVal )
-                #        print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
+                for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
+                    setVal = 0.0
+                    if histos[ name ].GetBinContent( bin_ ) < 0 :
+                        histos[ name ].SetBinContent( bin_, setVal )
+                        print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
                 if not 'ggH' in name and not 'bbH' in name :
                     print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
-                if not ops['mssm'] :
-                    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
+                #if not ops['mssm'] :
+                #    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
+                
     
                 # Proper naming of output histos
                 #if (ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var or '_topPt' in var) :
