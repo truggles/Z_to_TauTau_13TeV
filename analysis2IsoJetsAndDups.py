@@ -1029,8 +1029,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' : tauIso == 'TightIso'
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
-                    tauIDweight_1[0] = 0.927
-                    tauIDweight_2[0] = 0.927
+                    tauIDweight_1[0] = 0.951
+                    tauIDweight_2[0] = 0.951
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
