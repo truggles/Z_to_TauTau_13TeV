@@ -117,10 +117,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         sfs = '*(1)'
         if analysis == 'htt' :
             sfs = '*(weight)'
-            #if channel == 'tt' :
+            if channel == 'tt' :
                 # Not currently included in weight for sync ntuple
-                #sfs += '*(tauIDweight_1 * tauIDweight_2)'
-                #sfs += '*(0.9)'
+                sfs += '*(tauIDweight_1 * tauIDweight_2)'
         if analysis == 'azh' :
             sfs = '*(puweight*azhWeight)' 
         xsec = '*(XSecLumiWeight)'
@@ -196,7 +195,7 @@ def getHistoDict( analysis, channel ) :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
             'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
-            'Z_Pt' : (100, 0, 500, 1, 'Z p_{T} [GeV]', ' GeV'),
+            'Z_Pt' : (100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'),
             'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
             'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
             'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
@@ -205,9 +204,10 @@ def getHistoDict( analysis, channel ) :
 #            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
 #            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
 #            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-#            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
 #            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
-#            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
 #            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
 #            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
 #            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
@@ -229,7 +229,7 @@ def getHistoDict( analysis, channel ) :
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
             'm_vis' : [30, 0, 300, 1, 'Z Vis Mass [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
-            'm_sv' : (300, 0, 300, 10, 'Z svFit Mass [GeV]', ' GeV'),
+            'm_sv' : [300, 0, 300, 10, 'Z svFit Mass [GeV]', ' GeV'],
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
 #            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -247,15 +247,15 @@ def getHistoDict( analysis, channel ) :
             varsForShapeSyst.append( item )
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        shapesToAdd = ['energyScale',]
+        shapesToAdd = {'energyScale':'TES','zPt':'Z p_{T}/Mass Reweight'}
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
-                for shape in shapesToAdd :
+                for shape, app in shapesToAdd.iteritems() :
                     genVarMap[ var+'_'+shape+'Up' ] = list(genVarMap[ var ])
-                    genVarMap[ var+'_'+shape+'Up' ][4] = genVarMap[ var+'_'+shape+'Up' ][4]+' TES UP'
+                    genVarMap[ var+'_'+shape+'Up' ][4] = genVarMap[ var+'_'+shape+'Up' ][4]+' '+app+' UP'
                     genVarMap[ var+'_'+shape+'Down' ] = list(genVarMap[ var ])
-                    genVarMap[ var+'_'+shape+'Down' ][4] = genVarMap[ var+'_'+shape+'Down' ][4]+' TES Down'
-        #    
+                    genVarMap[ var+'_'+shape+'Down' ][4] = genVarMap[ var+'_'+shape+'Down' ][4]+' '+app+' Down'
+            
 
         if channel == 'em' :
             # Provides a list of histos to create for 'EM' channel
