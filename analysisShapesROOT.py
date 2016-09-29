@@ -234,9 +234,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
                         3300.0,3500.0,3700.0,3900.0] )
             elif ops['sync'] :
-                binArray = array( 'd', [] )
-                for i in range( 21 ) :
-                    binArray.append( i * 17.5 )
+                binArray = array( 'd', [i*20 for i in range( 11 )] )
             else :
                 if ops['category'] in ['1jet_low', '1jet_high'] :
                     binArray = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
