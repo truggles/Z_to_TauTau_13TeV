@@ -65,18 +65,20 @@ def initialCut( outFile, analysis, sample, samples, channel, cutMapper, svFitPre
     if svFitPost == 'true' : sampF = 'sv/'
     if skimHdfs == 'true' : sampF = 'hdfs/'
     if skimmed == 'true' : sampF = 'skimmed/'
+    path = '%s/final/Ntuple' % channel
     if svFitPost == 'true' or skimmed == 'true' :
         sampleList = 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel)
+        if 'dataTT' not in sample :
+            path = '%s/Ntuple' % channel
     else :
         sampleList = 'meta/NtupleInputs_%s/%s%s.txt' % (analysis, sampF, sample)
-    path = '%s/final/Ntuple' % channel
     #print "sample List and path", sampleList, path
     chain = makeTChain( sampleList, path, 0, fileMin, fileMax )
 
     # Store eventCount
-    getEvtInfo = getEventCount( sampleList, channel, 0, fileMin, fileMax )
-    eventCount = getEvtInfo[0]
-    summedWeights = getEvtInfo[1]
+    #getEvtInfo = getEventCount( sampleList, channel, 0, fileMin, fileMax )
+    eventCount = 0.0
+    summedWeights = 0.0
 
     numEntries = chain.GetEntries()
     #print "%25s : %10i" % ('Initial', numEntries)

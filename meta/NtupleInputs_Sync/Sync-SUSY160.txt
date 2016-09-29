@@ -1,6 +1,5 @@
-/data/truggles/Sept28-SM-HTT-Sync/SUSY160/make_ntuples_cfg-66445A95-3151-E611-AA07-0090FAA579F0.root
-/data/truggles/Sept28-SM-HTT-Sync/SUSY160/make_ntuples_cfg-8EBF2F49-5551-E611-A76B-0CC47A1E046A.root
-/data/truggles/Sept28-SM-HTT-Sync/SUSY160/make_ntuples_cfg-C60106AA-3F51-E611-92E1-00259073E42E.root
-/data/truggles/Sept28-SM-HTT-Sync/SUSY160/make_ntuples_cfg-CC21A5B7-3F51-E611-98B0-0025907B4F16.root
-/data/truggles/Sept28-SM-HTT-Sync/SUSY160/make_ntuples_cfg-DC070582-4751-E611-B401-002590D0B0B8.root
-/data/truggles/Sept28-SM-HTT-Sync/SUSY160/make_ntuples_cfg-E29D29F3-3851-E611-88F1-00259073E34E.root
+/data/truggles/2015-ZTT-svFit/april11_svFit_2/Recoil2_TESType1_isWJ0/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_0_tt.root
+/data/truggles/2015-ZTT-svFit/april11_svFit_2/Recoil2_TESType1_isWJ0/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_1_tt.root
+/data/truggles/2015-ZTT-svFit/april11_svFit_2/Recoil2_TESType1_isWJ0/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_2_tt.root
+/data/truggles/2015-ZTT-svFit/april11_svFit_2/Recoil2_TESType1_isWJ0/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_3_tt.root
+/data/truggles/2015-ZTT-svFit/april11_svFit_2/Recoil2_TESType1_isWJ0/TauTau_13_Recoil2_TESType1_isWJ0-ggH160_4_tt.root

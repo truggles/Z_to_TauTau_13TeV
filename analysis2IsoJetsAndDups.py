@@ -392,8 +392,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
         'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
         'cand_AgainstMuonTight3' : 'againstMuonTight3',
-        'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
-        'cand_ChargedIsoPtSumdR03' : 'chargedIsoPtSumdR03',
+        #'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
+        #'cand_ChargedIsoPtSumdR03' : 'chargedIsoPtSumdR03',
         'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
@@ -402,7 +402,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
         'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
-        'cand_ByVLooseIsolationMVArun2v1DBoldDMwLT' : 'byVLooseIsolationMVArun2v1DBoldDMwLT',
+        #'cand_ByVLooseIsolationMVArun2v1DBoldDMwLT' : 'byVLooseIsolationMVArun2v1DBoldDMwLT',
         }
 
     # Add in the vars which won't change names
@@ -760,9 +760,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            #if channel == 'tt' and 'Sync-' in sample : 
-            #    #print "### Iso Ordering %s ###" % sample
-            #    isoOrder( channel, row )
+            if channel == 'tt' and 'Sync-' in sample : 
+                #print "### Iso Ordering %s ###" % sample
+                isoOrder( channel, row )
             vbfClean( row )
 
 

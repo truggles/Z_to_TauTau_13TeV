@@ -33,6 +33,7 @@ os.chdir('..')
 
 ''' Preset samples '''
 SamplesSync = ['Sync-HtoTT','Sync-VBF125']
+SamplesSync = ['Sync-SUSY160',]
 samples = SamplesSync
 
 ''' These parameters are fed into the 2 main function calls.
@@ -49,12 +50,12 @@ params = {
     #'channels' : ['tt','em',],
     'channels' : ['tt',],
     #'channels' : ['em',],
-    #'cutMapper' : 'syncCutsMSSMNtuple',
-    'cutMapper' : 'syncCutsSMHTTNtuple',
+    'cutMapper' : 'syncCutsMSSMNtuple',
+    #'cutMapper' : 'syncCutsSMHTTNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
-    'mid1' : '1Sept28a',
-    'mid2' : '2Sept28a',
-    'mid3' : '3Sept28a',
+    'mid1' : '1Sept29a',
+    'mid2' : '2Sept29a',
+    'mid3' : '3Sept29a',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -63,8 +64,8 @@ params = {
     'doFRMthd' : 'false',
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true',
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 
 """ Get samples with map of attributes """
