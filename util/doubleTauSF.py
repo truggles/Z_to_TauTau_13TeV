@@ -158,29 +158,29 @@ class DoubleTau35Efficiencies :
         #iso = iso.strip('Iso')
 
 
-        if genCode == 5 : # Real Hadronically decay Tau
-            m0 = self.real_taus_cumlative[iso]['m_{0}']
-            sigma = self.real_taus_cumlative[iso]['sigma']
-            alpha = self.real_taus_cumlative[iso]['alpha']
-            n = self.real_taus_cumlative[iso]['n']
-            norm = self.real_taus_cumlative[iso]['norm']
-            #m0 = self.effMap['Real Tau'][iso]['m_{0}']
-            #sigma = self.effMap['Real Tau'][iso]['sigma']
-            #alpha = self.effMap['Real Tau'][iso]['alpha']
-            #n = self.effMap['Real Tau'][iso]['n']
-            #norm = self.effMap['Real Tau'][iso]['norm']
-            ''' for the moment stick with real vs. fake '''
-        else : # Fake Tau (measurements were done in SS region)
-            m0 = self.same_sign_cumlative[iso]['m_{0}']
-            sigma = self.same_sign_cumlative[iso]['sigma']
-            alpha = self.same_sign_cumlative[iso]['alpha']
-            n = self.same_sign_cumlative[iso]['n']
-            norm = self.same_sign_cumlative[iso]['norm']
-            #m0 = self.effMap['Fake Tau SS'][iso]['m_{0}']
-            #sigma = self.effMap['Fake Tau SS'][iso]['sigma']
-            #alpha = self.effMap['Fake Tau SS'][iso]['alpha']
-            #n = self.effMap['Fake Tau SS'][iso]['n']
-            #norm = self.effMap['Fake Tau SS'][iso]['norm']
+        #if genCode == 5 : # Real Hadronically decay Tau
+        #    m0 = self.real_taus_cumlative[iso]['m_{0}']
+        #    sigma = self.real_taus_cumlative[iso]['sigma']
+        #    alpha = self.real_taus_cumlative[iso]['alpha']
+        #    n = self.real_taus_cumlative[iso]['n']
+        #    norm = self.real_taus_cumlative[iso]['norm']
+        #    #m0 = self.effMap['Real Tau'][iso]['m_{0}']
+        #    #sigma = self.effMap['Real Tau'][iso]['sigma']
+        #    #alpha = self.effMap['Real Tau'][iso]['alpha']
+        #    #n = self.effMap['Real Tau'][iso]['n']
+        #    #norm = self.effMap['Real Tau'][iso]['norm']
+        #    ''' for the moment stick with real vs. fake '''
+        #else : # Fake Tau (measurements were done in SS region)
+        #    m0 = self.same_sign_cumlative[iso]['m_{0}']
+        #    sigma = self.same_sign_cumlative[iso]['sigma']
+        #    alpha = self.same_sign_cumlative[iso]['alpha']
+        #    n = self.same_sign_cumlative[iso]['n']
+        #    norm = self.same_sign_cumlative[iso]['norm']
+        #    #m0 = self.effMap['Fake Tau SS'][iso]['m_{0}']
+        #    #sigma = self.effMap['Fake Tau SS'][iso]['sigma']
+        #    #alpha = self.effMap['Fake Tau SS'][iso]['alpha']
+        #    #n = self.effMap['Fake Tau SS'][iso]['n']
+        #    #norm = self.effMap['Fake Tau SS'][iso]['norm']
         
         ### Temporary check using efficiency bins instead of fit function
         #if pt > 160 : pt = 159
@@ -192,9 +192,22 @@ class DoubleTau35Efficiencies :
         #return self.tight.GetBinContent( self.tight.FindBin( pt ) )
 
 
-        return self.CBeff( pt, m0, sigma, alpha, n, norm )
+        #return self.CBeff( pt, m0, sigma, alpha, n, norm )
 
+        ### Ignore all the 2016 stuff and use 2015 data/MC scale factors
+        # Fit values from Riccardo
+        m0_d     = 3.45412e+01
+        sigma_d  = 5.63353e+00
+        alpha_d  = 2.49242e+00
+        n_d      = 3.35896e+00
+        norm_d   = 1.00000e+00
+        m0_mc    = 3.60274e+01
+        sigma_mc = 5.89434e+00
+        alpha_mc = 5.82870e+00
+        n_mc     = 1.83737e+00
+        norm_mc  = 9.58000e-01
 
+        return self.CBeff( pt, m0_d, sigma_d, alpha_d, n_d, norm_d ) / self.CBeff( pt, m0_mc, sigma_mc, alpha_mc, n_mc, norm_mc )
 
 
 if __name__ == '__main__' :
