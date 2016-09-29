@@ -79,7 +79,7 @@
     "nNtupleFiles": 3, 
     "nlumis": 661
   }, 
-  "DYJetsBig": {
+  "DYJets": {
     "STATUS": "Error", 
     "UniqueID": 3, 
     "DAS status": "ok", 
@@ -750,22 +750,6 @@
     "nevents": 6079415, 
     "nNtupleFiles": 215, 
     "nlumis": 30842
-  }, 
-  "DYJets": {
-    "STATUS": "Good to Go!", 
-    "UniqueID": 3, 
-    "DAS status": "ok", 
-    "nEvents": 9004328, 
-    "DAS Path": "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", 
-    "nfiles": 226, 
-    "nblocks": 31, 
-    "Cross Section (pb)": 6025.198466, 
-    "BkgGroup": 1, 
-    "summedWeightsNorm": 9004328.0, 
-    "summedWeights": 9004328.0, 
-    "nevents": 9004328, 
-    "nNtupleFiles": 226, 
-    "nlumis": 45051
   }, 
   "ggH130": {
     "STATUS": "Good to Go!", 
