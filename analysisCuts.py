@@ -45,10 +45,10 @@ ttKin5040TES   = '(t1Pt*1.03) > 50 && t1AbsEta < 2.1 && (t2Pt*1.03) > 40 && t2Ab
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
-tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1MatchesDoubleTau40Filter > 0 && t2MatchesDoubleTau40Filter > 0'
-tt35    = 'doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0'
+tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1DoubleTau40Filter > 0 && t2DoubleTau40Filter > 0'
+tt35    = 'doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1DoubleTau35Filter > 0 && t2DoubleTau35Filter > 0'
 ttBadRun = 'run != 2788808'
-tt32    = 'doubleTau32Pass > 0 && t1MatchesDoubleTau32Path > 0 && t2MatchesDoubleTau32Path > 0 && t1MatchesDoubleTau32Filter > 0 && t2MatchesDoubleTau32Filter > 0'
+tt32    = 'doubleTau32Pass > 0 && t1MatchesDoubleTau32Path > 0 && t2MatchesDoubleTau32Path > 0 && t1DoubleTau32Filter > 0 && t2DoubleTau32Filter > 0'
 # TT PostSync
 ttL1IsoTaus = 't1L1IsoTauMatch > 0 && t2L1IsoTauMatch > 0 && doubleL1IsoTauMatch > 0' # Used in 2015 for double tau trigger screw up
 ttOS    = 't1_t2_SS == 0'
@@ -132,7 +132,7 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
             'signalCuts' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
             'signalCuts5040' : [ttKin5040, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
             # Not isolation for full QCD estimation
-            'fakeFactorCutsTT' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
+            'fakeFactorCutsTT' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode],
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
             'syncCutsDCqcdTES' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA, ttBadRun],
             'syncCutsDCqcdTES5040' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA, ttBadRun],
