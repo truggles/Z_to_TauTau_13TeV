@@ -28,11 +28,15 @@ def sampleDetails( analysis ) :
     c80xMAOD2 = 'RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0'
     sampleMap = {
         'Sync' : {
-            'Sync-HtoTT': {
+            'Sync-SUSY160': {
                 'DASPath' : '/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 999.,
-                'group' : 'sync'
-        }}, # end Sync sample
+                'group' : 'sync'},
+             'Sync-VBF125': {
+                'DASPath' : '/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 3.782 * 0.0627,
+                'group' : 'sync'},
+        }, # end Sync sample
 
         'htt' : {
             'dataTT-B' : {

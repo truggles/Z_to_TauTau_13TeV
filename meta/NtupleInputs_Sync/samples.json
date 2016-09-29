@@ -1,5 +1,19 @@
 {
-  "Sync-HtoTT": {
+  "Sync-VBF125": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 1497468, 
+    "DAS Path": "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM", 
+    "nfiles": 39, 
+    "nblocks": 6, 
+    "Cross Section (pb)": 0.23713140000000002, 
+    "summedWeightsNorm": 1493577.6423714415, 
+    "summedWeights": 5592388.0, 
+    "nevents": 1497468, 
+    "nNtupleFiles": 39, 
+    "nlumis": 7706
+  }, 
+  "Sync-SUSY160": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
     "nEvents": 498892, 
