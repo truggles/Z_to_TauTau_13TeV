@@ -3,7 +3,6 @@ import ROOT
 import json
 import pyplotter.plot_functions as pyplotter #import setTDRStyle, getCanvas
 import pyplotter.tdrstyle as tdr
-import argparse
 from util.ratioPlot import ratioPlot
 import analysisPlots
 from util.splitCanvas import fixFontSize
@@ -21,6 +20,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     ops = {
     'qcdMakeDM' : 'x',
     'useQCDMakeName' : 'x',
+    'isSSQCD' : False,
     'addUncert' : True,
     'qcdMC' : False,
     'qcdSF' : 1.0,
@@ -29,6 +29,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'text' : False,
     'mssm' : False,
     'log' : False,
+    'sync' : False,
     'targetDir' : ''}
 
     '''python analysis3Plots.py --folder=2June26_OSl1ml2_VTight_ZTT --channel=tt --text=True --useQCDMake=True --useQCDMakeName=OSl1ml2_VTight_LooseZTT --qcdSF=0.147 --btag=False'''
@@ -81,6 +82,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     azhMass = 350
     mssmSF = 100
     higgsSF = 10
+    if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
     azhSF = .025
     
 
@@ -130,7 +132,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
         } # azh
     } # sampInfo
-    if not ops['mssm'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %i" % higgsSF
+    if not ops['mssm'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %.1f" % higgsSF
 
     # Make signal variable for later easy mapping
     signal = ''
@@ -175,6 +177,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         #print newVarMap
         for var, info in newVarMap.iteritems() :
     
+            # This is to speed up the Data Card making process by 2x and not
+            # create all the plots for SS when all we need it the yield from eta_1
+            if ops['isSSQCD'] and not var == 'eta_1' : continue
             #if 'mt_sv' in var : continue
             print "Var:",var
     
@@ -182,8 +187,20 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """
             Handle variable binning and longer ranges for visible mass
             """
+            isVBFCat = False
+            is1JetCat = False
+            is0JetCat = False
+            if 'm_sv' in var or 'm_vis' in var :
+                if ('1jet_low' in ops['useQCDMakeName'] or '1jet_high' in ops['useQCDMakeName']\
+                        or '1jet_low' in ops['qcdMakeDM'] or '1jet_high' in ops['qcdMakeDM']) :
+                    is1JetCat = True
+                if ('vbf' in ops['useQCDMakeName'] or 'vbf' in ops['qcdMakeDM']) :
+                    isVBFCat = True
+                if not (isVBFCat or is1JetCat) : is0JetCat = True
+
+
+            varBinned = True
             if '_mssm' in var :
-                varBinned = True
                 if 'ZTT' in folderDetails :
                     print "Inclusive"
                     xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
@@ -194,15 +211,29 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     print "BTAGGING"
                     xBins = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
     
+            elif var == 'mt_tot' :
+                xBins = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
+                        80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
+                        170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
+                        350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
+                        1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
+                        3300.0,3500.0,3700.0,3900.0] )
             elif var == 'm_vis_mssm' :
-                varBinned = True
                 #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
                 xBins = array( 'd', [] )
                 for i in range(0, 351 ) :
                     xBins.append( i * 10 )
-            elif var == 'm_vis_varB' :
-                varBinned = True
-                xBins = array('d', [0,20,40,60,80,100,150,200,250,350,600])
+            elif ops['sync'] and 'm_vis' in var :
+                xBins = array( 'd', [] )
+                for i in range( 21 ) :
+                    xBins.append( i * 17.5 )
+            elif 'm_sv' in var or 'm_vis' in var :
+                if is1JetCat :
+                    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+                elif isVBFCat :
+                    xBins = array( 'd', [0,40,60,80,100,120,150,200,250] )
+                else :
+                    xBins = array( 'd', [i*10 for i in range( 31 )] )
             else :
                 varBinned = False
                 first = info[1] * 1.
@@ -272,12 +303,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print '%s2IsoOrderAndDups/%s_%s.root' % (analysis, sample, channel)
     
                 if 'QCD' in sample :
-                    print "qcd in sample",sample
+                    #print "qcd in sample",sample
                     if ops['useQCDMakeName'] != 'x'  :
                         fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
                         print fName 
                         tFile = ROOT.TFile(fName, 'READ')
-                        print 1
                     elif ops['qcdMC'] :
                         print "Got QCD MC file", sample
                         tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
@@ -293,11 +323,21 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
                 dic = tFile.Get("%s_Histos" % channel )
+
+                # Require var to be in file or print note and skip
+                keys = dic.GetListOfKeys()
+                inVars = []
+                for key in keys :
+                    inVars.append( key.GetName() )
+                if getVar not in inVars :
+                    print "\n\n"+getVar+" not in your root files!  Skipping...\n\n"
+                    continue
+
                 preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
     
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
-                    print "Using QCD SCALE FACTOR <<<< NEW >>>>"
+                    #print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                     preHist.Scale( ops['qcdSF'] )
                     #print "QCD yield: %f" % preHist.Integral()
                     hist = ROOT.TH1D( preHist )
@@ -305,9 +345,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     hist = preHist.Rebin( xNum, "rebinned", xBins )
     
     
-                if var == 'm_vis' :
-                    if 'data' in sample and qcdMake : finalDataYield = hist.Integral()
-                if var == 'eta_1' and finalDataYield == 0. :
+                if var == 'eta_1' :
                     if 'data' in sample and qcdMake : finalDataYield = hist.Integral()
     
                 ''' Good Debugging stuff '''
@@ -321,13 +359,20 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 tFile.Close()
     
 
+            ''' Change bin yield to make this make sense with variable binning
+                this is only for viewing, the DC process is seperate '''
             for samp in sampHistos.keys() :
-                print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
+                if var == 'm_vis' :
+                    print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
                 # With Variable binning, need to set bin content appropriately
                 if not varBinned : continue
                 if samp == "qcd" : continue
-                for bin_ in range( 1, 11 ) :
-                    sampHistos[samp].SetBinContent( bin_, sampHistos[samp].GetBinContent( bin_ ) * ( sampHistos[samp].GetBinWidth(1) / sampHistos[samp].GetBinWidth( bin_ ) ) )
+                minWidth = 999.
+                for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
+                    minTmp = sampHistos[samp].GetBinWidth(bin_)
+                    if minTmp < minWidth : minWidth = minTmp
+                for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
+                    sampHistos[samp].SetBinContent( bin_, sampHistos[samp].GetBinContent( bin_ ) * ( minWidth / sampHistos[samp].GetBinWidth( bin_ ) ) )
     
     
             # Some specific HTT stuff
@@ -355,20 +400,59 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Scale signal samples for viewing
             sampHistos[ signal ].Scale( signalSF )
     
+            ''' Print out yields for a given distribution '''
+            #sensitivityVars = ['Higgs_Pt', 'pt_1', 'pt_2', 'mjj', 'jdeta', 'pt_sv']
+            ##if var == 'Higgs_Pt' or var == 'pt_1' or var == 'pt_2' :
+            #if var in sensitivityVars :
+            #    print "\n\nX "+var+" Stack yields"
+            #    totBkgVar = 0.
+            #    totSig = 0.
+            #    top = stack.GetStack().Last().GetNbinsX()+1
+            #    for bin in range( 1, top ) :
+            #        binBkg = stack.GetStack().Last().GetBinContent( top-bin )
+            #        binSig = sampHistos[signal].GetBinContent( top-bin )/higgsSF
+            #        if binBkg > 0. :
+            #            binSensitivity = binSig / math.sqrt( binBkg+binSig )
+            #        else : binSensitivity = 0.
+
+            #        totBkgVar += binBkg
+            #        totSig += binSig
+            #        if totBkgVar > 0. :
+            #            sensitivity = totSig / math.sqrt( totBkgVar+totSig )
+            #        else : sensitivity = 0.
+            #        edge = stack.GetStack().Last().GetBinLowEdge( top-bin )
+            #        #print "Bin: %i     sensitivity: %.2f     signal %.2f    bkg: %.2f" % (edge, sensitivity, totSig, totBkgVar)
+            #        print "Bin: %.1f     sensitivity: %.2f     binSensitivity: %.2f" % (edge, sensitivity, binSensitivity)
     
             """
             Calculate rough bin-by-bin uncertainties
             """
+            uncertNormMap = { 'htt' : {
+            'qcd' : .20,
+            'top' : .15,
+            'dib' : .10,
+            'wjets' : .10,
+            'ztt' : .05,
+            'zl' : .30,
+            'zj' : .30,
+            'higgs' : .0,
+            'obs' : .0,},
+            'azh' : {
+            'top' : .15,
+            'dyj' : .10,
+            'wz' : .15,
+            'zz' : .25,
+            'azh' : .0,
+            'obs' : .0,}
+            }
             binErrors = []
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
-                    if samp != 'qcd' and samp != 'zz' :
-                        toRoot += (sampHistos[samp].GetBinContent(k)*.1)**2
-                    elif samp == 'qcd' : # QCD has higher uncertainties
-                        toRoot += (sampHistos[samp].GetBinContent(k)*.1)**2
-                    elif samp == 'zz' : # ZZ has higher uncertainties in AZH
-                        toRoot += (sampHistos[samp].GetBinContent(k)*.25)**2
+                    toRoot += (sampHistos[samp].GetBinContent(k)*\
+                        uncertNormMap[analysis][samp])**2
+                    toRoot += sampHistos[samp].GetBinError(k)**2
+
                 binErrors.append( math.sqrt(toRoot) )
     
     
@@ -384,13 +468,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.Add( qcdVar ) 
                 if var == 'm_vis_mssm' :
                     print "M_VIS_MSSM plot details: %f %f" % (info[1], info[2])
-                qcdVar.GetXaxis().SetRangeUser( info[1], info[2] )
+                if varBinned :
+                    qcdVar.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
+                else :
+                    qcdVar.GetXaxis().SetRangeUser( info[1], info[2] )
                 print "qcdVar: %f   mean %f" % (qcdVar.Integral(), qcdVar.GetMean() )
-                if var == 'mt_sv_mssm' :
-                    #print "QCD Binning"
-                    #print xBins
-                    finalQCDYield = qcdVar.Integral()
-                if var == 'eta_1' and finalQCDYield == 0.0 :
+                if var == 'eta_1' :
                     finalQCDYield = qcdVar.Integral()
                 qcdDir.cd()
                 qcdVar.Write()
@@ -434,7 +517,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 """ Add uncertainty bands on ratio """
                 er = ROOT.TH1D("er %s" % append, "er", xNum, xBins )
                 er.Sumw2()
-                er.GetXaxis().SetRangeUser( info[1], info[2] )
+                if varBinned :
+                    er.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
+                else :
+                    er.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( er.GetNbinsX()+1 ) :
                     er.SetBinContent( k, 1. )
                     if stack.GetStack().Last().GetBinContent(k) > 0. : 
@@ -474,7 +560,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if info[ 5 ] == '' :
                 stack.GetYaxis().SetTitle("Events")
             else :
-                stack.GetYaxis().SetTitle("Events / %s%s" % (str(round(stack.GetStack().Last().GetBinWidth(1),1)), info[ 5 ])  )
+                width = stack.GetStack().Last().GetBinWidth(1)
+                if varBinned : width = minWidth
+                stack.GetYaxis().SetTitle("Events / %.1f%s" % (width, info[ 5 ])  )
     
 
             # Set axis and viewing area
@@ -527,9 +615,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             pad1.Update()
-            stack.GetXaxis().SetRangeUser( info[1], info[2] )
+            if varBinned :
+                stack.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
+            else :
+                stack.GetXaxis().SetRangeUser( info[1], info[2] )
             if ops['ratio'] :
-                ratioHist.GetXaxis().SetRangeUser( info[1], info[2] )
+                if varBinned :
+                    ratioHist.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
+                else :
+                    ratioHist.GetXaxis().SetRangeUser( info[1], info[2] )
     
     
             """
@@ -538,7 +632,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['addUncert'] :
                 e1 = ROOT.TH1D("e1 %s" % append, "e1", xNum, xBins )
                 e1.Sumw2()
-                e1.GetXaxis().SetRangeUser( info[1], info[2] )
+                if varBinned :
+                    e1.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
+                else :
+                    e1.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( e1.GetNbinsX()+1 ) :
                     e1.SetBinContent( k, stack.GetStack().Last().GetBinContent( k ) )
                     e1.SetBinError(k, binErrors[k] )
@@ -547,19 +644,38 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 e1.SetLineWidth( 0 )
                 e1.SetMarkerSize( 0 )
                 e1.SetFillStyle( 3002 )
-                #e1.SetFillStyle( 3244 )
                 e1.SetFillColor( 15 )
                 e1.Draw('same e2')
     
     
             """ Blinding Data """
             if ops['blind'] :
-                if (analysis == 'htt' and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var or 'mt_tot' in var) ) or (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
-                    targetMass = 170
-                    if 'Mass' in var : targetMass = 220
+                if (analysis == 'htt' and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var\
+                         or 'mt_tot' in var) ) or\
+                         (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
+                    if ops['mssm'] :
+                        targetMass = 170
+                        targetMassUp = 9999
+                    elif analysis == 'htt' and 'm_sv' in var :
+                        targetMassLow = 101
+                        #if '1jet' in ops['targetDir'] : targetMassLow = 90
+                        #elif 'vbf' in ops['targetDir'] : targetMassLow = 100
+                        #elif 'vbf_low' in ops['targetDir'] : targetMassLow = 100
+                        #elif 'vbf_high' in ops['targetDir'] : targetMassLow = 80
+                        #else : targetMassLow = 80
+                        targetMassUp = 149
+                    elif analysis == 'htt' and 'm_vis' in var :
+                        targetMassLow = 81
+                        targetMassUp = 149
+                    else :
+                        targetMassLow = 81
+                        targetMassUp = 149
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
-                    for k in range( nBins+1 ) :
-                        if sampHistos['obs'].GetXaxis().GetBinLowEdge(k+1)>targetMass :
+                    for k in range( 1, nBins+1 ) :
+                        binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
+                                sampHistos['obs'].GetXaxis().GetBinWidth(k)
+                        binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
+                        if binHigh>targetMassLow and binLow<=targetMassUp :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] :

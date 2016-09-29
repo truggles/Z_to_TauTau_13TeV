@@ -4,6 +4,8 @@
 
 # Excellent Source: https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
 # See Kenneth's Log Book for how to find this stuff on MCM: https://twiki.cern.ch/twiki/bin/view/Main/KDLLogBook#LogDay20150106
+# When in MCM, click "Select View", check "Generator Parameters" and there should be a cross section for one of
+# the versions of a given sample
 # The scale factor is for LO -> NNLO scaling see excel sheet below https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_samples
 
 from collections import OrderedDict
@@ -26,17 +28,69 @@ def sampleDetails( analysis ) :
     c80xMAOD2 = 'RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0'
     sampleMap = {
         'Sync' : {
-            'Sync-HtoTT': {
+            'Sync-SUSY160': {
                 'DASPath' : '/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 999.,
-                'group' : 'sync'
-        }}, # end Sync sample
+                'group' : 'sync'},
+             'Sync-VBF125': {
+                'DASPath' : '/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 3.782 * 0.0627,
+                'group' : 'sync'},
+        }, # end Sync sample
 
         'htt' : {
-            'dataTT' : {
-                'DASPath' : '/Tau/Run2015D-16Dec2015-v1/MINIAOD',
+            'dataTT-B' : {
+                'DASPath' : '/Tau/Run2016B-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
+            'dataTT-C' : {
+                'DASPath' : '/Tau/Run2016C-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-D' : {
+                'DASPath' : '/Tau/Run2016D-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-E' : {
+                'DASPath' : '/Tau/Run2016E-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-F' : {
+                'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'EWKWMinus' :   { 
+                'DASPath' : '/EWKWMinus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/%s-v2/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 20.25,
+                'group' : 'dib'},
+            'EWKWPlus' :    { 
+                'DASPath' : '/EWKWPlus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 20.25,
+                'group' : 'dib'},
+            'EWKZ2l' :      { 
+                'DASPath' : '/EWKZ2Jets_ZToLL_M-50_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 3.987,
+                'group' : 'dib'},
+            'EWKZ2nu' :     { 
+                'DASPath' : '/EWKZ2Jets_ZToNuNu_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 10.01,
+                'group' : 'dib'},
+            'WWW' :     { 
+                'DASPath' : '/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 0.2086,
+                'group' : 'dib'},
+            'WWZ' :     { 
+                'DASPath' : '/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 0.1651,
+                'group' : 'dib'},
+            'WZZ' :     { 
+                'DASPath' : '/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 0.05565,
+                'group' : 'dib'},
+            'ZZZ' :     { 
+                'DASPath' : '/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 0.01398,
+                'group' : 'dib'},
             'VV' :         { 
                 'DASPath' : '/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 11.95,
@@ -101,37 +155,45 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 485.6 * 1.221252,
                 'group' : 'wjets'},
+            'DYJetsAMCNLOReHLT' :     { 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80xReHLT, 
+                'xsec' : 4954.0 * 1.1638,
+                'group' : 'dyj'},
             'DYJetsAMCNLO' :     { 
                 'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2, 
-                'xsec' : 4954.0 * 1.216229,
+                'xsec' : 4954.0 * 1.1638,
+                'group' : 'dyj'},
+            'DYJetsOld' :     { 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xMAOD2, 
+                'xsec' : 4954.0 * 1.1638,
                 'group' : 'dyj'},
             'DYJets' :     { 
                 'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xReHLT, 
-                'xsec' : 4954.0 * 1.216229,
+                'xsec' : 4954.0 * 1.1638,
                 'group' : 'dyj'},
             'DYJets1' :    { 
                 'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 1012.5,
+                'xsec' : 1012.5 * 1.1638,
                 'group' : 'dyj'},
             'DYJets2' :    { 
                 'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 332.8,
+                'xsec' : 332.8 * 1.1638,
                 'group' : 'dyj'},
             'DYJets3' :    { 
                 'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 101.8,
+                'xsec' : 101.8 * 1.1638,
                 'group' : 'dyj'},
             'DYJets4' :    { 
                 'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 54.8,
+                'xsec' : 54.8 * 1.1638,
                 'group' : 'dyj'},
             'DYJetsHigh' : {
                 'DASPath' : '/DYJetsToLL_M-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 6.657,
+                'xsec' : 6.657 * 1.1638,
                 'group' : 'dyj'},
             'DYJetsLow' :  {
                 'DASPath' : '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2, 
-                'xsec' : 18610.,
+                'xsec' : 18610. * 1.1638,
                 'group' : 'dyj'},
              'ggHtoTauTau120': {
                 'DASPath' : '/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
@@ -157,7 +219,7 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/VBFHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.637 * 0.0541,
                 'group' : 'higgs'},
-            #'DYJetsBig' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 4954.0 * 1.216229 ), 
+            #'DYJetsBig' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 4954.0 * ), 
         }, # end HTT
         'azh' : {
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
@@ -209,23 +271,23 @@ def sampleDetails( analysis ) :
                 'group' : 'wz'},
             'DYJets' :     { 
                 'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xMAOD2, 
-                'xsec' : 4954.0 * 1.216229,
+                'xsec' : 4954.0 * 1.1638,
                 'group' : 'dyj'},
             'DYJets1' :    { 
                 'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 1012.5,
+                'xsec' : 1012.5 * 1.1638,
                 'group' : 'dyj'},
             'DYJets2' :    { 
                 'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 332.8,
+                'xsec' : 332.8 * 1.1638,
                 'group' : 'dyj'},
             'DYJets3' :    { 
                 'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 101.8,
+                'xsec' : 101.8 * 1.1638,
                 'group' : 'dyj'},
             'DYJets4' :    { 
                 'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
-                'xsec' : 54.8,
+                'xsec' : 54.8 * 1.1638,
                 'group' : 'dyj'},
             'TT' :         { 
                 'DASPath' : '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c80xReHLT,

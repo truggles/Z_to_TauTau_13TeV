@@ -1,2 +1,3 @@
-/data/truggles/httAug24FromHdfsSkimmed/ggHtoTauTau125_0_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/ggHtoTauTau125_1_tt.root
+/data/truggles/svFitSept16withPFMet/ggHtoTauTau125_0_tt.root
+/data/truggles/svFitSept16withPFMet/ggHtoTauTau125_1_tt.root
+/data/truggles/svFitSept16withPFMet/ggHtoTauTau125_2_tt.root

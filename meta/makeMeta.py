@@ -12,8 +12,8 @@ from sampleNames import returnSampleDetails
 def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
 
     currentDASSamples = {
-        'Sync' : ['Sync-HtoTT',],
-        'htt' : ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
+        'Sync' : ['Sync-SUSY160','Sync-VBF125'],
+        'htt' : ['DYJetsAMCNLO', 'DYJets', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
         'azh' : ['dataEE', 'dataMM', 'ZZ4l', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4m', 'ggZZ4tau', 'WMinusHTauTau', 'WPlusHTauTau', 'ZHTauTau', 'ttHTauTau'],
     }
 
@@ -23,52 +23,19 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 
-    # Data samples where we have multipl runs
-    dataSamples = {
-        'dataEE' : [
-            '/DoubleEG/Run2016B-PromptReco-v2/MINIAOD',
-            '/DoubleEG/Run2016C-PromptReco-v2/MINIAOD',
-            '/DoubleEG/Run2016D-PromptReco-v2/MINIAOD',
-            '/DoubleEG/Run2016E-PromptReco-v2/MINIAOD'],
-        'dataMM' : [
-            '/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD',
-            '/DoubleMuon/Run2016C-PromptReco-v2/MINIAOD',
-            '/DoubleMuon/Run2016D-PromptReco-v2/MINIAOD',
-            '/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD'],
-        'dataTT' : [
-            '/Tau/Run2016B-PromptReco-v2/MINIAOD',
-            '/Tau/Run2016C-PromptReco-v2/MINIAOD',
-            '/Tau/Run2016D-PromptReco-v2/MINIAOD',
-            '/Tau/Run2016E-PromptReco-v2/MINIAOD'],
-    }
-
     
     # A dictionary to store each samples info
     jDict = {}
     
     for k, v in samples.iteritems() :
         # Get the DAS info from DBS
-        # Sum up data sets by channels
-        if 'data' in k :
-            dataSamps = dataSamples[ k ]
-            infoDAS = [0, 0, 0, 0, u'ok']
-            for samp in dataSamps :
-                infoDAStmp = getDBSInfo( k, samp )
-                infoDAS[0] += infoDAStmp[0]
-                infoDAS[1] += infoDAStmp[1]
-                infoDAS[2] += infoDAStmp[2]
-                infoDAS[3] += infoDAStmp[3]
-                if infoDAStmp[4] != u'ok' :
-                    infoDAS[4] = 'error'
-                print "Data: ", infoDAStmp
-        else :
-            try : infoDAS = getDBSInfo( k, v['DASPath'] )
-            except IndexError :
-                print "\n#######################################"
-                print "IndexError for sample: %s" % k
-                print "#######################################\n"
-                continue
-            print infoDAS
+        try : infoDAS = getDBSInfo( k, v['DASPath'] )
+        except IndexError :
+            print "\n#######################################"
+            print "IndexError for sample: %s" % k
+            print "#######################################\n"
+            continue
+        print infoDAS
     
         # Get the Ntuple info that FSA created
         eventCount = 0

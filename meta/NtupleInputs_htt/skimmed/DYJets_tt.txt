@@ -1,4 +1,9 @@
-/data/truggles/httAug24FromHdfsSkimmed/DYJets_0_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/DYJets_1_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/DYJets_2_tt.root
-/data/truggles/httAug24FromHdfsSkimmed/DYJets_3_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_0_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_1_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_2_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_3_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_4_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_5_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_6_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_7_tt.root
+/data/truggles/svFitSept16withPFMet/DYJets_8_tt.root

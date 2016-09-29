@@ -32,7 +32,7 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-SamplesSync = ['Sync-HtoTT']
+SamplesSync = ['Sync-HtoTT','Sync-VBF125']
 samples = SamplesSync
 
 ''' These parameters are fed into the 2 main function calls.
@@ -49,11 +49,12 @@ params = {
     #'channels' : ['tt','em',],
     'channels' : ['tt',],
     #'channels' : ['em',],
-    'cutMapper' : 'syncCutsNtuple',
+    #'cutMapper' : 'syncCutsMSSMNtuple',
+    'cutMapper' : 'syncCutsSMHTTNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
-    'mid1' : '1Aug27mvamet',
-    'mid2' : '2Aug27mvamet',
-    'mid3' : '3Aug27mvamet',
+    'mid1' : '1Sept28a',
+    'mid2' : '2Sept28a',
+    'mid3' : '3Sept28a',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -72,7 +73,7 @@ import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 

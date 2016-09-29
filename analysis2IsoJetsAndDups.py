@@ -37,16 +37,16 @@ prodMap = {
 
 #XXX XXX XXX FIXME so that this does N Jet binned correct once we have ReHLT
 def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
-    print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
-    if shortName == 'DYJetsAMCNLO' :
+    #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
+    if shortName == 'DYJetsAMCNLO' or shortName == 'DYJetsAMCNLOReHLT' or shortName == 'DYJetsOld' : # or shortName == 'DYJets' : # Uncomment last part to study relations between all 4
         return cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
     if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
-        if shortName in ['DYJets',] or shortName[:6] == 'DYJets' :
+        if 'DYJets' == shortName or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
             scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ]['summedWeightsNorm'] # removing LO small DYJets
-            return scalar1 # FIXME
+            #return scalar1 # FIXME
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
@@ -107,6 +107,17 @@ def getTauPtWeight( sample, channel, t1GenID, t2GenID, row, ptScaler ) :
 
 
 
+def getHiggsPt( pt1, eta1, phi1, m1, pt2, eta2, phi2, m2, met, metphi) :
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
+    lorentz3 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz3.SetPtEtaPhiM( met, 0., metphi, 0. )
+    higgs = lorentz1 + lorentz2 + lorentz3
+    return higgs.Pt()
+    
+
 
 def mVisTES( cand1, cand2, row, TES ) :
     pt1 = (1 + TES) * getattr( row, cand1+'Pt' )
@@ -117,9 +128,9 @@ def mVisTES( cand1, cand2, row, TES ) :
     eta2 = getattr( row, cand2+'Eta' )
     phi2 = getattr( row, cand2+'Phi' )
     m2 = getattr( row, cand2+'Mass' )
-    lorentz1 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
     lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
-    lorentz2 = ROOT.TLorentzVector( 0,0,0,0 )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
     lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
     shifted = lorentz1 + lorentz2
     return shifted.M()
@@ -159,7 +170,9 @@ def calcMTTotal( pt1, phi1, pt2, phi2, mt1, mt2 ) :
 
 
 def getTransMass( met, metphi, l1pt, l1phi ) :
-    return math.sqrt( 2 * l1pt * met * (1 - math.cos( l1phi - metphi)))
+    if met < 0. : metTmp = 0.
+    else : metTmp = met
+    return math.sqrt( 2 * l1pt * metTmp * (1 - math.cos( l1phi - metphi)))
 
 
 def getIso( cand, row ) :
@@ -389,6 +402,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
         'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
+        'cand_ByVLooseIsolationMVArun2v1DBoldDMwLT' : 'byVLooseIsolationMVArun2v1DBoldDMwLT',
         }
 
     # Add in the vars which won't change names
@@ -659,18 +673,20 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     pzeta = array('f', [ 0 ] )
     pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    Higgs_Pt = array('f', [ 0 ] )
+    Higgs_PtB = tnew.Branch('Higgs_Pt', Higgs_Pt, 'Higgs_Pt/F')
     Z_DEta = array('f', [ 0 ] )
     Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
-    #m_vis_UP = array('f', [ 0 ] )
-    #m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
-    #m_vis_DOWN = array('f', [ 0 ] )
-    #m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
+    m_vis_UP = array('f', [ 0 ] )
+    m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
+    m_vis_DOWN = array('f', [ 0 ] )
+    m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
     mt_tot = array('f', [ 0 ] )
     mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
-    #mt_tot_UP = array('f', [ 0 ] )
-    #mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
-    #mt_tot_DOWN = array('f', [ 0 ] )
-    #mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
+    mt_tot_UP = array('f', [ 0 ] )
+    mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
+    mt_tot_DOWN = array('f', [ 0 ] )
+    mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -744,7 +760,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            #if channel == 'tt' and 'Sync-HtoTT' in sample : 
+            #if channel == 'tt' and 'Sync-' in sample : 
             #    #print "### Iso Ordering %s ###" % sample
             #    isoOrder( channel, row )
             vbfClean( row )
@@ -765,32 +781,23 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             pt1 = getattr( row, l1+'Pt' )
             phi1 = getattr( row, l1+'Phi' )
             eta1 = getattr( row, l1+'Eta' )
+            m1 = getattr( row, l1+'Mass' )
             pt2 = getattr( row, l2+'Pt' )
             phi2 = getattr( row, l2+'Phi' )
             eta2 = getattr( row, l2+'Eta' )
+            m2 = getattr( row, l2+'Mass' )
             if len( channel ) > 2 :
                 pt3 = getattr( row, l3+'Pt' )
                 phi3 = getattr( row, l3+'Phi' )
                 eta3 = getattr( row, l3+'Eta' )
+                m3 = getattr( row, l3+'Mass' )
             if len( channel ) > 3 :
                 pt4 = getattr( row, l4+'Pt' )
                 phi4 = getattr( row, l4+'Phi' )
                 eta4 = getattr( row, l4+'Eta' )
+                m4 = getattr( row, l4+'Mass' )
 
             Z_DEta[0] = (eta1 - eta2)
-
-            # TES Shifted M_Vis
-            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample :
-            #    m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
-            #    m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
-            #else :
-            #    m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-            #    m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-            #    if hasattr( row, 'm_sv_UP' ) :
-            #        setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
-            #        setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
-            #        setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
-            #        setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
 
 
             # Channel specific vetoes
@@ -810,6 +817,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             if channel == 'mt' :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+
+
             
             if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
                 mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
@@ -823,20 +832,39 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
                 if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
                     pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                         pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
             else : # Not l1_l2_MvaMet
                 mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
                 mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
+                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                        pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+
+
 
 
             # With calculated transverse mass variables, do Mt_Total for mssm search
             mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
-            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
-            #    mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
-            #    mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
-            #else :
-            #    mt_tot_UP[0] = -10
-            #    mt_tot_DOWN[0] = -10
+            # TES Shifted
+            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
+                m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
+                m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
+                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+            else :
+                m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+                if hasattr( row, 'm_sv_UP' ) :
+                    setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+                    setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+                    setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+                    setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+                mt_tot_UP[0] = mt_tot[0]
+                mt_tot_DOWN[0] = mt_tot[0]
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
+
+
+
 
             muonSF1[0] = 1
             muonSF2[0] = 1
@@ -1001,8 +1029,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' : tauIso == 'TightIso'
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
-                    tauIDweight_1[0] = 0.84
-                    tauIDweight_2[0] = 0.84
+                    tauIDweight_1[0] = 0.951
+                    tauIDweight_2[0] = 0.951
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
@@ -1023,7 +1051,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
-                #weight[0] *= zPtWeight[0]* topWeight[0]
+                weight[0] *= zPtWeight[0] # * topWeight[0]
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]

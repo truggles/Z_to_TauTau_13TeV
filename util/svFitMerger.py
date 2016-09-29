@@ -63,7 +63,7 @@ if __name__ == '__main__' :
 	#		mergeSample( jobId, sample, channel, origianlDir, targetDir )
 
 	# HTT Aug 23, hdfs -> UW
-	samples = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
+	samples = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
 	samples = ['DYJetsAMCNLO', 'dataTT']
 	originalDir = '/nfs_scratch/truggles/httAug24'
 	targetDir = '/nfs_scratch/truggles/httAug24Merged'
@@ -71,7 +71,6 @@ if __name__ == '__main__' :
 	channel = 'tt'
 	for sample in samples :
 	    mergeSample( jobId, sample, channel, originalDir, targetDir )
-
 
 
 

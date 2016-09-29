@@ -58,15 +58,17 @@ params = {
     'channels' : ['eemt','emmt'],
     'cutMapper' : 'goodZ',
     #'cutMapper' : 'HSS',
-    'mid1' : '1Aug21',
-    'mid2' : '2Aug21',
-    'mid3' : '3Aug21',
+    'mid1' : '1Sept01',
+    'mid2' : '2Sept01',
+    'mid3' : '3Sept01',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
+    'skimmed' : 'false',
+    'skimHdfs' : 'false',
 }
 
 """ Get samples with map of attributes """
@@ -76,8 +78,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples.keys(), **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples.keys(), **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True

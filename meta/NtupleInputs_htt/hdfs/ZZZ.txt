@@ -1,0 +1,6 @@
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-28D0605E-2A1D-E611-A17C-002590A80E08.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-36689F2E-2A1D-E611-AB08-001E67E71BAA.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-8EE08D65-2A1D-E611-B829-0025905C6448.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-9CDABD2D-2A1D-E611-B07A-001E67E6F369.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-CA77924C-2A1D-E611-984B-001E67E71B14.root
+/hdfs/store/user/truggles/SMHTT_sept24_EWK/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-E2C9C52C-2A1D-E611-BA36-002590200930.root

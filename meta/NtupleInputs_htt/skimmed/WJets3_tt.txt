@@ -1,1 +1,2 @@
-/data/truggles/httAug24FromHdfsSkimmed/WJets3_0_tt.root
+/data/truggles/svFitSept16withPFMet/WJets3_0_tt.root
+/data/truggles/svFitSept16withPFMet/WJets3_1_tt.root
