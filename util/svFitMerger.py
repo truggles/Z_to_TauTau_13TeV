@@ -15,7 +15,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
 		print size, " KB ", file_
 		runningSize += size
 		toMerge.append( file_ )
-		if runningSize > 7500 : # 7.5 MB is reasonal for doing duplicate removal later
+		if runningSize > 75000 : # 7.5 MB is reasonal for doing duplicate removal later
 			runningSize = 0
 			mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
 			for f in toMerge :
@@ -31,48 +31,35 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
 		subprocess.call( mergeList )
 
 
-#def removeFailed( jobId, sample, channel, originalDir ) :
-#	files = glob.glob(originalDir+'/%s%s_*_%s.root' % (jobId, sample, channel) )
-#
-#	rep = 0
-#	runningSize = 0
-#	for file_ in files :
-#		size = os.path.getsize( file_ )/1000. # in KB roughly
-#		print size, " KB ", file_
-#		if size < 10. : print "Small file
-
 
 
 if __name__ == '__main__' :
 
-	#samples = ['data', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsFXFX', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l']
-	#masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
-	##samples = []
-	##masses = [2600, 2900, 3200]
-	#for mass in masses :
-        #	samples.append( 'ggH%i' % mass )
-        #	samples.append( 'bbH%i' % mass )
-
-	#jobId = 'TauTau_13_test-'
-	#channels = ['em', 'tt']
-	#
-	#originalDir = '/hdfs/store/user/truggles/feb22_svFitFeb21SkimX/test'
-	#targetDir = '/nfs_scratch/truggles/svFitComplete/feb23_fromFeb21SkimX'
-	#for sample in samples :
-	#	for channel in channels :
-	#		mergeSample( jobId, sample, channel, origianlDir, targetDir )
-
-	# HTT Aug 23, hdfs -> UW
-	samples = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
-	samples = ['DYJetsAMCNLO', 'dataTT']
-	originalDir = '/nfs_scratch/truggles/httAug24'
-	targetDir = '/nfs_scratch/truggles/httAug24Merged'
-	jobId = ''
-	channel = 'tt'
-	for sample in samples :
-	    mergeSample( jobId, sample, channel, originalDir, targetDir )
-
-
-
-
-
+    targetDir = '/data/truggles/2016-ZTT-April11Merged'
+    
+    # Recoil2, TES1, WJets0
+    samples = ['DYJetsBig', 'DYJetsLow', 'DYJetsHigh', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
+    originalDir = '/data/truggles/2015-ZTT-svFit/april11_svFit_2/Recoil2_TESType1_isWJ0'
+    jobId = 'TauTau_13_Recoil2_TESType1_isWJ0-'
+    channel = 'tt'
+    for sample in samples :
+        mergeSample( jobId, sample, channel, originalDir, targetDir )
+    
+    
+    # Recoil0 TES0 WJets0
+    originalDir = '/data/truggles/2015-ZTT-svFit/april11_svFit/Recoil0_TESType0_isWJ0'
+    jobId = 'TauTau_13_Recoil0_TESType0_isWJ0-'
+    samples = ['T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV',]
+    for sample in samples :
+        mergeSample( jobId, sample, channel, originalDir, targetDir )
+    
+    
+    # Recoil0 TES0 WJets0
+    originalDir = '/data/truggles/2015-ZTT-svFit/april11_svFit/Recoil2_TESType0_isWJ1/'
+    jobId = 'TauTau_13_Recoil2_TESType0_isWJ1-'
+    samples = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4',]
+    for sample in samples :
+        mergeSample( jobId, sample, channel, originalDir, targetDir )
+    
+    
+    

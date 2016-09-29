@@ -1,0 +1,2 @@
+/data/truggles/2016-ZTT-April11Merged/DYJetsHigh_0_tt.root
+/data/truggles/2016-ZTT-April11Merged/DYJetsHigh_1_tt.root

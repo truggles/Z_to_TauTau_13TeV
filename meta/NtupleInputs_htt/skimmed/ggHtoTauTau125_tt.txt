@@ -1,3 +1,1 @@
-/data/truggles/svFitSept16withPFMet/ggHtoTauTau125_0_tt.root
-/data/truggles/svFitSept16withPFMet/ggHtoTauTau125_1_tt.root
-/data/truggles/svFitSept16withPFMet/ggHtoTauTau125_2_tt.root
+/data/truggles/2016-ZTT-April11Merged/ggHtoTauTau125_0_tt.root

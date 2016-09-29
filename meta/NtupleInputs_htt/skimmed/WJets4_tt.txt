@@ -1,2 +1,1 @@
-/data/truggles/svFitSept16withPFMet/WJets4_0_tt.root
-/data/truggles/svFitSept16withPFMet/WJets4_1_tt.root
+/data/truggles/2016-ZTT-April11Merged/WJets4_0_tt.root
