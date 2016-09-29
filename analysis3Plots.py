@@ -12,6 +12,7 @@ from array import array
 import math
 from analysisPlots import skipSystShapeVar
 from copy import deepcopy
+from util.helpers import checkDir
 
 
 
@@ -27,7 +28,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'blind' : True,
     'text' : False,
     'mssm' : False,
-    'log' : False,}
+    'log' : False,
+    'targetDir' : ''}
 
     '''python analysis3Plots.py --folder=2June26_OSl1ml2_VTight_ZTT --channel=tt --text=True --useQCDMake=True --useQCDMakeName=OSl1ml2_VTight_LooseZTT --qcdSF=0.147 --btag=False'''
 
@@ -35,14 +37,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         #print "another keyword arg: %s: %s" % (key, kwargs[key])
         if key in ops.keys() :
              ops[key] = kwargs[key]
-
     print ops
 
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
         genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-        dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
+        dyJets = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
         newSamples = {}
         for sample in samples.keys() :
             #print sample
@@ -59,6 +60,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 del samples[ dyJet ]
         samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
+        # Don't plot sm higgs 120, 130
+        smHiggs = ['ggHtoTauTau120', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau130']
+        for higgs in smHiggs :
+            if higgs in samples : del samples[ higgs ]
 
     for sample in samples :
         print sample
@@ -69,8 +74,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
     
-    cmsLumi = float(os.getenv('LUMI'))
-    print "Lumi = %i" % cmsLumi
+    cmsLumi = float(os.getenv('LUMI'))/1000
+    print "Lumi = %.1f / fb" % cmsLumi
     
     mssmMass = 250
     azhMass = 350
@@ -141,13 +146,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         print channel
     
         # Make an index file for web viewing
-        if not os.path.exists( '%sPlots' % analysis ) :
-            os.makedirs( '%sPlots/em' % analysis )
-            os.makedirs( '%sPlots/tt' % analysis )
-        if not os.path.exists( '%sPlotsList' % analysis ) :
-            os.makedirs( '%sPlotsList/em' % analysis )
-            os.makedirs( '%sPlotsList/tt' % analysis )
-        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/index.html' % (analysis, channel), 'w')
+        checkDir( '%sPlots/em' % analysis )
+        checkDir( '%sPlots/tt' % analysis )
+        checkDir( '%sPlotsList/em' % analysis )
+        checkDir( '%sPlotsList/tt' % analysis )
+        checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir']))
+        checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/' % (analysis, channel, ops['targetDir']))
+        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/index.html' % (analysis, channel, ops['targetDir']), 'w')
         htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
         htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
         htmlFile.write( '<body>\n' )
@@ -162,8 +167,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             qcdMake = True
             finalQCDYield = 0.0
             finalDataYield = 0.0
-            if not os.path.exists('meta/%sBackgrounds' % analysis) :
-                os.makedirs('meta/%sBackgrounds' % analysis)
+            checkDir('meta/%sBackgrounds' % analysis)
             print "qcdMakeDM called: ",ops['qcdMakeDM']
             qcdMaker = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['qcdMakeDM']), 'RECREATE')
             qcdDir = qcdMaker.mkdir('%s_Histos' % channel)
@@ -226,7 +230,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     if samp in ['zl', 'zj'] : continue
                 if analysis == 'htt' and channel == 'tt' :
                     if samp == 'zll' : continue
-                sampHistos[samp] = ROOT.TH1F("All Backgrounds %s %s" % (samp, append), samp, xNum, xBins )
+                sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s" % (samp, append), samp, xNum, xBins )
                 sampHistos[samp].Sumw2()
                 sampHistos[samp].SetFillColor( sampInfo[analysis][samp][0] )
                 sampHistos[samp].SetLineColor( ROOT.kBlack )
@@ -242,8 +246,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print sample
                 #print samples[sample]
     
-                ''' Skip plotting unused shape systematics '''
-                if skipSystShapeVar( var, sample, channel ) : continue
+                ''' Shape systematics are plotted with their 
+                    unshifted counterparts '''
+                getVar = var
+                if skipSystShapeVar( var, sample, channel ) :
+                    breakUp = var.split('_')
+                    breakUp.pop()
+                    getVar = '_'.join(breakUp)
     
                 # Remember data samples are called 'dataEE' and 'dataMM'
                 if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and sample == 'dataMM' : continue
@@ -284,14 +293,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
                 dic = tFile.Get("%s_Histos" % channel )
-                preHist = dic.Get( var )
+                preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
     
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
                     print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                     preHist.Scale( ops['qcdSF'] )
                     #print "QCD yield: %f" % preHist.Integral()
-                    hist = ROOT.TH1F( preHist )
+                    hist = ROOT.TH1D( preHist )
                 else :
                     hist = preHist.Rebin( xNum, "rebinned", xBins )
     
@@ -364,7 +373,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             if qcdMake :
-                qcdVar = ROOT.TH1F( var, 'qcd%s%s' % (append,var), xNum, xBins )
+                qcdVar = ROOT.TH1D( var, 'qcd%s%s' % (append,var), xNum, xBins )
                 qcdVar.Sumw2()
                 qcdVar.Add( sampHistos['obs'] )
                 qcdVar.Add( -1 * stack.GetStack().Last() )
@@ -409,7 +418,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioPad.SetBottomMargin(0.3)
                 pad1.SetBottomMargin(0.00)
                 ratioPad.SetGridy()
-                ratioHist = ROOT.TH1F('ratio %s' % append, 'ratio', xNum, xBins )
+                ratioHist = ROOT.TH1D('ratio %s' % append, 'ratio', xNum, xBins )
                 ratioHist.Sumw2()
                 ratioHist.Add( sampHistos['obs'] )
                 ratioHist.Divide( stack.GetStack().Last() )
@@ -423,7 +432,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioHist.Draw('ex0')
 
                 """ Add uncertainty bands on ratio """
-                er = ROOT.TH1F("er %s" % append, "er", xNum, xBins )
+                er = ROOT.TH1D("er %s" % append, "er", xNum, xBins )
                 er.Sumw2()
                 er.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( er.GetNbinsX()+1 ) :
@@ -466,7 +475,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.GetYaxis().SetTitle("Events")
             else :
                 stack.GetYaxis().SetTitle("Events / %s%s" % (str(round(stack.GetStack().Last().GetBinWidth(1),1)), info[ 5 ])  )
-            stack.SetTitle( "CMS Preliminary        %f pb^{-1} ( 13 TeV )" % cmsLumi )
     
 
             # Set axis and viewing area
@@ -500,9 +508,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             chan.SetTextSize(0.05)
             chan.DrawLatexNDC(.2, .84,"Channel: %s" % chans[channel] )
     
-            lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
+            lumi = ROOT.TText(.7,1.05,"X fb^{-1} (13 TeV)")
             lumi.SetTextSize(0.03)
-            lumi.DrawTextNDC(.7,.96,"15.9 / fb (13 TeV)" )
+            lumi.DrawTextNDC(.7,.96,"%.1f / fb (13 TeV)" % cmsLumi )
     
 
             ''' Random print outs on plots '''
@@ -528,7 +536,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             Add uncertainty bands on background stack
             """
             if ops['addUncert'] :
-                e1 = ROOT.TH1F("e1 %s" % append, "e1", xNum, xBins )
+                e1 = ROOT.TH1D("e1 %s" % append, "e1", xNum, xBins )
                 e1.Sumw2()
                 e1.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( e1.GetNbinsX()+1 ) :
@@ -565,8 +573,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
     
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s/%s.png' % (analysis, channel, var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s/%s.png' % (analysis, channel, var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
     
     
             """ Additional views for Visible Mass """

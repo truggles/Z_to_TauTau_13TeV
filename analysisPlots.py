@@ -5,7 +5,7 @@ from ROOT import gPad
 
 # Make a histo, but fill it later so we can keep track of events for ALL histos at once
 def makeHisto( cutName, varBins, varMin, varMax ) :
-    hist = ROOT.TH1F( cutName, cutName, varBins, varMin, varMax )
+    hist = ROOT.TH1D( cutName, cutName, varBins, varMin, varMax )
     return hist
 
 
@@ -38,14 +38,14 @@ def ESCuts( sample, channel, var ) :
     if len( channel ) == 4 : return '*(1)'
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
         if channel == 'tt' :
-            return '*(pt_1 > 40 && pt_2 > 40)'
+            return '*(pt_1 > 45 && pt_2 > 45)'
         if channel == 'em' :
             return '*(pt_1 > 13 && pt_2 > 10)'
     ESMap = {
         'tt' : { 
-            '_energyScaleUp' : '*((pt_1*1.03) > 40 && (pt_2*1.03) > 40)',
-            '_energyScaleDown' : '*((pt_1*0.97) > 40 && (pt_2*0.97) > 40)',
-            '_NoShift' : '*(pt_1 > 40 && pt_2 > 40)'},
+            '_energyScaleUp' : '*((pt_1*1.03) > 45 && (pt_2*1.03) > 45)',
+            '_energyScaleDown' : '*((pt_1*0.97) > 45 && (pt_2*0.97) > 45)',
+            '_NoShift' : '*(pt_1 > 45 && pt_2 > 45)'},
         'em' : { 
             '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
             '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
@@ -111,23 +111,33 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # and, top pt reweighting
         # weight is a composition of all applied MC/Data corrections
-        #sfs = '*(weight)' 
-        sfs = '*(effweight*puweight*azhWeight)' 
+        sfs = '*(1)'
+        if analysis == 'htt' :
+            sfs = '*(weight)'
+            if channel == 'tt' :
+                # Not currently included in weight for sync ntuple
+                sfs += '*(tauIDweight_1 * tauIDweight_2)'
+        if analysis == 'azh' :
+            sfs = '*(puweight*azhWeight)' 
         xsec = '*(XSecLumiWeight)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
-        #print var,es
-        #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
+        #print var,shapeSyst
+        #additionalCut += '*(Z_Pt>100)'
+        #additionalCut += '*(chargedIsoPtSum_2 < 0.5)'
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
+        #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
+        #print totalCutAndWeightMC
 
 
         # Check if the variable to plot is in the chain, if not, skip it
         # don't crash on systematics based variables
         varBase = var
         if 'Up' in var or 'Down' in var :
-            varBase = var.split('_')[0]
-        if '_sv' in var :
-            varBase += '_sv'
+            tmp = varBase.split('_')
+            tmp.pop()
+            varBase = '_'.join(tmp)
+                
         #print "Var: %s   VarBase: %s" % (var, varBase)
 
         ### Make sure that if we have no events
@@ -142,14 +152,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
-                chain.Draw( '%s>>%s' % (var, var), '1%s%s' % (additionalCut, dataES) )
+                chain.Draw( '%s>>%s' % (varBase, var), '1%s%s' % (additionalCut, dataES) )
                 histos[ var ] = gPad.GetPrimitive( var )
                 if var == 'm_vis' :
                     print 'm_vis'
                     print "Data Count:", histos[ var ].Integral()
             else :
 
-                chain.Draw( '%s>>%s' % (var, var), '%s' % totalCutAndWeightMC )
+                chain.Draw( '%s>>%s' % (varBase, var), '%s' % totalCutAndWeightMC )
                 ''' No reweighting at the moment! '''
                 histos[ var ] = gPad.GetPrimitive( var )
                 integralPost = histos[ var ].Integral()
@@ -179,28 +189,28 @@ def getHistoDict( analysis, channel ) :
             'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
             'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
             'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-            #'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
             #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
             #'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
             #'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
-#            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
-#            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
-#            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-#            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
-#            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
-#            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
-#            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
-#            #'extraelec_veto' : (20, 0, 2, 1, 'Extra Electron Veto', ''),
-#            #'extramuon_veto' : (20, 0, 2, 1, 'Extra Muon Veto', ''),
-#            'jpt_1' : (400, 0, 200, 20, 'Leading Jet Pt', ' GeV'),
-#            'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
-#            'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
-#            'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
+            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
+            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
+            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
+            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
+            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
+            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
+            #'extraelec_veto' : (20, 0, 2, 1, 'Extra Electron Veto', ''),
+            #'extramuon_veto' : (20, 0, 2, 1, 'Extra Muon Veto', ''),
+            'jpt_1' : (400, 0, 200, 20, 'Leading Jet Pt', ' GeV'),
+            'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
+            'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
+            'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
             #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
             'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
             #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
-            'm_vis' : (350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'),
+            'm_vis' : [350, 0, 350, 10, 'Z Vis Mass [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'m_sv' : (350, 0, 350, 10, 'Z svFit Mass [GeV]', ' GeV'),
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -214,16 +224,20 @@ def getHistoDict( analysis, channel ) :
 
         ''' added shape systematics '''
         #toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot']
-        #varsForShapeSyst = []
-        #for item in toAdd :
-        #    varsForShapeSyst.append( item )
-        #    varsForShapeSyst.append( item+'_mssm' )
+        toAdd = ['m_vis',]
+        varsForShapeSyst = []
+        for item in toAdd :
+            varsForShapeSyst.append( item )
+            #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        #for var in genVarMap.keys() :
-        #    if var in varsForShapeSyst :
-        #        for shape in shapesToAdd :
-        #            genVarMap[ var+'_'+shape+'Up' ] = genVarMap[ var ]
-        #            genVarMap[ var+'_'+shape+'Down' ] = genVarMap[ var ]
+        shapesToAdd = ['energyScale',]
+        for var in genVarMap.keys() :
+            if var in varsForShapeSyst :
+                for shape in shapesToAdd :
+                    genVarMap[ var+'_'+shape+'Up' ] = list(genVarMap[ var ])
+                    genVarMap[ var+'_'+shape+'Up' ][4] = genVarMap[ var+'_'+shape+'Up' ][4]+' TES UP'
+                    genVarMap[ var+'_'+shape+'Down' ] = list(genVarMap[ var ])
+                    genVarMap[ var+'_'+shape+'Down' ][4] = genVarMap[ var+'_'+shape+'Down' ][4]+' TES Down'
         #    
 
         if channel == 'em' :
@@ -255,7 +269,7 @@ def getHistoDict( analysis, channel ) :
                 'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
                 'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
                 'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
-                'iso_1' : (200, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
+                'iso_1' : (100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
                 'chargedIsoPtSum_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'),
                 'chargedIsoPtSum_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'),
                 'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
@@ -263,7 +277,7 @@ def getHistoDict( analysis, channel ) :
                 'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
                 'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
                 'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
-                'iso_2' : (200, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
+                'iso_2' : (100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
                 'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
                 #'t1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
                 'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
@@ -285,7 +299,9 @@ def getHistoDict( analysis, channel ) :
             'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
             'Z_DR' : (500, 0, 5, 50, 'Z dR', ' dR'),
             'Z_DPhi' : (800, -4, 4, 80, 'Z dPhi', ' dPhi'),
-            'Z_DEta' : (1000, -5, 5, 100, 'Z dEta', ' dEta'),
+            'Z_DEta' : (100, -5, 5, 10, 'Z dEta', ' dEta'),
+            'mjj' : (20, 0, 1000, 1, 'M_{jj}', ' [GeV]'),
+            'jdeta' : (100, -5, 5, 10, 'VBF dEta', ' dEta'),
             'm_vis' : (80, 50, 130, 10, 'Z Mass [GeV]', ' GeV'),
             'H_vis' : (400, 0, 400, 40, 'H Visible Mass [GeV]', ' GeV'),
             'Mass' : (600, 0, 600, 60, 'M_{ll#tau#tau} [GeV]', ' GeV'),

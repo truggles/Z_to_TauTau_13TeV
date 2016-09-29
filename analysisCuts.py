@@ -39,7 +39,7 @@ extraVetoTT   = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0'
 DecayMode = 't1DecayModeFinding == 1 && t2DecayModeFinding == 1'
 ttKin   = 't1Pt > 37 && t1AbsEta < 2.1 && t2Pt > 37 && t2AbsEta < 2.1'
 ttKinOld   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
-ttKinTES   = '(t1Pt*1.03) > 40 && t1AbsEta < 2.1 && (t2Pt*1.03) > 40 && t2AbsEta < 2.1'
+ttKinTES45   = '(t1Pt*1.03) > 45 && t1AbsEta < 2.1 && (t2Pt*1.03) > 45 && t2AbsEta < 2.1'
 ttKinLoose   = 't1Pt > 35 && t1AbsEta < 2.1 && t2Pt > 35 && t2AbsEta < 2.1'
 ttCharge    = 'abs( t1Charge ) == 1 && abs( t2Charge ) == 1'
 ttDR    = 't1_t2_DR > 0.5'
@@ -117,7 +117,7 @@ eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoZTTp001dxyzR0 == 0'
 mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 4'
 eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
 
-def getCut( analysis, channel, cutName, isData=False ) :
+def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     
     triggers = [tt40, tt35, '('+e23m8+'||'+m23e12+')', emTrig, eeTrig, mmTrig]
 
@@ -138,7 +138,7 @@ def getCut( analysis, channel, cutName, isData=False ) :
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
             'syncCutsDCqcd' : [ttKin, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
-            'syncCutsDCqcdTES' : [ttKinTES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
+            'syncCutsDCqcdTES' : [ttKinTES45, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
             # Selection which only does baseline for sync sample
             'syncCutsNtuple' : [ttKinOld, ttCharge, ttDR, ttVtx, tt35, DecayMode],
             #'syncCutsNtupleTmp' : [ttKinOld, ttCharge, ttDR, ttVtx, DecayMode],
@@ -208,8 +208,9 @@ def getCut( analysis, channel, cutName, isData=False ) :
 
     cuts1 = cutMap[ analysis ][ channel ][ cutName ]
 
-    # Remove trigger requirements if MC
+    # Remove trigger requirements if MC except reHLT samples
     if not isData :
+        #if not isReHLT : 
         for trig in triggers :
             if trig in cuts1 :
                 cuts1.remove( trig )
@@ -250,7 +251,11 @@ def getCut( analysis, channel, cutName, isData=False ) :
 
 
 if __name__ == '__main__' :
-    cut = getCut( 'htt', 'tt', 'syncCutsDCqcd', False )
+    isData=False
+    isReHLT=True
+    cut = getCut( 'htt', 'tt', 'syncCutsDCqcd', isData, isReHLT )
+    print cut + "\n\n"
+    cut = getCut( 'htt', 'tt', 'syncCutsDCqcd', isData, not isReHLT )
     print cut + "\n\n"
     cut = getCut( 'htt', 'tt', 'syncCutsDCqcd', True )
     print cut + "\n\n"

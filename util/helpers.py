@@ -207,5 +207,17 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
     #mergeFiles( analysis, fileList, outDir )
 
 
+def getQCDSF( fileName, category ) :
+
+    with open( fileName ) as qcdFile :
+        for line in qcdFile :
+            info = line.strip().split(':')
+            if info[0] == category :
+                print info
+                return float(info[1])
+
+
+if __name__ == '__main__' :
+    print getQCDSF( 'httQCDYields_2Aug25x5pt45b.txt', '1Jet' )
 
 

@@ -144,7 +144,7 @@ def addNvtxWeight( analysis, sample, fileName, channel ) :
 if __name__ == '__main__' :
     zHome = os.getenv('CMSSW_BASE') + '/src/Z_to_TauTau_13TeV/'
     os.environ['_ZHOME_'] = zHome
-    makeDataPUTemplate( 'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt', 'pileup_latest.txt' ) # July 22, 12.9/fb
+    makeDataPUTemplate( 'Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt', 'pileup_latest.txt' ) # Aug 25, 20.1/fb
     #makeMCPUTemplate()
     print PUreweight()
 

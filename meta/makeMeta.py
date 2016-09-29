@@ -9,11 +9,11 @@ from sampleNames import returnSampleDetails
 
 
 
-def makeMetaJSON( analysis, ch = 'tt' ) :
+def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
 
     currentDASSamples = {
         'Sync' : ['Sync-HtoTT',],
-        'htt' : ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
+        'htt' : ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
         'azh' : ['dataEE', 'dataMM', 'ZZ4l', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4m', 'ggZZ4tau', 'WMinusHTauTau', 'WPlusHTauTau', 'ZHTauTau', 'ttHTauTau'],
     }
 
@@ -71,19 +71,23 @@ def makeMetaJSON( analysis, ch = 'tt' ) :
             print infoDAS
     
         # Get the Ntuple info that FSA created
-        numFiles = getNumberOfFiles( k, analysis )
         eventCount = 0
         summedWeights = 0
         summedWeightsNorm = 0
-        inFiles = open('NtupleInputs_%s/%s.txt' % (analysis, k), 'r')
+        if skimmed :
+            fileName = 'NtupleInputs_%s/skimmed/%s_%s.txt' % (analysis, k, channel)
+        else :
+            fileName = 'NtupleInputs_%s/%s.txt' % (analysis, k)
+        inFiles = open( fileName, 'r')
+        numFiles = getNumberOfFiles( fileName )
         try :
             for fileName in inFiles :
-                eventCount += getEventCount( fileName.strip(), ch )
-                w = getSummedWeights( fileName.strip(), ch )
+                eventCount += getEventCount( fileName.strip(), channel )
+                w = getSummedWeights( fileName.strip(), channel )
                 summedWeights += w[0]
                 summedWeightsNorm += w[1]
         except AttributeError :
-            print "\nAttributeError, maybe channel is wrong: %s\n" % ch
+            print "\nAttributeError, maybe channel is wrong: %s\n" % channel
             continue
             inFiles.close()
         inFiles.close()

@@ -27,7 +27,7 @@ def sampleDetails( analysis ) :
     sampleMap = {
         'Sync' : {
             'Sync-HtoTT': {
-                'DASPath' : '/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/SUSYGluGluToHToTauTau_M-160_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 999.,
                 'group' : 'sync'
         }}, # end Sync sample
@@ -38,125 +38,125 @@ def sampleDetails( analysis ) :
                 'xsec' : 999.,
                 'group' : 'obs'},
             'VV' :         { 
-                'DASPath' : '/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 11.95,
                 'group' : 'dib'},
             'ZZ2l2q' :     { 
-                'DASPath' : '/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 3.22,
                 'group' : 'dib'},
             'WW1l1nu2q' :  { 
-                'DASPath' : '/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 49.997,
                 'group' : 'dib'},
             'WZ2l2q' :     { 
-                'DASPath' : '/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 5.595,
                 'group' : 'dib'},
             'WZ1l3nu' :    { 
-                'DASPath' : '/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 3.05,
                 'group' : 'dib'},
             'WZ1l1nu2q' :  { 
-                'DASPath' : '/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 10.71,
                 'group' : 'dib'},
             'Tbar-tW' :    { 
-                'DASPath' : '/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 35.6,
                 'group' : 'dib'},
             'T-tW' :       { 
-                'DASPath' : '/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v2/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 35.6,
                 'group' : 'dib'},
             'T-tchan' :    { 
-                'DASPath' : '/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 136.02,
                 'group' : 'dib'},
             'Tbar-tchan' : { 
-                'DASPath' : '/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 80.95,
                 'group' : 'dib'},
             'TT' :         { 
-                'DASPath' : '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 831.76,
                 'group' : 'top'},
             'WJets' :      { 
-                'DASPath' : '/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 50380 * 1.221252,
                 'group' : 'wjets'},
             'WJets1' :     { 
-                'DASPath' : '/W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 9644.5 * 1.221252,
                 'group' : 'wjets'},
             'WJets2' :     { 
-                'DASPath' : '/W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 3144.5 * 1.221252,
                 'group' : 'wjets'},
             'WJets3' :     { 
-                'DASPath' : '/W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 954.8 * 1.221252,
                 'group' : 'wjets'},
             'WJets4' :     { 
-                'DASPath' : '/W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 485.6 * 1.221252,
                 'group' : 'wjets'},
             'DYJetsAMCNLO' :     { 
-                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xMAOD2, 
                 'xsec' : 4954.0 * 1.216229,
                 'group' : 'dyj'},
             'DYJets' :     { 
-                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 
+                'DASPath' : '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80xReHLT, 
                 'xsec' : 4954.0 * 1.216229,
                 'group' : 'dyj'},
             'DYJets1' :    { 
-                'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 1012.5 * 1.216229,
                 'group' : 'dyj'},
             'DYJets2' :    { 
-                'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 332.8 * 1.216229,
                 'group' : 'dyj'},
             'DYJets3' :    { 
-                'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 101.8 * 1.216229,
                 'group' : 'dyj'},
             'DYJets4' :    { 
-                'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 54.8 * 1.216229,
                 'group' : 'dyj'},
             'DYJetsHigh' : {
-                'DASPath' : '/DYJetsToLL_M-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/DYJetsToLL_M-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 6.657,
                 'group' : 'dyj'},
             'DYJetsLow' :  {
-                'DASPath' : '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80x, 
+                'DASPath' : '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2, 
                 'xsec' : 18610.,
                 'group' : 'dyj'},
              'ggHtoTauTau120': {
                 'DASPath' : '/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 47.38 * 0.0698,
-                'group' : 'ggh'},
+                'group' : 'higgs'},
              'ggHtoTauTau125': {
                 'DASPath' : '/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 44.14 * 0.0627,
-                'group' : 'ggh'},
+                'group' : 'higgs'},
              'ggHtoTauTau130': {
                 'DASPath' : '/GluGluHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 41.23 * 0.0541,
-                'group' : 'ggh'},
+                'group' : 'higgs'},
              'VBFHtoTauTau120': {
                 'DASPath' : '/VBFHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.935 * 0.0698,
-                'group' : 'vbf'},
+                'group' : 'higgs'},
              'VBFHtoTauTau125': {
                 'DASPath' : '/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.782 * 0.0627,
-                'group' : 'vbf'},
+                'group' : 'higgs'},
              'VBFHtoTauTau130': {
                 'DASPath' : '/VBFHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.637 * 0.0541,
-                'group' : 'vbf'},
+                'group' : 'higgs'},
             #'DYJetsBig' : ('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s_ext1-v1/MINIAODSIM' % c80x, 4954.0 * 1.216229 ), 
         }, # end HTT
         'azh' : {
