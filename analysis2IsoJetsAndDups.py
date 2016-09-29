@@ -93,15 +93,15 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     return scalar1
 
 
-def getTauPtWeight( sample, channel, row, ptScaler ) :
+def getTauPtWeight( sample, channel, t1GenID, t2GenID, row, ptScaler ) :
     if channel != 'tt' : return 1
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample or 'Sync' in sample) :
         return 1
     l1weight = 0. 
     l2weight = 0.
-    if row.t1ZTTGenMatching == 5 and row.t1GenJetPt >= 0 :
+    if t1GenID == 5 and row.t1GenJetPt >= 0 :
         l1weight = row.t1GenJetPt * ptScaler / 1000.
-    if row.t2ZTTGenMatching == 5 and row.t2GenJetPt >= 0 :
+    if t2GenID == 5 and row.t2GenJetPt >= 0 :
         l2weight = row.t2GenJetPt * ptScaler / 1000.
     return 1 + l1weight + l2weight
 
@@ -197,64 +197,21 @@ def getCurrentEvt( channel, row ) :
     return currentEvt
 
 
-tauIso = {
-    'Pt' : 'pt',
-    'Eta' : 'eta',
-    'Phi' : 'phi',
-    'Mass' : 'm',
-    'Charge' : 'q',
-    'PVDXY' : 'd0',
-    'PVDZ' : 'dZ',
-    'MtToPfMet_Raw' : '',
-    'MtToPfMet_type1' : '',
-    'ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
-    'ByIsolationMVArun2v1DBnewDMwLTraw' : '',
-    'ByIsolationMVArun2v1DBoldDMwLTraw' : '',
-    'ByLooseIsolationMVArun2v1DBoldDMwLT' : '',
-    'ByMediumIsolationMVArun2v1DBoldDMwLT' : '',
-    'ByTightIsolationMVArun2v1DBoldDMwLT' : '',
-    'ByVTightIsolationMVArun2v1DBoldDMwLT' : '',
-    'ByIsolationMVA3newDMwLTraw' : '',
-    'ByIsolationMVA3oldDMwLTraw' : '',
-    'AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
-    'AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
-    'AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
-    'AgainstElectronVLooseMVA6' : 'againstElectronVLooseMVA6',
-    'AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
-    'AgainstMuonLoose3' : 'againstMuonLoose3',
-    'AgainstMuonTight3' : 'againstMuonTight3',
-    'ChargedIsoPtSum' : 'chargedIsoPtSum',
-    'NeutralIsoPtSum' : 'neutralIsoPtSum',
-    'PuCorrPtSum' : 'puCorrPtSum',
-    'AbsEta' : '',
-    'DecayMode' : '',
-    'DecayModeFinding' : '',
-    'DoubleTau40Filter' : '',
-    'ElecOverlap' : '',
-    'GenDecayMode' : '',
-    'ZTTGenMatching' : 'gen_match',
-    'GlobalMuonVtxOverlap' : '',
-    'JetArea' : '',
-    'JetBtag' : '',
-    'JetEtaEtaMoment' : '',
-    'JetEtaPhiMoment' : '',
-    'JetPFCISVBtag' : '',
-    'JetPartonFlavour' : '',
-    'JetPhiPhiMoment' : '',
-    'JetPt' : '',
-    'GenJetPt' : '',
-    'LeadTrackPt' : '',
-    'LowestMll' : '',
-    'MatchesDoubleTau40Path' : '',
-    'MatchesDoubleTau35Path' : '',
-    'MuOverlap' : '',
-    'MuonIdIsoStdVtxOverlap' : '',
-    'MuonIdIsoVtxOverlap' : '',
-    'MuonIdVtxOverlap' : '',
-    'NearestZMass' : '',
-    'Rank' : '',
-    'VZ' : '',
-}
+tauIsoList = [
+'Pt', 'Eta', 'Phi', 'Mass', 'Charge', 'PVDXY', 'PVDZ', 'MtToPfMet_Raw', 'MtToPfMet_type1',
+'ByCombinedIsolationDeltaBetaCorrRaw3Hits', 'ByIsolationMVArun2v1DBnewDMwLTraw',
+'ByIsolationMVArun2v1DBoldDMwLTraw', 'ByLooseIsolationMVArun2v1DBoldDMwLT',
+'ByMediumIsolationMVArun2v1DBoldDMwLT', 'ByTightIsolationMVArun2v1DBoldDMwLT',
+'ByVTightIsolationMVArun2v1DBoldDMwLT', 'ByIsolationMVA3newDMwLTraw',
+'ByIsolationMVA3oldDMwLTraw', 'AgainstElectronLooseMVA6', 'AgainstElectronMediumMVA6',
+'AgainstElectronTightMVA6', 'AgainstElectronVLooseMVA6', 'AgainstElectronVTightMVA6',
+'AgainstMuonLoose3', 'AgainstMuonTight3', 'ChargedIsoPtSum', 'NeutralIsoPtSum',
+'PuCorrPtSum', 'AbsEta', 'DecayMode', 'DecayModeFinding', 'DoubleTau40Filter',
+'ElecOverlap', 'GenDecayMode', 'ZTTGenMatching', 'ZTTGenMatching2', 'GlobalMuonVtxOverlap',
+'JetArea', 'JetBtag', 'JetEtaEtaMoment', 'JetEtaPhiMoment', 'JetPFCISVBtag',
+'JetPartonFlavour', 'JetPhiPhiMoment', 'JetPt', 'GenJetPt', 'LeadTrackPt', 'LowestMll',
+'MatchesDoubleTau40Path', 'MatchesDoubleTau35Path', 'MuOverlap', 'MuonIdIsoStdVtxOverlap',
+'MuonIdIsoVtxOverlap', 'MuonIdVtxOverlap', 'NearestZMass', 'Rank', 'VZ',]
 
 def isoOrder( channel, row ) :
     if channel != 'tt' : return
@@ -266,7 +223,7 @@ def isoOrder( channel, row ) :
     pt1 = getattr( row, 't1Pt' )
     pt2 = getattr( row, 't2Pt' )
     if iso2 > iso1 :
-        for uw in tauIso.keys() :
+        for uw in tauIsoList :
             if not hasattr( row, 't1%s' % uw ) : continue
             if not hasattr( row, 't2%s' % uw ) : continue
             tmp1 = getattr( row, 't1%s' % uw )
@@ -379,7 +336,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'DPhi' : 'H_DPhi',
         }
     branchMappingElec = {
-        'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt', # rename ePt to pt_1
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -392,7 +348,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingMuon = {
-        'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
         'cand_Eta' : 'eta',
         'cand_Phi' : 'phi',
@@ -404,7 +359,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingTau = {
-        'cand_ZTTGenMatching' : 'gen_match',
         'cand_Pt' : 'pt',
         'cand_DecayMode' : 'decayMode',
         'cand_Eta' : 'eta',
@@ -701,10 +655,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
     #FFWeightQCD2_DOWN = array('f', [ 0 ] )
     #FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
-    #pzetamiss = array('f', [ 0 ] )
-    #pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
-    #pzeta = array('f', [ 0 ] )
-    #pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    pzetamiss = array('f', [ 0 ] )
+    pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    pzeta = array('f', [ 0 ] )
+    pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
     Z_DEta = array('f', [ 0 ] )
     Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
     #m_vis_UP = array('f', [ 0 ] )
@@ -717,10 +671,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
     #mt_tot_DOWN = array('f', [ 0 ] )
     #mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
-    #mt_1 = array('f', [ 0 ] )
-    #mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
-    #mt_2 = array('f', [ 0 ] )
-    #mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
+    mt_1 = array('f', [ 0 ] )
+    mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
+    mt_2 = array('f', [ 0 ] )
+    mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
     XSecLumiWeight = array('f', [ 0 ] )
     XSecLumiWeightB = tnew.Branch('XSecLumiWeight', XSecLumiWeight, 'XSecLumiWeight/F')
     trigweight_1 = array('f', [ 0 ] )
@@ -747,8 +701,31 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     mvacov10B = tnew.Branch('mvacov10', mvacov10, 'mvacov10/F')
     mvacov11 = array('f', [ 0 ] )
     mvacov11B = tnew.Branch('mvacov11', mvacov11, 'mvacov11/F')
+    mvamet = array('f', [ 0 ] )
+    mvametB = tnew.Branch('mvamet', mvamet, 'mvamet/F')
+    mvametphi = array('f', [ 0 ] )
+    mvametphiB = tnew.Branch('mvametphi', mvametphi, 'mvametphi/F')
+    gen_match_1 = array('f', [ 0 ] )
+    gen_match_1B = tnew.Branch('gen_match_1', gen_match_1, 'gen_match_1/F')
+    gen_match_2 = array('f', [ 0 ] )
+    gen_match_2B = tnew.Branch('gen_match_2', gen_match_2, 'gen_match_2/F')
+    gen_match_3 = array('f', [ 0 ] )
+    gen_match_3B = tnew.Branch('gen_match_3', gen_match_3, 'gen_match_3/F')
+    gen_match_4 = array('f', [ 0 ] )
+    gen_match_4B = tnew.Branch('gen_match_4', gen_match_4, 'gen_match_4/F')
 
 
+    ''' Set MvaMet base vars defaults in case we didn't fill that value '''
+    mvacov00[0] = -999
+    mvacov10[0] = -999
+    mvacov01[0] = -999
+    mvacov11[0] = -999
+    mvamet[0] = -999
+    mvametphi[0] = -999
+    mt_1[0] = -999
+    mt_2[0] = -999
+    pzeta[0] = -999
+    pzetamiss[0] = -999
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -834,40 +811,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
                 extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
             
-            if hasattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) ):
+            if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
                 mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
                 mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
                 mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
                 mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
-
-            # Channel specific pairwise mvaMet
-            #if channel == 'tt' :
-            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
-            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
-            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
-            #    else :
-            #        pzetamiss[0] = -9999
-            #        mt_1[0] = -9999
-            #        mt_2[0] = -9999
-            #if channel == 'em' :
-            #    if hasattr( row, "mvamet" ) and hasattr( row, "mvametphi" ) :
-            #        pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, row.mvamet, row.mvametphi)[1]
-            #        mt_1[0] = getTransMass( row.mvamet, row.mvametphi, pt1, phi1 )
-            #        mt_2[0] = getTransMass( row.mvamet, row.mvametphi, pt2, phi2 )
-            #    else :
-            #        pzetamiss[0] = -9999
-            #        mt_1[0] = -9999
-            #        mt_2[0] = -9999
-            #if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
-            #    pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+                mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
+                mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
+                mt_1[0]= getTransMass( mvamet[0], mvametphi[0], pt1, phi1 )
+                mt_2[0]= getTransMass( mvamet[0], mvametphi[0], pt2, phi2 )
+                pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
+                if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+                    pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+            else : # Not l1_l2_MvaMet
+                mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
+                mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
 
 
             # With calculated transverse mass variables, do Mt_Total for mssm search
-            mt_1 = getattr( row, l1+'MtToPfMet_Raw' )
-            mt_2 = getattr( row, l2+'MtToPfMet_Raw' )
-            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1, mt_2 ) # Using wrong mt
-            #XXX mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
+            mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
             #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
             #    mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
             #    mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
@@ -898,6 +860,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             zPtWeight[0] = 1
             weight[0] = 1
             XSecLumiWeight[0] = 1
+            gen_match_1[0] = -1
+            gen_match_2[0] = -1
+            gen_match_3[0] = -1
+            gen_match_4[0] = -1
 
             # Data specific vars
             if 'data' in sample :
@@ -947,7 +913,27 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
 
+                if hasattr( row, l1+'ZTTGenMatching2' ) : # GenMatching2 is best var
+                    gen_match_1[0] = getattr( row, l1+'ZTTGenMatching2' )
+                elif hasattr( row, l1+'ZTTGenMatching' ) :
+                    gen_match_1[0] = getattr( row, l1+'ZTTGenMatching' )
+                if hasattr( row, l2+'ZTTGenMatching2' ) : # GenMatching2 is best var
+                    gen_match_2[0] = getattr( row, l2+'ZTTGenMatching2' )
+                elif hasattr( row, l2+'ZTTGenMatching' ) :
+                    gen_match_2[0] = getattr( row, l2+'ZTTGenMatching' )
+
+
                 if analysis == 'azh' :
+
+                    if hasattr( row, l3+'ZTTGenMatching2' ) : # GenMatching2 is best var
+                        gen_match_3[0] = getattr( row, l3+'ZTTGenMatching2' )
+                    elif hasattr( row, l3+'ZTTGenMatching' ) :
+                        gen_match_3[0] = getattr( row, l3+'ZTTGenMatching' )
+                    if hasattr( row, l4+'ZTTGenMatching2' ) : # GenMatching2 is best var
+                        gen_match_4[0] = getattr( row, l4+'ZTTGenMatching2' )
+                    elif hasattr( row, l4+'ZTTGenMatching' ) :
+                        gen_match_4[0] = getattr( row, l4+'ZTTGenMatching' )
+
                     nvtx = row.nvtx
                     # Currently using PFIDLoose and Loose RelIso for all muons
                     
@@ -989,10 +975,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( pt1, eta1, pt2, eta2 )
                 #elif channel == 'tt' :
                 if channel == 'tt' :
+
                     # L1 trigger efficiency is dependent on tau isolation
                     # and real / fake tau status
                     # find tau iso and pass string for mapping appropriately
-                    t1Gen = getattr( row, l1+'ZTTGenMatching' )
                     tauIso = 'NoIso'
                     if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'LooseIso'
@@ -1003,8 +989,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' : tauIso == 'TightIso'
-                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, t1Gen )
-                    t2Gen = getattr( row, l2+'ZTTGenMatching' )
+                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0] )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'LooseIso'
@@ -1015,7 +1000,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' : tauIso == 'TightIso'
-                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, t2Gen )
+                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
                     tauIDweight_1[0] = 0.84
                     tauIDweight_2[0] = 0.84
                 
@@ -1059,8 +1044,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     tauPtWeightUp[0] = 1
                     tauPtWeightDown[0] = 1
                 if channel == 'tt' :
-                    tauPtWeightUp[0] = getTauPtWeight( sample, channel, row, 0.2 )
-                    tauPtWeightDown[0] = getTauPtWeight( sample, channel, row, -0.2 )
+                    tauPtWeightUp[0] = getTauPtWeight( sample, channel,
+                        gen_match_1[0], gen_match_2[0], row, 0.2 )
+                    tauPtWeightDown[0] = getTauPtWeight( sample, channel, 
+                        gen_match_1[0], gen_match_2[0], row, -0.2 )
 
 
 
