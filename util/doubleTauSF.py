@@ -27,21 +27,21 @@ class DoubleTau35Efficiencies :
                 self.same_sign_cumlative = json.load(f3)
 
             ### New Method
-            self.fVL = ROOT.TFile('data/doubleTau35/allRuns-VLoose.root','r')
-            self.vloose = getTH1FfromTGraphAsymmErrors( \
-                self.fVL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vloose')
-            self.fL = ROOT.TFile('data/doubleTau35/allRuns-Loose.root','r')
-            self.loose = getTH1FfromTGraphAsymmErrors( \
-                self.fL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'loose')
-            self.fM = ROOT.TFile('data/doubleTau35/allRuns-Medium.root','r')
-            self.medium = getTH1FfromTGraphAsymmErrors( \
-                self.fM.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'medium')
-            self.fT = ROOT.TFile('data/doubleTau35/allRuns-Tight.root','r')
-            self.tight = getTH1FfromTGraphAsymmErrors( \
-                self.fT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'tight')
-            self.fVT = ROOT.TFile('data/doubleTau35/allRuns-VTight.root','r')
-            self.vtight = getTH1FfromTGraphAsymmErrors( \
-                self.fVT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vtight')
+            #self.fVL = ROOT.TFile('data/doubleTau35/allRuns-VLoose.root','r')
+            #self.vloose = getTH1FfromTGraphAsymmErrors( \
+            #    self.fVL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vloose')
+            #self.fL = ROOT.TFile('data/doubleTau35/allRuns-Loose.root','r')
+            #self.loose = getTH1FfromTGraphAsymmErrors( \
+            #    self.fL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'loose')
+            #self.fM = ROOT.TFile('data/doubleTau35/allRuns-Medium.root','r')
+            #self.medium = getTH1FfromTGraphAsymmErrors( \
+            #    self.fM.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'medium')
+            #self.fT = ROOT.TFile('data/doubleTau35/allRuns-Tight.root','r')
+            #self.tight = getTH1FfromTGraphAsymmErrors( \
+            #    self.fT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'tight')
+            #self.fVT = ROOT.TFile('data/doubleTau35/allRuns-VTight.root','r')
+            #self.vtight = getTH1FfromTGraphAsymmErrors( \
+            #    self.fVT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vtight')
         else :
             self.high_mt_cumlative = ''
             self.real_taus_cumlative = ''
