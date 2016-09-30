@@ -605,11 +605,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         
 
         # Make sure we get the last event
+        # A previous check covered this situation
+        # if prevRunLumiEvt != currentRunLumiEvt
+        # so just fill here with the best version
+        # of an event we have
         if count == numRows :
             #print "LastRowPrev:",prevRunLumiEvt, prevEvt
             #print "LastRowCur:",currentRunLumiEvt, currentEvt
-            prevRunLumiEvt = currentRunLumiEvt
-            prevEvt = currentEvt
             toFillMap[ prevRunLumiEvt ] = prevEvt
     
     ''' Add a nvtx Pile UP weighting variable to the new tree
