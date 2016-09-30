@@ -36,7 +36,7 @@ def skipSystShapeVar( var, sample, channel ) :
 # Make specific extra cuts for different TES requirements
 def ESCuts( sample, channel, var ) :
     tau2PtCut = 40.
-    tau1PtCut = 50.
+    tau1PtCut = 40.
     if len( channel ) == 4 : return '*(1)'
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
         if channel == 'tt' :
@@ -196,23 +196,23 @@ def getHistoDict( analysis, channel ) :
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
             'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
             'Z_Pt' : (100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'),
-            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
-            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
+#            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
+#            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
             'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
 #            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
 #            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
 #            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
 #            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
 #            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
-            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
+#            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+#            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
 #            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
             'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
 #            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
 #            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
-#            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
+            'bjetCISVVeto20MediumZTT' : (60, 0, 6, 5, 'nBJets20Medium', ''),
 #            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-#XXX            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
 #XXX            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
 #            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
 #            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
@@ -224,7 +224,7 @@ def getHistoDict( analysis, channel ) :
 #            'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
 #            'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
 #            #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
-#            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
+            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
             #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
             'm_vis' : [30, 0, 300, 1, 'Z Vis Mass [GeV]', ' GeV'],
