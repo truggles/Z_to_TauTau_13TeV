@@ -123,8 +123,6 @@ eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
 
 def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     
-    triggers = [tt40, tt35, '('+e23m8+'||'+m23e12+')', emTrig, eeTrig, mmTrig]
-
     cutMap = { 
         'htt' : # analysis
         { 'tt' : {
@@ -197,13 +195,6 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     cutMap[ 'Sync' ] = cutMap[ 'htt' ]
 
     cuts1 = cutMap[ analysis ][ channel ][ cutName ]
-
-    # Remove trigger requirements if MC except reHLT samples
-    if not isData :
-        #if not isReHLT : 
-        for trig in triggers :
-            if trig in cuts1 :
-                cuts1.remove( trig )
 
     prodMap = {
         'em' : ('e', 'm'),
