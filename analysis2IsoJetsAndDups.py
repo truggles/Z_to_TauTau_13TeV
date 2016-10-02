@@ -284,9 +284,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
 
-    #cmssw_base = os.getenv('CMSSW_BASE')
-    #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
-    #ffqcd = ff_file.Get('ff_qcd_os') 
+    # Create Fake Factor object for retrieving
+    # FF values for data events
+    if 'data' in sample :
+        from util.fakeFactorQCD import fakeFactors
+        import random
+        cmssw_base = os.getenv('CMSSW_BASE')
+        ffQCD = fakeFactors()
 
     sameNameVars = [
     'run','lumi','evt','GenWeight','LT','charge','jetVeto30','jetVeto40',
@@ -651,24 +655,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
     electronSF4 = array('f', [ 0 ] )
     electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
-    #FFWeightQCD = array('f', [ 0 ] )
-    #FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
-    #FFWeightQCD_UP = array('f', [ 0 ] )
-    #FFWeightQCD_UPB = tnew.Branch('FFWeightQCD_UP', FFWeightQCD_UP, 'FFWeightQCD_UP/F')
-    #FFWeightQCD_DOWN = array('f', [ 0 ] )
-    #FFWeightQCD_DOWNB = tnew.Branch('FFWeightQCD_DOWN', FFWeightQCD_DOWN, 'FFWeightQCD_DOWN/F')
-    #FFWeightQCD1 = array('f', [ 0 ] )
-    #FFWeightQCD1B = tnew.Branch('FFWeightQCD1', FFWeightQCD1, 'FFWeightQCD1/F')
-    #FFWeightQCD1_UP = array('f', [ 0 ] )
-    #FFWeightQCD1_UPB = tnew.Branch('FFWeightQCD1_UP', FFWeightQCD1_UP, 'FFWeightQCD1_UP/F')
-    #FFWeightQCD1_DOWN = array('f', [ 0 ] )
-    #FFWeightQCD1_DOWNB = tnew.Branch('FFWeightQCD1_DOWN', FFWeightQCD1_DOWN, 'FFWeightQCD1_DOWN/F')
-    #FFWeightQCD2 = array('f', [ 0 ] )
-    #FFWeightQCD2B = tnew.Branch('FFWeightQCD2', FFWeightQCD2, 'FFWeightQCD2/F')
-    #FFWeightQCD2_UP = array('f', [ 0 ] )
-    #FFWeightQCD2_UPB = tnew.Branch('FFWeightQCD2_UP', FFWeightQCD2_UP, 'FFWeightQCD2_UP/F')
-    #FFWeightQCD2_DOWN = array('f', [ 0 ] )
-    #FFWeightQCD2_DOWNB = tnew.Branch('FFWeightQCD2_DOWN', FFWeightQCD2_DOWN, 'FFWeightQCD2_DOWN/F')
+    FFWeightQCD = array('f', [ 0 ] )
+    FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
+    FFWeightQCD_StatUP = array('f', [ 0 ] )
+    FFWeightQCD_StatUPB = tnew.Branch('FFWeightQCD_StatUP', FFWeightQCD_StatUP, 'FFWeightQCD_StatUP/F')
+    FFWeightQCD_StatDOWN = array('f', [ 0 ] )
+    FFWeightQCD_StatDOWNB = tnew.Branch('FFWeightQCD_StatDOWN', FFWeightQCD_StatDOWN, 'FFWeightQCD_StatDOWN/F')
+    FFWeightQCD_SystUP = array('f', [ 0 ] )
+    FFWeightQCD_SystUPB = tnew.Branch('FFWeightQCD_SystUP', FFWeightQCD_SystUP, 'FFWeightQCD_SystUP/F')
+    FFWeightQCD_SystDOWN = array('f', [ 0 ] )
+    FFWeightQCD_SystDOWNB = tnew.Branch('FFWeightQCD_SystDOWN', FFWeightQCD_SystDOWN, 'FFWeightQCD_SystDOWN/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     pzeta = array('f', [ 0 ] )
@@ -766,15 +762,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             vbfClean( row )
 
 
-            #FFWeightQCD[0] = -1
-            #FFWeightQCD_UP[0] = -1
-            #FFWeightQCD_DOWN[0] = -1
-            #FFWeightQCD1[0] = -1
-            #FFWeightQCD1_UP[0] = -1
-            #FFWeightQCD1_DOWN[0] = -1
-            #FFWeightQCD2[0] = -1
-            #FFWeightQCD2_UP[0] = -1
-            #FFWeightQCD2_DOWN[0] = -1
+            FFWeightQCD[0] = -1
+            FFWeightQCD_StatUP[0] = -1
+            FFWeightQCD_StatDOWN[0] = -1
+            FFWeightQCD_SystUP[0] = -1
+            FFWeightQCD_SystDOWN[0] = -1
 
 
             # For easy use later
@@ -905,36 +897,27 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Calculate Fake Factors based on this work:
                 # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
                 # We start with applying QCD factors to each leg and sum for total
-                #if channel == 'tt' :
-                #    FFWeightQCD[0] = 0.
-                #    FFWeightQCD_UP[0] = 0.
-                #    FFWeightQCD_DOWN[0] = 0.
-                #    FFWeightQCD1[0] = 0.
-                #    FFWeightQCD1_UP[0] = 0.
-                #    FFWeightQCD1_DOWN[0] = 0.
-                #    FFWeightQCD2[0] = 0.
-                #    FFWeightQCD2_UP[0] = 0.
-                #    FFWeightQCD2_DOWN[0] = 0.
-                #    muon_iso = 0.089 # this is an artifact of being based on MuTau channel
-                #                    # 0.089 gives a correction value of 1.0
-                #    # First leg FR
-                #    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
-                #        inputsqcd = ffqcd.inputs()
-                #        inputsqcd = [pt1, row.t1DecayMode, row.t1_t2_Mass, muon_iso]
-                #        FFWeightQCD1[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
-                #        FFWeightQCD1_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
-                #        FFWeightQCD1_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
-                #    # Second leg FR
-                #    if row.t2ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
-                #        inputsqcd = ffqcd.inputs()
-                #        inputsqcd = [pt2, row.t2DecayMode, row.t1_t2_Mass, muon_iso]
-                #        FFWeightQCD2[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd) )
-                #        FFWeightQCD2_UP[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_up" )
-                #        FFWeightQCD2_DOWN[0] = ffqcd.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_down" )
-                #    # Total
-                #    FFWeightQCD[0] = FFWeightQCD1[0] + FFWeightQCD2[0] 
-                #    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
-                #    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
+                if channel == 'tt' :
+                    FFWeightQCD[0] = 0.
+                    FFWeightQCD_StatUP[0] = 0.
+                    FFWeightQCD_StatDOWN[0] = 0.
+                    FFWeightQCD_SystUP[0] = 0.
+                    FFWeightQCD_SystDOWN[0] = 0.
+                    #muon_iso = 0.089 # this is an artifact of being based on MuTau channel
+                    #                # 0.089 gives a correction value of 1.0
+                    # First leg FR
+                    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
+                        decayMode = getattr(row, l1+'DecayMode')
+                        nJets = getattr(row, 'jetVeto30')
+                        mVis = getattr(row, 't1_t2_Mass')
+                        transMass = mt_1[0]
+                        muon_iso = 0.0
+                        inputsqcd = [pt1, decayMode, nJets, mVis, transMass, muon_iso]
+                        FFWeightQCD[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd) )
+                        FFWeightQCD_StatUP[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_up" )
+                        FFWeightQCD_StatDOWN[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_down" )
+                        FFWeightQCD_SystUP[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_up" )
+                        FFWeightQCD_SystDOWN[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_down" )
                     
             ### Not Data
             else :
@@ -1081,6 +1064,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
             tnew.Fill()
             count2 += 1
+
+    ### If fake factors were used, destroy the obj
+    if 'data' in sample :
+        del ffQCD
 
     # For xsec debugging:
     #if shortName in ['DYJets', 'WJets'] :
