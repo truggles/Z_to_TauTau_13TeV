@@ -15,6 +15,35 @@ from array import array
 
 
 def fillFakeFactorValues( analysis, mid2, sample, channel ) :
+
+    # Create Fake Factor object for retrieving
+    # FF values for data events
+    cmssw_base = os.getenv('CMSSW_BASE')
+    ffQCD = fakeFactors()
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.getInclusive(), 'Inc' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.get0Jet(), '0Jet' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.get1Jet(), '1Jet' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.get1JetLow(), '1JetLow' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.get1JetMed(), '1JetMed' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.get1JetHigh(), '1JetHigh' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.get2Jet(), '2Jet' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.getVBF(), 'VBF' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.getBTagged(), 'BTagged' )
+
+
+    del ffQCD
+
+
+def fillFakeFactorValuesPerCat( analysis, mid2, sample, channel, ffCat, append ) :
     fileName = '%s%s/%s.root' % (analysis, mid2, sample)
     f = ROOT.TFile(fileName, 'UPDATE' )
     updateTree = f.Get('Ntuple')
@@ -29,19 +58,19 @@ def fillFakeFactorValues( analysis, mid2, sample, channel ) :
     branchMap = {}
     FFWeightQCD = array('f', [ 0 ] )
     branchMap['FFWeightQCD'] = [FFWeightQCD, 
-        updateTree.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')]
+        updateTree.Branch('FFWeightQCD'+append, FFWeightQCD, 'FFWeightQCD/F')]
     FFWeightQCD_StatUP = array('f', [ 0 ] )
     branchMap['FFWeightQCD_StatUP'] = [FFWeightQCD_StatUP,
-        updateTree.Branch('FFWeightQCD_StatUP', FFWeightQCD_StatUP, 'FFWeightQCD_StatUP/F')]
+        updateTree.Branch('FFWeightQCD'+append+'_StatUP', FFWeightQCD_StatUP, 'FFWeightQCD_StatUP/F')]
     FFWeightQCD_StatDOWN = array('f', [ 0 ] )
     branchMap['FFWeightQCD_StatDOWN'] = [FFWeightQCD_StatDOWN,
-        updateTree.Branch('FFWeightQCD_StatDOWN', FFWeightQCD_StatDOWN, 'FFWeightQCD_StatDOWN/F')]
+        updateTree.Branch('FFWeightQCD'+append+'_StatDOWN', FFWeightQCD_StatDOWN, 'FFWeightQCD_StatDOWN/F')]
     FFWeightQCD_SystUP = array('f', [ 0 ] )
     branchMap['FFWeightQCD_SystUP'] = [FFWeightQCD_SystUP,
-        updateTree.Branch('FFWeightQCD_SystUP', FFWeightQCD_SystUP, 'FFWeightQCD_SystUP/F')]
+        updateTree.Branch('FFWeightQCD'+append+'_SystUP', FFWeightQCD_SystUP, 'FFWeightQCD_SystUP/F')]
     FFWeightQCD_SystDOWN = array('f', [ 0 ] )
     branchMap['FFWeightQCD_SystDOWN'] = [FFWeightQCD_SystDOWN,
-        updateTree.Branch('FFWeightQCD_SystDOWN', FFWeightQCD_SystDOWN, 'FFWeightQCD_SystDOWN/F')]
+        updateTree.Branch('FFWeightQCD'+append+'_SystDOWN', FFWeightQCD_SystDOWN, 'FFWeightQCD_SystDOWN/F')]
 
 
     for row in updateTree :
@@ -58,27 +87,26 @@ def fillFakeFactorValues( analysis, mid2, sample, channel ) :
             decayMode = getattr(row, 'decayMode_1')
             nJets = getattr(row, 'jetVeto30')
             mVis = getattr(row, 'm_vis')
-            print "mvis",mVis
+            #print "mvis",mVis
             transMass = getattr(row, 'mt_1')
-            print transMass
+            #print transMass
             muon_iso = 0.0
             inputsqcd = [pt, decayMode, nJets, mVis, transMass, muon_iso]
 
             # The following notation is grabbing the first item in the value pair
             # (an array) of a map, then setting that single first value in 
             # the array to our FF value
-            branchMap['FFWeightQCD'][0][0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd) )
-            branchMap['FFWeightQCD_StatUP'][0][0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_up" )
-            branchMap['FFWeightQCD_StatDOWN'][0][0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_down" )
-            branchMap['FFWeightQCD_SystUP'][0][0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_up" )
-            branchMap['FFWeightQCD_SystDOWN'][0][0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_down" )
+            branchMap['FFWeightQCD'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd) )
+            branchMap['FFWeightQCD_StatUP'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_up" )
+            branchMap['FFWeightQCD_StatDOWN'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_down" )
+            branchMap['FFWeightQCD_SystUP'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_up" )
+            branchMap['FFWeightQCD_SystDOWN'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_down" )
 
 
         # Fill all new values
         for key, val in branchMap.iteritems() :
             val[1].Fill()
 
-    del ffQCD
 
     f.cd()
     updateTree.Write('', ROOT.TObject.kOverwrite)

@@ -82,9 +82,9 @@ class fakeFactors :
     def get1JetLow( self ):
         return self.ff1jetLow
     def get1JetMed( self ):
-        return self.ff0jetMed
+        return self.ff1jetMed
     def get1JetHigh( self ):
-        return self.ff0jetHigh
+        return self.ff1jetHigh
     def get2Jet( self ):
         return self.ff2jet
     def getVBF( self ):
