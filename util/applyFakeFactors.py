@@ -8,7 +8,6 @@
 
 import ROOT
 from util.fakeFactorQCD import fakeFactors
-import random
 import os
 from array import array
 

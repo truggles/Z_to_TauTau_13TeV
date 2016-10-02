@@ -45,7 +45,7 @@ os.chdir('..')
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
 SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJetsBig', 'DYJetsLow', 'DYJetsHigh', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130']
 SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130'] # Removing DYJetsHigh and DYJetsLow and dataTT-C
-SamplesDataCards = ['dataTT-D','DYJets4'] 
+#SamplesDataCards = ['dataTT-D','DYJets4'] 
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -62,13 +62,15 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    'cutMapper' : 'syncCutsDCqcdTES',
+    #XXX'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'syncCutsDCqcdTES5040',
     'mid1' : '1Sept30a',
-    #'mid2' : '2Sept30a',
-    #'mid3' : '3Sept30a',
-    'mid2' : '2Sept30bFF',
-    'mid3' : '3Sept30bFF',
+    'mid2' : '2Sept30a',
+    'mid3' : '3Sept30a',
+    'cutMapper' : 'syncCutsDCqcdTESNoIso',
+    #'mid1' : '1Sept30cFFwithCoin',
+    #'mid2' : '2Sept30cFFwithCoin',
+    #'mid3' : '3Sept30cFFwithCoin',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -97,11 +99,11 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
-makeQCDBkg = False
+#makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+#makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
@@ -109,7 +111,8 @@ makeDataCards = False
 #isoVals = ['VTight', 'Tight', 'Medium',]
 isoVals = ['VTight',]
 
-cats = ['inclusive', '0jet', '1jet_low', '1jet_medium', '1jet_high', 'vbf', '1bjet', '2bjet']
+cats = ['inclusive', '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', 'vbf', '1bjet', '2bjet']
+#cats = ['inclusive', '0jet',]# '1jet_low', '1jet_medium', '1jet_high', 'vbf', '1bjet', '2bjet']
 #cats = ['1jet',]
 pt = '4040'
 #sync = True
@@ -154,23 +157,27 @@ for isoVal in isoVals :
         
     
     
-    
     if makeFinalPlots :
+        doFF = os.getenv('doFF')
         from util.helpers import getQCDSF
         for cat in cats :
             ROOT.gROOT.Reset()
-            qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
             tDir = cat
             blind = False
             if cat in ['inclusive', '0jet', '1jet'] :
                 blind = False
             
-            kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
-                'useQCDMakeName':'OSl1ml2_'+isoVal+'_LooseZTT'+cat, 'qcdSF':qcdSF,
-                'targetDir':'/'+tDir,'sync':sync,'ztt':ztt }
+            if doFF == 'True' :
+                kwargs = { 'text':text, 'blind':blind, 'targetDir':'/'+tDir,
+                    'sync':sync,'ztt':ztt }
+            else :
+                qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
+                kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
+                    'useQCDMakeName':'OSl1ml2_'+isoVal+'_LooseZTT'+cat, 'qcdSF':qcdSF,
+                    'targetDir':'/'+tDir,'sync':sync,'ztt':ztt }
             analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                 params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
-        subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/", "/afs/cern.ch/user/t/truggles/www/HTT_Sept08/%s" % isoVal] )
+        subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/", "/afs/cern.ch/user/t/truggles/www/HTT_Oct02/%s" % isoVal] )
         
         
     if makeDataCards :

@@ -29,7 +29,7 @@ samples = options.samples
 print "Options Skimmed:",skimmed
 print "samples: ",samples
 
-def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
+def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF='False' ) :
     if folder == 'xxx' :
         print "ERROR: Folder was not choosen"
         return
@@ -57,7 +57,6 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
         'mid2' : folder,
         'additionalCut' : '',
         'svFitPost' : 'false',
-        'doFRMthd' : 'false',
         'skimmed' : skimmed,
         'skipSSQCDDetails' : skipSSQCDDetailsX
     }
@@ -80,12 +79,19 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
         isoL1ML2loose = isoL2loose
         isoL1LL2loose = isoL2loose
         isoL1VTL2loose = isoL2loose
+
+
+    # If doing Fake Factors, we will add isolation cuts later
+    # for convenience
+    if doFF == 'True' : isoL1ML2loose = '(1)'
+
+
     if sign == 'OS' :
         Zsign = 0
     else : 
         Zsign = 1
         
-    print "\n\nIsoL2Loose: %s\n\n" % isoL2loose
+    print "\n\nIsoL2Loose: %s\n\n" % isoL1ML2loose
     print "skipSSQCDDetails:", skipSSQCDDetailsX
 
     """
@@ -140,15 +146,15 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ''' For checking distributions '''
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
-    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2)*%s' % (Zsign, isoL1ML2loose)
-    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2)*%s' % (Zsign, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
 
     
@@ -259,11 +265,22 @@ if __name__ == '__main__' :
         #XXX('','Tight'),
     ]
 
-    for pair in isoPairs :
-        for sign in ['OS', 'SS']:
-            testQCDCuts( folder, samples, isoVal, pair[0], pair[1], sign )
 
-#XXX    testQCDCuts( folder, '', 'VTight', 'OS' )
+
+    ### Check if we intend to do Fake Factor based MC cuts
+    ### These differ because of requiring a random choice
+    ### of l1 and l2, then seeing if l1 is gen matched
+    ### to anything besides a fake/jet
+    ### This is only applied for DYJets, WJets, TT, and QCD MC
+    doFF = os.getenv('doFF')
+    if doFF == 'True' :
+        # The '' in the following line gives us the signal region
+        testQCDCuts( folder, samples, isoVal, '', isoVal, 'OS', doFF )
+    else :
+        for pair in isoPairs :
+            for sign in ['OS', 'SS']:
+                testQCDCuts( folder, samples, isoVal, pair[0], pair[1], sign )
+
 
 
 

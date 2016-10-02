@@ -168,8 +168,8 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
     isoQty = renameBranches( analysis, mid1, mid2, save, channel )
 
     ### FF values for data events
-    doFF = bool(os.getenv('doFF'))
-    if doFF and 'data' in save and channel == 'tt' :
+    doFF = os.getenv('doFF')
+    if doFF == 'True' and 'data' in save and channel == 'tt' :
         from util.applyFakeFactors import fillFakeFactorValues
         fillFakeFactorValues( analysis, mid2, save, channel )
 
@@ -445,8 +445,8 @@ def drawHistos(analysis, samples, **fargs ) :
                 'tt' : '*(gen_match_2 == 6 || gen_match_1 == 6)'},
         'ZLL' : {'em' : '*(gen_match_1 < 3 || gen_match_2 < 4)',
                 'tt' : '*(gen_match_1 != 5 && gen_match_2 != 5)'},
-        'QCD' : {'em' : '*(FFWeightQCD)',
-                'tt' : '*(FFWeightQCD)'},
+        'QCD' : {'em' : '*(1)',
+                'tt' : '*(1)'},
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -461,11 +461,12 @@ def drawHistos(analysis, samples, **fargs ) :
 
         # the gen matching samples are: based off of the DYJets samples
         loopList = []
+        doFF = os.getenv('doFF')
         if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
             loopList.append( sample ) 
-        elif 'data' in sample and fargs['doFRMthd'] == 'true' :
+        elif 'data' in sample and doFF == 'True' :
             loopList.append( sample )
             loopList.append( 'QCD' )
         else : loopList.append( sample )

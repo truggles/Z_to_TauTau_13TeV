@@ -1,5 +1,6 @@
 import ROOT
 from ROOT import gPad
+import os
 
 
 
@@ -68,16 +69,68 @@ def HighPtTauWeight( var ) :
     else : return ''
 
 
+# Append the correction cuts for Fake Factors
+# this includes the MC based coin flip
+# and isolation cuts which were removed in
+# makeFinalCutsAndPlots.py for convenience
+#FIXME direct link to their documentation
+# see: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauJet2TauFakes
+# At the moment VTight is hardcoded here
+def getFFCutsAndWeights( sample, outFile ) :
+
+    print "Appending extra Fake Factor cuts based on random coin flip"
+    qcdIsolation = '*((coinFlip == 1 && byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5) || (coinFlip == 2 && byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))'
+    #qcdIsolation = '*((byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5) || (byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))'
+    otherIsolation = '*(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
+    mcCoinFlip = '*((coinFlip == 1 && gen_match_1 < 6) || (coinFlip == 2 && gen_match_2 < 6))'
+
+    fName = outFile.GetName()
+    if 'QCD_tt' in fName : # this one pick up the QCD made from 'data' samples
+        if   'ZTT0jet' in fName      : return qcdIsolation+"*(FFWeightQCD0Jet)"
+        elif 'ZTT1jet_low' in fName  : return qcdIsolation+"*(FFWeightQCD1JetLow)"
+        elif 'ZTT1jet_med' in fName  : return qcdIsolation+"*(FFWeightQCD1JetMed)"
+        elif 'ZTT1jet_high' in fName : return qcdIsolation+"*(FFWeightQCD1JetHigh)"
+        elif 'ZTT1jet' in fName      : return qcdIsolation+"*(FFWeightQCD1Jet)"
+        elif 'ZTT2jet' in fName      : return qcdIsolation+"*(FFWeightQCD2Jet)"
+        elif 'ZTTvbf' in fName       : return qcdIsolation+"*(FFWeightQCDVBF)"
+        elif 'ZTT1bjet' in fName     : return qcdIsolation+"*(FFWeightQCDBTagged)"
+        elif 'ZTT2bjet' in fName     : return qcdIsolation+"*(FFWeightQCDBTagged)"
+        else                         : return qcdIsolation+"*(FFWeightQCD)"
+    elif 'data' in sample : # this one picks up data normal
+        return otherIsolation
+    elif 'DYJets' in sample or 'WJets' in sample or 'TT' in sample :
+        return otherIsolation+mcCoinFlip
+    else :
+        return otherIsolation
+        
+
 
 # Plot histos using TTree::Draw which works very well with Proof
 def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False ) :
+
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMap = getHistoDict( analysis, channel )
+
 
     histosDir = outFile.mkdir( "%s_Histos" % channel )
     histosDir.cd()
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
+
+    
+    ### Check if we intend to do Fake Factor based MC cuts
+    ### These differ because of requiring a random choice
+    ### of l1 and l2, then seeing if l1 is gen matched
+    ### to anything besides a fake/jet
+    ### This is only applied for DYJets, WJets, TT, and QCD MC
+    doFF = os.getenv('doFF')
+    if doFF == 'True' :
+        ffCutAppend = getFFCutsAndWeights( sample, outFile )
+        additionalCut += ffCutAppend
+            
+
+
+
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
         print var
@@ -108,6 +161,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # so instead we appeand it to what ever else we have
         shapeSyst += ESCuts( sample, channel, var )
 
+        
 
     	histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
@@ -126,11 +180,15 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
-        #additionalCut += '*(Z_Pt>100)'
-        #additionalCut += '*(chargedIsoPtSum_2 < 0.5)'
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
+
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % \
+                (additionalCut, sfs, xsec, shapeSyst) 
+
         #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
-        #print totalCutAndWeightMC
+        #if 'data' in sample :
+        #    print "DATA:",additionalCut
+        #else :
+        #    print sample,":",totalCutAndWeightMC
 
 
         # Check if the variable to plot is in the chain, if not, skip it
