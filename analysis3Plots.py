@@ -41,6 +41,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
              ops[key] = kwargs[key]
     print ops
 
+    # Use FF built QCD backgrounds
+    doFF = os.getenv('doFF')
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
@@ -191,13 +193,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             isVBFCat = False
             is1JetCat = False
             is0JetCat = False
+            qcdMakeCode = ops['qcdMakeDM'].split('ZTT')[-1]
+            dirCode = ops['targetDir'].strip('/')
+            looseBinningGroup = ['1jet_low', '1jet_medium', '1jet_high', '2jet']
+            tightBinningGroup = ['vbf', '1bjet', '2bjet']
             if 'm_sv' in var or 'm_vis' in var :
-                if ('1jet_low' in ops['useQCDMakeName'] or '1jet_high' in ops['useQCDMakeName']\
-                        or '1jet_medium' in ops['useQCDMakeName'] or '1jet_medium' in ops['qcdMakeDM']\
-                        or '1jet_low' in ops['qcdMakeDM'] or '1jet_high' in ops['qcdMakeDM']) :
+                if qcdMakeCode in looseBinningGroup or dirCode in looseBinningGroup :
                     is1JetCat = True
-                if ('vbf' in ops['useQCDMakeName'] or 'vbf' in ops['qcdMakeDM']) or\
-                        ('bjet' in ops['useQCDMakeName'] or 'bjet' in ops['qcdMakeDM']) :
+                if qcdMakeCode in tightBinningGroup or dirCode in tightBinningGroup :
                     isVBFCat = True
                 if not (isVBFCat or is1JetCat) : is0JetCat = True
 
@@ -308,7 +311,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 if 'QCD' in sample :
                     #print "qcd in sample",sample
-                    if ops['useQCDMakeName'] != 'x'  :
+                    if doFF == 'True' :
+                        tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                    elif ops['useQCDMakeName'] != 'x'  :
                         fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
                         print fName 
                         tFile = ROOT.TFile(fName, 'READ')
@@ -365,18 +370,19 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             ''' Change bin yield to make this make sense with variable binning
                 this is only for viewing, the DC process is seperate '''
-            for samp in sampHistos.keys() :
-                if var == 'm_vis' :
-                    print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
-                # With Variable binning, need to set bin content appropriately
-                if not varBinned : continue
-                if samp == "qcd" : continue
-                minWidth = 999.
-                for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
-                    minTmp = sampHistos[samp].GetBinWidth(bin_)
-                    if minTmp < minWidth : minWidth = minTmp
-                for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
-                    sampHistos[samp].SetBinContent( bin_, sampHistos[samp].GetBinContent( bin_ ) * ( minWidth / sampHistos[samp].GetBinWidth( bin_ ) ) )
+            #for samp in sampHistos.keys() :
+            #    print "Doing Var Binning",samp
+            #    if var == 'm_vis' :
+            #        print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
+            #    # With Variable binning, need to set bin content appropriately
+            #    if not varBinned : continue
+            #    if samp == "qcd" : continue
+            #    minWidth = 999.
+            #    for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
+            #        minTmp = sampHistos[samp].GetBinWidth(bin_)
+            #        if minTmp < minWidth : minWidth = minTmp
+            #    for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
+            #        sampHistos[samp].SetBinContent( bin_, sampHistos[samp].GetBinContent( bin_ ) * ( minWidth / sampHistos[samp].GetBinWidth( bin_ ) ) )
     
     
             # Some specific HTT stuff
@@ -456,6 +462,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
+                    if samp == 'obs' : continue 
                     toRoot += (sampHistos[samp].GetBinContent(k)*\
                         uncertNormMap[analysis][samp])**2
                     toRoot += sampHistos[samp].GetBinError(k)**2
@@ -570,8 +577,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.GetYaxis().SetTitle("Events")
             else :
                 width = stack.GetStack().Last().GetBinWidth(1)
-                if varBinned : width = minWidth
-                stack.GetYaxis().SetTitle("Events / %.1f%s" % (width, info[ 5 ])  )
+                #if varBinned : width = minWidth
+                #stack.GetYaxis().SetTitle("Events / %.1f%s" % (width, info[ 5 ])  )
+                stack.GetYaxis().SetTitle("Events / Bin Width")
     
 
             # Set axis and viewing area
