@@ -247,7 +247,7 @@ def getHistoDict( analysis, channel ) :
             varsForShapeSyst.append( item )
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        shapesToAdd = {'energyScale':'TES','zPt':'Z p_{T}/Mass Reweight'}
+        shapesToAdd = {'energyScale':'TES',}#'zPt':'Z p_{T}/Mass Reweight'}
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
                 for shape, app in shapesToAdd.iteritems() :

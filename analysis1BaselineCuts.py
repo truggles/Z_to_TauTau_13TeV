@@ -10,6 +10,7 @@ import multiprocessing
 import math
 from ROOT import gPad, gROOT
 from util.helpers import checkDir
+import os
 
 
 
@@ -164,7 +165,14 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( analysis, mid1, mid2, save, channel, count )
+    isoQty = renameBranches( analysis, mid1, mid2, save, channel )
+
+    ### FF values for data events
+    doFF = bool(os.getenv('doFF'))
+    if doFF and 'data' in save and channel == 'tt' :
+        from util.applyFakeFactors import fillFakeFactorValues
+        fillFakeFactorValues( analysis, mid2, save, channel )
+
     #output.put( '%s%s/%s.root' % (analysis, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 

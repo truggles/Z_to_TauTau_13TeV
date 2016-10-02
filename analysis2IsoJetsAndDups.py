@@ -257,7 +257,7 @@ def calcDR( eta1, phi1, eta2, phi2 ) :
 
 
 
-def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
+def renameBranches( analysis, mid1, mid2, sample, channel ) :
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
         sampDict = json.load( sampFile )
 
@@ -283,14 +283,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
-
-    # Create Fake Factor object for retrieving
-    # FF values for data events
-    if 'data' in sample :
-        from util.fakeFactorQCD import fakeFactors
-        import random
-        cmssw_base = os.getenv('CMSSW_BASE')
-        ffQCD = fakeFactors()
 
     sameNameVars = [
     'run','lumi','evt','GenWeight','LT','charge','jetVeto30','jetVeto40',
@@ -655,16 +647,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
     electronSF4 = array('f', [ 0 ] )
     electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
-    FFWeightQCD = array('f', [ 0 ] )
-    FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
-    FFWeightQCD_StatUP = array('f', [ 0 ] )
-    FFWeightQCD_StatUPB = tnew.Branch('FFWeightQCD_StatUP', FFWeightQCD_StatUP, 'FFWeightQCD_StatUP/F')
-    FFWeightQCD_StatDOWN = array('f', [ 0 ] )
-    FFWeightQCD_StatDOWNB = tnew.Branch('FFWeightQCD_StatDOWN', FFWeightQCD_StatDOWN, 'FFWeightQCD_StatDOWN/F')
-    FFWeightQCD_SystUP = array('f', [ 0 ] )
-    FFWeightQCD_SystUPB = tnew.Branch('FFWeightQCD_SystUP', FFWeightQCD_SystUP, 'FFWeightQCD_SystUP/F')
-    FFWeightQCD_SystDOWN = array('f', [ 0 ] )
-    FFWeightQCD_SystDOWNB = tnew.Branch('FFWeightQCD_SystDOWN', FFWeightQCD_SystDOWN, 'FFWeightQCD_SystDOWN/F')
     pzetamiss = array('f', [ 0 ] )
     pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
     pzeta = array('f', [ 0 ] )
@@ -760,13 +742,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #print "### Iso Ordering %s ###" % sample
                 isoOrder( channel, row )
             vbfClean( row )
-
-
-            FFWeightQCD[0] = -1
-            FFWeightQCD_StatUP[0] = -1
-            FFWeightQCD_StatDOWN[0] = -1
-            FFWeightQCD_SystUP[0] = -1
-            FFWeightQCD_SystDOWN[0] = -1
 
 
             # For easy use later
@@ -894,30 +869,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if hasattr(row, 'NBTagPDL_idL_jVeto' ) :
                     setattr(row, 'NBTagPDL_idL_jVeto', getattr(row, 'bjetCISVVeto20LooseZTT'))
 
-                # Calculate Fake Factors based on this work:
-                # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
-                # We start with applying QCD factors to each leg and sum for total
-                if channel == 'tt' :
-                    FFWeightQCD[0] = 0.
-                    FFWeightQCD_StatUP[0] = 0.
-                    FFWeightQCD_StatDOWN[0] = 0.
-                    FFWeightQCD_SystUP[0] = 0.
-                    FFWeightQCD_SystDOWN[0] = 0.
-                    #muon_iso = 0.089 # this is an artifact of being based on MuTau channel
-                    #                # 0.089 gives a correction value of 1.0
-                    # First leg FR
-                    if row.t1ByTightIsolationMVArun2v1DBoldDMwLT < 0.5 and row.t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 :
-                        decayMode = getattr(row, l1+'DecayMode')
-                        nJets = getattr(row, 'jetVeto30')
-                        mVis = getattr(row, 't1_t2_Mass')
-                        transMass = mt_1[0]
-                        muon_iso = 0.0
-                        inputsqcd = [pt1, decayMode, nJets, mVis, transMass, muon_iso]
-                        FFWeightQCD[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd) )
-                        FFWeightQCD_StatUP[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_up" )
-                        FFWeightQCD_StatDOWN[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_down" )
-                        FFWeightQCD_SystUP[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_up" )
-                        FFWeightQCD_SystDOWN[0] = ffQCD.getInclusive().value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_down" )
                     
             ### Not Data
             else :
@@ -1065,10 +1016,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tnew.Fill()
             count2 += 1
 
-    ### If fake factors were used, destroy the obj
-    if 'data' in sample :
-        del ffQCD
-
     # For xsec debugging:
     #if shortName in ['DYJets', 'WJets'] :
         #print "Cross Sections in sample: ",xsecList
@@ -1079,8 +1026,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
     isoQty = "%25s : %10i" % ('Iso Selected', count2)
+
+
     # write to disk
     tnew.write()
     fnew.close()
     return isoQty
+
+
 
