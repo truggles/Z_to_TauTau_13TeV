@@ -6,4 +6,5 @@ export LUMI=2300.0
 echo "Set lumi = $LUMI"
 
 export doFF=True
+#export doFF=False
 echo "Setting Fake Factor Method to: $doFF"
