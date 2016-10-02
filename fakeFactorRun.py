@@ -72,7 +72,6 @@ params = {
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
-    'doFRMthd' : 'true',
 }
 
 #samples = setUpDirs( samples, params, analysis )
@@ -91,7 +90,6 @@ analysis1BaselineCuts.drawHistos( analysis, samples, **params)
 
 
 SamplesDataCards = ['data_tt',]
-params['doFRMthd'] = 'false'
 params['additionalCut'] = '*(t1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5)'
 samples = SamplesDataCards
 samples = setUpDirs( samples, params, analysis )

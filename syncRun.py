@@ -61,7 +61,6 @@ params = {
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     #'svFitPrep' : 'true',
-    'doFRMthd' : 'false',
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true',
     #'skimmed' : 'false',

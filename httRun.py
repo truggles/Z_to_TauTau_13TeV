@@ -43,9 +43,9 @@ os.chdir('..')
 
 ''' Preset samples '''
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
-SamplesDataCards = ['dataTT-C', 'dataTT-D', 'DYJets', 'DYJetsBig', 'DYJetsLow', 'DYJetsHigh', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130']
-SamplesDataCards = ['dataTT-C', 'dataTT-D', 'DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130'] # Removing DYJetsHigh and DYJetsLow
-#SamplesDataCards = ['dataTT-C','dataTT-D'] 
+SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJetsBig', 'DYJetsLow', 'DYJetsHigh', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130']
+SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130'] # Removing DYJetsHigh and DYJetsLow and dataTT-C
+SamplesDataCards = ['dataTT-D','DYJets4'] 
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -65,16 +65,15 @@ params = {
     'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'syncCutsDCqcdTES5040',
     'mid1' : '1Sept30a',
-    'mid2' : '2Sept30a',
-    'mid3' : '3Sept30a',
-    #'mid2' : '2Sept30bFF',
-    #'mid3' : '3Sept30bFF',
+    #'mid2' : '2Sept30a',
+    #'mid3' : '3Sept30a',
+    'mid2' : '2Sept30bFF',
+    'mid3' : '3Sept30bFF',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
-    'doFRMthd' : 'false',
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true',
     #'skimmed' : 'false',
@@ -98,11 +97,11 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False
+makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
