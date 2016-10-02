@@ -43,10 +43,9 @@ os.chdir('..')
 
 ''' Preset samples '''
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Adding EWK and tri-boson, sept 25
-SamplesDataCards = ['dataTT-C','dataTT-D'] 
-#SamplesDataCards = ['VBFHtoTauTau125',]
-#SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
+SamplesDataCards = ['dataTT-C', 'dataTT-D', 'DYJets', 'DYJetsBig', 'DYJetsLow', 'DYJetsHigh', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130']
+SamplesDataCards = ['dataTT-C', 'dataTT-D', 'DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130'] # Removing DYJetsHigh and DYJetsLow
+#SamplesDataCards = ['dataTT-C','dataTT-D'] 
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -62,12 +61,14 @@ params = {
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'signalCuts',
-    'cutMapper' : 'fakeFactorCutsTT',
-    #'cutMapper' : 'syncCutsDCqcdTES',
+    #'cutMapper' : 'fakeFactorCutsTT',
+    'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'syncCutsDCqcdTES5040',
-    'mid1' : '1Sept29_2015TauDataFF',
-    'mid2' : '2Sept29_2015TauDataFF',
-    'mid3' : '3Sept29_2015TauDataFF',
+    'mid1' : '1Sept30a',
+    'mid2' : '2Sept30a',
+    'mid3' : '3Sept30a',
+    #'mid2' : '2Sept30bFF',
+    #'mid3' : '3Sept30bFF',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -75,9 +76,9 @@ params = {
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
     'skimHdfs' : 'false',
-    'skimHdfs' : 'true',
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    #'skimHdfs' : 'true',
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -86,7 +87,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -99,24 +100,22 @@ samples = returnSampleDetails( analysis, samples )
 runPlots = True
 runPlots = False
 makeQCDBkg = True
-makeQCDBkg = False
+#makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+#makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
 makeDataCards = False
 #isoVals = ['VTight', 'Tight', 'Medium',]
-isoVals = ['Tight',]
+isoVals = ['VTight',]
 
-cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
-cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet',]
-cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
-cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
+cats = ['inclusive', '0jet', '1jet_low', '1jet_medium', '1jet_high', 'vbf', '1bjet', '2bjet']
 #cats = ['1jet',]
-pt = '5040'
+pt = '4040'
 #sync = True
 sync = False
+ztt = True
 
 for isoVal in isoVals :
     samplesX = copy.deepcopy(samples)
@@ -140,7 +139,7 @@ for isoVal in isoVals :
                     else : skipSSQCDDetails = False
                     ROOT.gROOT.Reset()
                     kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT'+cat, 
-                        'isSSQCD':skipSSQCDDetails,'sync':sync}
+                        'isSSQCD':skipSSQCDDetails,'sync':sync,'ztt':ztt}
                     folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'+cat
                     qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], folder, **kwargs  )
                     qcdYields[ sign+name+cat ] = qcdYield
@@ -163,13 +162,13 @@ for isoVal in isoVals :
             ROOT.gROOT.Reset()
             qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
             tDir = cat
-            blind = True
+            blind = False
             if cat in ['inclusive', '0jet', '1jet'] :
                 blind = False
             
             kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
                 'useQCDMakeName':'OSl1ml2_'+isoVal+'_LooseZTT'+cat, 'qcdSF':qcdSF,
-                'targetDir':'/'+tDir,'sync':sync }
+                'targetDir':'/'+tDir,'sync':sync,'ztt':ztt }
             analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                 params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
         subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/", "/afs/cern.ch/user/t/truggles/www/HTT_Sept08/%s" % isoVal] )

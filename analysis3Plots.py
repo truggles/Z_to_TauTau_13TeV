@@ -28,6 +28,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'blind' : True,
     'text' : False,
     'mssm' : False,
+    'ztt' : False,
     'log' : False,
     'sync' : False,
     'targetDir' : ''}
@@ -132,11 +133,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
         } # azh
     } # sampInfo
-    if not ops['mssm'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %.1f" % higgsSF
+    if not ops['mssm'] and not ops['ztt'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %.1f" % higgsSF
 
     # Make signal variable for later easy mapping
     signal = ''
-    if analysis == 'htt' : 
+    if analysis == 'htt' and not ops['ztt'] : 
         signal = 'higgs'
         signalSF = higgsSF
     if analysis == 'azh' : 
@@ -192,9 +193,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             is0JetCat = False
             if 'm_sv' in var or 'm_vis' in var :
                 if ('1jet_low' in ops['useQCDMakeName'] or '1jet_high' in ops['useQCDMakeName']\
+                        or '1jet_medium' in ops['useQCDMakeName'] or '1jet_medium' in ops['qcdMakeDM']\
                         or '1jet_low' in ops['qcdMakeDM'] or '1jet_high' in ops['qcdMakeDM']) :
                     is1JetCat = True
-                if ('vbf' in ops['useQCDMakeName'] or 'vbf' in ops['qcdMakeDM']) :
+                if ('vbf' in ops['useQCDMakeName'] or 'vbf' in ops['qcdMakeDM']) or\
+                        ('bjet' in ops['useQCDMakeName'] or 'bjet' in ops['qcdMakeDM']) :
                     isVBFCat = True
                 if not (isVBFCat or is1JetCat) : is0JetCat = True
 
@@ -267,10 +270,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 sampHistos[samp].SetLineColor( ROOT.kBlack )
                 sampHistos[samp].SetLineWidth( 2 )
                 sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
-            sampHistos[ signal ].SetLineColor( ROOT.kPink )
-            sampHistos[ signal ].SetLineWidth( 4 )
-            sampHistos[ signal ].SetLineStyle( 7 )
-            sampHistos[ signal ].SetMarkerStyle( 0 )
+            if not ops['ztt'] :
+                sampHistos[ signal ].SetLineColor( ROOT.kPink )
+                sampHistos[ signal ].SetLineWidth( 4 )
+                sampHistos[ signal ].SetLineStyle( 7 )
+                sampHistos[ signal ].SetMarkerStyle( 0 )
                 
     
             for sample in samples.keys() :
@@ -389,6 +393,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if channel == 'em' :
                     stack.Add( sampHistos['zll'] )
                 stack.Add( sampHistos['ztt'] )
+                if ops['ztt'] :
+                    stack.Add( sampHistos['higgs'] )
 
             # A to Zh stuff
             if analysis == 'azh' :
@@ -398,7 +404,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.Add( sampHistos['zz'] )
     
             # Scale signal samples for viewing
-            sampHistos[ signal ].Scale( signalSF )
+            if not ops['ztt'] :
+                sampHistos[ signal ].Scale( signalSF )
     
             ''' Print out yields for a given distribution '''
             #sensitivityVars = ['Higgs_Pt', 'pt_1', 'pt_2', 'mjj', 'jdeta', 'pt_sv']
@@ -487,7 +494,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 pad1.Draw()
                 pad1.cd()
                 stack.Draw('hist')
-                sampHistos[signal].Draw('same')
+                if not ops['ztt'] :
+                    sampHistos[signal].Draw('same')
                 sampHistos['obs'].Draw('esamex0')
                 # X Axis!
                 stack.GetXaxis().SetTitle("%s" % info[ 4 ])
@@ -552,7 +560,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 pad1.cd()
                 stack.Draw('hist')
-                sampHistos[signal].Draw('same')
+                if not ops['ztt'] :
+                    sampHistos[signal].Draw('same')
                 sampHistos['obs'].Draw('esamex0')
     
     
@@ -580,7 +589,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             legend.SetMargin(0.3)
             legend.SetBorderSize(0)
             legend.AddEntry( sampHistos['obs'], "Data", 'lep')
-            legend.AddEntry( sampHistos[signal], sampHistos[signal].GetTitle(), 'l')
+            if not ops['ztt'] :
+                legend.AddEntry( sampHistos[signal], sampHistos[signal].GetTitle(), 'l')
             for j in range(0, stack.GetStack().GetLast() + 1) :
                 last = stack.GetStack().GetLast()
                 legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')
