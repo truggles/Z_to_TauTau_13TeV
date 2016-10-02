@@ -13,6 +13,7 @@ import math
 import json
 import os
 import ROOT
+import random
 
 cmsLumi = float(os.getenv('LUMI'))
 print "Lumi = %i" % cmsLumi
@@ -707,6 +708,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
     gen_match_3B = tnew.Branch('gen_match_3', gen_match_3, 'gen_match_3/F')
     gen_match_4 = array('f', [ 0 ] )
     gen_match_4B = tnew.Branch('gen_match_4', gen_match_4, 'gen_match_4/F')
+    coinFlip = array('f', [ 0 ] )
+    coinFlipB = tnew.Branch('coinFlip', coinFlip, 'coinFlip/F')
 
 
     ''' Set MvaMet base vars defaults in case we didn't fill that value '''
@@ -1012,6 +1015,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
                         gen_match_1[0], gen_match_2[0], row, -0.2 )
 
 
+            coinFlip[0] = 1
+            # Use hashable tuple of eta for lepton1 and lepton2 as seed
+            # for repeatablity
+            # Interpret these values as lepton1 is lead lepton for FF
+            # of lepton2 is lead lepton for FF
+            random.seed( (eta1, eta2) )
+            if random.random() > 0.5 : coinFlip[0] = 2
+            
 
             tnew.Fill()
             count2 += 1
