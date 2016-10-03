@@ -82,7 +82,7 @@ def getFFCutsAndWeights( sample, outFile ) :
     qcdIsolation = '*((coinFlip == 1 && byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5) || (coinFlip == 2 && byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))'
     #qcdIsolation = '*((byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5) || (byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))'
     otherIsolation = '*(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
-    mcCoinFlip = '*((coinFlip == 1 && gen_match_1 < 6) || (coinFlip == 2 && gen_match_2 < 6))'
+    #mcCoinFlip = '*((coinFlip == 1 && gen_match_1 < 6) || (coinFlip == 2 && gen_match_2 < 6))'
 
     fName = outFile.GetName()
     if 'QCD_tt' in fName : # this one pick up the QCD made from 'data' samples
@@ -96,12 +96,13 @@ def getFFCutsAndWeights( sample, outFile ) :
         elif 'ZTT1bjet' in fName     : return qcdIsolation+"*(FFWeightQCDBTagged)"
         elif 'ZTT2bjet' in fName     : return qcdIsolation+"*(FFWeightQCDBTagged)"
         else                         : return qcdIsolation+"*(FFWeightQCD)"
-    elif 'data' in sample : # this one picks up data normal
-        return otherIsolation
-    elif 'DYJets' in sample or 'WJets' in sample or 'TT' in sample :
-        return otherIsolation+mcCoinFlip
+    #elif 'data' in sample : # this one picks up data normal
     else :
         return otherIsolation
+    #elif 'DYJets' in sample or 'WJets' in sample or 'TT' in sample :
+    #    return otherIsolation+mcCoinFlip
+    #else :
+    #    return otherIsolation
         
 
 
