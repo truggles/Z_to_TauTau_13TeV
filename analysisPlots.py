@@ -10,7 +10,9 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
     return hist
 
 
-def skipSystShapeVar( var, sample, channel ) :
+# Returns TRUE if a shape systematic based variable
+# should be skipped for a certain backgroud.
+def skipSystShapeVar( var, sample, channel, fName='' ) :
         # Tau Pt Scale reweighting only applied to DYJets and signal
         if '_tauPt' in var :
             if channel == 'em' : return True
@@ -31,6 +33,14 @@ def skipSystShapeVar( var, sample, channel ) :
         elif '_topPt' in var :
             if 'TT' not in sample : return True
             elif 'DYJets' in sample : return True
+
+        # fake factor systematics only applied to FF-based QCD
+        elif '_ffSyst' in var or '_ffStat' in var :
+            # sample == 'data'
+            if not ('QCD_tt' in fName or 'QCD' in sample) : # this one pick up the QCD made from 'data' samples
+            # 'QCD' in sample is from the plotting script
+                return True
+
         return False
 
 
@@ -86,16 +96,16 @@ def getFFCutsAndWeights( sample, outFile ) :
 
     fName = outFile.GetName()
     if 'QCD_tt' in fName : # this one pick up the QCD made from 'data' samples
-        if   'ZTT0jet' in fName      : return qcdIsolation+"*(FFWeightQCD0Jet)"
-        elif 'ZTT1jet_low' in fName  : return qcdIsolation+"*(FFWeightQCD1JetLow)"
-        elif 'ZTT1jet_med' in fName  : return qcdIsolation+"*(FFWeightQCD1JetMed)"
-        elif 'ZTT1jet_high' in fName : return qcdIsolation+"*(FFWeightQCD1JetHigh)"
-        elif 'ZTT1jet' in fName      : return qcdIsolation+"*(FFWeightQCD1Jet)"
-        elif 'ZTT2jet' in fName      : return qcdIsolation+"*(FFWeightQCD2Jet)"
-        elif 'ZTTvbf' in fName       : return qcdIsolation+"*(FFWeightQCDVBF)"
-        elif 'ZTT1bjet' in fName     : return qcdIsolation+"*(FFWeightQCDBTagged)"
-        elif 'ZTT2bjet' in fName     : return qcdIsolation+"*(FFWeightQCDBTagged)"
-        else                         : return qcdIsolation+"*(FFWeightQCD)"
+        if   'ZTT0jet' in fName      : return qcdIsolation
+        elif 'ZTT1jet_low' in fName  : return qcdIsolation
+        elif 'ZTT1jet_med' in fName  : return qcdIsolation
+        elif 'ZTT1jet_high' in fName : return qcdIsolation
+        elif 'ZTT1jet' in fName      : return qcdIsolation
+        elif 'ZTT2jet' in fName      : return qcdIsolation
+        elif 'ZTTvbf' in fName       : return qcdIsolation
+        elif 'ZTT1bjet' in fName     : return qcdIsolation
+        elif 'ZTT2bjet' in fName     : return qcdIsolation
+        else                         : return qcdIsolation
     #elif 'data' in sample : # this one picks up data normal
     else :
         return otherIsolation
@@ -103,6 +113,39 @@ def getFFCutsAndWeights( sample, outFile ) :
     #    return otherIsolation+mcCoinFlip
     #else :
     #    return otherIsolation
+
+### Fake Factor shape systematics
+def getFFShapeSystApp( sample, outFile, var ) :
+
+    app = ''
+
+    fName = outFile.GetName()
+    # Check if FF sample
+    if 'QCD_tt' in fName : # this one pick up the QCD made from 'data' samples
+
+        # Choose appropriate weight for the category
+        if   'ZTT0jet' in fName      : app = "FFWeightQCD0Jet"
+        elif 'ZTT1jet_low' in fName  : app = "FFWeightQCD1JetLow"
+        elif 'ZTT1jet_med' in fName  : app = "FFWeightQCD1JetMed"
+        elif 'ZTT1jet_high' in fName : app = "FFWeightQCD1JetHigh"
+        elif 'ZTT1jet' in fName      : app = "FFWeightQCD1Jet"
+        elif 'ZTT2jet' in fName      : app = "FFWeightQCD2Jet"
+        elif 'ZTTvbf' in fName       : app = "FFWeightQCDVBF"
+        elif 'ZTT1bjet' in fName     : app = "FFWeightQCDBTagged"
+        elif 'ZTT2bjet' in fName     : app = "FFWeightQCDBTagged"
+        else                         : app = "FFWeightQCDInc"
+
+        # Check if a FF shape variable
+        if '_ffStatUp' in var   : app += '_StatUP'
+        if '_ffStatDown' in var : app += '_StatDOWN'
+        if '_ffSystUp' in var   : app += '_SystUP'
+        if '_ffSystDown' in var : app += '_SystDOWN'
+
+        # Wrap appropriately
+        app = "*("+app+")"
+
+    # Return an empty string or appropriate FF Shape syst
+    return app
         
 
 
@@ -138,7 +181,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
 
         ''' Skip plotting unused shape systematics '''
-        if skipSystShapeVar( var, sample, channel ) : continue
+        if skipSystShapeVar( var, sample, channel, outFile.GetName() ) : continue
 
         ''' Define syst shape weights if applicable '''
         shapeSyst = ''
@@ -162,6 +205,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # so instead we appeand it to what ever else we have
         shapeSyst += ESCuts( sample, channel, var )
 
+        # This addes the Fake Factor shape systematics weights
+        ffShapeSyst = getFFShapeSystApp( sample, outFile, var )
         
 
     	histos[ var ] = makeHisto( var, info[0], info[1], info[2])
@@ -182,8 +227,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
 
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % \
-                (additionalCut, sfs, xsec, shapeSyst) 
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % \
+                (additionalCut, sfs, xsec, shapeSyst, ffShapeSyst) 
 
         #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
         #if 'data' in sample :
@@ -220,7 +265,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
-                chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s' % (additionalCut, dataES) )
+                chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % \
+                        (additionalCut, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
                 if var == 'm_vis' :
                     print 'm_vis'
@@ -307,6 +353,14 @@ def getHistoDict( analysis, channel ) :
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
         shapesToAdd = {'energyScale':'TES',}#'zPt':'Z p_{T}/Mass Reweight'}
+
+        # Add FF shape systs if doFF
+        doFF = os.getenv('doFF')
+        if doFF == 'True' :
+            shapesToAdd['ffSyst'] = 'FF Syst'
+            shapesToAdd['ffStat'] = 'FF Stat'
+
+
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
                 for shape, app in shapesToAdd.iteritems() :
