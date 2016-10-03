@@ -80,26 +80,33 @@ def fillFakeFactorValuesPerCat( analysis, mid2, sample, channel, ffCat, append )
             val[0][0] = 0.
 
 
+        muon_iso = 0.0
         # First leg FR
-        if row.byTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 and row.byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5 :
+        if row.byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 and row.byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5 :
             pt = getattr(row, 'pt_1')
             decayMode = getattr(row, 'decayMode_1')
             nJets = getattr(row, 'jetVeto30')
             mVis = getattr(row, 'm_vis')
-            #print "mvis",mVis
+            transMass = getattr(row, 'mt_2')
+        # Second leg FR
+        elif row.byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 and row.byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5 :
+            pt = getattr(row, 'pt_2')
+            decayMode = getattr(row, 'decayMode_2')
+            nJets = getattr(row, 'jetVeto30')
+            mVis = getattr(row, 'm_vis')
             transMass = getattr(row, 'mt_1')
-            #print transMass
-            muon_iso = 0.0
-            inputsqcd = [pt, decayMode, nJets, mVis, transMass, muon_iso]
+        else : continue
 
-            # The following notation is grabbing the first item in the value pair
-            # (an array) of a map, then setting that single first value in 
-            # the array to our FF value
-            branchMap['FFWeightQCD'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd) )
-            branchMap['FFWeightQCD_StatUP'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_up" )
-            branchMap['FFWeightQCD_StatDOWN'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_down" )
-            branchMap['FFWeightQCD_SystUP'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_up" )
-            branchMap['FFWeightQCD_SystDOWN'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_down" )
+        inputsqcd = [pt, decayMode, nJets, mVis, transMass, muon_iso]
+
+        # The following notation is grabbing the first item in the value pair
+        # (an array) of a map, then setting that single first value in 
+        # the array to our FF value
+        branchMap['FFWeightQCD'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd) )
+        branchMap['FFWeightQCD_StatUP'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_up" )
+        branchMap['FFWeightQCD_StatDOWN'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_stat_down" )
+        branchMap['FFWeightQCD_SystUP'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_up" )
+        branchMap['FFWeightQCD_SystDOWN'][0][0] = ffCat.value( len(inputsqcd),array('d',inputsqcd), "ff_qcd_syst_down" )
 
 
         # Fill all new values
