@@ -17,4 +17,11 @@ mkdir data
 cp -r /afs/cern.ch/user/j/jbrandst/public/Htautau/FakeRate/20160914/* data/
 popd
 
+echo "Hopefully temporary fix, using special FF files from Johannes"
+pushd $CMSSW_BASE/src
+cd HTTutilities/Jet2TauFakes
+cp -r /afs/cern.ch/user/j/jbrandst/public/forTyler/tt/ /data
+popd
+
+
 echo "You must <scram b -j 8>" 
