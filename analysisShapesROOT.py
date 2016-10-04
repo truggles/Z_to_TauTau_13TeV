@@ -10,6 +10,7 @@ from util.splitCanvas import fixFontSize
 from array import array
 from analysisPlots import skipSystShapeVar
 from util.helpers import checkDir
+import os
 
 
 def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
@@ -18,6 +19,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     'useQCDMakeName' : 'x',
     'qcdSF' : 1.0,
     'mssm' : False,
+    'ztt' : False,
     'category' : 'inclusive',
     'fitShape' : 'm_vis',
     'btag' : False,
@@ -33,6 +35,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
 
     print ops
 
+    # Use FF built QCD backgrounds
+    doFF = os.getenv('doFF')
 
     """ Add in the gen matched DY catagorization """
     # FIXME - do this later
@@ -101,25 +105,26 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['WJets3']    = ('kAzure+2', '_W_')
     samples['WJets4']    = ('kAzure+2', '_W_')
     samples['WW1l1nu2q']     = ('kAzure+4', '_VV_')
+    samples['WZJets']     = ('kAzure+4', '_VV_')
     #samples['WW2l2nu']       = ('kAzure+8', '_VV_')
     samples['WZ1l1nu2q'] = ('kAzure-6', '_VV_')
     samples['WZ1l3nu'] = ('kAzure-6', '_VV_')
     samples['WZ2l2q'] = ('kAzure-6', '_VV_')
-    #samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
+    samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
     #samples['ZZ2l2nu'] = ('kAzure-12', '_VV_')
     samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
-    #samples['ZZ4l'] = ('kAzure-12', '_VV_')
+    samples['ZZ4l'] = ('kAzure-12', '_VV_')
     samples['VV'] = ('kAzure-12', '_VV_')
-    samples['EWKWPlus'] = ('kAzure-12', '_VV_')
-    samples['EWKWMinus'] = ('kAzure-12', '_VV_')
-    samples['EWKZ2l'] = ('kAzure-12', '_VV_')
-    samples['EWKZ2nu'] = ('kAzure-12', '_VV_')
+    #samples['EWKWPlus'] = ('kAzure-12', '_VV_')
+    #samples['EWKWMinus'] = ('kAzure-12', '_VV_')
+    #samples['EWKZ2l'] = ('kAzure-12', '_VV_')
+    #samples['EWKZ2nu'] = ('kAzure-12', '_VV_')
     samples['QCD']        = ('kMagenta-10', '_QCD_')
-    samples['dataTT-B']  = ('kBlack', '_data_obs_')
-    samples['dataTT-C']  = ('kBlack', '_data_obs_')
+    #samples['dataTT-B']  = ('kBlack', '_data_obs_')
+    #samples['dataTT-C']  = ('kBlack', '_data_obs_')
     samples['dataTT-D']  = ('kBlack', '_data_obs_')
-    samples['dataTT-E']  = ('kBlack', '_data_obs_')
-    samples['dataTT-F']  = ('kBlack', '_data_obs_')
+    #samples['dataTT-E']  = ('kBlack', '_data_obs_')
+    #samples['dataTT-F']  = ('kBlack', '_data_obs_')
     samples['dataEM']  = ('kBlack', '_data_obs_')
     samples['VBFHtoTauTau120'] = ('kGreen', '_qqH120_')
     samples['VBFHtoTauTau125'] = ('kGreen', '_qqH125_')
@@ -191,8 +196,14 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['allShapes'] :
                 print "\nAll Shapes Applied\n"
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
-                if not (('_energyScale' in var) or ('_zPt' in var) or (baseVar == var)) :
-                    continue
+                if doFF == 'True' :
+                    if not (('_energyScale' in var) or ('_zPt' in var) or\
+                            ('_ffSyst' in var) or ('_ffStat' in var) or (baseVar == var)) :
+                        continue
+
+                else :
+                    if not (('_energyScale' in var) or ('_zPt' in var) or (baseVar == var)) :
+                        continue
             #if ops['mssm'] :
             #    if not var == baseVar+'_mssm' : continue
             #    if var != baseVar : continue
@@ -202,7 +213,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             elif ops['tauPt'] and not ops['ES'] :
                 if not (('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
             elif ops['tauPt'] and ops['ES'] :
-                if not (('_energyScaleUp' in var) or ('_energyScaleDown' in var) or ('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
+                if not (('_energyScaleUp' in var) or ('_energyScaleDown' in var) or ('_tauPtUp' in var) or\
+                        ('_tauPtDown' in var) or (baseVar == var)) : continue
             else :
                 if not var == baseVar : continue
     
@@ -266,6 +278,14 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         histos[ name ] = ROOT.TH1D( name+'topPtUp', name+'topPtUp', numBins, binArray )
                     elif '_topPtDown' in var :
                         histos[ name ] = ROOT.TH1D( name+'topPtDown', name+'topPtDown', numBins, binArray )
+                    elif '_ffSystUp' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'ffSystUp', name+'ffSystUp', numBins, binArray )
+                    elif '_ffSystDown' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'ffSystDown', name+'ffSystDown', numBins, binArray )
+                    elif '_ffStatUp' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'ffStatUp', name+'ffStatUp', numBins, binArray )
+                    elif '_ffStatDown' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'ffStatDown', name+'ffStatDown', numBins, binArray )
                     else :
                         histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
                 histos[ name ].Sumw2()
@@ -291,8 +311,11 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     if ops['useQCDMakeName'] != 'x'  :
                         print "Use QCD MAKE NAME: ",ops['useQCDMakeName']
                         tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['useQCDMakeName']), 'READ')
+                    elif doFF == 'True' :
+                        tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                        print " \n### Using Fake Factor QCD Shape !!! ###\n"
                     else :
-                        print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
+                        print " \n\n### SPECIFY A QCD SHAPE !!! ### \n\n"
                 else :
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
     
@@ -354,8 +377,12 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
                 # Proper naming of output histos
-                if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var or '_topPt' in var) :
-                    if name in ['_data_obs_','_QCD_','_VV_','_W_'] : continue 
+                if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or \
+                        '_zPt' in var or '_topPt' in var or '_ffStat' in var or '_ffSyst' in var) :
+                    if name in ['_data_obs_','_VV_','_W_'] : continue 
+                    if name == '_QCD_' and not doFF == 'True' : continue 
+                    if name == '_QCD_' and not ('_ffSyst' in var or '_ffStat' in var) : continue 
+                    if ('_ffSyst' in var or '_ffStat' in var) and name != '_QCD_' : continue
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
@@ -388,6 +415,35 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     elif '_zPtDown' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeVDown' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeVDown' )
+                    ### For these Fake Factor shapes, we need 2 copies with slightly different names
+                    elif '_ffSystUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVUp' )
+                        systUp = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVUp' )
+                        systUp.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVUp' )
+                        systUp.Write()
+                        del systUp
+                    elif '_ffSystDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVDown' )
+                        systDown = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVDown' )
+                        systDown.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVDown' )
+                        systDown.Write()
+                        del systDown
+                    elif '_ffStatUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVUp' )
+                        statUp = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVUp' )
+                        statUp.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVUp' )
+                        statUp.Write()
+                        del statUp
+                    elif '_ffStatDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVDown' )
+                        statDown = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVDown' )
+                        statDown.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVDown' )
+                        statDown.Write()
+                        del statDown
                     histos[ name ].Write()
                 else :
                     histos[ name ].SetTitle( name.strip('_') )

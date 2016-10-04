@@ -99,6 +99,10 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 3.22,
                 'group' : 'dib'},
+            'ZZ4l' :     { 
+                'DASPath' : '/ZZTo4L_13TeV-amcatnloFXFX-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM',
+                'xsec' : 1.212,
+                'group' : 'dib'},
             'WW1l1nu2q' :  { 
                 'DASPath' : '/WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 49.997,
@@ -114,6 +118,14 @@ def sampleDetails( analysis ) :
             'WZ1l1nu2q' :  { 
                 'DASPath' : '/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 10.71,
+                'group' : 'dib'},
+            'WZ3l1nu' :  { 
+                'DASPath' : '/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM',
+                'xsec' : 4.666,
+                'group' : 'dib'},
+            'WZJets'    :  {
+                'DASPath' : '/WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM',
+                'xsec' : 5.26,
                 'group' : 'dib'},
             'Tbar-tW' :    { 
                 'DASPath' : '/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/%s-v1/MINIAODSIM' % c80xMAOD2,

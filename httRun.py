@@ -44,8 +44,8 @@ os.chdir('..')
 ''' Preset samples '''
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
 SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJetsBig', 'DYJetsLow', 'DYJetsHigh', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130']
-SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJetsBig', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130'] # Removing DYJetsHigh and DYJetsLow and dataTT-C
-#SamplesDataCards = ['dataTT-D','DYJets4'] 
+SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130'] # Removing DYJetsHigh and DYJetsLow and dataTT-C and DYJetsBig
+#SamplesDataCards = ['ZZ4l',] 
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -71,9 +71,12 @@ params = {
     #'mid1' : '1Sept30cFFwithCoin',
     #'mid2' : '2Sept30cFFwithCoin',
     #'mid3' : '3Sept30cFFwithCoin',
-    'mid1' : '1Sept30bFF', # No Coin
-    'mid2' : '2Sept30bFF',
-    'mid3' : '3Sept30bFF',
+    #'mid1' : '1Sept30bFF', # No Coin
+    #'mid2' : '2Sept30bFF',
+    #'mid3' : '3Sept30bFF',
+    'mid1' : '1Oct03aFF',
+    'mid2' : '2Oct03bFFshapeSyst',
+    'mid3' : '3Oct03bFFshapeSyst',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -104,13 +107,13 @@ samples = returnSampleDetails( analysis, samples )
 runPlots = True
 runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False
+makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 #isoVals = ['VTight', 'Tight', 'Medium',]
 isoVals = ['VTight',]
 
@@ -121,6 +124,7 @@ pt = '4040'
 #sync = True
 sync = False
 ztt = True
+doFF = os.getenv('doFF')
 
 for isoVal in isoVals :
     samplesX = copy.deepcopy(samples)
@@ -161,7 +165,6 @@ for isoVal in isoVals :
     
     
     if makeFinalPlots :
-        doFF = os.getenv('doFF')
         from util.helpers import getQCDSF
         for cat in cats :
             ROOT.gROOT.Reset()
@@ -187,22 +190,29 @@ for isoVal in isoVals :
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
-        #for var in ['m_vis', 'm_sv', 'mt_sv', 'mt_tot', 'm_coll',] :
         for var in ['m_sv',] :
         #for var in ['m_vis','m_sv'] :
             for cat in cats :
-                qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                 finalCat = cat
-                folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
-                kwargs = {
-                'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
-                'qcdSF' : qcdSF,
-                'category' : finalCat,
-                #'fitShape' : 'm_vis',
-                'fitShape' : var,
-                'allShapes' : True,
-                'sync' : sync,
-                }
+                if doFF == 'True' :
+                    folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
+                    kwargs = {
+                    'category' : finalCat,
+                    'fitShape' : var,
+                    'allShapes' : True,
+                    'sync' : sync,
+                    }
+                else :
+                    folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
+                    qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
+                    kwargs = {
+                    'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
+                    'qcdSF' : qcdSF,
+                    'category' : finalCat,
+                    'fitShape' : var,
+                    'allShapes' : True,
+                    'sync' : sync,
+                    }
                 makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
         subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
