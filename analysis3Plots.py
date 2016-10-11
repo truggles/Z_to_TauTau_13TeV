@@ -255,22 +255,34 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             append = var + channel
             stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
             sampHistos = {}
-            for samp in sampInfo[analysis].keys() :
-                # Skip some DY gen based combos
-                if analysis == 'htt' and channel == 'em' :
-                    if samp in ['zl', 'zj'] : continue
-                if analysis == 'htt' and channel == 'tt' :
-                    if samp == 'zll' : continue
-                sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')), samp, xNum, xBins )
-                sampHistos[samp].Sumw2()
-                sampHistos[samp].SetFillColor( sampInfo[analysis][samp][0] )
-                sampHistos[samp].SetLineColor( ROOT.kBlack )
-                sampHistos[samp].SetLineWidth( 2 )
-                sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
-            sampHistos[ signal ].SetLineColor( ROOT.kPink )
-            sampHistos[ signal ].SetLineWidth( 4 )
-            sampHistos[ signal ].SetLineStyle( 7 )
-            sampHistos[ signal ].SetMarkerStyle( 0 )
+            if ":" not in var :
+                for samp in sampInfo[analysis].keys() :
+                    # Skip some DY gen based combos
+                    if analysis == 'htt' and channel == 'em' :
+                        if samp in ['zl', 'zj'] : continue
+                    if analysis == 'htt' and channel == 'tt' :
+                        if samp == 'zll' : continue
+                    sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')), samp, xNum, xBins )
+                    sampHistos[samp].Sumw2()
+                    sampHistos[samp].SetFillColor( sampInfo[analysis][samp][0] )
+                    sampHistos[samp].SetLineColor( ROOT.kBlack )
+                    sampHistos[samp].SetLineWidth( 2 )
+                    sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
+                sampHistos[ signal ].SetLineColor( ROOT.kPink )
+                sampHistos[ signal ].SetLineWidth( 4 )
+                sampHistos[ signal ].SetLineStyle( 7 )
+                sampHistos[ signal ].SetMarkerStyle( 0 )
+            else :
+                twoDVars = analysisPlots.get2DVars( var )
+                for samp in sampInfo[analysis].keys() :
+                    # Skip some DY gen based combos
+                    if analysis == 'htt' and channel == 'em' :
+                        if samp in ['zl', 'zj'] : continue
+                    if analysis == 'htt' and channel == 'tt' :
+                        if samp == 'zll' : continue
+                    sampHistos[samp] = ROOT.TH2D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')),
+                            samp, len(twoDVars[0])-1, twoDVars[0], len(twoDVars[1])-1, twoDVars[1] )
+                    sampHistos[samp].Sumw2()
                 
     
             for sample in samples.keys() :
@@ -340,9 +352,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     #print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                     preHist.Scale( ops['qcdSF'] )
                     #print "QCD yield: %f" % preHist.Integral()
-                    hist = ROOT.TH1D( preHist )
+                    if not ":" in var :
+                        hist = ROOT.TH1D( preHist )
+                    else :
+                        hist = ROOT.TH2D( preHist )
                 else :
-                    hist = preHist.Rebin( xNum, "rebinned", xBins )
+                    if ":" in var :
+                        hist = preHist.Rebin2D( 1, 1, "rebinned" )
+                    else : 
+                        hist = preHist.Rebin( xNum, "rebinned", xBins )
     
     
                 if var == 'eta_1' :
@@ -457,10 +475,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             if qcdMake :
-                qcdVar = ROOT.TH1D( var, 'qcd%s%s' % (append,var), xNum, xBins )
+                if not ":" in var :
+                    qcdVar = ROOT.TH1D( var, 'qcd%s%s' % (append,var), xNum, xBins )
+                else :
+                    qcdVar = ROOT.TH2D( var, 'qcd%s%s' % (append,var), len(twoDVars[0])-1, twoDVars[0], len(twoDVars[1])-1, twoDVars[1] )
                 qcdVar.Sumw2()
-                qcdVar.Add( sampHistos['obs'] )
-                qcdVar.Add( -1 * stack.GetStack().Last() )
+                qcdVar.Add( sampHistos['obs'], stack.GetStack().Last(), 1., -1. )
                 qcdVar.SetFillColor( ROOT.kMagenta-10 )
                 qcdVar.SetLineColor( ROOT.kBlack )
                 qcdVar.SetLineWidth( 2 )
@@ -482,7 +502,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Maybe make ratio hist
             c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 550, 550)
     
-            if not ops['ratio'] :
+            if not ops['ratio'] or ":" in var :
                 pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
                 pad1.Draw()
                 pad1.cd()
@@ -492,7 +512,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 # X Axis!
                 stack.GetXaxis().SetTitle("%s" % info[ 4 ])
     
-            if ops['ratio'] :
+            else : # Do Ratio plots
                 smlPadSize = .25
                 pads = ratioPlot( c1, 1-smlPadSize )
                 pad1 = pads[0]
@@ -559,7 +579,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Set labels appropriately
             if info[ 5 ] == '' :
                 stack.GetYaxis().SetTitle("Events")
-            else :
+            elif not ":" in var :
                 if varBinned :
                     stack.GetYaxis().SetTitle("Events / Bin Width")
                 else :
@@ -623,7 +643,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
             else :
                 stack.GetXaxis().SetRangeUser( info[1], info[2] )
-            if ops['ratio'] :
+            if ops['ratio'] and not ":" in var :
                 if varBinned :
                     ratioHist.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
                 else :
@@ -633,7 +653,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """
             Add uncertainty bands on background stack
             """
-            if ops['addUncert'] :
+            if ops['addUncert'] and not ":" in var :
                 e1 = ROOT.TH1D("e1 %s" % append, "e1", xNum, xBins )
                 e1.Sumw2()
                 if varBinned :
@@ -682,10 +702,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         if binHigh>targetMassLow and binLow<=targetMassUp :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
-                            if ops['ratio'] :
+                            if ops['ratio'] and not ":" in var :
                                 ratioHist.SetBinContent(k, 0.)
                                 ratioHist.SetBinError(k, 0.)
-                    if ops['ratio'] : 
+                    if ops['ratio'] and not ":" in var : 
                         ratioPad.cd()
                         ratioHist.Draw('esamex0')
                     pad1.cd()

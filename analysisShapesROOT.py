@@ -9,7 +9,7 @@ import analysisPlots
 from util.splitCanvas import fixFontSize
 from array import array
 from analysisPlots import skipSystShapeVar
-from util.helpers import checkDir
+from util.helpers import checkDir, unroll2D
 
 
 def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
@@ -173,7 +173,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             'm_sv' : 'svFitMass',
             'mt_sv' : 'svFitMt',
             'mt_tot' : 'mtTot',
-            'm_coll' : 'collMass',}
+            'Higgs_Pt:m_sv' : 'svFitMass2D',}
         append = '_'+appendMap[baseVar]
     
         if ops['mssm'] :
@@ -236,7 +236,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             elif ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
             else :
-                if ops['category'] in ['1jet_low', '1jet_high'] :
+                if ":" in var : binArray = array( 'd', [i for i in range( 37 )] )
+                elif ops['category'] in ['1jet_low', '1jet_high'] :
                     binArray = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
                 elif 'vbf' in ops['category'] :
                     binArray = array( 'd', [0,40,60,80,100,120,150,200,250] )
@@ -268,6 +269,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         histos[ name ] = ROOT.TH1D( name+'topPtDown', name+'topPtDown', numBins, binArray )
                     else :
                         histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
+                else :
+                    histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
                 histos[ name ].Sumw2()
     
     
@@ -326,7 +329,10 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 #    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
                 #    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
                 #    histos[ samples[ sample ][1] ].Add( hNew )
-                hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+                if ":" in var :
+                    hNew = unroll2D( hist )
+                else :
+                    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
                 histos[ samples[ sample ][1] ].Add( hNew )
     
                 if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :

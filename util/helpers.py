@@ -217,7 +217,25 @@ def getQCDSF( fileName, category ) :
                 return float(info[1])
 
 
+def unroll2D( hist ) :
+    nBinsX = hist.GetNbinsX()
+    nBinsY = hist.GetNbinsY()
+    nBins = nBinsX * nBinsY
+    hNew = ROOT.TH1D( hist.GetName(), hist.GetTitle(), nBins, 0, nBins )
+    for i in range(1, nBinsY+1) :
+        for j in range(1, nBinsX+1) :
+            hNew.SetBinContent( j+(i-1)*j, hist.GetBinContent( j, i ) )
+            hNew.SetBinError( j+(i-1)*j, hist.GetBinError( j, i ) )
+    return hNew
+
+
 if __name__ == '__main__' :
-    print getQCDSF( 'httQCDYields_2Aug25x5pt45b.txt', '1Jet' )
+    #print getQCDSF( 'httQCDYields_2Aug25x5pt45b.txt', '1Jet' )
+    #f = ROOT.TFile('htt2Oct11b2DRoll_OSl1ml2_Tight_ZTT1jet/DYJets1_tt.root','r')
+    #hist = f.Get('tt_Histos/m_sv:Higgs_Pt')
+    #unroll2D( hist )
+
+
+
 
 

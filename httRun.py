@@ -66,12 +66,14 @@ params = {
     #'cutMapper' : 'fakeFactorCutsTT',
     #'cutMapper' : 'syncCutsDCqcdTES',
     'cutMapper' : 'syncCutsDCqcdTES5040',
-    'mid1' : '1Oct10aICHEPNJetsGtrEq2',
-    'mid2' : '2Oct10aICHEPNJetsGtrEq2',
-    'mid3' : '3Oct10aICHEPNJetsGtrEq2',
-    #'mid1' : '1Oct10aICHEPNJetsEq2',
-    #'mid2' : '2Oct10aICHEPNJetsEq2',
-    #'mid3' : '3Oct10aICHEPNJetsEq2',
+    #'mid1' : '1Oct10aICHEPNJetsGtrEq2',
+    #'mid2' : '2Oct10aICHEPNJetsGtrEq2',
+    #'mid3' : '3Oct10aICHEPNJetsGtrEq2',
+    'mid1' : '1Oct11aICHEPNJetsGtrEq2',
+    'mid2' : '2Oct11b2DRoll',
+    'mid3' : '3Oct11b2DRoll',
+    #'mid2' : '2Oct11aQCDShapeMed',
+    #'mid3' : '3Oct11aQCDShapeMed',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -91,7 +93,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -101,11 +103,11 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False
+makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
@@ -117,10 +119,14 @@ cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
 cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet',]
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
-#cats = ['1jet',]
+cats = ['1jet2D','2jet2D']
 pt = '5040'
+lIso = 'Medium'
+lIso = 'Loose'
 #sync = True
 sync = False
+cleanPlots = False
+#cleanPlots = True
 
 for isoVal in isoVals :
     samplesX = copy.deepcopy(samples)
@@ -138,7 +144,7 @@ for isoVal in isoVals :
     if makeQCDBkg :    
         qcdYields = {}
         for sign in ['SS', 'OS'] :
-            for name in [isoVal+'_Loose', isoVal+'_'] :
+            for name in [isoVal+'_'+lIso, isoVal+'_'] :
                 for cat in cats :
                     if sign == 'SS' : skipSSQCDDetails = True
                     else : skipSSQCDDetails = False
@@ -152,7 +158,7 @@ for isoVal in isoVals :
         print qcdYields
         qcdFile = open('httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']),'w')
         for cat in cats :
-            qcdSF = qcdYields['SS'+isoVal+'_'+cat] / qcdYields['SS'+isoVal+'_Loose'+cat]
+            qcdSF = qcdYields['SS'+isoVal+'_'+cat] / qcdYields['SS'+isoVal+'_'+lIso+cat]
             qcdFile.write( cat+":"+str(qcdSF)+"\n" )
         for key in qcdYields :
             qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
@@ -172,7 +178,7 @@ for isoVal in isoVals :
                 blind = False
             
             kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
-                'useQCDMakeName':'OSl1ml2_'+isoVal+'_LooseZTT'+cat, 'qcdSF':qcdSF,
+                'useQCDMakeName':'OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat, 'qcdSF':qcdSF,
                 'targetDir':'/'+tDir,'sync':sync }
             analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                 params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
@@ -186,14 +192,15 @@ for isoVal in isoVals :
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
         #for var in ['m_vis', 'm_sv', 'mt_sv', 'mt_tot', 'm_coll',] :
-        for var in ['m_sv',] :
+        #for var in ['m_sv',] :
+        for var in ['Higgs_Pt:m_sv',] :
         #for var in ['m_vis','m_sv'] :
             for cat in cats :
                 qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                 finalCat = cat
                 folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                 kwargs = {
-                'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_LooseZTT'+cat,
+                'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
                 'qcdSF' : qcdSF,
                 'category' : finalCat,
                 #'fitShape' : 'm_vis',
@@ -207,7 +214,6 @@ for isoVal in isoVals :
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''
-    cleanPlots = True
     if cleanPlots :
         print "\nTrying to remove pngs used to build QCD Bkg\n"
         subprocess.call(["bash", "util/cleanDirs.sh"])

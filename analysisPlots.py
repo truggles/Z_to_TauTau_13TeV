@@ -1,11 +1,30 @@
 import ROOT
 from ROOT import gPad
+from array import array
 
 
 
 # Make a histo, but fill it later so we can keep track of events for ALL histos at once
 def makeHisto( cutName, varBins, varMin, varMax ) :
     hist = ROOT.TH1D( cutName, cutName, varBins, varMin, varMax )
+    return hist
+
+
+
+# Make a 2D histo
+def get2DVars( cutName ) :
+    if 'Higgs_Pt:m_sv' in cutName :
+        xBins = array( 'd', [0,100,170,2000] )
+        yBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+    return (xBins, yBins)
+
+
+# Make a 2D histo
+def make2DHisto( cutName ) :
+    info = get2DVars( cutName )
+    xBins = info[0]
+    yBins = info[1]
+    hist = ROOT.TH2D( cutName, cutName, len(xBins)-1, xBins, len(yBins)-1, yBins )
     return hist
 
 
@@ -109,7 +128,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         shapeSyst += ESCuts( sample, channel, var )
 
 
-    	histos[ var ] = makeHisto( var, info[0], info[1], info[2])
+        if ":" in var :
+    	    histos[ var ] = make2DHisto( var )
+        else :
+    	    histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # and, top pt reweighting
@@ -151,11 +173,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         ### Make sure that if we have no events
         ### we still save a blank histo for use later
         if chain.GetEntries() == 0 :
-             print " #### ENTRIES = 0 #### "
-             histos[ var ] = makeHisto( var, info[0], info[1], info[2])
+            print " #### ENTRIES = 0 #### "
+            if ":" in var :
+                histos[ var ] = make2DHisto( var )
+            else :
+                histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
         ### Check that the target var is in the TTrees
-        elif hasattr( chain, varBase ) :
+        elif hasattr( chain, varBase ) or ":" in varBase :
             #print "trying"
             #print "Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             if isData : # Data has no GenWeight and by def has puweight = 1
@@ -174,7 +199,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 histos[ var ] = gPad.GetPrimitive( var )
                 integralPost = histos[ var ].Integral()
                 if var == 'm_vis' :
-                    print 'm_vis'
+                    #print 'm_vis'
                     print "tmpIntPost: %f" % integralPost
                     #print "Cut: %s" % totalCutAndWeightMC
 
@@ -194,25 +219,25 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
-            'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
-            'Z_Pt' : (100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'),
-            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
-            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
-            'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
-#            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
-#            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
-#            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
-#            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
-#            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
-            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
-#            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
-            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-#            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
-#            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
-#            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
-#            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+#XXX            'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
+#XXX            'Z_Pt' : (100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'),
+#XXX            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
+#XXX            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
+#XXX            'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
+#XXX#            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
+#XXX#            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
+#XXX#            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
+#XXX#            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
+#XXX#            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
+#XXX            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+#XXX            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
+#XXX#            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
+#XXX            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+#XXX#            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
+#XXX#            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
+#XXX#            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
+#XXX#            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
+#XXX            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
 #XXX            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
 #            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
 #            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
@@ -230,6 +255,7 @@ def getHistoDict( analysis, channel ) :
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'Higgs_Pt:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
 #            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -240,8 +266,9 @@ def getHistoDict( analysis, channel ) :
         }
 
         ''' added shape systematics '''
-        toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot',]
+        toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot', 'Higgs_Pt:m_sv']
         #toAdd = ['m_vis', 'm_sv', 'mt_sv',]
+        toAdd = ['mt_sv', 'mt_tot', 'Higgs_Pt:m_sv'] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
             varsForShapeSyst.append( item )
@@ -376,6 +403,9 @@ def getHistoDict( analysis, channel ) :
             for var in llttMap.keys() :
                 genVarMap[var] = llttMap[ var ]
         return genVarMap
+
+
+
 
 
 
