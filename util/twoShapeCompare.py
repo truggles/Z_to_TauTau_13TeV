@@ -4,6 +4,8 @@ from ROOT import gPad, gStyle
 from ratioPlot import ratioPlot
 import os
 import pyplotter.tdrstyle as tdr
+from util.helpers import checkDir
+
 ROOT.gROOT.SetBatch(True)
 tdr.setTDRStyle()
 ROOT.gStyle.SetOptStat(1111)
@@ -56,6 +58,7 @@ ratioPad.SetGridy()
 #p1.cd()
 
 pdir = '/afs/cern.ch/user/t/truggles/www/fakeFactor/overlapPlots/'
+checkDir(pdir)
 for v in v1s :
     if v in v2s :
         # 1 = un-rebinned, range not set, 2 = post work
@@ -138,7 +141,7 @@ for v in v1s :
         logo = ROOT.TText(.2, .88,"CMS Preliminary")
         logo.SetTextSize(0.04)
         logo.DrawTextNDC(.2, .89,"CMS Preliminary")
-        lumi = ROOT.TText(.7,1.05,"%f fb^{-1} (13 TeV)" % round(cmsLumi/1000,2) )
+        lumi = ROOT.TText(.7,1.05,"%.1f fb^{-1} (13 TeV)" % cmsLumi )
         lumi.SetTextSize(0.04)
         lumi.DrawTextNDC(.7,.96,"2.3 / fb (13 TeV)" )
 

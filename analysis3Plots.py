@@ -690,7 +690,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/%s.pdf' % (analysis, channel, ops['targetDir'], var ) )
             c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
+            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/%s.pdf' % (analysis, channel, ops['targetDir'], var ) )
     
     
             """ Additional views for Visible Mass """
