@@ -212,7 +212,7 @@ def getHistoDict( analysis, channel ) :
 #            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
 #            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
 #            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-#XXX            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
 #XXX            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
 #            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
 #            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
@@ -227,9 +227,9 @@ def getHistoDict( analysis, channel ) :
 #            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
             #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
             #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
-            'm_vis' : [30, 0, 300, 1, 'Z Vis Mass [GeV]', ' GeV'],
+            'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
-            'm_sv' : [300, 0, 300, 10, 'Z svFit Mass [GeV]', ' GeV'],
+            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
 #            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -247,7 +247,8 @@ def getHistoDict( analysis, channel ) :
             varsForShapeSyst.append( item )
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        shapesToAdd = {'energyScale':'TES','zPt':'Z p_{T}/Mass Reweight'}
+        shapesToAdd = {'energyScale':'TES','zPt':'Z p_{T}/Mass Reweight',
+                'topPt':'Top p_{T} Reweight'}
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
                 for shape, app in shapesToAdd.iteritems() :

@@ -118,8 +118,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['dataTT-B']  = ('kBlack', '_data_obs_')
     samples['dataTT-C']  = ('kBlack', '_data_obs_')
     samples['dataTT-D']  = ('kBlack', '_data_obs_')
-    samples['dataTT-E']  = ('kBlack', '_data_obs_')
-    samples['dataTT-F']  = ('kBlack', '_data_obs_')
+    #samples['dataTT-E']  = ('kBlack', '_data_obs_')
+    #samples['dataTT-F']  = ('kBlack', '_data_obs_')
     samples['dataEM']  = ('kBlack', '_data_obs_')
     samples['VBFHtoTauTau120'] = ('kGreen', '_qqH120_')
     samples['VBFHtoTauTau125'] = ('kGreen', '_qqH125_')
@@ -191,7 +191,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['allShapes'] :
                 print "\nAll Shapes Applied\n"
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
-                if not (('_energyScale' in var) or ('_zPt' in var) or (baseVar == var)) :
+                if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                     continue
             #if ops['mssm'] :
             #    if not var == baseVar+'_mssm' : continue

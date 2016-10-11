@@ -1036,14 +1036,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
-                #if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
-                #    top1Pt = row.topQuarkPt1
-                #    if top1Pt > 400 : top1Pt = 400
-                #    top2Pt = row.topQuarkPt2
-                #    if top2Pt > 400 : top2Pt = 400
-                #    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
-                #else : topWeight[0] = 1
-                topWeight[0] = 1
+                if shortName == 'TT' and hasattr( row, 'topQuarkPt1' ) :
+                    top1Pt = row.topQuarkPt1 if row.topQuarkPt1 < 400 else 400
+                    top2Pt = row.topQuarkPt2 if row.topQuarkPt2 < 400 else 400
+                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
+                else : topWeight[0] = 1
+                #topWeight[0] = 1
 
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
@@ -1053,7 +1051,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
-                weight[0] *= zPtWeight[0] # * topWeight[0]
+                weight[0] *= zPtWeight[0] * topWeight[0]
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]

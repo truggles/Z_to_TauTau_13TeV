@@ -44,6 +44,7 @@ os.chdir('..')
 ''' Preset samples '''
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Adding EWK and tri-boson, sept 25
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Adding EWK and tri-boson, sept 25
 #SamplesDataCards = ['dataTT',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
@@ -65,9 +66,12 @@ params = {
     #'cutMapper' : 'fakeFactorCutsTT',
     #'cutMapper' : 'syncCutsDCqcdTES',
     'cutMapper' : 'syncCutsDCqcdTES5040',
-    'mid1' : '1Sept26a',
-    'mid2' : '2Sept26a',
-    'mid3' : '3Sept26a',
+    'mid1' : '1Oct10aICHEPNJetsGtrEq2',
+    'mid2' : '2Oct10aICHEPNJetsGtrEq2',
+    'mid3' : '3Oct10aICHEPNJetsGtrEq2',
+    #'mid1' : '1Oct10aICHEPNJetsEq2',
+    #'mid2' : '2Oct10aICHEPNJetsEq2',
+    #'mid3' : '3Oct10aICHEPNJetsEq2',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -87,7 +91,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -97,11 +101,11 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
-makeQCDBkg = False
+#makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+#makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
@@ -158,7 +162,7 @@ for isoVal in isoVals :
     
     
     if makeFinalPlots :
-        from util.helpers import getQCDSF
+        from util.helpers import getQCDSF, checkDir
         for cat in cats :
             ROOT.gROOT.Reset()
             qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
@@ -172,7 +176,9 @@ for isoVal in isoVals :
                 'targetDir':'/'+tDir,'sync':sync }
             analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                 params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
-        subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/", "/afs/cern.ch/user/t/truggles/www/HTT_Sept08/%s" % isoVal] )
+            cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s" % params['mid2'].strip('2')
+            checkDir( cpDir )
+            subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/tt/"+cat, cpDir] )
         
         
     if makeDataCards :
