@@ -261,7 +261,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     if samp in ['zl', 'zj'] : continue
                 if analysis == 'htt' and channel == 'tt' :
                     if samp == 'zll' : continue
-                sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s" % (samp, append), samp, xNum, xBins )
+                sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')), samp, xNum, xBins )
                 sampHistos[samp].Sumw2()
                 sampHistos[samp].SetFillColor( sampInfo[analysis][samp][0] )
                 sampHistos[samp].SetLineColor( ROOT.kBlack )
@@ -361,18 +361,18 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             ''' Change bin yield to make this make sense with variable binning
                 this is only for viewing, the DC process is seperate '''
-            for samp in sampHistos.keys() :
-                if var == 'm_vis' :
-                    print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
-                # With Variable binning, need to set bin content appropriately
-                if not varBinned : continue
-                if samp == "qcd" : continue
-                minWidth = 999.
-                for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
-                    minTmp = sampHistos[samp].GetBinWidth(bin_)
-                    if minTmp < minWidth : minWidth = minTmp
-                for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
-                    sampHistos[samp].SetBinContent( bin_, sampHistos[samp].GetBinContent( bin_ ) * ( minWidth / sampHistos[samp].GetBinWidth( bin_ ) ) )
+            #for samp in sampHistos.keys() :
+            #    if var == 'm_vis' :
+            #        print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
+            #    # With Variable binning, need to set bin content appropriately
+            #    if not varBinned : continue
+            #    if samp == "qcd" : continue
+            #    minWidth = 999.
+            #    for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
+            #        minTmp = sampHistos[samp].GetBinWidth(bin_)
+            #        if minTmp < minWidth : minWidth = minTmp
+            #    for bin_ in range( 1, sampHistos[samp].GetNbinsX()+1 ) :
+            #        sampHistos[samp].SetBinContent( bin_, sampHistos[samp].GetBinContent( bin_ ) * ( minWidth / sampHistos[samp].GetBinWidth( bin_ ) ) )
     
     
             # Some specific HTT stuff
@@ -560,15 +560,19 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if info[ 5 ] == '' :
                 stack.GetYaxis().SetTitle("Events")
             else :
-                width = stack.GetStack().Last().GetBinWidth(1)
-                if varBinned : width = minWidth
-                stack.GetYaxis().SetTitle("Events / %.1f%s" % (width, info[ 5 ])  )
+                if varBinned :
+                    stack.GetYaxis().SetTitle("Events / Bin Width")
+                else :
+                    width = stack.GetStack().Last().GetBinWidth(1)
+                    stack.GetYaxis().SetTitle("Events / %.1f%s" % (width, info[ 5 ])  )
     
 
             # Set axis and viewing area
             stackMax = stack.GetStack().Last().GetMaximum()
             dataMax = sampHistos['obs'].GetMaximum()
             stack.SetMaximum( max(dataMax, stackMax) * 1.5 )
+            if ops['targetDir'] == '/vbf_low' :
+                stack.SetMaximum( max(dataMax, stackMax) * 1.8 )
             if ops['log'] :
                 pad1.SetLogy()
                 stack.SetMaximum( max(dataMax, stackMax) * 10 )
@@ -719,7 +723,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             dumpFile = open('plotsOut.txt', 'a')
             dumpFile.write("\nFinal QCD and Data Info:\n -- QCD Name: %s\n -- Data Yield = %f\n -- QCD Yield = %f" % (ops['qcdMakeDM'], finalDataYield, finalQCDYield))
             dumpFile.close()
-    
+
+
     return finalQCDYield
 
 
