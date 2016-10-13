@@ -74,17 +74,18 @@ if __name__ == '__main__' :
 
 	# AZH Oct 12 hdfs -> UW
         azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',]
+        #azhSamples = []
         for mass in [120, 125, 130] :
-        	azhSamples.append('ggH%i' % mass)
-        	azhSamples.append('qqH%i' % mass)
-        	azhSamples.append('WMinusHTauTau%i' % mass)
-        	azhSamples.append('WPlusHTauTau%i' % mass)
-        	azhSamples.append('ZHTauTau%i' % mass)
-        	azhSamples.append('ttHTauTau%i' % mass)
+            azhSamples.append('ggHtoTauTau%i' % mass)
+            azhSamples.append('VBFHtoTauTau%i' % mass)
+            azhSamples.append('WMinusHTauTau%i' % mass)
+            azhSamples.append('WPlusHTauTau%i' % mass)
+            azhSamples.append('ZHTauTau%i' % mass)
+            azhSamples.append('ttHTauTau%i' % mass)
         for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-        	azhSamples.append('azh%i' % mass)
+               azhSamples.append('azh%i' % mass)
 	originalDir = '/nfs_scratch/truggles/azhOct12'
-	targetDir = '/nfs_scratch/truggles/azhOct12Merged'
+	targetDir = '/nfs_scratch/truggles/azhOct12MergedSMHiggs'
 	jobId = ''
 	channels = ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
 	for channel in channels :
