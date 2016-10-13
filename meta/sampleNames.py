@@ -373,15 +373,15 @@ def sampleDetails( analysis ) :
                 'group' : 'sm'},
 
             'ttHTauTau120' : {
-                'DASPath' : '/ttHToTT_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'DASPath' : '/ttHJetToTT_M120_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 0.570 * 0.0704,
                 'group' : 'sm'},
             'ttHTauTau125' : {
-                'DASPath' : '/ttHToTT_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'DASPath' : '/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 0.507 * 0.0632,
                 'group' : 'sm'},
             'ttHTauTau130' : {
-                'DASPath' : '/ttHToTT_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'DASPath' : '/ttHJetToTT_M130_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 0.454 * 0.0545,
                 'group' : 'sm'},
 	} # end SM-Higgs

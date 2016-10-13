@@ -20,6 +20,13 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
     # A to Zh sample masses
     for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
         currentDASSamples['azh'].append('azh%i' % mass)
+    for mass in [120, 125, 130] :
+        currentDASSamples['azh'].append('ggHtoTauTau%i' % mass)
+        currentDASSamples['azh'].append('VBFHtoTauTau%i' % mass)
+        currentDASSamples['azh'].append('WMinusHTauTau%i' % mass)
+        currentDASSamples['azh'].append('WPlusHTauTau%i' % mass)
+        currentDASSamples['azh'].append('ZHTauTau%i' % mass)
+        currentDASSamples['azh'].append('ttHTauTau%i' % mass)
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 
