@@ -19,19 +19,31 @@ def getMergeMap( analysis ) :
         'Sync' : {'x' : 999},
         'htt' : {'x' : 999},
         'azh' : {
-            'dataEE' : 200,
-            'dataMM' : 200,
-            'DYJets' : 200,
-            'DYJets1' : 200,
-            'DYJets2' : 200,
-            'DYJets3' : 200,
-            'DYJets4' : 200,
-            'WZ3l1nu' : 100,
-            'ZZ4lAMCNLO' : 5,
-            'TT' : 100,
-            'ggZZ4m' : 2,
-            'ggZZ4e' : 2,
-            'ggZZ2e2m' : 2,
+	    #'x' : 999,
+            'dataEE-B' : 10,
+            'dataEE-C' : 10,
+            'dataEE-D' : 10,
+            'dataEE-E' : 10,
+            'dataEE-F' : 10,
+            'dataMM-B' : 10,
+            'dataMM-C' : 10,
+            'dataMM-D' : 10,
+            'dataMM-E' : 10,
+            'dataMM-F' : 10,
+            'DYJets' : 20,
+            'DYJets1' : 20,
+            'DYJets2' : 20,
+            'DYJets3' : 20,
+            'DYJets4' : 20,
+            'WZ3l1nu' : 10,
+            'ZZ4lAMCNLO' : 1,
+            'TT' : 10,
+            'ggZZ4m' : 1,
+            'ggZZ2e2m' : 1,
+            'ggZZ2e2tau' : 1,
+            'ggZZ4tau' : 1,
+            'ggZZ4e' : 1,
+            'ggZZ2m2tau' : 1,
         } # end azh
     }
     return mergeMap[ analysis ]
@@ -47,8 +59,8 @@ def skipChanDataCombo( channel, sample, analysis ) :
         if (channel == 'tt') and ('data' in sample) and not ('dataTT' in sample) : return True
     # AZH
     if analysis == 'azh' :
-        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and (sample != 'dataEE') : return True
-        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt']) and ('data' in sample) and (sample != 'dataMM') : return True
+        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and not ('dataEE' in sample) : return True
+        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt']) and ('data' in sample) and not ('dataMM' in sample) : return True
     return False
 
 
@@ -196,7 +208,7 @@ def doInitialCuts(analysis, samples, **fargs) :
     for sample in samples :
    
         numFilesPerCycle = fargs['numFilesPerCycle']
-        if sample in mergeMap.keys() :
+        if sample in mergeMap.keys() and fargs[ 'skimmed' ] != 'true' :
             numFilesPerCycle = mergeMap[sample]
 
         fileLenEM = 9999

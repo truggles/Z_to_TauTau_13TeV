@@ -1,0 +1,3 @@
+/hdfs/store/user/caillol/ZH_sep16_v1/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-0A3C48B2-FC48-E611-91FC-002590D9D9F0.root
+/hdfs/store/user/caillol/ZH_sep16_v1/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-462C9E71-3948-E611-8595-6CC2173D4980.root
+/hdfs/store/user/caillol/ZH_sep16_v1/VBFHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-EC339131-FB48-E611-AE4F-485B39897242.root

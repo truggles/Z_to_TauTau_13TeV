@@ -225,12 +225,44 @@ def sampleDetails( analysis ) :
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
             #'WZ3l1nu' : ('/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/%s-v1/MINIAODSIM' % c80x, 4.666 ),
             #'ZZ4l' :    ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80x, 1.212 ),
-            'dataEE' : {
+            'dataEE-B' : {
+                'DASPath' : '/DoubleEG/Run2016B-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataEE-C' : {
+                'DASPath' : '/DoubleEG/Run2016C-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataEE-D' : {
+                'DASPath' : '/DoubleEG/Run2016D-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataEE-E' : {
                 'DASPath' : '/DoubleEG/Run2016E-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
-            'dataMM' : {
+            'dataEE-F' : {
+                'DASPath' : '/DoubleEG/Run2016F-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMM-B' : {
+                'DASPath' : '/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMM-C' : {
+                'DASPath' : '/DoubleMuon/Run2016C-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMM-D' : {
+                'DASPath' : '/DoubleMuon/Run2016D-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMM-E' : {
                 'DASPath' : '/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMM-F' : {
+                'DASPath' : '/DoubleMuon/Run2016F-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'ZZ4l' : {

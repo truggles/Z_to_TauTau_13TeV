@@ -1,0 +1,2 @@
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-DC5CF010-F358-E611-9809-008CFA06473C.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-F69B498A-5359-E611-BBE5-0025904B2C7E.root

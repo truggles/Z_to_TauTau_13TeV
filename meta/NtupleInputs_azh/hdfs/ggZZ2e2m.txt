@@ -1,0 +1,15 @@
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-00053AA4-F043-E611-AD68-001EC9B1D0C4.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-18BC3E0C-F143-E611-88A7-B083FED18596.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-20B94950-7944-E611-9476-0025904C6620.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-2875821D-F143-E611-A9B6-0025905238D8.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-320306F0-EE43-E611-9023-0025902D14EC.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-32A69400-3444-E611-9319-008CFA0008C4.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-38E9ED1E-5F44-E611-AE10-44A842CFD5FF.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-48AC288A-F043-E611-817D-008CFA166014.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-5CAEA594-2F44-E611-B52A-0CC47A57D066.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-7EBC1EE6-EE43-E611-A7D0-0CC47A1E0C70.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-A086937E-F043-E611-9BBC-0CC47A7FC750.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-B67963EA-F143-E611-B744-0025904A8EC8.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-DA2C19D9-EE43-E611-8AA6-3417EBE70684.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-E4A6199E-F043-E611-97C7-90B11C12E856.root
+/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-F0C5E996-FC43-E611-A4D9-0090FAA57750.root
