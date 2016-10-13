@@ -1,0 +1,3 @@
+/data/truggles/azhOct12Merged/ggZZ4e_0_eemt.root
+/data/truggles/azhOct12Merged/ggZZ4e_1_eemt.root
+/data/truggles/azhOct12Merged/ggZZ4e_2_eemt.root

@@ -1,0 +1,2 @@
+/data/truggles/azhOct12Merged/dataEE-E_0_eemm.root
+/data/truggles/azhOct12Merged/dataEE-E_1_eemm.root

@@ -1,0 +1,5 @@
+/data/truggles/azhOct12Merged/dataMM-E_0_emmm.root
+/data/truggles/azhOct12Merged/dataMM-E_1_emmm.root
+/data/truggles/azhOct12Merged/dataMM-E_2_emmm.root
+/data/truggles/azhOct12Merged/dataMM-E_3_emmm.root
+/data/truggles/azhOct12Merged/dataMM-E_4_emmm.root

@@ -1,0 +1,4 @@
+/data/truggles/azhOct12Merged/DYJets3_0_emmm.root
+/data/truggles/azhOct12Merged/DYJets3_1_emmm.root
+/data/truggles/azhOct12Merged/DYJets3_2_emmm.root
+/data/truggles/azhOct12Merged/DYJets3_3_emmm.root

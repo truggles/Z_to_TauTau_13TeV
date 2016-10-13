@@ -1,0 +1,14 @@
+/data/truggles/azhOct12Merged/ZZ4l_0_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_10_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_11_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_12_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_13_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_1_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_2_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_3_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_4_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_5_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_6_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_7_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_8_emmm.root
+/data/truggles/azhOct12Merged/ZZ4l_9_emmm.root

@@ -1,0 +1,8 @@
+/data/truggles/azhOct12Merged/ggZZ2m2tau_0_mmtt.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_1_mmtt.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_2_mmtt.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_3_mmtt.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_4_mmtt.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_5_mmtt.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_6_mmtt.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_7_mmtt.root

@@ -1,0 +1,3 @@
+/data/truggles/azhOct12Merged/ggZZ2m2tau_0_mmmm.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_1_mmmm.root
+/data/truggles/azhOct12Merged/ggZZ2m2tau_2_mmmm.root

@@ -1,0 +1,11 @@
+/data/truggles/azhOct12Merged/DYJets_0_eeee.root
+/data/truggles/azhOct12Merged/DYJets_10_eeee.root
+/data/truggles/azhOct12Merged/DYJets_1_eeee.root
+/data/truggles/azhOct12Merged/DYJets_2_eeee.root
+/data/truggles/azhOct12Merged/DYJets_3_eeee.root
+/data/truggles/azhOct12Merged/DYJets_4_eeee.root
+/data/truggles/azhOct12Merged/DYJets_5_eeee.root
+/data/truggles/azhOct12Merged/DYJets_6_eeee.root
+/data/truggles/azhOct12Merged/DYJets_7_eeee.root
+/data/truggles/azhOct12Merged/DYJets_8_eeee.root
+/data/truggles/azhOct12Merged/DYJets_9_eeee.root

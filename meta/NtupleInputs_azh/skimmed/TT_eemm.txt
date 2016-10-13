@@ -1,0 +1,13 @@
+/data/truggles/azhOct12Merged/TT_0_eemm.root
+/data/truggles/azhOct12Merged/TT_10_eemm.root
+/data/truggles/azhOct12Merged/TT_11_eemm.root
+/data/truggles/azhOct12Merged/TT_12_eemm.root
+/data/truggles/azhOct12Merged/TT_1_eemm.root
+/data/truggles/azhOct12Merged/TT_2_eemm.root
+/data/truggles/azhOct12Merged/TT_3_eemm.root
+/data/truggles/azhOct12Merged/TT_4_eemm.root
+/data/truggles/azhOct12Merged/TT_5_eemm.root
+/data/truggles/azhOct12Merged/TT_6_eemm.root
+/data/truggles/azhOct12Merged/TT_7_eemm.root
+/data/truggles/azhOct12Merged/TT_8_eemm.root
+/data/truggles/azhOct12Merged/TT_9_eemm.root

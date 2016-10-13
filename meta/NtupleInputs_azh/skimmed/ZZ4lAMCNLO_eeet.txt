@@ -1,0 +1,17 @@
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_0_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_10_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_11_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_12_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_13_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_14_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_15_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_16_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_1_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_2_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_3_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_4_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_5_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_6_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_7_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_8_eeet.root
+/data/truggles/azhOct12Merged/ZZ4lAMCNLO_9_eeet.root
