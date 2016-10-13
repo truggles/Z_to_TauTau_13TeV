@@ -44,8 +44,8 @@ for MASS in 120 125 130; do
     ls ${ALL}/ttHJetToTT_M${MASS}_13TeV_amcatnloFXFX_madspin_pythia8/*.root               > hdfs/ttHTauTau${MASS}.txt
     ls ${ALL}/WminusHToTauTau_M${MASS}_13TeV_powheg_pythia8/*.root                        > hdfs/WMinusHTauTau${MASS}.txt
     ls ${ALL}/WplusHToTauTau_M${MASS}_13TeV_powheg_pythia8/*.root                         > hdfs/WPlusHTauTau${MASS}.txt
-    ls ${ALL}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/*.root                        > hdfs/ggH${MASS}.txt
-    ls ${ALL}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/*.root                           > hdfs/qqH${MASS}.txt
+    ls ${ALL}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8/*.root                        > hdfs/ggHtoTauTau${MASS}.txt
+    ls ${ALL}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8/*.root                           > hdfs/VBFHtoTauTau${MASS}.txt
 done
 
 
