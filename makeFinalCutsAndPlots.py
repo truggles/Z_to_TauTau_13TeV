@@ -156,12 +156,12 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
 
     ''' For checking distributions '''
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet2D' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && njetingap20 < 1 && mjj>300)))*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && njetingap20 < 1 && mjj>500)))*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet2D' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(abs(jdeta) > 2.5 && njetingap20 < 1 && mjj>300)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(abs(jdeta) > 2.5 && njetingap20 < 1 && mjj>500)*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 

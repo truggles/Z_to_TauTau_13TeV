@@ -14,8 +14,8 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 # Make a 2D histo
 def get2DVars( cutName ) :
     if 'Higgs_Pt:m_sv' in cutName :
-        xBins = array( 'd', [0,100,170,2000] )
-        yBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,2000] )
     return (xBins, yBins)
 
 

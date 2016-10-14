@@ -221,19 +221,24 @@ def unroll2D( hist ) :
     nBinsX = hist.GetNbinsX()
     nBinsY = hist.GetNbinsY()
     nBins = nBinsX * nBinsY
+    #print "bin info: ",nBinsX, nBinsY, nBins
     hNew = ROOT.TH1D( hist.GetName(), hist.GetTitle(), nBins, 0, nBins )
     for i in range(1, nBinsY+1) :
         for j in range(1, nBinsX+1) :
-            hNew.SetBinContent( j+(i-1)*j, hist.GetBinContent( j, i ) )
-            hNew.SetBinError( j+(i-1)*j, hist.GetBinError( j, i ) )
+            #print "i %i j %i set bin %i" % (i, j, j+(i-1)*nBinsX)
+            #print "Bin content:",hist.GetBinContent( j, i )
+            hNew.SetBinContent( j+(i-1)*nBinsX, hist.GetBinContent( j, i ) )
+            hNew.SetBinError( j+(i-1)*nBinsX, hist.GetBinError( j, i ) )
     return hNew
 
 
 if __name__ == '__main__' :
     #print getQCDSF( 'httQCDYields_2Aug25x5pt45b.txt', '1Jet' )
-    #f = ROOT.TFile('htt2Oct11b2DRoll_OSl1ml2_Tight_ZTT1jet/DYJets1_tt.root','r')
-    #hist = f.Get('tt_Histos/m_sv:Higgs_Pt')
-    #unroll2D( hist )
+    #f = ROOT.TFile('meta/httBackgrounds/tt_qcdShape_2Oct11b2DRoll_OSl1ml2_Tight_LooseZTT1jet2D.root','r')
+    #f = ROOT.TFile('htt2Oct11b2DRoll_OSl1ml2_Tight_LooseZTT1jet2D/ggHtoTauTau125_tt.root','r')
+    #hist = f.Get('tt_Histos/Higgs_Pt:m_sv')
+    #h1 = unroll2D( hist )
+    #h1.SaveAs('ggh125.root')
     print "Hello"
 
 
