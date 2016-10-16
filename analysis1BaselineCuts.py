@@ -211,29 +211,27 @@ def doInitialCuts(analysis, samples, **fargs) :
         if sample in mergeMap.keys() and fargs[ 'skimmed' ] != 'true' :
             numFilesPerCycle = mergeMap[sample]
 
-        fileLenEM = 9999
-        fileLenTT = 9999
         sampF = ''
         if fargs['svFitPost'] == 'true' : sampF = 'sv/'
         if fargs['skimHdfs'] == 'true' : sampF = 'hdfs/'
         if fargs['skimmed'] == 'true' : sampF = 'skimmed/'
-        if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
-            fileLenEM = file_len( 'meta/NtupleInputs_%s/%s%s_em.txt' % (analysis, sampF, sample) )
-            fileLenTT = file_len( 'meta/NtupleInputs_%s/%s%s_tt.txt' % (analysis, sampF, sample) )
-            fileLen = max( fileLenEM, fileLenTT )
-        else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s%s.txt' % (analysis, sampF, sample) )
-        if fileLen == 0 : 
-            print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
-            continue
 
-        go = True
-        count = 0
-        while go :
-            for channel in channels :
+        for channel in channels :
 
-                # Check if we should skip running over data set
-                if skipChanDataCombo( channel, sample, analysis ) : continue
+            # Check if we should skip running over data set
+            if skipChanDataCombo( channel, sample, analysis ) : continue
+
+            if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
+                fileLen = file_len( 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel) )
+            else :
+                fileLen = file_len( 'meta/NtupleInputs_%s/%s%s.txt' % (analysis, sampF, sample) )
+            if fileLen == 0 : 
+                print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
+                continue
+
+            count = 0
+            go = True
+            while go :
 
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
@@ -271,11 +269,11 @@ def doInitialCuts(analysis, samples, **fargs) :
                                                                                     fargs['skimmed'])
 
                 num +=  1
+                count += 1
+                # Make sure we loop over large samples to get all files
+                if count * numFilesPerCycle >= fileLen : go = False
     
-            count += 1
             
-            # Make sure we loop over large samples to get all files
-            if count * numFilesPerCycle >= fileLen : go = False
     if fargs['debug'] == 'true' :
         print "#################################################################"
         print "###               Finished, summary below                     ###"
@@ -336,27 +334,26 @@ def doInitialOrder(analysis, samples, **fargs) :
         if sample in mergeMap.keys() :
             numFilesPerCycle = mergeMap[sample]
 
-        fileLenEM = 9999
-        fileLenTT = 9999
         sampF = ''
         if fargs['svFitPost'] == 'true' : sampF = 'sv/'
         if fargs['skimmed'] == 'true' : sampF = 'skimmed/'
-        if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
-            fileLenEM = file_len( 'meta/NtupleInputs_%s/%s%s_em.txt' % (analysis, sampF, sample) )
-            fileLenTT = file_len( 'meta/NtupleInputs_%s/%s%s_tt.txt' % (analysis, sampF, sample) )
-            fileLen = max( fileLenEM, fileLenTT )
-        else :
-            fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
-        if fileLen == 0 : 
-            print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
-            continue
-        go = True
-        count = 0
-        while go :
-            for channel in channels :
+
+        for channel in channels :
     
-                # Check if we should skip running over data set
-                if skipChanDataCombo( channel, sample, analysis ) : continue
+            # Check if we should skip running over data set
+            if skipChanDataCombo( channel, sample, analysis ) : continue
+
+            if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
+                fileLen = file_len( 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel) )
+            else :
+                fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
+            if fileLen == 0 : 
+                print "\n\nFile Length == 0 !!!!!! skipping sample %s \n\n" % sample
+                continue
+
+            count = 0
+            go = True
+            while go :
 
                 print " ====>  Adding %s_%s_%i_%s  <==== " % (analysis, sample, count, channel)
     
@@ -382,11 +379,9 @@ def doInitialOrder(analysis, samples, **fargs) :
                                                                                     fargs['cutMapper'],
                                                                                     numFilesPerCycle)
                 num +=  1
-    
-            count += 1
-            
-            # Make sure we loop over large samples to get all files
-            if count * numFilesPerCycle+1 > fileLen : go = False
+                count += 1
+                # Make sure we loop over large samples to get all files
+                if count * numFilesPerCycle+1 > fileLen : go = False
     
     
     if fargs['debug'] == 'true' :
