@@ -70,34 +70,22 @@ def getKeysOfClass( file_, dir_, class_ ) :
 # Merge some files for useful channel combinations
 def mergeChannels( analysis, folder, samples, channels, final ) :
     from analysisPlots import getHistoDict
-    # Check if we have data files in samples
-    # and remove them to correspond to the final state combo
-    hasData = False
-    toRemove = []
-    for sample in samples :
-        if 'data' in sample :
-            hasData = True
-            toRemove.append( sample )
-    if hasData == True :
-        for rmv in toRemove :
-            samples.remove( rmv )
-        if final == 'ZEE' : samples.append( 'dataEE' )
-        if final == 'ZMM' : samples.append( 'dataMM' )
-        if final == 'ZXX' : 
-            samples.append( 'dataEE' )
-            samples.append( 'dataMM' )
 
     # We only want to merge histos that correspond to all channels
     allChannelVarMap = getHistoDict( analysis, 'xxxx' )
-    print allChannelVarMap
+    #print allChannelVarMap
 
+    # Check if we have data files in samples
+    # and remove them to correspond to the final state combo
     for sample in samples :
+        if final == 'ZEE' and 'dataMM' in sample : continue
+        if final == 'ZMM' and 'dataEE' in sample : continue
 
         if final == 'ZEE' : getChan = 'eeet' 
         if final == 'ZMM' : getChan = 'emmt' 
         if final == 'ZXX' : 
             getChan = 'eeet' 
-            if sample == 'dataMM' :
+            if 'dataMM' in sample :
                 getChan = 'emmt' 
 
         # Make new file to hold combined histos
@@ -110,13 +98,12 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
         print final
         print channels
         print ifile
-        histKeys = getKeysOfClass( ifile, getChan+'_Histos', 'TH1F' )
+        histKeys = getKeysOfClass( ifile, getChan+'_Histos', 'TH1D' )
         #print histKeys
 
         # Make a map of our hists to add
         hists = {}
         for h in histKeys :
-            #print h.GetName()
             if h.GetName() not in allChannelVarMap.keys() :
                 print "Not in all chan var map ",h.GetName()
                 histKeys.remove( h )
@@ -130,23 +117,26 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
             if channel == getChan : 
                 print "Included as initial file"
                 continue
-            if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and sample == 'dataMM' :
+            if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and 'dataMM' in sample :
                 continue
-            if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm'] and sample == 'dataEE' :
+            if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm'] and 'dataEE' in sample :
                 continue
             print channel," considered"
 
             f = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folder, sample, channel), 'r' )
-            print f
             d = f.Get( channel+'_Histos' )
-            for h in histKeys :
+            for h in hists.keys() :
                 #print h
-                htmp = d.Get( h.GetName() )
-                hists[h.GetName()] += htmp
+                htmp = d.Get( h )
+                if h not in allChannelVarMap.keys() :
+                    #print "Not in all chan var map ",h.GetName()
+                    print "Not in all chan var map ",h
+                    continue
+                hists[h] += htmp
         # Write final output
-        for h in histKeys :
+        for h in hists.keys() :
             outDir.cd()
-            hists[h.GetName()].Write()
+            hists[h].Write()
         
             
 ## Merge files from a file list into a new directory
