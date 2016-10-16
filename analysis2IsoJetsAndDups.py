@@ -139,11 +139,12 @@ def mVisTES( cand1, cand2, row, TES ) :
 def getMTTotal( pt1, phi1, pt2, phi2, row, channel, esUP=True ) :
     if channel == 'tt' :
         es = 0.03
-    if channel == 'em' :
+    elif channel == 'em' :
         if abs( row.eEta ) < 1.479 : # BarrelEndcap transition at eta = 1.479
             es = 0.01
         else :
             es = 0.025
+    else : es = 0.0
 
     shift = 1.
     if esUP : shift += es

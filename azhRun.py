@@ -25,16 +25,20 @@ print "zHome: ",zHome
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
+### General samples.json file from /data/truggles files
 #makeMetaJSON( analysis, 'eeet' )
+### samples.json for post /hdfs skim -> uwlogin samples
+#makeMetaJSON( analysis, 'eeet', skimmed=True )
 os.chdir('..')
 
 
 ''' Preset samples '''
 azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',]
+azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',] # No WWW, data-E,F, ZZ4l MadGraph
 
 for mass in [120, 125, 130] :
-    azhSamples.append('ggHtoTauTau%i' % mass)
-    azhSamples.append('VBFHtoTauTau%i' % mass)
+    #azhSamples.append('ggHtoTauTau%i' % mass)
+    #azhSamples.append('VBFHtoTauTau%i' % mass)
     azhSamples.append('WMinusHTauTau%i' % mass)
     azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHTauTau%i' % mass)
@@ -63,22 +67,22 @@ params = {
     'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
     #'channels' : ['eeet','eett','eemt','eeem'],
     #'channels' : ['eeee','mmmm','eemm'],
-    #'channels' : ['eeee',],
+    #'channels' : ['eett',],
     #'channels' : ['eemt','emmt'],
-    'cutMapper' : 'Skim',
+    #'cutMapper' : 'Skim',
     #'cutMapper' : 'HSS',
-    'mid1' : '1Oct12',
-    'mid2' : '2Oct12',
-    'mid3' : '3Oct12',
+    'cutMapper' : 'goodZ',
+    'mid1' : '1Oct12bHOS',
+    'mid2' : '2Oct12bHOS',
+    'mid3' : '3Oct12bHOS',
     'additionalCut' : '',
-    #'svFitPost' : 'true',
     'svFitPost' : 'false',
-    #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimmed' : 'false',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true',
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -89,14 +93,15 @@ samples = returnSampleDetails( analysis, samples )
 
 
 analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
-runPlots = False
-#skipMerge = False
-skipMerge = True
+#runPlots = False
+skipMerge = False
+#skipMerge = True
 if runPlots :
+    from util.helpers import checkDir
     print params
     ''' Draw histos from TTrees '''
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
@@ -118,23 +123,29 @@ if runPlots :
             if ZXX == True :
                 merge.append( 'ZXX' )
         if useMerge :
+            
             if 'ZEE' in merge :
-                mergeChannels( analysis, params['mid3'], samples.keys(), ['eeet','eett','eemt','eeem'], 'ZEE' )
+                mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem'], 'ZEE' )
             if 'ZMM' in merge :
-                mergeChannels( analysis, params['mid3'], samples.keys(), ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
+                mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
             if 'ZXX' in merge :
-                mergeChannels( analysis, params['mid3'], samples.keys(), ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
+                mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
             for m in merge :
                 params['channels'].append( m )
+    #params['channels'] = ['ZEE',]
 
     #text=False
     text=True
-    kwargs = { 'text':text, }
-    #kwargs = { 'text':text, 'blind':False }
+    #kwargs = { 'text':text, }
+    kwargs = { 'text':text, 'blind':False }
     print params
 
-    ''' Make the final plots '''
+    ''' Make the final plots
+        and copy to viewing area '''
     analysis3Plots.makeLotsOfPlots( analysis, samples, params['channels'], params['mid3'], **kwargs  )
+    cpDir = "/afs/cern.ch/user/t/truggles/www/AZH_%s" % params['mid2'].strip('2')
+    checkDir( cpDir )
+    subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/azhPlots/", cpDir] )
     
     
     
