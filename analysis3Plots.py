@@ -268,6 +268,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     sampHistos[samp].SetLineColor( ROOT.kBlack )
                     sampHistos[samp].SetLineWidth( 2 )
                     sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
+                    sampHistos[samp].SetDirectory( 0 )
                 sampHistos[ signal ].SetLineColor( ROOT.kPink )
                 sampHistos[ signal ].SetLineWidth( 4 )
                 sampHistos[ signal ].SetLineStyle( 7 )
@@ -283,6 +284,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     sampHistos[samp] = ROOT.TH2D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')),
                             samp, len(twoDVars[0])-1, twoDVars[0], len(twoDVars[1])-1, twoDVars[1] )
                     sampHistos[samp].Sumw2()
+                    sampHistos[samp].SetDirectory( 0 )
                 
     
             for sample in samples.keys() :
@@ -298,10 +300,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     getVar = '_'.join(breakUp)
     
                 # Remember data samples are called 'dataEE' and 'dataMM'
-                if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and sample == 'dataMM' : continue
-                if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm'] and sample == 'dataEE' : continue
-                if channel in ['ZEE',] and sample == 'dataMM' : continue
-                if channel in ['ZMM',] and sample == 'dataEE' : continue
+                if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm', 'ZEE'] and 'dataMM' in sample : continue
+                if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm', 'ZMM'] and 'dataEE' in sample : continue
             
                 if channel == 'tt' and sample == 'dataEM' : continue
                 if channel == 'tt' and '-ZLL' in sample : continue
@@ -318,7 +318,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     #print "qcd in sample",sample
                     if ops['useQCDMakeName'] != 'x'  :
                         fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
-                        print fName 
+                        #print fName 
                         tFile = ROOT.TFile(fName, 'READ')
                     elif ops['qcdMC'] :
                         print "Got QCD MC file", sample
@@ -338,11 +338,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
                 # Require var to be in file or print note and skip
                 keys = dic.GetListOfKeys()
-                inVars = []
-                for key in keys :
-                    inVars.append( key.GetName() )
+                inVars = [key.GetName() for key in keys]
+                #    inVars.append( key.GetName() )
                 if getVar not in inVars :
-                    print "\n\n"+getVar+" not in your root files!  Skipping...\n\n"
+                    print "\n"+getVar+" not in your root files!  Skipping...\n"
                     continue
 
                 preHist = dic.Get( getVar )
@@ -379,9 +378,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             ''' Change bin yield to make this make sense with variable binning
                 this is only for viewing, the DC process is seperate '''
-            #for samp in sampHistos.keys() :
-            #    if var == 'm_vis' :
-            #        print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
+            for samp in sampHistos.keys() :
+                if var == 'm_vis' :
+                    print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
             #    # With Variable binning, need to set bin content appropriately
             #    if not varBinned : continue
             #    if samp == "qcd" : continue
@@ -446,22 +445,23 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             Calculate rough bin-by-bin uncertainties
             """
             uncertNormMap = { 'htt' : {
-            'qcd' : .20,
-            'top' : .15,
-            'dib' : .10,
-            'wjets' : .10,
-            'ztt' : .05,
-            'zl' : .30,
-            'zj' : .30,
-            'higgs' : .0,
-            'obs' : .0,},
+                'qcd' : .20,
+                'top' : .15,
+                'dib' : .10,
+                'wjets' : .10,
+                'ztt' : .05,
+                'zl' : .30,
+                'zj' : .30,
+                'higgs' : .0,
+                'obs' : .0,},
             'azh' : {
-            'top' : .15,
-            'dyj' : .10,
-            'wz' : .15,
-            'zz' : .25,
-            'azh' : .0,
-            'obs' : .0,}
+                'top' : .15,
+                'dyj' : .10,
+                'wz' : .15,
+                'zz' : .25,
+                'azh' : .0,
+                'sm' : .0,
+                'obs' : .0,}
             }
             binErrors = []
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
