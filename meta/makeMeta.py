@@ -14,7 +14,7 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
     currentDASSamples = {
         'Sync' : ['Sync-SUSY160','Sync-VBF125'],
         'htt' : ['DYJetsAMCNLO', 'DYJets', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
-        'azh' : ['dataEE', 'dataMM', 'ZZ4l', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4m', 'ggZZ4tau', 'WMinusHTauTau', 'WPlusHTauTau', 'ZHTauTau', 'ttHTauTau'],
+        'azh' : ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'ZZ4l', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4m', 'ggZZ4tau', 'WWW'],
     }
 
     # A to Zh sample masses
@@ -44,24 +44,30 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
             continue
         print infoDAS
     
+        # Because of using a single channel skim to find all our events
+        # and some data sets don't do other channels well, we have 
+        # to be able to override the channel
+        chanToUse = channel
+        if 'dataMM' in k : chanToUse = 'mmmt'
+
         # Get the Ntuple info that FSA created
         eventCount = 0
         summedWeights = 0
         summedWeightsNorm = 0
         if skimmed :
-            fileName = 'NtupleInputs_%s/skimmed/%s_%s.txt' % (analysis, k, channel)
+            fileName = 'NtupleInputs_%s/skimmed/%s_%s.txt' % (analysis, k, chanToUse)
         else :
             fileName = 'NtupleInputs_%s/%s.txt' % (analysis, k)
         inFiles = open( fileName, 'r')
         numFiles = getNumberOfFiles( fileName )
         try :
             for fileName in inFiles :
-                eventCount += getEventCount( fileName.strip(), channel )
-                w = getSummedWeights( fileName.strip(), channel )
+                eventCount += getEventCount( fileName.strip(), chanToUse )
+                w = getSummedWeights( fileName.strip(), chanToUse )
                 summedWeights += w[0]
                 summedWeightsNorm += w[1]
         except AttributeError :
-            print "\nAttributeError, maybe channel is wrong: %s\n" % channel
+            print "\nAttributeError, maybe channel is wrong: %s\n" % chanToUse
             continue
             inFiles.close()
         inFiles.close()

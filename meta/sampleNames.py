@@ -165,7 +165,7 @@ def sampleDetails( analysis ) :
                 'xsec' : 999.,
                 'group' : 'obs'},
             'ZZ4l' : {
-                'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 1.256 * 1.1, # See 1.1 k-factor in Devin's HIG-16-036
                 'group' : 'zz'},
             'ZZ4lAMCNLO' : {
