@@ -173,7 +173,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             'm_sv' : 'svFitMass',
             'mt_sv' : 'svFitMt',
             'mt_tot' : 'mtTot',
-            'Higgs_Pt:m_sv' : 'svFitMass2D',}
+            'Higgs_Pt:m_sv' : 'svFitMass2D',
+            'mjj:m_sv' : 'svFitMass2D',
+            }
         append = '_'+appendMap[baseVar]
     
         if ops['mssm'] :
