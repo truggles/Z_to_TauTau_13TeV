@@ -476,14 +476,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     # A few branches are ints instead of floats and must be treated specially
     # I think these are all the ones in FSA ntuples, but add more if you find them
     #intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake'])
-    intBranches = set(['run', 'evt', 'lumi', 'isdata',])
+    #intBranches = set(['run', 'evt', 'lumi', 'isdata',])
+    intBranches = set(['run', 'lumi', 'isdata',])
+    ulongBranches = set(['evt',])
     
     ##############################################################################
     # Shouldn't need to modify anything below here                               #
     ##############################################################################
     
     from rootpy.io import root_open
-    from rootpy.tree import Tree, TreeModel, FloatCol, IntCol
+    from rootpy.tree import Tree, TreeModel, FloatCol, IntCol, ULongCol
     # don't give silly warning
     import logging
     from rootpy import log as rlog; rlog = rlog['/renameBranches']
@@ -500,10 +502,18 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     newBranches = {}
     for old in told.branchnames:
         name = branchMapping[old] if old in branchMapping else old
-        branchType = IntCol() if old in intBranches else FloatCol()
+
+        #branchType = IntCol() if old in intBranches else FloatCol()
+        if old in intBranches : branchType = IntCol()
+        elif old in ulongBranches : branchType = ULongCol()
+        else : branchType = FloatCol()
+
         if old in branchMapping.keys() :
             name = branchMapping[old]
-            branchType = IntCol() if old in intBranches else FloatCol()
+            #branchType = IntCol() if old in intBranches else FloatCol()
+            if old in intBranches : branchType = IntCol()
+            elif old in ulongBranches : branchType = ULongCol()
+            else : branchType = FloatCol()
             newBranches[name] = branchType
     
         newBranches[name] = branchType
