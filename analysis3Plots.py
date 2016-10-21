@@ -180,6 +180,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # This is to speed up the Data Card making process by 2x and not
             # create all the plots for SS when all we need it the yield from eta_1
             if ops['isSSQCD'] and not var == 'eta_1' : continue
+
+            # speed up 2D plotting
+            if '2jet2D' in ops['qcdMakeDM'] :
+                if 'Higgs_Pt:m_sv' in var : continue
+            if '1jet2D' in ops['qcdMakeDM'] :
+                if 'mjj:m_sv' in var : continue
+            if '0jet' in ops['qcdMakeDM'] :
+                if ':' in var : continue
+
             #if 'mt_sv' in var : continue
             print "Var:",var
     
