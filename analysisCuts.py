@@ -57,6 +57,7 @@ ttSS    = 't1_t2_SS == 1'
 ttIso   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoTight   = 't1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoLooseMVA   = 't1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
+ttIsoVLooseMVA   = 't1ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoFakeFactor   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttDisc  = 't1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
@@ -141,6 +142,7 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
             'syncCutsDCqcdTES' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA, ttBadRun],
             'syncCutsDCqcdTES5040' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA, ttBadRun],
+            'syncCutsDCqcdTES5040VL' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVLooseMVA, ttBadRun],
             'syncCutsDCqcdTESNoIso' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
             # Selection which only does baseline for sync sample
             'syncCutsMSSMNtuple' : [ttKin40, ttCharge, ttDR, ttVtx, tt35, DecayMode, ttBadRun],

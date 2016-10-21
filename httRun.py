@@ -66,14 +66,21 @@ params = {
     #'cutMapper' : 'fakeFactorCutsTT',
     #'cutMapper' : 'syncCutsDCqcdTES',
     'cutMapper' : 'syncCutsDCqcdTES5040',
-    #'mid1' : '1Oct10aICHEPNJetsGtrEq2',
-    #'mid2' : '2Oct10aICHEPNJetsGtrEq2',
-    #'mid3' : '3Oct10aICHEPNJetsGtrEq2',
-    'mid1' : '1Oct11aICHEPNJetsGtrEq2',
-    'mid2' : '2Oct11b2DRoll',
-    'mid3' : '3Oct11b2DRoll',
+    #'cutMapper' : 'syncCutsDCqcdTES5040VL',
+#    'mid1' : '1Oct11aICHEPNJetsGtrEq2',
+#    'mid2' : '2Oct11aICHEPNJetsGtrEq2',
+#    'mid3' : '3Oct11aICHEPNJetsGtrEq2',
+#XXX    'mid1' : '1Oct11aICHEPNJetsGtrEq2',
+#XXX    'mid2' : '2Oct11b2DRoll',
+#XXX    'mid3' : '3Oct11b2DRoll',
     #'mid2' : '2Oct11aQCDShapeMed',
     #'mid3' : '3Oct11aQCDShapeMed',
+#    'mid1' : '1Oct17QCDCheck',
+#    'mid2' : '2Oct17QCDCheck',
+#    'mid3' : '3Oct17QCDCheck',
+    'mid1' : '1Oct21htt',
+    'mid2' : '2Oct21htt',
+    'mid3' : '3Oct21htt',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -103,11 +110,11 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
-makeQCDBkg = False
+#makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+#makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
@@ -119,16 +126,21 @@ cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
 cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet',]
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
-cats = ['1jet2D','2jet2D']
+#cats = ['1jet2D','2jet2D',]
+#cats = ['1jet2D',]
 pt = '5040'
 lIso = 'Medium'
 lIso = 'Loose'
 #sync = True
 sync = False
-cleanPlots = False
-#cleanPlots = True
+#cleanPlots = False
+cleanPlots = True
+#isoVals = ['Tight', 'Medium', 'Loose',]
 
 for isoVal in isoVals :
+    #if isoVal == 'Tight' : lIso = 'Medium'
+    #if isoVal == 'Medium' : lIso = 'Loose'
+    #if isoVal == 'Loose' : lIso = 'VLoose'
     samplesX = copy.deepcopy(samples)
     if runPlots :
         skipSSQCDDetails=True
@@ -192,10 +204,13 @@ for isoVal in isoVals :
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
         #for var in ['m_vis', 'm_sv', 'mt_sv', 'mt_tot', 'm_coll',] :
-        #for var in ['m_sv',] :
-        for var in ['Higgs_Pt:m_sv',] :
+        for var in ['m_sv',] :
+        #for var in ['Higgs_Pt:m_sv',] :
+        #for var in ['mjj:m_sv',] :
         #for var in ['m_vis','m_sv'] :
             for cat in cats :
+                if cat == '1jet2D' : var = 'Higgs_Pt:m_sv'
+                if cat == '2jet2D' : var = 'mjj:m_sv'
                 qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                 finalCat = cat
                 folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
@@ -210,6 +225,7 @@ for isoVal in isoVals :
                 }
                 makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
         subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
     
     ''' Remove the .pngs used to build the QCD Bkg

@@ -15,7 +15,10 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 def get2DVars( cutName ) :
     if 'Higgs_Pt:m_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,100,170,2000] )
+        yBins = array( 'd', [0,100,170,300,5000] )
+    if 'mjj:m_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,300,500,800,5000] )
     return (xBins, yBins)
 
 
@@ -255,7 +258,8 @@ def getHistoDict( analysis, channel ) :
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'Higgs_Pt:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#XXX            'Higgs_Pt:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#XXX            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
 #            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -268,7 +272,8 @@ def getHistoDict( analysis, channel ) :
         ''' added shape systematics '''
         toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot', 'Higgs_Pt:m_sv']
         #toAdd = ['m_vis', 'm_sv', 'mt_sv',]
-        toAdd = ['mt_sv', 'mt_tot', 'Higgs_Pt:m_sv'] # No extra shapes
+        toAdd = ['mt_sv', 'mt_tot', 'Higgs_Pt:m_sv', 'mjj:m_sv', 'm_sv'] # No extra shapes
+        #toAdd = ['m_sv', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
             varsForShapeSyst.append( item )
@@ -311,7 +316,7 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-                'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
+###                'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
 #                'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
                 'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
 #                'iso_1' : (100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
@@ -319,7 +324,7 @@ def getHistoDict( analysis, channel ) :
 #                'chargedIsoPtSum_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'),
 #                'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
 #                'chargedIsoPtSumdR03_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'),
-                'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
+###                'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
 #                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
 #                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
 #                'iso_2' : (100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
@@ -371,9 +376,9 @@ def getHistoDict( analysis, channel ) :
             #'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
             #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
             'npv' : (40, 0, 40, 4, 'Number of Vertices', ''),
-            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
+#            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
             'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
-            'azhWeight' : (50, 0, 2, 1, 'Muon + Electron Weights', ''),
+#            'azhWeight' : (50, 0, 2, 1, 'Muon + Electron Weights', ''),
             'muVetoZTTp001dxyz' : (6, -1, 5, 1, 'muVetoZTTp001dxyz', ''),
             'eVetoZTTp001dxyz' : (6, -1, 5, 1, 'eVetoZTTp001dxyz', ''),
             'muVetoZTTp001dxyzR0' : (6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''),
