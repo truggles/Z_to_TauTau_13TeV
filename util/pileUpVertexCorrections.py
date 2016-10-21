@@ -96,11 +96,13 @@ def makeMCPUTemplate( ) :
 
 def PUreweight() :
     # https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2015#PU_reweighting
-    datafile = ROOT.TFile('data/PileUpInfo/DataTemplate.root', 'READ')
+    #datafile = ROOT.TFile('data/PileUpInfo/DataTemplate.root', 'READ')
+    datafile = ROOT.TFile('data/PileUpInfo/Data_Pileup_2016_July22.root', 'READ') # Agreed upon for Nov Freeze HTT
     dHist = datafile.Get('pileup')
     dHist.Scale( 1 / dHist.Integral() )
 
-    samplefile = ROOT.TFile('data/PileUpInfo/MCTemplate.root', 'READ')
+    #samplefile = ROOT.TFile('data/PileUpInfo/MCTemplate.root', 'READ')
+    samplefile = ROOT.TFile('data/PileUpInfo/MC_Spring16_PU25ns_V1.root', 'READ') # Agreed upon for Nov Freeze HTT
     sHist = samplefile.Get('pileup')
     sHist.Scale( 1 / sHist.Integral() )
 
