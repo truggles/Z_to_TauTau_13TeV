@@ -176,7 +176,10 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             'Higgs_Pt:m_sv' : 'svFitMass2D',
             'mjj:m_sv' : 'svFitMass2D',
             }
-        append = '_'+appendMap[baseVar]
+        if 'Unroll' in ops['useQCDMakeName'] : 
+            append = '_svFitMass2D'
+        else :
+            append = '_'+appendMap[baseVar]
     
         if ops['mssm'] :
         #    if not var == baseVar+'_mssm' : continue
@@ -190,6 +193,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
         for var in newVarMap.keys() :
     
             if not baseVar in var : continue
+            if ops['fitShape'] == 'm_sv' and ':' in var : continue # Get rid of the 2D shapes in 0jet
             if ops['allShapes'] :
                 print "\nAll Shapes Applied\n"
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
@@ -238,7 +242,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             elif ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
             else :
-                if ":" in var : binArray = array( 'd', [i for i in range( 37 )] )
+                if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 elif ops['category'] in ['1jet_low', '1jet_high'] :
                     binArray = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
                 elif 'vbf' in ops['category'] :
@@ -368,6 +372,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
     
+                    if '_zPt' in var and name not in ['_ZTT_','_ZL_','_ZJ_','_ZLL_',] : continue
                     if '_topPt' in var :
                         if name == '_TT_' :
                             if '_topPtUp' in var :
