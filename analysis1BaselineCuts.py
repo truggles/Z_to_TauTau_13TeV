@@ -19,7 +19,7 @@ def getMergeMap( analysis ) :
         'Sync' : {'x' : 999},
         'htt' : {'x' : 999},
         'azh' : {
-	    #'x' : 999,
+	        #'x' : 999,
             'dataEE-B' : 10,
             'dataEE-C' : 10,
             'dataEE-D' : 10,
@@ -331,7 +331,7 @@ def doInitialOrder(analysis, samples, **fargs) :
     for sample in samples :
     
         numFilesPerCycle = fargs['numFilesPerCycle']
-        if sample in mergeMap.keys() :
+        if sample in mergeMap.keys() and fargs[ 'skimmed' ] != 'true' :
             numFilesPerCycle = mergeMap[sample]
 
         sampF = ''
@@ -453,7 +453,7 @@ def drawHistos(analysis, samples, **fargs ) :
     for sample in samples :
     
         numFilesPerCycle = fargs['numFilesPerCycle']
-        if sample in mergeMap.keys() :
+        if sample in mergeMap.keys() and fargs[ 'skimmed' ] != 'true' :
             numFilesPerCycle = mergeMap[sample]
 
         # the gen matching samples are: based off of the DYJets samples
