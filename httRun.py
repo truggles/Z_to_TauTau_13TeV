@@ -117,8 +117,7 @@ makeDataCards = True
 #isoVals = ['VTight', 'Tight', 'Medium',]
 isoVals = ['VTight',]
 
-cats = ['inclusive', '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', 'vbf', '1bjet', '2bjet']
-#cats = ['inclusive', '0jet',]# '1jet_low', '1jet_medium', '1jet_high', 'vbf', '1bjet', '2bjet']
+cats = ['inclusive', '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', '2jet_vbf', '1bjet', '2bjet']
 #cats = ['1jet',]
 pt = '4040'
 #sync = True

@@ -230,7 +230,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             is1JetCat = False
             is0JetCat = False
             looseBinningGroup = ['1jet_low', '1jet_medium', '1jet_high', '2jet']
-            tightBinningGroup = ['vbf', '1bjet', '2bjet']
+            tightBinningGroup = ['2jet_vbf', '1bjet', '2bjet']
             if 'm_sv' in var or 'm_vis' in var :
                 if ops['category'] in looseBinningGroup :
                     is1JetCat = True

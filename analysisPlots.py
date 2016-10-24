@@ -102,7 +102,7 @@ def getFFCutsAndWeights( sample, outFile ) :
         elif 'ZTT1jet_high' in fName : return qcdIsolation
         elif 'ZTT1jet' in fName      : return qcdIsolation
         elif 'ZTT2jet' in fName      : return qcdIsolation
-        elif 'ZTTvbf' in fName       : return qcdIsolation
+        elif 'ZTT2jet_vbf' in fName       : return qcdIsolation
         elif 'ZTT1bjet' in fName     : return qcdIsolation
         elif 'ZTT2bjet' in fName     : return qcdIsolation
         else                         : return qcdIsolation
@@ -130,7 +130,7 @@ def getFFShapeSystApp( sample, outFile, var ) :
         elif 'ZTT1jet_high' in fName : app = "FFWeightQCD1JetHigh"
         elif 'ZTT1jet' in fName      : app = "FFWeightQCD1Jet"
         elif 'ZTT2jet' in fName      : app = "FFWeightQCD2Jet"
-        elif 'ZTTvbf' in fName       : app = "FFWeightQCDVBF"
+        elif 'ZTT2jet_vbf' in fName  : app = "FFWeightQCDVBF"
         elif 'ZTT1bjet' in fName     : app = "FFWeightQCDBTagged"
         elif 'ZTT2bjet' in fName     : app = "FFWeightQCDBTagged"
         else                         : app = "FFWeightQCDInc"

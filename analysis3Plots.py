@@ -196,7 +196,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             qcdMakeCode = ops['qcdMakeDM'].split('ZTT')[-1]
             dirCode = ops['targetDir'].strip('/')
             looseBinningGroup = ['1jet_low', '1jet_medium', '1jet_high', '2jet']
-            tightBinningGroup = ['vbf', '1bjet', '2bjet']
+            tightBinningGroup = ['2jet_vbf', '1bjet', '2bjet']
             if 'm_sv' in var or 'm_vis' in var :
                 if qcdMakeCode in looseBinningGroup or dirCode in looseBinningGroup :
                     is1JetCat = True

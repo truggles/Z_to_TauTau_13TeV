@@ -63,7 +63,7 @@ def drawCMSString( title ) :
 
 
 
-cats = ['inclusive', '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', 'vbf', '1bjet', '2bjet']
+cats = ['inclusive', '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', '2jet_vbf', '1bjet', '2bjet']
 folder = '2Oct05oldMthd'
 for cat in cats :
     qcdSF = getQCDSF( 'httQCDYields_4040VTight_%s.txt' % folder, cat )
@@ -129,7 +129,7 @@ for cat in cats :
             #    
             #    if cat in ['2jet', '1jet_low', '1jet_medium', '1jet_high'] :
             #        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-            #    elif cat in ['vbf', '1bjet', '2bjet'] :
+            #    elif cat in ['2jet_vbf', '1bjet', '2bjet'] :
             #        xBins = array( 'd', [0,40,60,80,100,120,150,200,250] )
             #    else :
             #        xBins = array( 'd', [i*10 for i in range( 31 )] )
