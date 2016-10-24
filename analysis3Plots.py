@@ -235,7 +235,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     xBins.append( i * 17.5 )
             elif 'm_sv' in var or 'm_vis' in var :
                 if is1JetCat :
-                    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+                    if 'm_sv' in var :
+                        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+                    else :
+                        xBins = array( 'd', [0,40,50,60,70,80,90,100,110,120,130,150,200,250] )
                 elif isVBFCat :
                     xBins = array( 'd', [0,40,60,80,100,120,150,200,250] )
                 else :

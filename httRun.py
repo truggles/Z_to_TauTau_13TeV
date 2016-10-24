@@ -74,9 +74,9 @@ params = {
     #'mid1' : '1Sept30bFF', # No Coin
     #'mid2' : '2Sept30bFF',
     #'mid3' : '3Sept30bFF',
-    'mid1' : '1Oct03aFF',
-    'mid2' : '2Oct03bFFshapeSyst',
-    'mid3' : '3Oct03bFFshapeSyst',
+    'mid1' : '1Oct05oldMthd',
+    'mid2' : '2Oct05oldMthd',
+    'mid3' : '3Oct05oldMthd',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -94,8 +94,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -105,11 +105,11 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
-makeQCDBkg = False
+#makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+#makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
@@ -190,8 +190,8 @@ for isoVal in isoVals :
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
-        for var in ['m_sv',] :
-        #for var in ['m_vis','m_sv'] :
+        #for var in ['m_sv',] :
+        for var in ['m_vis','m_sv'] :
             for cat in cats :
                 finalCat = cat
                 if doFF == 'True' :
@@ -215,7 +215,7 @@ for isoVal in isoVals :
                     }
                 makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
         subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''

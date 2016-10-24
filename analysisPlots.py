@@ -299,8 +299,8 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
-            'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
-            'Z_Pt' : (100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'),
+            'mjj' : (40, 0, 800, 1, 'M_{jj} [GeV]', ' GeV'),
+            'Z_Pt' : (100, 0, 200, 5, 'Z p_{T} [GeV]', ' GeV'),
 #            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
 #            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
             'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
@@ -312,7 +312,7 @@ def getHistoDict( analysis, channel ) :
 #            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
 #            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
 #            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
-            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+            'mvamet' : (100, 0, 100, 2, 'mvaMetEt [GeV]', ' GeV'),
 #            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
 #            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
             'bjetCISVVeto20MediumZTT' : (60, 0, 6, 5, 'nBJets20Medium', ''),

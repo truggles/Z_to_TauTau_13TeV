@@ -223,6 +223,22 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             print "\nVar: ",var
     
             #print "MSSM btag option:",ops['btag']
+            """
+            Handle variable binning and longer ranges for visible mass
+            """
+            isVBFCat = False
+            is1JetCat = False
+            is0JetCat = False
+            looseBinningGroup = ['1jet_low', '1jet_medium', '1jet_high', '2jet']
+            tightBinningGroup = ['vbf', '1bjet', '2bjet']
+            if 'm_sv' in var or 'm_vis' in var :
+                if ops['category'] in looseBinningGroup :
+                    is1JetCat = True
+                if ops['category'] in tightBinningGroup :
+                    isVBFCat = True
+                if not (isVBFCat or is1JetCat) : is0JetCat = True
+
+
             binArray = array( 'd', [] )
             if ops['mssm'] :
                 print "MSSM btag option:",ops['btag']
@@ -248,9 +264,12 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             elif ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
             else :
-                if ops['category'] in ['1jet_low', '1jet_high'] :
-                    binArray = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-                elif 'vbf' in ops['category'] :
+                if is1JetCat :
+                    if ops['fitShape'] == 'm_sv' :
+                        binArray = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+                    else :
+                        binArray = array( 'd', [0,40,50,60,70,80,90,100,110,120,130,150,200,250] )
+                elif isVBFCat :
                     binArray = array( 'd', [0,40,60,80,100,120,150,200,250] )
                 else :
                     binArray = array( 'd', [i*10 for i in range( 31 )] )
@@ -417,31 +436,31 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeVDown' )
                     ### For these Fake Factor shapes, we need 2 copies with slightly different names
                     elif '_ffSystUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVUp' )
-                        systUp = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVUp' )
-                        systUp.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVUp' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVUp' )
+                        systUp = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVUp' )
+                        systUp.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVUp' )
                         systUp.Write()
                         del systUp
                     elif '_ffSystDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_13TeVDown' )
-                        systDown = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVDown' )
-                        systDown.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_syst_tautau_'+ops['category']+'_13TeVDown' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVDown' )
+                        systDown = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVDown' )
+                        systDown.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVDown' )
                         systDown.Write()
                         del systDown
                     elif '_ffStatUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVUp' )
-                        statUp = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVUp' )
-                        statUp.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVUp' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVUp' )
+                        statUp = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVUp' )
+                        statUp.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVUp' )
                         statUp.Write()
                         del statUp
                     elif '_ffStatDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_13TeVDown' )
-                        statDown = histos[ name ].Clone( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVDown' )
-                        statDown.SetTitle( name.strip('_')+'_CMS_htt_ff_qcd_stat_tautau_'+ops['category']+'_13TeVDown' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVDown' )
+                        statDown = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVDown' )
+                        statDown.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVDown' )
                         statDown.Write()
                         del statDown
                     histos[ name ].Write()
