@@ -1,1 +1,5 @@
-/data/truggles/2016-ZTT-April11Merged/WZJets_0_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZJets_0_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZJets_1_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZJets_2_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZJets_3_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZJets_4_tt.root

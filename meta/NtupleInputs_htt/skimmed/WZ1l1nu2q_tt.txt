@@ -1,1 +1,1 @@
-/data/truggles/2016-ZTT-April11Merged/WZ1l1nu2q_0_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ1l1nu2q_0_tt.root

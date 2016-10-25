@@ -1,2 +1,6 @@
-/data/truggles/2016-ZTT-April11Merged/DYJetsHigh_0_tt.root
-/data/truggles/2016-ZTT-April11Merged/DYJetsHigh_1_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/DYJetsHigh_0_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/DYJetsHigh_1_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/DYJetsHigh_2_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/DYJetsHigh_3_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/DYJetsHigh_4_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/DYJetsHigh_5_tt.root

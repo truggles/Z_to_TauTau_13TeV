@@ -1,1 +1,15 @@
-/data/truggles/2016-ZTT-April11Merged/WZ2l2q_0_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_0_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_10_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_11_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_12_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_13_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_14_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_1_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_2_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_3_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_4_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_5_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_6_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_7_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_8_tt.root
+/data/truggles/svFitComplete/ZTT2015_Oct24/WZ2l2q_9_tt.root
