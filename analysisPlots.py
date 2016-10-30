@@ -86,42 +86,50 @@ def HighPtTauWeight( var ) :
 #FIXME direct link to their documentation
 # see: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauJet2TauFakes
 # At the moment VTight is hardcoded here
-def getFFCutsAndWeights( sample, outFile ) :
-
-    print "Appending extra Fake Factor cuts based on random coin flip"
-    qcdIsolation = '*((coinFlip == 1 && byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5) || (coinFlip == 2 && byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))'
-    #qcdIsolation = '*((byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5) || (byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))'
-    otherIsolation = '*(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
-    #mcCoinFlip = '*((coinFlip == 1 && gen_match_1 < 6) || (coinFlip == 2 && gen_match_2 < 6))'
+#
+# New (Oct 30, 2016) each sample (data included)
+# will have 2 versions of each histo, signal region
+# with normal filling for data, and a gen_match
+# requirement for MC.  And, an anti-isolated region
+# with histos filled using FF method
+# anti-isolated histos are for subtracting from
+# signal region histos later
+def getFFCutsAndWeights( ffRegion, isData, outFile ) :
 
     fName = outFile.GetName()
-    if 'QCD_tt' in fName : # this one pick up the QCD made from 'data' samples
-        if   'ZTT0jet' in fName      : return qcdIsolation
-        elif 'ZTT1jet_low' in fName  : return qcdIsolation
-        elif 'ZTT1jet_med' in fName  : return qcdIsolation
-        elif 'ZTT1jet_high' in fName : return qcdIsolation
-        elif 'ZTT1jet' in fName      : return qcdIsolation
-        elif 'ZTT2jet' in fName      : return qcdIsolation
-        elif 'ZTT2jet_vbf' in fName       : return qcdIsolation
-        elif 'ZTT1bjet' in fName     : return qcdIsolation
-        elif 'ZTT2bjet' in fName     : return qcdIsolation
-        else                         : return qcdIsolation
-    #elif 'data' in sample : # this one picks up data normal
-    else :
-        return otherIsolation
-    #elif 'DYJets' in sample or 'WJets' in sample or 'TT' in sample :
-    #    return otherIsolation+mcCoinFlip
-    #else :
-    #    return otherIsolation
+    # Removing the coin flip method, this was discussed at
+    # Add a factor of 0.5 to account for this removal
+    # the FF workshop in early Oct
+    
+    dataSignalIsolation = '*(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
+    # mcSignalIsolation fills histso with a weight of 0.5 for each "non-fake" tau
+    mcSignalIsolation = '*(byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)*((gen_match_1 < 6) * 0.5 + (gen_match_2 < 6) * 0.5)'
+    dataFFIsolation = '*((byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && byLooseIsolationMVArun2v1DBoldDMwLT_2 > 0.5) || (byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byLooseIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))*(0.5)' # 0.5 for replacing the coin flip
+    mcFFIsolation = '*((byVTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && byLooseIsolationMVArun2v1DBoldDMwLT_2 > 0.5 && gen_match_2 < 6) || (byVTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byLooseIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byVTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5 && gen_match_1 < 6))*(0.5)' # 0.5 for replacing the coin flip, the two different isolation configurations are orthogonal so we don't need to weight based on the gen_match like in mcSignalIsolation
+
+    if ffRegion == 'signal' :
+        if isData or 'QCD_tt' in fName :
+            return dataSignalIsolation
+        else : # not data
+            return mcSignalIsolation
+    if ffRegion == 'anti-iso' :
+        if isData or 'QCD_tt' in fName :
+            return dataFFIsolation
+        else : # not data
+            return mcFFIsolation
+
 
 ### Fake Factor shape systematics
-def getFFShapeSystApp( sample, outFile, var ) :
+def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
 
     app = ''
 
     fName = outFile.GetName()
     # Check if FF sample
-    if 'QCD_tt' in fName : # this one pick up the QCD made from 'data' samples
+    # this one pick up the QCD made from 'data' samples
+    # and also provides the weight for the MC jet->tau
+    # subtraction
+    if 'QCD_tt' in fName or ffRegion == 'anti-iso' :
 
         # Choose appropriate weight for the category
         if   'ZTT0jet' in fName      : app = "FFWeightQCD0Jet"
@@ -167,10 +175,17 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     ### of l1 and l2, then seeing if l1 is gen matched
     ### to anything besides a fake/jet
     ### This is only applied for DYJets, WJets, TT, and QCD MC
+
+    ### Check if doFF is turned on and, if so, double
+    ### our output histograms to account for the 
+    ### required subtractions
     doFF = os.getenv('doFF')
     if doFF == 'True' :
-        ffCutAppend = getFFCutsAndWeights( sample, outFile )
-        additionalCut += ffCutAppend
+        tmpDict = {}
+        for var, info in newVarMap.iteritems() :
+            tmpDict[var] = info
+            tmpDict[var+'_ffSub'] = info
+        newVarMap = tmpDict
             
 
 
@@ -206,7 +221,13 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         shapeSyst += ESCuts( sample, channel, var )
 
         # This addes the Fake Factor shape systematics weights
-        ffShapeSyst = getFFShapeSystApp( sample, outFile, var )
+        # And add the variable specific Fake Factor cut
+        # (isolation and gen match change per variable def)
+        ffShapeSyst = ''
+        if doFF :
+            ffRegion = 'anti-iso' if '_ffSub' in var else 'signal'
+            ffShapeSyst += getFFShapeSystApp( ffRegion, isData, outFile, var )
+            ffShapeSyst += getFFCutsAndWeights( ffRegion, isData, outFile )
         
 
     	histos[ var ] = makeHisto( var, info[0], info[1], info[2])
@@ -239,8 +260,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         # Check if the variable to plot is in the chain, if not, skip it
         # don't crash on systematics based variables
-        varBase = var
-        plotVar = var
+        varBase = var.replace('_ffSub','')
+        plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
             tmp.pop()
@@ -298,50 +319,50 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
-            #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
-            'mjj' : (40, 0, 800, 1, 'M_{jj} [GeV]', ' GeV'),
-            'Z_Pt' : (100, 0, 200, 5, 'Z p_{T} [GeV]', ' GeV'),
-#            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
-#            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
-            'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
-#            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
-#            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
-#            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
-#            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
-#            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-#            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
-#            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
-#            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
-            'mvamet' : (100, 0, 100, 2, 'mvaMetEt [GeV]', ' GeV'),
-#            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
-#            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
-            'bjetCISVVeto20MediumZTT' : (60, 0, 6, 5, 'nBJets20Medium', ''),
-#            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
-#XXX            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
-#            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
-#            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
-#            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
-#            #'extraelec_veto' : (20, 0, 2, 1, 'Extra Electron Veto', ''),
-#            #'extramuon_veto' : (20, 0, 2, 1, 'Extra Muon Veto', ''),
-#            'jpt_1' : (400, 0, 200, 20, 'Leading Jet Pt', ' GeV'),
-#            'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
-#            'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
-#            'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
-#            #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
-            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
-            #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
-            #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
+            #'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
+            'mjj' : [40, 0, 800, 1, 'M_{jj} [GeV]', ' GeV'],
+            'Z_Pt' : [100, 0, 200, 5, 'Z p_{T} [GeV]', ' GeV'],
+#            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+#            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
+            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
+#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
+#            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
+#            'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
+#            'LT' : [600, 0, 300, 20, 'Total LT [GeV]', ' GeV'],
+#            'Mt' : [600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'],
+#            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+#            't1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
+#            #'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
+            'mvamet' : [100, 0, 100, 2, 'mvaMetEt [GeV]', ' GeV'],
+#            'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
+#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
+            'bjetCISVVeto20MediumZTT' : [60, 0, 6, 5, 'nBJets20Medium', ''],
+#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
+            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+#XXX            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
+#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
+#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
+#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
+#            #'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
+#            #'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
+#            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
+#            'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
+#            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
+#            'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
+#            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
+#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
+            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
+            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
             'm_vis' : [30, 0, 300, 1, 'Z Vis Mass [GeV]', ' GeV'],
-            #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
+            #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'Z svFit Mass [GeV]', ' GeV'],
-            #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-            #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-#            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
-#            'mt_tot' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
-            #'pzetavis' : (300, 0, 300, 20, 'pZetaVis', ' GeV'),
-            #'pfpzetamis' : (300, 0, 300, 20, 'pfpZetaMis', ' GeV'),
-            #'pzetamiss' : (500, -200, 300, 20, 'pZetaMis', ' GeV'),
+            #'mt_sv_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
+            #'mt_tot_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
+#            'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
+#            'mt_tot' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
+            #'pzetavis' : [300, 0, 300, 20, 'pZetaVis', ' GeV'],
+            #'pfpzetamis' : [300, 0, 300, 20, 'pfpZetaMis', ' GeV'],
+            #'pzetamiss' : [500, -200, 300, 20, 'pZetaMis', ' GeV'],
         }
 
         ''' added shape systematics '''
@@ -373,21 +394,21 @@ def getHistoDict( analysis, channel ) :
         if channel == 'em' :
             # Provides a list of histos to create for 'EM' channel
             chanVarMapEM = {
-                'pt_1' : (200, 0, 200, 10, 'e p_{T} [GeV]', ' GeV'),
-                'eta_1' : (60, -3, 3, 2, 'e Eta', ' Eta'),
-                #'iso_1' : (20, 0, 0.2, 1, 'e RelIsoDB03', ''),
-                'mt_1' : (200, 0, 200, 5, 'e m_{T} [GeV]', ' GeV'),
-                'pt_2' : (200, 0, 200, 10, 'm p_{T} [GeV]', ' GeV'),
-                'eta_2' : (60, -3, 3, 2, 'm Eta', ' Eta'),
-                #'iso_2' : (20, 0, 0.2, 1, 'm RelIsoDB03', ''),
-                'mt_2' : (200, 0, 200, 5, 'm m_{T} [GeV]', ' GeV'),
-                'eJetPt' : (200, 0, 200, 10, 'e Overlapping Jet Pt', ' GeV'),
-                'mJetPt' : (200, 0, 200, 10, 'm Overlapping Jet Pt', ' GeV'),
-                #'e_m_Pt + mvamet' : (400, 0, 400, 10, 'ditau Pt + mvamet', ' GeV'),
-                #'ePVDZ' : (25, -.25, .25, 1, "e PVDZ [cm]", " cm"),
-                #'ePVDXY' : (50, -.1, .1, 2, "e PVDXY [cm]", " cm"),
-                #'mPVDZ' : (25, -.25, .25, 1, "m PVDZ [cm]", " cm"),
-                #'mPVDXY' : (50, -.1, .1, 2, "m PVDXY [cm]", " cm"),
+                'pt_1' : [200, 0, 200, 10, 'e p_{T} [GeV]', ' GeV'],
+                'eta_1' : [60, -3, 3, 2, 'e Eta', ' Eta'],
+                #'iso_1' : [20, 0, 0.2, 1, 'e RelIsoDB03', ''],
+                'mt_1' : [200, 0, 200, 5, 'e m_{T} [GeV]', ' GeV'],
+                'pt_2' : [200, 0, 200, 10, 'm p_{T} [GeV]', ' GeV'],
+                'eta_2' : [60, -3, 3, 2, 'm Eta', ' Eta'],
+                #'iso_2' : [20, 0, 0.2, 1, 'm RelIsoDB03', ''],
+                'mt_2' : [200, 0, 200, 5, 'm m_{T} [GeV]', ' GeV'],
+                'eJetPt' : [200, 0, 200, 10, 'e Overlapping Jet Pt', ' GeV'],
+                'mJetPt' : [200, 0, 200, 10, 'm Overlapping Jet Pt', ' GeV'],
+                #'e_m_Pt + mvamet' : [400, 0, 400, 10, 'ditau Pt + mvamet', ' GeV'],
+                #'ePVDZ' : [25, -.25, .25, 1, "e PVDZ [cm]", " cm"],
+                #'ePVDXY' : [50, -.1, .1, 2, "e PVDXY [cm]", " cm"],
+                #'mPVDZ' : [25, -.25, .25, 1, "m PVDZ [cm]", " cm"],
+                #'mPVDXY' : [50, -.1, .1, 2, "m PVDXY [cm]", " cm"],
             }
             for key in chanVarMapEM.keys() :
                 genVarMap[ key ] = chanVarMapEM[ key ]
@@ -396,88 +417,88 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-                'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
-#                'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
-                'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
-#                'iso_1' : (100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
-#                'chargedIsoPtSum_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'),
-#                'chargedIsoPtSum_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'),
-#                'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
-#                'chargedIsoPtSumdR03_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'),
-                'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
-#                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
-#                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
-#                'iso_2' : (100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
-#                'decayMode_1' : (15, 0, 15, 1, 't1 Decay Mode', ''),
-#                #'t1JetPt' : (400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'),
-#                'm_1' : (60, 0, 3, 4, 't1 Mass', ' GeV'),
-#                'decayMode_2' : (15, 0, 15, 1, 't2 Decay Mode', ''),
-#                #'t2JetPt' : (400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'),
-#                'm_2' : (60, 0, 3, 4, 't2 Mass', ' GeV'),
-                #'t1ChargedIsoPtSum' : (0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'),
-                #'t1NeutralIsoPtSum' : (0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'),
-                #'t1PuCorrPtSum' : (0, 40, 4, 't1 PuCorrPtSum', ' GeV'),
-                #'t2ChargedIsoPtSum' : (0, 10, 8, 't2 ChargedIsoPtSum', ' GeV'),
-                #'t2NeutralIsoPtSum' : (0, 10, 8, 't2 NeutralIsoPtSum', ' GeV'),
-                #'t2PuCorrPtSum' : (0, 40, 4, 't2 PuCorrPtSum', ' GeV'),
+                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+#                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
+                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
+#                'iso_1' : [100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''],
+#                'chargedIsoPtSum_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'],
+#                'chargedIsoPtSum_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'],
+#                'chargedIsoPtSumdR03_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'],
+#                'chargedIsoPtSumdR03_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'],
+                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+#                'gen_match_2' : [14, 0, 7, 1, '#tau_{2} Gen Match', ''],
+#                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
+#                'iso_2' : [100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''],
+#                'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
+#                #'t1JetPt' : [400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'],
+#                'm_1' : [60, 0, 3, 4, 't1 Mass', ' GeV'],
+#                'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
+#                #'t2JetPt' : [400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'],
+#                'm_2' : [60, 0, 3, 4, 't2 Mass', ' GeV'],
+                #'t1ChargedIsoPtSum' : [0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'],
+                #'t1NeutralIsoPtSum' : [0, 10, 8, 't1 NeutralIsoPtSum', ' GeV'],
+                #'t1PuCorrPtSum' : [0, 40, 4, 't1 PuCorrPtSum', ' GeV'],
+                #'t2ChargedIsoPtSum' : [0, 10, 8, 't2 ChargedIsoPtSum', ' GeV'],
+                #'t2NeutralIsoPtSum' : [0, 10, 8, 't2 NeutralIsoPtSum', ' GeV'],
+                #'t2PuCorrPtSum' : [0, 40, 4, 't2 PuCorrPtSum', ' GeV'],
             }
             for key in chanVarMapTT.keys() :
                 genVarMap[ key ] = chanVarMapTT[ key ]
             return genVarMap
     if analysis == 'azh' :
         genVarMap = {
-            'Z_Pt' : (400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'),
-            'Z_DR' : (500, 0, 5, 50, 'Z dR', ' dR'),
-            'Z_DPhi' : (800, -4, 4, 80, 'Z dPhi', ' dPhi'),
-            'Z_DEta' : (100, -5, 5, 10, 'Z dEta', ' dEta'),
-            'mjj' : (40, 0, 800, 1, 'M_{jj}', ' [GeV]'),
-            'jdeta' : (100, -5, 5, 10, 'VBF dEta', ' dEta'),
-            'm_vis' : (80, 50, 130, 10, 'Z Mass [GeV]', ' GeV'),
-            'H_vis' : (400, 0, 400, 40, 'H Visible Mass [GeV]', ' GeV'),
-            'Mass' : (600, 0, 600, 60, 'M_{ll#tau#tau} [GeV]', ' GeV'),
-            'LT' : (600, 0, 600, 40, 'Total LT [GeV]', ' GeV'),
-            'Mt' : (600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'),
-            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
-            'pt_1' : (200, 0, 200, 10, 'Leg1 p_{T} [GeV]', ' GeV'),
-            'pt_2' : (200, 0, 200, 10, 'Leg2 p_{T} [GeV]', ' GeV'),
-            'pt_3' : (200, 0, 200, 10, 'Leg3 p_{T} [GeV]', ' GeV'),
-            'pt_4' : (200, 0, 200, 10, 'Leg4 p_{T} [GeV]', ' GeV'),
-            'eta_1' : (60, -3, 3, 10, 'Leg1 Eta', ' Eta'),
-            'eta_2' : (60, -3, 3, 10, 'Leg2 Eta', ' Eta'),
-            'eta_3' : (60, -3, 3, 10, 'Leg3 Eta', ' Eta'),
-            'eta_4' : (60, -3, 3, 10, 'Leg4 Eta', ' Eta'),
-            'iso_1' : (20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''),
-            'iso_2' : (20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''),
-            'iso_3' : (20, 0, 1, 1, 'Leg3 Iso', ''),
-            'iso_4' : (20, 0, 1, 1, 'Leg4 Iso', ''),
-            #'jpt_1' : (400, 0, 200, 20, 'Leading Jet Pt', ' GeV'),
-            #'jeta_1' : (100, -5, 5, 10, 'Leading Jet Eta', ' Eta'),
-            #'jpt_2' : (400, 0, 200, 20, 'Second Jet Pt', ' GeV'),
-            #'jeta_2' : (100, -5, 5, 10, 'Second Jet Eta', ' Eta'),
-            #'weight' : (60, -30, 30, 1, 'Gen Weight', ''),
-            'npv' : (40, 0, 40, 4, 'Number of Vertices', ''),
-            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
-            'azhWeight' : (50, 0, 2, 1, 'Muon + Electron Weights', ''),
-            'muVetoZTTp001dxyz' : (6, -1, 5, 1, 'muVetoZTTp001dxyz', ''),
-            'eVetoZTTp001dxyz' : (6, -1, 5, 1, 'eVetoZTTp001dxyz', ''),
-            'muVetoZTTp001dxyzR0' : (6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''),
-            'eVetoZTTp001dxyzR0' : (6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''),
-            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
-            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
-            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
+            'Z_Pt' : [400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
+            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
+            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
+            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
+            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
+            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
+            'm_vis' : [80, 50, 130, 10, 'Z Mass [GeV]', ' GeV'],
+            'H_vis' : [400, 0, 400, 40, 'H Visible Mass [GeV]', ' GeV'],
+            'Mass' : [600, 0, 600, 60, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
+            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
+            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+            'pt_1' : [200, 0, 200, 10, 'Leg1 p_{T} [GeV]', ' GeV'],
+            'pt_2' : [200, 0, 200, 10, 'Leg2 p_{T} [GeV]', ' GeV'],
+            'pt_3' : [200, 0, 200, 10, 'Leg3 p_{T} [GeV]', ' GeV'],
+            'pt_4' : [200, 0, 200, 10, 'Leg4 p_{T} [GeV]', ' GeV'],
+            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
+            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
+            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
+            'eta_4' : [60, -3, 3, 10, 'Leg4 Eta', ' Eta'],
+            'iso_1' : [20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''],
+            'iso_2' : [20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''],
+            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
+            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
+            #'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
+            #'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
+            #'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
+            #'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
+            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
+            'npv' : [40, 0, 40, 4, 'Number of Vertices', ''],
+            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
+            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+            'azhWeight' : [50, 0, 2, 1, 'Muon + Electron Weights', ''],
+            'muVetoZTTp001dxyz' : [6, -1, 5, 1, 'muVetoZTTp001dxyz', ''],
+            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
+            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
+            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
+            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
+            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
+            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
         }
         llltMap = {
-            'againstElectronVLooseMVA6_4' : (9, -1, 2, 1, 'Against E VL MVA6 Leg 4', ''),
-            'againstElectronLooseMVA6_4' : (9, -1, 2, 1, 'Against E L MVA6 Leg 4', ''),
-            'againstMuonLoose3_4' : (9, -1, 2, 1, 'Against M Loose 3 Leg 4', ''),
-            'againstMuonTight3_4' : (9, -1, 2, 1, 'Against M Tight 3 Leg 4', ''),
+            'againstElectronVLooseMVA6_4' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 4', ''],
+            'againstElectronLooseMVA6_4' : [9, -1, 2, 1, 'Against E L MVA6 Leg 4', ''],
+            'againstMuonLoose3_4' : [9, -1, 2, 1, 'Against M Loose 3 Leg 4', ''],
+            'againstMuonTight3_4' : [9, -1, 2, 1, 'Against M Tight 3 Leg 4', ''],
         }
         llttMap = {
-            'againstElectronVLooseMVA6_3' : (9, -1, 2, 1, 'Against E VL MVA6 Leg 3', ''),
-            'againstElectronLooseMVA6_3' : (9, -1, 2, 1, 'Against E L MVA6 Leg 3', ''),
-            'againstMuonLoose3_3' : (9, -1, 2, 1, 'Against M Loose 3 Leg 3', ''),
-            'againstMuonTight3_3' : (9, -1, 2, 1, 'Against M Tight 3 Leg 3', ''),
+            'againstElectronVLooseMVA6_3' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 3', ''],
+            'againstElectronLooseMVA6_3' : [9, -1, 2, 1, 'Against E L MVA6 Leg 3', ''],
+            'againstMuonLoose3_3' : [9, -1, 2, 1, 'Against M Loose 3 Leg 3', ''],
+            'againstMuonTight3_3' : [9, -1, 2, 1, 'Against M Tight 3 Leg 3', ''],
         }
         if channel == 'xxxx' :
             return genVarMap

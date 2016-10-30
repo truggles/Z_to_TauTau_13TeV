@@ -169,7 +169,7 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
 
     ### FF values for data events
     doFF = os.getenv('doFF')
-    if doFF == 'True' and 'data' in save and channel == 'tt' :
+    if doFF == 'True' and channel == 'tt' :
         from util.applyFakeFactors import fillFakeFactorValues
         fillFakeFactorValues( analysis, mid2, save, channel )
 

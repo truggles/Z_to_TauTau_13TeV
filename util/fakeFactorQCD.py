@@ -14,25 +14,26 @@ class fakeFactors :
     
 
     def __init__(self):
-        date = '20160914'
+        date = '201610_test'
+        path = '/src/Z_to_TauTau_13TeV/data/FakeFactors/tt/'
         cmssw_base = os.getenv('CMSSW_BASE')
-        self.fileInclusive = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/incl/fakeFactors_%s.root' % date,'r')
+        self.fileInclusive = ROOT.TFile(cmssw_base+path+'incl/fakeFactors_%s.root' % date,'r')
         self.ffInclusive = self.fileInclusive.Get('ff_comb')
-        self.file0jet = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_0jet/fakeFactors_%s.root' % date,'r')
+        self.file0jet = ROOT.TFile(cmssw_base+path+'_0jet/fakeFactors_%s.root' % date,'r')
         self.ff0jet = self.file0jet.Get('ff_comb')
-        self.file1jet = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_1jet/fakeFactors_%s.root' % date,'r')
+        self.file1jet = ROOT.TFile(cmssw_base+path+'_1jet/fakeFactors_%s.root' % date,'r')
         self.ff1jet = self.file1jet.Get('ff_comb')
-        self.file1jetLow = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_1jetZ050/fakeFactors_%s.root' % date,'r')
+        self.file1jetLow = ROOT.TFile(cmssw_base+path+'_1jetZ050/fakeFactors_%s.root' % date,'r')
         self.ff1jetLow = self.file1jetLow.Get('ff_comb')
-        self.file1jetMed = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_1jetZ50100/fakeFactors_%s.root' % date,'r')
+        self.file1jetMed = ROOT.TFile(cmssw_base+path+'_1jetZ50100/fakeFactors_%s.root' % date,'r')
         self.ff1jetMed = self.file1jetMed.Get('ff_comb')
-        self.file1jetHigh = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_1jetZ100/fakeFactors_%s.root' % date,'r')
+        self.file1jetHigh = ROOT.TFile(cmssw_base+path+'_1jetZ100/fakeFactors_%s.root' % date,'r')
         self.ff1jetHigh = self.file1jetHigh.Get('ff_comb')
-        self.file2jet = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_2jet/fakeFactors_%s.root' % date,'r')
+        self.file2jet = ROOT.TFile(cmssw_base+path+'_2jet/fakeFactors_%s.root' % date,'r')
         self.ff2jet = self.file2jet.Get('ff_comb')
-        self.fileVBF = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_2jetVBF/fakeFactors_%s.root' % date,'r')
+        self.fileVBF = ROOT.TFile(cmssw_base+path+'_2jetVBF/fakeFactors_%s.root' % date,'r')
         self.ffVBF = self.fileVBF.Get('ff_comb')
-        self.fileBTagged = ROOT.TFile(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/tt/_anyb/fakeFactors_%s.root' % date,'r')
+        self.fileBTagged = ROOT.TFile(cmssw_base+path+'_anyb/fakeFactors_%s.root' % date,'r')
         self.ffBTagged = self.fileBTagged.Get('ff_comb')
 
 

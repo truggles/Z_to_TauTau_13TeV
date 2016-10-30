@@ -114,22 +114,22 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF='False' ) :
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_low' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(Z_Pt<50)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(Z_Pt<50)*(bjetCISVVeto20MediumZTT==0)*(jetVeto30==1 || (jetVeto30 > 1 && !(mjj>500 && abs(jdeta) > 3.5))*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_medium' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(Z_Pt>50 && Z_Pt<100)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(Z_Pt>50 && Z_Pt<100)*(bjetCISVVeto20MediumZTT==0)*(jetVeto30==1 || (jetVeto30 > 1 && !(mjj>500 && abs(jdeta) > 3.5))*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_high' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(Z_Pt>100)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(Z_Pt>100)*(bjetCISVVeto20MediumZTT==0)*(jetVeto30==1 || (jetVeto30 > 1 && !(mjj>500 && abs(jdeta) > 3.5))*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet_vbf' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && mjj>500 && abs(jdeta) > 3.5)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && mjj>500 && abs(jdeta) > 3.5)*(bjetCISVVeto20MediumZTT==0)*%s' % (Zsign, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 

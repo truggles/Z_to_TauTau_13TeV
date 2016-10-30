@@ -285,7 +285,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
     from util.zPtReweightSMHTT import ZPtReweighterSMHTT
-    zPtWeighterSMHTT = ZPtReweighterSHMTT()
+    zPtWeighterSMHTT = ZPtReweighterSMHTT( channel )
 
     sameNameVars = [
     'run','lumi','evt','GenWeight','LT','charge','jetVeto30','jetVeto40',

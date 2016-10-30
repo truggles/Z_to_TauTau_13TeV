@@ -164,6 +164,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
 
         newVarMap = analysisPlots.getHistoDict( analysis, channel )
+        if doFF == 'True' :
+            tmpDict = {}
+            for var, info in newVarMap.iteritems() :
+                tmpDict[var] = info
+                tmpDict[var+'_ffSub'] = info
+                tmpDict[var+'_ffSub'][4] += ' FF Sub'
+            newVarMap = tmpDict
     
         finalQCDYield = 0.0
         finalDataYield = 0.0
@@ -292,7 +299,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 getVar = var
                 if skipSystShapeVar( var, sample, channel ) :
                     breakUp = var.split('_')
-                    breakUp.pop()
+                    if 'ffSub' in breakUp :
+                        # Double pop gets rid of 'ffSub' and 'shape syst'
+                        breakUp.pop()
+                        breakUp.pop()
+                    else :
+                        breakUp.pop()
                     getVar = '_'.join(breakUp)
     
                 # Remember data samples are called 'dataEE' and 'dataMM'
@@ -345,7 +357,26 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     print "\n\n"+getVar+" not in your root files!  Skipping...\n\n"
                     continue
 
-                preHist = dic.Get( getVar )
+
+                """ Do the Fake Factor MC - jet->tau fake MC here """
+                if doFF == 'True' :
+                    if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
+                        preHist = dic.Get( getVar )
+                        if not '_ffSub' in getVar :
+                            preHTmp = dic.Get( getVar+'_ffSub' )
+                            preHist.Add( preHTmp, -1.0 )
+                    # QCD takes shape and yield from anti-isolated
+                    # the +'_ffSub' is already appended to getVar
+                    elif sample == 'QCD' :
+                        if not '_ffSub' in getVar :
+                            preHist = dic.Get( getVar+'_ffSub' )
+                        else :
+                            preHist = dic.Get( getVar )
+                    # Data and all other MC treated normally
+                    else :
+                        preHist = dic.Get( getVar )
+                else :
+                    preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
     
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
