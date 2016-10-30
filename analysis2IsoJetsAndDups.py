@@ -284,6 +284,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
+    from util.zPtReweightSMHTT import ZPtReweighterSMHTT
+    zPtWeighterSMHTT = ZPtReweighterSHMTT()
 
     sameNameVars = [
     'run','lumi','evt','GenWeight','LT','charge','jetVeto30','jetVeto40',
@@ -632,6 +634,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
+    zPtWeightSMHTT = array('f', [ 0 ] )
+    zPtWeightSMHTTB = tnew.Branch('zPtWeightSMHTT', zPtWeightSMHTT, 'zPtWeightSMHTT/F')
     muonSF1 = array('f', [ 0 ] )
     muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
     muonSF2 = array('f', [ 0 ] )
@@ -856,6 +860,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
             tauIDweight_2[0] = 1
             topWeight[0] = 1
             zPtWeight[0] = 1
+            zPtWeightSMHTT[0] = 1
             weight[0] = 1
             XSecLumiWeight[0] = 1
             gen_match_1[0] = -1
@@ -986,9 +991,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
+                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) and hassattr( row, 'genEta' ) :
+                        zPtWeightSMHTT[0] = zPtWeighterSMHTT.getZPtReweightSMHTT( row.genM, row.genpT, row.genEta )
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
-                #weight[0] *= zPtWeight[0] # * topWeight[0]
+                weight[0] *= zPtWeightSMHTT[0] # * topWeight[0]
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
