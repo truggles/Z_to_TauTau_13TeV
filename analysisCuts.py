@@ -58,7 +58,7 @@ ttIso   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMV
 ttIsoTight   = 't1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoLooseMVA   = 't1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoVLooseMVA   = 't1ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
-ttIsoFakeFactor   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5'
+ttIsoVVLooseMVA   = 't1ByIsolationMVArun2v1DBoldDMwLTraw > 0.38 && t2ByIsolationMVArun2v1DBoldDMwLTraw > 0.38' # This corresponds to the loosest mva cut at high pt for VVLoose. The actual VVLoose variable is added after our initial cuts in step 2
 ttDisc  = 't1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
 ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0'
@@ -140,7 +140,8 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
             # Not isolation for full QCD estimation
             'fakeFactorCutsTT' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
             # Selection which only does baseline for sync data cards, NO SIGN for QCD and Loose Iso for TT QCD
-            'syncCutsDCqcdTES' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA, ttBadRun],
+            'syncCutsDCqcdTES' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVLooseMVA ],
+            'syncCutsDCqcdTES5040VVLoose' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVVLooseMVA ],
             'syncCutsDCqcdTES5040' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA, ttBadRun],
             'syncCutsDCqcdTES5040VL' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVLooseMVA, ttBadRun],
             'syncCutsDCqcdTESNoIso' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttBadRun],
