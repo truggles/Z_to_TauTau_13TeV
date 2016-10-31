@@ -13,20 +13,27 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
 
     currentDASSamples = {
         'Sync' : ['Sync-SUSY160','Sync-VBF125'],
-        'htt' : ['DYJetsAMCNLO', 'DYJets', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'],
         'azh' : ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'ZZ4l', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4m', 'ggZZ4tau', 'WWW'],
+        'htt' : ['DYJetsAMCNLO', 'DYJets', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'WW', 'WZ3l1nu', 'WZ', 'ZZ4l', 'ZZ'],
     }
 
-    # A to Zh sample masses
-    for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-        currentDASSamples['azh'].append('azh%i' % mass)
+    # SM-HTT
     for mass in [120, 125, 130] :
+        currentDASSamples['htt'].append('ggHtoTauTau%i' % mass)
+        currentDASSamples['htt'].append('VBFHtoTauTau%i' % mass)
+        currentDASSamples['htt'].append('WMinusHTauTau%i' % mass)
+        currentDASSamples['htt'].append('WPlusHTauTau%i' % mass)
+        currentDASSamples['htt'].append('ZHTauTau%i' % mass)
         currentDASSamples['azh'].append('ggHtoTauTau%i' % mass)
         currentDASSamples['azh'].append('VBFHtoTauTau%i' % mass)
         currentDASSamples['azh'].append('WMinusHTauTau%i' % mass)
         currentDASSamples['azh'].append('WPlusHTauTau%i' % mass)
         currentDASSamples['azh'].append('ZHTauTau%i' % mass)
         currentDASSamples['azh'].append('ttHTauTau%i' % mass)
+
+    # A to Zh sample masses
+    for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
+        currentDASSamples['azh'].append('azh%i' % mass)
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 

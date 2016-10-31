@@ -44,8 +44,16 @@ os.chdir('..')
 ''' Preset samples '''
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Adding EWK and tri-boson, sept 25
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Adding EWK and tri-boson, sept 25
-#SamplesDataCards = ['dataTT',] 
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'WW', 'WZ3l1nu', 'WZ', 'ZZ4l', 'ZZ'] # B-F data, add WW, WZ3l1nu, WZ, ZZ4l, ZZ, removed WWZ, WZZ
+
+for mass in [120, 125, 130] :
+    SamplesDataCards.append('ggHtoTauTau%i' % mass)
+    SamplesDataCards.append('VBFHtoTauTau%i' % mass)
+    SamplesDataCards.append('WMinusHTauTau%i' % mass)
+    SamplesDataCards.append('WPlusHTauTau%i' % mass)
+    SamplesDataCards.append('ZHTauTau%i' % mass)
+
+#SamplesDataCards = ['dataTT-C',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
 samples = SamplesDataCards
@@ -64,23 +72,12 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    #'cutMapper' : 'syncCutsDCqcdTES',
-    'cutMapper' : 'syncCutsDCqcdTES5040',
-    #'cutMapper' : 'syncCutsDCqcdTES5040VL',
-#    'mid1' : '1Oct11aICHEPNJetsGtrEq2',
-#    'mid2' : '2Oct11aICHEPNJetsGtrEq2',
-#    'mid3' : '3Oct11aICHEPNJetsGtrEq2',
-#XXX    'mid1' : '1Oct11aICHEPNJetsGtrEq2',
-#XXX    'mid2' : '2Oct11b2DRoll',
-#XXX    'mid3' : '3Oct11b2DRoll',
-    #'mid2' : '2Oct11aQCDShapeMed',
-    #'mid3' : '3Oct11aQCDShapeMed',
-#    'mid1' : '1Oct17QCDCheck',
-#    'mid2' : '2Oct17QCDCheck',
-#    'mid3' : '3Oct17QCDCheck',
-    'mid1' : '1Oct21htt',
-    'mid2' : '2Oct21htt',
-    'mid3' : '3Oct21htt',
+    'cutMapper' : 'syncCutsDCqcdTES',
+    #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose',
+    #'cutMapper' : 'syncCutsDCqcdTES5040',
+    'mid1' : '1Oct31VVLoose',
+    'mid2' : '2Oct31VVLoose',
+    'mid3' : '3Oct31VVLoose',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -99,7 +96,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -118,7 +115,7 @@ makeFinalPlots = True
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 #isoVals = ['VTight', 'Tight', 'Medium',]
 isoVals = ['Tight',]
 

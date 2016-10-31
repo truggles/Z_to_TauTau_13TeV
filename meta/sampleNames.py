@@ -17,6 +17,7 @@ def returnSampleDetails( analysis, samples=[] ) :
     for sample in samples :
         if sample in sampleMap.keys() :
             returnMap[ sample ] = sampleMap[ sample ]
+        else : print "\n\nSample: %s    not in meta/sampleNames.py\n\n" % sample
     return returnMap
 
 
@@ -119,6 +120,14 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 831.76,
                 'group' : 'top'},
+            'ZZ4l' : {
+                'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'xsec' : 1.256 * 1.1, # See 1.1 k-factor in Devin's HIG-16-036
+                'group' : 'dib'},
+            'WZ3l1nu' : {
+                'DASPath' : '/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 4.708, # MCM
+                'group' : 'dib'},
         }, # end HTT
         'azh' : {
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
@@ -306,6 +315,20 @@ def sampleDetails( analysis ) :
                 'xsec' : 0.01398,
                 'group' : 'dib'},
         }, # end triboson
+        'DiBoson' : {
+            'WW' :     { 
+                'DASPath' : '/WW_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 0.001,
+                'group' : 'dib'},
+            'WZ' :     { 
+                'DASPath' : '/WZ_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 0.001,
+                'group' : 'dib'},
+            'ZZ' :     { 
+                'DASPath' : '/ZZ_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 0.001,
+                'group' : 'dib'},
+        }, # end diiboson
 	'SM-Higgs' : {
             'ggHtoTauTau120': {
                'DASPath' : '/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
@@ -399,6 +422,8 @@ def sampleDetails( analysis ) :
     # Simplify tracking SM-Higgs and add to all returned maps
     for smHiggs in sampleMap['SM-Higgs'].keys() :
         sampleMap[analysis][smHiggs] = sampleMap['SM-Higgs'][smHiggs]
+    for di in sampleMap['DiBoson'].keys() :
+        sampleMap[analysis][di] = sampleMap['DiBoson'][di]
     for tri in sampleMap['TriBoson'].keys() :
         sampleMap[analysis][tri] = sampleMap['TriBoson'][tri]
     for WorDY in sampleMap['WandDYJets'].keys() :
