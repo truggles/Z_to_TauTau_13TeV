@@ -284,6 +284,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
+    from util.extraTauMVArun2v1IsoWPs import IsoWPAdder
+    isoWPAdder = IsoWPAdder()
 
     #cmssw_base = os.getenv('CMSSW_BASE')
     #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
@@ -636,6 +638,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     ''' We are calculating and adding these below variables to our new tree
     PU Weighting '''
+    byVVTightIsolationMVArun2v1DBoldDMwLT_1 = array('f', [ 0 ] )
+    byVVTightIsolationMVArun2v1DBoldDMwLT_1B = tnew.Branch('byVVTightIsolationMVArun2v1DBoldDMwLT_1', byVVTightIsolationMVArun2v1DBoldDMwLT_1, 'byVVTightIsolationMVArun2v1DBoldDMwLT_1/F')
+    byVVTightIsolationMVArun2v1DBoldDMwLT_2 = array('f', [ 0 ] )
+    byVVTightIsolationMVArun2v1DBoldDMwLT_2B = tnew.Branch('byVVTightIsolationMVArun2v1DBoldDMwLT_2', byVVTightIsolationMVArun2v1DBoldDMwLT_2, 'byVVTightIsolationMVArun2v1DBoldDMwLT_2/F')
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_1 = array('f', [ 0 ] )
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_1B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_1', byVVLooseIsolationMVArun2v1DBoldDMwLT_1, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_1/F')
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_2 = array('f', [ 0 ] )
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_2B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_2', byVVLooseIsolationMVArun2v1DBoldDMwLT_2, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_2/F')
     weight = array('f', [ 0 ] )
     weightB = tnew.Branch('weight', weight, 'weight/F')
     azhWeight = array('f', [ 0 ] )
@@ -907,6 +917,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             gen_match_2[0] = -1
             gen_match_3[0] = -1
             gen_match_4[0] = -1
+            byVVTightIsolationMVArun2v1DBoldDMwLT_1[0] = -1
+            byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = -1
+            byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = -1
+            byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = -1
 
             # Data specific vars
             if 'data' in sample :
@@ -1078,6 +1092,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
                 XSecLumiWeight[0] = xsec
+
+            # Additional VVLoose and VVTight Iso WPs
+            if channel == 'tt' :
+                byVVTightIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVTight( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
+                byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVTight( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
+                byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVLoose( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
+                byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVLoose( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
 
             # Tau Pt Weighting
             if 'data' not in sample :
