@@ -246,12 +246,12 @@ def isoOrder( channel, row ) :
             setattr( row, 't2%s' % uw, tmp1 )
 
 def vbfClean( row ) :
-    if row.jetVeto20ZTT < 2 :
-        setattr( row, 'vbfMassZTT', -10000 )
-        setattr( row, 'vbfDetaZTT', -10 )
-        setattr( row, 'vbfDphiZTT', -10 )
-        setattr( row, 'vbfJetVeto30ZTT', -10 )
-        setattr( row, 'vbfJetVeto20ZTT', -10 )
+    if row.jetVeto20 < 2 :
+        setattr( row, 'vbfMass', -10000 )
+        setattr( row, 'vbfDeta', -10 )
+        setattr( row, 'vbfDphi', -10 )
+        setattr( row, 'vbfJetVeto30', -10 )
+        setattr( row, 'vbfJetVeto20', -10 )
 
 def calcDR( eta1, phi1, eta2, phi2 ) :
     return float(math.sqrt( (eta1-eta2)*(eta1-eta2) + (phi1-phi2)*(phi1-phi2) ))
@@ -290,7 +290,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #ffqcd = ff_file.Get('ff_qcd_os') 
 
     sameNameVars = [
-    'run','lumi','evt','GenWeight','LT','charge','jetVeto30','jetVeto40',
+    'run','lumi','evt','GenWeight','LT','charge','jetVeto30',
     'bjetCISVVeto20Medium','Mt','bjetCISVVeto30Medium','bjetCISVVeto30Tight',]
 
     branchMapping = {
@@ -314,20 +314,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'jb2eta' : 'beta_2',
         #XXX'jb2mva' : 'bmva_2',
         'jb2csv' : 'bcsv_2',
-        #'bjetCISVVeto20MediumZTT' : 'nbtag',
+        'bjetCISVVeto20Medium' : 'nbtag',
+        'bjetCISVVeto20Loose' : 'nbtagloose',
         #XXX 'NBTagPDM_idL_jVeto' : 'nbtag',
         #XXX 'NBTagPDL_idL_jVeto' : 'nbtagLoose',
-        'jetVeto20ZTT' : 'njetspt20',
-        #'jetVeto30RecoilZTT' : 'njets',
-        'jetVeto30ZTT' : 'njets',
+        'jetVeto20' : 'njetspt20',
+        'jetVeto30' : 'njets',
+        'puppiMetEt' : 'puppimet',
+        'puppiMetPhi' : 'puppimetphi',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
-        'vbfMassZTT' : 'mjj',
-        'vbfDetaZTT' : 'jdeta',
-        'vbfDphiZTT' : 'jdphi',
-        'vbfJetVeto30ZTT' : 'njetingap',
-        'vbfJetVeto20ZTT' : 'njetingap20',
+        'vbfMass' : 'mjj',
+        'vbfDeta' : 'jdeta',
+        'vbfDphi' : 'jdphi',
+        'vbfJetVeto30' : 'njetingap',
+        'vbfJetVeto20' : 'njetingap20',
         }
     doubleProds = {
         'Mass' : 'm_vis',
