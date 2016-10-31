@@ -1,0 +1,3 @@
+/hdfs/store/user/caillol/SMHTT_oct25/WplusHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-24A92257-CF51-E611-96B7-FA163EA14189.root
+/hdfs/store/user/caillol/SMHTT_oct25/WplusHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-4A808F51-CF51-E611-8CEC-FA163E558159.root
+/hdfs/store/user/caillol/SMHTT_oct25/WplusHToTauTau_M120_13TeV_powheg_pythia8/make_ntuples_cfg-A66FECEB-6951-E611-ADF2-0CC47ABAC0CE.root

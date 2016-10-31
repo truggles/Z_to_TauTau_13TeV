@@ -1,0 +1,4 @@
+/hdfs/store/user/caillol/SMHTT_oct25/GluGluHToWWTo2L2Nu_M120_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-0CEFE45E-D445-E611-BC4C-002590DE6DE4.root
+/hdfs/store/user/caillol/SMHTT_oct25/GluGluHToWWTo2L2Nu_M120_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-409D695E-6346-E611-8884-002590DE3A92.root
+/hdfs/store/user/caillol/SMHTT_oct25/GluGluHToWWTo2L2Nu_M120_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-84483A5B-D445-E611-88AC-3417EBE705CD.root
+/hdfs/store/user/caillol/SMHTT_oct25/GluGluHToWWTo2L2Nu_M120_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-8AC0A166-D445-E611-9E69-00266CF3E4B8.root

@@ -1,6 +1,6 @@
-/hdfs/store/user/truggles/SMHTT_sept24_EWK/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-4EF602FE-621A-E611-BE29-0025900EB16C.root
-/hdfs/store/user/truggles/SMHTT_sept24_EWK/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-765C6EAA-621A-E611-BAA7-0CC47A124352.root
-/hdfs/store/user/truggles/SMHTT_sept24_EWK/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-9E181BB0-621A-E611-9753-002590C192A8.root
-/hdfs/store/user/truggles/SMHTT_sept24_EWK/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-E095F3B8-621A-E611-84EB-001EC9ADE6D1.root
-/hdfs/store/user/truggles/SMHTT_sept24_EWK/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-E63333AD-621A-E611-B271-0CC47A124314.root
-/hdfs/store/user/truggles/SMHTT_sept24_EWK/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-FEC067AB-621A-E611-BD88-001EC9ADC50F.root
+/hdfs/store/user/caillol/SMHTT_oct25/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-4EF602FE-621A-E611-BE29-0025900EB16C.root
+/hdfs/store/user/caillol/SMHTT_oct25/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-765C6EAA-621A-E611-BAA7-0CC47A124352.root
+/hdfs/store/user/caillol/SMHTT_oct25/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-9E181BB0-621A-E611-9753-002590C192A8.root
+/hdfs/store/user/caillol/SMHTT_oct25/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-E095F3B8-621A-E611-84EB-001EC9ADE6D1.root
+/hdfs/store/user/caillol/SMHTT_oct25/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-E63333AD-621A-E611-B271-0CC47A124314.root
+/hdfs/store/user/caillol/SMHTT_oct25/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/make_ntuples_cfg-FEC067AB-621A-E611-BD88-001EC9ADC50F.root

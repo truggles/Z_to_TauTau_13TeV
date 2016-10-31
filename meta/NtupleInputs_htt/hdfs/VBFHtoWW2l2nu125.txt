@@ -1,0 +1,14 @@
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-022BB2EF-AD3B-E611-8A1A-002590D9D880.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-06D3CDEA-093B-E611-B764-0CC47AB0B704.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-0A4E04E9-A53B-E611-8B18-0025907793F4.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-0AE6D439-BA3B-E611-B9C7-24BE05C60641.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-3ED2ABEF-AD3B-E611-98F6-002590D9D880.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-4A14ACE6-093B-E611-B0A0-002590FD5A52.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-7A4328FC-533C-E611-AD44-0CC47A57D066.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-A672A633-CB3B-E611-AE5A-003048CBA4EC.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-D0CCEAFB-CB3B-E611-959C-002590FD5694.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-D637ABD9-CB3B-E611-B5F8-00259029E87C.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-E25031F3-B63B-E611-8371-002590D9D990.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-E2CECC38-8F3B-E611-92A5-001E67A4069F.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-E43795D1-BD3B-E611-8E39-002590791D3C.root
+/hdfs/store/user/caillol/SMHTT_oct25/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8/make_ntuples_cfg-EE8D1359-9E3B-E611-86E9-0025901AC0FC.root

@@ -1,0 +1,11 @@
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-06D0E83E-1951-E611-9D34-02163E012D8D.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-26DBB5C4-AA50-E611-A1CC-0025902D11AC.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-3C9506A0-0351-E611-A0CA-008CFA0F50F4.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-3E7E1006-7151-E611-AD7C-002590182FBA.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-5A13D140-2451-E611-BC4D-02163E014B9D.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-9661E8BE-5852-E611-802F-FA163E92E5CA.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-BA045491-7C51-E611-BA1F-008CFA197990.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-C892109D-7350-E611-84F7-00259056F3D4.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-C8C8D133-FA4F-E611-931F-008CFA111164.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-D44418A5-7350-E611-97E3-008CFA197CA8.root
+/hdfs/store/user/caillol/SMHTT_oct25/ZHToTauTau_M125_13TeV_powheg_pythia8/make_ntuples_cfg-D4E55506-2451-E611-A6E3-FA163E6ED801.root
