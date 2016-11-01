@@ -14,7 +14,8 @@ class fakeFactors :
     
 
     def __init__(self):
-        date = '201610_test'
+        #date = '201610_test'
+        date = '201610_looseVTight'
         path = '/src/Z_to_TauTau_13TeV/data/FakeFactors/tt/'
         cmssw_base = os.getenv('CMSSW_BASE')
         self.fileInclusive = ROOT.TFile(cmssw_base+path+'incl/fakeFactors_%s.root' % date,'r')
