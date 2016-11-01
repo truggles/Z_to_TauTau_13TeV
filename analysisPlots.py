@@ -31,14 +31,18 @@ def skipSystShapeVar( var, sample, channel, fName='' ) :
 
         # top pt reweighting only applied to ttbar
         elif '_topPt' in var :
-            if 'TT' not in sample : return True
-            elif 'DYJets' in sample : return True
+            if sample != 'TT' : return True
 
         # fake factor systematics only applied to FF-based QCD
         elif '_ffSyst' in var or '_ffStat' in var :
             # sample == 'data'
             if not ('QCD_tt' in fName or 'QCD' in sample) : # this one pick up the QCD made from 'data' samples
             # 'QCD' in sample is from the plotting script
+                return True
+
+        # met Systematics don't affect QCD and data
+        elif '_metResponse' in var or '_metResolution' in var :
+            if ('QCD_tt' in fName or 'QCD' in sample or 'data' in sample) :
                 return True
 
         return False
@@ -211,8 +215,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
         elif '_zPt' in var :
-            if '_zPtUp' in var : shapeSyst = '*(zPtWeight)'
-            elif '_zPtDown' in var : shapeSyst = '*(1./zPtWeight)'
+            if '_zPtUp' in var : shapeSyst = '*(zPtWeightSMHTT)'
+            elif '_zPtDown' in var : shapeSyst = '*(1./zPtWeightSMHTT)'
             
         # Energy Scale reweighting only applied to DYJets and signal
         # this is not an "if" style shape b/c we need to apply
@@ -264,12 +268,26 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
-            tmp.pop()
+            shapeName = tmp.pop()
             varBase = '_'.join(tmp)
-            if 'Up' in var :
-                plotVar = varBase + '_UP'
-            if 'Down' in var :
-                plotVar = varBase + '_DOWN'
+            if 'energyScale' in shapeName :
+                if 'Up' in var :
+                    plotVar = varBase + '_UP'
+                if 'Down' in var :
+                    plotVar = varBase + '_DOWN'
+            elif 'metResolution' in shapeName :
+                if 'Up' in var :
+                    plotVar = varBase + '_ResolutionUP'
+                if 'Down' in var :
+                    plotVar = varBase + '_ResolutionDOWN'
+            elif 'metResponse' in shapeName :
+                if 'Up' in var :
+                    plotVar = varBase + '_ResponseUP'
+                if 'Down' in var :
+                    plotVar = varBase + '_ResponseDOWN'
+            else :
+                plotVar = varBase
+
                 
         #print "Var: %s   VarBase: %s" % (var, varBase)
 
@@ -280,7 +298,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
              histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
         ### Check that the target var is in the TTrees
-        elif hasattr( chain, varBase ) :
+        elif hasattr( chain, plotVar ) :
             #print "trying"
             #print "Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             if isData : # Data has no GenWeight and by def has puweight = 1
@@ -372,8 +390,13 @@ def getHistoDict( analysis, channel ) :
         for item in toAdd :
             varsForShapeSyst.append( item )
             #varsForShapeSyst.append( item+'_mssm' )
-        #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        shapesToAdd = {'energyScale':'TES',}#'zPt':'Z p_{T}/Mass Reweight'}
+        shapesToAdd = {'energyScale':'TES',
+                    'zPt':'Z p_{T}/Mass Reweight',
+                    'metResponse':'Met Response',
+                    'metResolution':'Met Resolution',
+                    #'tauPt':'High P_{T} Tau',
+                    #'topPt':'Top P_{T} Reweight',
+                    }
 
         # Add FF shape systs if doFF
         doFF = os.getenv('doFF')
@@ -385,6 +408,7 @@ def getHistoDict( analysis, channel ) :
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
                 for shape, app in shapesToAdd.iteritems() :
+                    if var == 'm_vis' and shape in ['metResponse','metResolution'] : continue
                     genVarMap[ var+'_'+shape+'Up' ] = list(genVarMap[ var ])
                     genVarMap[ var+'_'+shape+'Up' ][4] = genVarMap[ var+'_'+shape+'Up' ][4]+' '+app+' UP'
                     genVarMap[ var+'_'+shape+'Down' ] = list(genVarMap[ var ])
