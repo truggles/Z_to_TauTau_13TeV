@@ -168,7 +168,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             tmpDict = {}
             for var, info in newVarMap.iteritems() :
                 tmpDict[var] = info
-                tmpDict[var+'_ffSub'] = info
+                tmpDict[var+'_ffSub'] = list(info)
                 tmpDict[var+'_ffSub'][4] += ' FF Sub'
             newVarMap = tmpDict
     
@@ -186,7 +186,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
         #print newVarMap
         for var, info in newVarMap.iteritems() :
-    
+
+            # Don't create extra plots of Fake Factor stuff    
+            if '_ffSub' in var : continue
+
             # This is to speed up the Data Card making process by 2x and not
             # create all the plots for SS when all we need it the yield from eta_1
             if ops['isSSQCD'] and not var == 'eta_1' : continue
@@ -240,6 +243,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 xBins = array( 'd', [] )
                 for i in range( 21 ) :
                     xBins.append( i * 17.5 )
+            # This is the proposed binning for ZTT 2015 paper
+            elif doFF == 'True' and ('m_sv' in var or 'm_vis' in var) :
+                xBins = array( 'd', [i*10 for i in range( 31 )] )
             elif 'm_sv' in var or 'm_vis' in var :
                 if is1JetCat :
                     if 'm_sv' in var :
@@ -306,6 +312,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     else :
                         breakUp.pop()
                     getVar = '_'.join(breakUp)
+                    #print sample,getVar
     
                 # Remember data samples are called 'dataEE' and 'dataMM'
                 if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and sample == 'dataMM' : continue
@@ -358,13 +365,35 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     continue
 
 
+                ''' Special ZTT scaling for DYJets -> ZTT samples '''
+                zttScaleTable = {
+                    'inclusive' : 1.0,
+                    '0jet' : 1.0,
+                    '1jet' : 1.0,
+                    '2jet' : 1.0,
+                    '1jet_low' : 1.0,
+                    '1jet_medium' : 1.0,
+                    '1jet_high' : 1.0,
+                    '2jet_vbf' : 1.2,
+                    '1bjet' : 1.2,
+                    '2bjet' : 1.4,
+                }
                 """ Do the Fake Factor MC - jet->tau fake MC here """
                 if doFF == 'True' :
                     if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
                         preHist = dic.Get( getVar )
                         if not '_ffSub' in getVar :
-                            preHTmp = dic.Get( getVar+'_ffSub' )
-                            preHist.Add( preHTmp, -1.0 )
+                            ffSubHist = dic.Get( getVar+'_ffSub' )
+                            #print sample," FF Sub int",ffSubHist.Integral()
+                            ffSubHist2 = ffSubHist.Rebin( xNum, "rebinned", xBins )
+                            if varBinned :
+                                ffSubHist2.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
+                            else :
+                                ffSubHist2.GetXaxis().SetRangeUser( info[1], info[2] )
+                            if "DYJets" in sample and "ZTT" in sample :
+                                ffSubHist2.Scale( zttScaleTable[dirCode] )
+                            sampHistos[ 'qcd' ].Add( ffSubHist2, -1.0 )
+                            #print "FFSub Int",sampHistos[ 'qcd' ].Integral()
                     # QCD takes shape and yield from anti-isolated
                     # the +'_ffSub' is already appended to getVar
                     elif sample == 'QCD' :
@@ -386,6 +415,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     hist = ROOT.TH1D( preHist )
                 else :
                     hist = preHist.Rebin( xNum, "rebinned", xBins )
+
+                ''' Special ZTT scaling for DYJets -> ZTT samples '''
+                if "DYJets" in sample and "ZTT" in sample :
+                    if dirCode in zttScaleTable.keys() :
+                        hist.Scale( zttScaleTable[dirCode] )
     
     
                 if var == 'eta_1' :
@@ -424,6 +458,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if not qcdMake :
                     #print "Adding QCD: ",sampHistos['qcd'].Integral()
                     stack.Add( sampHistos['qcd'] )
+                    print "QCD Int",sampHistos['qcd'].Integral()
                 stack.Add( sampHistos['top'] )
                 stack.Add( sampHistos['dib'] )
                 stack.Add( sampHistos['wjets'] )
