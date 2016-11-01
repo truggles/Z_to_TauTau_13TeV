@@ -198,7 +198,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                 if doFF == 'True' :
                     if not (('_energyScale' in var) or ('_zPt' in var) or\
-                            ('_ffSyst' in var) or ('_ffStat' in var) or (baseVar == var)) :
+                            ('_ffSyst' in var) or ('_ffStat' in var) or\
+                            ('_metResponse' in var) or ('_metResolution' in var)\
+                            or ('_ffSub' in var) or (baseVar == var)) :
                         continue
 
                 else :
@@ -263,6 +265,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         3300.0,3500.0,3700.0,3900.0] )
             elif ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
+            # This is the proposed binning for ZTT 2015 paper
+            elif doFF == 'True' and ('m_sv' in var or 'm_vis' in var) :
+                binArray = array( 'd', [i*10 for i in range( 31 )] )
             else :
                 if is1JetCat :
                     if ops['fitShape'] == 'm_sv' :
@@ -305,6 +310,14 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         histos[ name ] = ROOT.TH1D( name+'ffStatUp', name+'ffStatUp', numBins, binArray )
                     elif '_ffStatDown' in var and doFF == 'True' :
                         histos[ name ] = ROOT.TH1D( name+'ffStatDown', name+'ffStatDown', numBins, binArray )
+                    elif '_metResponseUp' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'metResponseUp', name+'metResponseUp', numBins, binArray )
+                    elif '_metResponseDown' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'metResponseDown', name+'metResponseDown', numBins, binArray )
+                    elif '_metResolutionUp' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'metResolutionUp', name+'metResolutionUp', numBins, binArray )
+                    elif '_metResolutionDown' in var and doFF == 'True' :
+                        histos[ name ] = ROOT.TH1D( name+'metResolutionDown', name+'metResolutionDown', numBins, binArray )
                     else :
                         histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
                 histos[ name ].Sumw2()
@@ -339,8 +352,38 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
     
     
+                ''' Special ZTT scaling for DYJets -> ZTT samples '''
+                zttScaleTable = {
+                    'inclusive' : 1.0,
+                    '0jet' : 1.0,
+                    '1jet' : 1.0,
+                    '2jet' : 1.0,
+                    '1jet_low' : 1.0,
+                    '1jet_medium' : 1.0,
+                    '1jet_high' : 1.0,
+                    '2jet_vbf' : 1.2,
+                    '1bjet' : 1.2,
+                    '2bjet' : 1.4,
+                }
                 dic = tFile.Get("%s_Histos" % channel )
-                hist = dic.Get( "%s" % var )
+                if sample == 'QCD' :
+                    if doFF == 'True' :
+                        hist = dic.Get( "%s_ffSub" % var )
+                else :
+                    hist = dic.Get( "%s" % var )
+                    if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
+                        if not '_ffSub' in var :
+                            ffSubHist = dic.Get( var+'_ffSub' )
+                            print sample," FF Sub int",ffSubHist.Integral()
+                            ffSubHist2 = ffSubHist.Rebin( numBins, "rebinned", binArray )
+                            ffSubHist2.GetXaxis().SetRangeUser( binArray[0], binArray[-1] )
+                            if "DYJets" in sample and "ZTT" in sample :
+                                ffSubHist2.Scale( zttScaleTable[ops['category']] )
+                            histos[ '_QCD_' ].Add( ffSubHist2, -1.0 )
+                            print "FFSub Int",histos[ '_QCD_' ].Integral()
+                #if sample == 'QCD' :
+                #    if doFF == 'True' :
+                #        print " \n### Using Fake Factor QCD Shape %.2f!!! ###\n" % hist.Integral()
                 hist.SetDirectory( 0 )
                 #print "Hist yield before scaling ",hist.Integral()
     
@@ -356,6 +399,12 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     #print "QCD yield Pre: %f" % hist.Integral()
                     hist.Scale( qcdScale )
                     #print "QCD yield Post Scale: %f" % hist.Integral()
+
+
+                ''' Special ZTT scaling for DYJets -> ZTT samples '''
+                if "DYJets" in sample and "ZTT" in sample :
+                    if ops['category'] in zttScaleTable.keys() :
+                        hist.Scale( zttScaleTable[ ops['category']] )
     
                 #if 'QCD' not in sample :
                 #    #hist.Rebin( 10 )
@@ -397,14 +446,26 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 # Proper naming of output histos
                 if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or \
-                        '_zPt' in var or '_topPt' in var or '_ffStat' in var or '_ffSyst' in var) :
-                    if name in ['_data_obs_','_VV_','_W_'] : continue 
+                        '_zPt' in var or '_topPt' in var or '_ffStat' in var or '_ffSyst' in var or \
+                        'metResolution' in var or 'metResponse' in var) :
+                    if name in ['_data_obs_',] : continue 
+                    if name in ['_VV_','_W_'] and not 'metRes' in var : continue 
                     if name == '_QCD_' and not doFF == 'True' : continue 
                     if name == '_QCD_' and not ('_ffSyst' in var or '_ffStat' in var) : continue 
                     if ('_ffSyst' in var or '_ffStat' in var) and name != '_QCD_' : continue
+                    if '_zPt' in var and not name in ['_ZTT_','_ZL_','_ZJ_','_ZLL_'] : continue
+
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
+
+                    # Met Shapes
+                    if 'metResolution' in var or 'metResponse' in var :
+                        if name in ['_ZTT_','_ZL_','_ZJ_','_ZLL_','_W_','_qqH120_',
+                            '_qqH125_','_qqH130_','_ggH120_','_ggH125_','_ggH130_'] :
+                            corr = 'corr'
+                        else :
+                            corr = 'uncorr'
     
                     if '_topPt' in var :
                         if name == '_TT_' :
@@ -415,7 +476,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                                 histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
                                 histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
                         else : continue
-                    elif name == '_TT_' : continue # this is to catch TT when it's not wanted
+                    elif name == '_TT_' and not 'metRes' in var : continue # this is to catch TT when it's not wanted
                     elif '_energyScaleUp' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
@@ -463,6 +524,34 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         statDown.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVDown' )
                         statDown.Write()
                         del statDown
+                    elif '_metResponseUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_met_%s_13TeVUp' % corr )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_met_%s_13TeVUp' % corr )
+                        metRespUp = histos[ name ].Clone( name.strip('_')+'_CMS_scale_met_%s_tt_13TeVUp' % corr )
+                        metRespUp.SetTitle( name.strip('_')+'_CMS_scale_met_%s_tt_13TeVUp' % corr )
+                        metRespUp.Write()
+                        del metRespUp
+                    elif '_metResponseDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_met_%s_13TeVDown' % corr )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_met_%s_13TeVDown' % corr )
+                        metRespDown = histos[ name ].Clone( name.strip('_')+'_CMS_scale_met_%s_tt_13TeVDown' % corr )
+                        metRespDown.SetTitle( name.strip('_')+'_CMS_scale_met_%s_tt_13TeVDown' % corr )
+                        metRespDown.Write()
+                        del metRespDown
+                    elif '_metResolutionUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_res_met_%s_13TeVUp' % corr )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_res_met_%s_13TeVUp' % corr )
+                        metResolUp = histos[ name ].Clone( name.strip('_')+'_CMS_res_met_%s_tt_13TeVUp' % corr )
+                        metResolUp.SetTitle( name.strip('_')+'_CMS_res_met_%s_tt_13TeVUp' % corr )
+                        metResolUp.Write()
+                        del metResolUp
+                    elif '_metResolutionDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_res_met_%s_13TeVDown' % corr )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_res_met_%s_13TeVDown' % corr )
+                        metResolDown = histos[ name ].Clone( name.strip('_')+'_CMS_res_met_%s_tt_13TeVDown' % corr )
+                        metResolDown.SetTitle( name.strip('_')+'_CMS_res_met_%s_tt_13TeVDown' % corr )
+                        metResolDown.Write()
+                        del metResolDown
                     histos[ name ].Write()
                 else :
                     histos[ name ].SetTitle( name.strip('_') )
