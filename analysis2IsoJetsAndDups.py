@@ -976,14 +976,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
-                #if 'TT' in sample and hasattr( row, 'topQuarkPt1' ) :
-                #    top1Pt = row.topQuarkPt1
-                #    if top1Pt > 400 : top1Pt = 400
-                #    top2Pt = row.topQuarkPt2
-                #    if top2Pt > 400 : top2Pt = 400
-                #    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
-                #else : topWeight[0] = 1
-                topWeight[0] = 1
+                if sample == 'TT' and hasattr( row, 'topQuarkPt1' ) :
+                    top1Pt = row.topQuarkPt1
+                    if top1Pt > 400 : top1Pt = 400
+                    top2Pt = row.topQuarkPt2
+                    if top2Pt > 400 : top2Pt = 400
+                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
+                else : topWeight[0] = 1
+                #topWeight[0] = 1
 
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
@@ -991,8 +991,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
-                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) and hassattr( row, 'genEta' ) :
-                        zPtWeightSMHTT[0] = zPtWeighterSMHTT.getZPtReweightSMHTT( row.genM, row.genpT, row.genEta )
+                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
+                        if hasattr( row, 'genEta' ) :
+                            zPtWeightSMHTT[0] = zPtWeighterSMHTT.getZPtReweightSMHTT( row.genM, row.genpT, row.genEta )
+                    else : # This is a back up at the moment, we want Gen!
+                        zPtWeightSMHTT[0] = zPtWeighterSMHTT.getZPtReweightSMHTT( row.m_sv, row.p_sv, row.eta_sv )
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
                 weight[0] *= zPtWeightSMHTT[0] # * topWeight[0]
