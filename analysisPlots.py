@@ -160,16 +160,39 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         # Check if the variable to plot is in the chain, if not, skip it
         # don't crash on systematics based variables
-        varBase = var
-        plotVar = var
+        varBase = var.replace('_ffSub','')
+        plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
-            tmp.pop()
+            shapeName = tmp.pop()
             varBase = '_'.join(tmp)
-            if 'Up' in var :
-                plotVar = varBase + '_UP'
-            if 'Down' in var :
-                plotVar = varBase + '_DOWN'
+            if 'energyScale' in shapeName :
+                if 'Up' in var :
+                    plotVar = varBase + '_UP'
+                if 'Down' in var :
+                    plotVar = varBase + '_DOWN'
+            elif 'metResolution' in shapeName :
+                if 'Up' in var :
+                    plotVar = varBase + '_ResolutionUP'
+                if 'Down' in var :
+                    plotVar = varBase + '_ResolutionDOWN'
+            elif 'metResponse' in shapeName :
+                if 'Up' in var :
+                    plotVar = varBase + '_ResponseUP'
+                if 'Down' in var :
+                    plotVar = varBase + '_ResponseDOWN'
+            else :
+                plotVar = varBase
+        #varBase = var
+        #plotVar = var
+        #if 'Up' in var or 'Down' in var :
+        #    tmp = varBase.split('_')
+        #    tmp.pop()
+        #    varBase = '_'.join(tmp)
+        #    if 'Up' in var :
+        #        plotVar = varBase + '_UP'
+        #    if 'Down' in var :
+        #        plotVar = varBase + '_DOWN'
                 
         #print "Var: %s   VarBase: %s" % (var, varBase)
 
@@ -183,7 +206,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
         ### Check that the target var is in the TTrees
-        elif hasattr( chain, varBase ) or ":" in varBase :
+        elif hasattr( chain, plotVar ) or ":" in varBase :
             #print "trying"
             #print "Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             if isData : # Data has no GenWeight and by def has puweight = 1
@@ -222,26 +245,26 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : (20, -1, 1, 1, 'Z Same Sign', ''),
-#XXX            'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
-#XXX            'Z_Pt' : (100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'),
-#XXX            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
-#XXX            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
-#XXX            'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
-#XXX#            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
-#XXX#            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
-#XXX#            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
-#XXX#            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
-#XXX#            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
-#XXX            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
-#XXX            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
-#XXX#            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
-#XXX            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
-#XXX#            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
-#XXX#            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
-#XXX#            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
-#XXX#            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
-#XXX            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
-#XXX            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
+            'mjj' : (40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'),
+            'Z_Pt' : (100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'),
+            'Higgs_Pt' : (10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'),
+            'pt_sv' : (10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'),
+            'jdeta' : (20, 0, 10, 1, 'VBF Jets dEta', ' dEta'),
+#            'Z_DR' : (500, 0, 5, 20, 'Z dR', ' dR'),
+#            'Z_DPhi' : (800, -4, 4, 40, 'Z dPhi', ' dPhi'),
+#            'Z_DEta' : (1000, -5, 5, 40, 'Z dEta', ' dEta'),
+#            'LT' : (600, 0, 300, 20, 'Total LT [GeV]', ' GeV'),
+#            'Mt' : (600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'),
+            'met' : (250, 0, 250, 20, 'pfMet [GeV]', ' GeV'),
+            't1_t2_MvaMet' : (250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'),
+#            #'metphi' : (80, -4, 4, 10, 'pfMetPhi', ''),
+            'mvamet' : (100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'),
+#            'mvametphi' : (100, -5, 5, 2, 'mvaMetPhi', ''),
+#            'bjetCISVVeto20Medium' : (60, 0, 6, 5, 'nBTag_20Medium', ''),
+#            'bjetCISVVeto30Medium' : (60, 0, 6, 5, 'nBTag_30Medium', ''),
+#            'njetspt20' : (100, 0, 10, 10, 'nJetPt20', ''),
+            'jetVeto30' : (100, 0, 10, 10, 'nJetPt30', ''),
+            'njetingap20' : (100, 0, 10, 10, 'njetingap20', ''),
 #            #'jetVeto40' : (100, 0, 10, 10, 'nJetPt40', ''),
 #            #'nbtag' : (6, 0, 6, 1, 'nBTag', ''),
 #            'bjetCISVVeto30Tight' : (60, 0, 6, 5, 'nBTag_30Tight', ''),
@@ -279,8 +302,13 @@ def getHistoDict( analysis, channel ) :
             varsForShapeSyst.append( item )
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        shapesToAdd = {'energyScale':'TES','zPt':'Z p_{T}/Mass Reweight',
-                'topPt':'Top p_{T} Reweight'}
+        shapesToAdd = {'energyScale':'TES',
+                    'zPt':'Z p_{T}/Mass Reweight',
+                    #'metResponse':'Met Response',
+                    #'metResolution':'Met Resolution',
+                    #'tauPt':'High P_{T} Tau',
+                    'topPt':'Top P_{T} Reweight',
+                    }
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
                 for shape, app in shapesToAdd.iteritems() :
@@ -316,7 +344,7 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-###                'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
+                'pt_1' : (200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'),
 #                'gen_match_1' : (14, 0, 7, 1, '#tau_{1} Gen Match', ''),
                 'eta_1' : (60, -3, 3, 4, '#tau_{1} Eta', ' Eta'),
 #                'iso_1' : (100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''),
@@ -324,7 +352,7 @@ def getHistoDict( analysis, channel ) :
 #                'chargedIsoPtSum_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'),
 #                'chargedIsoPtSumdR03_1' : (100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'),
 #                'chargedIsoPtSumdR03_2' : (100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'),
-###                'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
+                'pt_2' : (200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'),
 #                'gen_match_2' : (14, 0, 7, 1, '#tau_{2} Gen Match', ''),
 #                'eta_2' : (60, -3, 3, 4, '#tau_{2} Eta', ' Eta'),
 #                'iso_2' : (100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''),
