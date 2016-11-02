@@ -92,7 +92,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     Double Hardonic baseline with good QCD estimation
         Inclusive
     """
-    ''' FINAL SELECTIONS MSSM '''
+    ### FINAL SELECTIONS MSSM ###
     #params['channels'] = ['tt',]
     #params['mid3'] = folder+'_%sl1ml2_%s_%sBTL' % (sign, isoT, isoL)
     #params['additionalCut'] = '*(Z_SS==%i)*%s*(nbtagLoose>0)*(njets<=1)' % (Zsign, isoL1ML2loose)
@@ -105,7 +105,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     #samples = setUpDirs( samples, params, analysis )
     #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    ''' FINAL SELECTIONS ZTT && HIG-15-007 ZTT '''
+    ### FINAL SELECTIONS ZTT && HIG-15-007 ZTT ###
     params['channels'] = ['tt',]
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTinclusive' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*%s' % (Zsign, isoL1ML2loose)
@@ -115,26 +115,28 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     samples = returnSampleDetails( analysis, samples )
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    ''' LEGACY HTT CATEGORIES '''
+    ### LEGACY HTT CATEGORIES ###
+    higgsPtVar = 'Higgs_Pt'
+    higgsPtVar = 'pt_sv'
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_low' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(Higgs_Pt>100 && Higgs_Pt<170)*(jetVeto30==1 ||\
-        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(%s>100 && %s<170)*(jetVeto30==1 ||\
+        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, higgsPtVar, higgsPtVar, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_high' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(Higgs_Pt>170)*(jetVeto30==1 ||\
-        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(%s>170)*(jetVeto30==1 ||\
+        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap20 < 1)))*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf_low' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && abs(jdeta) > 2.5 && njetingap20 < 1)*((Higgs_Pt<100 && mjj>300) || (Higgs_Pt>100 && mjj>300 && mjj<500))*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && abs(jdeta) > 2.5 && njetingap20 < 1)*((%s<100 && mjj>300) || (%s>100 && mjj>300 && mjj<500))*%s' % (Zsign, higgsPtVar, higgsPtVar, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf_high' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && Higgs_Pt>100 && mjj>500 && abs(jdeta)>2.5 && njetingap20<1)*%s' % (Zsign, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2 && %s>100 && mjj>500 && abs(jdeta)>2.5 && njetingap20<1)*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
@@ -143,7 +145,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-   ''' For checking distributions '''
+   #### For checking distributions ###
    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet' % (sign, isoT, isoL)
    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -164,7 +166,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
 #XXX    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet2D' % (sign, isoT, isoL)
 #XXX    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(abs(jdeta) > 2.5 && njetingap20 < 1 && mjj>500)*%s' % (Zsign, isoL1ML2loose)
 #XXX    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(abs(jdeta) > 2.5 && njetingap20 < 1 && mjj>300)*%s' % (Zsign, isoL1ML2loose)
-#XXX    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(Higgs_Pt>100)*(abs(jdeta)>2.5 && njetingap20<1)*%s' % (Zsign, isoL1ML2loose)
+#XXX    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5 && njetingap20<1)*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
 #XXX    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
 #XXX    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 #XXX
