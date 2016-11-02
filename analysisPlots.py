@@ -13,13 +13,13 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 # Make a 2D histo
 def get2DVars( cutName ) :
-    if 'pt_sv:m_sv' in cutName :
+    if 'pt_sv' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,5000] )
-    if 'mjj:m_sv' in cutName :
+    if 'mjj' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,5000] )
-    if 'pt_1:m_sv' in cutName :
+    if 'pt_1' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,60,100,5000] )
     return (xBins, yBins)
@@ -207,6 +207,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if 'pt_sv:m_sv' in var :
                     if 'Up' in var : plotVar = 'pt_sv_UP:m_sv_UP'
                     if 'Down' in var : plotVar = 'pt_sv_DOWN:m_sv_DOWN'
+                if 'pt_1:m_sv' in var :
+                    if 'Up' in var : plotVar = 'pt_1_UP:m_sv_UP'
+                    if 'Down' in var : plotVar = 'pt_1_DOWN:m_sv_DOWN'
                 elif 'Up' in var :
                     plotVar = varBase + '_UP'
                 elif 'Down' in var :
@@ -322,9 +325,9 @@ def getHistoDict( analysis, channel ) :
 #XXX            'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-#XXX            'Higgs_Pt:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-#XXX            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-#XXX            'pt_1:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            #'pt_1:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'], # unrolling pt_1 provides nothing
             #'mt_sv_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
             #'mt_tot_mssm' : (3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'),
 #            'mt_sv' : (350, 0, 350, 10, 'Total Transverse Mass (svFit) [GeV]', ' GeV'),
@@ -335,9 +338,7 @@ def getHistoDict( analysis, channel ) :
         }
 
         ''' added shape systematics '''
-        toAdd = ['mt_sv', 'm_sv', 'm_vis', 'mt_tot', 'Higgs_Pt:m_sv']
-        #toAdd = ['m_vis', 'm_sv', 'mt_sv',]
-        toAdd = ['mt_sv', 'mt_tot', 'Higgs_Pt:m_sv', 'mjj:m_sv', 'm_sv'] # No extra shapes
+        toAdd = ['mt_sv', 'mt_tot', 'pt_sv:m_sv', 'mjj:m_sv', 'pt_1:m_sv', 'm_sv'] # No extra shapes
         #toAdd = ['m_sv', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :

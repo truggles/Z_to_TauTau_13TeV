@@ -58,7 +58,7 @@ ttIso   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMV
 ttIsoTight   = 't1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoLooseMVA   = 't1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoVLooseMVA   = 't1ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
-ttIsoVVLooseMVA   = 't1ByIsolationMVArun2v1DBoldDMwLTraw > 0.38 && t2ByIsolationMVArun2v1DBoldDMwLTraw > 0.38' # This corresponds to the loosest mva cut at high pt for VVLoose. The actual VVLoose variable is added after our initial cuts in step 2
+ttIsoVVLooseMVA   = 't1ByIsolationMVArun2v1DBoldDMwLTraw > 0. && t2ByIsolationMVArun2v1DBoldDMwLTraw > 0.' # This corresponds to the loosest mva cut at high pt for VVLoose. The actual VVLoose variable is added after our initial cuts in step 2
 ttDisc  = 't1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
 ttIsoInvert = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0 && t2ByCombinedIsolationDeltaBetaCorrRaw3Hits > 3.0'

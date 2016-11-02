@@ -73,8 +73,8 @@ adapt=ROOT.gROOT.GetColor(12)
 new_idx=ROOT.gROOT.GetListOfColors().GetSize() + 1
 trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",0.5)
 
-categories= ["tt_1jet2D","tt_2jet2D",]
-#categories= ["tt_1jet2D",]
+categories= ["tt_boosted","tt_VBF",]
+categories= ["tt_0jet",]
 
 
 ncat=len(categories)
@@ -82,15 +82,16 @@ ncat=len(categories)
 for cat in categories:
    print cat
    Data=file.Get(cat).Get("data_obs")
+   print Data.Integral()
    QCD=file.Get(cat).Get("QCD")
    W=file.Get(cat).Get("W") 
-   TT=file.Get(cat).Get("TT")
+   TT=file.Get(cat).Get("TTT")
    VV=file.Get(cat).Get("VV")
-   if not "2bjet" in cat :
-    VV.Add(W)
-    ZL=file.Get(cat).Get("ZL")
-    ZJ=file.Get(cat).Get("ZJ")
-    ZL.Add(ZJ)
+   #if not "2bjet" in cat :
+   if W != None : VV.Add(W)
+   ZL=file.Get(cat).Get("ZL")
+   ZJ=file.Get(cat).Get("ZJ")
+   if ZJ != None : ZL.Add(ZJ)
    ZTT=file.Get(cat).Get("ZTT")
    SMHiggs=file.Get(cat).Get("ggH125")
    SMHiggs.Add(file.Get(cat).Get("qqH125"))
@@ -274,7 +275,7 @@ for cat in categories:
    c.Modified()
    #c.SaveAs("mVis"+cat+args.mthd+".pdf")
    #c.SaveAs("mVis"+cat+args.mthd+".png")
-   date='Oct18'
+   date='Nov02'
    c.SaveAs("/afs/cern.ch/user/t/truggles/www/2D/"+date+"/mSV"+cat+args.mthd+".pdf")
    c.SaveAs("/afs/cern.ch/user/t/truggles/www/2D/"+date+"/mSV"+cat+args.mthd+".png")
    pad1.SetLogy()

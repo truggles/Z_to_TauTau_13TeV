@@ -16,6 +16,7 @@ class IsoWPAdder :
     def __init__(self):
         self.inFile = ROOT.TFile('data/wpDiscriminationByIsolationMVARun2v1_DBoldDMwLT.root','r')
         self.wpVVLoose = self.inFile.Get('DBoldDMwLTEff95')
+        self.wpVLoose = self.inFile.Get('DBoldDMwLTEff90')
         self.wpVVTight = self.inFile.Get('DBoldDMwLTEff40')
 
 
@@ -25,6 +26,15 @@ class IsoWPAdder :
         if pt > 1900 : pt = 1900
         if pt < 23 : pt = 23
         thresholdAtPt = self.wpVVLoose.Eval( pt )
+        if isoRaw > thresholdAtPt : return 1.0
+        else : return 0.0
+
+    def getVLoose( self, isoRaw, pt ):
+        # Make sure we stay on the TGraph
+        # this could probably be tightened up on the low Pt side if we cared
+        if pt > 1900 : pt = 1900
+        if pt < 23 : pt = 23
+        thresholdAtPt = self.wpVLoose.Eval( pt )
         if isoRaw > thresholdAtPt : return 1.0
         else : return 0.0
 
