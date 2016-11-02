@@ -44,7 +44,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
         genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-        dyJets = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
+        dyJets = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow']
         newSamples = {}
         for sample in samples.keys() :
             #print sample
@@ -54,6 +54,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
                     genApp = gen.lower()
                     samples[ sample+'-'+gen ]['group'] = genApp
+            #if sample == 'TT' :
+            #    for gen in ['TTT', 'TTJ'] :
+            #        samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
+            #        genApp = gen.lower()
+            #        samples[ sample+'-'+gen ]['group'] = genApp
 
         # Clean the samples list
         for dyJet in dyJets :
@@ -119,6 +124,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'zll' : [ROOT.TColor.GetColor(100,182,232), 'Z#rightarrowee'],
         'wjets' : [ROOT.kAzure+6, 'WJets'],
         'higgs' : [ROOT.kBlue, 'SM Higgs(125)'],
+        'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
         #'mssm' : [ROOT.kPink, 'MSSM(%i) x %i' % (mssmMass, mssmSF)],
         'obs' : [ROOT.kBlack, 'Data'],
         }, # htt
@@ -462,6 +468,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'zl' : .30,
                 'zj' : .30,
                 'higgs' : .0,
+                'VH' : .2,
                 'obs' : .0,},
             'azh' : {
                 'top' : .15,
