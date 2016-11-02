@@ -38,7 +38,7 @@ prodMap = {
 #XXX XXX XXX FIXME so that this does N Jet binned correct once we have ReHLT
 def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
-    if shortName == 'DYJetsAMCNLO' or shortName == 'DYJetsAMCNLOReHLT' or shortName == 'DYJetsOld' : # or shortName == 'DYJets' : # Uncomment last part to study relations between all 4
+    if shortName in ['DYJetsAMCNLO', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJetsLow'] : # or shortName == 'DYJets' : # Uncomment last part to study relations between all 4
         return cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
     if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
@@ -91,6 +91,20 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     if 'QCD' in shortName or 'toTauTau' in shortName : return scalar1
     if 'data' in shortName : return 1.0
     return scalar1
+
+
+# make a var which fills with the tighest iso WP passed
+def setIsoCode( row, lep, VVTight, VVLoose ) :
+    # None = 0, VVL = 1, VL = 2, L = 3, M = 4, T = 5, VT = 6, VVT = 7
+    if not VVLoose : return 0
+    if not getattr( row, lep+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) : return 1
+    if not getattr( row, lep+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) : return 2
+    if not getattr( row, lep+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) : return 3
+    if not getattr( row, lep+'ByTightIsolationMVArun2v1DBoldDMwLT' ) : return 4
+    if not getattr( row, lep+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) : return 5
+    if not VVTight : return 6
+    if VVTight : return 7
+    else : return -1
 
 
 def getTauPtWeight( sample, channel, t1GenID, t2GenID, row, ptScaler ) :
@@ -646,6 +660,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     byVVLooseIsolationMVArun2v1DBoldDMwLT_1B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_1', byVVLooseIsolationMVArun2v1DBoldDMwLT_1, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_1/F')
     byVVLooseIsolationMVArun2v1DBoldDMwLT_2 = array('f', [ 0 ] )
     byVVLooseIsolationMVArun2v1DBoldDMwLT_2B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_2', byVVLooseIsolationMVArun2v1DBoldDMwLT_2, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_2/F')
+    byVLooseIsolationMVArun2v1DBoldDMwLT_1 = array('f', [ 0 ] )
+    byVLooseIsolationMVArun2v1DBoldDMwLT_1B = tnew.Branch('byVLooseIsolationMVArun2v1DBoldDMwLTv2_1', byVLooseIsolationMVArun2v1DBoldDMwLT_1, 'byVLooseIsolationMVArun2v1DBoldDMwLTv2_1/F')
+    byVLooseIsolationMVArun2v1DBoldDMwLT_2 = array('f', [ 0 ] )
+    byVLooseIsolationMVArun2v1DBoldDMwLT_2B = tnew.Branch('byVLooseIsolationMVArun2v1DBoldDMwLTv2_2', byVLooseIsolationMVArun2v1DBoldDMwLT_2, 'byVLooseIsolationMVArun2v1DBoldDMwLTv2_2/F')
+    isoCode1 = array('f', [ 0 ] )
+    isoCode1B = tnew.Branch('isoCode1', isoCode1, 'isoCode1/F')
+    isoCode2 = array('f', [ 0 ] )
+    isoCode2B = tnew.Branch('isoCode2', isoCode2, 'isoCode2/F')
+    pt_1_UP = array('f', [ 0 ] )
+    pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
+    pt_1_DOWN = array('f', [ 0 ] )
+    pt_1_DOWNB = tnew.Branch('pt_1_DOWN', pt_1_DOWN, 'pt_1_DOWN/F')
+    pt_2_UP = array('f', [ 0 ] )
+    pt_2_UPB = tnew.Branch('pt_2_UP', pt_2_UP, 'pt_2_UP/F')
+    pt_2_DOWN = array('f', [ 0 ] )
+    pt_2_DOWNB = tnew.Branch('pt_2_DOWN', pt_2_DOWN, 'pt_2_DOWN/F')
     weight = array('f', [ 0 ] )
     weightB = tnew.Branch('weight', weight, 'weight/F')
     azhWeight = array('f', [ 0 ] )
@@ -921,6 +951,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = -1
             byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = -1
             byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = -1
+            isoCode1[0] = -1
+            isoCode2[0] = -1
+            pt_1_UP[0] = -1
+            pt_1_DOWN[0] = -1
+            pt_2_UP[0] = -1
+            pt_2_DOWN[0] = -1
 
             # Data specific vars
             if 'data' in sample :
@@ -1060,6 +1096,20 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
                     tauIDweight_1[0] = 0.951
                     tauIDweight_2[0] = 0.951
+
+                    # Tau Energy Scale Saved
+                    if gen_match_1[0] == 5 :
+                        pt_1_UP[0] = getattr( row, l1+'Pt' ) * 1.03
+                        pt_1_DOWN[0] = getattr( row, l1+'Pt' ) * 0.97
+                    else :
+                        pt_1_UP[0] = getattr( row, l1+'Pt' )
+                        pt_1_DOWN[0] = getattr( row, l1+'Pt' )
+                    if gen_match_2[0] == 5 :
+                        pt_2_UP[0] = getattr( row, l2+'Pt' ) * 1.03
+                        pt_2_DOWN[0] = getattr( row, l2+'Pt' ) * 0.97
+                    else :
+                        pt_2_UP[0] = getattr( row, l2+'Pt' )
+                        pt_2_DOWN[0] = getattr( row, l2+'Pt' )
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
@@ -1099,6 +1149,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVTight( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
                 byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVLoose( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
                 byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVLoose( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
+                byVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVLoose( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
+                byVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVLoose( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
+                isoCode1[0] = setIsoCode( row, l1, byVVTightIsolationMVArun2v1DBoldDMwLT_1[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0]) 
+                isoCode2[0] = setIsoCode( row, l2, byVVTightIsolationMVArun2v1DBoldDMwLT_2[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0]) 
 
             # Tau Pt Weighting
             if 'data' not in sample :
