@@ -1,8 +1,9 @@
-/data/truggles/oct31_VVL_Study/DYJets_0_tt.root
-/data/truggles/oct31_VVL_Study/DYJets_1_tt.root
-/data/truggles/oct31_VVL_Study/DYJets_2_tt.root
-/data/truggles/oct31_VVL_Study/DYJets_3_tt.root
-/data/truggles/oct31_VVL_Study/DYJets_4_tt.root
-/data/truggles/oct31_VVL_Study/DYJets_5_tt.root
-/data/truggles/oct31_VVL_Study/DYJets_6_tt.root
-/data/truggles/oct31_VVL_Study/DYJets_7_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_0_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_1_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_2_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_3_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_4_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_5_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_6_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_7_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets_8_tt.root

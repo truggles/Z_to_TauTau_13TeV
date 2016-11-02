@@ -1,4 +1,4 @@
-/data/truggles/oct31_VVL_Study/VBFHtoTauTau125_0_tt.root
-/data/truggles/oct31_VVL_Study/VBFHtoTauTau125_1_tt.root
-/data/truggles/oct31_VVL_Study/VBFHtoTauTau125_2_tt.root
-/data/truggles/oct31_VVL_Study/VBFHtoTauTau125_3_tt.root
+/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_0_tt.root
+/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_1_tt.root
+/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_2_tt.root
+/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_3_tt.root

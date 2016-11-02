@@ -1,2 +1,2 @@
-/data/truggles/oct31_VVL_Study/DYJets3_0_tt.root
-/data/truggles/oct31_VVL_Study/DYJets3_1_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets3_0_tt.root
+/data/truggles/nov02-SMHTT-svFit/DYJets3_1_tt.root

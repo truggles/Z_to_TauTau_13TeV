@@ -1,2 +1,2 @@
-/data/truggles/oct31_VVL_Study/WJets4_0_tt.root
-/data/truggles/oct31_VVL_Study/WJets4_1_tt.root
+/data/truggles/nov02-SMHTT-svFit/WJets4_0_tt.root
+/data/truggles/nov02-SMHTT-svFit/WJets4_1_tt.root

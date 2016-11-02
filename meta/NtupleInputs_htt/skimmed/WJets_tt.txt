@@ -1,5 +1,2 @@
-/data/truggles/oct31_VVL_Study/WJets_0_tt.root
-/data/truggles/oct31_VVL_Study/WJets_1_tt.root
-/data/truggles/oct31_VVL_Study/WJets_2_tt.root
-/data/truggles/oct31_VVL_Study/WJets_3_tt.root
-/data/truggles/oct31_VVL_Study/WJets_4_tt.root
+/data/truggles/nov02-SMHTT-svFit/WJets_0_tt.root
+/data/truggles/nov02-SMHTT-svFit/WJets_1_tt.root

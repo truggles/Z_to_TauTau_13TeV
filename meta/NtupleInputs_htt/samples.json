@@ -24,7 +24,7 @@
     "summedWeightsNorm": 65485168.0, 
     "summedWeights": 65485168.0, 
     "nevents": 65485168, 
-    "nNtupleFiles": 15, 
+    "nNtupleFiles": 18, 
     "nlumis": 330450
   }, 
   "DYJets2": {
@@ -66,7 +66,7 @@
     "summedWeightsNorm": 4101383.0, 
     "summedWeights": 4101383.0, 
     "nevents": 4101383, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 3, 
     "nlumis": 30162
   }, 
   "DYJetsAMCNLOReHLT": {
@@ -150,7 +150,7 @@
     "summedWeightsNorm": 9780290.204922788, 
     "summedWeights": 78592204.0, 
     "nevents": 15498581, 
-    "nNtupleFiles": 6, 
+    "nNtupleFiles": 7, 
     "nlumis": 74587
   }, 
   "WZ2l2q": {
@@ -161,10 +161,10 @@
     "nfiles": 656, 
     "nblocks": 23, 
     "Cross Section (pb)": 5.595, 
-    "summedWeightsNorm": 15562071.957255375, 
+    "summedWeightsNorm": 15562071.95725537, 
     "summedWeights": 229341408.0, 
     "nevents": 25996157, 
-    "nNtupleFiles": 10, 
+    "nNtupleFiles": 11, 
     "nlumis": 126715
   }, 
   "WPlusHTauTau120": {
@@ -189,10 +189,10 @@
     "nfiles": 503, 
     "nblocks": 19, 
     "Cross Section (pb)": 10.71, 
-    "summedWeightsNorm": 11240962.524225045, 
+    "summedWeightsNorm": 11240962.524225047, 
     "summedWeights": 336249541.0, 
     "nevents": 19500618, 
-    "nNtupleFiles": 5, 
+    "nNtupleFiles": 4, 
     "nlumis": 95023
   }, 
   "EWKZ2nu": {
@@ -203,7 +203,7 @@
     "nfiles": 8, 
     "nblocks": 2, 
     "Cross Section (pb)": 10.01, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": 298400.0, 
     "summedWeights": 298400.0, 
     "nevents": 298400, 
     "nNtupleFiles": 1, 
@@ -220,7 +220,7 @@
     "summedWeightsNorm": 1498800.0, 
     "summedWeights": 1498800.0, 
     "nevents": 1498800, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 3, 
     "nlumis": 7502
   }, 
   "ZZZ": {
@@ -290,7 +290,7 @@
     "summedWeightsNorm": 99504301.0, 
     "summedWeights": 99504301.0, 
     "nevents": 99699582, 
-    "nNtupleFiles": 5, 
+    "nNtupleFiles": 2, 
     "nlumis": 536759
   }, 
   "ZHTauTau130": {
@@ -315,10 +315,10 @@
     "nfiles": 132, 
     "nblocks": 9, 
     "Cross Section (pb)": 49.997, 
-    "summedWeightsNorm": 3259952.8654452832, 
+    "summedWeightsNorm": 3259952.8654452837, 
     "summedWeights": 440201579.0, 
     "nevents": 5235265, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 26315
   }, 
   "ZHTauTau125": {
@@ -399,10 +399,10 @@
     "nfiles": 499, 
     "nblocks": 68, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -12987, 
+    "summedWeightsNorm": -20979, 
     "summedWeights": 0.0, 
     "nevents": 40550286, 
-    "nNtupleFiles": 13, 
+    "nNtupleFiles": 21, 
     "nlumis": 21251
   }, 
   "dataTT-E": {
@@ -413,10 +413,10 @@
     "nfiles": 663, 
     "nblocks": 47, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -16983, 
+    "summedWeightsNorm": -27972, 
     "summedWeights": 0.0, 
     "nevents": 58349490, 
-    "nNtupleFiles": 17, 
+    "nNtupleFiles": 28, 
     "nlumis": 27807
   }, 
   "dataTT-D": {
@@ -427,10 +427,10 @@
     "nfiles": 667, 
     "nblocks": 30, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -16983, 
+    "summedWeightsNorm": -28971, 
     "summedWeights": 0.0, 
     "nevents": 61113729, 
-    "nNtupleFiles": 17, 
+    "nNtupleFiles": 29, 
     "nlumis": 31021
   }, 
   "dataTT-C": {
@@ -441,10 +441,10 @@
     "nfiles": 659, 
     "nblocks": 51, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -11988, 
+    "summedWeightsNorm": -17982, 
     "summedWeights": 0.0, 
     "nevents": 56546350, 
-    "nNtupleFiles": 12, 
+    "nNtupleFiles": 18, 
     "nlumis": 21889
   }, 
   "dataTT-B": {
@@ -455,10 +455,10 @@
     "nfiles": 896, 
     "nblocks": 126, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -21978, 
+    "summedWeightsNorm": -37962, 
     "summedWeights": 0.0, 
     "nevents": 71901374, 
-    "nNtupleFiles": 22, 
+    "nNtupleFiles": 38, 
     "nlumis": 64042
   }, 
   "WJets3": {
@@ -472,7 +472,7 @@
     "summedWeightsNorm": 19869053.0, 
     "summedWeights": 19869053.0, 
     "nevents": 19869053, 
-    "nNtupleFiles": 4, 
+    "nNtupleFiles": 2, 
     "nlumis": 129154
   }, 
   "WJets2": {
@@ -486,7 +486,7 @@
     "summedWeightsNorm": 29984239.0, 
     "summedWeights": 29984239.0, 
     "nevents": 29984239, 
-    "nNtupleFiles": 5, 
+    "nNtupleFiles": 2, 
     "nlumis": 149034
   }, 
   "WJets1": {
@@ -500,7 +500,7 @@
     "summedWeightsNorm": 39855520.0, 
     "summedWeights": 39855520.0, 
     "nevents": 39855520, 
-    "nNtupleFiles": 6, 
+    "nNtupleFiles": 2, 
     "nlumis": 196647
   }, 
   "T-tchan": {
@@ -629,6 +629,20 @@
     "nNtupleFiles": 2, 
     "nlumis": 299577
   }, 
+  "DYJetsLow": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 35079788, 
+    "DAS Path": "/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM", 
+    "nfiles": 867, 
+    "nblocks": 47, 
+    "Cross Section (pb)": 21658.318, 
+    "summedWeightsNorm": 35079788.0, 
+    "summedWeights": 35079788.0, 
+    "nevents": 35079788, 
+    "nNtupleFiles": 1, 
+    "nlumis": 248523
+  }, 
   "ggHtoTauTau130": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
@@ -724,7 +738,7 @@
     "summedWeightsNorm": 89346818.0, 
     "summedWeights": 89346818.0, 
     "nevents": 91350867, 
-    "nNtupleFiles": 8, 
+    "nNtupleFiles": 9, 
     "nlumis": 574894
   }, 
   "TT": {
@@ -738,7 +752,7 @@
     "summedWeightsNorm": 92925926.0, 
     "summedWeights": 92925926.0, 
     "nevents": 92925926, 
-    "nNtupleFiles": 20, 
+    "nNtupleFiles": 26, 
     "nlumis": 466566
   }
 }

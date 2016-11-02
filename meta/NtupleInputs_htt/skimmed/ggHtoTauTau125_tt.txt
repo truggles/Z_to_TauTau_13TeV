@@ -1,2 +1,3 @@
-/data/truggles/oct31_VVL_Study/ggHtoTauTau125_0_tt.root
-/data/truggles/oct31_VVL_Study/ggHtoTauTau125_1_tt.root
+/data/truggles/nov02-SMHTT-svFit/ggHtoTauTau125_0_tt.root
+/data/truggles/nov02-SMHTT-svFit/ggHtoTauTau125_1_tt.root
+/data/truggles/nov02-SMHTT-svFit/ggHtoTauTau125_2_tt.root
