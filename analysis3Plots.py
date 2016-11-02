@@ -54,13 +54,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
                     genApp = gen.lower()
                     samples[ sample+'-'+gen ]['group'] = genApp
-            #if sample == 'TT' :
-            #    for gen in ['TTT', 'TTJ'] :
-            #        samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
-            #        genApp = gen.lower()
-            #        samples[ sample+'-'+gen ]['group'] = genApp
+            if sample == 'TT' :
+                for gen in ['TTT', 'TTJ'] :
+                    samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
+                    genApp = gen.lower()
+                    samples[ sample+'-'+gen ]['group'] = genApp
 
         # Clean the samples list
+        if analysis == 'htt' and 'TT' in samples.keys() :
+            del samples[ 'TT' ]
         for dyJet in dyJets :
             if dyJet in samples.keys() :
                 del samples[ dyJet ]
@@ -116,7 +118,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     sampInfo = { 'htt' : {
         'dib' : [ROOT.kRed+2, 'VV'],
-        'top' : [ROOT.kBlue-8, 't#bar{t}'],
+        'ttt' : [ROOT.kBlue-8, 't#bar{t}'],
+        'ttj' : [ROOT.kBlue-8, 't#bar{t}+Jets'],
         'qcd' : [ROOT.TColor.GetColor(250,202,255), 'QCD'], #kMagenta-10
         'ztt' : [ROOT.TColor.GetColor(248,206,104), 'Z#rightarrow#tau#tau'], #kOrange-4,
         'zl' : [ROOT.kAzure+2, 'Z#rightarrowee (lepton)'],
@@ -412,7 +415,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if not qcdMake :
                     #print "Adding QCD: ",sampHistos['qcd'].Integral()
                     stack.Add( sampHistos['qcd'] )
-                stack.Add( sampHistos['top'] )
+                stack.Add( sampHistos['ttt'] )
+                stack.Add( sampHistos['ttj'] )
                 stack.Add( sampHistos['dib'] )
                 stack.Add( sampHistos['wjets'] )
                 if channel != 'em' :
@@ -461,7 +465,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """
             uncertNormMap = { 'htt' : {
                 'qcd' : .20,
-                'top' : .15,
+                'ttt' : .15,
+                'ttj' : .15,
                 'dib' : .10,
                 'wjets' : .10,
                 'ztt' : .05,

@@ -51,6 +51,7 @@ def skipSystShapeVar( var, sample, channel ) :
         # top pt reweighting only applied to ttbar
         elif '_topPt' in var :
             if 'TT' not in sample : return True
+            elif 'data' in sample :return True
             elif 'DYJets' in sample : return True
         return False
 

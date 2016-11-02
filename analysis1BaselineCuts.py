@@ -444,6 +444,10 @@ def drawHistos(analysis, samples, **fargs ) :
                 'tt' : '*(gen_match_1 != 5 && gen_match_2 != 5)'},
         'QCD' : {'em' : '*(FFWeightQCD)',
                 'tt' : '*(FFWeightQCD)'},
+        'TTT' : {
+                'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
+        'TTJ' : {
+                'tt' : '*(gen_match_1 != 5 || gen_match_2 != 5)'},
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -460,6 +464,10 @@ def drawHistos(analysis, samples, **fargs ) :
         loopList = []
         if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
+            loopList = genList
+            loopList.append( sample ) 
+        if sample == 'TT' and analysis == 'htt' :
+            genList = ['TTT', 'TTJ']
             loopList = genList
             loopList.append( sample ) 
         elif 'data' in sample and fargs['doFRMthd'] == 'true' :

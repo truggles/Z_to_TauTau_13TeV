@@ -92,7 +92,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['DYJetsLow-ZLL']   = ('kOrange-4', '_ZLL_')
     samples['T-tW']     = ('kYellow+2', '_VV_')
     samples['T-tchan']     = ('kYellow+2', '_VV_')
-    samples['TT']       = ('kBlue-8', '_TT_')
+    samples['TT-TTT']       = ('kBlue-8', '_TTT_')
+    samples['TT-TTJ']       = ('kBlue-8', '_TTJ_')
     samples['Tbar-tW']  = ('kYellow-2', '_VV_')
     samples['Tbar-tchan']  = ('kYellow-2', '_VV_')
     samples['WJets']    = ('kAzure+2', '_W_')
@@ -139,7 +140,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['ZHTauTau125'] = ('kGreen', '_ZH125_')
     samples['ZHTauTau130'] = ('kGreen', '_ZH130_')
     
-    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_EWKZ_']
+    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TTT_','_TTJ_','_QCD_','_VV_','_W_','_EWKZ_']
     for name in ['_qqH120_','_ggH120_','_WH120_','_ZH120_'] :
         nameArray.append( name )
         nameArray.append( name.replace('120','125' ) )
@@ -390,7 +391,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
                     if '_zPt' in var and name not in ['_ZTT_','_ZL_','_ZJ_','_ZLL_',] : continue
                     if '_topPt' in var :
-                        if name == '_TT_' :
+                        if name in ['_TTT_','_TTJ_'] :
                             if '_topPtUp' in var :
                                 histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVUp' )
                                 histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVUp' )
@@ -398,7 +399,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                                 histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
                                 histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
                         else : continue
-                    elif name == '_TT_' : continue # this is to catch TT when it's not wanted
+                    elif name in ['_TTT_','_TTJ_'] : continue # this is to catch TT when it's not wanted
                     elif '_energyScaleUp' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
