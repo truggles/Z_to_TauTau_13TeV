@@ -159,13 +159,13 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_JetEnUp')
                 # We changed naming to simple mjj, njetingap20 and jdeta for sync for nominal
                 additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_JetEnUp')
-                additionalCutToUse = additionalCutToUse.replace('njetingap20','vbfJetVeto20_JetEnUp')
+                additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnUp')
                 additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnUp')
                 #print additionalCutToUse+"\n"
             if 'Down' in var :
                 additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_JetEnDown')
                 additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_JetEnDown')
-                additionalCutToUse = additionalCutToUse.replace('njetingap20','vbfJetVeto20_JetEnDown')
+                additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnDown')
                 additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnDown')
                 #print additionalCutToUse+"\n"
                 
