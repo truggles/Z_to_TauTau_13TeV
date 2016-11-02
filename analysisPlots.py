@@ -61,15 +61,15 @@ def ESCuts( sample, channel, var ) :
     tau2PtCut = 40.
     tau1PtCut = 50.
     if len( channel ) == 4 : return '*(1)'
-    if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
+    if 'data' in sample :
         if channel == 'tt' :
             return '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)
         if channel == 'em' :
             return '*(pt_1 > 13 && pt_2 > 10)'
     ESMap = {
         'tt' : { 
-            '_energyScaleUp' : '*((pt_1*1.03) > %s && (pt_2*1.03) > %s)' % (tau1PtCut, tau2PtCut),
-            '_energyScaleDown' : '*((pt_1*0.97) > %s && (pt_2*0.97) > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleUp' : '*( ((gen_match_1==5 && pt_1*1.03 > %s) || (gen_match_1!=5 && pt_1 > %s)) && ((gen_match_2==5 && pt_2*1.03 > %s) || (gen_match_2!=5 && pt_2 > %s)))' % (tau1PtCut, tau1PtCut, tau2PtCut, tau2PtCut),
+            '_energyScaleDown' : '*( ((gen_match_1==5 && pt_1*0.97 > %s) || (gen_match_1!=5 && pt_1 > %s)) && ((gen_match_2==5 && pt_2*0.97 > %s) || (gen_match_2!=5 && pt_2 > %s)))' % (tau1PtCut, tau1PtCut, tau2PtCut, tau2PtCut),
             '_NoShift' : '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)},
         'em' : { 
             '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
@@ -125,11 +125,20 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             if '_zPtUp' in var : shapeSyst = '*(zPtWeight)'
             elif '_zPtDown' in var : shapeSyst = '*(1./zPtWeight)'
             
-        # Energy Scale reweighting only applied to DYJets and signal
+        # Energy Scale reweighting applied to all Real Hadronic Taus
+        # gen_match == 5
         # this is not an "if" style shape b/c we need to apply
         # normal pt cuts if the shape syst is not called
         # so instead we appeand it to what ever else we have
         shapeSyst += ESCuts( sample, channel, var )
+        # Additionally, if we have Energy Scale, we also need
+        # to change any Higgs_Pt vars to Higgs_Pt_UP/DOWN
+        additionalCutToUse = additionalCut
+        if 'energyScale' in var and 'data' not in sample :
+            if 'Up' in var and 'pt_sv' in additionalCutToUse :
+                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_UP')
+            elif 'Down' in var and 'pt_sv' in additionalCutToUse :
+                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_DOWN')
 
 
         if ":" in var :
@@ -152,10 +161,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
-        #additionalCut += '*(Z_Pt>100)'
-        #additionalCut += '*(chargedIsoPtSum_2 < 0.5)'
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCut, sfs, xsec, shapeSyst) 
-        #totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (xsec, sfs, additionalCut)
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst) 
         #print totalCutAndWeightMC
 
 
@@ -213,12 +219,12 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
-                chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s' % (additionalCut, dataES) )
+                chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s' % (additionalCutToUse, dataES) )
                 histos[ var ] = gPad.GetPrimitive( var )
                 if var == 'm_vis' :
                     print 'm_vis'
                     print "Data Count:", histos[ var ].Integral()
-                    #print "Cut: %s%s" % (additionalCut, dataES)
+                    #print "Cut: %s%s" % (additionalCutToUse, dataES)
             else :
 
                 chain.Draw( '%s>>%s' % (plotVar, var), '%s' % totalCutAndWeightMC )
