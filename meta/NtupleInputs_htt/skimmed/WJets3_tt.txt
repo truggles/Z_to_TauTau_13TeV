@@ -1,2 +1,4 @@
-/data/truggles/svFitSept16withPFMet/WJets3_0_tt.root
-/data/truggles/svFitSept16withPFMet/WJets3_1_tt.root
+/data/truggles/oct31_VVL_Study/WJets3_0_tt.root
+/data/truggles/oct31_VVL_Study/WJets3_1_tt.root
+/data/truggles/oct31_VVL_Study/WJets3_2_tt.root
+/data/truggles/oct31_VVL_Study/WJets3_3_tt.root

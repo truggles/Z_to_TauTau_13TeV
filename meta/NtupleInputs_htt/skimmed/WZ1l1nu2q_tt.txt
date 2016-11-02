@@ -1,4 +1,5 @@
-/data/truggles/svFitSept16withPFMet/WZ1l1nu2q_0_tt.root
-/data/truggles/svFitSept16withPFMet/WZ1l1nu2q_1_tt.root
-/data/truggles/svFitSept16withPFMet/WZ1l1nu2q_2_tt.root
-/data/truggles/svFitSept16withPFMet/WZ1l1nu2q_3_tt.root
+/data/truggles/oct31_VVL_Study/WZ1l1nu2q_0_tt.root
+/data/truggles/oct31_VVL_Study/WZ1l1nu2q_1_tt.root
+/data/truggles/oct31_VVL_Study/WZ1l1nu2q_2_tt.root
+/data/truggles/oct31_VVL_Study/WZ1l1nu2q_3_tt.root
+/data/truggles/oct31_VVL_Study/WZ1l1nu2q_4_tt.root

@@ -1,3 +1,2 @@
-/data/truggles/svFitSept16withPFMet/DYJets4_0_tt.root
-/data/truggles/svFitSept16withPFMet/DYJets4_1_tt.root
-/data/truggles/svFitSept16withPFMet/DYJets4_2_tt.root
+/data/truggles/oct31_VVL_Study/DYJets4_0_tt.root
+/data/truggles/oct31_VVL_Study/DYJets4_1_tt.root
