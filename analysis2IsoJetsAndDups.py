@@ -660,10 +660,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     byVVLooseIsolationMVArun2v1DBoldDMwLT_1B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_1', byVVLooseIsolationMVArun2v1DBoldDMwLT_1, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_1/F')
     byVVLooseIsolationMVArun2v1DBoldDMwLT_2 = array('f', [ 0 ] )
     byVVLooseIsolationMVArun2v1DBoldDMwLT_2B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_2', byVVLooseIsolationMVArun2v1DBoldDMwLT_2, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_2/F')
-    byVLooseIsolationMVArun2v1DBoldDMwLT_1 = array('f', [ 0 ] )
-    byVLooseIsolationMVArun2v1DBoldDMwLT_1B = tnew.Branch('byVLooseIsolationMVArun2v1DBoldDMwLTv2_1', byVLooseIsolationMVArun2v1DBoldDMwLT_1, 'byVLooseIsolationMVArun2v1DBoldDMwLTv2_1/F')
-    byVLooseIsolationMVArun2v1DBoldDMwLT_2 = array('f', [ 0 ] )
-    byVLooseIsolationMVArun2v1DBoldDMwLT_2B = tnew.Branch('byVLooseIsolationMVArun2v1DBoldDMwLTv2_2', byVLooseIsolationMVArun2v1DBoldDMwLT_2, 'byVLooseIsolationMVArun2v1DBoldDMwLTv2_2/F')
     isoCode1 = array('f', [ 0 ] )
     isoCode1B = tnew.Branch('isoCode1', isoCode1, 'isoCode1/F')
     isoCode2 = array('f', [ 0 ] )
@@ -1146,11 +1142,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             # Additional VVLoose and VVTight Iso WPs
             if channel == 'tt' :
                 byVVTightIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVTight( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
-                byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVTight( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
                 byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVLoose( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
+                byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVTight( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
                 byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVLoose( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
-                byVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVLoose( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
-                byVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVLoose( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
                 isoCode1[0] = setIsoCode( row, l1, byVVTightIsolationMVArun2v1DBoldDMwLT_1[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0]) 
                 isoCode2[0] = setIsoCode( row, l2, byVVTightIsolationMVArun2v1DBoldDMwLT_2[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0]) 
 
