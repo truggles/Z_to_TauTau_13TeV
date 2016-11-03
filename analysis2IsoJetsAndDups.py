@@ -1090,8 +1090,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' : tauIso == 'TightIso'
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
-                    tauIDweight_1[0] = 0.951
-                    tauIDweight_2[0] = 0.951
+                    tauIDweight_1[0] = 0.9
+                    tauIDweight_2[0] = 0.9
 
                     # Tau Energy Scale Saved
                     if gen_match_1[0] == 5 :
