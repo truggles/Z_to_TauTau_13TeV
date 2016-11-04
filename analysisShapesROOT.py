@@ -190,10 +190,11 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             'm_sv' : 'svFitMass',
             'mt_sv' : 'svFitMt',
             'mt_tot' : 'mtTot',
-            'Higgs_Pt:m_sv' : 'svFitMass2D',
+            'pt_sv:m_sv' : 'svFitMass2D',
+            'pt_1:m_sv' : 'svFitMass2D',
             'mjj:m_sv' : 'svFitMass2D',
             }
-        if 'Unroll' in ops['useQCDMakeName'] : 
+        if ops['category'] == '0jet2D' : 
             append = '_svFitMass2D'
         else :
             append = '_'+appendMap[baseVar]
@@ -205,7 +206,13 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             mid = 'sm'
     
         shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, channel, mid, append), 'UPDATE')
-        shapeDir = shapeFile.mkdir( channel + '_%s' % ops['category'], channel + '_%s' % ops['category'] )
+        # We have two pathways to create tt_0jet and need to maintain their seperate root files for 1D vs 2D
+        # so we need this override that renames 0jet2D -> 0jet and places in the unrolled root file
+        if ops['category'] == '0jet2D' : 
+            shapeDir = shapeFile.mkdir( channel + '_0jet', channel + '_0jet' )
+        else :
+            shapeDir = shapeFile.mkdir( channel + '_%s' % ops['category'], channel + '_%s' % ops['category'] )
+        assert( shapeDir != None ), "It looks like the directory already exists, remove the old root file and start again: rm httShapes/htt/htt_tt.inputs-sm-13TeV_ ..."
     
         for var in newVarMap.keys() :
     
@@ -341,6 +348,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
                     #print "Using QCD SCALE FACTOR <<<< NEW >>>>"
                     qcdScale = ops['qcdSF']
+                    assert( qcdScale > 0. ), "\nQCD Scale is wrong, you probably need to rerun all channels together\n"
                     print "Skip rebin; Scale QCD shape by %f" % qcdScale
                     #print "QCD yield Pre: %f" % hist.Integral()
                     hist.Scale( qcdScale )
@@ -359,6 +367,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 #    histos[ samples[ sample ][1] ].Add( hNew )
                 if ":" in var :
                     hNew = unroll2D( hist )
+                    #print "nbinsX",hNew.GetNbinsX() ,hNew.GetBinLowEdge(1),hNew.GetBinLowEdge( hNew.GetNbinsX()+1 )
                 else :
                     hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
                 histos[ samples[ sample ][1] ].Add( hNew )

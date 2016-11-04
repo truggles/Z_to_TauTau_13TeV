@@ -191,12 +191,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['isSSQCD'] and not var == 'eta_1' : continue
 
             # speed up 2D plotting
-            if '2jet2D' in ops['qcdMakeDM'] :
-                if 'Higgs_Pt:m_sv' in var : continue
-            if '1jet2D' in ops['qcdMakeDM'] :
-                if 'mjj:m_sv' in var : continue
-            if '0jet' in ops['qcdMakeDM'] :
-                if ':' in var : continue
+            if ":" in var :
+                if 'VBF' in ops['qcdMakeDM'] :
+                    if not ('mjj' in var or 'vbfMass' in var) : continue
+                elif 'boosted' in ops['qcdMakeDM'] :
+                    if not ('pt_sv' in var) : continue
+                #elif '0jet' in ops['qcdMakeDM'] :
+                #    if not ('pt_1' in var) : continue
+                else : continue
+
 
             #if 'mt_sv' in var : continue
             print "Var:",var

@@ -113,9 +113,9 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     import analysis3Plots
     from meta.sampleNames import returnSampleDetails
     samples = returnSampleDetails( analysis, samples )
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    ### LEGACY HTT CATEGORIES ###
+    #### LEGACY HTT CATEGORIES ###
     higgsPtVar = 'Higgs_Pt'
     higgsPtVar = 'pt_sv'
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_low' % (sign, isoT, isoL)
@@ -145,32 +145,32 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-   #### For checking distributions ###
-   #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet' % (sign, isoT, isoL)
-   #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
-   #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-   #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
-
-   #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet' % (sign, isoT, isoL)
-   #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2)*%s' % (Zsign, isoL1ML2loose)
-   #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-   #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    #### For checking distributions ###
+    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet' % (sign, isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1)*%s' % (Zsign, isoL1ML2loose)
+    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+ 
+    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet' % (sign, isoT, isoL)
+    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==2)*%s' % (Zsign, isoL1ML2loose)
+    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ### 2D Distributions ###
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet2D' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && njetingap < 1 && %s>100)))*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
-    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTboosted' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && njetingap < 1 && %s>100)))*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT2jet2D' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5 && njetingap<1)*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
-    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTVBF' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5 && njetingap<1)*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    #params['mid3'] = folder+'_%sl1ml2_%s_%sZTT0jet2D' % (sign, isoT, isoL)
-    #params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==0)*%s' % (Zsign, isoL1ML2loose)
-    #setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT0jet2D' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==0)*%s' % (Zsign, isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
 
     
