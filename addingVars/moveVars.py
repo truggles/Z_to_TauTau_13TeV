@@ -91,6 +91,7 @@ def mapToNewTree( files, treeName, varMap, evtMap ) :
         f = ROOT.TFile( file, 'UPDATE' )
         #print "Updating file",f
         t = f.Get( treeName )
+        totalEvents += t.GetEntries()
         print "Events: %10i in file: %s" % (t.GetEntries(), f.GetName())
         #print t
         for key, val in varMap.iteritems() :
@@ -175,12 +176,12 @@ if '__main__' in __name__ :
 
     # Map of samples to the variables of interest and output file names
     inMap = OrderedDict()
-    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets4_*_tt.root']
-    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets3_*_tt.root']
-    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets2_*_tt.root']
-    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets1_*_tt.root']
-    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsBig_*_tt.root']
-    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsLow_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets4_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets3_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets2_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets1_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsBig_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsLow_*_tt.root']
     inMap['/hdfs/store/user/truggles/oct22_2015ZTT76xMC/TT_TuneCUETP8M1_13TeV-powheg-pythia8'] = [varMapTT, 'TauTau_13_Recoil0_TESType0_isWJ0_metSyst3-TT_*_tt.root']
     
 
@@ -245,7 +246,6 @@ if '__main__' in __name__ :
 
     #newTreeName = 'tt/Ntuple'
     #mapToNewTree( newFiles, newTreeName, varMap, evtMap )
-
 
 
 
