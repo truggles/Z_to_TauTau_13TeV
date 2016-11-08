@@ -7,6 +7,7 @@ from array import array
 
 
 def getFileList( dirName, sampName ) :
+    assert( '.root' in sampName ), "ERROR: conclude your sample name with .root"
     assert( os.path.exists( dirName ) ), "ERROR: directory doesn't exist"
     files = glob.glob(dirName+'/'+sampName)
     return files
@@ -20,7 +21,9 @@ def getFileList( dirName, sampName ) :
 def mapInitialVars( files, treeName, vars, cut="" ) :
     eventMap = {}
     count = 0
+    saveName = ''
     for file in files :
+        if count == 0 : saveName = file.split('/')[-2]
         fileEventMap = {}
         f = ROOT.TFile( file, 'r' )
         tInitial = f.Get( treeName )
@@ -65,7 +68,8 @@ def mapInitialVars( files, treeName, vars, cut="" ) :
     varNaming = ''
     for var in vars :
         varNaming += var
-    with open(varNaming+'.txt', 'w') as outFile :
+    #with open(varNaming+'.txt', 'w') as outFile :
+    with open(saveName+'.txt', 'w') as outFile :
         for key, val in eventMap.iteritems() :
             outFile.write( repr(key)+':'+repr(val)+'\n' )
         outFile.close()
@@ -81,11 +85,11 @@ def mapToNewTree( files, treeName, varMap, evtMap ) :
     newVals = {}
     matched = 0
     totalEvents = 0
+    #tmpCut = '(t1Pt > 38 && t2Pt > 38 && t1AbsEta < 2.1 && t2AbsEta < 2.1 && t1_t2_DR > 0.5 && abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2 && abs( t1Charge ) == 1 && abs( t2Charge ) == 1 && t1ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && t2ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0 && t1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1)'
     for file in files :
         f = ROOT.TFile( file, 'UPDATE' )
         #print "Updating file",f
         t = f.Get( treeName )
-        totalEvents += t.GetEntries()
         print "Events: %10i in file: %s" % (t.GetEntries(), f.GetName())
         #print t
         for key, val in varMap.iteritems() :
@@ -97,6 +101,11 @@ def mapToNewTree( files, treeName, varMap, evtMap ) :
             newBranches[var] = [ t.Branch(var, newVals[var], var+'/F') ]
             #print newBranches[var]
 
+        #tTmp = t.CopyTree( tmpCut )
+        #totalEvents += tTmp.GetEntries()
+        #for row in tTmp :   
+
+        totalEvents += t.GetEntries()
         for row in t :   
             # Removed Run because we're working on MC
             evnIDTup = (row.lumi, row.evt, round(row.t1Pt,6), round(row.t2Pt,6))
@@ -104,12 +113,12 @@ def mapToNewTree( files, treeName, varMap, evtMap ) :
 
             # See if key exists and save value
             if evnIDTup not in evtMap.keys() :
-                print evnIDTup, " not in the initial files, will fill with default values"
-                print "Iso1",row.t1ByIsolationMVArun2v1DBoldDMwLTraw
-                print "Iso2",row.t2ByIsolationMVArun2v1DBoldDMwLTraw
+                #print evnIDTup, " not in the initial files, will fill with default values"
+                #print "Iso1",row.t1ByIsolationMVArun2v1DBoldDMwLTraw
+                #print "Iso2",row.t2ByIsolationMVArun2v1DBoldDMwLTraw
                 for key, val in varMap.iteritems() :
-                    var = val[0]
-                    newVals[var][0] = -1
+                    newVals[ val[0] ][0] = -99
+                    newBranches[ val[0] ][0].Fill()
                 
             
             else : # we have a match!
@@ -133,38 +142,108 @@ def mapToNewTree( files, treeName, varMap, evtMap ) :
     print "Number of events matched:",matched
 
 
+# Read the event map from the saved output file of mapInitialVars
+def eventMapFromFile( fName ) :
+    evtMap = {}
+    with open(fName, 'r') as inFile :
+        for line in inFile :
+
+            info = line.strip().split(':')
+            key = info[0].strip('(').strip(')').split(', ')
+            keyTup = (int(key[0]), long(key[1]), float(key[2]), float(key[3]))
+            val = info[1].strip('[').strip(']').split(', ')
+            valList = [float(f) for f in val]
+            evtMap[keyTup] = valList
+
+        inFile.close()
+    return evtMap
+
+
+
+
 if '__main__' in __name__ :
-    #dName = '/cms/truggles/ZTT/CMSSW_8_0_13/src/Z_to_TauTau_13TeV/addingVars'
-    ##sampName = 'make_ntuples_cfg-00090D4B-AFC1-E511-B88B-001E673986B5' # No .root on the end
-    #sampName = 'make_ntuples_cfg-00*' # No .root on the end
-    dName = '/hdfs/store/user/truggles/oct30_2015ZTT76x/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'
-    #sampName = 'make_ntuples_cfg-00090D4B-AFC1-E511-B88B-001E673986B5' # No .root on the end
+
+    varMapTT = OrderedDict()
+    varMapTT['topQuarkPt1'] = 'topQuarkPt1_v7',
+    varMapTT['topQuarkPt2'] = 'topQuarkPt2_v7',
+    varMapDY = OrderedDict()
+    varMapDY['genEta'] = 'genEta_v7',
+    varMapDY['genpT'] = 'genpT_v7',
+    varMapDY['genM'] = 'genM_v7',
+    varMapDY['genMass'] = 'genMass_v7',
+
+    # Map of samples to the variables of interest and output file names
+    inMap = OrderedDict()
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets4_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets3_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets2_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets1_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsLow_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsBig_*_tt.root']
+    inMap['/hdfs/store/user/truggles/oct22_2015ZTT76xMC/TT_TuneCUETP8M1_13TeV-powheg-pythia8'] = [varMapTT, 'TauTau_13_Recoil0_TESType0_isWJ0_metSyst3-TT_*_tt.root']
+    
+
+    # Sampe for all samples
+    #newDir = '/cms/truggles/ZTT/CMSSW_8_0_13/src/Z_to_TauTau_13TeV/addingVars'
+    newDir = '/nfs_scratch/truggles/addingVar'
     sampName = 'make_ntuples_cfg-*.root'
     treeName = 'tt/final/Ntuple'
-    files = getFileList( dName, sampName )
-
-    # old var name, new var name (can be same as old var name)
-    # need to keep this in order so when we retrieve that vals
-    # they are correct
-    varMap = OrderedDict()
-    #varMap['topQuarkPt1'] = 'topQuarkPt1_v5',
-    #varMap['topQuarkPt2'] = 'topQuarkPt2_v5',
-    varMap['genEta'] = 'genEta_v3',
-    varMap['genpT'] = 'genpT_v3',
-    varMap['genM'] = 'genM_v3',
-    varMap['genMass'] = 'genMass_v3',
-    tmpCut = '(t1Pt > 38 && t2Pt > 38 && t1AbsEta < 2.1 && t2AbsEta < 2.1 && t1_t2_DR > 0.5 && abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2 && abs( t1Charge ) == 1 && abs( t2Charge ) == 1 && t1ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && t2ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0 && t1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1)'
-    #tmpCut = ""
-    evtMap = mapInitialVars( files, treeName, varMap, tmpCut )
-
-    # Add vars to other files
-    newDir = '/cms/truggles/ZTT/CMSSW_8_0_13/src/Z_to_TauTau_13TeV/addingVars'
-    newSample = 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets4_*_tt.root'
-    newFiles = getFileList( newDir, newSample )
-    print newFiles
-
     newTreeName = 'tt/Ntuple'
-    mapToNewTree( newFiles, newTreeName, varMap, evtMap )
+    tmpCut = '(t1Pt > 38 && t2Pt > 38 && t1AbsEta < 2.1 && t2AbsEta < 2.1 && t1_t2_DR > 0.5 && abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2 && abs( t1Charge ) == 1 && abs( t2Charge ) == 1 && t1ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && t2ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0 && t1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1)'
+
+    for dName, val in inMap.iteritems() :
+        print "Directory path",dName
+        print "Variables to Map:"
+        varMap = val[0]
+        newSample = val[1]
+        print varMap
+
+        files = getFileList( dName, sampName )
+
+        # old var name, new var name (can be same as old var name)
+        # need to keep this in order so when we retrieve that vals
+        # they are correct
+        evtMap = mapInitialVars( files, treeName, varMap, tmpCut )
+
+        # Read in eventMap from file
+        # this could be helpful if final mapping is bad, but you don't
+        # need to redo the initial skim
+        #outputFileName = files[0].split('/')[-2]
+        #evtMap = eventMapFromFile( outputFileName+'.txt' )
+
+        # Add vars to other files
+        newFiles = getFileList( newDir, newSample )
+        print "Length of new files",len(newFiles)
+        print newFiles
+
+        mapToNewTree( newFiles, newTreeName, varMap, evtMap )
+
+    # For non-loop debugging
+    ##dName = '/cms/truggles/ZTT/CMSSW_8_0_13/src/Z_to_TauTau_13TeV/addingVars'
+    #dName = '/hdfs/store/user/truggles/oct30_2015ZTT76x/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'
+    #sampName = 'make_ntuples_cfg-*.root'
+    #treeName = 'tt/final/Ntuple'
+    #files = getFileList( dName, sampName )
+
+    ## old var name, new var name (can be same as old var name)
+    ## need to keep this in order so when we retrieve that vals
+    ## they are correct
+    #tmpCut = '(t1Pt > 38 && t2Pt > 38 && t1AbsEta < 2.1 && t2AbsEta < 2.1 && t1_t2_DR > 0.5 && abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2 && abs( t1Charge ) == 1 && abs( t2Charge ) == 1 && t1ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && t2ByIsolationMVArun2v1DBoldDMwLTraw > -0.4 && eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0 && t1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5 && t1DecayModeFinding == 1 && t2DecayModeFinding == 1)'
+    #evtMap = mapInitialVars( files, treeName, varMap, tmpCut )
+
+    ## Read in eventMap from file
+    ## this could be helpful if final mapping is bad, but you don't
+    ## need to redo the initial skim
+    ##evtMap = eventMapFromFile( 'genEtagenpTgenMgenMass.txt' )
+
+    ## Add vars to other files
+    #newDir = '/cms/truggles/ZTT/CMSSW_8_0_13/src/Z_to_TauTau_13TeV/addingVars'
+    #newSample = 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets4_*_tt.root'
+    #newFiles = getFileList( newDir, newSample )
+    #print newFiles
+
+    #newTreeName = 'tt/Ntuple'
+    #mapToNewTree( newFiles, newTreeName, varMap, evtMap )
 
 
 
