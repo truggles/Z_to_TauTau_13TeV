@@ -686,6 +686,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
+    __ZWEIGHT__ = array('f', [ 0 ] )
+    __ZWEIGHT__B = tnew.Branch('__ZWEIGHT__', __ZWEIGHT__, '__ZWEIGHT__/F')
     muonSF1 = array('f', [ 0 ] )
     muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
     muonSF2 = array('f', [ 0 ] )
@@ -1116,12 +1118,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 else : topWeight[0] = 1
                 #topWeight[0] = 1
 
+                # genMass is a default from FSA, that doesn't conform to HTT genMass
+                if hasattr( row, 'genMass' ) and hasattr( row, 'genM' ) :
+                    setattr( row, 'genMass', getattr( row, 'genM' ))
+
                 # Apply z Pt Reweighting to LO DYJets samples
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
-
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
+                __ZWEIGHT__[0] = zPtWeight[0] # FIXME - tmp for Isobel sync
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
                 weight[0] *= zPtWeight[0] * topWeight[0]
