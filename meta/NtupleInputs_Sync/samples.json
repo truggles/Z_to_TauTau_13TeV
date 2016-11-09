@@ -26,5 +26,19 @@
     "nevents": 498892, 
     "nNtupleFiles": 6, 
     "nlumis": 2702
+  }, 
+  "Sync-DYJets4": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 4101383, 
+    "DAS Path": "/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM", 
+    "nfiles": 94, 
+    "nblocks": 6, 
+    "Cross Section (pb)": 63.776239999999994, 
+    "summedWeightsNorm": 4101383.0, 
+    "summedWeights": 4101383.0, 
+    "nevents": 4101383, 
+    "nNtupleFiles": 94, 
+    "nlumis": 30162
   }
 }

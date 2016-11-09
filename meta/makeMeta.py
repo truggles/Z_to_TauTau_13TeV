@@ -12,7 +12,7 @@ from sampleNames import returnSampleDetails
 def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
 
     currentDASSamples = {
-        'Sync' : ['Sync-SUSY160','Sync-VBF125'],
+        'Sync' : ['Sync-SUSY160','Sync-VBF125','Sync-DYJets4'],
         'azh' : ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'ZZ4l', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4m', 'ggZZ4tau', 'WWW'],
         'htt' : ['DYJetsAMCNLO', 'DYJets', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'WZ3l1nu'], # just removed WZJets, ZZ4l, WW, WZ, ZZ
     }

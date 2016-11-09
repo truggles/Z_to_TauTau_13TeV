@@ -37,6 +37,10 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 3.782 * 0.0627,
                 'group' : 'sync'},
+            'Sync-DYJets4' :    { 
+                'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % c80xMAOD2,
+                'xsec' : 54.8 * 1.1638,
+                'group' : 'dyj'},
         }, # end Sync sample
 
         'htt' : {

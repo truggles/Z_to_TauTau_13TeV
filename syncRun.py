@@ -25,14 +25,16 @@ print "zHome: ",zHome
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
 ''' General samples.json file from /data/truggles files '''
-#makeMetaJSON( analysis, channel='tt' )
+makeMetaJSON( analysis, channel='tt' )
 ''' samples.json for post /hdfs skim -> uwlogin samples '''
 #makeMetaJSON( analysis, channel='tt', skimmed=True )
 os.chdir('..')
 
 
 ''' Preset samples '''
-SamplesSync = ['Sync-HtoTT','Sync-VBF125']
+SamplesSync = ['Sync-HtoTT','Sync-VBF125','Sync-DYJets4']
+SamplesSync = ['Sync-VBF125',]
+SamplesSync = ['Sync-DYJets4',]
 samples = SamplesSync
 
 ''' These parameters are fed into the 2 main function calls.
@@ -52,9 +54,9 @@ params = {
     #'cutMapper' : 'syncCutsMSSMNtuple',
     'cutMapper' : 'syncCutsSMHTTNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
-    'mid1' : '1Sept28a',
-    'mid2' : '2Sept28a',
-    'mid3' : '3Sept28a',
+    'mid1' : '1Nov08withOutTrig',
+    'mid2' : '2Nov08withOutTrig',
+    'mid3' : '3Nov08withOutTrig',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -73,7 +75,7 @@ import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
