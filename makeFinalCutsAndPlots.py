@@ -85,7 +85,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
     else : 
         Zsign = 1
         
-    print "\n\nIsoL2Loose: %s\n\n" % isoL2loose
+    print "\n\nIsoL1ML2Loose: %s\n\n" % isoL1ML2loose
     print "skipSSQCDDetails:", skipSSQCDDetailsX
 
     """
@@ -251,36 +251,13 @@ def plotSingle2( folder, folder2 ) :
 
 if __name__ == '__main__' :
 
-    tups = [
-        #('SS', 'OS', 'em,tt'),
-#        ('SS', 'OS', 'em'),
-#        ('SS', 'OS', 'tt'),
-        #('tt_SSno2p', 'tt_OSno2p', 'tt'),
-        #('tt_SSno2pZpt60', 'tt_OSno2pZpt60', 'tt'),
-        ('SSpZetaCut', 'OSpZetaCut', 'em'),
-        ('SSpZetaCutNoBT', 'OSpZetaCutNoBT', 'em'),
-        ('SSpZetaCutBT', 'OSpZetaCutBT', 'em'),
-        #('tt_SStau0', 'tt_OStau0', 'tt', '0'),
-        #('tt_SStau1', 'tt_OStau1', 'tt', '1'),
-        #('tt_SStau10', 'tt_OStau10', 'tt', '10'),
-    ]
-
-    #folder = "2Feb02sDC"
-#    for tup in tups :
-#        plotThem( folder, tup[0], tup[1], tup[2] )
-    
     isoPairs = [
-#        ('VLoose','Loose'),
-#        ('Loose','Medium'),
-        #('Loose','Tight'),
-        ('Loose',isoVal),
-#        ('Medium','Tight'),
-        #('Medium','VTight'),
-       #('Tight','VTight'),
-        #('','Tight'),
-        #('','Medium'),
-        #('','Loose'),
-        ('',isoVal),
+# QCD Syst Mthd Closure        ('VLoose','Loose'), # qcd Syst check
+# QCD Syst Mthd Closure        ('Loose','Tight'), # qcd Syst check
+# QCD Syst Mthd Closure        ('','Tight'), # qcd Syst check
+# QCD Syst Mthd Closure        ('','Loose'), # qcd Syst check
+        ('Loose',isoVal), # Normal running
+        ('',isoVal), # Normal running
     ]
 
     for pair in isoPairs :
