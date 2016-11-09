@@ -46,6 +46,7 @@ def mapInitialVars( files, treeName, vars, cut="" ) :
             for var in vars :
                 # rounding happens here, remove if not desired
                 varList.append( round( getattr( row, var ), 6) )
+            #print varList
 
             # This portion is a waste of time if we have unique inputs
             # it simply shows if we have some duplicates that will
@@ -164,22 +165,22 @@ def eventMapFromFile( fName ) :
 if '__main__' in __name__ :
 
     varMapTT = OrderedDict()
-    varMapTT['topQuarkPt1'] = 'topQuarkPt1_v7',
-    varMapTT['topQuarkPt2'] = 'topQuarkPt2_v7',
+    varMapTT['topQuarkPt1'] = 'topQuarkPt1_v8',
+    varMapTT['topQuarkPt2'] = 'topQuarkPt2_v8',
     varMapDY = OrderedDict()
-    varMapDY['genEta'] = 'genEta_v7',
-    varMapDY['genpT'] = 'genpT_v7',
-    varMapDY['genM'] = 'genM_v7',
-    varMapDY['genMass'] = 'genMass_v7',
+    varMapDY['genEta'] = 'genEta_v8',
+    varMapDY['genpT'] = 'genpT_v8',
+    varMapDY['genM'] = 'genM_v8',
+    varMapDY['genMass'] = 'genMass_v8',
 
     # Map of samples to the variables of interest and output file names
     inMap = OrderedDict()
-    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets4_*_tt.root']
-    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets3_*_tt.root']
-    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets2_*_tt.root']
-    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets1_*_tt.root']
-    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsLow_*_tt.root']
-    inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsBig_*_tt.root']
+    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets4_*_tt.root']
+    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets3_*_tt.root']
+    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets2_*_tt.root']
+    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJets1_*_tt.root']
+    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsBig_*_tt.root']
+    #inMap['/hdfs/store/user/truggles/oct30_2015ZTT76x/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'] = [varMapDY, 'TauTau_13_Recoil2_TESType1_isWJ0_metSyst1-DYJetsLow_*_tt.root']
     inMap['/hdfs/store/user/truggles/oct22_2015ZTT76xMC/TT_TuneCUETP8M1_13TeV-powheg-pythia8'] = [varMapTT, 'TauTau_13_Recoil0_TESType0_isWJ0_metSyst3-TT_*_tt.root']
     
 
