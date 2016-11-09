@@ -1,4 +1,8 @@
-/data/truggles/svFitComplete/ZTT2015_Oct24/DYJets2_0_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/DYJets2_1_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/DYJets2_2_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/DYJets2_3_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_0_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_1_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_2_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_3_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_4_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_5_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_6_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets2_7_tt.root

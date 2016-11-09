@@ -1,6 +1,6 @@
-/data/truggles/svFitComplete/ZTT2015_Oct24/TT_0_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/TT_1_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/TT_2_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/TT_3_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/TT_4_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/TT_5_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/TT_0_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/TT_1_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/TT_2_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/TT_3_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/TT_4_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/TT_5_tt.root

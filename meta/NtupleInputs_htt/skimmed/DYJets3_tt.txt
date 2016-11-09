@@ -1,2 +1,4 @@
-/data/truggles/svFitComplete/ZTT2015_Oct24/DYJets3_0_tt.root
-/data/truggles/svFitComplete/ZTT2015_Oct24/DYJets3_1_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets3_0_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets3_1_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets3_2_tt.root
+/data/truggles/svFitComplete/Nov09VarSwapped/DYJets3_3_tt.root
