@@ -200,6 +200,9 @@ class DoubleTau35Efficiencies :
 
 
 if __name__ == '__main__' :
-    c = DoubleTau35Efficiencies()
-    print c.doubleTauTriggerEff(68., 'VTightIso', 'x', 'ss' )
+    c = DoubleTau35Efficiencies('tt')
+    print c.doubleTauTriggerEff(68., 'VTightIso', 5 ) # 5 = gen_match real tau
+    print c.doubleTauTriggerEff(68., 'VTightIso', 3 ) # 3 = gen_match NOT real tau
+    print c.doubleTauTriggerEff(68., 'TightIso', 5 ) # 5 = gen_match real tau
+    print c.doubleTauTriggerEff(68., 'TightIso', 3 ) # 3 = gen_match NOT real tau
 

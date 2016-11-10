@@ -1075,6 +1075,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # and real / fake tau status
                     # find tau iso and pass string for mapping appropriately
                     tauIso = 'NoIso'
+                    if getattr( row, l1+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'VLooseIso'
                     if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'LooseIso'
                     if getattr( row, l1+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
@@ -1083,9 +1085,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'TightIso'
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
-                    if analysis == 'Sync' : tauIso == 'TightIso'
+                    if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
                     trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0] )
                     tauIso = 'NoIso'
+                    if getattr( row, l2+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+                        tauIso = 'VLooseIso'
                     if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'LooseIso'
                     if getattr( row, l2+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
@@ -1094,7 +1098,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'TightIso'
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
-                    if analysis == 'Sync' : tauIso == 'TightIso'
+                    if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
                     tauIDweight_1[0] = 0.9
                     tauIDweight_2[0] = 0.9
