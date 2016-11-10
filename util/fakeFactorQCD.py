@@ -36,6 +36,9 @@ class fakeFactors :
         self.ffVBF = self.fileVBF.Get('ff_comb')
         self.fileBTagged = ROOT.TFile(cmssw_base+path+'_anyb/fakeFactors_%s.root' % date,'r')
         self.ffBTagged = self.fileBTagged.Get('ff_comb')
+        # Same sign was added as a control region for Inclusive selection only
+        self.fileInclusiveSS = ROOT.TFile(cmssw_base+path+'incl/fakeFactors_201610_SAMESIGN_looseVTight.root','r')
+        self.ffInclusiveSS = self.fileInclusiveSS.Get('ff_comb')
 
 
         #print self.ffInclusive
@@ -68,6 +71,8 @@ class fakeFactors :
         self.ff2jet.Delete()
         self.ffVBF.Delete()
         self.ffBTagged.Delete()
+        self.fileInclusiveSS.Close()
+        self.ffInclusiveSS.Delete()
         
 
     ### Methods to return the fake factor objects
@@ -93,6 +98,8 @@ class fakeFactors :
         return self.ffVBF
     def getBTagged( self ):
         return self.ffBTagged
+    def getInclusiveSS( self ):
+        return self.ffInclusiveSS
 
 
 

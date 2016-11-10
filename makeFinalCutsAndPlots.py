@@ -156,6 +156,12 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF='False' ) :
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
+    # Event though this is Same Sign below, keep the OS in the naming
+    # so it's easier to include in old code
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTinclusiveSS' % (sign, isoT, isoL)
+    params['additionalCut'] = '*(Z_SS==1)*%s' % (isoL1ML2loose)
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     
     return

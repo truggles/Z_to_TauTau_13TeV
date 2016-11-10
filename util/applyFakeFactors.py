@@ -38,6 +38,8 @@ def fillFakeFactorValues( analysis, mid2, sample, channel ) :
         ffQCD.getVBF(), 'VBF' )
     fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
         ffQCD.getBTagged(), 'BTagged' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.getInclusiveSS(), 'IncSS' )
 
 
     del ffQCD

@@ -119,7 +119,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     #samples['EWKWMinus'] = ('kAzure-12', '_VV_')
     #samples['EWKZ2l'] = ('kAzure-12', '_VV_')
     #samples['EWKZ2nu'] = ('kAzure-12', '_VV_')
-    samples['QCD']        = ('kMagenta-10', '_QCD_')
+    samples['QCD']        = ('kMagenta-10', '_jetFakes_')
     #samples['dataTT-B']  = ('kBlack', '_data_obs_')
     #samples['dataTT-C']  = ('kBlack', '_data_obs_')
     samples['dataTT-D']  = ('kBlack', '_data_obs_')
@@ -133,7 +133,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     samples['ggHtoTauTau125'] = ('kGreen', '_ggH125_')
     samples['ggHtoTauTau130'] = ('kGreen', '_ggH130_')
     
-    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_QCD_','_VV_','_W_','_ggH120_','_ggH125_','_ggH130_','_qqH120_','_qqH125_','_qqH130_']
+    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TT_','_jetFakes_','_VV_','_W_','_ggH120_','_ggH125_','_ggH130_','_qqH120_','_qqH125_','_qqH130_']
     
     if ops['mssm'] : # FIXME - make sure SM Higgs 120 and 130 don't overlap?
         masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
@@ -198,7 +198,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                 if doFF == 'True' :
                     if not (('_energyScale' in var) or ('_zPt' in var) or\
-                            ('_ffSyst' in var) or ('_ffStat' in var) or\
+                            ('_ffSyst' in var) or ('_ffStat' in var) or ('_topPt' in var) or\
                             ('_metResponse' in var) or ('_metResolution' in var)\
                             or ('_ffSub' in var) or (baseVar == var)) :
                         continue
@@ -355,6 +355,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 ''' Special ZTT scaling for DYJets -> ZTT samples '''
                 zttScaleTable = {
                     'inclusive' : 1.0,
+                    'inclusiveSS' : 1.0,
                     '0jet' : 1.0,
                     '1jet' : 1.0,
                     '2jet' : 1.0,
@@ -374,13 +375,13 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
                         if not '_ffSub' in var :
                             ffSubHist = dic.Get( var+'_ffSub' )
-                            print sample," FF Sub int",ffSubHist.Integral()
+                            #print sample," FF Sub int",ffSubHist.Integral()
                             ffSubHist2 = ffSubHist.Rebin( numBins, "rebinned", binArray )
                             ffSubHist2.GetXaxis().SetRangeUser( binArray[0], binArray[-1] )
                             if "DYJets" in sample and "ZTT" in sample :
                                 ffSubHist2.Scale( zttScaleTable[ops['category']] )
-                            histos[ '_QCD_' ].Add( ffSubHist2, -1.0 )
-                            print "FFSub Int",histos[ '_QCD_' ].Integral()
+                            histos[ '_jetFakes_' ].Add( ffSubHist2, -1.0 )
+                            #print "FFSub Int",histos[ '_jetFakes_' ].Integral()
                 #if sample == 'QCD' :
                 #    if doFF == 'True' :
                 #        print " \n### Using Fake Factor QCD Shape %.2f!!! ###\n" % hist.Integral()
@@ -450,9 +451,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         'metResolution' in var or 'metResponse' in var) :
                     if name in ['_data_obs_',] : continue 
                     if name in ['_VV_','_W_'] and not 'metRes' in var : continue 
-                    if name == '_QCD_' and not doFF == 'True' : continue 
-                    if name == '_QCD_' and not ('_ffSyst' in var or '_ffStat' in var) : continue 
-                    if ('_ffSyst' in var or '_ffStat' in var) and name != '_QCD_' : continue
+                    if name == '_jetFakes_' and not doFF == 'True' : continue 
+                    if name == '_jetFakes_' and not ('_ffSyst' in var or '_ffStat' in var) : continue 
+                    if ('_ffSyst' in var or '_ffStat' in var) and name != '_jetFakes_' : continue
                     if '_zPt' in var and not name in ['_ZTT_','_ZL_','_ZJ_','_ZLL_'] : continue
 
                     lep = 'x'

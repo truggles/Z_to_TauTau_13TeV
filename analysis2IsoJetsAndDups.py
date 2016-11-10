@@ -976,7 +976,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
-                if sample == 'TT' and hasattr( row, 'topQuarkPt1' ) :
+                if shortName == 'TT' and hasattr( row, 'topQuarkPt1_v8' ) :
                     top1Pt = row.topQuarkPt1
                     if top1Pt > 400 : top1Pt = 400
                     top2Pt = row.topQuarkPt2
@@ -991,14 +991,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel ) :
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
-                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
-                        if hasattr( row, 'genEta' ) :
-                            zPtWeightSMHTT[0] = zPtWeighterSMHTT.getZPtReweightSMHTT( row.genM, row.genpT, row.genEta )
+                    if hasattr( row, 'genM_v8' ) and hasattr( row, 'genpT_v8' ) and hasattr( row, 'genEta_v8' ) :
+                        #print "Has gen Eta"
+                        zPtWeightSMHTT[0] = zPtWeighterSMHTT.getZPtReweightSMHTT( row.genM_v8, row.genpT_v8, row.genEta_v8 )
                     else : # This is a back up at the moment, we want Gen!
                         zPtWeightSMHTT[0] = zPtWeighterSMHTT.getZPtReweightSMHTT( row.m_sv, row.p_sv, row.eta_sv )
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
-                weight[0] *= zPtWeightSMHTT[0] # * topWeight[0]
+                weight[0] *= zPtWeightSMHTT[0] * topWeight[0]
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]

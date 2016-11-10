@@ -45,7 +45,7 @@ os.chdir('..')
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
 SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJetsBig', 'DYJetsLow', 'DYJetsHigh', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130']
 SamplesDataCards = ['dataTT-D', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'Tbar-tchan', 'T-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZJets', 'WZ3l1nu', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130'] # Removing DYJetsHigh and DYJetsLow and dataTT-C and DYJetsBig
-#SamplesDataCards = ['ZZ4l',] 
+#SamplesDataCards = ['DYJetsLow','DYJets4'] 
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -62,21 +62,14 @@ params = {
     #'cutMapper' : 'syncCutsDC',
     #'cutMapper' : 'signalCuts',
     #'cutMapper' : 'fakeFactorCutsTT',
-    #XXX'cutMapper' : 'syncCutsDCqcdTES',
+    'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'syncCutsDCqcdTES5040',
-    #'mid1' : '1Sept30a', # Old Method
-    #'mid2' : '2Sept30a',
-    #'mid3' : '3Sept30a',
-    'cutMapper' : 'syncCutsDCqcdTESNoIso',
-    #'mid1' : '1Sept30cFFwithCoin',
-    #'mid2' : '2Sept30cFFwithCoin',
-    #'mid3' : '3Sept30cFFwithCoin',
-    #'mid1' : '1Sept30bFF', # No Coin
-    #'mid2' : '2Sept30bFF',
-    #'mid3' : '3Sept30bFF',
-    'mid1' : '1Oct05oldMthd',
-    'mid2' : '2Oct05oldMthd',
-    'mid3' : '3Oct05oldMthd',
+    ###'mid1' : '1Oct30ApreFFrootSwap',
+    ###'mid2' : '2Oct30ApreFFrootSwap',
+    ###'mid3' : '3Oct30ApreFFrootSwap',
+    'mid1' : '1Nov10ssControlAdded',
+    'mid2' : '2Nov10ssControlAdded',
+    'mid3' : '3Nov10ssControlAdded',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -107,18 +100,20 @@ samples = returnSampleDetails( analysis, samples )
 runPlots = True
 #runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
 #makeFinalPlots = False
 text=True
-text=False
+#text=False
 makeDataCards = True
 #makeDataCards = False
 #isoVals = ['VTight', 'Tight', 'Medium',]
 isoVals = ['VTight',]
 
-cats = ['inclusive', '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', '2jet_vbf', '1bjet', '2bjet']
+cats = ['inclusive', '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', '2jet_vbf', '1bjet', '2bjet', 'inclusiveSS']
+#cats = ['inclusive',]# '0jet', '1jet', '2jet', '1jet_low', '1jet_medium', '1jet_high', '2jet_vbf', '1bjet', '2bjet']
 #cats = ['1jet',]
+#cats = ['inclusive', 'inclusiveSS']
 pt = '4040'
 #sync = True
 sync = False
@@ -182,7 +177,7 @@ for isoVal in isoVals :
                     'targetDir':'/'+tDir,'sync':sync,'ztt':ztt }
             analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                 params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
-        subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/", "/afs/cern.ch/user/t/truggles/www/HTT_Oct02/%s" % isoVal] )
+        subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/", "/afs/cern.ch/user/t/truggles/www/HTT_Nov01/%s" % isoVal] )
         
         
     if makeDataCards :

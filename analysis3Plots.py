@@ -368,6 +368,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ''' Special ZTT scaling for DYJets -> ZTT samples '''
                 zttScaleTable = {
                     'inclusive' : 1.0,
+                    'inclusiveSS' : 1.0,
                     '0jet' : 1.0,
                     '1jet' : 1.0,
                     '2jet' : 1.0,

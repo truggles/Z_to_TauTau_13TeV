@@ -145,6 +145,7 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
         elif 'ZTT2jet_vbf' in fName  : app = "FFWeightQCDVBF"
         elif 'ZTT1bjet' in fName     : app = "FFWeightQCDBTagged"
         elif 'ZTT2bjet' in fName     : app = "FFWeightQCDBTagged"
+        elif 'ZTTinclusiveSS' in fName : app = "FFWeightQCDIncSS"
         else                         : app = "FFWeightQCDInc"
 
         # Check if a FF shape variable
@@ -338,11 +339,11 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
-            'mjj' : [40, 0, 800, 1, 'M_{jj} [GeV]', ' GeV'],
+#FIXME            'mjj' : [40, 0, 800, 1, 'M_{jj} [GeV]', ' GeV'],
             'Z_Pt' : [100, 0, 200, 5, 'Z p_{T} [GeV]', ' GeV'],
 #            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
 #            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
-            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
+#FIXME            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
 #            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
 #            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
 #            'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
@@ -351,10 +352,10 @@ def getHistoDict( analysis, channel ) :
 #            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
 #            't1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
 #            #'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
-            'mvamet' : [100, 0, 100, 2, 'mvaMetEt [GeV]', ' GeV'],
+#FIXME            'mvamet' : [100, 0, 100, 2, 'mvaMetEt [GeV]', ' GeV'],
 #            'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
 #            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
-            'bjetCISVVeto20MediumZTT' : [60, 0, 6, 5, 'nBJets20Medium', ''],
+#FIXME            'bjetCISVVeto20MediumZTT' : [60, 0, 6, 5, 'nBJets20Medium', ''],
 #            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
             'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
 #XXX            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
@@ -395,7 +396,7 @@ def getHistoDict( analysis, channel ) :
                     'metResponse':'Met Response',
                     'metResolution':'Met Resolution',
                     #'tauPt':'High P_{T} Tau',
-                    #'topPt':'Top P_{T} Reweight',
+                    'topPt':'Top P_{T} Reweight',
                     }
 
         # Add FF shape systs if doFF
