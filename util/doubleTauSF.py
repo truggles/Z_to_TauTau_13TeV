@@ -19,12 +19,14 @@ class DoubleTau35Efficiencies :
     def __init__( self, channel ):
         if channel == 'tt' :
             #print "Initializing LepWeight class for channel ",channel
-            with open('data/triggerSF/di-tau/high_mt_cumulative.json') as f1 :
-                self.high_mt_cumlative = json.load(f1)
-            with open('data/triggerSF/di-tau/real_taus_cumulative.json') as f2 :
-                self.real_taus_cumlative = json.load(f2)
-            with open('data/triggerSF/di-tau/same_sign_cumulative.json') as f3 :
-                self.same_sign_cumlative = json.load(f3)
+            effType = 'binned'
+            #effType = 'cumulative'
+            with open('data/triggerSF/di-tau/high_mt_%s.json' % effType) as f1 :
+                self.high_mt_json = json.load(f1)
+            with open('data/triggerSF/di-tau/real_taus_%s.json' % effType) as f2 :
+                self.real_taus_json = json.load(f2)
+            with open('data/triggerSF/di-tau/same_sign_%s.json' % effType) as f3 :
+                self.same_sign_json = json.load(f3)
 
             ### New Method
             self.fVL = ROOT.TFile('data/doubleTau35/allRuns-VLoose.root','r')
@@ -43,9 +45,9 @@ class DoubleTau35Efficiencies :
             self.vtight = getTH1FfromTGraphAsymmErrors( \
                 self.fVT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vtight')
         else :
-            self.high_mt_cumlative = ''
-            self.real_taus_cumlative = ''
-            self.high_mt_cumlative = ''
+            self.high_mt_json = ''
+            self.real_taus_json = ''
+            self.high_mt_json = ''
 
         # These are the 2.1/fb efficiencies
         #self.effMap = {
@@ -159,11 +161,11 @@ class DoubleTau35Efficiencies :
 
 
         if genCode == 5 : # Real Hadronically decay Tau
-            m0 = self.real_taus_cumlative[iso]['m_{0}']
-            sigma = self.real_taus_cumlative[iso]['sigma']
-            alpha = self.real_taus_cumlative[iso]['alpha']
-            n = self.real_taus_cumlative[iso]['n']
-            norm = self.real_taus_cumlative[iso]['norm']
+            m0 = self.real_taus_json[iso]['m_{0}']
+            sigma = self.real_taus_json[iso]['sigma']
+            alpha = self.real_taus_json[iso]['alpha']
+            n = self.real_taus_json[iso]['n']
+            norm = self.real_taus_json[iso]['norm']
             #m0 = self.effMap['Real Tau'][iso]['m_{0}']
             #sigma = self.effMap['Real Tau'][iso]['sigma']
             #alpha = self.effMap['Real Tau'][iso]['alpha']
@@ -171,11 +173,11 @@ class DoubleTau35Efficiencies :
             #norm = self.effMap['Real Tau'][iso]['norm']
             ''' for the moment stick with real vs. fake '''
         else : # Fake Tau (measurements were done in SS region)
-            m0 = self.same_sign_cumlative[iso]['m_{0}']
-            sigma = self.same_sign_cumlative[iso]['sigma']
-            alpha = self.same_sign_cumlative[iso]['alpha']
-            n = self.same_sign_cumlative[iso]['n']
-            norm = self.same_sign_cumlative[iso]['norm']
+            m0 = self.same_sign_json[iso]['m_{0}']
+            sigma = self.same_sign_json[iso]['sigma']
+            alpha = self.same_sign_json[iso]['alpha']
+            n = self.same_sign_json[iso]['n']
+            norm = self.same_sign_json[iso]['norm']
             #m0 = self.effMap['Fake Tau SS'][iso]['m_{0}']
             #sigma = self.effMap['Fake Tau SS'][iso]['sigma']
             #alpha = self.effMap['Fake Tau SS'][iso]['alpha']
