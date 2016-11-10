@@ -686,8 +686,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
-    __ZWEIGHT__ = array('f', [ 0 ] )
-    __ZWEIGHT__B = tnew.Branch('__ZWEIGHT__', __ZWEIGHT__, '__ZWEIGHT__/F')
     muonSF1 = array('f', [ 0 ] )
     muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
     muonSF2 = array('f', [ 0 ] )
@@ -782,6 +780,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     gen_match_3B = tnew.Branch('gen_match_3', gen_match_3, 'gen_match_3/F')
     gen_match_4 = array('f', [ 0 ] )
     gen_match_4B = tnew.Branch('gen_match_4', gen_match_4, 'gen_match_4/F')
+    __WEIGHT__ = array('f', [ 0 ] )
+    __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
+    __ZWEIGHT__ = array('f', [ 0 ] )
+    __ZWEIGHT__B = tnew.Branch('__ZWEIGHT__', __ZWEIGHT__, '__ZWEIGHT__/F')
+    __CORR__ = array('f', [ 0 ] )
+    __CORR__B = tnew.Branch('__CORR__', __CORR__, '__CORR__/F')
 
 
     ''' Set MvaMet base vars defaults in case we didn't fill that value '''
@@ -1127,7 +1131,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
-                __ZWEIGHT__[0] = zPtWeight[0] # FIXME - tmp for Isobel sync
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
                 weight[0] *= zPtWeight[0] * topWeight[0]
@@ -1164,6 +1167,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         gen_match_1[0], gen_match_2[0], row, 0.2 )
                     tauPtWeightDown[0] = getTauPtWeight( sample, channel, 
                         gen_match_1[0], gen_match_2[0], row, -0.2 )
+
+
+            # Set branch for syncing with other groups:
+            __ZWEIGHT__[0] = zPtWeight[0]
+            __WEIGHT__[0] = XSecLumiWeight[0]
+            __CORR__[0] = trigweight_1[0] * trigweight_2[0]
 
 
 
