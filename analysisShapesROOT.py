@@ -9,7 +9,7 @@ import analysisPlots
 from util.splitCanvas import fixFontSize
 from array import array
 from analysisPlots import skipSystShapeVar
-from util.helpers import checkDir, unroll2D
+from util.helpers import checkDir, unroll2D, returnSortedDict
 
 
 def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
@@ -181,7 +181,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
         print channel
     
-        newVarMap = analysisPlots.getHistoDict( analysis, channel )
+        newVarMapUnsorted = getHistoDict( analysis, channel )
+        newVarMap = returnSortedDict( newVarMapUnsorted )
     
         baseVar = ops['fitShape']
         if 'data' in sample : print "Fitting",baseVar

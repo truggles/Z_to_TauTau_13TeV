@@ -1,5 +1,6 @@
 import os, glob, subprocess
 import ROOT
+from collections import OrderedDict
 
 
 # Check if directory exists, make it if not
@@ -220,6 +221,18 @@ def unroll2D( hist ) :
             hNew.SetBinContent( j+(i-1)*nBinsX, hist.GetBinContent( j, i ) )
             hNew.SetBinError( j+(i-1)*nBinsX, hist.GetBinError( j, i ) )
     return hNew
+
+
+# Returns a sorted ordered dict
+# The values must be stored in a list, not tuple
+def returnSortedDict( dict ) :
+    alist = dict.keys()
+    alist.sort()
+    rtnDict = OrderedDict()
+    for var in alist :
+        rtnDict[ var ] = list(dict[ var ])
+    return rtnDict
+
 
 
 if __name__ == '__main__' :

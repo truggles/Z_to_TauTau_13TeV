@@ -11,7 +11,7 @@ from array import array
 import math
 from analysisPlots import skipSystShapeVar
 from copy import deepcopy
-from util.helpers import checkDir
+from util.helpers import checkDir, returnSortedDict
 
 
 
@@ -169,7 +169,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         htmlFile.write( '<body>\n' )
     
 
-        newVarMap = analysisPlots.getHistoDict( analysis, channel )
+        newVarMapUnsorted = getHistoDict( analysis, channel )
+        newVarMap = returnSortedDict( newVarMapUnsorted )
     
         finalQCDYield = 0.0
         finalDataYield = 0.0
