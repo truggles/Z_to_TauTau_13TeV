@@ -41,10 +41,9 @@ def skipSystShapeVar( var, sample, channel ) :
             if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
                 return True
             
-        # Energy Scale reweighting only applied to DYJets and signal
+        # Energy Scale reweighting applied to all MC based on gen_match
         elif '_energyScale' in var :
-            if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
-                return True
+            if 'data' in sample : return True
 
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
         # do run for DYJetsLow as weight is set to 1
@@ -322,7 +321,7 @@ def getHistoDict( analysis, channel ) :
 #XXX#            'npv' : (40, 0, 40, 2, 'Number of Vertices', ''),
 #XXX            #'npu' : (50, 1, 40, 2, 'Number of True PU Vertices', ''),
 #XXX            #'m_vis_mssm' : (3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'),
-#XXX            'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
+            'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             #'m_sv_mssm' : (3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'),
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
