@@ -80,7 +80,7 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 #prefix = ["tt_0jet","tt_1jet","tt_2jet","tt_1jet_low","tt_1jet_medium",
 #            "tt_1jet_high","tt_1bjet","tt_2bjet","tt_vbf"]
 prefix = ["tt_0jet","tt_1jet_low","tt_1jet_medium",
-            "tt_1jet_high","tt_1bjet","tt_2bjet","tt_vbf"]
+            "tt_1jet_high","tt_1bjet","tt_2bjet","tt_2jet_vbf"]
 #prefix = ["tt_inclusive",]
 categories= []
 for pre in prefix :

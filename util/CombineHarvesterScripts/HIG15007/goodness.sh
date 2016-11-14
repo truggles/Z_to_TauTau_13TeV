@@ -1,6 +1,7 @@
 
 mkdir -p output/GoF/
 cd output/GoF
+#cd output/LIMITS/tt/
 
 
 combine -M GoodnessOfFit ../LIMITS/tt/datacard.txt --algo=saturated
