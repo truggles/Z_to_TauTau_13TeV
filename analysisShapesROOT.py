@@ -428,11 +428,11 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
                     elif '_JESUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_'+channel+'_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_'+channel+'_13TeVUp' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVUp' )
                     elif '_JESDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_'+channel+'_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_'+channel+'_13TeVDown' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVDown' )
                     elif '_tauPtUp' in var :
                         hisos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
