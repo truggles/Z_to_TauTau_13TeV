@@ -169,7 +169,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         htmlFile.write( '<body>\n' )
     
 
-        newVarMapUnsorted = getHistoDict( analysis, channel )
+        newVarMapUnsorted = analysisPlots.getHistoDict( analysis, channel )
         newVarMap = returnSortedDict( newVarMapUnsorted )
     
         finalQCDYield = 0.0

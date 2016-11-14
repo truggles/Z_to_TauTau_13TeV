@@ -17,10 +17,10 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 def get2DVars( cutName ) :
     if 'pt_sv' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,100,170,300,5000] )
+        yBins = array( 'd', [0,100,170,300,1000] )
     if 'mjj' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,300,500,800,5000] )
+        yBins = array( 'd', [0,300,500,800,10000] )
     if 'pt_1' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,60,100,5000] )

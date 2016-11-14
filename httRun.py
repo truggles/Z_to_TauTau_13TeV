@@ -75,17 +75,13 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
     'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
-    'mid1' : '11Nov03newTauIDSF',
+    #'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
+    'mid1' : '11Nov03newTauIDSF', # used for freezing plots
     'mid2' : '21Nov03newTauIDSF',
     'mid3' : '31Nov03newTauIDSF',
-    #'mid1' : '11Nov01VVLoose',
-    #'mid2' : '21Nov01VVLoose',
-    #'mid3' : '31Nov01VVLoose',
-    #'mid1' : '11Nov01svFit',
-    #'mid2' : '21Nov01svFit',
-    #'mid3' : '31Nov01svFit',
-    #'mid2' : '21Nov01svFit2',
-    #'mid3' : '31Nov01svFit2',
+    #'mid1' : '11Nov04qcdSyst', # used for QCD Method Uncertainties
+    #'mid2' : '21Nov04qcdSyst',
+    #'mid3' : '31Nov04qcdSyst',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -124,8 +120,6 @@ text=True
 text=False
 makeDataCards = True
 #makeDataCards = False
-#isoVals = ['VTight', 'Tight', 'Medium',]
-isoVals = ['Tight',]
 
 cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
 cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet',]
@@ -135,16 +129,16 @@ cats = ['vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
 cats = ['0jet2D', 'boosted','VBF',]
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet', '0jet2D', 'boosted','VBF',]
 pt = '5040'
-lIso = 'Medium'
-lIso = 'Loose'
 #sync = True
 sync = False
 #cleanPlots = False
 cleanPlots = True
 #isoVals = ['Tight', 'Medium', 'Loose',]
+#isoVals = ['Tight', 'Loose',]
+isoVals = ['Tight',]
 
 for isoVal in isoVals :
-    #if isoVal == 'Tight' : lIso = 'Medium'
+    if isoVal == 'Tight' : lIso = 'Loose'
     #if isoVal == 'Medium' : lIso = 'Loose'
     #if isoVal == 'Loose' : lIso = 'VLoose'
     samplesX = copy.deepcopy(samples)
@@ -209,9 +203,10 @@ for isoVal in isoVals :
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
-        for var in ['m_sv',] :
-        #for var in ['m_vis','m_sv'] :
+        #for var in ['m_sv',] :
+        for var in ['m_vis','m_sv'] :
             for cat in cats :
+                if var == 'm_vis' and cat in ['boosted','VBF','0jet2D'] : continue
                 if cat == 'boosted' : var = 'pt_sv:m_sv'
                 if cat == 'VBF' : var = 'mjj:m_sv'
                 qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )

@@ -181,7 +181,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
         print channel
     
-        newVarMapUnsorted = getHistoDict( analysis, channel )
+        newVarMapUnsorted = analysisPlots.getHistoDict( analysis, channel )
         newVarMap = returnSortedDict( newVarMapUnsorted )
     
         baseVar = ops['fitShape']

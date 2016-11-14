@@ -25,7 +25,7 @@ print "zHome: ",zHome
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
 ''' General samples.json file from /data/truggles files '''
-makeMetaJSON( analysis, channel='tt' )
+#makeMetaJSON( analysis, channel='tt' )
 ''' samples.json for post /hdfs skim -> uwlogin samples '''
 #makeMetaJSON( analysis, channel='tt', skimmed=True )
 os.chdir('..')
