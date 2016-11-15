@@ -33,12 +33,16 @@ def skipSystShapeVar( var, sample, channel, fName='' ) :
         elif '_topPt' in var :
             if sample != 'TT' : return True
 
+        # This section need to be commented out to allow
+        # us to build the QCD - fake Tau MC = fakeJet histograms
+        # for FF shape systematics
+        #
         # fake factor systematics only applied to FF-based QCD
-        elif '_ffSyst' in var or '_ffStat' in var :
-            # sample == 'data'
-            if not ('QCD_tt' in fName or 'QCD' in sample) : # this one pick up the QCD made from 'data' samples
-            # 'QCD' in sample is from the plotting script
-                return True
+        #elif '_ffSyst' in var or '_ffStat' in var :
+        #    # sample == 'data'
+        #    if not ('QCD_tt' in fName or 'QCD' in sample) : # this one pick up the QCD made from 'data' samples
+        #    # 'QCD' in sample is from the plotting script
+        #        return True
 
         # met Systematics don't affect QCD and data
         elif '_metResponse' in var or '_metResolution' in var :
