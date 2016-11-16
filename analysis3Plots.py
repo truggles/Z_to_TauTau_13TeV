@@ -12,6 +12,7 @@ import math
 from analysisPlots import skipSystShapeVar
 from copy import deepcopy
 from util.helpers import checkDir, returnSortedDict
+import subprocess
 
 
 
@@ -738,10 +739,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
     
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/%s.pdf' % (analysis, channel, ops['targetDir'], var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/%s.png' % (analysis, channel, ops['targetDir'], var ) )
-            c1.SaveAs('/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/%s.pdf' % (analysis, channel, ops['targetDir'], var ) )
+            if ops['qcdMakeDM'] == 'x' :
+                plotDir = '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'] )
+                c1.SaveAs(plotDir+'%s.png' % var )
+                c1.SaveAs(plotDir+'%s.pdf' % var )
+
+                # To speed up, just copy the new png/pdfs to other dir
+                # this will help with 2D plots
+                newPlotDir = plotDir.replace('Plots/','PlotsList/')
+                subprocess.call(['cp',plotDir+'%s.png' % var, newPlotDir+'%s.png' % var])
+                subprocess.call(['cp',plotDir+'%s.pdf' % var, newPlotDir+'%s.pdf' % var])
     
     
             """ Additional views for Visible Mass """
