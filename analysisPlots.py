@@ -61,6 +61,11 @@ def skipSystShapeVar( var, sample, channel ) :
         # Jet Energy Scale, no data
         elif '_JES' in var :
             if 'data' in sample : return True
+
+        # ggH Scale, only for ggH
+        elif '_ggH' in var :
+            if not 'ggHtoTauTau' in sample : return True
+
         return False
 
 
@@ -133,6 +138,21 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         elif '_zPt' in var :
             if '_zPtUp' in var : shapeSyst = '*(zPtWeight)'
             elif '_zPtDown' in var : shapeSyst = '*(1./zPtWeight)'
+
+        # ggH scale to ggHtoTauTau signal
+        elif '_ggH' in var :
+            # Different scale depending on final category
+            if 'ZTT0jet2D' in outFile.GetName() :
+                if '_ggHUp' in var : shapeSyst = '*(ggHWeight0Jet)'
+                elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeight0Jet)'
+            elif 'ZTTboosted' in outFile.GetName() :
+                if '_ggHUp' in var : shapeSyst = '*(ggHWeightBoost)'
+                elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightBoost)'
+            elif 'ZTTVBF' in outFile.GetName() :
+                if '_ggHUp' in var : shapeSyst = '*(ggHWeightVBF)'
+                elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightVBF)'
+            else : "\n\n\nWhy didn't I find a file?\n"
+            
             
         # Energy Scale reweighting applied to all Real Hadronic Taus
         # gen_match == 5
@@ -354,6 +374,7 @@ def getHistoDict( analysis, channel ) :
                     #'tauPt':'High P_{T} Tau',
                     'topPt':'Top P_{T} Reweight',
                     'JES' : 'Jet Energy Scale',
+                    'ggH' : 'ggH Scale',
                     }
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :

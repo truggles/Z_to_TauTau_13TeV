@@ -686,6 +686,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
+    ggHWeight0Jet = array('f', [ 0 ] )
+    ggHWeight0JetB = tnew.Branch('ggHWeight0Jet', ggHWeight0Jet, 'ggHWeight0Jet/F')
+    ggHWeightBoost = array('f', [ 0 ] )
+    ggHWeightBoostB = tnew.Branch('ggHWeightBoost', ggHWeightBoost, 'ggHWeightBoost/F')
+    ggHWeightVBF = array('f', [ 0 ] )
+    ggHWeightVBFB = tnew.Branch('ggHWeightVBF', ggHWeightVBF, 'ggHWeightVBF/F')
     muonSF1 = array('f', [ 0 ] )
     muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
     muonSF2 = array('f', [ 0 ] )
@@ -943,6 +949,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tauIDweight_2[0] = 1
             topWeight[0] = 1
             zPtWeight[0] = 1
+            ggHWeight0Jet[0] = 1
+            ggHWeightBoost[0] = 1
+            ggHWeightVBF[0] = 1
             weight[0] = 1
             XSecLumiWeight[0] = 1
             gen_match_1[0] = -1
@@ -1116,6 +1125,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     else :
                         pt_2_UP[0] = getattr( row, l2+'Pt' )
                         pt_2_DOWN[0] = getattr( row, l2+'Pt' )
+
+
+                # ggH reweighting, only for ggH120,125,130
+                # estimated by Cecile, Nov 15, 2016
+                # See: https://indico.cern.ch/event/578552/contributions/2343738/attachments/1372271/2081852/systematics_SMH.pdf
+                # Slide 10 for tautau
+                if shortName in ['ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] :
+
+                    ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
+                    # 2 options for boosted category in case we haven't run svFit
+                    # prefer the svFit option
+                    if hasattr( row, 'pt_sv' ) :
+                        ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
+                    elif Higgs_Pt[0] != 0.0 :
+                        ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
+
+                    if hasattr( row, 'vbfMass' ) :
+                        ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
+
                 
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
