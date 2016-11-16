@@ -686,6 +686,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
+    ggHWeight0Jet = array('f', [ 0 ] )
+    ggHWeight0JetB = tnew.Branch('ggHWeight0Jet', ggHWeight0Jet, 'ggHWeight0Jet/F')
+    ggHWeightBoosted = array('f', [ 0 ] )
+    ggHWeightBoostedB = tnew.Branch('ggHWeightBoosted', ggHWeightBoosted, 'ggHWeightBoosted/F')
+    ggHWeightVBF = array('f', [ 0 ] )
+    ggHWeightVBFB = tnew.Branch('ggHWeightVBF', ggHWeightVBF, 'ggHWeightVBF/F')
     muonSF1 = array('f', [ 0 ] )
     muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
     muonSF2 = array('f', [ 0 ] )
@@ -726,6 +732,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
     Higgs_Pt = array('f', [ 0 ] )
     Higgs_PtB = tnew.Branch('Higgs_Pt', Higgs_Pt, 'Higgs_Pt/F')
+    Higgs_Pt_MetUp = array('f', [ 0 ] )
+    Higgs_Pt_MetUpB = tnew.Branch('Higgs_Pt_MetUp', Higgs_Pt_MetUp, 'Higgs_Pt_MetUp/F')
+    Higgs_Pt_MetDown = array('f', [ 0 ] )
+    Higgs_Pt_MetDownB = tnew.Branch('Higgs_Pt_MetDown', Higgs_Pt_MetDown, 'Higgs_Pt_MetDown/F')
     Z_DEta = array('f', [ 0 ] )
     Z_DEtaB = tnew.Branch('Z_DEta', Z_DEta, 'Z_DEta/F')
     m_vis_UP = array('f', [ 0 ] )
@@ -889,13 +899,27 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
                 if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
                     pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
-                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
-                         pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
+                # We're using pfMet in analysis...
+                #Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                #         pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
             else : # Not l1_l2_MvaMet
                 mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
                 mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
-                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
-                        pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+
+            Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                    pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+            # No shifted Higgs_Pt for data
+            if 'data' in sample :
+                Higgs_Pt_MetUp[0] = Higgs_Pt[0]
+                Higgs_Pt_MetDown[0] = Higgs_Pt[0]
+            
+            else : # not data
+                Higgs_Pt_MetUp[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                        pt2, eta2, phi2, m2, row.type1_pfMet_shiftedPt_UnclusteredEnUp,\
+                        row.type1_pfMet_shiftedPhi_UnclusteredEnUp)
+                Higgs_Pt_MetDown[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                        pt2, eta2, phi2, m2, row.type1_pfMet_shiftedPt_UnclusteredEnDown,\
+                        row.type1_pfMet_shiftedPhi_UnclusteredEnDown)
 
 
 
@@ -943,6 +967,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tauIDweight_2[0] = 1
             topWeight[0] = 1
             zPtWeight[0] = 1
+            ggHWeight0Jet[0] = 1
+            ggHWeightBoosted[0] = 1
+            ggHWeightVBF[0] = 1
             weight[0] = 1
             XSecLumiWeight[0] = 1
             gen_match_1[0] = -1
@@ -1117,6 +1144,24 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         pt_2_UP[0] = getattr( row, l2+'Pt' )
                         pt_2_DOWN[0] = getattr( row, l2+'Pt' )
                 
+
+                # ggH reweighting, only for ggH120,125,130
+                # estimated by Cecile, Nov 15, 2016
+                # See: https://indico.cern.ch/event/578552/contributions/2343738/attachments/1372271/2081852/systematics_SMH.pdf
+                # Slide 10 for tautau
+                if shortName in ['ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] :
+
+                    ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
+                    # 2 options for boosted category in case we haven't run svFit
+                    # prefer the svFit option
+                    if hasattr( row, 'pt_sv' ) :
+                        ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
+                    elif Higgs_Pt[0] != 0.0 :
+                        ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
+
+                    if hasattr( row, 'vbfMass' ) :
+                        ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
+
                 # top pt reweighting, only for ttbar events
                 # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
                 if shortName == 'TT' and hasattr( row, 'topQuarkPt1' ) :

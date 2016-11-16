@@ -77,8 +77,11 @@ params = {
     'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     #'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     'mid1' : '11Nov03newTauIDSF', # used for freezing plots
-    'mid2' : '21Nov03newTauIDSF',
-    'mid3' : '31Nov03newTauIDSF',
+    #'mid2' : '21Nov03newTauIDSF',
+    #'mid3' : '31Nov03newTauIDSF',
+    #'mid1' : '1Nov14metCheck', # met systematics check
+    'mid2' : '2Nov14metCheck',
+    'mid3' : '3Nov14metCheck',
     #'mid1' : '11Nov04qcdSyst', # used for QCD Method Uncertainties
     #'mid2' : '21Nov04qcdSyst',
     #'mid3' : '31Nov04qcdSyst',
@@ -127,7 +130,8 @@ cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1je
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
 cats = ['vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
 cats = ['0jet2D', 'boosted','VBF',]
-cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet', '0jet2D', 'boosted','VBF',]
+cats = ['boosted',]
+#cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet', '0jet2D', 'boosted','VBF',]
 pt = '5040'
 #sync = True
 sync = False
@@ -207,7 +211,8 @@ for isoVal in isoVals :
         for var in ['m_vis','m_sv'] :
             for cat in cats :
                 if var == 'm_vis' and cat in ['boosted','VBF','0jet2D'] : continue
-                if cat == 'boosted' : var = 'pt_sv:m_sv'
+                #if cat == 'boosted' : var = 'pt_sv:m_sv'
+                if cat == 'boosted' : var = 'Higgs_Pt_MetDown:m_sv'
                 if cat == 'VBF' : var = 'mjj:m_sv'
                 qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                 finalCat = cat

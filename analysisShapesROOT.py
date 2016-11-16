@@ -192,6 +192,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             'mt_sv' : 'svFitMt',
             'mt_tot' : 'mtTot',
             'pt_sv:m_sv' : 'svFitMass2D',
+            'Higgs_Pt:m_sv' : 'svFitMass2DNom',
+            'Higgs_Pt_MetUp:m_sv' : 'svFitMass2DDown',
+            'Higgs_Pt_MetDown:m_sv' : 'svFitMass2DUp',
             'pt_1:m_sv' : 'svFitMass2D',
             'mjj:m_sv' : 'svFitMass2D',
             }
@@ -222,8 +225,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['allShapes'] :
                 print "\nAll Shapes Applied\n"
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
-                if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
-                        or ('_JES' in var) or (baseVar == var)) :
+                #if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
+                #        or ('_JES' in var) or (baseVar == var)) :
+                if not baseVar == var :
                     continue
             #if ops['mssm'] :
             #    if not var == baseVar+'_mssm' : continue
@@ -277,7 +281,17 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     binArray = array( 'd', [i*10 for i in range( 31 )] )
             numBins = len( binArray ) - 1
             print binArray
-            #print numBins
+            print "numBins",numBins
+
+
+            boost = {
+                '_data_obs_' : [0]*4,
+                '_ZTT_' : [0]*4,
+                '_QCD_' : [0]*4,
+                '_ggH125_' : [0]*4,
+                '_qqH125_' : [0]*4,
+                'other' : [0]*4,
+            }
 
             histos = {}
             for name in nameArray :
@@ -330,6 +344,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     if ops['useQCDMakeName'] != 'x'  :
                         print "Use QCD MAKE NAME: ",ops['useQCDMakeName']
                         tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['useQCDMakeName']), 'READ')
+                        print tFile
                     else :
                         print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
                 else :
@@ -371,6 +386,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     #print "nbinsX",hNew.GetNbinsX() ,hNew.GetBinLowEdge(1),hNew.GetBinLowEdge( hNew.GetNbinsX()+1 )
                 else :
                     hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+                #print "nNew n Bins:",hNew.GetXaxis().GetNbins()
+                #print "nNew n Bins min:",hNew.GetXaxis().GetBinLowEdge(1)," Up:",hNew.GetXaxis().GetBinLowEdge( hNew.GetXaxis().GetNbins()+1 )
+                #hNew.ClearUnderflowAndOverflow()
                 histos[ samples[ sample ][1] ].Add( hNew )
     
                 if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
@@ -396,6 +414,30 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 #if not ops['mssm'] :
                 #    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
                 
+
+            #boost = {
+            #    '_data_obs_' : [],
+            #    '_ZTT_' : [],
+            #    '_QCD_' : [],
+            #    '_ggH125_' : [],
+            #    '_qqH125_' : [],
+            #    'other' : []
+            #}
+                # Get slice yields:
+                nBinsMass = 12
+                print name
+                for iii in range(0, 4) :
+                    tot = 0.
+                    for jjj in range(0, 12) :
+                        tot += histos[ name ].GetBinContent( iii*nBinsMass + jjj+1 )
+                        #print "grab bin:",iii*nBinsMass + jjj+1,"  added:",histos[ name ].GetBinContent( iii*nBinsMass + jjj+1 )
+                    print "Slice:",iii+1," tot:",tot
+                    if name in boost.keys() :
+                        boost[ name ][iii] += tot
+                    elif '_ZH' not in name and '_WH' not in name :
+                        boost[ 'other' ][iii] += tot
+                    
+                    
     
                 # Proper naming of output histos
                 if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
@@ -445,6 +487,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     histos[ name ].SetTitle( name.strip('_') )
                     histos[ name ].SetName( name.strip('_') )
                     histos[ name ].Write()
+            for key in boost.keys() :
+                print key, boost[key][0], boost[key][1], boost[key][2], boost[key][3]
         shapeFile.Close()
     
     

@@ -18,6 +18,15 @@ def get2DVars( cutName ) :
     if 'pt_sv' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,1000] )
+    if 'Higgs_Pt_MetUp' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,1000] )
+    if 'Higgs_Pt_MetDown' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,1000] )
+    if 'Higgs_Pt' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,1000] )
     if 'mjj' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
@@ -201,43 +210,43 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # don't crash on systematics based variables
         varBase = var.replace('_ffSub','')
         plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
-        if 'Up' in var or 'Down' in var :
-            tmp = varBase.split('_')
-            shapeName = tmp.pop()
-            varBase = '_'.join(tmp)
-            if 'energyScale' in shapeName :
-                if 'pt_sv:m_sv' in var :
-                    if 'Up' in var : plotVar = 'pt_sv_UP:m_sv_UP'
-                    if 'Down' in var : plotVar = 'pt_sv_DOWN:m_sv_DOWN'
-                if 'pt_1:m_sv' in var :
-                    if 'Up' in var : plotVar = 'pt_1_UP:m_sv_UP'
-                    if 'Down' in var : plotVar = 'pt_1_DOWN:m_sv_DOWN'
-                elif 'Up' in var :
-                    plotVar = varBase + '_UP'
-                elif 'Down' in var :
-                    plotVar = varBase + '_DOWN'
-            elif 'metResolution' in shapeName :
-                if 'Up' in var :
-                    plotVar = varBase + '_ResolutionUP'
-                if 'Down' in var :
-                    plotVar = varBase + '_ResolutionDOWN'
-            elif 'metResponse' in shapeName :
-                if 'Up' in var :
-                    plotVar = varBase + '_ResponseUP'
-                if 'Down' in var :
-                    plotVar = varBase + '_ResponseDOWN'
-            elif 'JES' in shapeName :
-                if 'mjj:m_sv' in var :
-                    if 'Up' in var :
-                        plotVar = 'vbfMass_JetEnUp:m_sv'
-                    if 'Down' in var :
-                        plotVar = 'vbfMass_JetEnDown:m_sv'
-                else : # For this one, we adjust the additionalCuts to 
-                    # provide different yields
-                    plotVar = varBase
-            # Else includes zPt and topPt  
-            else :
-                plotVar = varBase
+#FIXME        if 'Up' in var or 'Down' in var :
+#FIXME            tmp = varBase.split('_')
+#FIXME            shapeName = tmp.pop()
+#FIXME            varBase = '_'.join(tmp)
+#FIXME            if 'energyScale' in shapeName :
+#FIXME                if 'pt_sv:m_sv' in var :
+#FIXME                    if 'Up' in var : plotVar = 'pt_sv_UP:m_sv_UP'
+#FIXME                    if 'Down' in var : plotVar = 'pt_sv_DOWN:m_sv_DOWN'
+#FIXME                if 'pt_1:m_sv' in var :
+#FIXME                    if 'Up' in var : plotVar = 'pt_1_UP:m_sv_UP'
+#FIXME                    if 'Down' in var : plotVar = 'pt_1_DOWN:m_sv_DOWN'
+#FIXME                elif 'Up' in var :
+#FIXME                    plotVar = varBase + '_UP'
+#FIXME                elif 'Down' in var :
+#FIXME                    plotVar = varBase + '_DOWN'
+#FIXME            elif 'metResolution' in shapeName :
+#FIXME                if 'Up' in var :
+#FIXME                    plotVar = varBase + '_ResolutionUP'
+#FIXME                if 'Down' in var :
+#FIXME                    plotVar = varBase + '_ResolutionDOWN'
+#FIXME            elif 'metResponse' in shapeName :
+#FIXME                if 'Up' in var :
+#FIXME                    plotVar = varBase + '_ResponseUP'
+#FIXME                if 'Down' in var :
+#FIXME                    plotVar = varBase + '_ResponseDOWN'
+#FIXME            elif 'JES' in shapeName :
+#FIXME                if 'mjj:m_sv' in var :
+#FIXME                    if 'Up' in var :
+#FIXME                        plotVar = 'vbfMass_JetEnUp:m_sv'
+#FIXME                    if 'Down' in var :
+#FIXME                        plotVar = 'vbfMass_JetEnDown:m_sv'
+#FIXME                else : # For this one, we adjust the additionalCuts to 
+#FIXME                    # provide different yields
+#FIXME                    plotVar = varBase
+#FIXME            # Else includes zPt and topPt  
+#FIXME            else :
+#FIXME                plotVar = varBase
 
                 
         #print "Var: %s   VarBase: %s" % (var, varBase)
@@ -327,7 +336,10 @@ def getHistoDict( analysis, channel ) :
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#FIXME            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'Higgs_Pt:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'Higgs_Pt_MetUp:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'Higgs_Pt_MetDown:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'pt_1:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'], # unrolling pt_1 provides nothing
             #'mt_sv_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
@@ -347,13 +359,14 @@ def getHistoDict( analysis, channel ) :
             varsForShapeSyst.append( item )
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        shapesToAdd = {'energyScale':'TES',
-                    'zPt':'Z p_{T}/Mass Reweight',
-                    #'metResponse':'Met Response',
-                    #'metResolution':'Met Resolution',
-                    #'tauPt':'High P_{T} Tau',
-                    'topPt':'Top P_{T} Reweight',
-                    'JES' : 'Jet Energy Scale',
+        shapesToAdd = {
+#FIXME                    'energyScale':'TES',
+#FIXME                    'zPt':'Z p_{T}/Mass Reweight',
+#FIXME                    #'metResponse':'Met Response',
+#FIXME                    #'metResolution':'Met Resolution',
+#FIXME                    #'tauPt':'High P_{T} Tau',
+#FIXME                    'topPt':'Top P_{T} Reweight',
+#FIXME                    'JES' : 'Jet Energy Scale',
                     }
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
