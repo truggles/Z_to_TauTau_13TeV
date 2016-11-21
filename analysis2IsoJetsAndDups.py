@@ -686,6 +686,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
+    zmumuBoostWeight = array('f', [ 0 ] )
+    zmumuBoostWeightB = tnew.Branch('zmumuBoostWeight', zmumuBoostWeight, 'zmumuBoostWeight/F')
+    zmumuVBFWeight = array('f', [ 0 ] )
+    zmumuVBFWeightB = tnew.Branch('zmumuVBFWeight', zmumuVBFWeight, 'zmumuVBFWeight/F')
     ggHWeight0Jet = array('f', [ 0 ] )
     ggHWeight0JetB = tnew.Branch('ggHWeight0Jet', ggHWeight0Jet, 'ggHWeight0Jet/F')
     ggHWeightBoost = array('f', [ 0 ] )
@@ -949,6 +953,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tauIDweight_2[0] = 1
             topWeight[0] = 1
             zPtWeight[0] = 1
+            zmumuBoostWeight[0] = 1
+            zmumuVBFWeight[0] = 1
             ggHWeight0Jet[0] = 1
             ggHWeightBoost[0] = 1
             ggHWeightVBF[0] = 1
@@ -1163,6 +1169,26 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if 'DYJets' in sample and 'Low' not in sample :
                     if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
+
+                # Reweighting 2D distributions based on Zmumu CR
+                if 'DYJets' in sample :
+
+                    # Boosted Category
+                    boostPt = 0.
+                    if hasattr( row, 'pt_sv' ) : boostPt = row.pt_sv
+                    else : boostPt = Higgs_Pt[0]
+                    if boostPt <= 100.   : zmumuBoostWeight[0] = 0.973
+                    elif boostPt <= 170. : zmumuBoostWeight[0] = 0.959
+                    elif boostPt <= 300. : zmumuBoostWeight[0] = 0.934
+                    else                 : zmumuBoostWeight[0] = 0.993 # > 300
+
+                    # VBF Category
+                    if row.vbfMass <= 300   : zmumuVBFWeight[0] = 1.010
+                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = 1.064
+                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = 1.088
+                    else                    : zmumuVBFWeight[0] = 1.003 # > 800
+                    
+
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
                 weight[0] *= zPtWeight[0] * topWeight[0]

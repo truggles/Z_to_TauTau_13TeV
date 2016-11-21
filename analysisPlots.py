@@ -153,6 +153,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightVBF)'
             else : "\n\n\nWhy didn't I find a file?\n"
             
+
+        # Add the Zmumu CR normalizations from Cecile's studies
+        # from Nov 18, 2016 SM-HTT
+        if 'DYJets' in sample and 'ZTTboosted' in outFile.GetName() :
+            shapeSyst += '*(zmumuBoostWeight)'
+        if 'DYJets' in sample and 'ZTTVBF' in outFile.GetName() :
+            shapeSyst += '*(zmumuVBFWeight)'
+        
             
         # Energy Scale reweighting applied to all Real Hadronic Taus
         # gen_match == 5
