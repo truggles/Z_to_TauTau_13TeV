@@ -158,12 +158,12 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
 
     ### 2D Distributions ###
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTboosted' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && jpt_1>50 && %s>100)))*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && %s>100)))*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTVBF' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5 && jpt_1>50)*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
+    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5)*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
