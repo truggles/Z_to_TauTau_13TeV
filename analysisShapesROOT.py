@@ -220,10 +220,11 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             if not baseVar in var : continue
             if ops['fitShape'] == 'm_sv' and ':' in var : continue # Get rid of the 2D shapes in 0jet
             if ops['allShapes'] :
-                print "\nAll Shapes Applied\n"
+                print "\nAll Shapes Applied: %s\n" % var
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                 if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
-                        or ('_JES' in var) or ('_ggH' in var) or (baseVar == var)) :
+                        or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) or (baseVar == var)) :
+                    print "Did we fail?"
                     continue
             #if ops['mssm'] :
             #    if not var == baseVar+'_mssm' : continue
@@ -303,6 +304,10 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         histos[ name ] = ROOT.TH1D( name+'JESUp', name+'JESUp', numBins, binArray )
                     elif '_JESDown' in var :
                         histos[ name ] = ROOT.TH1D( name+'JESDown', name+'JESDown', numBins, binArray )
+                    elif '_JetToTauUp' in var :
+                        histos[ name ] = ROOT.TH1D( name+'jetToTauUp', name+'jetToTauUp', numBins, binArray )
+                    elif '_JetToTauDown' in var :
+                        histos[ name ] = ROOT.TH1D( name+'jetToTauDown', name+'jetToTauDown', numBins, binArray )
                     elif '_ggHUp' in var :
                         histos[ name ] = ROOT.TH1D( name+'ggHUp', name+'ggHUp', numBins, binArray )
                     elif '_ggHDown' in var :
@@ -403,9 +408,10 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 # Proper naming of output histos
                 if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
-                        or '_JES' in var or '_topPt' in var or '_ggH' in var) :
+                        or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var) :
                     if name in ['_data_obs_','_QCD_'] : continue 
                     if '_ggH' in var and not name in ['_ggH120_','_ggH125_','_ggH130_'] : continue
+                    if '_JetToTau' in var and not name in ['_W_', '_TTJ_', '_ZJ_'] : continue
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
@@ -439,6 +445,12 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     elif '_JESDown' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVDown' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVDown' )
+                    elif '_JetToTauUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVUp' )
+                    elif '_JetToTauDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVDown' )
                     elif '_tauPtUp' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )

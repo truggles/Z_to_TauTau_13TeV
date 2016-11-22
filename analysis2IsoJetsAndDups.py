@@ -238,6 +238,7 @@ tauIsoList = [
 'ElecOverlap', 'GenDecayMode', 'ZTTGenMatching', 'ZTTGenMatching2', 'GlobalMuonVtxOverlap',
 'JetArea', 'JetBtag', 'JetEtaEtaMoment', 'JetEtaPhiMoment', 'JetPFCISVBtag',
 'JetPartonFlavour', 'JetPhiPhiMoment', 'JetPt', 'GenJetPt', 'LeadTrackPt', 'LowestMll',
+'ZTTGenPt', 'ZTTGenEta', 'ZTTGenPhi', 'ZTTGenDR',
 'MatchesDoubleTau40Path', 'MatchesDoubleTau35Path', 'MuOverlap', 'MuonIdIsoStdVtxOverlap',
 'MuonIdIsoVtxOverlap', 'MuonIdVtxOverlap', 'NearestZMass', 'Rank', 'VZ',]
 
@@ -696,6 +697,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ggHWeightBoostB = tnew.Branch('ggHWeightBoost', ggHWeightBoost, 'ggHWeightBoost/F')
     ggHWeightVBF = array('f', [ 0 ] )
     ggHWeightVBFB = tnew.Branch('ggHWeightVBF', ggHWeightVBF, 'ggHWeightVBF/F')
+    jetToTauFakeWeight = array('f', [ 0 ] )
+    jetToTauFakeWeightB = tnew.Branch('jetToTauFakeWeight', jetToTauFakeWeight, 'jetToTauFakeWeight/F')
     muonSF1 = array('f', [ 0 ] )
     muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
     muonSF2 = array('f', [ 0 ] )
@@ -958,6 +961,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             ggHWeight0Jet[0] = 1
             ggHWeightBoost[0] = 1
             ggHWeightVBF[0] = 1
+            jetToTauFakeWeight[0] = 1
             weight[0] = 1
             XSecLumiWeight[0] = 1
             gen_match_1[0] = -1
@@ -1187,6 +1191,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     elif row.vbfMass <= 500 : zmumuVBFWeight[0] = 1.064
                     elif row.vbfMass <= 800 : zmumuVBFWeight[0] = 1.088
                     else                    : zmumuVBFWeight[0] = 1.003 # > 800
+
+                # Jet to Tau Fake weight
+                if not 'date' in sample :
+                    w1 = 0.
+                    w2 = 0.
+                    if gen_match_1[0] == 6 :
+                        w1 = row.t1ZTTGenPt / 100.
+                    if gen_match_2[0] == 6 :
+                        w2 = row.t2ZTTGenPt / 100.
+                    jetToTauFakeWeight[0] = 1. + .2 * math.sqrt( w1**2 + w2**2 )
                     
 
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]

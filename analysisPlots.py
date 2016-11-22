@@ -62,6 +62,12 @@ def skipSystShapeVar( var, sample, channel ) :
         elif '_JES' in var :
             if 'data' in sample : return True
 
+        # Jet to Tau Fake, no data
+        elif '_JetToTau' in var :
+            #if 'data' in sample : return True
+            if not ('TT' in sample or 'DYJets' in sample or 'WJets' in sample) :
+                return True
+
         # ggH Scale, only for ggH
         elif '_ggH' in var :
             if not 'ggHtoTauTau' in sample : return True
@@ -152,6 +158,15 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if '_ggHUp' in var : shapeSyst = '*(ggHWeightVBF)'
                 elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightVBF)'
             else : "\n\n\nWhy didn't I find a file?\n"
+
+        # Jet to Tau Fake
+        # These look to be applied in reverse
+        # the shift convention was choosen to match MSSM 2016 ICHEP
+        elif '_JetToTau' in var :
+            if '_JetToTauUp' in var :
+                shapeSyst = '*(2 - jetToTauFakeWeight)' # = to 1 - SF
+            if '_JetToTauDown' in var :
+                shapeSyst = '*(jetToTauFakeWeight)'
             
 
         # Add the Zmumu CR normalizations from Cecile's studies
@@ -382,6 +397,7 @@ def getHistoDict( analysis, channel ) :
                     #'tauPt':'High P_{T} Tau',
                     'topPt':'Top P_{T} Reweight',
                     'JES' : 'Jet Energy Scale',
+                    'JetToTau' : 'Jet to Tau Fake',
                     'ggH' : 'ggH Scale',
                     }
         for var in genVarMap.keys() :
