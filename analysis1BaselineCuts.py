@@ -10,6 +10,7 @@ import multiprocessing
 import math
 from ROOT import gPad, gROOT
 from util.helpers import checkDir
+from util.azhReducibleBackground import doRedBkgPlots
 
 
 
@@ -431,6 +432,10 @@ def drawHistos(analysis, samples, **fargs ) :
     if 'skipSSQCDDetails' in fargs.keys() :
         if fargs['skipSSQCDDetails'] :
             skipSSQCDDetails = True
+    doRedBkg = False
+    if 'doRedBkg' in fargs.keys() :
+        if fargs['doRedBkg'] :
+            doRedBkg = True
 
     genMap = {
         # sample : em , tt
@@ -503,7 +508,6 @@ def drawHistos(analysis, samples, **fargs ) :
                 print " ====>  Starting Plots For %s_%s_%s  <==== " % (analysis, saveName, channel)
     
                 chain = ROOT.TChain('Ntuple')
-                outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
                 for i in range( numIters ) :
                     #print "%s_%i" % ( sample, i)
                     #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (analysis, fargs['mid2'], sample.split('_')[0], i, channel)
@@ -518,8 +522,12 @@ def drawHistos(analysis, samples, **fargs ) :
                     else : additionalCut += genMap[subName][channel] 
                 #print "AdditionalCuts",additionalCut
                 blind = False
-                analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind, skipSSQCDDetails )
-                outFile.Close()
+                if doRedBkg :
+                    doRedBkgPlots( analysis, chain, sample, channel )
+                else :
+                    outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
+                    analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind, skipSSQCDDetails )
+                    outFile.Close()
          
 
 if __name__ == '__main__' :

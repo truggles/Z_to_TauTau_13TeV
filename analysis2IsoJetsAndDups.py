@@ -198,6 +198,13 @@ def getIso( cand, row ) :
     if 't' in cand :
         #return getattr(row, cand+'ByCombinedIsolationDeltaBetaCorrRaw3Hits')
         return getattr(row, cand+'ByIsolationMVArun2v1DBoldDMwLTraw' )
+                    
+
+def getOverlappingJet( lep ) :
+    assert( 'e' in lep or 'm' in lep or 't' in lep ), "%s is not an electron, muon, or tau" % lep
+    pt = getattr( lep+'JetPt' )
+    eta = getattr( lep+'Eta' )
+    return pt, eta
         
         
 def getCurrentEvt( channel, row ) :
@@ -337,8 +344,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         #XXX 'NBTagPDL_idL_jVeto' : 'nbtagLoose',
         'jetVeto20' : 'njetspt20',
         'jetVeto30' : 'njets',
-        'puppiMetEt' : 'puppimet',
-        'puppiMetPhi' : 'puppimetphi',
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
@@ -348,6 +353,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'vbfJetVeto30' : 'njetingap',
         'vbfJetVeto20' : 'njetingap20',
         }
+
+    if analysis != 'azh' : # Stupid fix for old ntuples
+        branchMapping['puppiMetEt'] = 'puppimet'
+        branchMapping['puppiMetPhi'] = 'puppimetphi'
+
     doubleProds = {
         'Mass' : 'm_vis',
         #'SVfitMass' : 'm_sv',
@@ -699,22 +709,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ggHWeightVBFB = tnew.Branch('ggHWeightVBF', ggHWeightVBF, 'ggHWeightVBF/F')
     jetToTauFakeWeight = array('f', [ 0 ] )
     jetToTauFakeWeightB = tnew.Branch('jetToTauFakeWeight', jetToTauFakeWeight, 'jetToTauFakeWeight/F')
-    muonSF1 = array('f', [ 0 ] )
-    muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
-    muonSF2 = array('f', [ 0 ] )
-    muonSF2B = tnew.Branch('muonSF2', muonSF2, 'muonSF2/F')
-    muonSF3 = array('f', [ 0 ] )
-    muonSF3B = tnew.Branch('muonSF3', muonSF3, 'muonSF3/F')
-    muonSF4 = array('f', [ 0 ] )
-    muonSF4B = tnew.Branch('muonSF4', muonSF4, 'muonSF4/F')
-    electronSF1 = array('f', [ 0 ] )
-    electronSF1B = tnew.Branch('electronSF1', electronSF1, 'electronSF1/F')
-    electronSF2 = array('f', [ 0 ] )
-    electronSF2B = tnew.Branch('electronSF2', electronSF2, 'electronSF2/F')
-    electronSF3 = array('f', [ 0 ] )
-    electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
-    electronSF4 = array('f', [ 0 ] )
-    electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
     #FFWeightQCD = array('f', [ 0 ] )
     #FFWeightQCDB = tnew.Branch('FFWeightQCD', FFWeightQCD, 'FFWeightQCD/F')
     #FFWeightQCD_UP = array('f', [ 0 ] )
@@ -793,6 +787,31 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     gen_match_3B = tnew.Branch('gen_match_3', gen_match_3, 'gen_match_3/F')
     gen_match_4 = array('f', [ 0 ] )
     gen_match_4B = tnew.Branch('gen_match_4', gen_match_4, 'gen_match_4/F')
+    muonSF1 = array('f', [ 0 ] )
+    muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
+    muonSF2 = array('f', [ 0 ] )
+    muonSF2B = tnew.Branch('muonSF2', muonSF2, 'muonSF2/F')
+    muonSF3 = array('f', [ 0 ] )
+    muonSF3B = tnew.Branch('muonSF3', muonSF3, 'muonSF3/F')
+    muonSF4 = array('f', [ 0 ] )
+    muonSF4B = tnew.Branch('muonSF4', muonSF4, 'muonSF4/F')
+    electronSF1 = array('f', [ 0 ] )
+    electronSF1B = tnew.Branch('electronSF1', electronSF1, 'electronSF1/F')
+    electronSF2 = array('f', [ 0 ] )
+    electronSF2B = tnew.Branch('electronSF2', electronSF2, 'electronSF2/F')
+    electronSF3 = array('f', [ 0 ] )
+    electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
+    electronSF4 = array('f', [ 0 ] )
+    electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
+    # 1 and 2 not needed for Reducible Bkg Mthd
+    overlapJetPt3 = array('f', [ 0 ] )
+    overlapJetPt3B = tnew.Branch('overlapJetPt3', overlapJetPt3, 'overlapJetPt3/F')
+    overlapJetPt4 = array('f', [ 0 ] )
+    overlapJetPt4B = tnew.Branch('overlapJetPt4', overlapJetPt4, 'overlapJetPt4/F')
+    overlapJetEta3 = array('f', [ 0 ] )
+    overlapJetEta3B = tnew.Branch('overlapJetEta3', overlapJetEta3, 'overlapJetEta3/F')
+    overlapJetEta4 = array('f', [ 0 ] )
+    overlapJetEta4B = tnew.Branch('overlapJetEta4', overlapJetEta4, 'overlapJetEta4/F')
     __WEIGHT__ = array('f', [ 0 ] )
     __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
     __ZWEIGHT__ = array('f', [ 0 ] )
@@ -944,6 +963,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             electronSF2[0] = 1
             electronSF3[0] = 1
             electronSF4[0] = 1
+            overlapJetPt3[0] = 1
+            overlapJetPt4[0] = 1
+            overlapJetEta3[0] = 1
+            overlapJetEta4[0] = 1
             azhWeight[0] = 1
             puweight[0] = 1
             tauPtWeightUp[0] = 1
@@ -1076,6 +1099,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
                     if 'e' in l4 :
                         electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
+
+                    # Get the overlapping jet for each lepton and fill values for each leg
+                    # for easy plotting later
+                    overlapJetPt3[0], overlapJetEta3[0] = getOverlappingJet( l3 )
+                    overlapJetPt4[0], overlapJetEta4[0] = getOverlappingJet( l4 )
 
                 # Isolation / ID weights
                 if 't' in l1 : idisoweight_1[0] = 1

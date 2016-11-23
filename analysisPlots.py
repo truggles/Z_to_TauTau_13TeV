@@ -116,7 +116,8 @@ def HighPtTauWeight( var ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False, doRedBkg=False ) :
+def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False ) :
+
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMapUnsorted = getHistoDict( analysis, channel )
     newVarMap = returnSortedDict( newVarMapUnsorted )
