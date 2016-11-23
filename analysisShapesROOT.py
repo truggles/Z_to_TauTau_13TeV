@@ -223,7 +223,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 print "\nAll Shapes Applied: %s\n" % var
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                 if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
-                        or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) or (baseVar == var)) :
+                        or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) \
+                        or ('_Zmumu' in var) or (baseVar == var)) :
                     print "Did we fail?"
                     continue
             #if ops['mssm'] :
@@ -408,10 +409,12 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 # Proper naming of output histos
                 if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
-                        or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var) :
+                        or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var) :
                     if name in ['_data_obs_','_QCD_'] : continue 
                     if '_ggH' in var and not name in ['_ggH120_','_ggH125_','_ggH130_'] : continue
                     if '_JetToTau' in var and not name in ['_W_', '_TTJ_', '_ZJ_'] : continue
+                    if '_Zmumu' in var and (name not in ['_ZTT_', '_ZL_', '_ZJ_'] or \
+                            ops['category'] != 'VBF') : continue # Shape only used in VBF category atm
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
@@ -463,6 +466,12 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                     elif '_ggHDown' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeVDown' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeVDown' )
+                    elif '_ZmumuUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVUp' )
+                    elif '_ZmumuDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVDown' )
                     histos[ name ].Write()
                 else :
                     histos[ name ].SetTitle( name.strip('_') )

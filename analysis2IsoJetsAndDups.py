@@ -1181,26 +1181,30 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     boostPt = 0.
                     if hasattr( row, 'pt_sv' ) : boostPt = row.pt_sv
                     else : boostPt = Higgs_Pt[0]
-                    if boostPt <= 100.   : zmumuBoostWeight[0] = 0.973
-                    elif boostPt <= 170. : zmumuBoostWeight[0] = 0.959
-                    elif boostPt <= 300. : zmumuBoostWeight[0] = 0.934
-                    else                 : zmumuBoostWeight[0] = 0.993 # > 300
+                    if boostPt <= 100.   : zmumuBoostWeight[0] = (-1. + 0.973)
+                    elif boostPt <= 170. : zmumuBoostWeight[0] = (-1. + 0.959)
+                    elif boostPt <= 300. : zmumuBoostWeight[0] = (-1. + 0.934)
+                    else                 : zmumuBoostWeight[0] = (-1. + 0.993) # > 300
 
                     # VBF Category
-                    if row.vbfMass <= 300   : zmumuVBFWeight[0] = 1.010
-                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = 1.064
-                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = 1.088
-                    else                    : zmumuVBFWeight[0] = 1.003 # > 800
+                    # Change application method and add shape with nominal
+                    # shift at 1/2 the initial value
+                    if row.vbfMass <= 300   : zmumuVBFWeight[0] = (-1. + 1.010) / 2.
+                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = (-1. + 1.064) / 2.
+                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = (-1. + 1.088) / 2.
+                    else                    : zmumuVBFWeight[0] = (-1. + 1.003) / 2. # > 800
 
                 # Jet to Tau Fake weight
                 if not 'date' in sample :
                     w1 = 0.
                     w2 = 0.
                     if gen_match_1[0] == 6 :
-                        w1 = row.t1ZTTGenPt / 100.
+                        w1 = .2 * pt1 / 100.
                     if gen_match_2[0] == 6 :
-                        w2 = row.t2ZTTGenPt / 100.
-                    jetToTauFakeWeight[0] = 1. + .2 * math.sqrt( w1**2 + w2**2 )
+                        w2 = .2 * pt2 / 100.
+                    if w1 > .4 : w1 = .4
+                    if w2 > .4 : w2 = .4
+                    jetToTauFakeWeight[0] = 1. + w1 + w2
                     
 
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
