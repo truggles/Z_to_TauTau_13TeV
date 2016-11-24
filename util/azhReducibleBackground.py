@@ -40,8 +40,8 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
         'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'electron' : ['eeet', 'eeem', 'emmt', 'emmm'],
-        'muon' : ['eemt', 'eeem', 'mmmt', 'emmm'],
+        'electron' : ['eeet', 'emmt'],
+        'muon' : ['eemt', 'mmmt'],
     }
 
     for obj, chans in redBkgMap.iteritems() :
@@ -89,13 +89,30 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         'mmmm' : ('m3', 'm4'),
     }
 
-    passCuts = {
-        'tau' : ['byLooseIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
-        'electron' : ['iso_Num < 0.3', 'id_e_mva_nt_loose_Num > 0'],
-        'muon' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0'],
+    cuts = {
+        'tau' : {
+            'denom' : ['(1)'],
+            'pass' : ['byLooseIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
+        },
+        'electron' : {
+            'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
+            'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_loose_Num > 0'],
+        },
+        'muon' : {
+            'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
+            'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0'],
+        },
     } 
 
-    passCut = ' && '.join( passCuts[obj] )
+#    etaCuts = {
+#'tau' : {'Barrel'
+#'electron' :
+#'muon' :
+#    }
+
+    denomCut = ' && '.join( cuts[obj]['denom'] )
+    passCut = ' && '.join( cuts[obj]['pass'] )
+    passCut = denomCut+' && '+passCut
 
     for channel in channels :
         print channel
@@ -112,12 +129,14 @@ def doRedBkgPlots( obj, channels, inputDir ) :
             passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
             if channel == 'emmt' : passCutX = passCutX.replace('id_e_mva_nt_loose_3', 'eMVANonTrigWP90')
 
+            # Denominator selection
             hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
-            t.Draw( leg+'JetPt >> hTmp' )
+            t.Draw( leg+'JetPt >> hTmp', denomCut )
             #print channel, leg, hTmp.Integral()
             denomAll.Add( hTmp )
             print " -- denomAll Int:",denomAll.Integral()
 
+            # Passing selection
             hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', binInfo[0], binInfo[1], binInfo[2] )
             t.Draw( leg+'JetPt >> hTmpPass', passCutX )
             passAll.Add( hTmpPass )
