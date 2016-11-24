@@ -13,6 +13,7 @@ import math
 import json
 import os
 import ROOT
+import copy
 
 cmsLumi = float(os.getenv('LUMI'))
 print "Lumi = %i" % cmsLumi
@@ -200,13 +201,6 @@ def getIso( cand, row ) :
         return getattr(row, cand+'ByIsolationMVArun2v1DBoldDMwLTraw' )
                     
 
-def getOverlappingJet( lep ) :
-    assert( 'e' in lep or 'm' in lep or 't' in lep ), "%s is not an electron, muon, or tau" % lep
-    pt = getattr( lep+'JetPt' )
-    eta = getattr( lep+'Eta' )
-    return pt, eta
-        
-        
 def getCurrentEvt( channel, row ) :
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
@@ -447,44 +441,44 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     # Map all of the variables based on their FSA names to Sync names leg by leg
     if len( channel ) == 2 :
         if channel == 'em' :
-            l1Map = branchMappingElec
-            l2Map = branchMappingMuon
+            l1Map = copy.deepcopy( branchMappingElec )
+            l2Map = copy.deepcopy( branchMappingMuon )
         elif channel == 'et' :
-            l1Map = branchMappingElec
-            l2Map = branchMappingTau
+            l1Map = copy.deepcopy( branchMappingElec )
+            l2Map = copy.deepcopy( branchMappingTau )
         elif channel == 'mt' :
-            l1Map = branchMappingMuon
-            l2Map = branchMappingTau
+            l1Map = copy.deepcopy( branchMappingMuon )
+            l2Map = copy.deepcopy( branchMappingTau )
         elif channel == 'tt' :
-            l1Map = branchMappingTau
-            l2Map = branchMappingTau
+            l1Map = copy.deepcopy( branchMappingTau )
+            l2Map = copy.deepcopy( branchMappingTau )
     if len( channel ) == 4 :
         # Channel naming gets confusing with FSA, e first, m second, t last
         if channel[:2] == 'ee' :
-            l1Map = branchMappingElec
-            l2Map = branchMappingElec
+            l1Map = copy.deepcopy( branchMappingElec )
+            l2Map = copy.deepcopy( branchMappingElec )
         elif channel[:2] == 'mm' or channel == 'emmt' or channel == 'emmm' :
-            l1Map = branchMappingMuon
-            l2Map = branchMappingMuon
+            l1Map = copy.deepcopy( branchMappingMuon )
+            l2Map = copy.deepcopy( branchMappingMuon )
 
         if channel[-2:] == 'ee' :
-            l3Map = branchMappingElec
-            l4Map = branchMappingElec
+            l3Map = copy.deepcopy( branchMappingElec )
+            l4Map = copy.deepcopy( branchMappingElec )
         if channel[-2:] == 'mm' :
-            l3Map = branchMappingMuon
-            l4Map = branchMappingMuon
+            l3Map = copy.deepcopy( branchMappingMuon )
+            l4Map = copy.deepcopy( branchMappingMuon )
         if channel[-2:] == 'tt' :
-            l3Map = branchMappingTau
-            l4Map = branchMappingTau
+            l3Map = copy.deepcopy( branchMappingTau )
+            l4Map = copy.deepcopy( branchMappingTau )
         elif channel[-2:] == 'mt' :
-            l3Map = branchMappingMuon
-            l4Map = branchMappingTau
+            l3Map = copy.deepcopy( branchMappingMuon )
+            l4Map = copy.deepcopy( branchMappingTau )
         elif channel == 'eeet' or channel == 'emmt' :
-            l3Map = branchMappingElec
-            l4Map = branchMappingTau
+            l3Map = copy.deepcopy( branchMappingElec )
+            l4Map = copy.deepcopy( branchMappingTau )
         elif channel == 'eeem' or channel == 'emmm' :
-            l3Map = branchMappingElec
-            l4Map = branchMappingMuon
+            l3Map = copy.deepcopy( branchMappingElec )
+            l4Map = copy.deepcopy( branchMappingMuon )
 
         for key in l3Map.keys() :
             branchMapping[ key.replace('cand_', l3) ] = l3Map[ key ]+'_3'
@@ -803,15 +797,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
     electronSF4 = array('f', [ 0 ] )
     electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
-    # 1 and 2 not needed for Reducible Bkg Mthd
-    overlapJetPt3 = array('f', [ 0 ] )
-    overlapJetPt3B = tnew.Branch('overlapJetPt3', overlapJetPt3, 'overlapJetPt3/F')
-    overlapJetPt4 = array('f', [ 0 ] )
-    overlapJetPt4B = tnew.Branch('overlapJetPt4', overlapJetPt4, 'overlapJetPt4/F')
-    overlapJetEta3 = array('f', [ 0 ] )
-    overlapJetEta3B = tnew.Branch('overlapJetEta3', overlapJetEta3, 'overlapJetEta3/F')
-    overlapJetEta4 = array('f', [ 0 ] )
-    overlapJetEta4B = tnew.Branch('overlapJetEta4', overlapJetEta4, 'overlapJetEta4/F')
     __WEIGHT__ = array('f', [ 0 ] )
     __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
     __ZWEIGHT__ = array('f', [ 0 ] )
@@ -963,10 +948,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             electronSF2[0] = 1
             electronSF3[0] = 1
             electronSF4[0] = 1
-            overlapJetPt3[0] = 1
-            overlapJetPt4[0] = 1
-            overlapJetEta3[0] = 1
-            overlapJetEta4[0] = 1
             azhWeight[0] = 1
             puweight[0] = 1
             tauPtWeightUp[0] = 1
@@ -1044,6 +1025,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #    FFWeightQCD[0] = FFWeightQCD1[0] + FFWeightQCD2[0] 
                 #    FFWeightQCD_UP[0] = FFWeightQCD1_UP[0] + FFWeightQCD2_UP[0] 
                 #    FFWeightQCD_DOWN[0] = FFWeightQCD1_DOWN[0] + FFWeightQCD2_DOWN[0]
+
                     
             ### Not Data
             else :
@@ -1099,11 +1081,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
                     if 'e' in l4 :
                         electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
-
-                    # Get the overlapping jet for each lepton and fill values for each leg
-                    # for easy plotting later
-                    overlapJetPt3[0], overlapJetEta3[0] = getOverlappingJet( l3 )
-                    overlapJetPt4[0], overlapJetEta4[0] = getOverlappingJet( l4 )
 
                 # Isolation / ID weights
                 if 't' in l1 : idisoweight_1[0] = 1
