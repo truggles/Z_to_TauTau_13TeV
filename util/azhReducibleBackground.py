@@ -40,6 +40,8 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
         'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        'tau-lltt' : ['eett', 'mmtt'],
+        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
         'electron' : ['eeet', 'emmt'],
         'muon' : ['eemt', 'mmmt'],
     }
@@ -96,94 +98,120 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         },
         'electron' : {
             'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
-            'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_loose_Num > 0'],
+            'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_loose_Num > 0.5'],
         },
         'muon' : {
             'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
-            'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0'],
+            'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0.5'],
         },
     } 
 
-#    etaCuts = {
-#'tau' : {'Barrel'
-#'electron' :
-#'muon' :
-#    }
+    etaCuts = {
+        'tau' : {
+            'Barrel' : 'abs( eta_Num ) <= 1.4',
+            'Endcap' : 'abs( eta_Num ) > 1.4',
+            'AllEta' : '(1)',
+        },
+        'electron' : {
+            'Barrel' : 'abs( eta_Num ) <= 1.4',
+            'Endcap' : 'abs( eta_Num ) > 1.4',
+            'AllEta' : '(1)',
+        },
+        'muon' :{
+            'Barrel' : 'abs( eta_Num ) <= 1.4',
+            'Endcap' : 'abs( eta_Num ) > 1.4',
+            'AllEta' : '(1)',
+        },
+    }
 
-    denomCut = ' && '.join( cuts[obj]['denom'] )
-    passCut = ' && '.join( cuts[obj]['pass'] )
-    passCut = denomCut+' && '+passCut
+    for etaRegion, etaCut in etaCuts[obj.split('-')[0]].iteritems() :
+    # obj.split('-')[0] is to get the same cuts and mapping for
+    # tau, tau-lltt, tau-lllt
 
-    for channel in channels :
-        print channel
-        f = ROOT.TFile( inputDir+'/redBkg_'+channel+'.root', 'r' )
-        t = f.Get('Ntuple')
+        denomCut = ' && '.join( cuts[obj.split('-')[0]]['denom'] )
+        denomCut += ' && '+etaCut
+        passCut = ' && '.join( cuts[obj.split('-')[0]]['pass'] )
+        passCut = denomCut+' && '+passCut
 
-        # check if first letter of 'obj' in leg3 then leg4 and draw if so
-        for i, leg in enumerate(prodMap[channel]) :
+        for channel in channels :
+            print channel
+            f = ROOT.TFile( inputDir+'/redBkg_'+channel+'.root', 'r' )
+            t = f.Get('Ntuple')
 
-            if not obj[0] in leg : continue
+            # check if first letter of 'obj' in leg3 then leg4 and draw if so
+            for i, leg in enumerate(prodMap[channel]) :
 
-            # Replace vals in the passCut to match leg
-            passCutX = passCut.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
-            passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
-            if channel == 'emmt' : passCutX = passCutX.replace('id_e_mva_nt_loose_3', 'eMVANonTrigWP90')
+                if not obj[0] in leg : continue
 
-            # Denominator selection
-            hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
-            t.Draw( leg+'JetPt >> hTmp', denomCut )
-            #print channel, leg, hTmp.Integral()
-            denomAll.Add( hTmp )
-            print " -- denomAll Int:",denomAll.Integral()
+                # Replace vals in the passCut to match leg
+                denomCutX = denomCut.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
+                denomCutX = denomCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
+                passCutX = passCut.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
+                passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
+                print denomCutX
+                print passCutX
+                if channel == 'emmt' : passCutX = passCutX.replace('id_e_mva_nt_loose_3', 'eMVANonTrigWP90')
 
-            # Passing selection
-            hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', binInfo[0], binInfo[1], binInfo[2] )
-            t.Draw( leg+'JetPt >> hTmpPass', passCutX )
-            passAll.Add( hTmpPass )
-            print " -- passAll Int:",passAll.Integral()
-            del hTmp, hTmpPass
+                # Denominator selection
+                hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
+                t.Draw( leg+'JetPt >> hTmp', denomCutX )
+                #print channel, leg, hTmp.Integral()
+                denomAll.Add( hTmp )
+                print " -- denomAll Int:",denomAll.Integral()
+
+                # Passing selection
+                hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', binInfo[0], binInfo[1], binInfo[2] )
+                t.Draw( leg+'JetPt >> hTmpPass', passCutX )
+                passAll.Add( hTmpPass )
+                print " -- passAll Int:",passAll.Integral()
+                del hTmp, hTmpPass
 
 
-    denomAll.SetMaximum( denomAll.GetMaximum() * 1.3 )
-    denomAll.Draw()
-    setText( "Denominator", cmsLumi )
-    c1.SaveAs( saveDir+'/'+obj+'_Denominator.png' )
-    passAll.SetMaximum( passAll.GetMaximum() * 1.3 )
-    passAll.Draw()
-    setText( "Passing", cmsLumi )
-    c1.SaveAs( saveDir+'/'+obj+'_Pass.png' )
+        #denomAll.SetMaximum( denomAll.GetMaximum() * 1.3 )
+        #denomAll.Draw()
+        #setText( "Denominator", cmsLumi )
+        #c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_Denominator.png' )
+        #passAll.SetMaximum( passAll.GetMaximum() * 1.3 )
+        #passAll.Draw()
+        #setText( "Passing", cmsLumi )
+        #c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_Pass.png' )
 
-    # Make Fake Rate plot
-    pad1.SetLogy()
-    graph = ROOT.TGraphAsymmErrors(passAll, denomAll)
-    graph.GetXaxis().SetTitle(xAxis)
-    graph.GetYaxis().SetTitle(yAxis2)
-    graph.GetYaxis().SetTitle("Fake Rate")
-    graph.SetMaximum( 2 )
-    graph.Draw("ALP")
-    # do fit
-    f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', binInfo[1], binInfo[2])
-    f1.SetParName( 0, "y rise" )
-    f1.SetParName( 1, "scale" )
-    f1.SetParName( 2, "decay" )
-    if obj == 'electron' :
-        f1.SetParameter( 0, 0. )
-        f1.SetParameter( 1, .01 )
-        f1.SetParameter( 2, .05 )
-    else :
-        f1.SetParameter( 0, 0. )
-        f1.SetParameter( 1, 1. )
-        f1.SetParameter( 2, .05 )
-    graph.Fit('f1', 'S' )
-    f2 = ROOT.TF1( 'f2', '([0] + [1]*TMath::Exp(-[2]*x))', binInfo[1], binInfo[2])
-    f2.SetParameter( 0, f1.GetParameter( 0 ) )
-    f2.SetParameter( 1, f1.GetParameter( 1 ) )
-    f2.SetParameter( 2, f1.GetParameter( 2 ) )
-    f2.Draw('SAME')
+        # Make Fake Rate plot
+        pad1.SetLogy()
+        graph = ROOT.TGraphAsymmErrors(passAll, denomAll)
+        graph.GetXaxis().SetTitle(xAxis)
+        graph.GetYaxis().SetTitle(yAxis2)
+        graph.GetYaxis().SetTitle("Fake Rate")
+        graph.SetMaximum( 10 )
+        graph.SetMinimum( 0.0005 )
+        graph.Draw("AP")
+        # do fit
+        f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', binInfo[1], binInfo[2])
+        f1.SetParName( 0, "y rise" )
+        f1.SetParName( 1, "scale" )
+        f1.SetParName( 2, "decay" )
+        if obj == 'electron' :
+            f1.SetParameter( 0, 0. )
+            f1.SetParameter( 1, .01 )
+            f1.SetParameter( 2, .05 )
+        else :
+            f1.SetParameter( 0, 0. )
+            f1.SetParameter( 1, 1. )
+            f1.SetParameter( 2, .05 )
+        graph.Fit('f1', 'S' )
+        f2 = ROOT.TF1( 'f2', '([0] + [1]*TMath::Exp(-[2]*x))', binInfo[1], binInfo[2])
+        f2.SetParameter( 0, f1.GetParameter( 0 ) )
+        f2.SetParameter( 1, f1.GetParameter( 1 ) )
+        f2.SetParameter( 2, f1.GetParameter( 2 ) )
+        f2.Draw('SAME')
 
-    #setText( "Fake Rate", cmsLumi )
-    c1.SaveAs( saveDir+'/'+obj+'_FakeRate.png' )
-    pad1.SetLogy(0)
+        ROOT.gStyle.SetStatX(.95)
+        ROOT.gStyle.SetStatY(0.8)
+        ROOT.gStyle.SetStatH(.2)
+        ROOT.gStyle.SetStatW(.2)
+        setText( "Fake Rate: %s %s" % (obj, etaRegion), cmsLumi )
+        c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.png' )
+        pad1.SetLogy(0)
 
 
 def setText( category, cmsLumi ) :
