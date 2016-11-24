@@ -46,8 +46,19 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
         'muon' : ['eemt', 'mmmt'],
     }
 
+    fakeRateMap = {}
     for obj, chans in redBkgMap.iteritems() :
-        doRedBkgPlots( obj, chans, dir2 )
+        tmpMap = doRedBkgPlots( obj, chans, dir2 )
+        for name, func in tmpMap.iteritems() :
+            fakeRateMap[name] = func
+
+    # Save fits to out file
+    outFile = ROOT.TFile('data/azhFakeRateFits.root', 'RECREATE')
+    for name, func in fakeRateMap.iteritems() :
+        func.SetName( name )
+        func.SetTitle( 'Fake Rate Fit: '+name )
+        func.Write()
+    outFile.Close()
 
 
 def doRedBkgPlots( obj, channels, inputDir ) :
@@ -123,6 +134,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
             'AllEta' : '(1)',
         },
     }
+
+    frMap = {}
 
     for etaRegion, etaCut in etaCuts[obj.split('-')[0]].iteritems() :
     # obj.split('-')[0] is to get the same cuts and mapping for
@@ -212,6 +225,13 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         setText( "Fake Rate: %s %s" % (obj, etaRegion), cmsLumi )
         c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.png' )
         pad1.SetLogy(0)
+
+        # Add FR fit to map
+        frMap[obj+'_'+etaRegion] = f2
+
+    # Return map
+    return frMap
+
 
 
 def setText( category, cmsLumi ) :
