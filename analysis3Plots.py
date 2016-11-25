@@ -58,7 +58,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if sample == 'TT' :
                 for gen in ['TTT', 'TTJ'] :
                     samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
-                    genApp = gen.lower()
+                    genApp = 'ttbar'
                     samples[ sample+'-'+gen ]['group'] = genApp
 
         # Clean the samples list
@@ -119,8 +119,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     sampInfo = { 'htt' : {
         'dib' : [ROOT.kRed+2, 'VV'],
-        'ttt' : [ROOT.kBlue-8, 't#bar{t}'],
-        'ttj' : [ROOT.kBlue-8, 't#bar{t}+Jets'],
+        'ttbar' : [ROOT.kBlue-8, 't#bar{t}'],
         'qcd' : [ROOT.TColor.GetColor(250,202,255), 'QCD'], #kMagenta-10
         'ztt' : [ROOT.TColor.GetColor(248,206,104), 'Z#rightarrow#tau#tau'], #kOrange-4,
         'zl' : [ROOT.kAzure+2, 'Z#rightarrowee (lepton)'],
@@ -420,8 +419,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if not qcdMake :
                     #print "Adding QCD: ",sampHistos['qcd'].Integral()
                     stack.Add( sampHistos['qcd'] )
-                stack.Add( sampHistos['ttt'] )
-                stack.Add( sampHistos['ttj'] )
+                stack.Add( sampHistos['ttbar'] )
                 stack.Add( sampHistos['dib'] )
                 stack.Add( sampHistos['wjets'] )
                 if channel != 'em' :
@@ -470,8 +468,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """
             uncertNormMap = { 'htt' : {
                 'qcd' : .20,
-                'ttt' : .15,
-                'ttj' : .15,
+                'ttbar' : .15,
                 'dib' : .10,
                 'wjets' : .10,
                 'ztt' : .05,
