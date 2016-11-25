@@ -1124,20 +1124,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
-                    tauIDweight_1[0] = 0.9
-                    tauIDweight_2[0] = 0.9
 
                     # Tau Energy Scale Saved
                     if gen_match_1[0] == 5 :
+                        tauIDweight_1[0] = 0.9
                         pt_1_UP[0] = getattr( row, l1+'Pt' ) * 1.03
                         pt_1_DOWN[0] = getattr( row, l1+'Pt' ) * 0.97
                     else :
+                        tauIDweight_1[0] = 1.
                         pt_1_UP[0] = getattr( row, l1+'Pt' )
                         pt_1_DOWN[0] = getattr( row, l1+'Pt' )
                     if gen_match_2[0] == 5 :
+                        tauIDweight_2[0] = 0.9
                         pt_2_UP[0] = getattr( row, l2+'Pt' ) * 1.03
                         pt_2_DOWN[0] = getattr( row, l2+'Pt' ) * 0.97
                     else :
+                        tauIDweight_2[0] = 1.
                         pt_2_UP[0] = getattr( row, l2+'Pt' )
                         pt_2_DOWN[0] = getattr( row, l2+'Pt' )
 
