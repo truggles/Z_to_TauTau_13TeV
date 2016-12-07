@@ -1,2 +1,0 @@
-/hdfs/store/user/caillol/ZH_sep16_v1/ttHJetToTT_M130_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-AC3CFD46-FD4C-E611-9858-44A84225CABC.root
-/hdfs/store/user/caillol/ZH_sep16_v1/ttHJetToTT_M130_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-BED75C7D-C34D-E611-88FC-A0369F7FC608.root

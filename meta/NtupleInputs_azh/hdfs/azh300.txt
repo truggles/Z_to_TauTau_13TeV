@@ -1,2 +1,2 @@
-/hdfs/store/user/caillol/ZH_sep16_v1/AToZhToLLTauTau_M-300_13TeV_madgraph_4f_LO/make_ntuples_cfg-A8F7ADF2-2B42-E611-8FAD-002590E3A0FA.root
-/hdfs/store/user/caillol/ZH_sep16_v1/AToZhToLLTauTau_M-300_13TeV_madgraph_4f_LO/make_ntuples_cfg-CE031EF6-2B42-E611-B99C-001EC94BE9F4.root
+/hdfs/store/user/caillol/LLTT_dec2_v1/AToZhToLLTauTau_M-300_13TeV_madgraph_4f_LO/make_ntuples_cfg-A8F7ADF2-2B42-E611-8FAD-002590E3A0FA.root
+/hdfs/store/user/caillol/LLTT_dec2_v1/AToZhToLLTauTau_M-300_13TeV_madgraph_4f_LO/make_ntuples_cfg-CE031EF6-2B42-E611-B99C-001EC94BE9F4.root

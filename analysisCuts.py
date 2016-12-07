@@ -75,7 +75,7 @@ HSS = 'LEG3_LEG4_SS == 1'
 # EE for Z cand legs
 # Preselection
 eeTrig = '(doubleE_23_12Pass > 0 && LEG1MatchesDoubleE23_12Path > 0 && LEG2MatchesDoubleE23_12Path > 0)'
-eePt = '((LEG1Pt > 28 && LEG2Pt > 20) || (LEG2Pt > 28 && LEG1Pt > 20))'
+eePt = '((LEG1Pt > 24 && LEG2Pt > 13) || (LEG2Pt > 24 && LEG1Pt > 13))'
 eeEta = 'abs(LEG1Eta) < 2.5 && abs(LEG2Eta) < 2.5'
 eeIso = 'e1IsoDB03 < 0.3 && e2IsoDB03 < 0.3'
 eeHits = 'e1PassesConversionVeto > 0 && e1MissingHits < 2 && e2PassesConversionVeto > 0 && e2MissingHits < 2'
@@ -83,26 +83,26 @@ eeIDL = 'LEG1MVANonTrigWP90 > 0 && LEG2MVANonTrigWP90 > 0'
 
 # MM for Z cand legs
 mmTrig = 'doubleMuPass > 0 && LEG1MatchesDoubleMu > 0 && LEG2MatchesDoubleMu > 0'
-mmPt = '((LEG1Pt > 20 && LEG2Pt > 10) || (LEG2Pt > 20 && LEG1Pt > 10))'
+mmPt = '((LEG1Pt > 18 && LEG2Pt > 9) || (LEG2Pt > 18 && LEG1Pt > 9))'
 mmEta = 'abs(LEG1Eta) < 2.4 && abs(LEG2Eta) < 2.4'
 mmIso = 'm1IsoDB04 < 0.25 && m2IsoDB04 < 0.25'
 mmIDL = 'LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 #mmIDL = 'LEG1IsTracker > 0 && LEG2IsTracker > 0 && LEG1IsGlobal > 0 && LEG2IsGlobal > 0 && LEG1PFIDLoose > 0 && LEG2PFIDLoose > 0'
 
 # ET Higgs
-eeetE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
-eeetERed = 'e3Pt > 20 && abs(e3Eta) < 2.5'
-mmetE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
-mmetERed = 'ePt > 20 && abs(eEta) < 2.5'
+eeetE = 'e3Pt > 7 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
+eeetERed = 'e3Pt > 7 && abs(e3Eta) < 2.5'
+mmetE = 'ePt > 7 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
+mmetERed = 'ePt > 7 && abs(eEta) < 2.5'
 xxetT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1 && tAgainstElectronVLooseMVA6 == 1'
 xxetTRed = 'tPt > 20 && abs(tEta) < 2.1 && tDecayModeFinding == 1' 
 eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
 mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
 # MT Higgs
-eemtM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB04 < 0.25 && mPFIDLoose > 0'
-eemtMRed = 'mPt > 10 && abs(mEta) < 2.4'
-mmmtM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose > 0'
-mmmtMRed = 'm3Pt > 10 && abs(m3Eta) < 2.4'
+eemtM = 'mPt > 5 && abs(mEta) < 2.4 && mIsoDB04 < 0.25 && mPFIDLoose > 0'
+eemtMRed = 'mPt > 5 && abs(mEta) < 2.4'
+mmmtM = 'm3Pt > 5 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose > 0'
+mmmtMRed = 'm3Pt > 5 && abs(m3Eta) < 2.4'
 xxmtT = 'tPt > 20 && abs(tEta) < 2.1 && tByLooseIsolationMVArun2v1DBoldDMwLT > 0 && tDecayModeFinding == 1 && tAgainstMuonLoose3 == 1'
 xxmtTRed = 'tPt > 20 && abs(tEta) < 2.1 && tDecayModeFinding == 1'
 eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 1'
@@ -113,23 +113,23 @@ xxttTTRed = 't1Pt > 20 && abs(t1Eta) < 2.1 && t2Pt > 20 && abs(t2Eta) < 2.1 && t
 eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 == 0'
 mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 2'
 # EM Higgs
-eeemE = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
-mmemE = 'ePt > 20 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
-eeemM = 'mPt > 10 && abs(mEta) < 2.4 && mIsoDB04 < 0.25 && mPFIDLoose > 0'
-mmemM = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose > 0'
-eeemERed = 'e3Pt > 20 && abs(e3Eta) < 2.5'
-mmemERed = 'ePt > 20 && abs(eEta) < 2.5'
-eeemMRed = 'mPt > 10 && abs(mEta) < 2.4'
-mmemMRed = 'm3Pt > 10 && abs(m3Eta) < 2.4'
+eeemE = 'e3Pt > 7 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0'
+mmemE = 'ePt > 7 && abs(eEta) < 2.5 && eIsoDB03 < 0.3 && eMVANonTrigWP90 > 0'
+eeemM = 'mPt > 5 && abs(mEta) < 2.4 && mIsoDB04 < 0.25 && mPFIDLoose > 0'
+mmemM = 'm3Pt > 5 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose > 0'
+eeemERed = 'e3Pt > 7 && abs(e3Eta) < 2.5'
+mmemERed = 'ePt > 7 && abs(eEta) < 2.5'
+eeemMRed = 'mPt > 5 && abs(mEta) < 2.4'
+mmemMRed = 'm3Pt > 5 && abs(m3Eta) < 2.4'
 eeemVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 <= 1'
 mmemVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 3'
 # EE & MM Higgs (ZZ control region)
-eeee = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0 && e4Pt > 20 && abs(e4Eta) < 2.5 && e4IsoDB03 < 0.3 && e4MVANonTrigWP90 > 0'
-mmmm = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose> 0 && m4Pt > 10 && abs(m4Eta) < 2.4 && m4IsoDB04 < 0.25 && m4PFIDLoose > 0'
-eemm = 'm1Pt > 10 && abs(m1Eta) < 2.4 && m1IsoDB04 < 0.25 &&  m1PFIDLoose > 0 && m2Pt > 10 && abs(m2Eta) < 2.4 && m2IsoDB04 < 0.25 && m2PFIDLoose > 0'
-eeeeRed = 'e3Pt > 20 && abs(e3Eta) < 2.5 && e4Pt > 20 && abs(e4Eta) < 2.5'
-mmmmRed = 'm3Pt > 10 && abs(m3Eta) < 2.4 && m4Pt > 10 && abs(m4Eta) < 2.4'
-eemmRed = 'm1Pt > 10 && abs(m1Eta) < 2.4 && m2Pt > 10 && abs(m2Eta) < 2.4'
+eeee = 'e3Pt > 7 && abs(e3Eta) < 2.5 && e3IsoDB03 < 0.3 && e3MVANonTrigWP90 > 0 && e4Pt > 7 && abs(e4Eta) < 2.5 && e4IsoDB03 < 0.3 && e4MVANonTrigWP90 > 0'
+mmmm = 'm3Pt > 5 && abs(m3Eta) < 2.4 && m3IsoDB04 < 0.25 && m3PFIDLoose> 0 && m4Pt > 5 && abs(m4Eta) < 2.4 && m4IsoDB04 < 0.25 && m4PFIDLoose > 0'
+eemm = 'm1Pt > 5 && abs(m1Eta) < 2.4 && m1IsoDB04 < 0.25 &&  m1PFIDLoose > 0 && m2Pt > 5 && abs(m2Eta) < 2.4 && m2IsoDB04 < 0.25 && m2PFIDLoose > 0'
+eeeeRed = 'e3Pt > 7 && abs(e3Eta) < 2.5 && e4Pt > 7 && abs(e4Eta) < 2.5'
+mmmmRed = 'm3Pt > 5 && abs(m3Eta) < 2.4 && m4Pt > 5 && abs(m4Eta) < 2.4'
+eemmRed = 'm1Pt > 5 && abs(m1Eta) < 2.4 && m2Pt > 5 && abs(m2Eta) < 2.4'
 eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoZTTp001dxyzR0 == 0'
 mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 4'
 eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
@@ -165,67 +165,67 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeee, eeeeVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeee, eeeeVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeeeRed, eeeeVetos],
-            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eePt, eeEta, ZDXYZ, HDXYZ],
+            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HDXYZ, eeeeRed, eeeeVetos],
         }, # end EEEE
          'eeet' : {
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeetE, xxetT, eeetVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeetE, xxetT, eeetVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeetERed, xxetTRed, eeetVetos],
-            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eePt, eeEta, ZDXYZ, HDXYZ, eeetERed, xxetTRed],
+            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HDXYZ, eeetERed, xxetTRed, eeetVetos],
         }, # end EEET
          'eett' : {
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, xxttTT, eettVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, xxttTT, eettVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, xxttTTRed, eettVetos],
-            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eePt, eeEta, ZDXYZ, HDXYZ, xxttTTRed],
+            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HDXYZ, xxttTTRed, eettVetos],
         }, # end EETT
          'eemt' : {
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtM, xxmtT, eemtVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemtM, xxmtT, eemtVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemtMRed, xxmtTRed, eemtVetos],
-            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eePt, eeEta, ZDXYZ, HDXYZ, eemtMRed, xxmtTRed],
+            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HDXYZ, eemtMRed, xxmtTRed, eemtVetos],
         }, # end EEMT
          'eeem' : {
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeemE, eeemM, eeemVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeemE, eeemM, eeemVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeemERed, eeemMRed, eeemVetos],
-            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eePt, eeEta, ZDXYZ, HDXYZ],
+            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HDXYZ, eeemERed, eeemMRed, eeemVetos],
         }, # end EEEM
          'eemm' : {
             'goodZ' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemm, eemmVetos],
             'HSS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemm, eemmVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemmRed, eemmVetos],
-            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eePt, eeEta, ZDXYZ, HDXYZ],
+            'Skim' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HDXYZ, eemmRed, eemmVetos],
         }, # end EEMM
          'mmmm' : {
             'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmmm, mmmmVetos],
             'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmm, mmmmVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmmRed, mmmmVetos],
-            'Skim' : [ZOS, ZMass, mmTrig, mmPt, mmEta, ZDXYZ, HDXYZ],
+            'Skim' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HDXYZ, mmmmRed, mmmmVetos],
         }, # end MMMM
          'emmt' : {
             'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetE, xxetT, mmetVetos],
             'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmetE, xxetT, mmetVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmetERed, xxetTRed, mmetVetos],
-            'Skim' : [ZOS, ZMass, mmTrig, mmPt, mmEta, ZDXYZ, HDXYZ, mmetERed, xxetTRed],
+            'Skim' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HDXYZ, mmetERed, xxetTRed, mmetVetos],
         }, # end MMET
          'mmtt' : {
             'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, xxttTT, mmttVetos],
             'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, xxttTT, mmttVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, xxttTTRed, mmttVetos],
-            'Skim' : [ZOS, ZMass, mmTrig, mmPt, mmEta, ZDXYZ, HDXYZ, xxttTTRed],
+            'Skim' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HDXYZ, xxttTTRed, mmttVetos],
         }, # end MMTT
          'mmmt' : {
             'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmmtM, xxmtT, mmmtVetos],
             'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmtM, xxmtT, mmmtVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmtMRed, xxmtTRed, mmmtVetos],
-            'Skim' : [ZOS, ZMass, mmTrig, mmPt, mmEta, ZDXYZ, HDXYZ, mmmtMRed, xxmtTRed],
+            'Skim' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HDXYZ, mmmtMRed, xxmtTRed, mmmtVetos],
         }, # end MMMT
          'emmm' : {
             'goodZ' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmemE, mmemM, mmemVetos],
             'HSS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmemE, mmemM, mmemVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmemERed, mmemMRed, mmemVetos],
-            'Skim' : [ZOS, ZMass, mmTrig, mmPt, mmEta, ZDXYZ, HDXYZ],
+            'Skim' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HDXYZ, mmemERed, mmemMRed, mmemVetos],
         } # end MMEM
         } # end AZH analysis cuts
     } # end cutMap

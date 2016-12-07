@@ -1,5 +1,5 @@
 
-ALL=/hdfs/store/user/caillol/ZH_sep16_v1
+ALL=/hdfs/store/user/caillol/LLTT_dec2_v1
 
 ls ${ALL}/data_DoubleMuon_Run2016B/*.root                                                 > hdfs/dataMM-B.txt 
 ls ${ALL}/data_DoubleMuon_Run2016C/*.root                                                 > hdfs/dataMM-C.txt 

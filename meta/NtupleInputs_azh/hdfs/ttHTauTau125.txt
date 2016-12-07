@@ -1,1 +1,0 @@
-/hdfs/store/user/caillol/ZH_sep16_v1/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-EA2E00CB-AD4E-E611-BD0B-0025905C42A6.root

@@ -3,95 +3,96 @@ from util.helpers import checkDir
 
 
 def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
-	files = glob.glob(originalDir+'/%s%s_*_%s.root' % (jobId, sample, channel) )
-	checkDir( targetDir )
+    files = glob.glob(originalDir+'/%s%s_*_%s.root' % (jobId, sample, channel) )
+    checkDir( targetDir )
 
-	rep = 0
-	runningSize = 0
-	toMerge = []
-	ints = []
-	for file_ in files :
-		size = os.path.getsize( file_ )/1000 # in KB roughly
-		print size, " KB ", file_
-		runningSize += size
-		toMerge.append( file_ )
-		if runningSize > 7500 : # 7.5 MB is reasonal for doing duplicate removal later
-			runningSize = 0
-			mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
-			for f in toMerge :
-				mergeList.append( f )
-			subprocess.call( mergeList )
-			ints = []
-			toMerge = []
-			rep += 1
-	mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
-	for f in toMerge :
-		mergeList.append( f )
-	if len( mergeList ) > 3 : # greater than 3 means we actually have a file to merge (not empty)
-		subprocess.call( mergeList )
+    rep = 0
+    runningSize = 0
+    toMerge = []
+    ints = []
+    for file_ in files :
+        size = os.path.getsize( file_ )/1000 # in KB roughly
+        print size, " KB ", file_
+        runningSize += size
+        toMerge.append( file_ )
+        if runningSize > 35000 : # 7.5 MB is reasonal for doing duplicate removal later
+            runningSize = 0
+            mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
+            for f in toMerge :
+                mergeList.append( f )
+            subprocess.call( mergeList )
+            ints = []
+            toMerge = []
+            rep += 1
+    mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
+    for f in toMerge :
+        mergeList.append( f )
+    if len( mergeList ) > 3 : # greater than 3 means we actually have a file to merge (not empty)
+        subprocess.call( mergeList )
 
 
 #def removeFailed( jobId, sample, channel, originalDir ) :
-#	files = glob.glob(originalDir+'/%s%s_*_%s.root' % (jobId, sample, channel) )
+#    files = glob.glob(originalDir+'/%s%s_*_%s.root' % (jobId, sample, channel) )
 #
-#	rep = 0
-#	runningSize = 0
-#	for file_ in files :
-#		size = os.path.getsize( file_ )/1000. # in KB roughly
-#		print size, " KB ", file_
-#		if size < 10. : print "Small file
+#    rep = 0
+#    runningSize = 0
+#    for file_ in files :
+#        size = os.path.getsize( file_ )/1000. # in KB roughly
+#        print size, " KB ", file_
+#        if size < 10. : print "Small file
 
 
 
 if __name__ == '__main__' :
 
-	#samples = ['data', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsFXFX', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l']
-	#masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
-	##samples = []
-	##masses = [2600, 2900, 3200]
-	#for mass in masses :
-        #	samples.append( 'ggH%i' % mass )
-        #	samples.append( 'bbH%i' % mass )
+    #samples = ['data', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau125', 'ggHtoTauTau130', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJetsFXFX', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZJets', 'ZZ2l2q', 'ZZ4l']
+    #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2600, 2900, 3200]
+    ##samples = []
+    ##masses = [2600, 2900, 3200]
+    #for mass in masses :
+        #    samples.append( 'ggH%i' % mass )
+        #    samples.append( 'bbH%i' % mass )
 
-	#jobId = 'TauTau_13_test-'
-	#channels = ['em', 'tt']
-	#
-	#originalDir = '/hdfs/store/user/truggles/feb22_svFitFeb21SkimX/test'
-	#targetDir = '/nfs_scratch/truggles/svFitComplete/feb23_fromFeb21SkimX'
-	#for sample in samples :
-	#	for channel in channels :
-	#		mergeSample( jobId, sample, channel, origianlDir, targetDir )
+    #jobId = 'TauTau_13_test-'
+    #channels = ['em', 'tt']
+    #
+    #originalDir = '/hdfs/store/user/truggles/feb22_svFitFeb21SkimX/test'
+    #targetDir = '/nfs_scratch/truggles/svFitComplete/feb23_fromFeb21SkimX'
+    #for sample in samples :
+    #    for channel in channels :
+    #        mergeSample( jobId, sample, channel, origianlDir, targetDir )
 
-	# HTT Aug 23, hdfs -> UW
-	#samples = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
-	#samples = ['DYJetsAMCNLO', 'dataTT']
-	#originalDir = '/nfs_scratch/truggles/httAug24'
-	#targetDir = '/nfs_scratch/truggles/httAug24Merged'
-	#jobId = ''
-	#channel = 'tt'
-	#for sample in samples :
-	#    mergeSample( jobId, sample, channel, originalDir, targetDir )
+    # HTT Aug 23, hdfs -> UW
+    #samples = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130']
+    #samples = ['DYJetsAMCNLO', 'dataTT']
+    #originalDir = '/nfs_scratch/truggles/httAug24'
+    #targetDir = '/nfs_scratch/truggles/httAug24Merged'
+    #jobId = ''
+    #channel = 'tt'
+    #for sample in samples :
+    #    mergeSample( jobId, sample, channel, originalDir, targetDir )
 
-	# AZH Oct 12 hdfs -> UW
-        azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',]
-        #azhSamples = []
-        for mass in [120, 125, 130] :
-            azhSamples.append('ggHtoTauTau%i' % mass)
-            azhSamples.append('VBFHtoTauTau%i' % mass)
-            azhSamples.append('WMinusHTauTau%i' % mass)
-            azhSamples.append('WPlusHTauTau%i' % mass)
-            azhSamples.append('ZHTauTau%i' % mass)
-            azhSamples.append('ttHTauTau%i' % mass)
-        for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-               azhSamples.append('azh%i' % mass)
-	originalDir = '/nfs_scratch/truggles/azhOct12'
-	targetDir = '/nfs_scratch/truggles/azhOct12MergedSMHiggs'
-	jobId = ''
-	channels = ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
-	for channel in channels :
-		for sample in azhSamples :
-	    		mergeSample( jobId, sample, channel, originalDir, targetDir )
-	
+    # AZH Oct 12 hdfs -> UW
+    azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',]
+    azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataMM-B', 'dataMM-C', 'dataMM-D',]
+    #azhSamples = []
+    #for mass in [120, 125, 130] :
+    #    azhSamples.append('ggHtoTauTau%i' % mass)
+    #    azhSamples.append('VBFHtoTauTau%i' % mass)
+    #    azhSamples.append('WMinusHTauTau%i' % mass)
+    #    azhSamples.append('WPlusHTauTau%i' % mass)
+    #    azhSamples.append('ZHTauTau%i' % mass)
+    #    azhSamples.append('ttHTauTau%i' % mass)
+    #for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
+    #    azhSamples.append('azh%i' % mass)
+    originalDir = '/nfs_scratch/truggles/azhNov23RedBkg'
+    targetDir = '/nfs_scratch/truggles/azhNov23RedBkgMerged'
+    jobId = ''
+    channels = ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
+    for channel in channels :
+        for sample in azhSamples :
+                mergeSample( jobId, sample, channel, originalDir, targetDir )
+    
 
 
 
