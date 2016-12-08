@@ -1,3 +1,1 @@
-/data/truggles/azhOct12Merged/dataMM-B_0_mmmm.root
-/data/truggles/azhOct12Merged/dataMM-B_1_mmmm.root
-/data/truggles/azhOct12Merged/dataMM-B_2_mmmm.root
+/data/truggles/azhDec07SkimMerged/dataMM-B_0_mmmm.root

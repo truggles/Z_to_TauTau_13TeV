@@ -1,3 +1,1 @@
-/data/truggles/azhOct12Merged/ggZZ2e2tau_0_eeem.root
-/data/truggles/azhOct12Merged/ggZZ2e2tau_1_eeem.root
-/data/truggles/azhOct12Merged/ggZZ2e2tau_2_eeem.root
+/data/truggles/azhDec07SkimMerged/ggZZ2e2tau_0_eeem.root

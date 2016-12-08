@@ -1,9 +1,1 @@
-/data/truggles/azhOct12Merged/ggZZ2e2m_0_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_1_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_2_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_3_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_4_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_5_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_6_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_7_eett.root
-/data/truggles/azhOct12Merged/ggZZ2e2m_8_eett.root
+/data/truggles/azhDec07SkimMerged/ggZZ2e2m_0_eett.root

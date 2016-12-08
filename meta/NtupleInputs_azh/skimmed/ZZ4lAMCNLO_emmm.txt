@@ -1,15 +1,2 @@
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_0_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_10_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_11_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_12_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_13_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_14_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_1_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_2_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_3_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_4_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_5_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_6_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_7_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_8_emmm.root
-/data/truggles/azhOct12Merged/ZZ4lAMCNLO_9_emmm.root
+/data/truggles/azhDec07SkimMerged/ZZ4lAMCNLO_0_emmm.root
+/data/truggles/azhDec07SkimMerged/ZZ4lAMCNLO_1_emmm.root

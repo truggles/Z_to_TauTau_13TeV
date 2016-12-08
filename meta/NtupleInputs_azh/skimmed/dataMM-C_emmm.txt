@@ -1,4 +1,1 @@
-/data/truggles/azhOct12Merged/dataMM-C_0_emmm.root
-/data/truggles/azhOct12Merged/dataMM-C_1_emmm.root
-/data/truggles/azhOct12Merged/dataMM-C_2_emmm.root
-/data/truggles/azhOct12Merged/dataMM-C_3_emmm.root
+/data/truggles/azhDec07SkimMerged/dataMM-C_0_emmm.root

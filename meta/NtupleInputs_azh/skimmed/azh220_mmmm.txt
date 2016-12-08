@@ -1,1 +1,1 @@
-/data/truggles/azhOct12Merged/azh220_0_mmmm.root
+/data/truggles/azhDec07SkimMerged/azh220_0_mmmm.root

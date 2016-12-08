@@ -1,1 +1,4 @@
-/data/truggles/azhOct12Merged/DYJets4_0_eett.root
+/data/truggles/azhDec07SkimMerged/DYJets4_0_eett.root
+/data/truggles/azhDec07SkimMerged/DYJets4_1_eett.root
+/data/truggles/azhDec07SkimMerged/DYJets4_2_eett.root
+/data/truggles/azhDec07SkimMerged/DYJets4_3_eett.root

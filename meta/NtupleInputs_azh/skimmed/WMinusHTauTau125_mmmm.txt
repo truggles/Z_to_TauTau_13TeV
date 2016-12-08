@@ -1,1 +1,1 @@
-/data/truggles/azhOct12Merged/WMinusHTauTau125_0_mmmm.root
+/data/truggles/azhDec07SkimMerged/WMinusHTauTau125_0_mmmm.root
