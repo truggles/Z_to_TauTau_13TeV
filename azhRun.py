@@ -34,7 +34,7 @@ os.chdir('..')
 
 ''' Preset samples '''
 azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',]
-azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',] # No WWW, data-E,F, ZZ4l MadGraph
+azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',] # No WWW, data-E,F, ZZ4l MadGraph
 
 for mass in [120, 125, 130] :
     #azhSamples.append('ggHtoTauTau%i' % mass)
@@ -42,7 +42,7 @@ for mass in [120, 125, 130] :
     azhSamples.append('WMinusHTauTau%i' % mass)
     azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHTauTau%i' % mass)
-    azhSamples.append('ttHTauTau%i' % mass)
+    #azhSamples.append('ttHTauTau%i' % mass)
 
 #azhSamples = []
 for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
@@ -61,7 +61,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 14,
+    'numCores' : 11,
     'numFilesPerCycle' : 1,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
@@ -71,18 +71,18 @@ params = {
     #'channels' : ['eemt','emmt'],
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'HSS',
-    'cutMapper' : 'goodZ',
-    'mid1' : '1Oct12bHOS',
-    'mid2' : '2Oct12bHOS',
-    'mid3' : '3Oct12bHOS',
+    'cutMapper' : 'Skim',
+    'mid1' : '1Dec07Skim',
+    'mid2' : '2Dec07Skim',
+    'mid3' : '3Dec07Skim',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimmed' : 'false',
-    'skimmed' : 'true',
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true',
+    'skimmed' : 'false',
+    #'skimmed' : 'true',
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -93,11 +93,11 @@ samples = returnSampleDetails( analysis, samples )
 
 
 analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
-#runPlots = False
+runPlots = False
 skipMerge = False
 #skipMerge = True
 if runPlots :

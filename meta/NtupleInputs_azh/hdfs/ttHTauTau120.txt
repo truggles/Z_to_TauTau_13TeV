@@ -1,3 +1,0 @@
-/hdfs/store/user/caillol/ZH_sep16_v1/ttHJetToTT_M120_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-2C278530-F442-E611-8549-0025905745B2.root
-/hdfs/store/user/caillol/ZH_sep16_v1/ttHJetToTT_M120_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-48C475FE-0843-E611-963A-0022198C2C85.root
-/hdfs/store/user/caillol/ZH_sep16_v1/ttHJetToTT_M120_13TeV_amcatnloFXFX_madspin_pythia8/make_ntuples_cfg-588470A2-FD43-E611-A27E-0026B92779BD.root

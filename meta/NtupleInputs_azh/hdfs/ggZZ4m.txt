@@ -1,11 +1,1 @@
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-1EF1D4F6-3B1A-E611-885F-002590DE6E86.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-3A319B6A-3C1A-E611-9588-002590DE71DA.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-3ADE44FB-3B1A-E611-ADBC-0025904C7DFA.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-58554BEC-3B1A-E611-B3E0-0025904C7E02.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-98249DEF-3B1A-E611-880C-0025901D40A6.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-9C9E3AFC-3B1A-E611-A1CE-0025904C7F5E.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-AE3A9B6A-3C1A-E611-985E-002590DE71DA.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-B4615DF4-3B1A-E611-9805-0023AEEEB3D6.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-C0EB7E85-2C1D-E611-8FB4-0CC47A78A3D8.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-F2003AEA-3B1A-E611-ACE5-28924A33AF26.root
-/hdfs/store/user/caillol/ZH_sep16_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-F4F31EFC-3B1A-E611-ACBA-0025904B8708.root
+/hdfs/store/user/caillol/LLTT_dec2_v1/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/make_ntuples_cfg-9C9E3AFC-3B1A-E611-A1CE-0025904C7F5E.root
