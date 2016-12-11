@@ -1251,6 +1251,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     tauPtWeightDown[0] = getTauPtWeight( sample, channel, 
                         gen_match_1[0], gen_match_2[0], row, -0.2 )
 
+            if analysis == 'azh' :
+                # Set LeptonJetPt to be equal to or greater than lepton Pt
+                # b/c the lepton should be a subset of the overlapping jet
+                # if jet pt < lepton pt, then we have the wrong jet
+                for lep in [l1, l2, l3, l4] :
+                    if getattr( row, lep+'Pt' ) > getattr( row, lep+'JetPt' ) :
+                        setattr( row, lep+'JetPt', getattr( row, lep+'Pt' ))
+
 
             # Set branch for syncing with other groups:
             __ZWEIGHT__[0] = zPtWeight[0]
