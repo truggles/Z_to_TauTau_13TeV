@@ -65,6 +65,16 @@ def getSummedWeights( fileName, channel ) :
 
     # Normalize summedWeights by GenWeight value
     tree2 = ifile.Get( '%s/final/Ntuple' % channel )
+    if tree2.GetEntries() == 0 and not 'data' in fileName.split('/')[0] :
+        # If tree length == 0, check if this is a non-data file
+        # if it is non-data try other channel
+        # (happened for ggZZ4m when running on channel eeet 
+        nFileName = fileName.replace( channel, 'mmmt' )
+        print "\nNon-data file with TTree length == 0"
+        print " -- Checking file from other channel:"
+        print " -- previous file: ",fileName
+        print " -- new file: ",nFileName,"\n"
+        return getSummedWeights( nFileName, 'mmmt' )
     tree2.GetEntry( 1 )
     weight = abs( tree2.GenWeight )
     #print "weight: ",weight
