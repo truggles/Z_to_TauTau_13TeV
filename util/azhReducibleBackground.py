@@ -26,7 +26,7 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
         if 'data' in samp : samples[samp] = val
     #print samples
 
-    # Apply initial Reducible Bkg Cuts for inclusive selection
+#    # Apply initial Reducible Bkg Cuts for inclusive selection
 #    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #    # Order events and choose best interpretation
 #    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
@@ -65,12 +65,12 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
     cmsLumi = float(os.getenv('LUMI'))/1000
     print "Lumi = %.1f / fb" % cmsLumi
-    print "doing Red Bkg Plots"
+    print "doing Red Bkg Plots for",obj
     print channels
 
-    binInfo = [18, 20, 200]
+    binInfo = [80, 0, 200]
 
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Dec11'
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -161,8 +161,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 denomCutX = denomCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
                 passCutX = passCut.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
                 passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
-                print denomCutX
-                print passCutX
+                print "Denom Cut:",denomCutX
+                print "Passing Cut:",passCutX
                 if channel == 'emmt' : passCutX = passCutX.replace('id_e_mva_nt_loose_3', 'eMVANonTrigWP90')
 
                 # Denominator selection
@@ -182,24 +182,32 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
         #denomAll.SetMaximum( denomAll.GetMaximum() * 1.3 )
         #denomAll.Draw()
-        #setText( "Denominator", cmsLumi )
+        #setText( obj+" Denominator", cmsLumi )
         #c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_Denominator.png' )
         #passAll.SetMaximum( passAll.GetMaximum() * 1.3 )
         #passAll.Draw()
-        #setText( "Passing", cmsLumi )
+        #setText( obj+" Passing", cmsLumi )
         #c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_Pass.png' )
 
         # Make Fake Rate plot
-        pad1.SetLogy()
         graph = ROOT.TGraphAsymmErrors(passAll, denomAll)
         graph.GetXaxis().SetTitle(xAxis)
         graph.GetYaxis().SetTitle(yAxis2)
         graph.GetYaxis().SetTitle("Fake Rate")
-        graph.SetMaximum( 10 )
-        graph.SetMinimum( 0.0005 )
+
+        # For Log
+        #pad1.SetLogy()
+        #graph.SetMaximum( 10 )
+        #graph.SetMinimum( 0.0005 )
+        ## For Linear
+        graph.SetMaximum( .25 )
+        graph.SetMinimum( 0 )
+
         graph.Draw("AP")
+
         # do fit
-        f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', binInfo[1], binInfo[2])
+        fitMin = binInfo[1] if binInfo[1] != 0 else 10
+        f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2])
         f1.SetParName( 0, "y rise" )
         f1.SetParName( 1, "scale" )
         f1.SetParName( 2, "decay" )
@@ -234,7 +242,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
 
 
-def setText( category, cmsLumi ) :
+def setText( text, cmsLumi ) :
     # Set CMS Styles Stuff
     logo = ROOT.TText(.2, .88,"CMS Preliminary")
     logo.SetTextSize(0.03)
@@ -242,7 +250,7 @@ def setText( category, cmsLumi ) :
     
     chan = ROOT.TLatex(.2, .80,"x")
     chan.SetTextSize(0.05)
-    chan.DrawLatexNDC(.2, .84,"Category: %s" % category )
+    chan.DrawLatexNDC(.2, .84,"%s" % text )
     
     lumi = ROOT.TText(.7,1.05,"X fb^{-1} (13 TeV)")
     lumi.SetTextSize(0.03)
@@ -254,7 +262,7 @@ if '__main__' in __name__ :
     
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
-    samples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',] # No WWW, data-E,F, ZZ4l MadGraph
+    samples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',] # No WWW, data-E,F, ZZ4l MadGraph
     params = {
         #'debug' : 'true',
         'debug' : 'false',
@@ -263,9 +271,9 @@ if '__main__' in __name__ :
         'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
         #'channels' : ['eeet',],
         'cutMapper' : 'RedBkg',
-        'mid1' : '1Nov23',
-        'mid2' : '2Nov23',
-        'mid3' : '3Nov23',
+        'mid1' : '1Dec08',
+        'mid2' : '2Dec08',
+        'mid3' : '3Dec08',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',

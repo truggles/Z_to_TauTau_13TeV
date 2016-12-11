@@ -83,7 +83,7 @@ def skipSystShapeVar( var, sample, channel ) :
 def ESCuts( sample, channel, var ) :
     tau2PtCut = 40.
     tau1PtCut = 50.
-    if len( channel ) == 4 : return '*(1)'
+    if len( channel ) == 4 : return '*(1.)'
     if 'data' in sample :
         if channel == 'tt' :
             return '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)
@@ -242,7 +242,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # Adding Trigger, ID and Iso, & Efficiency Scale Factors
         # and, top pt reweighting
         # weight is a composition of all applied MC/Data corrections
-        sfs = '*(1)'
+        sfs = '*(1.)'
         if analysis == 'htt' :
             sfs = '*(weight)'
             if channel == 'tt' :
@@ -484,58 +484,58 @@ def getHistoDict( analysis, channel ) :
             return genVarMap
     if analysis == 'azh' :
         genVarMap = {
-            'Z_Pt' : [400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
-            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
-            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
-            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
-            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
-            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
+#            'Z_Pt' : [400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
+#            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
+#            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
+#            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
+#            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
+#            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
             'm_vis' : [80, 50, 130, 10, 'Z Mass [GeV]', ' GeV'],
             'H_vis' : [400, 0, 400, 40, 'H Visible Mass [GeV]', ' GeV'],
             'Mass' : [600, 0, 600, 60, 'M_{ll#tau#tau} [GeV]', ' GeV'],
             'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
             'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
-            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+#            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
             'pt_1' : [200, 0, 200, 10, 'Leg1 p_{T} [GeV]', ' GeV'],
             'pt_2' : [200, 0, 200, 10, 'Leg2 p_{T} [GeV]', ' GeV'],
             'pt_3' : [200, 0, 200, 10, 'Leg3 p_{T} [GeV]', ' GeV'],
             'pt_4' : [200, 0, 200, 10, 'Leg4 p_{T} [GeV]', ' GeV'],
-            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
-            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
-            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
-            'eta_4' : [60, -3, 3, 10, 'Leg4 Eta', ' Eta'],
-            'iso_1' : [20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''],
-            'iso_2' : [20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''],
-            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
-            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
+#            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
+#            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
+#            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
+#            'eta_4' : [60, -3, 3, 10, 'Leg4 Eta', ' Eta'],
+#            'iso_1' : [20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''],
+#            'iso_2' : [20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''],
+#            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
+#            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
             #'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
             #'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
             #'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
             #'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
             #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
-            'npv' : [40, 0, 40, 4, 'Number of Vertices', ''],
-#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
-#            'azhWeight' : [50, 0, 2, 1, 'Muon + Electron Weights', ''],
-            'muVetoZTTp001dxyz' : [6, -1, 5, 1, 'muVetoZTTp001dxyz', ''],
-            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
-            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
-            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
-            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
-            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
-            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
+#            'npv' : [40, 0, 40, 4, 'Number of Vertices', ''],
+##            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
+#            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+##            'azhWeight' : [50, 0, 2, 1, 'Muon + Electron Weights', ''],
+#            'muVetoZTTp001dxyz' : [6, -1, 5, 1, 'muVetoZTTp001dxyz', ''],
+#            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
+#            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
+#            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
+#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
+#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
+#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
         }
         llltMap = {
-            'againstElectronVLooseMVA6_4' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 4', ''],
-            'againstElectronLooseMVA6_4' : [9, -1, 2, 1, 'Against E L MVA6 Leg 4', ''],
-            'againstMuonLoose3_4' : [9, -1, 2, 1, 'Against M Loose 3 Leg 4', ''],
-            'againstMuonTight3_4' : [9, -1, 2, 1, 'Against M Tight 3 Leg 4', ''],
+#            'againstElectronVLooseMVA6_4' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 4', ''],
+#            'againstElectronLooseMVA6_4' : [9, -1, 2, 1, 'Against E L MVA6 Leg 4', ''],
+#            'againstMuonLoose3_4' : [9, -1, 2, 1, 'Against M Loose 3 Leg 4', ''],
+#            'againstMuonTight3_4' : [9, -1, 2, 1, 'Against M Tight 3 Leg 4', ''],
         }
         llttMap = {
-            'againstElectronVLooseMVA6_3' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 3', ''],
-            'againstElectronLooseMVA6_3' : [9, -1, 2, 1, 'Against E L MVA6 Leg 3', ''],
-            'againstMuonLoose3_3' : [9, -1, 2, 1, 'Against M Loose 3 Leg 3', ''],
-            'againstMuonTight3_3' : [9, -1, 2, 1, 'Against M Tight 3 Leg 3', ''],
+#            'againstElectronVLooseMVA6_3' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 3', ''],
+#            'againstElectronLooseMVA6_3' : [9, -1, 2, 1, 'Against E L MVA6 Leg 3', ''],
+#            'againstMuonLoose3_3' : [9, -1, 2, 1, 'Against M Loose 3 Leg 3', ''],
+#            'againstMuonTight3_3' : [9, -1, 2, 1, 'Against M Tight 3 Leg 3', ''],
         }
         if channel == 'xxxx' :
             return genVarMap

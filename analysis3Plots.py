@@ -137,7 +137,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'wz' : [ROOT.kRed-4, 'WZ'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
-        'sm' : [ROOT.kGreen, 'SM Higgs (125)'],
+        #'sm' : [ROOT.kGreen, 'SM Higgs (125)'],
+        'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
         } # azh
     } # sampInfo
@@ -149,8 +150,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         signal = 'higgs'
         signalSF = higgsSF
     if analysis == 'azh' : 
-        signal = 'azh'
-        signalSF = azhSF
+        #signal = 'azh'
+        #signalSF = azhSF
+        signal = 'VH'
+        signalSF = higgsSF
+        sampInfo['azh']['VH'][1] = "SM VHiggs(125) x %.1f" % higgsSF
     
     
     for channel in channels :
@@ -478,12 +482,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'VH' : .2,
                 'obs' : .0,},
             'azh' : {
-                'top' : .15,
+                'top' : .10,
                 'dyj' : .10,
-                'wz' : .15,
-                'zz' : .25,
+                'wz' : .10,
+                'zz' : .10,
                 'azh' : .0,
                 'sm' : .0,
+                'VH' : .0,
                 'obs' : .0,}
             }
             binErrors = []
