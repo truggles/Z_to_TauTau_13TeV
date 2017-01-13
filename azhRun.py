@@ -48,8 +48,9 @@ for mass in [120, 125, 130] :
 for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
     azhSamples.append('azh%i' % mass)
 
+#azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F',]
 #azhSamples=['ZZ4lAMCNLO',]
-#azhSamples=['dataEE', 'dataMM']
+#azhSamples=['dataEE-D',]
 #azhSamples=['azh300',]
 #azhSamples=['ggZZ4m','ggZZ2m2tau']
 samples = azhSamples
@@ -69,13 +70,20 @@ params = {
     #'channels' : ['eeet','eett','eemt','eeem'],
     #'channels' : ['eeee','mmmm','eemm'],
     #'channels' : ['eett',],
-    #'channels' : ['mmmm',],
+    #'channels' : ['emmt',],
     #'cutMapper' : 'goodZ',
-    'cutMapper' : 'HSS',
+    #'cutMapper' : 'HSS',
     #'cutMapper' : 'Skim',
-    'mid1' : '1Dec09SS',
-    'mid2' : '2Dec09SS',
-    'mid3' : '3Dec09SS',
+    'cutMapper' : 'SkimOS',
+    #'mid1' : '1Dec09SS',
+    #'mid1' : '1Dec09',
+    #'mid2' : '2Dec09',
+    #'mid3' : '3Dec09',
+    #'mid2' : '2Dec11redBkg',
+    #'mid3' : '3Dec11redBkg',
+    'mid1' : '1Jan12redBkgOS',
+    'mid2' : '2Jan12redBkgOS',
+    'mid3' : '3Jan12redBkgOS',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -93,19 +101,32 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
 #runPlots = False
 skipMerge = False
 #skipMerge = True
+#useRedBkg = True
+useRedBkg = False
+
 if runPlots :
     from util.helpers import checkDir
     print params
     ''' Draw histos from TTrees '''
+    params['additionalCut'] = '*(Z_SS==0)*ADD_CHANNEL_SPECIFIC_ISO_CUTS'
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    if useRedBkg :
+        for sample in samples.keys() :
+            if 'data' in sample :
+                era = sample.split('-')[1]
+                samples[ 'RedBkg-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
+        redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu',]
+        for sample in samples.keys() :
+            if sample in redBkgList :
+                del samples[ sample ]
 
     ''' merge channels '''
     if not skipMerge :
@@ -133,12 +154,10 @@ if runPlots :
                 mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
             for m in merge :
                 params['channels'].append( m )
-    #params['channels'] = ['ZEE',]
 
     #text=False
     text=True
-    #kwargs = { 'text':text, }
-    kwargs = { 'text':text, 'blind':False }
+    kwargs = { 'text':text, 'blind':False, 'redBkg':useRedBkg }
     print params
 
     ''' Make the final plots

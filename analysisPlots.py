@@ -3,6 +3,9 @@ from ROOT import gPad
 from array import array
 from collections import OrderedDict
 from util.helpers import returnSortedDict
+from util.azhReducibleBackgroundHelpers import \
+    getRedBkgCutsAndWeights, getChannelSpecificFinalCuts
+
 
 
 
@@ -124,6 +127,24 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
     histosDir = outFile.mkdir( "%s_Histos" % channel )
     histosDir.cd()
+
+                
+    # Set additionalCut to reflect ZH reducible background estimation
+    # process
+
+    # Add in the ability to do Reducible Background estimations for
+    # AZH / ZH analysis
+    # Add channel specific cuts
+    if 'ADD_CHANNEL_SPECIFIC_ISO_CUTS' in additionalCut :
+        if analysis == 'azh' and 'RedBkg' in outFile.GetName() :
+            redBkgCut = getRedBkgCutsAndWeights( channel )
+            additionalCut = additionalCut.replace(
+                    'ADD_CHANNEL_SPECIFIC_ISO_CUTS', '('+redBkgCut+')')
+        else : # No reducible bkg
+            additionalCut = getChannelSpecificFinalCuts(
+                    analysis, channel, additionalCut )
+
+
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
     for var, info in newVarMap.iteritems() :
@@ -231,7 +252,6 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnDown')
                 additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnDown')
                 #print additionalCutToUse+"\n"
-                
 
 
         if ":" in var :
@@ -496,6 +516,9 @@ def getHistoDict( analysis, channel ) :
             'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
             'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
 #            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+            'zhFR0' : [50, 0, 0.5, 1, 'ZH FakeRate Weight 0', ''],
+            'zhFR1' : [50, 0, 0.5, 1, 'ZH FakeRate Weight 1', ''],
+            'zhFR2' : [50, 0, 0.5, 1, 'ZH FakeRate Weight 2', ''],
             'pt_1' : [200, 0, 200, 10, 'Leg1 p_{T} [GeV]', ' GeV'],
             'pt_2' : [200, 0, 200, 10, 'Leg2 p_{T} [GeV]', ' GeV'],
             'pt_3' : [200, 0, 200, 10, 'Leg3 p_{T} [GeV]', ' GeV'],
@@ -506,8 +529,8 @@ def getHistoDict( analysis, channel ) :
 #            'eta_4' : [60, -3, 3, 10, 'Leg4 Eta', ' Eta'],
 #            'iso_1' : [20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''],
 #            'iso_2' : [20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''],
-#            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
-#            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
+            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
+            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
             #'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
             #'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
             #'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],

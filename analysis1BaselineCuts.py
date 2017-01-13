@@ -448,6 +448,8 @@ def drawHistos(analysis, samples, **fargs ) :
                 'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
         'TTJ' : {
                 'tt' : '*(gen_match_1 != 5 || gen_match_2 != 5)'},
+        'RedBkg' : {
+                'xxxx' : '*(1.)'},
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -466,13 +468,16 @@ def drawHistos(analysis, samples, **fargs ) :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
             loopList.append( sample ) 
-        if sample == 'TT' and analysis == 'htt' :
+        elif sample == 'TT' and analysis == 'htt' :
             genList = ['TTT', 'TTJ']
             loopList = genList
             loopList.append( sample ) 
         elif 'data' in sample and fargs['doFRMthd'] == 'true' :
             loopList.append( sample )
             loopList.append( 'QCD' )
+        elif 'data' in sample and analysis == 'azh' :
+            loopList.append( sample )
+            loopList.append( 'RedBkg-'+sample.split('-')[1] )
         else : loopList.append( sample )
 
     
@@ -482,6 +487,7 @@ def drawHistos(analysis, samples, **fargs ) :
         for subName in loopList :
             #print "SubName:",subName
             if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
+            elif 'RedBkg' in subName and 'data' in sample : saveName = subName
             elif subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
             else : saveName = sample.split('_')[0]
             
@@ -511,11 +517,12 @@ def drawHistos(analysis, samples, **fargs ) :
                 if 'data' in sample : isData = True
                 else : isData = False
                 additionalCut = fargs['additionalCut']
-                if subName != sample : 
+                if subName != sample and 'RedBkg' not in subName : 
                     if genMap[subName][channel] == '' : continue
                     if additionalCut == '' : additionalCut = genMap[subName][channel] 
                     else : additionalCut += genMap[subName][channel] 
                 #print "AdditionalCuts",additionalCut
+
                 blind = False
                 outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
                 analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind, skipSSQCDDetails )

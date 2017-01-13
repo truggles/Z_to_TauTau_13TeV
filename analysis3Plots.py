@@ -31,6 +31,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'mssm' : False,
     'log' : False,
     'sync' : False,
+    'redBkg' : False,
     'targetDir' : ''}
 
     '''python analysis3Plots.py --folder=2June26_OSl1ml2_VTight_ZTT --channel=tt --text=True --useQCDMake=True --useQCDMakeName=OSl1ml2_VTight_LooseZTT --qcdSF=0.147 --btag=False'''
@@ -137,6 +138,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'wz' : [ROOT.kRed-4, 'WZ'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
+        'redBkg' : [ROOT.kCyan, 'Reducible Bkg.'],
         #'sm' : [ROOT.kGreen, 'SM Higgs (125)'],
         'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
@@ -435,9 +437,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             # A to Zh stuff
             if analysis == 'azh' :
-                stack.Add( sampHistos['top'] )
-                stack.Add( sampHistos['dyj'] )
-                stack.Add( sampHistos['wz'] )
+                if ops['redBkg'] :
+                    stack.Add( sampHistos['redBkg'] )
+                else :
+                    stack.Add( sampHistos['top'] )
+                    stack.Add( sampHistos['dyj'] )
+                    stack.Add( sampHistos['wz'] )
                 stack.Add( sampHistos['zz'] )
     
             # Scale signal samples for viewing
@@ -486,6 +491,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'dyj' : .10,
                 'wz' : .10,
                 'zz' : .10,
+                'redBkg' : .0,
                 'azh' : .0,
                 'sm' : .0,
                 'VH' : .0,

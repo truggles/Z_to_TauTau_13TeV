@@ -49,15 +49,20 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     fakeRateMap = {}
     for obj, chans in redBkgMap.iteritems() :
         tmpMap = doRedBkgPlots( obj, chans, dir2 )
-        for name, func in tmpMap.iteritems() :
-            fakeRateMap[name] = func
+        for name, info in tmpMap.iteritems() :
+            fakeRateMap[name] = info
 
     # Save fits to out file
     outFile = ROOT.TFile('data/azhFakeRateFits.root', 'RECREATE')
-    for name, func in fakeRateMap.iteritems() :
-        func.SetName( name )
+    for name, info in fakeRateMap.iteritems() :
+        func = info[0]
+        func.SetName( name+'_fit' )
         func.SetTitle( 'Fake Rate Fit: '+name )
         func.Write()
+        graph = info[1]
+        graph.SetName( name+'_graph' )
+        graph.SetTitle( 'Fake Rate Fit: '+name )
+        graph.Write()
     outFile.Close()
 
 
@@ -68,7 +73,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     print "doing Red Bkg Plots for",obj
     print channels
 
-    binInfo = [80, 0, 200]
+    binInfo = [50, 0, 200]
 
     saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Dec11'
     checkDir( saveDir )
@@ -194,6 +199,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         graph.GetXaxis().SetTitle(xAxis)
         graph.GetYaxis().SetTitle(yAxis2)
         graph.GetYaxis().SetTitle("Fake Rate")
+        pad1.SetGrid()
 
         # For Log
         #pad1.SetLogy()
@@ -235,7 +241,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         pad1.SetLogy(0)
 
         # Add FR fit to map
-        frMap[obj+'_'+etaRegion] = f2
+        frMap[obj+'_'+etaRegion] = [f2, graph]
 
     # Return map
     return frMap

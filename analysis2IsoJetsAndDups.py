@@ -303,6 +303,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.extraTauMVArun2v1IsoWPs import IsoWPAdder
     isoWPAdder = IsoWPAdder()
 
+    if len(channel) > 3 : # either AZH or ZH analysis
+        from util.applyReducibleBkg import ReducibleBkgWeights
+        zhFRObj = ReducibleBkgWeights( channel )
+
     #cmssw_base = os.getenv('CMSSW_BASE')
     #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
     #ffqcd = ff_file.Get('ff_qcd_os') 
@@ -392,7 +396,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_Charge' : 'q',
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
-        'cand_IsoDB03' : 'iso',
+        'cand_IsoDB04' : 'iso',
         'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingTau = {
@@ -461,24 +465,24 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             l1Map = copy.deepcopy( branchMappingMuon )
             l2Map = copy.deepcopy( branchMappingMuon )
 
-        if channel[-2:] == 'ee' :
-            l3Map = copy.deepcopy( branchMappingElec )
-            l4Map = copy.deepcopy( branchMappingElec )
-        if channel[-2:] == 'mm' :
-            l3Map = copy.deepcopy( branchMappingMuon )
-            l4Map = copy.deepcopy( branchMappingMuon )
-        if channel[-2:] == 'tt' :
-            l3Map = copy.deepcopy( branchMappingTau )
-            l4Map = copy.deepcopy( branchMappingTau )
-        elif channel[-2:] == 'mt' :
-            l3Map = copy.deepcopy( branchMappingMuon )
-            l4Map = copy.deepcopy( branchMappingTau )
-        elif channel == 'eeet' or channel == 'emmt' :
+        if channel == 'eeet' or channel == 'emmt' :
             l3Map = copy.deepcopy( branchMappingElec )
             l4Map = copy.deepcopy( branchMappingTau )
         elif channel == 'eeem' or channel == 'emmm' :
             l3Map = copy.deepcopy( branchMappingElec )
             l4Map = copy.deepcopy( branchMappingMuon )
+        elif channel[-2:] == 'ee' :
+            l3Map = copy.deepcopy( branchMappingElec )
+            l4Map = copy.deepcopy( branchMappingElec )
+        elif channel[-2:] == 'mm' :
+            l3Map = copy.deepcopy( branchMappingMuon )
+            l4Map = copy.deepcopy( branchMappingMuon )
+        elif channel[-2:] == 'tt' :
+            l3Map = copy.deepcopy( branchMappingTau )
+            l4Map = copy.deepcopy( branchMappingTau )
+        elif channel[-2:] == 'mt' :
+            l3Map = copy.deepcopy( branchMappingMuon )
+            l4Map = copy.deepcopy( branchMappingTau )
 
         for key in l3Map.keys() :
             branchMapping[ key.replace('cand_', l3) ] = l3Map[ key ]+'_3'
@@ -489,6 +493,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         branchMapping[ key.replace('cand_', l1) ] = l1Map[ key ]+'_1'
     for key in l2Map.keys() :
         branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
+
 
     oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
     newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
@@ -797,6 +802,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
     electronSF4 = array('f', [ 0 ] )
     electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
+    zhFR0 = array('f', [ 0 ] )
+    zhFR0B = tnew.Branch('zhFR0', zhFR0, 'zhFR0/F')
+    zhFR1 = array('f', [ 0 ] )
+    zhFR1B = tnew.Branch('zhFR1', zhFR1, 'zhFR1/F')
+    zhFR2 = array('f', [ 0 ] )
+    zhFR2B = tnew.Branch('zhFR2', zhFR2, 'zhFR2/F')
     __WEIGHT__ = array('f', [ 0 ] )
     __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
     __ZWEIGHT__ = array('f', [ 0 ] )
@@ -982,6 +993,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             pt_1_DOWN[0] = -1
             pt_2_UP[0] = -1
             pt_2_DOWN[0] = -1
+            zhFR0[0] = 0
+            zhFR1[0] = 0
+            zhFR2[0] = 0
 
             # Data specific vars
             if 'data' in sample :
@@ -1251,13 +1265,21 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     tauPtWeightDown[0] = getTauPtWeight( sample, channel, 
                         gen_match_1[0], gen_match_2[0], row, -0.2 )
 
-            if analysis == 'azh' :
+            if len(channel) > 3 :
                 # Set LeptonJetPt to be equal to or greater than lepton Pt
                 # b/c the lepton should be a subset of the overlapping jet
                 # if jet pt < lepton pt, then we have the wrong jet
                 for lep in [l1, l2, l3, l4] :
                     if getattr( row, lep+'Pt' ) > getattr( row, lep+'JetPt' ) :
                         setattr( row, lep+'JetPt', getattr( row, lep+'Pt' ))
+
+                # Calculate our ZH fake rate values
+                # This uses the 1+2-0 method detailed in AN2014/109
+                if 'data' in sample :
+                    zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), l3, row ) 
+                    zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), l4, row ) 
+                    zhFR0[0] = zhFR1[0] * zhFR2[0]
+                
 
 
             # Set branch for syncing with other groups:

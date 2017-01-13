@@ -1,8 +1,8 @@
 
 
 echo "BASED OFF OF CECILE'S /hdfs/store/user/caillol/SMHTT_aug16_v2 SUBMIT"
-#export LUMI=19828.0
-export LUMI=12900.0
+export LUMI=21000.0
+#export LUMI=12900.0
 
 echo "Set lumi = $LUMI"
 echo "Using ICHEP"
