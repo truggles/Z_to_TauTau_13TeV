@@ -138,64 +138,6 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
         for h in hists.keys() :
             outDir.cd()
             hists[h].Write()
-        
-            
-## Merge files from a file list into a new directory
-## this is to keep root from having to open thousands
-## of tiny files        
-#def mergeFiles( analysis, fileList, outDir ) :
-#    
-#    # Check if outbound directory exists
-#    # Make outbound directory
-#    if not os.path.exists( outDir ) :
-#        os.makedirs( outDir )
-#    print "Output Dir: ",outDir
-#    
-#    # Build list of files
-#    files = []
-#    with open( 'meta/NtupleInputs_%s/%s' % (analysis, fileList) ) as fList :
-#        for file in fList :
-#            f = file.strip()
-#            files.append( f )
-#    print files
-#    info = fileList.split('/')
-#    sample = info[-1].strip('.txt')
-#    print sample
-#    
-#
-#    rep = 0
-#    runningSize = 0
-#    toMerge = []
-#    for file_ in files :
-#        size = os.path.getsize( file_ )/1000 # in KB roughly
-#        print size, " KB ", file_
-#        runningSize += size
-#        print "Running size",runningSize
-#        toMerge.append( file_ )
-#        if runningSize > 500000 : # Target 1 GB files
-#            runningSize = 0
-#            mergeList = ["hadd", "-f", outDir+"/%s_%i.root" % (sample, rep)]
-#            for f in toMerge :
-#            	mergeList.append( f )
-#            subprocess.call( mergeList )
-#            print mergeList
-#            toMerge = []
-#            rep += 1
-#
-#    # Make sure to get the others who didn't total over 1 GB
-#    mergeList = ["hadd", "-f", outDir+"/%s_%i.root" % (sample, rep)]
-#    for f in toMerge :
-#    	mergeList.append( f )
-#    if len( mergeList ) > 3 : # greater than 3 means we actually have a file to merge (not empty)
-#    	subprocess.call( mergeList )
-            
-
-#if __name__ == '__main__' :
-    #mergeChannels( 'azh', '3July27d', ['data_ee',], ['eeet','eemt'], 'ZEE' )
-    #analysis = 'azh'
-    #fileList = 'WZ3l1nu.txt'
-    #outDir = '/data/truggles/tmpFun'    
-    #mergeFiles( analysis, fileList, outDir )
 
 
 def getQCDSF( fileName, category ) :
