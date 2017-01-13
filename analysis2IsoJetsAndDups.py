@@ -1276,8 +1276,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Calculate our ZH fake rate values
                 # This uses the 1+2-0 method detailed in AN2014/109
                 if 'data' in sample :
-                    zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), l3, row ) 
-                    zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), l4, row ) 
+                    zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
+                    zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
                     zhFR0[0] = zhFR1[0] * zhFR2[0]
                 
 

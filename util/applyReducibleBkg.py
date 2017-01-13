@@ -19,32 +19,48 @@ class ReducibleBkgWeights :
 
         # Set Leg3 FR graphs
         if self.channel in ['eeet','eeem','emmt','emmm','eeee'] :
-            self.frGraphL3 = self.file.Get( 'electron_AllEta_graph' )
-            self.frFitL3 = self.file.Get( 'electron_AllEta_fit' )
+            self.frGraphBarrelL3 = self.file.Get( 'electron_Barrel_graph' )
+            self.frFitBarrelL3 = self.file.Get( 'electron_Barrel_fit' )
+            self.frGraphEndcapL3 = self.file.Get( 'electron_Endcap_graph' )
+            self.frFitEndcapL3 = self.file.Get( 'electron_Endcap_fit' )
         elif self.channel in ['eemm','eemt','mmmt','mmmm'] :
-            self.frGraphL3 = self.file.Get( 'muon_AllEta_graph' )
-            self.frFitL3 = self.file.Get( 'muon_AllEta_fit' )
+            self.frGraphBarrelL3 = self.file.Get( 'muon_Barrel_graph' )
+            self.frFitBarrelL3 = self.file.Get( 'muon_Barrel_fit' )
+            self.frGraphEndcapL3 = self.file.Get( 'muon_Endcap_graph' )
+            self.frFitEndcapL3 = self.file.Get( 'muon_Endcap_fit' )
         elif self.channel in ['eett','mmtt'] :
-            self.frGraphL3 = self.file.Get( 'tau_AllEta_graph' )
-            self.frFitL3 = self.file.Get( 'tau_AllEta_fit' )
+            self.frGraphBarrelL3 = self.file.Get( 'tau-lltt_Barrel_graph' )
+            self.frFitBarrelL3 = self.file.Get( 'tau-lltt_Barrel_fit' )
+            self.frGraphEndcapL3 = self.file.Get( 'tau-lltt_Endcap_graph' )
+            self.frFitEndcapL3 = self.file.Get( 'tau-lltt_Endcap_fit' )
 
         # Set Leg4 FR graphs
-        if self.channel in ['eett','mmtt','eeet','emmt','eemt','mmmt',] :
-            self.frGraphL4 = self.file.Get( 'tau_AllEta_graph' )
-            self.frFitL4 = self.file.Get( 'tau_AllEta_fit' )
+        if self.channel in ['eeet','emmt','eemt','mmmt',] :
+            self.frGraphBarrelL4 = self.file.Get( 'tau-lllt_Barrel_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'tau-lllt_Barrel_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'tau-lllt_Endcap_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'tau-lllt_Endcap_fit' )
+        elif self.channel in ['eett','mmtt',] :
+            self.frGraphBarrelL4 = self.file.Get( 'tau-lltt_Barrel_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'tau-lltt_Barrel_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'tau-lltt_Endcap_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'tau-lltt_Endcap_fit' )
         elif self.channel in ['eeem','eemm','emmm','mmmm'] :
-            self.frGraphL4 = self.file.Get( 'muon_AllEta_graph' )
-            self.frFitL4 = self.file.Get( 'muon_AllEta_fit' )
+            self.frGraphBarrelL4 = self.file.Get( 'muon_Barrel_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'muon_Barrel_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'muon_Endcap_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'muon_Endcap_fit' )
         elif self.channel in ['eeee',] :
-            self.frGraphL4 = self.file.Get( 'electron_AllEta_graph' )
-            self.frFitL4 = self.file.Get( 'electron_AllEta_fit' )
+            self.frGraphBarrelL4 = self.file.Get( 'electron_Barrel_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'electron_Barrel_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'electron_Endcap_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'electron_Endcap_fit' )
+
 
     # Retrieve values
     # For each of these calls, check if the lepton fails their associated
     # cuts.  If it fails, assign a FF value, if it pass -> 0
-
-    # Not using Eta right now
-    def getFRWeightL3( self, pt, lep, row ):
+    def getFRWeightL3( self, pt, eta, lep, row ):
         if self.channel in ['eeet','eeem','emmt','emmm','eeee'] :
             if self.electronPasses( lep, row ) : return 0.
         elif self.channel in ['eemm','eemt','mmmt','mmmm'] :
@@ -53,10 +69,13 @@ class ReducibleBkgWeights :
             if self.tauPasses( lep, row ) : return 0.
         
         if pt > 200 : pt = 199
-        return self.frGraphL3.Eval( pt ) / ( 1. - self.frGraphL3.Eval( pt ) )
+        if abs(eta) < 1.4 :
+            return self.frGraphBarrelL3.Eval( pt ) / ( 1. - self.frGraphBarrelL3.Eval( pt ) )
+        if abs(eta) >= 1.4 :
+            return self.frGraphEndcapL3.Eval( pt ) / ( 1. - self.frGraphEndcapL3.Eval( pt ) )
 
 
-    def getFRWeightL4( self, pt, lep, row ):
+    def getFRWeightL4( self, pt, eta, lep, row ):
         if self.channel in ['eett','mmtt','eeet','emmt','eemt','mmmt',] :
             if self.tauPasses( lep, row ) : return 0.
         elif self.channel in ['eeem','eemm','emmm','mmmm'] :
@@ -65,7 +84,10 @@ class ReducibleBkgWeights :
             if self.electronPasses( lep, row ) : return 0.
         
         if pt > 200 : pt = 199
-        return self.frGraphL4.Eval( pt ) / ( 1. - self.frGraphL4.Eval( pt ) )
+        if abs(eta) < 1.4 :
+            return self.frGraphBarrelL4.Eval( pt ) / ( 1. - self.frGraphBarrelL4.Eval( pt ) )
+        if abs(eta) >= 1.4 :
+            return self.frGraphEndcapL4.Eval( pt ) / ( 1. - self.frGraphEndcapL4.Eval( pt ) )
 
  
     # Check to see if e/m/t pass their cuts
