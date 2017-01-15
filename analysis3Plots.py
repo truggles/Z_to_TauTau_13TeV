@@ -356,7 +356,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                     else :
                         continue
-                if ops['redBkg'] and 'RedBkgShape' in sample :
+                elif ops['redBkg'] and 'RedBkgShape' in sample :
                     tFileYield = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                 else :

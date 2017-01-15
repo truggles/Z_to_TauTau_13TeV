@@ -102,9 +102,17 @@ samples = returnSampleDetails( analysis, samples )
 
 
 runPlots = True
-#runPlots = False
-skipMerge = False
-#skipMerge = True
+doMerge = True
+makeFinalPlots = True
+doDataCards = True
+
+
+doMerge = False
+runPlots = False
+makeFinalPlots = False
+#doDataCards = False
+
+
 useRedBkg = True
 #useRedBkg = False
 
@@ -114,44 +122,46 @@ if runPlots :
     ''' Draw histos from TTrees '''
     params['additionalCut'] = '*ADD_CHANNEL_SPECIFIC_ISO_CUTS'
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
-    if useRedBkg :
-        for sample in samples.keys() :
-            if 'data' in sample :
-                era = sample.split('-')[1]
-                samples[ 'RedBkgYield-'+era ] = {'xsec' : 0.0, 'group' : 'redBkgYield'}
-                samples[ 'RedBkgShape-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
-        redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu',]
-        for sample in samples.keys() :
-            if sample in redBkgList :
-                del samples[ sample ]
 
-    ''' merge channels '''
-    if not skipMerge :
-        useMerge = False
-        merge = []
-        if len( params['channels'] ) > 3 :
-            if 'eeet' in params['channels'] and 'eemt' in params['channels'] and 'eett' in params['channels'] and 'eeem' in params['channels'] :
-                useMerge = True
-                merge.append( 'ZEE' )
-            if 'emmt' in params['channels'] and 'mmmt' in params['channels'] and 'mmtt' in params['channels'] and 'emmm' in params['channels'] :
-                useMerge = True
-                merge.append( 'ZMM' )
-            ZXX = True
-            for channel in ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] :
-                if channel not in params['channels'] : ZXX = False
-            if ZXX == True :
-                merge.append( 'ZXX' )
-        if useMerge :
-            
-            if 'ZEE' in merge :
-                mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem'], 'ZEE' )
-            if 'ZMM' in merge :
-                mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
-            if 'ZXX' in merge :
-                mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
-            for m in merge :
-                params['channels'].append( m )
+if useRedBkg :
+    for sample in samples.keys() :
+        if 'data' in sample :
+            era = sample.split('-')[1]
+            samples[ 'RedBkgYield-'+era ] = {'xsec' : 0.0, 'group' : 'redBkgYield'}
+            samples[ 'RedBkgShape-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
+    redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu',]
+    for sample in samples.keys() :
+        if sample in redBkgList :
+            del samples[ sample ]
 
+''' merge channels '''
+if doMerge :
+    useMerge = False
+    merge = []
+    if len( params['channels'] ) > 3 :
+        if 'eeet' in params['channels'] and 'eemt' in params['channels'] and 'eett' in params['channels'] and 'eeem' in params['channels'] :
+            useMerge = True
+            merge.append( 'ZEE' )
+        if 'emmt' in params['channels'] and 'mmmt' in params['channels'] and 'mmtt' in params['channels'] and 'emmm' in params['channels'] :
+            useMerge = True
+            merge.append( 'ZMM' )
+        ZXX = True
+        for channel in ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] :
+            if channel not in params['channels'] : ZXX = False
+        if ZXX == True :
+            merge.append( 'ZXX' )
+    if useMerge :
+        
+        if 'ZEE' in merge :
+            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem'], 'ZEE' )
+        if 'ZMM' in merge :
+            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
+        if 'ZXX' in merge :
+            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
+        for m in merge :
+            params['channels'].append( m )
+
+if makeFinalPlots :
     #text=False
     text=True
     kwargs = { 'text':text, 'blind':False, 'redBkg':useRedBkg }
@@ -169,5 +179,20 @@ if runPlots :
     subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/azhPlots/", cpDir] )
     
     
-    
+if doDataCards :
+    ROOT.gROOT.Reset()
+    from analysisShapesROOT import makeDataCards
+    var = 'Mass'
+    finalCat = 'inclusive'
+    folderDetails = params['mid3']
+    kwargs = {
+    'category' : finalCat,
+    'fitShape' : var,
+    'allShapes' : False,
+    'redBkg' : useRedBkg, 
+    }
+    makeDataCards( analysis, samples, params['channels'], folderDetails, **kwargs )
+    subprocess.call( ["mv", "azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass.root", "azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass_new.root"] )
+
+
 

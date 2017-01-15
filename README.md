@@ -77,6 +77,15 @@ script, there is again a default qcdShape option.
 :-)
 
 
+ZH/AZh analysis:
+relies on azhRun.py
+has ability to use MC based reducible bkg method or data driven RedBkg method
+the cuts for the data driven RedBkg method are not in a consolidated place, if updating them please change the cuts in:
+util/azhReducibleBackground.py
+util/azhReducibleBackgroundHelpers.py
+analysisCuts.py
+
+
 Auxilary Functions:
 Tau Tracking Study tools including an analyzer and plotter can be found in
 Z_to_TauTau_13TeV/ThreeProngTaus<BR>
