@@ -356,6 +356,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                     else :
                         continue
+                if ops['redBkg'] and 'RedBkgShape' in sample :
+                    tFileYield = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                 else :
                     #print "File: '%s%s/%s_%s.root'" % (analysis, folderDetails, sample, channel)
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
@@ -374,6 +377,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
                 preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
+
+                if ops['redBkg'] and 'RedBkgShape' in sample :
+                    redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, getVar)).Integral()
+                    #print "REd BKG Yield:",redBkgYield
+                    if preHist.Integral() != 0 :
+                        preHist.Scale( redBkgYield / preHist.Integral() )
+                    hist = ROOT.TH1D( preHist )
     
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
                     #print "Using QCD SCALE FACTOR <<<< NEW >>>>"
@@ -501,6 +511,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
+                    if samp in ['azh','sm','VH'] : continue
                     toRoot += (sampHistos[samp].GetBinContent(k)*\
                         uncertNormMap[analysis][samp])**2
                     toRoot += sampHistos[samp].GetBinError(k)**2

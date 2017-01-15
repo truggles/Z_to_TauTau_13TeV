@@ -103,7 +103,7 @@ class ReducibleBkgWeights :
         else : return False
 
     def tauPasses( self, lep, row ):
-        if getattr( row, lep+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0.5 : return True
+        if getattr( row, lep+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0.5 : return True
         else : return False
 
 

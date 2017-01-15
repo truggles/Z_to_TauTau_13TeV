@@ -109,15 +109,15 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
     cuts = {
         'tau' : {
-            'denom' : ['(1)'],
-            'pass' : ['byLooseIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
+            'denom' : ['(1)',],
+            'pass' : ['byMediumIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
         },
         'electron' : {
-            'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
+            'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
             'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_loose_Num > 0.5'],
         },
         'muon' : {
-            'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
+            'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
             'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0.5'],
         },
     } 
@@ -145,6 +145,11 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     for etaRegion, etaCut in etaCuts[obj.split('-')[0]].iteritems() :
     # obj.split('-')[0] is to get the same cuts and mapping for
     # tau, tau-lltt, tau-lllt
+
+        # If channels are lltt, then add an LT cut that is not present
+        # for the other tau FRs
+        if channels == ['eett', 'mmtt'] :
+            cuts['tau']['denom'].append('LT_higgs > 50')
 
         denomCut = ' && '.join( cuts[obj.split('-')[0]]['denom'] )
         denomCut += ' && '+etaCut
@@ -277,9 +282,9 @@ if '__main__' in __name__ :
         'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
         #'channels' : ['eeet',],
         'cutMapper' : 'RedBkg',
-        'mid1' : '1Dec08',
-        'mid2' : '2Dec08',
-        'mid3' : '3Dec08',
+        'mid1' : '1Jan13mkFR',
+        'mid2' : '2Jan13mkFR',
+        'mid3' : '3Jan13mkFR',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',

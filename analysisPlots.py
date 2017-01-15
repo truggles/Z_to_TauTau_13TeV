@@ -2,10 +2,10 @@ import ROOT
 from ROOT import gPad
 from array import array
 from collections import OrderedDict
-from util.helpers import returnSortedDict
+from util.helpers import returnSortedDict, getProdMap
 from util.azhReducibleBackgroundHelpers import \
-    getRedBkgCutsAndWeights, getChannelSpecificFinalCuts
-
+    getRedBkgCutsAndWeights, getChannelSpecificFinalCuts, \
+    getRedBkgShape
 
 
 
@@ -136,13 +136,16 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     # AZH / ZH analysis
     # Add channel specific cuts
     if 'ADD_CHANNEL_SPECIFIC_ISO_CUTS' in additionalCut :
-        if analysis == 'azh' and 'RedBkg' in outFile.GetName() :
-            redBkgCut = getRedBkgCutsAndWeights( channel )
-            additionalCut = additionalCut.replace(
-                    'ADD_CHANNEL_SPECIFIC_ISO_CUTS', '('+redBkgCut+')')
+        prodMap = getProdMap()
+        if analysis == 'azh' and 'RedBkgYield' in outFile.GetName() :
+            additionalCut = getRedBkgCutsAndWeights(
+                    analysis, channel, additionalCut, prodMap )
+        elif analysis == 'azh' and 'RedBkgShape' in outFile.GetName() :
+            additionalCut = getRedBkgShape( 
+                    analysis, channel, additionalCut, prodMap )
         else : # No reducible bkg
             additionalCut = getChannelSpecificFinalCuts(
-                    analysis, channel, additionalCut )
+                    analysis, channel, additionalCut, prodMap )
 
 
     ''' Combine Gen and Chan specific into one fill section '''
@@ -343,8 +346,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 histos[ var ] = gPad.GetPrimitive( var )
                 if var == 'm_vis' :
                     print 'm_vis'
-                    print "Data Count:", histos[ var ].Integral()
-                    #print "Cut: %s%s" % (additionalCutToUse, dataES)
+                    #print "Data Count:", histos[ var ].Integral()
+                    print "Cut: %s%s" % (additionalCutToUse, dataES)
             else :
 
                 chain.Draw( '%s>>%s' % (plotVar, var), '%s' % totalCutAndWeightMC )
@@ -515,10 +518,11 @@ def getHistoDict( analysis, channel ) :
             'Mass' : [600, 0, 600, 60, 'M_{ll#tau#tau} [GeV]', ' GeV'],
             'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
             'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
+            'LT_higgs' : [150, 0, 150, 10, 'LT_{higgs} [GeV]', ' GeV'],
 #            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
-            'zhFR0' : [50, 0, 0.5, 1, 'ZH FakeRate Weight 0', ''],
-            'zhFR1' : [50, 0, 0.5, 1, 'ZH FakeRate Weight 1', ''],
-            'zhFR2' : [50, 0, 0.5, 1, 'ZH FakeRate Weight 2', ''],
+            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
+            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
+            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
             'pt_1' : [200, 0, 200, 10, 'Leg1 p_{T} [GeV]', ' GeV'],
             'pt_2' : [200, 0, 200, 10, 'Leg2 p_{T} [GeV]', ' GeV'],
             'pt_3' : [200, 0, 200, 10, 'Leg3 p_{T} [GeV]', ' GeV'],

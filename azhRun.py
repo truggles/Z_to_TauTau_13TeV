@@ -71,19 +71,15 @@ params = {
     #'channels' : ['eeee','mmmm','eemm'],
     #'channels' : ['eett',],
     #'channels' : ['emmt',],
-    #'cutMapper' : 'goodZ',
+    #'channels' : ['eeee','eeet','eett','eemt'],
     #'cutMapper' : 'HSS',
-    #'cutMapper' : 'Skim',
-    'cutMapper' : 'SkimOS',
-    #'mid1' : '1Dec09SS',
-    #'mid1' : '1Dec09',
-    #'mid2' : '2Dec09',
-    #'mid3' : '3Dec09',
-    #'mid2' : '2Dec11redBkg',
-    #'mid3' : '3Dec11redBkg',
-    'mid1' : '1Jan12redBkgOS',
-    'mid2' : '2Jan12redBkgOS',
-    'mid3' : '3Jan12redBkgOS',
+    'cutMapper' : 'Skim',
+    #'mid1' : '1Jan12redBkgOS',
+    #'mid2' : '2Jan12redBkgOSnewFR',
+    #'mid3' : '3Jan12redBkgOSnewFR',
+    'mid1' : '1Jan13skim',
+    'mid2' : '2Jan13skim',
+    'mid3' : '3Jan13skim',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -109,20 +105,21 @@ runPlots = True
 #runPlots = False
 skipMerge = False
 #skipMerge = True
-#useRedBkg = True
-useRedBkg = False
+useRedBkg = True
+#useRedBkg = False
 
 if runPlots :
     from util.helpers import checkDir
     print params
     ''' Draw histos from TTrees '''
-    params['additionalCut'] = '*(Z_SS==0)*ADD_CHANNEL_SPECIFIC_ISO_CUTS'
+    params['additionalCut'] = '*ADD_CHANNEL_SPECIFIC_ISO_CUTS'
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
     if useRedBkg :
         for sample in samples.keys() :
             if 'data' in sample :
                 era = sample.split('-')[1]
-                samples[ 'RedBkg-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
+                samples[ 'RedBkgYield-'+era ] = {'xsec' : 0.0, 'group' : 'redBkgYield'}
+                samples[ 'RedBkgShape-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
         redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu',]
         for sample in samples.keys() :
             if sample in redBkgList :
@@ -159,6 +156,10 @@ if runPlots :
     text=True
     kwargs = { 'text':text, 'blind':False, 'redBkg':useRedBkg }
     print params
+    if useRedBkg : # Delete the yield sample from samples, will be loaded
+        # in analysis3Plot.py
+        for sample in samples :
+            if 'RedBkgYield' in sample : del samples[ sample ]
 
     ''' Make the final plots
         and copy to viewing area '''

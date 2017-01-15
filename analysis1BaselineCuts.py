@@ -448,8 +448,8 @@ def drawHistos(analysis, samples, **fargs ) :
                 'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
         'TTJ' : {
                 'tt' : '*(gen_match_1 != 5 || gen_match_2 != 5)'},
-        'RedBkg' : {
-                'xxxx' : '*(1.)'},
+        'RedBkgYield' : {'xxxx' : '*(1.)'},
+        'RedBkgShape' : {'xxxx' : '*(1.)'},
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -477,7 +477,8 @@ def drawHistos(analysis, samples, **fargs ) :
             loopList.append( 'QCD' )
         elif 'data' in sample and analysis == 'azh' :
             loopList.append( sample )
-            loopList.append( 'RedBkg-'+sample.split('-')[1] )
+            loopList.append( 'RedBkgYield-'+sample.split('-')[1] )
+            loopList.append( 'RedBkgShape-'+sample.split('-')[1] )
         else : loopList.append( sample )
 
     
