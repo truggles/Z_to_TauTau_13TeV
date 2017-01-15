@@ -10,9 +10,13 @@ from util.splitCanvas import fixFontSize
 from array import array
 from analysisPlots import skipSystShapeVar
 from util.helpers import checkDir, unroll2D, returnSortedDict
+from analysis1BaselineCuts import skipChanDataCombo
 
 
-def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
+def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
+    assert( type(inSamples) == type(OrderedDict())
+        or type(inSamples) == type({}) ), "Provide a samples list which \
+        is a dict or OrderedDict"
 
     ops = {
     'useQCDMakeName' : 'x',
@@ -24,6 +28,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     'ES' : False,
     'tauPt' : False,
     'sync' : False,
+    'redBkg' : False,
     'allShapes' : False,}
 
     for key in kwargs :
@@ -37,25 +42,6 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     """ Add in the gen matched DY catagorization """
     # FIXME - do this later
     print "\n Samples currently hardcoded \n"
-    #if analysis == 'htt' :
-    #    genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-    #    dyJets = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
-    #    newSamples = {}
-    #    for sample in samples.keys() :
-    #        #print sample
-    #        if sample in dyJets :
-    #            for gen in genList :
-    #                #print gen, sample+'-'+gen
-    #                samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
-    #                genApp = gen.lower()
-    #                samples[ sample+'-'+gen ]['group'] = genApp
-
-    #    # Clean the samples list
-    #    for dyJet in dyJets :
-    #        if dyJet in samples.keys() :
-    #            del samples[ dyJet ]
-    #    samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
-
 
     
     ROOT.gROOT.SetBatch(True)
@@ -65,102 +51,83 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
         sampDict = json.load( sampFile )
     
+    # Build samples list with val for which grouping each sample belongs to
     samples = OrderedDict()
-    samples['DYJets-ZTT']   = ('kOrange-4', '_ZTT_')
-    samples['DYJets-ZL']   = ('kOrange-4', '_ZL_')
-    samples['DYJets-ZJ']   = ('kOrange-4', '_ZJ_')
-    samples['DYJets-ZLL']   = ('kOrange-4', '_ZLL_')
-    samples['DYJets1-ZTT']   = ('kOrange-4', '_ZTT_')
-    samples['DYJets1-ZL']   = ('kOrange-4', '_ZL_')
-    samples['DYJets1-ZJ']   = ('kOrange-4', '_ZJ_')
-    samples['DYJets1-ZLL']   = ('kOrange-4', '_ZLL_')
-    samples['DYJets2-ZTT']   = ('kOrange-4', '_ZTT_')
-    samples['DYJets2-ZL']   = ('kOrange-4', '_ZL_')
-    samples['DYJets2-ZJ']   = ('kOrange-4', '_ZJ_')
-    samples['DYJets2-ZLL']   = ('kOrange-4', '_ZLL_')
-    samples['DYJets3-ZTT']   = ('kOrange-4', '_ZTT_')
-    samples['DYJets3-ZL']   = ('kOrange-4', '_ZL_')
-    samples['DYJets3-ZJ']   = ('kOrange-4', '_ZJ_')
-    samples['DYJets3-ZLL']   = ('kOrange-4', '_ZLL_')
-    samples['DYJets4-ZTT']   = ('kOrange-4', '_ZTT_')
-    samples['DYJets4-ZL']   = ('kOrange-4', '_ZL_')
-    samples['DYJets4-ZJ']   = ('kOrange-4', '_ZJ_')
-    samples['DYJets4-ZLL']   = ('kOrange-4', '_ZLL_')
-    samples['DYJetsLow-ZTT']   = ('kOrange-4', '_ZTT_')
-    samples['DYJetsLow-ZL']   = ('kOrange-4', '_ZL_')
-    samples['DYJetsLow-ZJ']   = ('kOrange-4', '_ZJ_')
-    samples['DYJetsLow-ZLL']   = ('kOrange-4', '_ZLL_')
-    samples['T-tW']     = ('kYellow+2', '_VV_')
-    samples['T-tchan']     = ('kYellow+2', '_VV_')
-    samples['TT-TTT']       = ('kBlue-8', '_TTT_')
-    samples['TT-TTJ']       = ('kBlue-8', '_TTJ_')
-    samples['Tbar-tW']  = ('kYellow-2', '_VV_')
-    samples['Tbar-tchan']  = ('kYellow-2', '_VV_')
-    samples['WJets']    = ('kAzure+2', '_W_')
-    samples['WJets1']    = ('kAzure+2', '_W_')
-    samples['WJets2']    = ('kAzure+2', '_W_')
-    samples['WJets3']    = ('kAzure+2', '_W_')
-    samples['WJets4']    = ('kAzure+2', '_W_')
-    samples['WW1l1nu2q']     = ('kAzure+4', '_VV_')
-    #samples['WW2l2nu']       = ('kAzure+8', '_VV_')
-    samples['WZ1l1nu2q'] = ('kAzure-6', '_VV_')
-    samples['WZ1l3nu'] = ('kAzure-6', '_VV_')
-    samples['WZ2l2q'] = ('kAzure-6', '_VV_')
-    samples['WZ3l1nu'] = ('kAzure-6', '_VV_')
-    #samples['ZZ2l2nu'] = ('kAzure-12', '_VV_')
-    samples['ZZ2l2q'] = ('kAzure-12', '_VV_')
-    #samples['ZZ4l'] = ('kAzure-12', '_VV_')
-    samples['VV'] = ('kAzure-12', '_VV_')
-    samples['WWW'] = ('kAzure-12', '_VV_')
-    samples['ZZZ'] = ('kAzure-12', '_VV_')
-    samples['EWKWPlus'] = ('kAzure-12', '_W_')
-    samples['EWKWMinus'] = ('kAzure-12', '_W_')
-    samples['EWKZ2l'] = ('kAzure-12', '_EWKZ_')
-    samples['EWKZ2nu'] = ('kAzure-12', '_EWKZ_')
-    samples['QCD']        = ('kMagenta-10', '_QCD_')
-    samples['dataTT-B']  = ('kBlack', '_data_obs_')
-    samples['dataTT-C']  = ('kBlack', '_data_obs_')
-    samples['dataTT-D']  = ('kBlack', '_data_obs_')
-    #samples['dataTT-E']  = ('kBlack', '_data_obs_')
-    #samples['dataTT-F']  = ('kBlack', '_data_obs_')
-    samples['dataEM']  = ('kBlack', '_data_obs_')
-    samples['VBFHtoTauTau120'] = ('kGreen', '_qqH120_')
-    samples['VBFHtoTauTau125'] = ('kGreen', '_qqH125_')
-    samples['VBFHtoTauTau130'] = ('kGreen', '_qqH130_')
-    samples['ggHtoTauTau120'] = ('kGreen', '_ggH120_')
-    samples['ggHtoTauTau125'] = ('kGreen', '_ggH125_')
-    samples['ggHtoTauTau130'] = ('kGreen', '_ggH130_')
-    samples['WMinusHTauTau120'] = ('kGreen', '_WH120_')
-    samples['WMinusHTauTau125'] = ('kGreen', '_WH125_')
-    samples['WMinusHTauTau130'] = ('kGreen', '_WH130_')
-    samples['WPlusHTauTau120'] = ('kGreen', '_WH120_')
-    samples['WPlusHTauTau125'] = ('kGreen', '_WH125_')
-    samples['WPlusHTauTau130'] = ('kGreen', '_WH130_')
-    samples['ZHTauTau120'] = ('kGreen', '_ZH120_')
-    samples['ZHTauTau125'] = ('kGreen', '_ZH125_')
-    samples['ZHTauTau130'] = ('kGreen', '_ZH130_')
-    
-    nameArray = ['_data_obs_','_ZTT_','_ZL_','_ZJ_','_ZLL_','_TTT_','_TTJ_','_QCD_','_VV_','_W_','_EWKZ_']
-    for name in ['_qqH120_','_ggH120_','_WH120_','_ZH120_'] :
-        nameArray.append( name )
-        nameArray.append( name.replace('120','125' ) )
-        nameArray.append( name.replace('120','130' ) )
+    genMap = ['ZTT', 'ZLL', 'ZL', 'ZJ']
+    dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow']
+    for dyj in dyJets :
+        for gen in genMap : samples[dyj+'-'+gen] = gen
+    samples['T-tW']       = 'VV'
+    samples['T-tchan']    = 'VV'
+    samples['TT-TTT']     = 'TTT'
+    samples['TT-TTJ']     = 'TTJ'
+    samples['Tbar-tW']    = 'VV'
+    samples['Tbar-tchan'] = 'VV'
+    samples['WJets']      = 'W'
+    samples['WJets1']     = 'W'
+    samples['WJets2']     = 'W'
+    samples['WJets3']     = 'W'
+    samples['WJets4']     = 'W'
+    samples['WW1l1nu2q']  = 'VV'
+    samples['WW2l2nu']    = 'VV'
+    samples['WZ1l1nu2q']  = 'VV'
+    samples['WZ1l3nu']    = 'VV'
+    samples['WZ2l2q']     = 'VV'
+    samples['WZ3l1nu']    = 'VV'
+    samples['ZZ2l2nu']    = 'VV'
+    samples['ZZ2l2q']     = 'VV'
+    samples['ZZ4l']       = 'VV'
+    samples['VV']         = 'VV'
+    samples['WWW']        = 'VV'
+    samples['ZZZ']        = 'VV'
+    samples['EWKWPlus']   = 'W'
+    samples['EWKWMinus']  = 'W'
+    samples['EWKZ2l']     = 'EWKZ'
+    samples['EWKZ2nu']    = 'EWKZ'
+    samples['QCD']        = 'QCD'
 
+    eras =  ['B', 'C', 'D', 'E', 'F', 'G', 'H']
+    for era in eras :
+        samples['dataTT-%s' % era]  = 'data_obs'
+        samples['dataEE-%s' % era]  = 'data_obs'
+        samples['dataMM-%s' % era]  = 'data_obs'
+
+    for mass in ['120', '125', '130'] :
+        samples['VBFHtoTauTau%s' % mass] = 'qqH%s' % mass
+        samples['ggHtoTauTau%s' % mass] = 'ggH%s' % mass
+        samples['WMinusHTauTau%s' % mass] = 'WH%s' % mass
+        samples['WPlusHTauTau%s' % mass] = 'WH%s' % mass
+        samples['ZHTauTau%s' % mass] = 'ZH%s' % mass
     
     if ops['mssm'] : # FIXME - make sure SM Higgs 120 and 130 don't overlap?
         masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
         for mssmMass in masses :
-            samples['ggH%i' % mssmMass] = ('kPink', '_ggH%i_' % mssmMass)
-            samples['bbH%i' % mssmMass] = ('kPink', '_bbH%i_' % mssmMass) 
-            nameArray.append('_ggH%i_' % mssmMass)
-            nameArray.append('_bbH%i_' % mssmMass)
+            samples['ggH%i' % mssmMass] = 'ggH%i' % mssmMass
+            samples['bbH%i' % mssmMass] = 'bbH%i' % mssmMass 
+
+    if analysis == 'azh' :
+        samples['ZZ4l'] = 'ZZ'
+        for era in eras :
+            samples['RedBkgShape-%s' % era] = 'RedBkg'
     
+    # Remove samples which are not part of input samples
+    # and build list of names/samples which will be used
+    # for a given final channel. This differs for some HTT
+    # channels
+    nameArray = []
+    for samp in samples :
+        if samp not in inSamples.keys() :
+            del samples[samp]
+            continue
+        if samples[samp] not in nameArray : nameArray.append( samples[samp] )
     
     extra = ''
     checkDir( '%sShapes' % analysis )
     if ops['mssm'] : 
         checkDir( '%sShapes/mssm' % analysis )
         extra = 'mssm'
+    if analysis == 'azh' :
+        extra = 'azh'
     else : 
         checkDir( '%sShapes/htt' % analysis )
         extra = 'htt'
@@ -171,13 +138,13 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             for sample in samples.keys() :
                 if '-ZLL' in sample :
                     del samples[ sample ]
-            nameArray.remove('_ZLL_')
+            nameArray.remove('ZLL')
         if channel == 'em' :
             for sample in samples.keys() :
                 if sample[-3:] == '-ZL' or '-ZJ' in sample :
                     del samples[ sample ]
-            nameArray.remove('_ZJ_')
-            nameArray.remove('_ZL_')
+            nameArray.remove('ZJ')
+            nameArray.remove('ZL')
     
         print channel
     
@@ -185,7 +152,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
         newVarMap = returnSortedDict( newVarMapUnsorted )
     
         baseVar = ops['fitShape']
-        if 'data' in sample : print "Fitting",baseVar
+        #if 'data' in sample : print "Fitting",baseVar
         appendMap = {
             'm_vis' : 'visMass',
             'm_sv' : 'svFitMass',
@@ -194,6 +161,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
             'pt_sv:m_sv' : 'svFitMass2D',
             'pt_1:m_sv' : 'svFitMass2D',
             'mjj:m_sv' : 'svFitMass2D',
+            'Mass' : '4LMass',
             }
         if ops['category'] == '0jet2D' : 
             append = '_svFitMass2D'
@@ -206,7 +174,8 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
         else :
             mid = 'sm'
     
-        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, channel, mid, append), 'UPDATE')
+        nameChan = 'tt' if analysis != 'azh' else 'zh'
+        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, nameChan, mid, append), 'UPDATE')
         # We have two pathways to create tt_0jet and need to maintain their seperate root files for 1D vs 2D
         # so we need this override that renames 0jet2D -> 0jet and places in the unrolled root file
         if ops['category'] == '0jet2D' : 
@@ -283,7 +252,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
 
             histos = {}
             for name in nameArray :
-                title = name.strip('_')
+                title = name
                 if ops['ES'] or ops['tauPt'] or ops['allShapes'] :
                     if '_energyScaleUp' in var :
                         histos[ name ] = ROOT.TH1D( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
@@ -326,8 +295,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 if skipSystShapeVar( var, sample, channel ) : continue
                 if '_topPt' in var : print "Top Pt still in Var: "+var+" sample: "+sample
     
-                if channel == 'tt' and 'dataEM' in sample : continue
-                if channel == 'em' and 'dataTT' in sample : continue
+                # Skip looping over nonsense channel / sample combos
+                if skipChanDataCombo( channel, sample, analysis ) : continue
+
                 #if sample == 'DYJetsLow' : continue
                 #if 'HtoTauTau' in sample : continue
                 #print sample
@@ -342,6 +312,9 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                         tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['useQCDMakeName']), 'READ')
                     else :
                         print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
+                elif ops['redBkg'] and 'RedBkgShape' in sample :
+                    tFileYield = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                 else :
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
     
@@ -351,6 +324,12 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 hist.SetDirectory( 0 )
                 #print "Hist yield before scaling ",hist.Integral()
     
+
+                """ Scale reducible bkg shape by yield estimate """
+                if ops['redBkg'] and 'RedBkgShape' in sample :
+                    redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, var)).Integral()
+                    if hist.Integral() != 0 :
+                        hist.Scale( redBkgYield / hist.Integral() )
     
     
                 ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
@@ -370,25 +349,25 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
                 #    #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
                 #    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
                 #    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
-                #    histos[ samples[ sample ][1] ].Add( hNew )
+                #    histos[ samples[ sample ] ].Add( hNew )
                 #else :
                 #    #print "hist # bins pre: %i" % hist.GetXaxis().GetNbins()
                 #    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
                 #    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
-                #    histos[ samples[ sample ][1] ].Add( hNew )
+                #    histos[ samples[ sample ] ].Add( hNew )
                 if ":" in var :
                     hNew = unroll2D( hist )
                     #print "nbinsX",hNew.GetNbinsX() ,hNew.GetBinLowEdge(1),hNew.GetBinLowEdge( hNew.GetNbinsX()+1 )
                 else :
                     hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
-                histos[ samples[ sample ][1] ].Add( hNew )
+                histos[ samples[ sample ] ].Add( hNew )
     
                 if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
                     print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
                 else :
                     print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
                 #hist2 = hist.Rebin( 18, 'rebinned', binArray )
-                #histos[ samples[ sample ][1] ].Add( hist2 )
+                #histos[ samples[ sample ] ].Add( hist2 )
                 tFile.Close()
     
     
@@ -480,7 +459,7 @@ def makeDataCards( analysis, samples, channels, folderDetails, **kwargs ) :
         shapeFile.Close()
     
     
-        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (analysis, extra, channel, mid, append)
+        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (analysis, extra, nameChan, mid, append)
     
 if __name__ == '__main__' :
     analysis = 'htt'
