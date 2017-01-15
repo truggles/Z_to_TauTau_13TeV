@@ -175,7 +175,25 @@ def returnSortedDict( dict ) :
         rtnDict[ var ] = list(dict[ var ])
     return rtnDict
 
-
+def getProdMap() :
+    prodMap = {
+        'em' : ('e', 'm'),
+        'et' : ('e', 't'),
+        'mt' : ('m', 't'),
+        'tt' : ('t1', 't2'),
+        'eeem' : ('e1', 'e2', 'e3', 'm'),
+        'eeet' : ('e1', 'e2', 'e3', 't'),
+        'eemt' : ('e1', 'e2', 'm', 't'),
+        'eett' : ('e1', 'e2', 't1', 't2'),
+        'emmm' : ('m1', 'm2', 'e', 'm3'),
+        'emmt' : ('m1', 'm2', 'e', 't'),
+        'mmmt' : ('m1', 'm2', 'm3', 't'),
+        'mmtt' : ('m1', 'm2', 't1', 't2'),
+        'eeee' : ('e1', 'e2', 'e3', 'e4'),
+        'eemm' : ('e1', 'e2', 'm1', 'm2'),
+        'mmmm' : ('m1', 'm2', 'm3', 'm4'),
+    }
+    return prodMap
 
 if __name__ == '__main__' :
     #print getQCDSF( 'httQCDYields_2Aug25x5pt45b.txt', '1Jet' )

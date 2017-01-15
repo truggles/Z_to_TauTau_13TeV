@@ -14,27 +14,12 @@ import json
 import os
 import ROOT
 import copy
+from util.helpers import getProdMap
 
 cmsLumi = float(os.getenv('LUMI'))
 print "Lumi = %i" % cmsLumi
 
-prodMap = {
-    'em' : ('e', 'm'),
-    'et' : ('e', 't'),
-    'mt' : ('m', 't'),
-    'tt' : ('t1', 't2'),
-    'eeem' : ('e1', 'e2', 'e3', 'm'),
-    'eeet' : ('e1', 'e2', 'e3', 't'),
-    'eemt' : ('e1', 'e2', 'm', 't'),
-    'eett' : ('e1', 'e2', 't1', 't2'),
-    'emmm' : ('m1', 'm2', 'e', 'm3'),
-    'emmt' : ('m1', 'm2', 'e', 't'),
-    'mmmt' : ('m1', 'm2', 'm3', 't'),
-    'mmtt' : ('m1', 'm2', 't1', 't2'),
-    'eeee' : ('e1', 'e2', 'e3', 'e4'),
-    'eemm' : ('e1', 'e2', 'm1', 'm2'),
-    'mmmm' : ('m1', 'm2', 'm3', 'm4'),
-}
+prodMap = getProdMap()
 
 #XXX XXX XXX FIXME so that this does N Jet binned correct once we have ReHLT
 def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
@@ -670,6 +655,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     byVVLooseIsolationMVArun2v1DBoldDMwLT_1B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_1', byVVLooseIsolationMVArun2v1DBoldDMwLT_1, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_1/F')
     byVVLooseIsolationMVArun2v1DBoldDMwLT_2 = array('f', [ 0 ] )
     byVVLooseIsolationMVArun2v1DBoldDMwLT_2B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_2', byVVLooseIsolationMVArun2v1DBoldDMwLT_2, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_2/F')
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_3 = array('f', [ 0 ] )
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_3B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_3', byVVLooseIsolationMVArun2v1DBoldDMwLT_3, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_3/F')
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_4 = array('f', [ 0 ] )
+    byVVLooseIsolationMVArun2v1DBoldDMwLT_4B = tnew.Branch('byVVLooseIsolationMVArun2v1DBoldDMwLT_4', byVVLooseIsolationMVArun2v1DBoldDMwLT_4, 'byVVLooseIsolationMVArun2v1DBoldDMwLT_4/F')
     isoCode1 = array('f', [ 0 ] )
     isoCode1B = tnew.Branch('isoCode1', isoCode1, 'isoCode1/F')
     isoCode2 = array('f', [ 0 ] )
@@ -808,6 +797,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     zhFR1B = tnew.Branch('zhFR1', zhFR1, 'zhFR1/F')
     zhFR2 = array('f', [ 0 ] )
     zhFR2B = tnew.Branch('zhFR2', zhFR2, 'zhFR2/F')
+    LT_higgs = array('f', [ 0 ] )
+    LT_higgsB = tnew.Branch('LT_higgs', LT_higgs, 'LT_higgs/F')
     __WEIGHT__ = array('f', [ 0 ] )
     __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
     __ZWEIGHT__ = array('f', [ 0 ] )
@@ -987,6 +978,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = -1
             byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = -1
             byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = -1
+            byVVLooseIsolationMVArun2v1DBoldDMwLT_3[0] = -1
+            byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = -1
             isoCode1[0] = -1
             isoCode2[0] = -1
             pt_1_UP[0] = -1
@@ -996,6 +989,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             zhFR0[0] = 0
             zhFR1[0] = 0
             zhFR2[0] = 0
+            LT_higgs[0] = 0
 
             # Data specific vars
             if 'data' in sample :
@@ -1095,6 +1089,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
                     if 'e' in l4 :
                         electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
+
 
                 # Isolation / ID weights
                 if 't' in l1 : idisoweight_1[0] = 1
@@ -1280,6 +1275,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
                     zhFR0[0] = zhFR1[0] * zhFR2[0]
                 
+                # Define the LT varialbe we use in analysis (LT from FSA is all 4 objects)
+                LT_higgs[0] = pt3 + pt4
+
+                # Add VVL for leg3 and leg4
+                if 't' in l3 :
+                    byVVLooseIsolationMVArun2v1DBoldDMwLT_3[0] = isoWPAdder.getVVLoose(
+                            getattr(row, l3+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt3 )
+                if 't' in l4 :
+                    byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = isoWPAdder.getVVLoose(
+                            getattr(row, l4+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt4 )
 
 
             # Set branch for syncing with other groups:
