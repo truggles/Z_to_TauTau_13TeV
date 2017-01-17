@@ -57,10 +57,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow']
     for dyj in dyJets :
         for gen in genMap : samples[dyj+'-'+gen] = gen
+    #print samples
     samples['T-tW']       = 'VV'
     samples['T-tchan']    = 'VV'
-    samples['TT-TTT']     = 'TTT'
-    samples['TT-TTJ']     = 'TTJ'
     samples['Tbar-tW']    = 'VV'
     samples['Tbar-tchan'] = 'VV'
     samples['WJets']      = 'W'
@@ -120,6 +119,17 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             del samples[samp]
             continue
         if samples[samp] not in nameArray : nameArray.append( samples[samp] )
+    # Add DYJets gen splitting and ttbar
+    genMapDYJ = ['ZTT', 'ZLL', 'ZL', 'ZJ']
+    genMapTT = ['TTT', 'TTJ']
+    for samp in inSamples.keys() :
+        if 'DYJets' in samp and not '-' in samp : # '-' means we already have Gen additions
+            for gen in genMapDYJ : samples[samp+'-'+gen] = gen
+        if samp == 'TT' and not '-' in samp : # '-' means we already have Gen additions
+            for gen in genMapTT : samples[samp+'-'+gen] = gen
+    # Using final samples map, build nameArray
+    for samp in samples :
+        if samples[samp] not in nameArray : nameArray.append( samples[samp] )
     
     extra = ''
     checkDir( '%sShapes' % analysis )
@@ -138,13 +148,14 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             for sample in samples.keys() :
                 if '-ZLL' in sample :
                     del samples[ sample ]
-            nameArray.remove('ZLL')
+            if 'ZLL' in nameArray : nameArray.remove('ZLL')
         if channel == 'em' :
             for sample in samples.keys() :
                 if sample[-3:] == '-ZL' or '-ZJ' in sample :
                     del samples[ sample ]
-            nameArray.remove('ZJ')
-            nameArray.remove('ZL')
+            if 'ZJ' in nameArray : nameArray.remove('ZJ')
+            if 'ZL' in nameArray : nameArray.remove('ZL')
+        print nameArray.sort()
     
         print channel
     
@@ -163,7 +174,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'mjj:m_sv' : 'svFitMass2D',
             'Mass' : '4LMass',
             }
-        if ops['category'] == '0jet2D' : 
+        if '0jet2D' in ops['category'] : 
             append = '_svFitMass2D'
         else :
             append = '_'+appendMap[baseVar]
@@ -178,8 +189,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, nameChan, mid, append), 'UPDATE')
         # We have two pathways to create tt_0jet and need to maintain their seperate root files for 1D vs 2D
         # so we need this override that renames 0jet2D -> 0jet and places in the unrolled root file
-        if ops['category'] == '0jet2D' : 
-            shapeDir = shapeFile.mkdir( channel + '_0jet', channel + '_0jet' )
+        if '0jet2D' in ops['category'] : 
+            cr = '_qcd_cr' if '_qcd_cr' in ops['category'] else ''
+            shapeDir = shapeFile.mkdir( channel + '_0jet'+cr, channel + '_0jet'+cr )
         else :
             shapeDir = shapeFile.mkdir( channel + '_%s' % ops['category'], channel + '_%s' % ops['category'] )
         assert( shapeDir != None ), "It looks like the directory already exists, remove the old root file and start again: rm httShapes/htt/htt_tt.inputs-sm-13TeV_ ..."
@@ -188,8 +200,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
             if not baseVar in var : continue
             if ops['fitShape'] == 'm_sv' and ':' in var : continue # Get rid of the 2D shapes in 0jet
+            print "\n\n=============================================================="
             if ops['allShapes'] :
-                print "\nAll Shapes Applied: %s\n" % var
+                print "All Shapes Applied: %s" % var
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                 if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
                         or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) \
@@ -247,10 +260,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 else :
                     binArray = array( 'd', [i*10 for i in range( 31 )] )
             numBins = len( binArray ) - 1
-            print binArray
+            #print binArray
             #print numBins
 
-            histos = {}
+            histos = OrderedDict()
             for name in nameArray :
                 title = name
                 if ops['ES'] or ops['tauPt'] or ops['allShapes'] :
@@ -360,17 +373,28 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     #print "nbinsX",hNew.GetNbinsX() ,hNew.GetBinLowEdge(1),hNew.GetBinLowEdge( hNew.GetNbinsX()+1 )
                 else :
                     hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+
+                # If using the qcd CR, we want a single bin for all
+                if '_qcd_cr' in ops['category'] :
+                    nBins = hNew.GetNbinsX()
+                    hNew.Rebin( nBins )
+                    # If histos haven't been Rebinned, do it
+                    nBinsHistos = histos[ samples[ sample ] ].GetNbinsX()
+                    if nBins == nBinsHistos :
+                        histos[ samples[ sample ] ].Rebin( nBins )
+
                 histos[ samples[ sample ] ].Add( hNew )
     
                 if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
-                    print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
+                    print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
                 else :
-                    print "SampleName: %s   Hist yield %f" % (sample, hist.Integral())
+                    print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
                 #hist2 = hist.Rebin( 18, 'rebinned', binArray )
                 #histos[ samples[ sample ] ].Add( hist2 )
                 tFile.Close()
     
     
+            print "=============================================================="
             shapeDir.cd()
             for name in histos :
                 #print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
@@ -380,8 +404,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if histos[ name ].GetBinContent( bin_ ) < 0 :
                         histos[ name ].SetBinContent( bin_, setVal )
                         print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
-                if not 'ggH' in name and not 'bbH' in name :
-                    print "name: %s Yield Post: %f" % (name, histos[ name ].Integral() )
+                if histos[ name ].Integral() != 0.0 :
+                    print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
                 #if not ops['mssm'] :
                 #    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
                 
@@ -389,17 +413,21 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Proper naming of output histos
                 if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
                         or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var) :
-                    if name in ['_data_obs_','_QCD_'] : continue 
-                    if '_ggH' in var and not name in ['_ggH120_','_ggH125_','_ggH130_'] : continue
-                    if '_JetToTau' in var and not name in ['_W_', '_TTJ_', '_ZJ_'] : continue
-                    if '_Zmumu' in var and (name not in ['_ZTT_', '_ZL_', '_ZJ_'] or \
-                            ops['category'] != 'VBF') : continue # Shape only used in VBF category atm
+
+                    # Systematics naming removes CRs
+                    category = ops['category'].strip('_qcd_cr')
+
+                    if name in ['data_obs','QCD'] : continue 
+                    if '_ggH' in var and not name in ['ggH120','ggH125','ggH130'] : continue
+                    if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ'] : continue
+                    if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ'] or \
+                            category != 'VBF') : continue # Shape only used in VBF category atm
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
     
                     if '_zPt' in var :
-                        if name not in ['_ZTT_','_ZL_','_ZJ_','_ZLL_',] : continue
+                        if name not in ['ZTT','ZL','ZJ','ZLL',] : continue
                         elif '_zPtUp' in var :
                             histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeVUp' )
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeVUp' )
@@ -414,7 +442,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         elif '_topPtDown' in var :
                             histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
-                    #elif name in ['_TTT_','_TTJ_'] : continue # this is to catch TT when it's not wanted
+                    #elif name in ['TTT','TTJ'] : continue # this is to catch TT when it's not wanted
                     elif '_energyScaleUp' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
@@ -446,11 +474,11 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeVDown' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeVDown' )
                     elif '_ZmumuUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVUp' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVUp' )
                     elif '_ZmumuDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+ops['category']+'_13TeVDown' )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVDown' )
                     histos[ name ].Write()
                 else :
                     histos[ name ].SetTitle( name.strip('_') )

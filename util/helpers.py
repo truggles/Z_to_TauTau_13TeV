@@ -1,6 +1,7 @@
 import os, glob, subprocess
 import ROOT
 from collections import OrderedDict
+from array import array
 
 
 # Check if directory exists, make it if not
@@ -10,7 +11,6 @@ def checkDir( dirName ) :
 
 # Function to create TH1Fs from TGraphAsymmErrors
 def getTH1FfromTGraphAsymmErrors( asym, name ) :
-    from array import array
 
     # Holding vals for TH1F binning and y-vals
     xSpacing = array( 'd', [] )
@@ -155,7 +155,14 @@ def unroll2D( hist ) :
     nBinsY = hist.GetNbinsY()
     nBins = nBinsX * nBinsY
     #print "bin info: ",nBinsX, nBinsY, nBins
-    hNew = ROOT.TH1D( hist.GetName(), hist.GetTitle(), nBins, 0, nBins )
+
+    # Because we use the array method to construct our datacards
+    # if we use arrays here, we avoid unnecessary warning messages
+    # later on
+    # ROOT warning: "Attempt to add histograms with different bin limits"
+    binArray = array( 'd', [i for i in range( nBins+1 )] )
+    numBins = len( binArray ) - 1
+    hNew = ROOT.TH1D( hist.GetName(), hist.GetTitle(), numBins, binArray )
     for i in range(1, nBinsY+1) :
         for j in range(1, nBinsX+1) :
             #print "i %i j %i set bin %i" % (i, j, j+(i-1)*nBinsX)

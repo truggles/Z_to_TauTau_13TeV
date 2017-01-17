@@ -83,8 +83,10 @@ params = {
     ###'mid3' : '3Nov16ggHScale',
     #'mid2' : '2Nov21zmumu', # Official pre-approval 2d DCs 
     #'mid3' : '3Nov21zmumu', # Official pre-approval 2d DCs
-    'mid2' : '2Dec08somePlots', # pre-approval checks 
-    'mid3' : '3Dec08somePlots', # pre-approval checks
+    ###'mid2' : '2Dec08somePlots', # pre-approval checks 
+    ###'mid3' : '3Dec08somePlots', # pre-approval checks
+    'mid2' : '2Jan16test',
+    'mid3' : '3Jan16test',
     #'mid1' : '11Nov04qcdSyst', # used for QCD Method Uncertainties
     #'mid2' : '21Nov04qcdSyst',
     #'mid3' : '31Nov04qcdSyst',
@@ -119,22 +121,17 @@ samples = returnSampleDetails( analysis, samples )
 runPlots = True
 runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False
+makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
-cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet', '1jet', '2jet',]
-cats = ['inclusive', 'vbf', '1jet_low', '1jet_high', '0jet',]
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
-cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
-cats = ['vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet']
-#cats = ['boosted','VBF',]
-#cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet', '0jet2D', 'boosted','VBF',]
 cats = ['inclusive', '0jet2D', 'boosted','VBF',]
+cats = ['0jet2D', 'boosted','VBF',]
 pt = '5040'
 #sync = True
 sync = False
@@ -229,8 +226,22 @@ for isoVal in isoVals :
                 'sync' : sync,
                 }
                 makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+
+                # Make OS Loose QCD CR
+                folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
+                kwargs = {
+                'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
+                'qcdSF' : qcdSF,
+                'category' : finalCat+'_qcd_cr',
+                #'fitShape' : 'm_vis',
+                'fitShape' : var,
+                'allShapes' : True,
+                'sync' : sync,
+                }
+                makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
