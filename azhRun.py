@@ -34,15 +34,18 @@ os.chdir('..')
 
 ''' Preset samples '''
 azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',]
-azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4l', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',] # No WWW, data-E,F, ZZ4l MadGraph
+azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataEE-G', 'dataEE-H', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'dataMM-G', 'dataMM-H', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4l', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'WWW', 'WWZ', 'WZ', 'WZZ', 'ZZ', 'ZZZ'] # Jan 14 samples
 
 for mass in [120, 125, 130] :
     #azhSamples.append('ggHtoTauTau%i' % mass)
     #azhSamples.append('VBFHtoTauTau%i' % mass)
-    azhSamples.append('WMinusHTauTau%i' % mass)
-    azhSamples.append('WPlusHTauTau%i' % mass)
+    #azhSamples.append('WMinusHTauTau%i' % mass)
+    #azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHTauTau%i' % mass)
     #azhSamples.append('ttHTauTau%i' % mass)
+for mass in [125,] :
+    azhSamples.append('WMinusHTauTau%i' % mass)
+    azhSamples.append('WPlusHTauTau%i' % mass)
 
 #azhSamples = []
 for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
@@ -63,13 +66,13 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 11,
+    'numCores' : 16,
     'numFilesPerCycle' : 1,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
     #'channels' : ['eeet','eett','eemt','eeem'],
     #'channels' : ['eeee','mmmm','eemm'],
-    #'channels' : ['eett',],
+    #'channels' : ['eeet',],
     #'channels' : ['emmt',],
     #'channels' : ['eeee','eeet','eett','eemt'],
     #'cutMapper' : 'HSS',
@@ -77,17 +80,17 @@ params = {
     #'mid1' : '1Jan12redBkgOS',
     #'mid2' : '2Jan12redBkgOSnewFR',
     #'mid3' : '3Jan12redBkgOSnewFR',
-    'mid1' : '1Jan13skim',
-    'mid2' : '2Jan13skim',
-    'mid3' : '3Jan13skim',
+    'mid1' : '1Jan19newSkim',
+    'mid2' : '2Jan19newSkim',
+    'mid3' : '3Jan19newSkim',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimmed' : 'false',
-    'skimmed' : 'true',
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true',
+    'skimmed' : 'false',
+    #'skimmed' : 'true',
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -97,7 +100,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -110,7 +113,7 @@ doDataCards = True
 doMerge = False
 runPlots = False
 makeFinalPlots = False
-#doDataCards = False
+doDataCards = False
 
 
 useRedBkg = True
