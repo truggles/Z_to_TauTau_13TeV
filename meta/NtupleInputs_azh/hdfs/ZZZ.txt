@@ -1,0 +1,4 @@
+/hdfs/store/user/caillol/LLTT_jan14/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-0A1892AC-55C0-E611-8905-0CC47A5FC67D.root
+/hdfs/store/user/caillol/LLTT_jan14/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-6CDD73B9-5DC0-E611-A938-0CC47A5FC2A5.root
+/hdfs/store/user/caillol/LLTT_jan14/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-9600778C-53C0-E611-B92E-0017A4771060.root
+/hdfs/store/user/caillol/LLTT_jan14/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-EE27920F-4FC0-E611-A059-0CC47A5FC619.root
