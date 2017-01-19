@@ -161,6 +161,14 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/DoubleEG/Run2016F-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
+            'dataEE-G' : {
+                'DASPath' : '/DoubleEG/Run2016G-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataEE-H' : {
+                'DASPath' : '/DoubleEG/Run2016H-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
             'dataMM-B' : {
                 'DASPath' : '/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
@@ -179,6 +187,14 @@ def sampleDetails( analysis ) :
                 'group' : 'obs'},
             'dataMM-F' : {
                 'DASPath' : '/DoubleMuon/Run2016F-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMM-G' : {
+                'DASPath' : '/DoubleMuon/Run2016G-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMM-H' : {
+                'DASPath' : '/DoubleMuon/Run2016H-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'ZZ4l' : {

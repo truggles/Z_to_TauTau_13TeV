@@ -1,5 +1,7 @@
 
 
+echo " "
+echo " "
 echo "BASED OFF OF CECILE'S /hdfs/store/user/caillol/SMHTT_aug16_v2 SUBMIT"
 #export LUMI=21000.0
 export LUMI=12900.0
@@ -14,6 +16,13 @@ echo "Using ICHEP"
 
 #export doFF=True
 export doFF=False
+echo " "
 echo "Setting Fake Factor Method to: $doFF"
 echo " "
 echo " "
+
+
+export PYTHONPATH=$PYTHONPATH:$CMSSW_BASE/src/Z_to_TauTau_13TeV/
+
+
+
