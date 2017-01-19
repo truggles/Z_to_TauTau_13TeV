@@ -6,6 +6,7 @@ from util.helpers import returnSortedDict, getProdMap
 from util.azhReducibleBackgroundHelpers import \
     getRedBkgCutsAndWeights, getChannelSpecificFinalCuts, \
     getRedBkgShape
+import os
 
 
 
@@ -118,6 +119,78 @@ def HighPtTauWeight( var ) :
 
 
 
+# Append the correction cuts for Fake Factors
+# this includes the MC based coin flip
+# and isolation cuts which were removed in
+# makeFinalCutsAndPlots.py for convenience
+#FIXME direct link to their documentation
+# see: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauJet2TauFakes
+# At the moment VTight is hardcoded here
+#
+# New (Oct 30, 2016) each sample (data included)
+# will have 2 versions of each histo, signal region
+# with normal filling for data, and a gen_match
+# requirement for MC.  And, an anti-isolated region
+# with histos filled using FF method
+# anti-isolated histos are for subtracting from
+# signal region histos later
+def getFFCutsAndWeights( ffRegion, isData, outFile ) :
+
+    fName = outFile.GetName()
+    # Removing the coin flip method, this was discussed at
+    # Add a factor of 0.5 to account for this removal
+    # the FF workshop in early Oct
+
+    dataSignalIsolation = '*(byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)'
+    # mcSignalIsolation fills histso with a weight of 0.5 for each "non-fake" tau
+    mcSignalIsolation = '*(byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5)*((gen_match_1 < 6) * 0.5 + (gen_match_2 < 6) * 0.5)'
+    dataFFIsolation = '*((byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && byVLooseIsolationMVArun2v1DBoldDMwLT_2 > 0.5) || (byTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVLooseIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5))*(0.5)' # 0.5 for replacing the coin flip
+    mcFFIsolation = '*((byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && byVLooseIsolationMVArun2v1DBoldDMwLT_2 > 0.5 && gen_match_2 < 6) || (byTightIsolationMVArun2v1DBoldDMwLT_1 < 0.5 && byVLooseIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5 && gen_match_1 < 6))*(0.5)' # 0.5 for replacing the coin flip, the two different isolation configurations are orthogonal so we don't need to weight based on the gen_match like in mcSignalIsolation
+
+    if ffRegion == 'signal' :
+        if isData or 'QCD' in fName and 'tt' in fName :
+            return dataSignalIsolation
+        else : # not data
+            return mcSignalIsolation
+    if ffRegion == 'anti-iso' :
+        if isData or 'QCD' in fName and 'tt' in fName :
+            return dataFFIsolation
+        else : # not data
+            return mcFFIsolation
+
+
+### Fake Factor shape systematics
+def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
+
+    app = ''
+
+    fName = outFile.GetName()
+    # Check if FF sample
+    # this one pick up the QCD made from 'data' samples
+    # and also provides the weight for the MC jet->tau
+    # subtraction
+    if ('QCD' in fName and 'tt' in fName) or ffRegion == 'anti-iso' :
+
+        # Choose appropriate weight for the category
+        if   'ZTT0jet' in fName     : app = "FFWeightQCD0Jet"
+        elif 'ZTTBoosted' in fName  : app = "FFWeightQCDBoosted"
+        elif 'ZTTVBF' in fName      : app = "FFWeightQCDVBF"
+        else                        : app = "FFWeightQCDInc"
+
+        # Check if a FF shape variable
+        if '_ffStatUp' in var   : app += '_StatUP'
+        if '_ffStatDown' in var : app += '_StatDOWN'
+        if '_ffSystUp' in var   : app += '_SystUP'
+        if '_ffSystDown' in var : app += '_SystDOWN'
+
+        # Wrap appropriately
+        app = "*("+app+")"
+
+    # Return an empty string or appropriate FF Shape syst
+    return app
+
+
+
 # Plot histos using TTree::Draw which works very well with Proof
 def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False ) :
 
@@ -150,6 +223,26 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
+
+
+    ### Check if we intend to do Fake Factor based MC cuts
+    ### These differ because of requiring a random choice
+    ### of l1 and l2, then seeing if l1 is gen matched
+    ### to anything besides a fake/jet
+    ### This is only applied for DYJets, WJets, TT, and QCD MC
+
+    ### Check if doFF is turned on and, if so, double
+    ### our output histograms to account for the
+    ### required subtractions
+    doFF = os.getenv('doFF')
+    if doFF == 'True' :
+        tmpDict = {}
+        for var, info in newVarMap.iteritems() :
+            tmpDict[var] = info
+            tmpDict[var+'_ffSub'] = info
+        newVarMap = returnSortedDict( tmpDict )
+
+
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
         print var
@@ -257,6 +350,16 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 #print additionalCutToUse+"\n"
 
 
+        # This addes the Fake Factor shape systematics weights
+        # And add the variable specific Fake Factor cut
+        # (isolation and gen match change per variable def)
+        ffShapeSyst = ''
+        if doFF :
+            ffRegion = 'anti-iso' if '_ffSub' in var else 'signal'
+            ffShapeSyst += getFFShapeSystApp( ffRegion, isData, outFile, var )
+            ffShapeSyst += getFFCutsAndWeights( ffRegion, isData, outFile )
+
+
         if ":" in var :
     	    histos[ var ] = make2DHisto( var )
         else :
@@ -277,7 +380,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst) 
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst, ffShapeSyst) 
         #print totalCutAndWeightMC
 
 
@@ -342,7 +445,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
-                chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s' % (additionalCutToUse, dataES) )
+                chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
                 if var == 'm_vis' :
                     print 'm_vis'
@@ -411,8 +514,8 @@ def getHistoDict( analysis, channel ) :
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'pt_1:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'], # unrolling pt_1 provides nothing
             #'mt_sv_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
             #'mt_tot_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
@@ -431,17 +534,28 @@ def getHistoDict( analysis, channel ) :
             varsForShapeSyst.append( item )
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
-        shapesToAdd = {'energyScale':'TES',
-                    'zPt':'Z p_{T}/Mass Reweight',
+        shapesToAdd = {
+              #      'energyScale':'TES',
+              #      'zPt':'Z p_{T}/Mass Reweight',
                     #'metResponse':'Met Response',
                     #'metResolution':'Met Resolution',
                     #'tauPt':'High P_{T} Tau',
-                    'topPt':'Top P_{T} Reweight',
-                    'JES' : 'Jet Energy Scale',
-                    'JetToTau' : 'Jet to Tau Fake',
-                    'ggH' : 'ggH Scale',
-                    'Zmumu' : 'Z mumu DY Reweight',
+              #      'topPt':'Top P_{T} Reweight',
+              #      'JES' : 'Jet Energy Scale',
+              #      'JetToTau' : 'Jet to Tau Fake',
+              #      'ggH' : 'ggH Scale',
+              #      'Zmumu' : 'Z mumu DY Reweight',
                     }
+
+        # Add FF shape systs if doFF
+      #  doFF = os.getenv('doFF')
+      #  if doFF == 'True' :
+      #      shapesToAdd['ffSyst'] = 'FF Syst'
+      #      shapesToAdd['ffStat'] = 'FF Stat'
+
+
+
+
         for var in genVarMap.keys() :
             if var in varsForShapeSyst :
                 for shape, app in shapesToAdd.iteritems() :

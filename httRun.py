@@ -66,7 +66,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 12,
+    'numCores' : 18,
     'numFilesPerCycle' : 1,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
@@ -74,9 +74,9 @@ params = {
     #'cutMapper' : 'fakeFactorCutsTT',
     #'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
-    'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
-    #'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
-    'mid1' : '11Nov03newTauIDSF', # used for freezing plots
+    #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
+    'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
+#    'mid1' : '11Nov03newTauIDSF', # used for freezing plots
     ###'mid2' : '21Nov03newTauIDSF',
     ###'mid3' : '31Nov03newTauIDSF',
     ###'mid2' : '2Nov16ggHScale',
@@ -85,11 +85,11 @@ params = {
     #'mid3' : '3Nov21zmumu', # Official pre-approval 2d DCs
     ###'mid2' : '2Dec08somePlots', # pre-approval checks 
     ###'mid3' : '3Dec08somePlots', # pre-approval checks
-    'mid2' : '2Jan16test',
-    'mid3' : '3Jan16test',
-    #'mid1' : '11Nov04qcdSyst', # used for QCD Method Uncertainties
-    #'mid2' : '21Nov04qcdSyst',
-    #'mid3' : '31Nov04qcdSyst',
+#    'mid2' : '2Jan16test',
+#    'mid3' : '3Jan16test',
+    'mid1' : '1Jan18ffTest',
+    'mid2' : '2Jan18ffTest',
+    'mid3' : '3Jan18ffTest',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -123,15 +123,16 @@ runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+#makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', '0jet2D', 'boosted','VBF',]
-cats = ['0jet2D', 'boosted','VBF',]
+#cats = ['0jet2D', 'boosted','VBF',]
+#cats = ['inclusive',]
 pt = '5040'
 #sync = True
 sync = False
@@ -140,6 +141,8 @@ cleanPlots = True
 #isoVals = ['Tight', 'Medium', 'Loose',]
 #isoVals = ['Tight', 'Loose',]
 isoVals = ['Tight',]
+doFF = os.getenv('doFF')
+
 
 for isoVal in isoVals :
     if isoVal == 'Tight' : lIso = 'Loose'
@@ -156,6 +159,12 @@ for isoVal in isoVals :
         """ Make our folders with directories of histos for each bkg """
         subprocess.call( process )
     
+    if doFF == 'True' :
+        for sample in samples.keys() :
+            if 'data' in sample :
+                era = sample.split('-')[1]
+                samples[ 'QCD-'+era ] = {'group' : 'jetFakes'}
+    samplesX = copy.deepcopy(samples)
        
     if makeQCDBkg :    
         qcdYields = {}
@@ -187,15 +196,18 @@ for isoVal in isoVals :
         from util.helpers import getQCDSF, checkDir
         for cat in cats :
             ROOT.gROOT.Reset()
-            qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
             tDir = cat
             blind = True
             if cat in ['inclusive', '0jet', '1jet'] :
                 blind = False
             
-            kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
-                'useQCDMakeName':'OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat, 'qcdSF':qcdSF,
-                'targetDir':'/'+tDir,'sync':sync }
+            if doFF == 'True' :
+                kwargs = { 'text':text, 'blind':blind, 'targetDir':'/'+tDir,'sync':sync }
+            else :
+                qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
+                kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
+                    'useQCDMakeName':'OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat, 'qcdSF':qcdSF,
+                    'targetDir':'/'+tDir,'sync':sync }
             analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                 params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
             cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s" % params['mid2'].strip('2')
@@ -213,32 +225,42 @@ for isoVal in isoVals :
                 if var == 'm_vis' and cat in ['boosted','VBF','0jet2D'] : continue
                 if cat == 'boosted' : var = 'pt_sv:m_sv'
                 if cat == 'VBF' : var = 'mjj:m_sv'
-                qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                 finalCat = cat
-                folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
-                kwargs = {
-                'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
-                'qcdSF' : qcdSF,
-                'category' : finalCat,
-                #'fitShape' : 'm_vis',
-                'fitShape' : var,
-                'allShapes' : True,
-                'sync' : sync,
-                }
-                makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                if doFF == 'True' :
+                    folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
+                    kwargs = {
+                    'category' : finalCat,
+                    'fitShape' : var,
+                    'allShapes' : True,
+                    'sync' : sync,
+                    }
+                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                else :
+                    qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
+                    folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
+                    kwargs = {
+                    'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
+                    'qcdSF' : qcdSF,
+                    'category' : finalCat,
+                    #'fitShape' : 'm_vis',
+                    'fitShape' : var,
+                    'allShapes' : True,
+                    'sync' : sync,
+                    }
+                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
 
-                # Make OS Loose QCD CR
-                folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
-                kwargs = {
-                'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
-                'qcdSF' : qcdSF,
-                'category' : finalCat+'_qcd_cr',
-                #'fitShape' : 'm_vis',
-                'fitShape' : var,
-                'allShapes' : True,
-                'sync' : sync,
-                }
-                makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                    # Make OS Loose QCD CR
+                    folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
+                    kwargs = {
+                    'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
+                    'qcdSF' : qcdSF,
+                    'category' : finalCat+'_qcd_cr',
+                    #'fitShape' : 'm_vis',
+                    'fitShape' : var,
+                    'allShapes' : True,
+                    'sync' : sync,
+                    }
+                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )

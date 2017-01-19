@@ -42,6 +42,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
              ops[key] = kwargs[key]
     print ops
 
+    # Use FF built QCD backgrounds
+    doFF = os.getenv('doFF')
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
@@ -68,7 +70,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for dyJet in dyJets :
             if dyJet in samples.keys() :
                 del samples[ dyJet ]
-        samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
+        if not doFF == 'True' :
+            samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
         # Don't plot sm higgs 120, 130
         smHiggs = ['ggHtoTauTau120', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau130']
@@ -157,6 +160,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         signal = 'VH'
         signalSF = higgsSF
         sampInfo['azh']['VH'][1] = "SM VHiggs(125) x %.1f" % higgsSF
+    if doFF == 'True' :
+        sampInfo['htt']['jetFakes'] = [ROOT.TColor.GetColor(250,202,255), 'jetFakes'] #kMagenta-10
+        del sampInfo['htt']['qcd']
     
     
     for channel in channels :
@@ -177,6 +183,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
         newVarMapUnsorted = analysisPlots.getHistoDict( analysis, channel )
         newVarMap = returnSortedDict( newVarMapUnsorted )
+
+        if doFF == 'True' :
+            tmpDict = {}
+            for var, info in newVarMap.iteritems() :
+                tmpDict[var] = info
+                tmpDict[var+'_ffSub'] = list(info)
+                tmpDict[var+'_ffSub'][4] += ' FF Sub'
+            newVarMap = returnSortedDict( tmpDict )
     
         finalQCDYield = 0.0
         finalDataYield = 0.0
@@ -255,6 +269,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 xBins = array( 'd', [] )
                 for i in range( 21 ) :
                     xBins.append( i * 17.5 )
+            # This is the proposed binning for ZTT 2015 paper
+            elif doFF == 'True' and ('m_sv' in var or 'm_vis' in var) :
+                xBins = array( 'd', [i*10 for i in range( 31 )] )
             elif 'm_sv' in var or 'm_vis' in var :
                 if is1JetCat :
                     xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
@@ -337,14 +354,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if channel == 'em' and '-ZJ' in sample : continue
                 if channel == 'em' and '-ZL' in sample and not '-ZLL' in sample : continue
                 if ops['qcdMC'] and sample == 'QCD' : continue
-                if not ops['qcdMC'] and 'QCD' in sample and '-' in sample : continue
+                #if not ops['qcdMC'] and 'QCD' in sample and '-' in sample : continue # Why was this line here? QCD pt binned MC???
     
                 #if var == 'm_vis' : print sample
                 #print '%s2IsoOrderAndDups/%s_%s.root' % (analysis, sample, channel)
     
                 if 'QCD' in sample :
                     #print "qcd in sample",sample
-                    if ops['useQCDMakeName'] != 'x'  :
+                    if doFF == 'True' :
+                        tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                    elif ops['useQCDMakeName'] != 'x'  :
                         fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
                         #print fName 
                         tFile = ROOT.TFile(fName, 'READ')
@@ -375,7 +394,50 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     print "\n"+getVar+" not in your root files!  Skipping...\n"
                     continue
 
-                preHist = dic.Get( getVar )
+
+
+                ''' Special ZTT scaling for DYJets -> ZTT samples '''
+                zttScaleTable = {
+                    'inclusive' : 1.0,
+                    'inclusiveSS' : 1.0,
+                    '0jet' : 1.0,
+                    '1jet' : 1.0,
+                    '2jet' : 1.0,
+                    '1jet_low' : 1.0,
+                    '1jet_medium' : 1.0,
+                    '1jet_high' : 1.0,
+                    '2jet_vbf' : 1.2,
+                    '1bjet' : 1.2,
+                    '2bjet' : 1.4,
+                }
+                """ Do the Fake Factor MC - jet->tau fake MC here """
+                if doFF == 'True' :
+                    if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
+                        preHist = dic.Get( getVar )
+                        if not '_ffSub' in getVar :
+                            ffSubHist = dic.Get( getVar+'_ffSub' )
+                            #print sample," FF Sub int",ffSubHist.Integral()
+                            ffSubHist2 = ffSubHist.Rebin( xNum, "rebinned", xBins )
+                            if varBinned :
+                                ffSubHist2.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
+                            else :
+                                ffSubHist2.GetXaxis().SetRangeUser( info[1], info[2] )
+                            #if "DYJets" in sample and "ZTT" in sample :
+                            #    ffSubHist2.Scale( zttScaleTable[dirCode] )
+                            sampHistos[ 'jetFakes' ].Add( ffSubHist2, -1.0 )
+                            #print "FFSub Int ",sample,sampHistos[ 'jetFakes' ].Integral()
+                    # QCD takes shape and yield from anti-isolated
+                    # the +'_ffSub' is already appended to getVar
+                    elif 'QCD' in sample :
+                        if not '_ffSub' in getVar :
+                            preHist = dic.Get( getVar+'_ffSub' )
+                        else :
+                            preHist = dic.Get( getVar )
+                    # Data and all other MC treated normally
+                    else :
+                        preHist = dic.Get( getVar )
+                else :
+                    preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
 
                 if ops['redBkg'] and 'RedBkgShape' in sample :
@@ -408,9 +470,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 0 ), hist.GetBinLowEdge( nBins+1 ))
     
     
-                #if samples[ sample ]['group'] == 'qcd' :
-                #    print "qcd Stack yield: %f" % hist.Integral()
                 sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                #if samples[ sample ]['group'] == 'jetFakes' :
+                #    print "jetFakes Stack yield: %f" % hist.Integral()
+                #    print "%s int: %.2f" % (sample, sampHistos[ samples[ sample ]['group'] ].Integral() )
                 tFile.Close()
     
 
@@ -432,7 +495,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             # Some specific HTT stuff
             if analysis == 'htt' :
-                if not qcdMake :
+                if doFF == 'True' :
+                    stack.Add( sampHistos['jetFakes'] )
+                elif not qcdMake :
                     #print "Adding QCD: ",sampHistos['qcd'].Integral()
                     stack.Add( sampHistos['qcd'] )
                 stack.Add( sampHistos['ttbar'] )
@@ -487,6 +552,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """
             uncertNormMap = { 'htt' : {
                 'qcd' : .20,
+                'jetFakes' : .0,
                 'ttbar' : .15,
                 'dib' : .10,
                 'wjets' : .10,

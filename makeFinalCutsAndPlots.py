@@ -29,7 +29,7 @@ samples = options.samples
 print "Options Skimmed:",skimmed
 print "samples: ",samples
 
-def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
+def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF='False' ) :
     if folder == 'xxx' :
         print "ERROR: Folder was not choosen"
         return
@@ -80,6 +80,11 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign ) :
         isoL1ML2loose = isoL2loose
         isoL1LL2loose = isoL2loose
         isoL1VTL2loose = isoL2loose
+
+    # If doing Fake Factors, we will add isolation cuts later
+    # for convenience
+    if doFF == 'True' : isoL1ML2loose = '(1)'
+
     if sign == 'OS' :
         Zsign = 0
     else : 
@@ -260,9 +265,19 @@ if __name__ == '__main__' :
         ('',isoVal), # Normal running
     ]
 
-    for pair in isoPairs :
-        for sign in ['OS', 'SS']:
-            testQCDCuts( folder, samples, isoVal, pair[0], pair[1], sign )
+    ### Check if we intend to do Fake Factor based MC cuts
+    ### These differ because of requiring a random choice
+    ### of l1 and l2, then seeing if l1 is gen matched
+    ### to anything besides a fake/jet
+    ### This is only applied for DYJets, WJets, TT, and QCD MC
+    doFF = os.getenv('doFF')
+    if doFF == 'True' :
+        # The '' in the following line gives us the signal region
+        testQCDCuts( folder, samples, isoVal, '', isoVal, 'OS', doFF )
+    else :
+        for pair in isoPairs :
+            for sign in ['OS', 'SS']:
+                testQCDCuts( folder, samples, isoVal, pair[0], pair[1], sign )
 
 #XXX    testQCDCuts( folder, '', 'VTight', 'OS' )
 

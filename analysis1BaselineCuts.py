@@ -10,6 +10,7 @@ import multiprocessing
 import math
 from ROOT import gPad, gROOT
 from util.helpers import checkDir
+import os
 
 
 
@@ -175,6 +176,13 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
     isoQty = renameBranches( analysis, mid1, mid2, save, channel, count )
+
+    ### FF values for data events
+    doFF = os.getenv('doFF')
+    if doFF == 'True' and channel == 'tt' :
+        from util.applyFakeFactors import fillFakeFactorValues
+        fillFakeFactorValues( analysis, mid2, save, channel )
+
     #output.put( '%s%s/%s.root' % (analysis, mid2, save) )
     print "%5i %20s %10s %3i: Finished Iso Ordering" % (num, sample, channel, count)
 
@@ -198,7 +206,6 @@ def doInitialCuts(analysis, samples, **fargs) :
     pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
     multiprocessingOutputs = []
 
-    import os
     if fargs[ 'svFitPrep' ] == 'true' :
 	checkDir( '/data/truggles/svFitPrep/%s%s' % (analysis, fargs[ 'mid1']) )
     if fargs[ 'skimHdfs' ] == 'true' :
@@ -464,6 +471,7 @@ def drawHistos(analysis, samples, **fargs ) :
 
         # the gen matching samples are: based off of the DYJets samples
         loopList = []
+        doFF = os.getenv('doFF')
         if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
@@ -472,9 +480,9 @@ def drawHistos(analysis, samples, **fargs ) :
             genList = ['TTT', 'TTJ']
             loopList = genList
             loopList.append( sample ) 
-        elif 'data' in sample and fargs['doFRMthd'] == 'true' :
+        elif 'data' in sample and doFF == 'True' :
             loopList.append( sample )
-            loopList.append( 'QCD' )
+            loopList.append( 'QCD-'+sample.split('-')[1] )
         elif 'data' in sample and analysis == 'azh' :
             loopList.append( sample )
             loopList.append( 'RedBkgYield-'+sample.split('-')[1] )
@@ -489,6 +497,7 @@ def drawHistos(analysis, samples, **fargs ) :
             #print "SubName:",subName
             if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
             elif 'RedBkg' in subName and 'data' in sample : saveName = subName
+            elif 'QCD' in subName and 'data' in sample and doFF == 'True' : saveName = subName
             elif subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
             else : saveName = sample.split('_')[0]
             
@@ -518,7 +527,7 @@ def drawHistos(analysis, samples, **fargs ) :
                 if 'data' in sample : isData = True
                 else : isData = False
                 additionalCut = fargs['additionalCut']
-                if subName != sample and 'RedBkg' not in subName : 
+                if subName != sample and 'RedBkg' not in subName and 'QCD-' not in subName : 
                     if genMap[subName][channel] == '' : continue
                     if additionalCut == '' : additionalCut = genMap[subName][channel] 
                     else : additionalCut += genMap[subName][channel] 
