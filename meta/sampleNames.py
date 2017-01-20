@@ -64,6 +64,14 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
+            'dataTT-G' : {
+                'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataTT-H' : {
+                'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
             'EWKWMinus' :   { 
                 'DASPath' : '/EWKWMinus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/%s-v2/MINIAODSIM' % c80xMAOD2,
                 'xsec' : 20.25,
@@ -430,6 +438,11 @@ def sampleDetails( analysis ) :
             'ttHTauTau130' : {
                 'DASPath' : '/ttHJetToTT_M130_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
                 'xsec' : 0.454 * 0.0545,
+                'group' : 'VH'},
+
+            'HtoWW2l2nu125' : {
+                'DASPath' : 'XXX/ttHJetToTT_M130_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
+                'xsec' : 999,
                 'group' : 'VH'},
 	} # end SM-Higgs
     } # end sample Map
