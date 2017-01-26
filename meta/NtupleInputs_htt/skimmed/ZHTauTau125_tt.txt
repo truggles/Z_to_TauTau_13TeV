@@ -1,2 +1,1 @@
-/data/truggles/nov02-SMHTT-svFit/ZHTauTau125_0_tt.root
-/data/truggles/nov02-SMHTT-svFit/ZHTauTau125_1_tt.root
+/data/truggles/httJan25skimHTT_JESMerged/ZHTauTau125_0_tt.root

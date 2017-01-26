@@ -1,7 +1,1 @@
-/data/truggles/nov02-SMHTT-svFit/ZZ2l2q_0_tt.root
-/data/truggles/nov02-SMHTT-svFit/ZZ2l2q_1_tt.root
-/data/truggles/nov02-SMHTT-svFit/ZZ2l2q_2_tt.root
-/data/truggles/nov02-SMHTT-svFit/ZZ2l2q_3_tt.root
-/data/truggles/nov02-SMHTT-svFit/ZZ2l2q_4_tt.root
-/data/truggles/nov02-SMHTT-svFit/ZZ2l2q_5_tt.root
-/data/truggles/nov02-SMHTT-svFit/ZZ2l2q_6_tt.root
+/data/truggles/httJan25skimHTT_JESMerged/ZZ2l2q_0_tt.root

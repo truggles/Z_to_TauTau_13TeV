@@ -1,4 +1,1 @@
-/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_0_tt.root
-/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_1_tt.root
-/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_2_tt.root
-/data/truggles/nov02-SMHTT-svFit/VBFHtoTauTau125_3_tt.root
+/data/truggles/httJan25skimHTT_JESMerged/VBFHtoTauTau125_0_tt.root

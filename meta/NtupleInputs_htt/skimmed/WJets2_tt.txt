@@ -1,2 +1,1 @@
-/data/truggles/nov02-SMHTT-svFit/WJets2_0_tt.root
-/data/truggles/nov02-SMHTT-svFit/WJets2_1_tt.root
+/data/truggles/httJan25skimHTT_JESMerged/WJets2_0_tt.root

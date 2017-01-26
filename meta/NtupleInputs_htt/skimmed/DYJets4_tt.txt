@@ -1,3 +1,1 @@
-/data/truggles/nov02-SMHTT-svFit/DYJets4_0_tt.root
-/data/truggles/nov02-SMHTT-svFit/DYJets4_1_tt.root
-/data/truggles/nov02-SMHTT-svFit/DYJets4_2_tt.root
+/data/truggles/httJan25skimHTT_JESMerged/DYJets4_0_tt.root

@@ -1,1 +1,1 @@
-/data/truggles/nov02-SMHTT-svFit/WMinusHTauTau125_0_tt.root
+/data/truggles/httJan25skimHTT_JESMerged/WMinusHTauTau125_0_tt.root

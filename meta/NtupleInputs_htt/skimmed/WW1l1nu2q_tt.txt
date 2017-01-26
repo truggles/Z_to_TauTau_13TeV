@@ -1,1 +1,1 @@
-/data/truggles/nov02-SMHTT-svFit/WW1l1nu2q_0_tt.root
+/data/truggles/httJan25skimHTT_JESMerged/WW1l1nu2q_0_tt.root
