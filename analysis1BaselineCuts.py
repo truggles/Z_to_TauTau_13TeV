@@ -111,6 +111,7 @@ def initialCut( outFile, analysis, sample, samples, channel, cutMapper, svFitPre
         isReHLT = True
         if analysis == 'Sync' : isReHLT = False # Want to keep trigger cut out for now
     cutString = analysisCuts.getCut( analysis, channel, cutMapper, isData, isReHLT )
+    #print cutString
     	
     ''' Copy and make some cuts while doing it '''
     ROOT.gROOT.cd() # This makes copied TTrees get written to general ROOT, not our TFile

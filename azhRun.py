@@ -55,6 +55,7 @@ for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
 #azhSamples=['ZZ4lAMCNLO',]
 #azhSamples=['dataEE-D',]
 #azhSamples=['azh300',]
+azhSamples=['ZHTauTau125',]
 #azhSamples=['ggZZ4m','ggZZ2m2tau']
 samples = azhSamples
 
@@ -72,25 +73,26 @@ params = {
     'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
     #'channels' : ['eeet','eett','eemt','eeem'],
     #'channels' : ['eeee','mmmm','eemm'],
-    #'channels' : ['eeet',],
+    'channels' : ['eemt',],
     #'channels' : ['emmt',],
     #'channels' : ['eeee','eeet','eett','eemt'],
     #'cutMapper' : 'HSS',
     'cutMapper' : 'Skim',
+    'cutMapper' : 'Sync2',
     #'mid1' : '1Jan12redBkgOS',
     #'mid2' : '2Jan12redBkgOSnewFR',
     #'mid3' : '3Jan12redBkgOSnewFR',
-    'mid1' : '1Jan19newSkim',
-    'mid2' : '2Jan19newSkim',
-    'mid3' : '3Jan19newSkim',
+    'mid1' : '1Jan20sync',
+    'mid2' : '2Jan20sync',
+    'mid3' : '3Jan20sync',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
     'skimmed' : 'false',
     #'skimmed' : 'true',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -101,7 +103,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True

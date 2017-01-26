@@ -186,18 +186,18 @@ def getIso( cand, row ) :
         return getattr(row, cand+'ByIsolationMVArun2v1DBoldDMwLTraw' )
                     
 
-def getCurrentEvt( channel, row ) :
+def getCurrentEvt( analysis, channel, row ) :
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
     leg1Iso = getIso( l1, row )
     leg2Iso = getIso( l2, row )
     leg1Pt = getattr(row, l1+'Pt')
     leg2Pt = getattr(row, l2+'Pt')
-    sign = ''
-    if getattr(row, '%s_%s_SS' % (l1,l2)) == 1 : sign = 'SS'
-    if getattr(row, '%s_%s_SS' % (l1,l2)) == 0 : sign = 'OS'
+    if analysis == 'htt' and channel == 'tt' :
+        sign = ''
+        if getattr(row, '%s_%s_SS' % (l1,l2)) == 1 : sign = 'SS'
+        if getattr(row, '%s_%s_SS' % (l1,l2)) == 0 : sign = 'OS'
 
-    if channel == 'tt' :
         if leg1Iso > leg2Iso :
             currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
         elif leg1Iso < leg2Iso :
@@ -207,7 +207,16 @@ def getCurrentEvt( channel, row ) :
         elif leg1Pt < leg2Pt :
             currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt, sign)
         else : print "Iso1 == Iso2 & Pt1 == Pt2", row.evt
+    elif analysis == 'azh' :
+        l3 = prodMap[channel][2]
+        l4 = prodMap[channel][3]
+        leg3Pt = getattr(row, l3+'Pt')
+        leg4Pt = getattr(row, l4+'Pt')
+        closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
+        LT = leg1Pt +leg2Pt + leg3Pt + leg4Pt
+        currentEvt = (closeZ, LT)
     else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
+
     return currentEvt
 
 
@@ -556,7 +565,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         lumi = int( row.lumi )
         evt = int( row.evt )
         
-        currentEvt = getCurrentEvt( channel, row )
+        currentEvt = getCurrentEvt( analysis, channel, row )
         currentRunLumiEvt = (run, lumi, evt)
         if count == 0 :
             prevRunLumiEvt = currentRunLumiEvt
@@ -582,7 +591,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         Iso sorting is channel specific b/c tt uses MVA iso
         where are high value == good isolation
         """
-        if channel == 'tt' :
+        if analysis == 'htt' and channel == 'tt' :
             # OS has preference over SS regardless of iso and pt
             #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
             #    prevEvt = currentEvt
@@ -604,6 +613,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         # highest pt_2
                         if currentEvt[ 3 ] > prevEvt[ 3 ] :
                             prevEvt = currentEvt
+        elif analysis == 'azh' :
+            # closest Z to Z mass top priority, then highest total LT
+            if currentEvt[ 0 ] < prevEvt[ 0 ] :
+                prevEvt = currentEvt
+            elif currentEvt[ 0 ] == prevEvt[ 0 ] :
+                if currentEvt[ 1 ] > prevEvt[ 1 ] :
+                    prevEvt = currentEvt
         else :
             # OS has preference over SS regardless of iso and pt
             #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
@@ -829,7 +845,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         if evt < 0 :
             print "\n\n\n BIG \n\n TROUBLE \n\n EVT: %i   Sample: %s \n\n\n\n" % (evt, sample)
         
-        currentEvt = getCurrentEvt( channel, row )
+        currentEvt = getCurrentEvt( analysis, channel, row )
         currentRunLumiEvt = (run, lumi, evt)
 
         
