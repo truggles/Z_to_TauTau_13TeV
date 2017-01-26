@@ -183,8 +183,8 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
     isoQty = renameBranches( analysis, mid1, mid2, save, channel, count )
 
     ### FF values for data events
-    doFF = os.getenv('doFF')
-    if doFF == 'True' and channel == 'tt' :
+    doFF = bool(os.getenv('doFF'))
+    if doFF and channel == 'tt' :
         from util.applyFakeFactors import fillFakeFactorValues
         fillFakeFactorValues( analysis, mid2, save, channel )
 
@@ -476,7 +476,7 @@ def drawHistos(analysis, samples, **fargs ) :
 
         # the gen matching samples are: based off of the DYJets samples
         loopList = []
-        doFF = os.getenv('doFF')
+        doFF = bool(os.getenv('doFF'))
         if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
@@ -485,7 +485,7 @@ def drawHistos(analysis, samples, **fargs ) :
             genList = ['TTT', 'TTJ']
             loopList = genList
             loopList.append( sample ) 
-        elif 'data' in sample and doFF == 'True' :
+        elif 'data' in sample and doFF :
             loopList.append( sample )
             loopList.append( 'QCD-'+sample.split('-')[1] )
         elif 'data' in sample and analysis == 'azh' :
@@ -502,7 +502,7 @@ def drawHistos(analysis, samples, **fargs ) :
             #print "SubName:",subName
             if subName == 'QCD' and 'data' in sample : saveName = 'QCD'
             elif 'RedBkg' in subName and 'data' in sample : saveName = subName
-            elif 'QCD' in subName and 'data' in sample and doFF == 'True' : saveName = subName
+            elif 'QCD' in subName and 'data' in sample and doFF : saveName = subName
             elif subName != sample : saveName = "%s-%s" % (sample.split('_')[0], subName)
             else : saveName = sample.split('_')[0]
             

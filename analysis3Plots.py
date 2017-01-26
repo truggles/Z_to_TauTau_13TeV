@@ -43,7 +43,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     print ops
 
     # Use FF built QCD backgrounds
-    doFF = os.getenv('doFF')
+    doFF = bool(os.getenv('doFF'))
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
@@ -70,7 +70,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for dyJet in dyJets :
             if dyJet in samples.keys() :
                 del samples[ dyJet ]
-        if not doFF == 'True' :
+        if not doFF :
             samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
         # Don't plot sm higgs 120, 130
@@ -160,7 +160,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         signal = 'VH'
         signalSF = higgsSF
         sampInfo['azh']['VH'][1] = "SM VHiggs(125) x %.1f" % higgsSF
-    if doFF == 'True' :
+    if doFF :
         sampInfo['htt']['jetFakes'] = [ROOT.TColor.GetColor(250,202,255), 'jetFakes'] #kMagenta-10
         del sampInfo['htt']['qcd']
     
@@ -184,7 +184,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         newVarMapUnsorted = analysisPlots.getHistoDict( analysis, channel )
         newVarMap = returnSortedDict( newVarMapUnsorted )
 
-        if doFF == 'True' :
+        if doFF :
             tmpDict = {}
             for var, info in newVarMap.iteritems() :
                 tmpDict[var] = info
@@ -270,7 +270,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 for i in range( 21 ) :
                     xBins.append( i * 17.5 )
             # This is the proposed binning for ZTT 2015 paper
-            elif doFF == 'True' and ('m_sv' in var or 'm_vis' in var) :
+            elif doFF and ('m_sv' in var or 'm_vis' in var) :
                 xBins = array( 'd', [i*10 for i in range( 31 )] )
             elif 'm_sv' in var or 'm_vis' in var :
                 if is1JetCat :
@@ -361,7 +361,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 if 'QCD' in sample :
                     #print "qcd in sample",sample
-                    if doFF == 'True' :
+                    if doFF :
                         tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                     elif ops['useQCDMakeName'] != 'x'  :
                         fName = 'meta/%sBackgrounds/%s_qcdShape_%s_%s.root' % (analysis, channel, folderDetails.split('_')[0], ops['useQCDMakeName'])
@@ -411,7 +411,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     '2bjet' : 1.4,
                 }
                 """ Do the Fake Factor MC - jet->tau fake MC here """
-                if doFF == 'True' :
+                if doFF :
                     if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
                         preHist = dic.Get( getVar )
                         if not '_ffSub' in getVar :
@@ -495,7 +495,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             # Some specific HTT stuff
             if analysis == 'htt' :
-                if doFF == 'True' :
+                if doFF :
                     stack.Add( sampHistos['jetFakes'] )
                 elif not qcdMake :
                     #print "Adding QCD: ",sampHistos['qcd'].Integral()

@@ -234,8 +234,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     ### Check if doFF is turned on and, if so, double
     ### our output histograms to account for the
     ### required subtractions
-    doFF = os.getenv('doFF')
-    if doFF == 'True' :
+    doFF = bool(os.getenv('doFF'))
+    if doFF :
         tmpDict = {}
         for var, info in newVarMap.iteritems() :
             tmpDict[var] = info
@@ -244,7 +244,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
     # Check for per-var adjustments later
     # Full JES shapes if doFullJES
-    doFullJES = os.getenv('doFullJES')
+    doFullJES = bool(os.getenv('doFullJES'))
 
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
@@ -341,7 +341,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             # with ~30 shifts, get the name of the shift
             jesUnc = var.strip('JES').strip('Up').strip('Down')
             if 'Up' in var :
-                if doFullJES == 'True' :
+                if doFullJES :
                     # jDeta is minimally impacted by JES shifts, so the minor adjustments are not saved atm
                     # and is negligible for mjj > 100
                     additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_Jet%sUp' % jesUnc)
@@ -352,7 +352,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnUp')
                 print additionalCutToUse+"\n"
             if 'Down' in var :
-                if doFullJES == 'True' :
+                if doFullJES :
                     additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_Jet%sDown' % jesUnc)
                     additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_Jet%sDown' % jesUnc)
                 else :
@@ -559,14 +559,14 @@ def getHistoDict( analysis, channel ) :
                     }
 
         # Add FF shape systs if doFF
-        doFF = os.getenv('doFF')
-        if doFF == 'True' :
+        doFF = bool(os.getenv('doFF'))
+        if doFF :
             shapesToAdd['ffSyst'] = 'FF Syst'
             shapesToAdd['ffStat'] = 'FF Stat'
 
         # Add Full JES shapes if doFullJES
-        doFullJES = os.getenv('doFullJES')
-        if doFullJES == 'True' :
+        doFullJES = bool(os.getenv('doFullJES'))
+        if doFullJES :
             # Remove standard JES
             if 'JES' in shapesToAdd.keys() : del shapesToAdd['JES']
             from util.jetEnergyScale import getUncerts

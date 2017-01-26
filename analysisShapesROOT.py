@@ -40,7 +40,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     print ops
 
     # Use FF built QCD backgrounds
-    doFF = os.getenv('doFF')
+    doFF = bool(os.getenv('doFF'))
 
     """ Add in the gen matched DY catagorization """
     # FIXME - do this later
@@ -112,7 +112,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         for era in eras :
             samples['RedBkgShape-%s' % era] = 'RedBkg'
 
-    if doFF == 'True' :
+    if doFF :
         samples['QCD'] = 'jetFakes'
     
     # Remove samples which are not part of input samples
@@ -210,7 +210,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             if ops['allShapes'] :
                 print "All Shapes Applied: %s" % var
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
-                if doFF == 'True' :
+                if doFF :
                     if not (('_energyScale' in var) or ('_zPt' in var) or\
                             ('_ffSyst' in var) or ('_ffStat' in var) or ('_topPt' in var) or\
                             ('_metResponse' in var) or ('_metResolution' in var)\
@@ -266,7 +266,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             elif ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
             # This is the proposed binning for ZTT 2015 paper
-            elif doFF == 'True' and ('m_sv' in var or 'm_vis' in var) :
+            elif doFF and ('m_sv' in var or 'm_vis' in var) :
                 binArray = array( 'd', [i*10 for i in range( 31 )] )
             else :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
@@ -312,21 +312,21 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ] = ROOT.TH1D( name+'ggHUp', name+'ggHUp', numBins, binArray )
                     elif '_ggHDown' in var :
                         histos[ name ] = ROOT.TH1D( name+'ggHDown', name+'ggHDown', numBins, binArray )
-                    elif '_ffSystUp' in var and doFF == 'True' :
+                    elif '_ffSystUp' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'ffSystUp', name+'ffSystUp', numBins, binArray )
-                    elif '_ffSystDown' in var and doFF == 'True' :
+                    elif '_ffSystDown' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'ffSystDown', name+'ffSystDown', numBins, binArray )
-                    elif '_ffStatUp' in var and doFF == 'True' :
+                    elif '_ffStatUp' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'ffStatUp', name+'ffStatUp', numBins, binArray )
-                    elif '_ffStatDown' in var and doFF == 'True' :
+                    elif '_ffStatDown' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'ffStatDown', name+'ffStatDown', numBins, binArray )
-                    elif '_metResponseUp' in var and doFF == 'True' :
+                    elif '_metResponseUp' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'metResponseUp', name+'metResponseUp', numBins, binArray )
-                    elif '_metResponseDown' in var and doFF == 'True' :
+                    elif '_metResponseDown' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'metResponseDown', name+'metResponseDown', numBins, binArray )
-                    elif '_metResolutionUp' in var and doFF == 'True' :
+                    elif '_metResolutionUp' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'metResolutionUp', name+'metResolutionUp', numBins, binArray )
-                    elif '_metResolutionDown' in var and doFF == 'True' :
+                    elif '_metResolutionDown' in var and doFF :
                         histos[ name ] = ROOT.TH1D( name+'metResolutionDown', name+'metResolutionDown', numBins, binArray )
                     else :
                         histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
@@ -356,7 +356,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if ops['useQCDMakeName'] != 'x'  :
                         print "Use QCD MAKE NAME: ",ops['useQCDMakeName']
                         tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['useQCDMakeName']), 'READ')
-                    elif doFF == 'True' :
+                    elif doFF :
                         tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
                         print " \n### Using Fake Factor QCD Shape !!! ###\n"
                     else :
@@ -369,9 +369,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
     
                 dic = tFile.Get("%s_Histos" % channel )
-                if not doFF == 'True' :
+                if not doFF :
                     hist = dic.Get( "%s" % var )
-                if doFF == 'True' :
+                if doFF :
                     if sample == 'QCD' :
                         hist = dic.Get( "%s_ffSub" % var )
                     else :
@@ -469,7 +469,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     category = ops['category'].strip('_qcd_cr')
 
                     if name in ['data_obs','QCD'] : continue 
-                    if name == 'jetFakes' and not doFF == 'True' : continue
+                    if name == 'jetFakes' and not doFF : continue
                     if name == 'jetFakes' and not ('_ffSyst' in var or '_ffStat' in var) : continue
                     if '_ggH' in var and not name in ['ggH120','ggH125','ggH130'] : continue
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ'] : continue

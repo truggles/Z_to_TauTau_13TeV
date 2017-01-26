@@ -29,7 +29,7 @@ samples = options.samples
 print "Options Skimmed:",skimmed
 print "samples: ",samples
 
-def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF='False' ) :
+def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     if folder == 'xxx' :
         print "ERROR: Folder was not choosen"
         return
@@ -83,7 +83,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF='False' ) :
 
     # If doing Fake Factors, we will add isolation cuts later
     # for convenience
-    if doFF == 'True' : isoL1ML2loose = '(1)'
+    if doFF : isoL1ML2loose = '(1)'
 
     if sign == 'OS' :
         Zsign = 0
@@ -122,7 +122,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF='False' ) :
 
     #### LEGACY HTT CATEGORIES ###
     higgsPtVar = 'Higgs_Pt'
-    higgsPtVar = 'pt_sv'
+    #FIXME higgsPtVar = 'pt_sv'
 #    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_low' % (sign, isoT, isoL)
 #    params['additionalCut'] = '*(Z_SS==%i)*(%s>100 && %s<170)*(jetVeto30==1 ||\
 #        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap < 1)))*%s' % (Zsign, higgsPtVar, higgsPtVar, isoL1ML2loose)
@@ -270,8 +270,8 @@ if __name__ == '__main__' :
     ### of l1 and l2, then seeing if l1 is gen matched
     ### to anything besides a fake/jet
     ### This is only applied for DYJets, WJets, TT, and QCD MC
-    doFF = os.getenv('doFF')
-    if doFF == 'True' :
+    doFF = bool(os.getenv('doFF'))
+    if doFF :
         # The '' in the following line gives us the signal region
         testQCDCuts( folder, samples, isoVal, '', isoVal, 'OS', doFF )
     else :
