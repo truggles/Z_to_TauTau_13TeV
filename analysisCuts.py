@@ -141,21 +141,21 @@ def eTight( lep ) :
     return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && LEG_PVDXY < 0.045 && LEG_PVDZ < 0.2 && LEG_IsoDB03 < 0.3 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
 
 def mBase( lep ) :
-    return 'LEG1Pt > 10 && abs(LEG1Eta) < 2.4 && LEG_PVDXY < 0.045 && LEG_PVDZ < 0.2'.replace('LEG_',lep)
+    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.4 && LEG_PVDXY < 0.045 && LEG_PVDZ < 0.2'.replace('LEG_',lep)
 def mTight( lep ) :
-    return 'LEG1Pt > 10 && abs(LEG1Eta) < 2.4 && LEG_PVDXY < 0.045 && LEG_PVDZ < 0.2 && LEG_IsoDB04 < 0.25 && LEG_PFIDLoose > 0.5'.replace('LEG_',lep)
+    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.4 && LEG_PVDXY < 0.045 && LEG_PVDZ < 0.2 && LEG_IsoDB04 < 0.25 && LEG_PFIDLoose > 0.5'.replace('LEG_',lep)
 
 def tBase( lep ) :
-    return 'LEG_Pt > 20 && abs(LEG_Eta) < 2.1 && LEG_DecayModeFinding == 1 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1'.replace('LEG_',lep)
+    return 'LEG_Pt > 20 && abs(LEG_Eta) < 2.3 && LEG_DecayModeFinding == 1 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1'.replace('LEG_',lep)
 def tTight( lep ) :
-    return 'LEG_Pt > 20 && abs(LEG_Eta) < 2.1 && LEG_ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && LEG_DecayModeFinding == 1 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1'.replace('LEG_',lep)
+    return 'LEG_Pt > 20 && abs(LEG_Eta) < 2.3 && LEG_ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5 && LEG_DecayModeFinding == 1 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1'.replace('LEG_',lep)
 def tAntiEV ( lep ) :
     return 'LEG_AgainstElectronTightMVA6 == 1'.replace('LEG_',lep)
 def tAntiMV ( lep ) :
     return 'LEG_AgainstMuonTight3 == 1'.replace('LEG_',lep)
 
 def eeTrigPt(lep1='e1', lep2='e2') :
-    return'(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path > 0 && LEG2_MatchesDoubleE23_12Path > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    return '(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path > 0 && LEG2_MatchesDoubleE23_12Path > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
 def eeeTrigPt() :
     match1_2 = eeTrigPt('e1', 'e2')
     match1_3 = eeTrigPt('e1', 'e3')
@@ -172,7 +172,7 @@ def eeeeTrigPt() :
     comb = ' || '.join( [match1_2, match1_3, match1_4, match2_3, match2_4, match3_4] )
     return '('+comb+')'
 def mmTrigPt(lep1='m1', lep2='m2') :
-    return'((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu > 0 && LEG2_MatchesDoubleMu > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    return '((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu > 0 && LEG2_MatchesDoubleMu > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
 def mmmTrigPt() :
     match1_2 = mmTrigPt('m1', 'm2')
     match1_3 = mmTrigPt('m1', 'm3')
@@ -189,6 +189,13 @@ def mmmmTrigPt() :
     comb = ' || '.join( [match1_2, match1_3, match1_4, match2_3, match2_4, match3_4] )
     return '('+comb+')'
 
+def llltDR( l1,l2,l3,l4 ) :
+    dr = 'LEG1_LEG4_DR > 0.5 && LEG2_LEG3_DR > 0.5 && LEG2_LEG4_DR > 0.5 && LEG3_LEG4_DR > 0.5'
+    return dr.replace('LEG1',l1).replace('LEG2',l2).replace('LEG3',l3).replace('LEG4',l4)
+
+def llttDR( l1,l2,l3,l4 ) :
+    dr = 'LEG1_LEG3_DR > 0.5 && LEG1_LEG4_DR > 0.5 && LEG2_LEG3_DR > 0.5 && LEG2_LEG4_DR > 0.5 && LEG3_LEG4_DR > 0.5'
+    return dr.replace('LEG1',l1).replace('LEG2',l2).replace('LEG3',l3).replace('LEG4',l4)
 
 
 def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
@@ -229,21 +236,23 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
             'goodZ'  : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eeetE, xxetT, eeetVetos],
             'HSS'    : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeetE, xxetT, eeetVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eeetERed, xxetTRed, eeetVetos],
-            'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
+            'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), llltDR('e1','e2','e3','t'), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
             'SkimOS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS,  HDXYZ, eeetERed, xxetTRed, eeetVetos],
         }, # end EEET
          'eett' : {
             'goodZ'  : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, xxttTT, eettVetos],
             'HSS'    : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, xxttTT, eettVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, xxttTTRed, eettVetos],
-            'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
+            'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
             'SkimOS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS,  HDXYZ, xxttTTRed, eettVetos],
         }, # end EETT
          'eemt' : {
             'goodZ'  : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS, HDXYZ, eemtM, xxmtT, eemtVetos],
             'HSS'    : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemtM, xxmtT, eemtVetos],
             'RedBkg' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HSS, HDXYZ, eemtMRed, xxmtTRed, eemtVetos],
-            'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
+            'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
+            'Sync'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
+            'Sync2'   : ['e1Pt > 5',],
             'SkimOS' : [ZOS, ZMass, eeTrig, eeHits, eeIso, eeIDL, eePt, eeEta, ZDXYZ, HOS,  HDXYZ, eemtMRed, xxmtTRed, eemtVetos],
         }, # end EEMT
          'eeem' : {
@@ -271,21 +280,21 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
             'goodZ'  : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmetE, xxetT, mmetVetos],
             'HSS'    : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmetE, xxetT, mmetVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmetERed, xxetTRed, mmetVetos],
-            'Skim'   : [ZOS, ZMass, mmTrig, mmTrigPt(), mmetVetos, mTight('m1'), mTight('m2'), eBase('e'), tBase('t'), tAntiEV('t')],
+            'Skim'   : [ZOS, ZMass, mmTrig, mmTrigPt(), llltDR('m1','m2','e','t'), mmetVetos, mTight('m1'), mTight('m2'), eBase('e'), tBase('t'), tAntiEV('t')],
             'SkimOS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS,  HDXYZ, mmetERed, xxetTRed, mmetVetos],
         }, # end MMET
          'mmtt' : {
             'goodZ'  : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, xxttTT, mmttVetos],
             'HSS'    : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, xxttTT, mmttVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, xxttTTRed, mmttVetos],
-            'Skim'   : [ZOS, ZMass, mmTrig, mmTrigPt(), mmttVetos, mTight('m1'), mTight('m2'), tBase('t1'), tBase('t2')],
+            'Skim'   : [ZOS, ZMass, mmTrig, mmTrigPt(), llttDR('m1','m2','t1','t2'), mmttVetos, mTight('m1'), mTight('m2'), tBase('t1'), tBase('t2')],
             'SkimOS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS,  HDXYZ, xxttTTRed, mmttVetos],
         }, # end MMTT
          'mmmt' : {
             'goodZ'  : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS, HDXYZ, mmmtM, xxmtT, mmmtVetos],
             'HSS'    : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmtM, xxmtT, mmmtVetos],
             'RedBkg' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HSS, HDXYZ, mmmtMRed, xxmtTRed, mmmtVetos],
-            'Skim'   : [ZOS, ZMass, mmTrig, mmmTrigPt(), mmmtVetos, mTight('m1'), mTight('m2'), mBase('m3'), tBase('t'), tAntiMV('t')],
+            'Skim'   : [ZOS, ZMass, mmTrig, mmmTrigPt(), llltDR('m1','m2','m','t'), mmmtVetos, mTight('m1'), mTight('m2'), mBase('m3'), tBase('t'), tAntiMV('t')],
             'SkimOS' : [ZOS, ZMass, mmTrig, mmIso, mmIDL, mmPt, mmEta, ZDXYZ, HOS,  HDXYZ, mmmtMRed, xxmtTRed, mmmtVetos],
         }, # end MMMT
          'emmm' : {
