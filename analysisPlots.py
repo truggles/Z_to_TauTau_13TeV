@@ -242,6 +242,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             tmpDict[var+'_ffSub'] = info
         newVarMap = returnSortedDict( tmpDict )
 
+    # Check for per-var adjustments later
+    # Full JES shapes if doFullJES
+    doFullJES = os.getenv('doFullJES')
 
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
@@ -335,19 +338,27 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # as well when it's in the plotVar for 2D
         # plotVar is changed below with this happens for other shifts
         if 'JES' in var and 'data' not in sample :
+            # with ~30 shifts, get the name of the shift
+            jesUnc = var.strip('JES').strip('Up').strip('Down')
             if 'Up' in var :
-                additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_JetEnUp')
-                # We changed naming to simple mjj, njetingap20 and jdeta for sync for nominal
-                additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_JetEnUp')
-                additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnUp')
-                additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnUp')
-                #print additionalCutToUse+"\n"
+                if doFullJES == 'True' :
+                    # jDeta is minimally impacted by JES shifts, so the minor adjustments are not saved atm
+                    # and is negligible for mjj > 100
+                    additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_Jet%sUp' % jesUnc)
+                    # We changed naming to simple mjj, njetingap20 and jdeta for sync for nominal
+                    additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_Jet%sUp' % jesUnc)
+                else :
+                    #additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnUp') # Cut no long used
+                    additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnUp')
+                print additionalCutToUse+"\n"
             if 'Down' in var :
-                additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_JetEnDown')
-                additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_JetEnDown')
-                additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnDown')
-                additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnDown')
-                #print additionalCutToUse+"\n"
+                if doFullJES == 'True' :
+                    additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_Jet%sDown' % jesUnc)
+                    additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_Jet%sDown' % jesUnc)
+                else :
+                    #additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnDown')
+                    additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnDown')
+                print additionalCutToUse+"\n"
 
 
         # This addes the Fake Factor shape systematics weights
@@ -535,24 +546,34 @@ def getHistoDict( analysis, channel ) :
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
         shapesToAdd = {
-              #      'energyScale':'TES',
-              #      'zPt':'Z p_{T}/Mass Reweight',
+                    'energyScale':'TES',
+                    'zPt':'Z p_{T}/Mass Reweight',
                     #'metResponse':'Met Response',
                     #'metResolution':'Met Resolution',
                     #'tauPt':'High P_{T} Tau',
-              #      'topPt':'Top P_{T} Reweight',
-              #      'JES' : 'Jet Energy Scale',
-              #      'JetToTau' : 'Jet to Tau Fake',
-              #      'ggH' : 'ggH Scale',
-              #      'Zmumu' : 'Z mumu DY Reweight',
+                    'topPt':'Top P_{T} Reweight',
+                    'JES' : 'Jet Energy Scale',
+                    'JetToTau' : 'Jet to Tau Fake',
+                    'ggH' : 'ggH Scale',
+                    'Zmumu' : 'Z mumu DY Reweight',
                     }
 
         # Add FF shape systs if doFF
-      #  doFF = os.getenv('doFF')
-      #  if doFF == 'True' :
-      #      shapesToAdd['ffSyst'] = 'FF Syst'
-      #      shapesToAdd['ffStat'] = 'FF Stat'
+        doFF = os.getenv('doFF')
+        if doFF == 'True' :
+            shapesToAdd['ffSyst'] = 'FF Syst'
+            shapesToAdd['ffStat'] = 'FF Stat'
 
+        # Add Full JES shapes if doFullJES
+        doFullJES = os.getenv('doFullJES')
+        if doFullJES == 'True' :
+            # Remove standard JES
+            if 'JES' in shapesToAdd.keys() : del shapesToAdd['JES']
+            from util.jetEnergyScale import getUncerts
+            uncerts = getUncerts()
+            for uncert in uncerts :
+                shapesToAdd['JES'+uncert] = 'JES '+uncert 
+                shapesToAdd['JES'+uncert] = 'JES '+uncert
 
 
 
