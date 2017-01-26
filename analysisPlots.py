@@ -6,7 +6,7 @@ from util.helpers import returnSortedDict, getProdMap
 from util.azhReducibleBackgroundHelpers import \
     getRedBkgCutsAndWeights, getChannelSpecificFinalCuts, \
     getRedBkgShape
-import os
+from smart_getenv import getenv
 
 
 
@@ -234,7 +234,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     ### Check if doFF is turned on and, if so, double
     ### our output histograms to account for the
     ### required subtractions
-    doFF = bool(os.getenv('doFF'))
+    doFF = getenv('doFF', type=bool)
     if doFF :
         tmpDict = {}
         for var, info in newVarMap.iteritems() :
@@ -244,7 +244,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
     # Check for per-var adjustments later
     # Full JES shapes if doFullJES
-    doFullJES = bool(os.getenv('doFullJES'))
+    doFullJES = getenv('doFullJES', type=bool)
 
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
@@ -559,13 +559,13 @@ def getHistoDict( analysis, channel ) :
                     }
 
         # Add FF shape systs if doFF
-        doFF = bool(os.getenv('doFF'))
+        doFF = getenv('doFF', type=bool)
         if doFF :
             shapesToAdd['ffSyst'] = 'FF Syst'
             shapesToAdd['ffStat'] = 'FF Stat'
 
         # Add Full JES shapes if doFullJES
-        doFullJES = bool(os.getenv('doFullJES'))
+        doFullJES = getenv('doFullJES', type=bool)
         if doFullJES :
             # Remove standard JES
             if 'JES' in shapesToAdd.keys() : del shapesToAdd['JES']

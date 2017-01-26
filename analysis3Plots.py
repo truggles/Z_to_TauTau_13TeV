@@ -13,6 +13,8 @@ from analysisPlots import skipSystShapeVar
 from copy import deepcopy
 from util.helpers import checkDir, returnSortedDict
 import subprocess
+from smart_getenv import getenv
+
 
 
 
@@ -43,7 +45,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     print ops
 
     # Use FF built QCD backgrounds
-    doFF = bool(os.getenv('doFF'))
+    doFF = getenv('doFF', type=bool)
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :

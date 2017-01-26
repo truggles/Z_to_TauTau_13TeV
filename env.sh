@@ -16,14 +16,15 @@ echo "Using Full 2016 Data! Sans run H"
 
 #echo "Lumi adjusted down b/c of removal of run 2788808 = 272 / pb"
 
-#export doFF=1
-export doFF=0
+#export doFF=true
+export doFF=false 
 echo " "
 echo "Setting Fake Factor Method to: $doFF"
 echo " "
 echo " "
 
-export doFullJES=1
+#export doFullJES=false
+export doFullJES=true
 echo " "
 echo "Setting Full JES Method to: $doFullJES"
 echo " "

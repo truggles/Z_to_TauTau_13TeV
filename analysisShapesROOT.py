@@ -12,6 +12,7 @@ from analysisPlots import skipSystShapeVar
 from util.helpers import checkDir, unroll2D, returnSortedDict
 from analysis1BaselineCuts import skipChanDataCombo
 import os
+from smart_getenv import getenv
 
 
 def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
@@ -40,7 +41,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     print ops
 
     # Use FF built QCD backgrounds
-    doFF = bool(os.getenv('doFF'))
+    doFF = getenv('doFF', type=bool)
 
     """ Add in the gen matched DY catagorization """
     # FIXME - do this later

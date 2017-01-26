@@ -11,6 +11,7 @@ import math
 from ROOT import gPad, gROOT
 from util.helpers import checkDir
 import os
+from smart_getenv import getenv
 
 
 
@@ -183,7 +184,7 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
     isoQty = renameBranches( analysis, mid1, mid2, save, channel, count )
 
     ### FF values for data events
-    doFF = bool(os.getenv('doFF'))
+    doFF = getenv('doFF', type=bool)
     if doFF and channel == 'tt' :
         from util.applyFakeFactors import fillFakeFactorValues
         fillFakeFactorValues( analysis, mid2, save, channel )
@@ -476,7 +477,7 @@ def drawHistos(analysis, samples, **fargs ) :
 
         # the gen matching samples are: based off of the DYJets samples
         loopList = []
-        doFF = bool(os.getenv('doFF'))
+        doFF = getenv('doFF', type=bool)
         if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList

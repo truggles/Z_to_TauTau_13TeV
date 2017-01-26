@@ -13,6 +13,8 @@ import analysis1BaselineCuts
 from util.helpers import setUpDirs 
 import argparse
 import subprocess
+from smart_getenv import getenv
+
 
 p = argparse.ArgumentParser(description="A script to apply additional cuts and plot.")
 p.add_argument('--folder', action='store', default='xxx', dest='folder', help="What is the full folder name for extracting root files?")
@@ -270,7 +272,7 @@ if __name__ == '__main__' :
     ### of l1 and l2, then seeing if l1 is gen matched
     ### to anything besides a fake/jet
     ### This is only applied for DYJets, WJets, TT, and QCD MC
-    doFF = bool(os.getenv('doFF'))
+    doFF = getenv('doFF', type=bool)
     if doFF :
         # The '' in the following line gives us the signal region
         testQCDCuts( folder, samples, isoVal, '', isoVal, 'OS', doFF )
