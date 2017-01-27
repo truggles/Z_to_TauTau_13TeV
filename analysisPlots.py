@@ -7,6 +7,7 @@ from util.azhReducibleBackgroundHelpers import \
     getRedBkgCutsAndWeights, getChannelSpecificFinalCuts, \
     getRedBkgShape
 from smart_getenv import getenv
+from util.jetEnergyScale import getUncerts
 
 
 
@@ -19,15 +20,21 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 # Make a 2D histo
 def get2DVars( cutName ) :
-    if 'pt_sv' in cutName and 'm_sv' in cutName :
+    #if 'pt_sv' in cutName and 'm_sv' in cutName :
+    #    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+    #    yBins = array( 'd', [0,100,170,300,1000] )
+    #if 'mjj' in cutName and 'm_sv' in cutName :
+    #    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+    #    yBins = array( 'd', [0,300,500,800,10000] )
+    if 'Higgs_Pt' in cutName and 'm_vis' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,1000] )
-    if 'mjj' in cutName and 'm_sv' in cutName :
+    if 'mjj' in cutName and 'm_vis' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
-    if 'pt_1' in cutName and 'm_sv' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,60,100,5000] )
+    #if 'pt_1' in cutName and 'm_sv' in cutName :
+    #    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+    #    yBins = array( 'd', [0,60,100,5000] )
     return (xBins, yBins)
 
 
@@ -245,6 +252,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     # Check for per-var adjustments later
     # Full JES shapes if doFullJES
     doFullJES = getenv('doFullJES', type=bool)
+    if doFullJES : jesUncerts = getUncerts()
 
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
@@ -337,10 +345,12 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # make because we unroll in mjj, edit that
         # as well when it's in the plotVar for 2D
         # plotVar is changed below with this happens for other shifts
+        jesUnc = 'En'
         if 'JES' in var and 'data' not in sample :
             # with ~30 shifts, get the name of the shift
-            jesUnc = var.strip('JES').strip('Up').strip('Down')
-            if 'Up' in var :
+            for unc in jesUncerts :
+                if unc in var : jesUnc = unc
+            if 'Up' in var[-2:] :
                 if doFullJES :
                     # jDeta is minimally impacted by JES shifts, so the minor adjustments are not saved atm
                     # and is negligible for mjj > 100
@@ -350,15 +360,15 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 else :
                     #additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnUp') # Cut no long used
                     additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnUp')
-                print additionalCutToUse+"\n"
-            if 'Down' in var :
+                #print additionalCutToUse+"\n"
+            if 'Down' in var[-4:] :
                 if doFullJES :
                     additionalCutToUse = additionalCutToUse.replace('jetVeto30','jetVeto30_Jet%sDown' % jesUnc)
                     additionalCutToUse = additionalCutToUse.replace('mjj','vbfMass_Jet%sDown' % jesUnc)
                 else :
                     #additionalCutToUse = additionalCutToUse.replace('njetingap','vbfJetVeto30_JetEnDown')
                     additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnDown')
-                print additionalCutToUse+"\n"
+                #print additionalCutToUse+"\n"
 
 
         # This addes the Fake Factor shape systematics weights
@@ -425,11 +435,16 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if 'Down' in var :
                     plotVar = varBase + '_ResponseDOWN'
             elif 'JES' in shapeName :
-                if 'mjj:m_sv' in var :
-                    if 'Up' in var :
-                        plotVar = 'vbfMass_JetEnUp:m_sv'
-                    if 'Down' in var :
-                        plotVar = 'vbfMass_JetEnDown:m_sv'
+                if 'data' in sample :
+                    plotVar = varBase
+                #if 'mjj:m_sv' in var :
+                if 'mjj:m_vis' in var :
+                    if 'Up' in var[-2:] : # Make sure we check the last 2 chars
+                        #plotVar = 'vbfMass_Jet%sUp:m_sv' % jesUnc
+                        plotVar = 'vbfMass_Jet%sUp:m_vis' % jesUnc
+                    if 'Down' in var[-4:] : # Make sure we check the last 4 chars
+                        #plotVar = 'vbfMass_Jet%sDown:m_sv' % jesUnc
+                        plotVar = 'vbfMass_Jet%sDown:m_vis' % jesUnc
                 else : # For this one, we adjust the additionalCuts to 
                     # provide different yields
                     plotVar = varBase
@@ -452,7 +467,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         ### Check that the target var is in the TTrees
         elif hasattr( chain, plotVar ) or ":" in varBase :
             #print "trying"
-            #print "Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
+            print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( 'data', channel, var )
                 #print 'dataES',dataES
@@ -523,8 +538,10 @@ def getHistoDict( analysis, channel ) :
 #XXX            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
 #XXX            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
+            'mjj:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'Higgs_Pt:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
-            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#FIXME            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'pt_1:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'], # unrolling pt_1 provides nothing
@@ -538,7 +555,8 @@ def getHistoDict( analysis, channel ) :
         }
 
         ''' added shape systematics '''
-        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_vis', 'm_sv'] # No extra shapes
+#FIXME        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_vis', 'm_sv'] # No extra shapes
+        toAdd = ['Higgs_Pt:m_vis', 'mjj:m_vis', 'm_vis'] # No extra shapes
         #toAdd = ['m_sv', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
@@ -574,7 +592,6 @@ def getHistoDict( analysis, channel ) :
             for uncert in uncerts :
                 shapesToAdd['JES'+uncert] = 'JES '+uncert 
                 shapesToAdd['JES'+uncert] = 'JES '+uncert
-
 
 
         for var in genVarMap.keys() :

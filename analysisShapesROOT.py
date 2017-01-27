@@ -58,7 +58,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     # Build samples list with val for which grouping each sample belongs to
     samples = OrderedDict()
     genMap = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-    dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow']
+    dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]# 'DYJetsLow']
     for dyj in dyJets :
         for gen in genMap : samples[dyj+'-'+gen] = gen
     #print samples
@@ -162,8 +162,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     del samples[ sample ]
             if 'ZJ' in nameArray : nameArray.remove('ZJ')
             if 'ZL' in nameArray : nameArray.remove('ZL')
-        print nameArray.sort()
-    
+
+
+        print nameArray    
         print channel
     
         newVarMapUnsorted = analysisPlots.getHistoDict( analysis, channel )
@@ -176,13 +177,15 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'm_sv' : 'svFitMass',
             'mt_sv' : 'svFitMt',
             'mt_tot' : 'mtTot',
-            'pt_sv:m_sv' : 'svFitMass2D',
-            'pt_1:m_sv' : 'svFitMass2D',
-            'mjj:m_sv' : 'svFitMass2D',
+            #'pt_sv:m_sv' : 'svFitMass2D',
+            #'mjj:m_sv' : 'svFitMass2D',
+            'Higgs_Pt:m_vis' : 'visMass2D',
+            'mjj:m_vis' : 'visMass2D',
             'Mass' : '4LMass',
             }
         if '0jet2D' in ops['category'] : 
-            append = '_svFitMass2D'
+            #append = '_svFitMass2D'
+            append = '_visMass2D'
         else :
             append = '_'+appendMap[baseVar]
     
@@ -205,6 +208,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
         for var in newVarMap.keys() :
     
+            print var
             if not baseVar in var : continue
             if ops['fitShape'] == 'm_sv' and ':' in var : continue # Get rid of the 2D shapes in 0jet
             print "\n\n=============================================================="
@@ -222,8 +226,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
                         or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) \
                         or ('_Zmumu' in var) or (baseVar == var)) :
-                    print "Did we fail?"
-                    continue
+                        print "Did we fail?"
+                        continue
             #if ops['mssm'] :
             #    if not var == baseVar+'_mssm' : continue
             #    if var != baseVar : continue
@@ -285,50 +289,54 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             for name in nameArray :
                 title = name
                 if ops['ES'] or ops['tauPt'] or ops['allShapes'] :
-                    if '_energyScaleUp' in var :
-                        histos[ name ] = ROOT.TH1D( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
-                    elif '_energyScaleDown' in var :
-                        histos[ name ] = ROOT.TH1D( name+'energyScaleDown', name+'energyScaleDown', numBins, binArray )
-                    elif '_tauPtUp' in var :
-                        histos[ name ] = ROOT.TH1D( name+'tauPtUp', name+'tauPtUp', numBins, binArray )
-                    elif '_tauPtDown' in var :
-                        histos[ name ] = ROOT.TH1D( name+'tauPtDown', name+'tauPtDown', numBins, binArray )
-                    elif '_zPtUp' in var :
-                        histos[ name ] = ROOT.TH1D( name+'zPtUp', name+'zPtUp', numBins, binArray )
-                    elif '_zPtDown' in var :
-                        histos[ name ] = ROOT.TH1D( name+'zPtDown', name+'zPtDown', numBins, binArray )
-                    elif '_topPtUp' in var :
-                        histos[ name ] = ROOT.TH1D( name+'topPtUp', name+'topPtUp', numBins, binArray )
-                    elif '_topPtDown' in var :
-                        histos[ name ] = ROOT.TH1D( name+'topPtDown', name+'topPtDown', numBins, binArray )
-                    elif '_JESUp' in var :
-                        histos[ name ] = ROOT.TH1D( name+'JESUp', name+'JESUp', numBins, binArray )
-                    elif '_JESDown' in var :
-                        histos[ name ] = ROOT.TH1D( name+'JESDown', name+'JESDown', numBins, binArray )
-                    elif '_JetToTauUp' in var :
-                        histos[ name ] = ROOT.TH1D( name+'jetToTauUp', name+'jetToTauUp', numBins, binArray )
-                    elif '_JetToTauDown' in var :
-                        histos[ name ] = ROOT.TH1D( name+'jetToTauDown', name+'jetToTauDown', numBins, binArray )
-                    elif '_ggHUp' in var :
-                        histos[ name ] = ROOT.TH1D( name+'ggHUp', name+'ggHUp', numBins, binArray )
-                    elif '_ggHDown' in var :
-                        histos[ name ] = ROOT.TH1D( name+'ggHDown', name+'ggHDown', numBins, binArray )
-                    elif '_ffSystUp' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'ffSystUp', name+'ffSystUp', numBins, binArray )
-                    elif '_ffSystDown' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'ffSystDown', name+'ffSystDown', numBins, binArray )
-                    elif '_ffStatUp' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'ffStatUp', name+'ffStatUp', numBins, binArray )
-                    elif '_ffStatDown' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'ffStatDown', name+'ffStatDown', numBins, binArray )
-                    elif '_metResponseUp' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'metResponseUp', name+'metResponseUp', numBins, binArray )
-                    elif '_metResponseDown' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'metResponseDown', name+'metResponseDown', numBins, binArray )
-                    elif '_metResolutionUp' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'metResolutionUp', name+'metResolutionUp', numBins, binArray )
-                    elif '_metResolutionDown' in var and doFF :
-                        histos[ name ] = ROOT.TH1D( name+'metResolutionDown', name+'metResolutionDown', numBins, binArray )
+
+                    if '_' in var and ('Up' in var or 'Down' in var) :
+                        systName = var.split('_')[-1]
+                        histos[ name ] = ROOT.TH1D( name+systName, name+systName, numBins, binArray )
+                    #if '_energyScaleUp' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
+                    #elif '_energyScaleDown' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'energyScaleDown', name+'energyScaleDown', numBins, binArray )
+                    #elif '_tauPtUp' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'tauPtUp', name+'tauPtUp', numBins, binArray )
+                    #elif '_tauPtDown' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'tauPtDown', name+'tauPtDown', numBins, binArray )
+                    #elif '_zPtUp' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'zPtUp', name+'zPtUp', numBins, binArray )
+                    #elif '_zPtDown' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'zPtDown', name+'zPtDown', numBins, binArray )
+                    #elif '_topPtUp' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'topPtUp', name+'topPtUp', numBins, binArray )
+                    #elif '_topPtDown' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'topPtDown', name+'topPtDown', numBins, binArray )
+                    #elif '_JESUp' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'JESUp', name+'JESUp', numBins, binArray )
+                    #elif '_JESDown' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'JESDown', name+'JESDown', numBins, binArray )
+                    #elif '_JetToTauUp' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'jetToTauUp', name+'jetToTauUp', numBins, binArray )
+                    #elif '_JetToTauDown' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'jetToTauDown', name+'jetToTauDown', numBins, binArray )
+                    #elif '_ggHUp' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'ggHUp', name+'ggHUp', numBins, binArray )
+                    #elif '_ggHDown' in var :
+                    #    histos[ name ] = ROOT.TH1D( name+'ggHDown', name+'ggHDown', numBins, binArray )
+                    #elif '_ffSystUp' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'ffSystUp', name+'ffSystUp', numBins, binArray )
+                    #elif '_ffSystDown' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'ffSystDown', name+'ffSystDown', numBins, binArray )
+                    #elif '_ffStatUp' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'ffStatUp', name+'ffStatUp', numBins, binArray )
+                    #elif '_ffStatDown' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'ffStatDown', name+'ffStatDown', numBins, binArray )
+                    #elif '_metResponseUp' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'metResponseUp', name+'metResponseUp', numBins, binArray )
+                    #elif '_metResponseDown' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'metResponseDown', name+'metResponseDown', numBins, binArray )
+                    #elif '_metResolutionUp' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'metResolutionUp', name+'metResolutionUp', numBins, binArray )
+                    #elif '_metResolutionDown' in var and doFF :
+                    #    histos[ name ] = ROOT.TH1D( name+'metResolutionDown', name+'metResolutionDown', numBins, binArray )
                     else :
                         histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
                 else :
@@ -446,7 +454,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 tFile.Close()
     
     
-            print "=============================================================="
+            print ".............................................................."
             shapeDir.cd()
             for name in histos :
                 #print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
@@ -479,6 +487,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
+
+                    # JES Breakdown
+                    shiftDir = ''
+                    if var[-2:] == 'Up' : shiftDir = 'Up'
+                    if var[-4:] == 'Down' : shiftDir = 'Down'
+                    if '_JES' in var : jesUnc = var.split('_')[-1]+'_13TeV'+shiftDir
     
                     if '_zPt' in var :
                         if name not in ['ZTT','ZL','ZJ','ZLL',] : continue
@@ -503,12 +517,15 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     elif '_energyScaleDown' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
-                    elif '_JESUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVUp' )
-                    elif '_JESDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVDown' )
+                    elif '_JES' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_'+jesUnc )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_'+jesUnc )
+                    #elif '_JESUp' in var :
+                    #    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVUp' )
+                    #    histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVUp' )
+                    #elif '_JESDown' in var :
+                    #    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVDown' )
+                    #    histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVDown' )
                     elif '_JetToTauUp' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVUp' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVUp' )

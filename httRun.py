@@ -13,6 +13,7 @@ import analysis1BaselineCuts
 from util.helpers import setUpDirs 
 import subprocess
 import copy
+from smart_getenv import getenv
 ROOT.gROOT.Reset()
 
 
@@ -45,17 +46,19 @@ os.chdir('..')
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', ]
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'ZZ2l2q', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F',  'VBFHtoTauTau120', 'VBFHtoTauTau125', 'VBFHtoTauTau130', 'ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] # Adding EWK and tri-boson, sept 25
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW', 'WW1l1nu2q', 'WWW', 'WZ', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ', 'ZZ2l2q', 'ZZ4l'] # remove WZZ ZZZ 
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q'] # remove WZZ ZZZ 
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ2l2q', 'ZZ2l2q'] # JES TEST
 
 #for mass in [120, 125, 130] :
 for mass in [125,] :
     SamplesDataCards.append('ggHtoTauTau%i' % mass)
     SamplesDataCards.append('VBFHtoTauTau%i' % mass)
-    SamplesDataCards.append('WMinusHTauTau%i' % mass)
+    #SamplesDataCards.append('WMinusHTauTau%i' % mass)
     SamplesDataCards.append('WPlusHTauTau%i' % mass)
     SamplesDataCards.append('ZHTauTau%i' % mass)
-    SamplesDataCards.append('HtoWW2l2nu%i' % mass)
+    #SamplesDataCards.append('HtoWW2l2nu%i' % mass)
 
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'G'] :
+for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
 
@@ -93,19 +96,19 @@ params = {
     ###'mid3' : '3Dec08somePlots', # pre-approval checks
 #    'mid2' : '2Jan16test',
 #    'mid3' : '3Jan16test',
-    'mid1' : '1Jan20skimHTT',
-    'mid2' : '2Jan20skimHTT',
-    'mid3' : '3Jan20skimHTT',
+    'mid1' : '1Jan26jesCheck1',
+    'mid2' : '2Jan26jesCheck1',
+    'mid3' : '3Jan26jesCheck1',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true',
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true',
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -114,7 +117,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -133,7 +136,7 @@ makeFinalPlots = False
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', '0jet2D', 'boosted','VBF',]
@@ -147,7 +150,7 @@ cleanPlots = True
 #isoVals = ['Tight', 'Medium', 'Loose',]
 #isoVals = ['Tight', 'Loose',]
 isoVals = ['Tight',]
-doFF = os.getenv('doFF')
+doFF = getenv('doFF', type=bool)
 
 
 for isoVal in isoVals :
@@ -165,7 +168,7 @@ for isoVal in isoVals :
         """ Make our folders with directories of histos for each bkg """
         subprocess.call( process )
     
-    if doFF == 'True' :
+    if doFF :
         for sample in samples.keys() :
             if 'data' in sample :
                 era = sample.split('-')[1]
@@ -207,7 +210,7 @@ for isoVal in isoVals :
             if cat in ['inclusive', '0jet', '1jet'] :
                 blind = False
             
-            if doFF == 'True' :
+            if doFF :
                 kwargs = { 'text':text, 'blind':blind, 'targetDir':'/'+tDir,'sync':sync }
             else :
                 qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
@@ -226,13 +229,16 @@ for isoVal in isoVals :
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
         #for var in ['m_vis','m_sv'] :
-        for var in ['m_sv',] :
+        #for var in ['m_sv',] :
+        for var in ['m_vis',] :
             for cat in cats :
-                if var == 'm_vis' and cat in ['boosted','VBF','0jet2D'] : continue
-                if cat == 'boosted' : var = 'pt_sv:m_sv'
-                if cat == 'VBF' : var = 'mjj:m_sv'
+                #if var == 'm_vis' and cat in ['boosted','VBF','0jet2D'] : continue
+                #if cat == 'boosted' : var = 'pt_sv:m_sv'
+                #if cat == 'VBF' : var = 'mjj:m_sv'
+                if cat == 'boosted' : var = 'Higgs_Pt:m_vis'
+                if cat == 'VBF' : var = 'mjj:m_vis'
                 finalCat = cat
-                if doFF == 'True' :
+                if doFF :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                     kwargs = {
                     'category' : finalCat,
@@ -267,7 +273,7 @@ for isoVal in isoVals :
                     'sync' : sync,
                     }
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
