@@ -1,1 +1,4 @@
-/data/truggles/httJan25skimHTT_JESMerged/T-tchan_0_tt.root
+/data/truggles/httJan25skimHTT_JES2Merged/T-tchan_0_tt.root
+/data/truggles/httJan25skimHTT_JES2Merged/T-tchan_1_tt.root
+/data/truggles/httJan25skimHTT_JES2Merged/T-tchan_2_tt.root
+/data/truggles/httJan25skimHTT_JES2Merged/T-tchan_3_tt.root

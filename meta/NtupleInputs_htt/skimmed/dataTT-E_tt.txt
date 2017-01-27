@@ -1,4 +1,11 @@
 /data/truggles/httJan20skimHTTMerged/dataTT-E_0_tt.root
+/data/truggles/httJan20skimHTTMerged/dataTT-E_10_tt.root
 /data/truggles/httJan20skimHTTMerged/dataTT-E_1_tt.root
 /data/truggles/httJan20skimHTTMerged/dataTT-E_2_tt.root
 /data/truggles/httJan20skimHTTMerged/dataTT-E_3_tt.root
+/data/truggles/httJan20skimHTTMerged/dataTT-E_4_tt.root
+/data/truggles/httJan20skimHTTMerged/dataTT-E_5_tt.root
+/data/truggles/httJan20skimHTTMerged/dataTT-E_6_tt.root
+/data/truggles/httJan20skimHTTMerged/dataTT-E_7_tt.root
+/data/truggles/httJan20skimHTTMerged/dataTT-E_8_tt.root
+/data/truggles/httJan20skimHTTMerged/dataTT-E_9_tt.root
