@@ -122,6 +122,11 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     # channels
     nameArray = []
     for samp in samples :
+
+        # Keep QCD if normal htt analysis
+        if samp == 'QCD' and analysis == 'htt' and not doFF :
+            if samples[samp] not in nameArray : nameArray.append( samples[samp] )
+
         if samp not in inSamples.keys() :
             del samples[samp]
             continue
@@ -211,6 +216,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             print var
             if not baseVar in var : continue
             if ops['fitShape'] == 'm_sv' and ':' in var : continue # Get rid of the 2D shapes in 0jet
+            if ops['fitShape'] == 'm_vis' and ':' in var : continue # Get rid of the 2D shapes in 0jet
             print "\n\n=============================================================="
             if ops['allShapes'] :
                 print "All Shapes Applied: %s" % var
@@ -492,7 +498,18 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     shiftDir = ''
                     if var[-2:] == 'Up' : shiftDir = 'Up'
                     if var[-4:] == 'Down' : shiftDir = 'Down'
-                    if '_JES' in var : jesUnc = var.split('_')[-1]+'_13TeV'+shiftDir
+                    if '_JES' in var :
+                        print var
+                        jesUnc = var.split('_')[-1]
+                        print jesUnc
+                        jesUnc = jesUnc.replace('JES', '')
+                        print jesUnc
+                        if 'Up' in jesUnc[-2:] : jesUnc = jesUnc[:-2]
+                        print jesUnc
+                        if 'Down' in jesUnc[-4:] : jesUnc = jesUnc[:-4]
+                        print jesUnc
+                        jesUnc += '_13TeV'+shiftDir
+                        print jesUnc
     
                     if '_zPt' in var :
                         if name not in ['ZTT','ZL','ZJ','ZLL',] : continue

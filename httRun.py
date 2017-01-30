@@ -139,8 +139,8 @@ makeDataCards = True
 #makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
-cats = ['inclusive', '0jet2D', 'boosted','VBF',]
-#cats = ['0jet2D', 'boosted','VBF',]
+#cats = ['inclusive', '0jet2D', 'boosted','VBF',]
+cats = ['0jet2D', 'boosted','VBF',]
 #cats = ['inclusive',]
 pt = '5040'
 #sync = True
