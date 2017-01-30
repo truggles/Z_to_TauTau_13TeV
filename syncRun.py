@@ -34,7 +34,7 @@ os.chdir('..')
 ''' Preset samples '''
 SamplesSync = ['Sync-HtoTT','Sync-VBF125','Sync-DYJets4']
 SamplesSync = ['Sync-VBF125',]
-SamplesSync = ['Sync-DYJets4',]
+#SamplesSync = ['Sync-DYJets4',]
 samples = SamplesSync
 
 ''' These parameters are fed into the 2 main function calls.
@@ -54,9 +54,9 @@ params = {
     #'cutMapper' : 'syncCutsMSSMNtuple',
     'cutMapper' : 'syncCutsSMHTTNtuple',
     #'cutMapper' : 'crazyCutsNtuple',
-    'mid1' : '1Nov08withOutTrig',
-    'mid2' : '2Nov08withOutTrig',
-    'mid3' : '3Nov08withOutTrig',
+    'mid1' : '1Jan30',
+    'mid2' : '2Jan30',
+    'mid3' : '3Jan30',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',

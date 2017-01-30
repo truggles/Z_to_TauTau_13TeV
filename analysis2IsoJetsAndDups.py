@@ -193,7 +193,7 @@ def getCurrentEvt( analysis, channel, row ) :
     leg2Iso = getIso( l2, row )
     leg1Pt = getattr(row, l1+'Pt')
     leg2Pt = getattr(row, l2+'Pt')
-    if analysis == 'htt' and channel == 'tt' :
+    if (analysis == 'htt' or analysis == 'Sync') and channel == 'tt' :
         sign = ''
         if getattr(row, '%s_%s_SS' % (l1,l2)) == 1 : sign = 'SS'
         if getattr(row, '%s_%s_SS' % (l1,l2)) == 0 : sign = 'OS'
