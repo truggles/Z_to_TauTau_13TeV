@@ -200,7 +200,7 @@ def llttDR( l1,l2,l3,l4 ) :
 
 def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     
-    triggers = [tt40, tt35,]
+    #triggers = [tt40, tt35,]
 
     cutMap = { 
         'htt' : # analysis
@@ -313,11 +313,11 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     cuts1 = cutMap[ analysis ][ channel ][ cutName ]
 
     # Remove trigger requirements if MC except reHLT samples
-    if not isData :
-        #if not isReHLT : 
-        for trig in triggers :
-            if trig in cuts1 :
-                cuts1.remove( trig )
+    #if not isData :
+    #    #if not isReHLT : 
+    #    for trig in triggers :
+    #        if trig in cuts1 :
+    #            cuts1.remove( trig )
 
     prodMap = {
         'em' : ('e', 'm'),

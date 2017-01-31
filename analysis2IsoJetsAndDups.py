@@ -852,7 +852,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
-            #if channel == 'tt' and 'Sync-' in sample : 
+            #if channel == 'tt' : #and 'Sync-' in sample : 
             #    #print "### Iso Ordering %s ###" % sample
             #    isoOrder( channel, row )
             vbfClean( row )
@@ -1135,7 +1135,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0] )
+                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0], getattr(row, l1+'DecayMode') )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VLooseIso'
@@ -1148,7 +1148,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0] )
+                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0], getattr(row, l2+'DecayMode') )
 
                     # Tau Energy Scale Saved
                     if gen_match_1[0] == 5 :

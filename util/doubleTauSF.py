@@ -3,6 +3,8 @@
 function provided by Riccardo Manzoni for scaling
 double tau trigger MC to data
 22 Feb 2016
+
+Updated 30 Jan 2017 to include data/MC scale factors
 """
 
 
@@ -17,37 +19,45 @@ class DoubleTau35Efficiencies :
     
 
     def __init__( self, channel ):
+
+        # Lumi weighted trigger
+        totalLumi = 36773.0
+        runBCDEFH = 27916.0
+        runG = totalLumi-runBCDEFH
+        self.bcdefgWeight = runBCDEFH/totalLumi
+        self.gWeight = runG/totalLumi
+
         if channel == 'tt' :
             #print "Initializing LepWeight class for channel ",channel
-            effType = 'binned'
+            #effType = 'binned'
             #effType = 'cumulative'
-            with open('data/triggerSF/di-tau/high_mt_%s.json' % effType) as f1 :
-                self.high_mt_json = json.load(f1)
-            with open('data/triggerSF/di-tau/real_taus_%s.json' % effType) as f2 :
+            #with open('data/triggerSF/di-tau/high_mt_%s.json' % effType) as f1 :
+            #    self.high_mt_json = json.load(f1)
+            with open('data/triggerSF/di-tau/tightMVAiso/real_taus_Tightiso.json') as f2 :
                 self.real_taus_json = json.load(f2)
-            with open('data/triggerSF/di-tau/same_sign_%s.json' % effType) as f3 :
-                self.same_sign_json = json.load(f3)
+            #with open('data/triggerSF/di-tau/same_sign_%s.json' % effType) as f3 :
+            #    self.same_sign_json = json.load(f3)
 
             ### New Method
-            self.fVL = ROOT.TFile('data/doubleTau35/allRuns-VLoose.root','r')
-            self.vloose = getTH1FfromTGraphAsymmErrors( \
-                self.fVL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vloose')
-            self.fL = ROOT.TFile('data/doubleTau35/allRuns-Loose.root','r')
-            self.loose = getTH1FfromTGraphAsymmErrors( \
-                self.fL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'loose')
-            self.fM = ROOT.TFile('data/doubleTau35/allRuns-Medium.root','r')
-            self.medium = getTH1FfromTGraphAsymmErrors( \
-                self.fM.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'medium')
-            self.fT = ROOT.TFile('data/doubleTau35/allRuns-Tight.root','r')
-            self.tight = getTH1FfromTGraphAsymmErrors( \
-                self.fT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'tight')
-            self.fVT = ROOT.TFile('data/doubleTau35/allRuns-VTight.root','r')
-            self.vtight = getTH1FfromTGraphAsymmErrors( \
-                self.fVT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vtight')
+        #    self.fVL = ROOT.TFile('data/doubleTau35/allRuns-VLoose.root','r')
+        #    self.vloose = getTH1FfromTGraphAsymmErrors( \
+        #        self.fVL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vloose')
+        #    self.fL = ROOT.TFile('data/doubleTau35/allRuns-Loose.root','r')
+        #    self.loose = getTH1FfromTGraphAsymmErrors( \
+        #        self.fL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'loose')
+        #    self.fM = ROOT.TFile('data/doubleTau35/allRuns-Medium.root','r')
+        #    self.medium = getTH1FfromTGraphAsymmErrors( \
+        #        self.fM.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'medium')
+        #    self.fT = ROOT.TFile('data/doubleTau35/allRuns-Tight.root','r')
+        #    self.tight = getTH1FfromTGraphAsymmErrors( \
+        #        self.fT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'tight')
+        #    self.fVT = ROOT.TFile('data/doubleTau35/allRuns-VTight.root','r')
+        #    self.vtight = getTH1FfromTGraphAsymmErrors( \
+        #        self.fVT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vtight')
         else :
-            self.high_mt_json = ''
+            #self.high_mt_json = ''
             self.real_taus_json = ''
-            self.high_mt_json = ''
+            #self.high_mt_json = ''
 
         # These are the 2.1/fb efficiencies
         #self.effMap = {
@@ -149,7 +159,11 @@ class DoubleTau35Efficiencies :
 
 
 
-    def doubleTauTriggerEff(self, pt, iso, genCode ) :
+    def doubleTauTriggerEff(self, pt, iso, genCode, decayMode ) :
+
+        # Check that there are no 2 prong taus
+        assert( decayMode in [0,1,10]), "You have not cleaned your decay \
+            modes of your taus!"
 
         # For Sync, they want all taus considered as "VTight" 
         #iso = 'TightIso'
@@ -159,30 +173,68 @@ class DoubleTau35Efficiencies :
         ### related lines and directly below
         #iso = iso.strip('Iso')
 
+        """ 2016 Current Set up has differing efficiencies per decay mode
+            and per Run, so we need a lumi weighted approach, with Data/MC
+            SF as final output """
+        if decayMode == 0 :
+            paramGroups = ["Data BCDEFG decay mode =  0",
+                "Data H decay mode =  0",
+                "MC decay mode =  0"]
+        if decayMode == 1 :
+            paramGroups = ["Data BCDEFG decay mode =  1",
+                "Data H decay mode =  1",
+                "MC decay mode =  1"]
+        if decayMode == 10 :
+            paramGroups = ["Data BCDEFG decay mode = 10",
+                "Data H decay mode = 10",
+                "MC decay mode = 10"]
 
-        if genCode == 5 : # Real Hadronically decay Tau
-            m0 = self.real_taus_json[iso]['m_{0}']
-            sigma = self.real_taus_json[iso]['sigma']
-            alpha = self.real_taus_json[iso]['alpha']
-            n = self.real_taus_json[iso]['n']
-            norm = self.real_taus_json[iso]['norm']
-            #m0 = self.effMap['Real Tau'][iso]['m_{0}']
-            #sigma = self.effMap['Real Tau'][iso]['sigma']
-            #alpha = self.effMap['Real Tau'][iso]['alpha']
-            #n = self.effMap['Real Tau'][iso]['n']
-            #norm = self.effMap['Real Tau'][iso]['norm']
-            ''' for the moment stick with real vs. fake '''
-        else : # Fake Tau (measurements were done in SS region)
-            m0 = self.same_sign_json[iso]['m_{0}']
-            sigma = self.same_sign_json[iso]['sigma']
-            alpha = self.same_sign_json[iso]['alpha']
-            n = self.same_sign_json[iso]['n']
-            norm = self.same_sign_json[iso]['norm']
-            #m0 = self.effMap['Fake Tau SS'][iso]['m_{0}']
-            #sigma = self.effMap['Fake Tau SS'][iso]['sigma']
-            #alpha = self.effMap['Fake Tau SS'][iso]['alpha']
-            #n = self.effMap['Fake Tau SS'][iso]['n']
-            #norm = self.effMap['Fake Tau SS'][iso]['norm']
+        m0      = self.real_taus_json[paramGroups[0]]['m_{0}']
+        sigma   = self.real_taus_json[paramGroups[0]]['sigma']
+        alpha   = self.real_taus_json[paramGroups[0]]['alpha']
+        n       = self.real_taus_json[paramGroups[0]]['n']
+        norm    = self.real_taus_json[paramGroups[0]]['norm']
+        dataW   = self.bcdefgWeight * self.CBeff( pt, m0, sigma, alpha, n, norm )
+
+        m0      = self.real_taus_json[paramGroups[1]]['m_{0}']
+        sigma   = self.real_taus_json[paramGroups[1]]['sigma']
+        alpha   = self.real_taus_json[paramGroups[1]]['alpha']
+        n       = self.real_taus_json[paramGroups[1]]['n']
+        norm    = self.real_taus_json[paramGroups[1]]['norm']
+        dataW  += self.gWeight * self.CBeff( pt, m0, sigma, alpha, n, norm )
+
+        m0      = self.real_taus_json[paramGroups[2]]['m_{0}']
+        sigma   = self.real_taus_json[paramGroups[2]]['sigma']
+        alpha   = self.real_taus_json[paramGroups[2]]['alpha']
+        n       = self.real_taus_json[paramGroups[2]]['n']
+        norm    = self.real_taus_json[paramGroups[2]]['norm']
+        mcW     = self.CBeff( pt, m0, sigma, alpha, n, norm )
+
+        return dataW / mcW
+
+        #if genCode == 5 : # Real Hadronically decay Tau
+        #    m0 = self.real_taus_json[iso]['m_{0}']
+        #    sigma = self.real_taus_json[iso]['sigma']
+        #    alpha = self.real_taus_json[iso]['alpha']
+        #    n = self.real_taus_json[iso]['n']
+        #    norm = self.real_taus_json[iso]['norm']
+        #    #m0 = self.effMap['Real Tau'][iso]['m_{0}']
+        #    #sigma = self.effMap['Real Tau'][iso]['sigma']
+        #    #alpha = self.effMap['Real Tau'][iso]['alpha']
+        #    #n = self.effMap['Real Tau'][iso]['n']
+        #    #norm = self.effMap['Real Tau'][iso]['norm']
+        #    ''' for the moment stick with real vs. fake '''
+        #else : # Fake Tau (measurements were done in SS region)
+        #    m0 = self.same_sign_json[iso]['m_{0}']
+        #    sigma = self.same_sign_json[iso]['sigma']
+        #    alpha = self.same_sign_json[iso]['alpha']
+        #    n = self.same_sign_json[iso]['n']
+        #    norm = self.same_sign_json[iso]['norm']
+        #    #m0 = self.effMap['Fake Tau SS'][iso]['m_{0}']
+        #    #sigma = self.effMap['Fake Tau SS'][iso]['sigma']
+        #    #alpha = self.effMap['Fake Tau SS'][iso]['alpha']
+        #    #n = self.effMap['Fake Tau SS'][iso]['n']
+        #    #norm = self.effMap['Fake Tau SS'][iso]['norm']
         
         ### Temporary check using efficiency bins instead of fit function
         #if pt > 160 : pt = 159
@@ -194,15 +246,15 @@ class DoubleTau35Efficiencies :
         #return self.tight.GetBinContent( self.tight.FindBin( pt ) )
 
 
-        return self.CBeff( pt, m0, sigma, alpha, n, norm )
+        #return self.CBeff( pt, m0, sigma, alpha, n, norm )
 
 
 
 
 if __name__ == '__main__' :
     c = DoubleTau35Efficiencies('tt')
-    print c.doubleTauTriggerEff(68., 'VTightIso', 5 ) # 5 = gen_match real tau
-    print c.doubleTauTriggerEff(68., 'VTightIso', 3 ) # 3 = gen_match NOT real tau
-    print c.doubleTauTriggerEff(68., 'TightIso', 5 ) # 5 = gen_match real tau
-    print c.doubleTauTriggerEff(68., 'TightIso', 3 ) # 3 = gen_match NOT real tau
+    print c.doubleTauTriggerEff(68., 'VTightIso', 5, 1 ) # 5 = gen_match real tau
+    print c.doubleTauTriggerEff(68., 'VTightIso', 3, 0 ) # 3 = gen_match NOT real tau
+    print c.doubleTauTriggerEff(68., 'TightIso', 5 , 10 ) # 5 = gen_match real tau
+    print c.doubleTauTriggerEff(68., 'TightIso', 3 , 6 ) # 3 = gen_match NOT real tau
 

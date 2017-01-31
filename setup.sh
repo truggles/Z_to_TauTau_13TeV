@@ -8,7 +8,7 @@ pushd data
 git clone https://github.com/CMS-HTT/LeptonEfficiencies.git
 
 # Get the double tau trigger efficiencies provided by Riccardo Manzoni
-git clone https://github.com/rmanzoni/triggerSF.git
+git clone -b moriond17 https://github.com/rmanzoni/triggerSF.git
 popd
 
 
