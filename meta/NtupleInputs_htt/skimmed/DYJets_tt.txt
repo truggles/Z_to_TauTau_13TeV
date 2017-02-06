@@ -1,3 +1,4 @@
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets_0_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets_1_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets_2_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets_1_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets_2_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets_3_tt.root

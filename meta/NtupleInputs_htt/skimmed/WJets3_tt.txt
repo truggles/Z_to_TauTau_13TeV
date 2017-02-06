@@ -1,5 +1,5 @@
-/data/truggles/httJan25skimHTT_JES2Merged/WJets3_0_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/WJets3_1_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/WJets3_2_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/WJets3_3_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/WJets3_4_tt.root
+/data/truggles/httFeb06skimHTTMerged/WJets3_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/WJets3_1_tt.root
+/data/truggles/httFeb06skimHTTMerged/WJets3_2_tt.root
+/data/truggles/httFeb06skimHTTMerged/WJets3_3_tt.root
+/data/truggles/httFeb06skimHTTMerged/WJets3_4_tt.root

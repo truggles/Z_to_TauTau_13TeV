@@ -1,2 +1,2 @@
-/data/truggles/httJan25skimHTT_JES2Merged/DYJetsLow_0_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJetsLow_1_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJetsLow_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJetsLow_1_tt.root

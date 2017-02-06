@@ -1,1 +1,8 @@
-/data/truggles/httJan25skimHTT_JES2Merged/TT_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_1_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_2_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_3_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_4_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_5_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_6_tt.root
+/data/truggles/httFeb06skimHTTMerged/TT_7_tt.root

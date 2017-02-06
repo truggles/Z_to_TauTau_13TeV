@@ -1,6 +1,7 @@
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets1_0_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets1_1_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets1_2_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets1_3_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets1_4_tt.root
-/data/truggles/httJan25skimHTT_JES2Merged/DYJets1_5_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets1_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets1_1_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets1_2_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets1_3_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets1_4_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets1_5_tt.root
+/data/truggles/httFeb06skimHTTMerged/DYJets1_6_tt.root

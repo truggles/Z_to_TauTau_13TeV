@@ -1,1 +1,1 @@
-/data/truggles/httJan25skimHTT_JES2Merged/T-tW_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/T-tW_0_tt.root

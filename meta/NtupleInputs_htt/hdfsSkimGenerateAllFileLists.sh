@@ -1,7 +1,9 @@
 
 #ALL=/data/truggles/nov02-SMHTT-svFit
-ALL=/data/truggles/httJan25skimHTT_JES2Merged
-DATA=/data/truggles/httJan20skimHTTMerged
+#ALL=/data/truggles/httJan25skimHTT_JES2Merged
+#DATA=/data/truggles/httJan20skimHTTMerged
+ALL=/data/truggles/httFeb06skimHTTMerged
+DATA=${ALL}
 CHANNEL=tt
 
 #for SAMPLE in dataTT-B dataTT-C dataTT-D dataTT-E dataTT-F dataTT-G dataTT-H DYJets DYJets1 DYJets2 DYJets3 DYJets4 DYJetsLow EWKWPlus EWKWMinus EWKZ2l EWKZ2nu WWW WWZ WZZ ZZZ Tbar-tchan T-tchan TT Tbar-tW T-tW WJets WJets1 WJets2 WJets3 WJets4 WW1l1nu2q WZ1l1nu2q WZ1l3nu WZ2l2q ZZ2l2q VV WZ3l1nu ; do
