@@ -1147,7 +1147,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                     # Tau Energy Scale Saved
                     if gen_match_1[0] == 5 :
-                        tauIDweight_1[0] = 1.0
+                        tauIDweight_1[0] = 0.95 # 06 Feb 2017
                         pt_1_UP[0] = getattr( row, l1+'Pt' ) * 1.03
                         pt_1_DOWN[0] = getattr( row, l1+'Pt' ) * 0.97
                     else :
@@ -1155,7 +1155,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         pt_1_UP[0] = getattr( row, l1+'Pt' )
                         pt_1_DOWN[0] = getattr( row, l1+'Pt' )
                     if gen_match_2[0] == 5 :
-                        tauIDweight_2[0] = 1.0
+                        tauIDweight_2[0] = 0.95 # 06 Feb 2017
                         pt_2_UP[0] = getattr( row, l2+'Pt' ) * 1.03
                         pt_2_DOWN[0] = getattr( row, l2+'Pt' ) * 0.97
                     else :
