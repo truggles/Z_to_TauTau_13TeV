@@ -194,18 +194,14 @@ def getCurrentEvt( analysis, channel, row ) :
     leg1Pt = getattr(row, l1+'Pt')
     leg2Pt = getattr(row, l2+'Pt')
     if (analysis == 'htt' or analysis == 'Sync') and channel == 'tt' :
-        sign = ''
-        if getattr(row, '%s_%s_SS' % (l1,l2)) == 1 : sign = 'SS'
-        if getattr(row, '%s_%s_SS' % (l1,l2)) == 0 : sign = 'OS'
-
         if leg1Iso > leg2Iso :
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
         elif leg1Iso < leg2Iso :
-            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt, sign)
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
         elif leg1Pt > leg2Pt :
-            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
+            currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
         elif leg1Pt < leg2Pt :
-            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt, sign)
+            currentEvt = (leg2Iso, leg2Pt, leg1Iso, leg1Pt)
         else : print "Iso1 == Iso2 & Pt1 == Pt2", row.evt
     elif analysis == 'azh' :
         l3 = prodMap[channel][2]
@@ -215,7 +211,7 @@ def getCurrentEvt( analysis, channel, row ) :
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
         LT = leg1Pt +leg2Pt + leg3Pt + leg4Pt
         currentEvt = (closeZ, LT)
-    else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt, sign)
+    else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
 
     return currentEvt
 
@@ -556,7 +552,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ''' Select the version of each even we want to keep '''
     numRows = told.GetEntries()
     #print "Num rows %i" % numRows
-    prevEvt = (999, 0, 999, 0, '')
+    prevEvt = (999, 0, 999, 0)
     prevRunLumiEvt = (0, 0, 0)
     toFillMap = {}
     count = 0
@@ -572,6 +568,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             prevEvt = currentEvt
 
         count += 1
+
         
         if currentRunLumiEvt != prevRunLumiEvt :
             toFillMap[ prevRunLumiEvt ] = prevEvt
@@ -591,10 +588,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         Iso sorting is channel specific b/c tt uses MVA iso
         where are high value == good isolation
         """
-        if analysis == 'htt' and channel == 'tt' :
-            # OS has preference over SS regardless of iso and pt
-            #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
-            #    prevEvt = currentEvt
+        if (analysis == 'htt' or analysis == 'Sync') and channel == 'tt' :
             # lowest iso_1
             if currentEvt[ 0 ] > prevEvt[ 0 ] :
                 prevEvt = currentEvt
@@ -621,9 +615,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
         else :
-            # OS has preference over SS regardless of iso and pt
-            #if currentEvt[ 4 ] == 'OS' and prevEvt[ 4 ] == 'SS' :
-            #    prevEvt = currentEvt
             # lowest iso_1
             if currentEvt[ 0 ] < prevEvt[ 0 ] :
                 prevEvt = currentEvt
@@ -852,6 +843,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         if currentRunLumiEvt in toFillMap.keys() and currentEvt == toFillMap[ currentRunLumiEvt ] :
             #print "Fill choice:",currentRunLumiEvt, currentEvt
 
+            # This iso ordering is for the final selected permutation
+            # of a given event, it just changes flips t1 vs t2
+            # the actual permutation is selected elsewhere.
+            # For SM-HTT 2016, we pt order the final selected taus.
             #if channel == 'tt' : #and 'Sync-' in sample : 
             #    #print "### Iso Ordering %s ###" % sample
             #    isoOrder( channel, row )
