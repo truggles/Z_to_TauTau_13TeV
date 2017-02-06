@@ -47,6 +47,7 @@ ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
 tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1MatchesDoubleTau40Filter > 0 && t2MatchesDoubleTau40Filter > 0'
 tt35    = '((doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0) || (doubleTauCmbIso35RegPass > 0 && t1MatchesDoubleTauCmbIso35RegPath > 0 && t2MatchesDoubleTauCmbIso35RegPath > 0 && t1MatchesDoubleTauCmbIso35RegFilter > 0 && t2MatchesDoubleTauCmbIso35RegFilter > 0))'
+tt35mc    = '(doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0)'
 tt32    = 'doubleTau32Pass > 0 && t1MatchesDoubleTau32Path > 0 && t2MatchesDoubleTau32Path > 0 && t1MatchesDoubleTau32Filter > 0 && t2MatchesDoubleTau32Filter > 0'
 # TT PostSync
 ttL1IsoTaus = 't1L1IsoTauMatch > 0 && t2L1IsoTauMatch > 0 && doubleL1IsoTauMatch > 0' # Used in 2015 for double tau trigger screw up
@@ -200,7 +201,7 @@ def llttDR( l1,l2,l3,l4 ) :
 
 def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     
-    #triggers = [tt40, tt35,]
+    triggers = [tt40, tt35,]
 
     cutMap = { 
         'htt' : # analysis
@@ -313,11 +314,13 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     cuts1 = cutMap[ analysis ][ channel ][ cutName ]
 
     # Remove trigger requirements if MC except reHLT samples
-    #if not isData :
-    #    #if not isReHLT : 
-    #    for trig in triggers :
-    #        if trig in cuts1 :
-    #            cuts1.remove( trig )
+    if not isData :
+        #if not isReHLT : 
+        for trig in triggers :
+            if trig in cuts1 :
+                cuts1.remove( trig )
+                if analysis == 'htt' :
+                    cuts1.append( tt35mc )
 
     prodMap = {
         'em' : ('e', 'm'),
