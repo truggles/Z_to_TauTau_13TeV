@@ -466,9 +466,14 @@ def drawHistos(analysis, samples, **fargs ) :
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
-    ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']) ) )
+    #ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']) ) )
     gROOT.SetBatch(True)
     
+    ''' Start multiprocessing tests '''
+    #output = multiprocessing.Queue()
+    pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
+    multiprocessingOutputs = []
+
     for sample in samples :
     
         numFilesPerCycle = fargs['numFilesPerCycle']
@@ -541,8 +546,38 @@ def drawHistos(analysis, samples, **fargs ) :
 
                 blind = False
                 outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
-                analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind, skipSSQCDDetails )
-                outFile.Close()
+                if not fargs['debug'] == 'true' :
+                    multiprocessingOutputs.append( pool.apply_async(analysisPlots.plotHistosProof,
+                                                                                    args=(analysis,
+                                                                                    outFile,
+                                                                                    chain,
+                                                                                    sample,
+                                                                                    channel,
+                                                                                    isData,
+                                                                                    additionalCut,
+                                                                                    blind,
+                                                                                    skipSSQCDDetails)) )
+                """ for debugging without multiprocessing """
+                if fargs['debug'] == 'true' :
+                    analysisPlots.plotHistosProof(
+                                                                                    analysis,
+                                                                                    outFile,
+                                                                                    chain,
+                                                                                    sample,
+                                                                                    channel,
+                                                                                    isData,
+                                                                                    additionalCut,
+                                                                                    blind,
+                                                                                    skipSSQCDDetails) 
+                #analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind, skipSSQCDDetails )
+                #outFile.Close()
+
+    if fargs['debug'] != 'true' :
+        mpResults = [p.get() for p in multiprocessingOutputs]
+    
+    print "#################################################################"
+    print "###               Finished plotting all samples               ###"
+    print "#################################################################"
          
 
 if __name__ == '__main__' :

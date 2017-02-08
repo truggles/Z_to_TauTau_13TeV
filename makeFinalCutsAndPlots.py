@@ -61,7 +61,9 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
         'svFitPost' : 'false',
         'doFRMthd' : 'false',
         'skimmed' : skimmed,
-        'skipSSQCDDetails' : skipSSQCDDetailsX
+        'skipSSQCDDetails' : skipSSQCDDetailsX,
+        'debug' : 'true'
+        #'debug' : 'false'
     }
 
     isoL2loose = '(by%sIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 < 0.5 && by%sIsolationMVArun2v1DBoldDMwLT_2 > 0.5)' % (isoVal, isoT, isoL)
@@ -120,7 +122,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     import analysis3Plots
     from meta.sampleNames import returnSampleDetails
     samples = returnSampleDetails( analysis, samples )
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     #### LEGACY HTT CATEGORIES ###
     higgsPtVar = 'Higgs_Pt'
