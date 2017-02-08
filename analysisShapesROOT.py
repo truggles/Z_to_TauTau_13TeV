@@ -305,50 +305,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if '_' in var and ('Up' in var or 'Down' in var) :
                         systName = var.split('_')[-1]
                         histos[ name ] = ROOT.TH1D( name+systName, name+systName, numBins, binArray )
-                    #if '_energyScaleUp' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'energyScaleUp', name+'energyScaleUp', numBins, binArray )
-                    #elif '_energyScaleDown' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'energyScaleDown', name+'energyScaleDown', numBins, binArray )
-                    #elif '_tauPtUp' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'tauPtUp', name+'tauPtUp', numBins, binArray )
-                    #elif '_tauPtDown' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'tauPtDown', name+'tauPtDown', numBins, binArray )
-                    #elif '_zPtUp' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'zPtUp', name+'zPtUp', numBins, binArray )
-                    #elif '_zPtDown' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'zPtDown', name+'zPtDown', numBins, binArray )
-                    #elif '_topPtUp' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'topPtUp', name+'topPtUp', numBins, binArray )
-                    #elif '_topPtDown' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'topPtDown', name+'topPtDown', numBins, binArray )
-                    #elif '_JESUp' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'JESUp', name+'JESUp', numBins, binArray )
-                    #elif '_JESDown' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'JESDown', name+'JESDown', numBins, binArray )
-                    #elif '_JetToTauUp' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'jetToTauUp', name+'jetToTauUp', numBins, binArray )
-                    #elif '_JetToTauDown' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'jetToTauDown', name+'jetToTauDown', numBins, binArray )
-                    #elif '_ggHUp' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'ggHUp', name+'ggHUp', numBins, binArray )
-                    #elif '_ggHDown' in var :
-                    #    histos[ name ] = ROOT.TH1D( name+'ggHDown', name+'ggHDown', numBins, binArray )
-                    #elif '_ffSystUp' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'ffSystUp', name+'ffSystUp', numBins, binArray )
-                    #elif '_ffSystDown' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'ffSystDown', name+'ffSystDown', numBins, binArray )
-                    #elif '_ffStatUp' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'ffStatUp', name+'ffStatUp', numBins, binArray )
-                    #elif '_ffStatDown' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'ffStatDown', name+'ffStatDown', numBins, binArray )
-                    #elif '_metResponseUp' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'metResponseUp', name+'metResponseUp', numBins, binArray )
-                    #elif '_metResponseDown' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'metResponseDown', name+'metResponseDown', numBins, binArray )
-                    #elif '_metResolutionUp' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'metResolutionUp', name+'metResolutionUp', numBins, binArray )
-                    #elif '_metResolutionDown' in var and doFF :
-                    #    histos[ name ] = ROOT.TH1D( name+'metResolutionDown', name+'metResolutionDown', numBins, binArray )
                     else :
                         histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
                 else :
@@ -509,10 +465,13 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
 
-                    # JES Breakdown
                     shiftDir = ''
-                    if var[-2:] == 'Up' : shiftDir = 'Up'
-                    if var[-4:] == 'Down' : shiftDir = 'Down'
+                    shiftVar = var.replace('_ffStat','').replace('_ffSyst','')
+                    if shiftVar[-2:] == 'Up' : shiftDir = 'Up'
+                    if shiftVar[-4:] == 'Down' : shiftDir = 'Down'
+                    assert( shiftDir == 'Up' or shiftDir == 'Down' ), "Is var a +/- shift? ",var
+
+                    # JES Breakdown
                     if '_JES' in var :
                         jesUnc = var.split('_')[-1]
                         jesUnc = jesUnc.replace('JES', '')
@@ -523,89 +482,48 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
                     if '_zPt' in var :
                         if name not in ['ZTT','ZL','ZJ','ZLL',] : continue
-                        elif '_zPtUp' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeVUp' )
-                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeVUp' )
-                        elif '_zPtDown' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeVDown' )
-                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeVDown' )
+                        elif '_zPt' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeV'+shiftDir )
                     elif '_topPt' in var :
                         if name not in ['_TTT_','_TTJ_'] : continue
-                        elif '_topPtUp' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVUp' )
-                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVUp' )
-                        elif '_topPtDown' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
-                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeVDown' )
+                        elif '_topPt' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
                     #elif name in ['TTT','TTJ'] : continue # this is to catch TT when it's not wanted
-                    elif '_energyScaleUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVUp' )
-                    elif '_energyScaleDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeVDown' )
+                    elif '_energyScale' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeV'+shiftDir )
                     elif '_JES' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_'+jesUnc )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_'+jesUnc )
-                    #elif '_JESUp' in var :
-                    #    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVUp' )
-                    #    histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVUp' )
-                    #elif '_JESDown' in var :
-                    #    histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_13TeVDown' )
-                    #    histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_13TeVDown' )
-                    elif '_JetToTauUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVUp' )
-                    elif '_JetToTauDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_jetToTauFake_13TeVDown' )
-                    elif '_tauPtUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVUp' )
-                    elif '_tauPtDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeVDown' )
-                    elif '_ggHUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeVUp' )
-                    elif '_ggHDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeVDown' )
-                    elif '_ZmumuUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVUp' )
-                    elif '_ZmumuDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVDown' )
+                    elif '_JetToTau' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_jetToTauFake_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_jetToTauFake_13TeV'+shiftDir )
+                    elif '_tauPt' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeV'+shiftDir )
+                    elif '_ggH' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
+                    elif '_Zmumu' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeV'+shiftDir )
                     ### For these Fake Factor shapes, we need 2 copies with slightly different names
-                    elif '_ffSystUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVUp' )
-                        systUp = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVUp' )
-                        systUp.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVUp' )
-                        systUp.Write()
-                        del systUp
-                    elif '_ffSystDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVDown' )
-                        systDown = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVDown' )
-                        systDown.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVDown' )
-                        systDown.Write()
-                        del systDown
-                    elif '_ffStatUp' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVUp' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVUp' )
-                        statUp = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVUp' )
-                        statUp.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVUp' )
-                        statUp.Write()
-                        del statUp
-                    elif '_ffStatDown' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVDown' )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVDown' )
-                        statDown = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVDown' )
-                        statDown.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVDown' )
-                        statDown.Write()
-                        del statDown
+                    elif '_ffSyst' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeV'+shiftDir )
+                        shift = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeV'+shiftDir )
+                        shift.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeV'+shiftDir )
+                        shift.Write()
+                        del shift
+                    elif '_ffStat' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeV'+shiftDir )
+                        shift = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeV'+shiftDir )
+                        shift.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeV'+shiftDir )
+                        shift.Write()
+                        del shift
                     histos[ name ].Write()
                 else :
                     histos[ name ].SetTitle( name.strip('_') )
