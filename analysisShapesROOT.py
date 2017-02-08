@@ -114,7 +114,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             samples['RedBkgShape-%s' % era] = 'RedBkg'
 
     if doFF :
-        samples['QCD'] = 'jetFakes'
+        for era in eras :
+            samples['QCD-%s' % era] = 'jetFakes'
     
     # Remove samples which are not part of input samples
     # and build list of names/samples which will be used
@@ -126,6 +127,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         # Keep QCD if normal htt analysis
         if samp == 'QCD' and analysis == 'htt' and not doFF :
             if samples[samp] not in nameArray : nameArray.append( samples[samp] )
+            if samp not in inSamples.keys() : inSamples[samp] = 'qcd'
 
         if samp not in inSamples.keys() :
             del samples[samp]
@@ -142,6 +144,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     # Using final samples map, build nameArray
     for samp in samples :
         if samples[samp] not in nameArray : nameArray.append( samples[samp] )
+
     
     extra = ''
     checkDir( '%sShapes' % analysis )
@@ -225,6 +228,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if not (('_energyScale' in var) or ('_zPt' in var) or\
                             ('_ffSyst' in var) or ('_ffStat' in var) or ('_topPt' in var) or\
                             ('_metResponse' in var) or ('_metResolution' in var)\
+                            or ('_JES' in var) or ('_JetToTau' in var) or \
+                            ('_Zmumu' in var) or ('_ggH' in var) \
                             or ('_ffSub' in var) or (baseVar == var)) :
                         continue
 
@@ -253,32 +258,33 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
             #print "MSSM btag option:",ops['btag']
             binArray = array( 'd', [] )
-            if ops['mssm'] :
-                print "MSSM btag option:",ops['btag']
-                #if ops['btag'] == True :
-                #if doBTagging == True :
-                if 'ZTT' in folderDetails :
-                    print "Inclusive"
-                    binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-                elif 'NoBTL' in ops['folderDetails'] :
-                    print "No-BTAGGING"
-                    binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-                elif 'NoBTL' not in ops['folderDetails'] :
-                    print "BTAGGING"
-                    binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #if ops['mssm'] :
+            #    print "MSSM btag option:",ops['btag']
+            #    #if ops['btag'] == True :
+            #    #if doBTagging == True :
+            #    if 'ZTT' in folderDetails :
+            #        print "Inclusive"
+            #        binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #    elif 'NoBTL' in ops['folderDetails'] :
+            #        print "No-BTAGGING"
+            #        binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #    elif 'NoBTL' not in ops['folderDetails'] :
+            #        print "BTAGGING"
+            #        binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
 
-            elif var == 'mt_tot' :
-                binArray = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
-                        80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
-                        170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
-                        350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
-                        1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
-                        3300.0,3500.0,3700.0,3900.0] )
-            elif ops['sync'] :
+            #elif var == 'mt_tot' :
+            #    binArray = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
+            #            80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
+            #            170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
+            #            350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
+            #            1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
+            #            3300.0,3500.0,3700.0,3900.0] )
+            if ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
             # This is the proposed binning for ZTT 2015 paper
             elif doFF and ('m_sv' in var or 'm_vis' in var) :
-                binArray = array( 'd', [i*10 for i in range( 31 )] )
+                if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
+                else : binArray = array( 'd', [i*10 for i in range( 31 )] )
             else :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 elif ops['category'] in ['1jet_low', '1jet_high'] :
@@ -367,13 +373,13 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     tFile = ROOT.TFile('%s%s/%s_em.root' % (analysis, folderDetails, sample), 'READ')
                 elif 'dataTT' in sample :
                     tFile = ROOT.TFile('%s%s/%s_tt.root' % (analysis, folderDetails, sample), 'READ')
-                elif sample == 'QCD' :
+                elif 'QCD' in sample :
                     if ops['useQCDMakeName'] != 'x'  :
                         print "Use QCD MAKE NAME: ",ops['useQCDMakeName']
                         tFile = ROOT.TFile('meta/%sBackgrounds/%s_qcdShape_%s.root' % (analysis, channel, ops['useQCDMakeName']), 'READ')
                     elif doFF :
                         tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
-                        print " \n### Using Fake Factor QCD Shape !!! ###\n"
+                        #print " \n### Using Fake Factor QCD Shape !!! ###\n"
                     else :
                         print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
                 elif ops['redBkg'] and 'RedBkgShape' in sample :
@@ -387,7 +393,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if not doFF :
                     hist = dic.Get( "%s" % var )
                 if doFF :
-                    if sample == 'QCD' :
+                    if 'QCD' in sample :
                         hist = dic.Get( "%s_ffSub" % var )
                     else :
                         hist = dic.Get( "%s" % var )
@@ -395,10 +401,13 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             if not '_ffSub' in var :
                                 ffSubHist = dic.Get( var+'_ffSub' )
                                 #print sample," FF Sub int",ffSubHist.Integral()
-                                ffSubHist2 = ffSubHist.Rebin( numBins, "rebinned", binArray )
+                                if ":" in var :
+                                    ffSubHist2 = unroll2D( ffSubHist )
+                                else :
+                                    ffSubHist2 = ffSubHist.Rebin( numBins, "rebinned", binArray )
                                 ffSubHist2.GetXaxis().SetRangeUser( binArray[0], binArray[-1] )
-                                if "DYJets" in sample and "ZTT" in sample :
-                                    ffSubHist2.Scale( zttScaleTable[ops['category']] )
+                                #if "DYJets" in sample and "ZTT" in sample :
+                                #    ffSubHist2.Scale( zttScaleTable[ops['category']] )
                                 histos[ 'jetFakes' ].Add( ffSubHist2, -1.0 )
                 hist.SetDirectory( 0 )
                 #print "Hist yield before scaling ",hist.Integral()
@@ -464,6 +473,11 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             shapeDir.cd()
             for name in histos :
                 #print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
+                # First, if we are doing Fake Factor and jetFakes is negative
+                # zero it
+                if histos[ name ].Integral() < 0.0 and name == 'jetFakes' :
+                    for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
+                        histos[ name ].SetBinContent( bin_, setVal )
                 # Make sure we have no negative bins
                 for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
                     setVal = 0.0
@@ -478,7 +492,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
                 # Proper naming of output histos
                 if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
-                        or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var) :
+                        or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var \
+                        or '_ffSyst' in var or '_ffStat' in var) :
 
                     # Systematics naming removes CRs
                     category = ops['category'].strip('_qcd_cr')
@@ -499,17 +514,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if var[-2:] == 'Up' : shiftDir = 'Up'
                     if var[-4:] == 'Down' : shiftDir = 'Down'
                     if '_JES' in var :
-                        print var
                         jesUnc = var.split('_')[-1]
-                        print jesUnc
                         jesUnc = jesUnc.replace('JES', '')
-                        print jesUnc
                         if 'Up' in jesUnc[-2:] : jesUnc = jesUnc[:-2]
-                        print jesUnc
                         if 'Down' in jesUnc[-4:] : jesUnc = jesUnc[:-4]
-                        print jesUnc
-                        jesUnc += '_13TeV'+shiftDir
-                        print jesUnc
+                        if jesUnc == '' : jesUnc += '13TeV'+shiftDir
+                        else : jesUnc += '_13TeV'+shiftDir
     
                     if '_zPt' in var :
                         if name not in ['ZTT','ZL','ZJ','ZLL',] : continue
@@ -567,6 +577,35 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     elif '_ZmumuDown' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVDown' )
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeVDown' )
+                    ### For these Fake Factor shapes, we need 2 copies with slightly different names
+                    elif '_ffSystUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVUp' )
+                        systUp = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVUp' )
+                        systUp.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVUp' )
+                        systUp.Write()
+                        del systUp
+                    elif '_ffSystDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeVDown' )
+                        systDown = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVDown' )
+                        systDown.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeVDown' )
+                        systDown.Write()
+                        del systDown
+                    elif '_ffStatUp' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVUp' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVUp' )
+                        statUp = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVUp' )
+                        statUp.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVUp' )
+                        statUp.Write()
+                        del statUp
+                    elif '_ffStatDown' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVDown' )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeVDown' )
+                        statDown = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVDown' )
+                        statDown.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeVDown' )
+                        statDown.Write()
+                        del statDown
                     histos[ name ].Write()
                 else :
                     histos[ name ].SetTitle( name.strip('_') )

@@ -210,15 +210,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for var, info in newVarMap.iteritems() :
     
             # This is to speed up the Data Card making process by 2x and not
-            # create all the plots for SS when all we need it the yield from eta_1
-            if ops['isSSQCD'] and not var == 'eta_1' : continue
+            # create all the plots for SS when all we need it the yield from m_vis
+            if ops['isSSQCD'] and not var == 'm_vis' : continue
 
             # speed up 2D plotting
             if ":" in var :
                 if 'VBF' in ops['qcdMakeDM'] :
                     if not ('mjj' in var or 'vbfMass' in var) : continue
                 elif 'boosted' in ops['qcdMakeDM'] :
-                    if not ('pt_sv' in var) : continue
+                    if not ('Higgs_Pt' in var) : continue
+                    #FIXME if not ('pt_sv' in var) : continue
                 #elif '0jet' in ops['qcdMakeDM'] :
                 #    if not ('pt_1' in var) : continue
                 else : continue
@@ -464,7 +465,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         hist = preHist.Rebin( xNum, "rebinned", xBins )
     
     
-                if var == 'eta_1' :
+                if var == 'm_vis' :
                     if 'data' in sample and qcdMake : finalDataYield = hist.Integral()
     
                 ''' Good Debugging stuff '''
@@ -606,7 +607,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 else :
                     qcdVar.GetXaxis().SetRangeUser( info[1], info[2] )
                 print "qcdVar: %f   mean %f" % (qcdVar.Integral(), qcdVar.GetMean() )
-                if var == 'eta_1' :
+                if var == 'm_vis' :
                     finalQCDYield = qcdVar.Integral()
                 qcdDir.cd()
                 qcdVar.Write()

@@ -57,6 +57,10 @@ def skipSystShapeVar( var, sample, channel ) :
         # Energy Scale reweighting applied to all MC based on gen_match
         elif '_energyScale' in var :
             if 'data' in sample : return True
+            # This is QCD with an era
+            # thus means fake factor 
+            # method which is fully data driven
+            if 'QCD-' in sample :return True
 
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
         # do run for DYJetsLow as weight is set to 1
@@ -66,12 +70,16 @@ def skipSystShapeVar( var, sample, channel ) :
         # top pt reweighting only applied to ttbar
         elif '_topPt' in var :
             if 'TT' not in sample : return True
-            elif 'data' in sample :return True
-            elif 'DYJets' in sample : return True
+            elif 'data' in sample :return True # for dataTT
+            elif 'DYJets' in sample : return True # for ZTT
 
         # Jet Energy Scale, no data
         elif '_JES' in var :
             if 'data' in sample : return True
+            # This is QCD with an era
+            # thus means fake factor 
+            # method which is fully data driven
+            if 'QCD-' in sample :return True
 
         # Jet to Tau Fake, no data
         elif '_JetToTau' in var :
@@ -180,9 +188,9 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
 
         # Choose appropriate weight for the category
         if   'ZTT0jet' in fName     : app = "FFWeightQCD0Jet"
-        elif 'ZTTBoosted' in fName  : app = "FFWeightQCDBoosted"
+        elif 'ZTTboosted' in fName  : app = "FFWeightQCDBoosted"
         elif 'ZTTVBF' in fName      : app = "FFWeightQCDVBF"
-        else                        : app = "FFWeightQCDInc"
+        else                        : app = "FFWeightQCD0Jet"
 
         # Check if a FF shape variable
         if '_ffStatUp' in var   : app += '_StatUP'
@@ -194,6 +202,9 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
         app = "*("+app+")"
 
     # Return an empty string or appropriate FF Shape syst
+    #print "ffRegion: ",ffRegion
+    #print "File Name: ",fName
+    #print "Append: ",app
     return app
 
 
@@ -205,6 +216,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     newVarMapUnsorted = getHistoDict( analysis, channel )
     newVarMap = returnSortedDict( newVarMapUnsorted )
 
+    #print outFile, channel
     histosDir = outFile.mkdir( "%s_Histos" % channel )
     histosDir.cd()
 
@@ -348,8 +360,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         jesUnc = 'En'
         if 'JES' in var and 'data' not in sample :
             # with ~30 shifts, get the name of the shift
-            for unc in jesUncerts :
-                if unc in var : jesUnc = unc
+            if doFullJES :
+                for unc in jesUncerts :
+                    if unc in var : jesUnc = unc
             if 'Up' in var[-2:] :
                 if doFullJES :
                     # jDeta is minimally impacted by JES shifts, so the minor adjustments are not saved atm
@@ -439,10 +452,13 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     plotVar = varBase
                 #if 'mjj:m_sv' in var :
                 if 'mjj:m_vis' in var :
-                    if 'Up' in var[-2:] : # Make sure we check the last 2 chars
+                    # Strip _ffSub off for a comparison with the actual shifts
+                    if doFF : compVar = var.replace('_ffSub','')
+                    else : compVar = var
+                    if 'Up' in compVar[-2:] : # Make sure we check the last 2 chars
                         #plotVar = 'vbfMass_Jet%sUp:m_sv' % jesUnc
                         plotVar = 'vbfMass_Jet%sUp:m_vis' % jesUnc
-                    if 'Down' in var[-4:] : # Make sure we check the last 4 chars
+                    if 'Down' in compVar[-4:] : # Make sure we check the last 4 chars
                         #plotVar = 'vbfMass_Jet%sDown:m_sv' % jesUnc
                         plotVar = 'vbfMass_Jet%sDown:m_vis' % jesUnc
                 else : # For this one, we adjust the additionalCuts to 
@@ -496,7 +512,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         histos[ var ].Write()
 
     #outFile.Write()
-    return outFile
+    #return outFile
+    outFile.Close()
 
 
 # Provides a list of histos to create for both channels
@@ -504,39 +521,39 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
-#XXX            'mjj' : [40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'],
-#XXX            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
-#XXX            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+            'mjj' : [40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'],
+            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
+            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
 #XXX            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
-#XXX            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
-#XXX#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
-#XXX#            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
-#XXX#            'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
-#XXX#            'LT' : [600, 0, 300, 20, 'Total LT [GeV]', ' GeV'],
-#XXX#            'Mt' : [600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'],
-#XXX            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
-#XXX            't1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
-#XXX#            #'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
-#XXX            'mvamet' : [100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'],
-#XXX#            'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
-#XXX#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
-#XXX#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
-#XXX#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-#XXX            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
-#XXX            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
-#XXX#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
-#XXX#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
-#XXX#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
-#XXX#            #'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
-#XXX#            #'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
-#XXX#            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
-#XXX#            'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
-#XXX#            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
-#XXX#            'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
-#XXX#            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
-#XXX#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
-#XXX            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
-#XXX            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
+            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
+#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
+#            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
+#            'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
+#            'LT' : [600, 0, 300, 20, 'Total LT [GeV]', ' GeV'],
+#            'Mt' : [600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'],
+            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+#            't1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
+            'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
+#            'mvamet' : [100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'],
+#            'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
+#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
+#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
+#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
+            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
+#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
+#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
+#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
+#            #'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
+#            #'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
+            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
+#            'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
+            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
+#            'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
+#            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
+#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
+            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
+            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             'mjj:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'Higgs_Pt:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
@@ -629,22 +646,22 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-#                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
-#                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
+                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
                 'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
-#                'iso_1' : [100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''],
+                'iso_1' : [100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''],
 #                'chargedIsoPtSum_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'],
 #                'chargedIsoPtSum_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'],
 #                'chargedIsoPtSumdR03_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'],
 #                'chargedIsoPtSumdR03_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'],
-#                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
-#                'gen_match_2' : [14, 0, 7, 1, '#tau_{2} Gen Match', ''],
-#                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
-#                'iso_2' : [100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''],
-#                'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
+                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+                'gen_match_2' : [14, 0, 7, 1, '#tau_{2} Gen Match', ''],
+                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
+                'iso_2' : [100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''],
+                'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
 #                #'t1JetPt' : [400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'],
 #                'm_1' : [60, 0, 3, 4, 't1 Mass', ' GeV'],
-#                'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
+                'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
 #                #'t2JetPt' : [400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'],
 #                'm_2' : [60, 0, 3, 4, 't2 Mass', ' GeV'],
                 #'t1ChargedIsoPtSum' : [0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'],
