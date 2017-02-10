@@ -60,7 +60,7 @@ def skipSystShapeVar( var, sample, channel ) :
             # This is QCD with an era
             # thus means fake factor 
             # method which is fully data driven
-            if 'QCD-' in sample :return True
+            if 'QCD-' in sample : return True
 
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
         # do run for DYJetsLow as weight is set to 1
@@ -70,7 +70,7 @@ def skipSystShapeVar( var, sample, channel ) :
         # top pt reweighting only applied to ttbar
         elif '_topPt' in var :
             if 'TT' not in sample : return True
-            elif 'data' in sample :return True # for dataTT
+            elif 'data' in sample : return True # for dataTT
             elif 'DYJets' in sample : return True # for ZTT
 
         # Jet Energy Scale, no data
@@ -79,12 +79,13 @@ def skipSystShapeVar( var, sample, channel ) :
             # This is QCD with an era
             # thus means fake factor 
             # method which is fully data driven
-            if 'QCD-' in sample :return True
+            if 'QCD-' in sample : return True
 
         # Jet to Tau Fake, no data
         elif '_JetToTau' in var :
             #if 'data' in sample : return True
-            if not ('TT' in sample or 'DYJets' in sample or 'WJets' in sample) :
+            if not ('TTJ' in sample or 'ZJ' in sample or 'WJets' in sample \
+                    or 'VVJ' in sample) :
                 return True
 
         # ggH Scale, only for ggH

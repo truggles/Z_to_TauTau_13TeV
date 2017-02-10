@@ -461,6 +461,10 @@ def drawHistos(analysis, samples, **fargs ) :
                 'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
         'TTJ' : {
                 'tt' : '*(gen_match_1 != 5 || gen_match_2 != 5)'},
+        'VVT' : {
+                'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
+        'VVJ' : {
+                'tt' : '*(gen_match_1 != 5 || gen_match_2 != 5)'},
         'RedBkgYield' : {'xxxx' : '*(1.)'},
         'RedBkgShape' : {'xxxx' : '*(1.)'},
     }
@@ -489,6 +493,13 @@ def drawHistos(analysis, samples, **fargs ) :
             loopList.append( sample ) 
         elif sample == 'TT' and analysis == 'htt' :
             genList = ['TTT', 'TTJ']
+            loopList = genList
+            loopList.append( sample ) 
+        elif sample in ['T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan', 
+                'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
+                'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
+                'VV', 'WWW', 'ZZZ'] and analysis == 'htt' :
+            genList = ['VVT', 'VVJ']
             loopList = genList
             loopList.append( sample ) 
         elif 'data' in sample and doFF :

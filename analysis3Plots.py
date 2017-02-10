@@ -51,6 +51,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     if analysis == 'htt' :
         genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
         dyJets = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow']
+        vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
+             'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
+             'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
+
         newSamples = {}
         for sample in samples.keys() :
             #print sample
@@ -65,6 +69,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
                     genApp = 'ttbar'
                     samples[ sample+'-'+gen ]['group'] = genApp
+            if sample in vv : 
+                for gen in ['VVT', 'VVJ'] :
+                    samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
+                    genApp = 'dib'
+                    samples[ sample+'-'+gen ]['group'] = genApp
 
         # Clean the samples list
         if analysis == 'htt' and 'TT' in samples.keys() :
@@ -72,6 +81,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for dyJet in dyJets :
             if dyJet in samples.keys() :
                 del samples[ dyJet ]
+        for vvSamp in vv :
+            if vvSamp in samples.keys() :
+                del samples[ vvSamp ]
         if not doFF :
             samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 

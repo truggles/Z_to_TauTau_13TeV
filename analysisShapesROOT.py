@@ -136,11 +136,21 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     # Add DYJets gen splitting and ttbar
     genMapDYJ = ['ZTT', 'ZLL', 'ZL', 'ZJ']
     genMapTT = ['TTT', 'TTJ']
+    genMapVV = ['VVT', 'VVJ']
+    vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
+         'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
+         'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
     for samp in inSamples.keys() :
         if 'DYJets' in samp and not '-' in samp : # '-' means we already have Gen additions
             for gen in genMapDYJ : samples[samp+'-'+gen] = gen
-        if samp == 'TT' and not '-' in samp : # '-' means we already have Gen additions
+        elif samp == 'TT' and not '-' in samp : # '-' means we already have Gen additions
             for gen in genMapTT : samples[samp+'-'+gen] = gen
+        elif samp in vv and not '-' in samp :
+            for gen in genMapVV : samples[samp+'-'+gen] = gen
+        # single top sample with only 1 '-'
+        elif samp in ['T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan'] \
+                and samp.count('-') == 1 :
+            for gen in genMapVV : samples[samp+'-'+gen] = gen
     # Using final samples map, build nameArray
     for samp in samples :
         if samples[samp] not in nameArray : nameArray.append( samples[samp] )
@@ -458,7 +468,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if name == 'jetFakes' and not doFF : continue
                     if name == 'jetFakes' and not ('_ffSyst' in var or '_ffStat' in var) : continue
                     if '_ggH' in var and not name in ['ggH120','ggH125','ggH130'] : continue
-                    if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ'] : continue
+                    if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ'] : continue
                     if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ'] or \
                             category != 'VBF') : continue # Shape only used in VBF category atm
                     lep = 'x'
@@ -486,7 +496,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeV'+shiftDir )
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeV'+shiftDir )
                     elif '_topPt' in var :
-                        if name not in ['_TTT_','_TTJ_'] : continue
+                        if name not in ['TTT','TTJ'] : continue
                         elif '_topPt' in var :
                             histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
