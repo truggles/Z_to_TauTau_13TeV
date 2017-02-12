@@ -439,7 +439,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         jesUnc = jesUnc.replace('JES', '')
                         if 'Up' in jesUnc[-2:] : jesUnc = jesUnc[:-2]
                         if 'Down' in jesUnc[-4:] : jesUnc = jesUnc[:-4]
-                        if jesUnc == '' : jesUnc += '13TeV'+shiftDir
+
+                        if jesUnc == '' : jesUnc = '13TeV'+shiftDir
+                        # Keep a normal shift included for checks at Combine level
+                        elif 'Total' in jesUnc and 'Sub' not in jesUnc : jesUnc = '13TeV'+shiftDir
                         else : jesUnc += '_13TeV'+shiftDir
     
                     if '_zPt' in var :
