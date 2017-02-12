@@ -490,18 +490,18 @@ def drawHistos(analysis, samples, **fargs ) :
         if 'DYJets' in sample and analysis == 'htt' :
             genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
             loopList = genList
-            loopList.append( sample ) 
+            #loopList.append( sample ) # don't keep full original
         elif sample == 'TT' and analysis == 'htt' :
             genList = ['TTT', 'TTJ']
             loopList = genList
-            loopList.append( sample ) 
+            #loopList.append( sample ) # don't keep full original
         elif sample in ['T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan', 
                 'WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
                 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
                 'VV', 'WWW', 'ZZZ'] and analysis == 'htt' :
             genList = ['VVT', 'VVJ']
             loopList = genList
-            loopList.append( sample ) 
+            #loopList.append( sample ) # don't keep full original
         elif 'data' in sample and doFF :
             loopList.append( sample )
             loopList.append( 'QCD-'+sample.split('-')[1] )
@@ -567,7 +567,8 @@ def drawHistos(analysis, samples, **fargs ) :
                                                                                     isData,
                                                                                     additionalCut,
                                                                                     blind,
-                                                                                    skipSSQCDDetails)) )
+                                                                                    skipSSQCDDetails,
+                                                                                    sample+'-'+subName)) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
                     analysisPlots.plotHistosProof(
@@ -579,7 +580,8 @@ def drawHistos(analysis, samples, **fargs ) :
                                                                                     isData,
                                                                                     additionalCut,
                                                                                     blind,
-                                                                                    skipSSQCDDetails) 
+                                                                                    skipSSQCDDetails,
+                                                                                    sample+'-'+subName) 
                 #analysisPlots.plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind, skipSSQCDDetails )
                 #outFile.Close()
 
