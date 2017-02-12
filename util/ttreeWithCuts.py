@@ -9,18 +9,27 @@ def ttreeWithCuts( oldFile, oldTreePath, fOutName='ttreeWithCut.root', cut='' ) 
     fOut = ROOT.TFile(fOutName,'RECREATE')
     tOut = t.CopyTree( cut )
     print "Num events in new TTree:",tOut.GetEntries()
-    
+
     fOut.cd()
+    
+    # Make same directory path
+    info = oldTreePath.split('/')
+    info.pop() # Get rid of TTree name
+    newPath = '/'.join( info )
+    fOut.mkdir( newPath )
+    fOut.cd( newPath )
+    print "New path: %s/%s" % (newPath, tOut.GetName() )
+
     tOut.Write()
     fOut.Close()
 
 
 
 if __name__ == '__main__' :
-    oldFile = 'vbf.root'
+    oldFile = 'Sync1Feb12/Sync-VBF125_9_tt.root'
     oldTreePath = 'tt/final/Ntuple'
     fOutName = 'vbfCut.root'
-    cut = '(evt==1428178)'
+    cut = '(t1Pt>200 && t2Pt > 200)'
     ttreeWithCuts( oldFile, oldTreePath, fOutName, cut )
 
 
