@@ -202,6 +202,67 @@ def getProdMap() :
     }
     return prodMap
 
+
+# Provides a gen matched expanded list of samples
+# with the key, val being name = data card name
+def dataCardGenMatchedSamples( inSamples ) :
+    assert( type(inSamples) == type(OrderedDict())
+        or type(inSamples) == type({}) ), "Provide a samples list which \
+        is a dict or OrderedDict"
+    samples = OrderedDict()
+    genMapDYJ = ['ZTT', 'ZLL', 'ZL', 'ZJ']
+    dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]# 'DYJetsLow']
+    for dyj in dyJets :
+        if dyj in inSamples :
+            for gen in genMapDYJ : samples[dyj+'-'+gen] = gen
+
+    genMapTT = ['TTT', 'TTJ']
+    if 'TT' in inSamples :
+        for gen in genMapTT : samples['TT-'+gen] = gen
+    
+    genMapVV = ['VVT', 'VVJ']
+    vvs = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
+         'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
+         'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
+    for vv in vvs :
+        if vv in inSamples :
+            for gen in genMapVV : samples[vv+'-'+gen] = gen
+
+    WJets = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'EWKWPlus', 'EWKWMinus']
+    for wjet in WJets :
+        if wjet in inSamples : samples[wjet] = 'W'
+
+    ewkZs = ['EWKZ2l', 'EWKZ2nu']
+    for ewkZ in ewkZs :
+        if ewkZ in inSamples : samples[ewkZ] = 'EWKZ'
+
+    samples['QCD'] = 'QCD'
+
+    eras =  ['B', 'C', 'D', 'E', 'F', 'G', 'H']
+    for era in eras :
+        if 'dataTT-%s' % era in inSamples :
+            samples['dataTT-%s' % era]  = 'data_obs'
+        if 'dataEE-%s' % era in inSamples :
+            samples['dataEE-%s' % era]  = 'data_obs'
+        if 'dataMM-%s' % era in inSamples :
+            samples['dataMM-%s' % era]  = 'data_obs'
+
+    for mass in ['120', '125', '130'] :
+        if 'VBFHtoTauTau%s' % mass in inSamples :
+            samples['VBFHtoTauTau%s' % mass] = 'qqH%s' % mass
+        if 'ggHtoTauTau%s' % mass in inSamples :
+            samples['ggHtoTauTau%s' % mass] = 'ggH%s' % mass
+        if 'WMinusHTauTau%s' % mass in inSamples :
+            samples['WMinusHTauTau%s' % mass] = 'WH%s' % mass
+        if 'WPlusHTauTau%s' % mass in inSamples :
+            samples['WPlusHTauTau%s' % mass] = 'WH%s' % mass
+        if 'ZHTauTau%s' % mass in inSamples :
+            samples['ZHTauTau%s' % mass] = 'ZH%s' % mass
+    
+
+    return samples
+
+
 if __name__ == '__main__' :
     #print getQCDSF( 'httQCDYields_2Aug25x5pt45b.txt', '1Jet' )
     #f = ROOT.TFile('meta/httBackgrounds/tt_qcdShape_2Oct11b2DRoll_OSl1ml2_Tight_LooseZTT1jet2D.root','r')

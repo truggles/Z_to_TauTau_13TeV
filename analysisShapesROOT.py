@@ -9,7 +9,8 @@ import analysisPlots
 from util.splitCanvas import fixFontSize
 from array import array
 from analysisPlots import skipSystShapeVar
-from util.helpers import checkDir, unroll2D, returnSortedDict
+from util.helpers import checkDir, unroll2D, returnSortedDict, \
+        dataCardGenMatchedSamples
 from analysis1BaselineCuts import skipChanDataCombo
 import os
 from smart_getenv import getenv
@@ -19,6 +20,11 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     assert( type(inSamples) == type(OrderedDict())
         or type(inSamples) == type({}) ), "Provide a samples list which \
         is a dict or OrderedDict"
+
+    # Get expanded list of samples with gen appended names
+    samples = dataCardGenMatchedSamples( inSamples )
+    #for key in samples :
+    #    print key, samples[key]
 
     ops = {
     'useQCDMakeName' : 'x',
@@ -43,11 +49,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     # Use FF built QCD backgrounds
     doFF = getenv('doFF', type=bool)
 
-    """ Add in the gen matched DY catagorization """
-    # FIXME - do this later
-    print "\n Samples currently hardcoded \n"
-
-    
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
     
@@ -55,107 +56,54 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
         sampDict = json.load( sampFile )
     
-    # Build samples list with val for which grouping each sample belongs to
-    samples = OrderedDict()
-    genMap = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-    dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]# 'DYJetsLow']
-    for dyj in dyJets :
-        for gen in genMap : samples[dyj+'-'+gen] = gen
-    #print samples
-    samples['T-tW']       = 'VV'
-    samples['T-tchan']    = 'VV'
-    samples['Tbar-tW']    = 'VV'
-    samples['Tbar-tchan'] = 'VV'
-    samples['WJets']      = 'W'
-    samples['WJets1']     = 'W'
-    samples['WJets2']     = 'W'
-    samples['WJets3']     = 'W'
-    samples['WJets4']     = 'W'
-    samples['WW1l1nu2q']  = 'VV'
-    samples['WW2l2nu']    = 'VV'
-    samples['WZ1l1nu2q']  = 'VV'
-    samples['WZ1l3nu']    = 'VV'
-    samples['WZ2l2q']     = 'VV'
-    samples['WZ3l1nu']    = 'VV'
-    samples['ZZ2l2nu']    = 'VV'
-    samples['ZZ2l2q']     = 'VV'
-    samples['ZZ4l']       = 'VV'
-    samples['VV']         = 'VV'
-    samples['WWW']        = 'VV'
-    samples['ZZZ']        = 'VV'
-    samples['EWKWPlus']   = 'W'
-    samples['EWKWMinus']  = 'W'
-    samples['EWKZ2l']     = 'EWKZ'
-    samples['EWKZ2nu']    = 'EWKZ'
-    samples['QCD']        = 'QCD'
 
-    eras =  ['B', 'C', 'D', 'E', 'F', 'G', 'H']
-    for era in eras :
-        samples['dataTT-%s' % era]  = 'data_obs'
-        samples['dataEE-%s' % era]  = 'data_obs'
-        samples['dataMM-%s' % era]  = 'data_obs'
-
-    for mass in ['120', '125', '130'] :
-        samples['VBFHtoTauTau%s' % mass] = 'qqH%s' % mass
-        samples['ggHtoTauTau%s' % mass] = 'ggH%s' % mass
-        samples['WMinusHTauTau%s' % mass] = 'WH%s' % mass
-        samples['WPlusHTauTau%s' % mass] = 'WH%s' % mass
-        samples['ZHTauTau%s' % mass] = 'ZH%s' % mass
-    
-    if ops['mssm'] : # FIXME - make sure SM Higgs 120 and 130 don't overlap?
-        masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
-        for mssmMass in masses :
-            samples['ggH%i' % mssmMass] = 'ggH%i' % mssmMass
-            samples['bbH%i' % mssmMass] = 'bbH%i' % mssmMass 
-
+    # Change or alter samples based on flags
     if analysis == 'azh' :
         samples['ZZ4l'] = 'ZZ'
         for era in eras :
             samples['RedBkgShape-%s' % era] = 'RedBkg'
 
     if doFF :
+        eras =  []
+        for s in samples :
+            if 'dataTT' in s : eras.append( s.split('-').pop() )
+        if 'QCD' in samples.keys() :
+            del samples['QCD']
         for era in eras :
             samples['QCD-%s' % era] = 'jetFakes'
+
     
-    # Remove samples which are not part of input samples
-    # and build list of names/samples which will be used
+    # Build list of names/samples which will be used
     # for a given final channel. This differs for some HTT
     # channels
     nameArray = []
     for samp in samples :
-
-        # Keep QCD if normal htt analysis
-        if samp == 'QCD' and analysis == 'htt' and not doFF :
-            if samples[samp] not in nameArray : nameArray.append( samples[samp] )
-            if samp not in inSamples.keys() : inSamples[samp] = 'qcd'
-
-        if samp not in inSamples.keys() :
-            del samples[samp]
-            continue
-        if samples[samp] not in nameArray : nameArray.append( samples[samp] )
-    # Add DYJets gen splitting and ttbar
-    genMapDYJ = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-    genMapTT = ['TTT', 'TTJ']
-    genMapVV = ['VVT', 'VVJ']
-    vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
-         'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
-         'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
-    for samp in inSamples.keys() :
-        if 'DYJets' in samp and not '-' in samp : # '-' means we already have Gen additions
-            for gen in genMapDYJ : samples[samp+'-'+gen] = gen
-        elif samp == 'TT' and not '-' in samp : # '-' means we already have Gen additions
-            for gen in genMapTT : samples[samp+'-'+gen] = gen
-        elif samp in vv and not '-' in samp :
-            for gen in genMapVV : samples[samp+'-'+gen] = gen
-        # single top sample with only 1 '-'
-        elif samp in ['T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan'] \
-                and samp.count('-') == 1 :
-            for gen in genMapVV : samples[samp+'-'+gen] = gen
-    # Using final samples map, build nameArray
-    for samp in samples :
         if samples[samp] not in nameArray : nameArray.append( samples[samp] )
 
-    
+
+    # the shape names are changed to reflect the fact that they have the
+    # jet -> tau fakes removed
+    if doFF :
+        ffRenameMap = {
+            'W' : 'W_rest',
+            'ZJ' : 'ZJ_rest',
+            'TTJ' : 'TTJ_rest',
+            'VVJ' : 'VVJ_rest'
+        }
+        for samp, val in samples.iteritems() :
+            if val in ffRenameMap.keys() :
+                print "Val in ffRenameMap", val
+                samples[samp] = ffRenameMap[ val ]
+                if val in nameArray :
+                    nameArray.remove( val )
+                    nameArray.append( ffRenameMap[ val ] )
+
+
+    print "Samples to use and their mapping"
+    for key in samples :
+        print key, samples[key]
+
+
     extra = ''
     checkDir( '%sShapes' % analysis )
     if ops['mssm'] : 
@@ -174,14 +122,15 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if '-ZLL' in sample :
                     del samples[ sample ]
             if 'ZLL' in nameArray : nameArray.remove('ZLL')
-        if channel == 'em' :
-            for sample in samples.keys() :
-                if sample[-3:] == '-ZL' or '-ZJ' in sample :
-                    del samples[ sample ]
-            if 'ZJ' in nameArray : nameArray.remove('ZJ')
-            if 'ZL' in nameArray : nameArray.remove('ZL')
+        #if channel == 'em' :
+        #    for sample in samples.keys() :
+        #        if sample[-3:] == '-ZL' or '-ZJ' in sample :
+        #            del samples[ sample ]
+        #    if 'ZJ' in nameArray : nameArray.remove('ZJ')
+        #    if 'ZL' in nameArray : nameArray.remove('ZL')
 
 
+        print "Name Array"
         print nameArray    
         print channel
     
@@ -236,7 +185,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                 if doFF :
                     if not (('_energyScale' in var) or ('_zPt' in var) or\
-                            ('_ffSyst' in var) or ('_ffStat' in var) or ('_topPt' in var) or\
+                            ('ffSyst' in var) or ('ffStat' in var) or ('_topPt' in var) or\
                             ('_metResponse' in var) or ('_metResolution' in var)\
                             or ('_JES' in var) or ('_JetToTau' in var) or \
                             ('_Zmumu' in var) or ('_ggH' in var) \
@@ -459,17 +408,19 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Proper naming of output histos
                 if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
                         or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var \
-                        or '_ffSyst' in var or '_ffStat' in var) :
+                        or 'ffSyst' in var or 'ffStat' in var) :
 
                     # Systematics naming removes CRs
                     category = ops['category'].strip('_qcd_cr')
 
                     if name in ['data_obs','QCD'] : continue 
                     if name == 'jetFakes' and not doFF : continue
-                    if name == 'jetFakes' and not ('_ffSyst' in var or '_ffStat' in var) : continue
+                    if name == 'jetFakes' and not ('ffSyst' in var or 'ffStat' in var) : continue
+                    if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
                     if '_ggH' in var and not name in ['ggH120','ggH125','ggH130'] : continue
-                    if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ'] : continue
-                    if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ'] or \
+                    if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
+                            'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
+                    if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest'] or \
                             category != 'VBF') : continue # Shape only used in VBF category atm
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
@@ -477,9 +428,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                     shiftDir = ''
                     shiftVar = var.replace('_ffStat','').replace('_ffSyst','')
+                    #print "shiftVar1:",shiftVar
                     if shiftVar[-2:] == 'Up' : shiftDir = 'Up'
                     if shiftVar[-4:] == 'Down' : shiftDir = 'Down'
-                    assert( shiftDir == 'Up' or shiftDir == 'Down' ), "Is var a +/- shift? ",var
+                    assert( shiftDir == 'Up' or shiftDir == 'Down' ), "Is var a +/- shift? %s" % var
 
                     # JES Breakdown
                     if '_JES' in var :
@@ -491,12 +443,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         else : jesUnc += '_13TeV'+shiftDir
     
                     if '_zPt' in var :
-                        if name not in ['ZTT','ZL','ZJ','ZLL',] : continue
+                        if name not in ['ZTT','ZL','ZJ','ZLL','ZJ_rest'] : continue
                         elif '_zPt' in var :
                             histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_dyShape_13TeV'+shiftDir )
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_dyShape_13TeV'+shiftDir )
                     elif '_topPt' in var :
-                        if name not in ['TTT','TTJ'] : continue
+                        if name not in ['TTT','TTJ','TTJ_rest'] : continue
                         elif '_topPt' in var :
                             histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
@@ -520,18 +472,47 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeV'+shiftDir )
                     ### For these Fake Factor shapes, we need 2 copies with slightly different names
-                    elif '_ffSyst' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_13TeV'+shiftDir )
-                        shift = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeV'+shiftDir )
-                        shift.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_syst_tt_'+ops['category']+'_13TeV'+shiftDir )
+                    elif 'ffSyst' in var :
+                        if 'qcdffSyst' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_tt_syst_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_tt_syst_13TeV'+shiftDir )
+                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                        elif 'ttbarffSyst' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_ttbar_tt_syst_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_norm_ff_ttbar_tt_syst_13TeV'+shiftDir )
+                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_ttbar_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                            shift.SetTitle( name.strip('_')+'_norm_ff_ttbar_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                        elif 'wjetsffSyst' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_wjets_tt_syst_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_norm_ff_wjets_tt_syst_13TeV'+shiftDir )
+                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_wjets_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                            shift.SetTitle( name.strip('_')+'_norm_ff_wjets_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                        else : assert (2 + 2 == 5), "This shouldn't happen.  Problem in your FF shapes."
                         shift.Write()
                         del shift
-                    elif '_ffStat' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_13TeV'+shiftDir )
-                        shift = histos[ name ].Clone( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeV'+shiftDir )
-                        shift.SetTitle( name.strip('_')+'_CMS_ztt_ff_qcd_stat_tt_'+ops['category']+'_13TeV'+shiftDir )
+                    elif 'ffStat' in var :
+                        if '0jet1prongffStat' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_13TeV'+shiftDir )
+                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                        elif '0jet3prongffStat' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_13TeV'+shiftDir )
+                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                        elif '1jet1prongffStat' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_13TeV'+shiftDir )
+                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                        elif '1jet3prongffStat' in var :
+                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_13TeV'+shiftDir )
+                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                        else : assert (2 + 2 == 5), "This shouldn't happen.  Problem in your FF shapes."
                         shift.Write()
                         del shift
                     histos[ name ].Write()
