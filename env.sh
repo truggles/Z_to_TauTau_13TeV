@@ -5,7 +5,7 @@ echo " "
 echo "BASED OFF OF CECILE'S Jan ZH and HTT samples B,C,D,E,F,G,H"
 #export LUMI=21000.0
 #export LUMI=12900.0
-export LUMI=36773.0
+#export LUMI=36773.0
 export LUMI=27916.0
 
 echo "Set lumi = $LUMI"
@@ -16,15 +16,15 @@ echo "Using Full 2016 Data! Sans run H"
 
 #echo "Lumi adjusted down b/c of removal of run 2788808 = 272 / pb"
 
-#export doFF=true
-export doFF=false 
+export doFF=true
+#export doFF=false 
 echo " "
 echo "Setting Fake Factor Method to: $doFF"
 echo " "
 echo " "
 
-#export doFullJES=false
-export doFullJES=true
+export doFullJES=false
+#export doFullJES=true
 echo " "
 echo "Setting Full JES Method to: $doFullJES"
 echo " "

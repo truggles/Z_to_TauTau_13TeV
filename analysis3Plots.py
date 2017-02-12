@@ -46,14 +46,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
     # Use FF built QCD backgrounds
     doFF = getenv('doFF', type=bool)
+    vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
+         'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
+         'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
         genList = ['ZTT', 'ZLL', 'ZL', 'ZJ']
         dyJets = ['DYJetsAMCNLO', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow']
-        vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
-             'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
-             'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
 
         newSamples = {}
         for sample in samples.keys() :
@@ -348,7 +348,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
             for sample in samples.keys() :
-                #print sample
+                print sample
                 #print samples[sample]
     
                 ''' Shape systematics are plotted with their 
@@ -356,7 +356,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 getVar = var
                 if skipSystShapeVar( var, sample, channel ) :
                     breakUp = var.split('_')
-                    breakUp.pop()
+                    if breakUp[-1] == 'ffSub' :
+                        breakUp.pop()
+                        breakUp.pop()
+                    else : breakUp.pop()
                     getVar = '_'.join(breakUp)
     
                 # Remember data samples are called 'dataEE' and 'dataMM'
@@ -369,6 +372,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if channel == 'em' and '-ZJ' in sample : continue
                 if channel == 'em' and '-ZL' in sample and not '-ZLL' in sample : continue
                 if ops['qcdMC'] and sample == 'QCD' : continue
+                print sample
                 #if not ops['qcdMC'] and 'QCD' in sample and '-' in sample : continue # Why was this line here? QCD pt binned MC???
     
                 #if var == 'm_vis' : print sample
@@ -427,7 +431,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 }
                 """ Do the Fake Factor MC - jet->tau fake MC here """
                 if doFF :
-                    if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
+                    # Do this based on the gen appended break down (and WJets)
+                    if '-ZJ' in sample or '-TTJ' in sample or 'WJets' in sample or \
+                            '-VVJ' in sample :
                         preHist = dic.Get( getVar )
                         if not '_ffSub' in getVar :
                             ffSubHist = dic.Get( getVar+'_ffSub' )

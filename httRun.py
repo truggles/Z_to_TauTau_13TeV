@@ -58,11 +58,12 @@ for mass in [125,] :
     SamplesDataCards.append('ZHTauTau%i' % mass)
     #SamplesDataCards.append('HtoWW2l2nu%i' % mass)
 
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+for era in ['B', 'C', 'D', 'E', 'F', 'G',]:# 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
 
-#SamplesDataCards = ['TT',] 
+#SamplesDataCards = ['DYJets',] 
+#SamplesDataCards = ['dataTT-C',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
 samples = SamplesDataCards
@@ -85,20 +86,20 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
-#    'mid1' : '11Nov03newTauIDSF', # used for freezing plots
-    ###'mid2' : '21Nov03newTauIDSF',
-    ###'mid3' : '31Nov03newTauIDSF',
-    ###'mid2' : '2Nov16ggHScale',
-    ###'mid3' : '3Nov16ggHScale',
-    #'mid2' : '2Nov21zmumu', # Official pre-approval 2d DCs 
-    #'mid3' : '3Nov21zmumu', # Official pre-approval 2d DCs
-    ###'mid2' : '2Dec08somePlots', # pre-approval checks 
-    ###'mid3' : '3Dec08somePlots', # pre-approval checks
-#    'mid2' : '2Jan16test',
-#    'mid3' : '3Jan16test',
     'mid1' : '1Jan26jesCheck1',
     'mid2' : '2Jan26jesCheck1',
     'mid3' : '3Jan26jesCheck1',
+    'mid1' : '1Jan31checkMatchFFx',
+    'mid2' : '2Jan31checkMatchFFx',
+    'mid3' : '3Jan31checkMatchFFx',
+    'mid1' : '1Feb06jesCheck',
+    'mid2' : '2Feb06jesCheck',
+    'mid3' : '3Feb06jesCheck',
+    'mid1' : '1Feb08FF',
+    'mid2' : '2Feb08FF',
+    'mid3' : '3Feb08FF',
+    'mid2' : '2Feb08FFx',
+    'mid3' : '3Feb08FFx',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -132,7 +133,7 @@ runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False
+makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
@@ -141,6 +142,7 @@ makeDataCards = True
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 #cats = ['inclusive', '0jet2D', 'boosted','VBF',]
 cats = ['0jet2D', 'boosted','VBF',]
+#cats = ['boosted',]
 #cats = ['inclusive',]
 pt = '5040'
 #sync = True
@@ -273,10 +275,10 @@ for isoVal in isoVals :
                     'sync' : sync,
                     }
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''

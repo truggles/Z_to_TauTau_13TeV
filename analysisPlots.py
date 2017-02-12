@@ -47,8 +47,9 @@ def make2DHisto( cutName ) :
     return hist
 
 
-def skipSystShapeVar( var, sample, channel ) :
+def skipSystShapeVar( var, sample, channel, genCode='x' ) :
         # Tau Pt Scale reweighting only applied to DYJets and signal
+        #print "Skip Vars:",sample, var, genCode
         if '_tauPt' in var :
             if channel == 'em' : return True
             if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
@@ -65,7 +66,7 @@ def skipSystShapeVar( var, sample, channel ) :
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
         # do run for DYJetsLow as weight is set to 1
         elif '_zPt' in var :
-            if 'DYJets' not in sample : return True
+            if not 'DYJets' in sample : return True
 
         # top pt reweighting only applied to ttbar
         elif '_topPt' in var :
@@ -79,14 +80,18 @@ def skipSystShapeVar( var, sample, channel ) :
             # This is QCD with an era
             # thus means fake factor 
             # method which is fully data driven
+            if 'QCD-' in genCode : return True
             if 'QCD-' in sample : return True
 
         # Jet to Tau Fake, no data
         elif '_JetToTau' in var :
             #if 'data' in sample : return True
-            if not ('TTJ' in sample or 'ZJ' in sample or 'WJets' in sample \
-                    or 'VVJ' in sample) :
+            if not ('TTJ' in genCode or 'TTJ' in sample or \
+                    'ZJ' in genCode or 'ZJ' in sample or \
+                    'VVJ' in genCode or 'VVJ' in sample or \
+                    'WJets' in sample) :
                 return True
+            else : return False # Needed this for some reason, not sure why
 
         # ggH Scale, only for ggH
         elif '_ggH' in var :
@@ -95,6 +100,14 @@ def skipSystShapeVar( var, sample, channel ) :
         # Zmumu yields by slices, only for DYJets, and only VBF at the moment
         elif '_Zmumu' in var :
             if not 'DYJets' in sample : return True
+
+        elif 'ffSyst' in var or 'ffStat' in var :
+            if not ('ZJ' in genCode or 'ZJ' in sample or \
+                    'TTJ' in genCode or 'TTJ' in sample or \
+                    'VVJ' in genCode or 'VVJ' in sample or \
+                    'QCD-' in genCode or 'QCD-' in sample or \
+                    'WJets' in sample) :
+                return True
 
         return False
 
@@ -188,16 +201,28 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
     if ('QCD' in fName and 'tt' in fName) or ffRegion == 'anti-iso' :
 
         # Choose appropriate weight for the category
-        if   'ZTT0jet' in fName     : app = "FFWeightQCD0Jet"
-        elif 'ZTTboosted' in fName  : app = "FFWeightQCDBoosted"
-        elif 'ZTTVBF' in fName      : app = "FFWeightQCDVBF"
-        else                        : app = "FFWeightQCD0Jet"
+        if   'ZTT0jet' in fName     : app = "FFWeight0Jet"
+        elif 'ZTTboosted' in fName  : app = "FFWeightBoosted"
+        elif 'ZTTVBF' in fName      : app = "FFWeightVBF"
+        else                        : app = "FFWeight0Jet"
 
         # Check if a FF shape variable
-        if '_ffStatUp' in var   : app += '_StatUP'
-        if '_ffStatDown' in var : app += '_StatDOWN'
-        if '_ffSystUp' in var   : app += '_SystUP'
-        if '_ffSystDown' in var : app += '_SystDOWN'
+        # Stat
+        if '_0jet1prongffStatUp' in var   : app += '_0jet1prongStatUP'
+        if '_0jet1prongffStatDown' in var : app += '_0jet1prongStatDOWN'
+        if '_0jet3prongffStatUp' in var   : app += '_0jet3prongStatUP'
+        if '_0jet3prongffStatDown' in var : app += '_0jet3prongStatDOWN'
+        if '_1jet1prongffStatUp' in var   : app += '_1jet1prongStatUP'
+        if '_1jet1prongffStatDown' in var : app += '_1jet1prongStatDOWN'
+        if '_1jet3prongffStatUp' in var   : app += '_1jet3prongStatUP'
+        if '_1jet3prongffStatDown' in var : app += '_1jet3prongStatDOWN'
+        # Syst
+        if '_qcdffSystUp' in var     : app += '_qcdSystUP'
+        if '_qcdffSystDown' in var   : app += '_qcdSystDOWN'
+        if '_ttbarffSystUp' in var   : app += '_ttbarSystUP'
+        if '_ttbarffSystDown' in var : app += '_ttbarSystDOWN'
+        if '_wjetsffSystUp' in var   : app += '_wjetsSystUP'
+        if '_wjetsffSystDown' in var : app += '_wjetsSystDOWN'
 
         # Wrap appropriately
         app = "*("+app+")"
@@ -211,7 +236,8 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False ) :
+def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False, genCode='x' ) :
+    if genCode == 'x' : genCode = sample
 
     ''' Make a channel specific selection of desired histos and fill them '''
     newVarMapUnsorted = getHistoDict( analysis, channel )
@@ -273,7 +299,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
 
         ''' Skip plotting unused shape systematics '''
-        if skipSystShapeVar( var, sample, channel ) : continue
+        if skipSystShapeVar( var, sample, channel, genCode ) : continue
 
         ''' Define syst shape weights if applicable '''
         shapeSyst = ''
@@ -522,39 +548,39 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
-            'mjj' : [40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'],
-            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
-            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
-#XXX            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
-            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
-#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
-#            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
-#            'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
-#            'LT' : [600, 0, 300, 20, 'Total LT [GeV]', ' GeV'],
-#            'Mt' : [600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'],
-            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
-#            't1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
-            'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
-#            'mvamet' : [100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'],
-#            'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
-#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
-#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
-#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
-            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
-#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
-#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
-#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
-#            #'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
-#            #'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
-            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
-#            'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
-            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
-#            'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
-#            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
-#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
-            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
-            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
+#FIXME            'mjj' : [40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'],
+#FIXME            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
+#FIXME            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+#FIXME#XXX            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
+#FIXME            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
+#FIXME#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
+#FIXME#            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
+#FIXME#            'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
+#FIXME#            'LT' : [600, 0, 300, 20, 'Total LT [GeV]', ' GeV'],
+#FIXME#            'Mt' : [600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'],
+#FIXME            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+#FIXME#            't1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
+#FIXME            'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
+#FIXME#            'mvamet' : [100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'],
+#FIXME#            'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
+#FIXME#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
+#FIXME#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
+#FIXME#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
+#FIXME            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+#FIXME            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
+#FIXME#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
+#FIXME#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
+#FIXME#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
+#FIXME#            #'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
+#FIXME#            #'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
+#FIXME            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
+#FIXME#            'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
+#FIXME            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
+#FIXME#            'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
+#FIXME#            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
+#FIXME#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
+#FIXME            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
+#FIXME            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             'mjj:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'Higgs_Pt:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
@@ -597,8 +623,13 @@ def getHistoDict( analysis, channel ) :
         # Add FF shape systs if doFF
         doFF = getenv('doFF', type=bool)
         if doFF :
-            shapesToAdd['ffSyst'] = 'FF Syst'
-            shapesToAdd['ffStat'] = 'FF Stat'
+            shapesToAdd['qcdffSyst']   = 'FF QCD Syst'
+            shapesToAdd['ttbarffSyst'] = 'FF ttbar Syst'
+            shapesToAdd['wjetsffSyst'] = 'FF WJets Syst'
+            shapesToAdd['0jet1prongffStat'] = 'FF 0Jet 1Prong Stat'
+            shapesToAdd['0jet3prongffStat'] = 'FF 0Jet 3Prong Stat'
+            shapesToAdd['1jet1prongffStat'] = 'FF 1Jet 1Prong Stat'
+            shapesToAdd['1jet3prongffStat'] = 'FF 1Jet 3Prong Stat'
 
         # Add Full JES shapes if doFullJES
         doFullJES = getenv('doFullJES', type=bool)
@@ -647,22 +678,22 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
-                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
-                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
-                'iso_1' : [100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''],
-#                'chargedIsoPtSum_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'],
-#                'chargedIsoPtSum_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'],
-#                'chargedIsoPtSumdR03_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'],
-#                'chargedIsoPtSumdR03_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'],
-                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
-                'gen_match_2' : [14, 0, 7, 1, '#tau_{2} Gen Match', ''],
-                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
-                'iso_2' : [100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''],
-                'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
-#                #'t1JetPt' : [400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'],
-#                'm_1' : [60, 0, 3, 4, 't1 Mass', ' GeV'],
-                'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
+#FIXME                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+#FIXME                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
+#FIXME                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
+#FIXME                'iso_1' : [100, -1, 1, 1, '#tau_{1} MVArun2v1DBoldDMwLTraw', ''],
+#FIXME#                'chargedIsoPtSum_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum', ' GeV'],
+#FIXME#                'chargedIsoPtSum_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum', ' GeV'],
+#FIXME#                'chargedIsoPtSumdR03_1' : [100, 0, 5, 1, '#tau_{1} charge iso pt sum dR03', ' GeV'],
+#FIXME#                'chargedIsoPtSumdR03_2' : [100, 0, 5, 1, '#tau_{2} charge iso pt sum dR03', ' GeV'],
+#FIXME                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+#FIXME                'gen_match_2' : [14, 0, 7, 1, '#tau_{2} Gen Match', ''],
+#FIXME                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
+#FIXME                'iso_2' : [100, -1, 1, 1, '#tau_{2} MVArun2v1DBoldDMwLTraw', ''],
+#FIXME                'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
+#FIXME#                #'t1JetPt' : [400, 0, 400, 20, 't1 Overlapping Jet Pt', ' GeV'],
+#FIXME#                'm_1' : [60, 0, 3, 4, 't1 Mass', ' GeV'],
+#FIXME                'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
 #                #'t2JetPt' : [400, 0, 400, 20, 't2 Overlapping Jet Pt', ' GeV'],
 #                'm_2' : [60, 0, 3, 4, 't2 Mass', ' GeV'],
                 #'t1ChargedIsoPtSum' : [0, 10, 8, 't1 ChargedIsoPtSum', ' GeV'],
