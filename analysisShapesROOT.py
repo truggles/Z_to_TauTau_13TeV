@@ -46,9 +46,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
     print ops
 
-    # Use FF built QCD backgrounds
-    doFF = getenv('doFF', type=bool)
-
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
     
@@ -63,6 +60,11 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         for era in eras :
             samples['RedBkgShape-%s' % era] = 'RedBkg'
 
+
+    # Use FF built QCD backgrounds
+    doFF = getenv('doFF', type=bool)
+    # value saved to renormalize the FF shape uncertainties
+    jetFakesNomYield = -999.
     if doFF :
         eras =  []
         for s in samples :
@@ -312,7 +314,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         hist = dic.Get( "%s_ffSub" % var )
                     else :
                         hist = dic.Get( "%s" % var )
-                        if 'DYJets' in sample or sample == 'TT' or 'WJets' in sample :
+                        # This is where we subtract off the fakes from MC from jetFakes
+                        if '-ZJ' in sample or '-TTJ' in sample or 'WJets' in sample or '-VVJ' in sample :
                             if not '_ffSub' in var :
                                 ffSubHist = dic.Get( var+'_ffSub' )
                                 #print sample," FF Sub int",ffSubHist.Integral()
@@ -383,6 +386,19 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #histos[ samples[ sample ] ].Add( hist2 )
                 tFile.Close()
     
+            # All files looped through, now renormalize jetFakes
+            # background if doing Fake Factor method
+            if doFF :
+                if var == baseVar :
+                    jetFakesNomYield = histos[ 'jetFakes' ].Integral()
+                    print " -- FF Normalization: var == basevar %s %s yield: %.2f" % (baseVar,var,jetFakesNomYield)
+                elif ('ffSyst' in var or 'ffStat' in var) :
+                    assert( jetFakesNomYield > 0. ), "Why didn't you loop over the base variable yet?"
+                    preYield = histos[ 'jetFakes' ].Integral()
+                    histos[ 'jetFakes' ].Scale( jetFakesNomYield / preYield )
+                    postYield = histos[ 'jetFakes' ].Integral()
+                    print " -- FF Normalization: var is a ff shape: %s %s pre: %.2f post: %.2f" % (baseVar,var,preYield,postYield)
+
     
             print ".............................................................."
             shapeDir.cd()
