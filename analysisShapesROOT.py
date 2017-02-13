@@ -477,47 +477,29 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     ### For these Fake Factor shapes, we need 2 copies with slightly different names
                     elif 'ffSyst' in var :
                         if 'qcdffSyst' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_tt_syst_13TeV'+shiftDir )
-                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_tt_syst_13TeV'+shiftDir )
-                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
-                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_norm_ff_qcd_tt_syst_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_norm_ff_qcd_tt_syst_13TeV'+shiftDir )
                         elif 'ttbarffSyst' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_ttbar_tt_syst_13TeV'+shiftDir )
-                            histos[ name ].SetName( name.strip('_')+'_norm_ff_ttbar_tt_syst_13TeV'+shiftDir )
-                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_ttbar_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
-                            shift.SetTitle( name.strip('_')+'_norm_ff_ttbar_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_norm_ff_ttbar_tt_syst_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_norm_ff_ttbar_tt_syst_13TeV'+shiftDir )
                         elif 'wjetsffSyst' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_wjets_tt_syst_13TeV'+shiftDir )
-                            histos[ name ].SetName( name.strip('_')+'_norm_ff_wjets_tt_syst_13TeV'+shiftDir )
-                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_wjets_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
-                            shift.SetTitle( name.strip('_')+'_norm_ff_wjets_tt_syst_'+ops['category']+'_13TeV'+shiftDir )
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_norm_ff_w_tt_syst_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_norm_ff_w_tt_syst_13TeV'+shiftDir )
                         else : assert (2 + 2 == 5), "This shouldn't happen.  Problem in your FF shapes."
-                        shift.Write()
-                        del shift
                     elif 'ffStat' in var :
                         if '0jet1prongffStat' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_13TeV'+shiftDir )
-                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_13TeV'+shiftDir )
-                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
-                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_norm_ff_qcd_1prong_njet0_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_norm_ff_qcd_1prong_njet0_tt_stat_13TeV'+shiftDir )
                         elif '0jet3prongffStat' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_13TeV'+shiftDir )
-                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_13TeV'+shiftDir )
-                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
-                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet0_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_norm_ff_qcd_3prong_njet0_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_norm_ff_qcd_3prong_njet0_tt_stat_13TeV'+shiftDir )
                         elif '1jet1prongffStat' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_13TeV'+shiftDir )
-                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_13TeV'+shiftDir )
-                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
-                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_1prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_norm_ff_qcd_1prong_njet1_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_norm_ff_qcd_1prong_njet1_tt_stat_13TeV'+shiftDir )
                         elif '1jet3prongffStat' in var :
-                            histos[ name ].SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_13TeV'+shiftDir )
-                            histos[ name ].SetName( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_13TeV'+shiftDir )
-                            shift = histos[ name ].Clone( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
-                            shift.SetTitle( name.strip('_')+'_norm_ff_qcd_3prong_njet1_tt_stat_'+ops['category']+'_13TeV'+shiftDir )
+                            histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_norm_ff_qcd_3prong_njet1_tt_stat_13TeV'+shiftDir )
+                            histos[ name ].SetName( name.strip('_')+'_CMS_htt_norm_ff_qcd_3prong_njet1_tt_stat_13TeV'+shiftDir )
                         else : assert (2 + 2 == 5), "This shouldn't happen.  Problem in your FF shapes."
-                        shift.Write()
-                        del shift
                     histos[ name ].Write()
                 else :
                     histos[ name ].SetTitle( name.strip('_') )
