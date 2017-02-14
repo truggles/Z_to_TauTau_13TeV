@@ -199,7 +199,7 @@ def llttDR( l1,l2,l3,l4 ) :
     return dr.replace('LEG1',l1).replace('LEG2',l2).replace('LEG3',l3).replace('LEG4',l4)
 
 
-def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
+def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
     
     triggers = [tt40, tt35,]
 
@@ -317,6 +317,7 @@ def getCut( analysis, channel, cutName, isData=False, isReHLT=False ) :
     if not isData :
         #if not isReHLT : 
         for trig in triggers :
+            if hdfsSkim : continue # We want to keep all versions of double Tau 35 trigger for svFitting
             if trig in cuts1 :
                 cuts1.remove( trig )
                 if analysis == 'htt' :
