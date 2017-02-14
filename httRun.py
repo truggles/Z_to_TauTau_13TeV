@@ -58,12 +58,12 @@ for mass in [125,] :
     SamplesDataCards.append('ZHTauTau%i' % mass)
     #SamplesDataCards.append('HtoWW2l2nu%i' % mass)
 
-for era in ['B', 'C', 'D', 'E', 'F', 'G',]:# 'H'] :
+    
+
+for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
 
-#SamplesDataCards = ['DYJets',] 
-#SamplesDataCards = ['dataTT-C',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
 samples = SamplesDataCards
