@@ -1,22 +1,24 @@
 
-ALL=/hdfs/store/user/caillol/SMHTT_mc_jan17
-DATA=/hdfs/store/user/caillol/SMHTT_data_jan17
+#ALL=/hdfs/store/user/truggles/SMHTT_mc_jan23_JES
+#DATA=/hdfs/store/user/caillol/SMHTT_data_jan17
+ALL=/hdfs/store/user/truggles/SMHTT_jan31
+V2=/hdfs/store/user/truggles/SMHTT_jan31_v2
 
-ls ${DATA}/data_Tau_Run2016B_v3/*.root                                            		 > hdfs/dataTT-B.txt 
-ls ${DATA}/data_Tau_Run2016C/*.root                                            		     > hdfs/dataTT-C.txt 
-ls ${DATA}/data_Tau_Run2016D/*.root                                            		     > hdfs/dataTT-D.txt 
-ls ${DATA}/data_Tau_Run2016E/*.root                                            		     > hdfs/dataTT-E.txt 
-ls ${DATA}/data_Tau_Run2016F/*.root                                            		     > hdfs/dataTT-F.txt 
-ls ${DATA}/data_Tau_Run2016G/*.root                                            		     > hdfs/dataTT-G.txt 
-ls ${DATA}/data_Tau_Run2016H_v1/*.root                                            		 > hdfs/dataTT-H.txt 
-ls ${DATA}/data_Tau_Run2016H_v2/*.root                                            		 >> hdfs/dataTT-H.txt 
-ls ${DATA}/data_Tau_Run2016H_v3/*.root                                            		 >> hdfs/dataTT-H.txt 
+ls ${ALL}/data_Tau_Run2016B_v3/*.root                                            		 > hdfs/dataTT-B.txt 
+ls ${ALL}/data_Tau_Run2016C/*.root                                            		     > hdfs/dataTT-C.txt 
+ls ${ALL}/data_Tau_Run2016D/*.root                                            		     > hdfs/dataTT-D.txt 
+ls ${V2}/data_Tau_Run2016E/*.root                                            		     > hdfs/dataTT-E.txt 
+ls ${ALL}/data_Tau_Run2016F/*.root                                            		     > hdfs/dataTT-F.txt 
+ls ${ALL}/data_Tau_Run2016G/*.root                                            		     > hdfs/dataTT-G.txt 
+ls ${ALL}/data_Tau_Run2016H_v1/*.root                                            		 > hdfs/dataTT-H.txt 
+ls ${ALL}/data_Tau_Run2016H_v2/*.root                                            		 >> hdfs/dataTT-H.txt 
+ls ${ALL}/data_Tau_Run2016H_v3/*.root                                            		 >> hdfs/dataTT-H.txt 
 ls ${ALL}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6_ext1-v2/*.root                 > hdfs/DYJets.txt 
 ls ${ALL}/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1/*.root                > hdfs/DYJets1.txt 
 ls ${ALL}/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1/*.root                > hdfs/DYJets2.txt 
 ls ${ALL}/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1/*.root                > hdfs/DYJets3.txt 
 ls ${ALL}/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1/*.root                > hdfs/DYJets4.txt 
-ls ${ALL}/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_v6_ext1-v1/*.root             > hdfs/DYJetsLow.txt 
+ls ${ALL}/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1/*.root             > hdfs/DYJetsLow.txt 
 ls ${ALL}/ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1_v6-v1/*.root > hdfs/Tbar-tchan.txt 
 ls ${ALL}/ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1_v6-v1/*.root     > hdfs/T-tchan.txt 
 ls ${ALL}/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_v6_ext1-v1/*.root     > hdfs/Tbar-tW.txt 
