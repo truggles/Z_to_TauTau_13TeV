@@ -700,14 +700,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     isoCode1B = tnew.Branch('isoCode1', isoCode1, 'isoCode1/F')
     isoCode2 = array('f', [ 0 ] )
     isoCode2B = tnew.Branch('isoCode2', isoCode2, 'isoCode2/F')
-    pt_1_UP = array('f', [ 0 ] )
-    pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
-    pt_1_DOWN = array('f', [ 0 ] )
-    pt_1_DOWNB = tnew.Branch('pt_1_DOWN', pt_1_DOWN, 'pt_1_DOWN/F')
-    pt_2_UP = array('f', [ 0 ] )
-    pt_2_UPB = tnew.Branch('pt_2_UP', pt_2_UP, 'pt_2_UP/F')
-    pt_2_DOWN = array('f', [ 0 ] )
-    pt_2_DOWNB = tnew.Branch('pt_2_DOWN', pt_2_DOWN, 'pt_2_DOWN/F')
     weight = array('f', [ 0 ] )
     weightB = tnew.Branch('weight', weight, 'weight/F')
     azhWeight = array('f', [ 0 ] )
@@ -840,10 +832,74 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ptCor_1B = tnew.Branch('ptCor_1', ptCor_1, 'ptCor_1/F')
     ptCor_2 = array('f', [ 0 ] )
     ptCor_2B = tnew.Branch('ptCor_2', ptCor_2, 'ptCor_2/F')
+    pt_1_UP = array('f', [ 0 ] )
+    pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
+    pt_1_DOWN = array('f', [ 0 ] )
+    pt_1_DOWNB = tnew.Branch('pt_1_DOWN', pt_1_DOWN, 'pt_1_DOWN/F')
+    pt_1_DM0_UP = array('f', [ 0 ] )
+    pt_1_DM0_UPB = tnew.Branch('pt_1_DM0_UP', pt_1_DM0_UP, 'pt_1_DM0_UP/F')
+    pt_1_DM0_DOWN = array('f', [ 0 ] )
+    pt_1_DM0_DOWNB = tnew.Branch('pt_1_DM0_DOWN', pt_1_DM0_DOWN, 'pt_1_DM0_DOWN/F')
+    pt_1_DM1_UP = array('f', [ 0 ] )
+    pt_1_DM1_UPB = tnew.Branch('pt_1_DM1_UP', pt_1_DM1_UP, 'pt_1_DM1_UP/F')
+    pt_1_DM1_DOWN = array('f', [ 0 ] )
+    pt_1_DM1_DOWNB = tnew.Branch('pt_1_DM1_DOWN', pt_1_DM1_DOWN, 'pt_1_DM1_DOWN/F')
+    pt_1_DM10_UP = array('f', [ 0 ] )
+    pt_1_DM10_UPB = tnew.Branch('pt_1_DM10_UP', pt_1_DM10_UP, 'pt_1_DM10_UP/F')
+    pt_1_DM10_DOWN = array('f', [ 0 ] )
+    pt_1_DM10_DOWNB = tnew.Branch('pt_1_DM10_DOWN', pt_1_DM10_DOWN, 'pt_1_DM10_DOWN/F')
+    pt_2_UP = array('f', [ 0 ] )
+    pt_2_UPB = tnew.Branch('pt_2_UP', pt_2_UP, 'pt_2_UP/F')
+    pt_2_DOWN = array('f', [ 0 ] )
+    pt_2_DOWNB = tnew.Branch('pt_2_DOWN', pt_2_DOWN, 'pt_2_DOWN/F')
+    pt_2_DM0_UP = array('f', [ 0 ] )
+    pt_2_DM0_UPB = tnew.Branch('pt_2_DM0_UP', pt_2_DM0_UP, 'pt_2_DM0_UP/F')
+    pt_2_DM0_DOWN = array('f', [ 0 ] )
+    pt_2_DM0_DOWNB = tnew.Branch('pt_2_DM0_DOWN', pt_2_DM0_DOWN, 'pt_2_DM0_DOWN/F')
+    pt_2_DM1_UP = array('f', [ 0 ] )
+    pt_2_DM1_UPB = tnew.Branch('pt_2_DM1_UP', pt_2_DM1_UP, 'pt_2_DM1_UP/F')
+    pt_2_DM1_DOWN = array('f', [ 0 ] )
+    pt_2_DM1_DOWNB = tnew.Branch('pt_2_DM1_DOWN', pt_2_DM1_DOWN, 'pt_2_DM1_DOWN/F')
+    pt_2_DM10_UP = array('f', [ 0 ] )
+    pt_2_DM10_UPB = tnew.Branch('pt_2_DM10_UP', pt_2_DM10_UP, 'pt_2_DM10_UP/F')
+    pt_2_DM10_DOWN = array('f', [ 0 ] )
+    pt_2_DM10_DOWNB = tnew.Branch('pt_2_DM10_DOWN', pt_2_DM10_DOWN, 'pt_2_DM10_DOWN/F')
     Higgs_PtCor = array('f', [ 0 ] )
     Higgs_PtCorB = tnew.Branch('Higgs_PtCor', Higgs_PtCor, 'Higgs_PtCor/F')
+    Higgs_PtCor_UP = array('f', [ 0 ] )
+    Higgs_PtCor_UPB = tnew.Branch('Higgs_PtCor_UP', Higgs_PtCor_UP, 'Higgs_PtCor_UP/F')
+    Higgs_PtCor_DOWN = array('f', [ 0 ] )
+    Higgs_PtCor_DOWNB = tnew.Branch('Higgs_PtCor_DOWN', Higgs_PtCor_DOWN, 'Higgs_PtCor_DOWN/F')
+    Higgs_PtCor_DM0_UP = array('f', [ 0 ] )
+    Higgs_PtCor_DM0_UPB = tnew.Branch('Higgs_PtCor_DM0_UP', Higgs_PtCor_DM0_UP, 'Higgs_PtCor_DM0_UP/F')
+    Higgs_PtCor_DM0_DOWN = array('f', [ 0 ] )
+    Higgs_PtCor_DM0_DOWNB = tnew.Branch('Higgs_PtCor_DM0_DOWN', Higgs_PtCor_DM0_DOWN, 'Higgs_PtCor_DM0_DOWN/F')
+    Higgs_PtCor_DM1_UP = array('f', [ 0 ] )
+    Higgs_PtCor_DM1_UPB = tnew.Branch('Higgs_PtCor_DM1_UP', Higgs_PtCor_DM1_UP, 'Higgs_PtCor_DM1_UP/F')
+    Higgs_PtCor_DM1_DOWN = array('f', [ 0 ] )
+    Higgs_PtCor_DM1_DOWNB = tnew.Branch('Higgs_PtCor_DM1_DOWN', Higgs_PtCor_DM1_DOWN, 'Higgs_PtCor_DM1_DOWN/F')
+    Higgs_PtCor_DM10_UP = array('f', [ 0 ] )
+    Higgs_PtCor_DM10_UPB = tnew.Branch('Higgs_PtCor_DM10_UP', Higgs_PtCor_DM10_UP, 'Higgs_PtCor_DM10_UP/F')
+    Higgs_PtCor_DM10_DOWN = array('f', [ 0 ] )
+    Higgs_PtCor_DM10_DOWNB = tnew.Branch('Higgs_PtCor_DM10_DOWN', Higgs_PtCor_DM10_DOWN, 'Higgs_PtCor_DM10_DOWN/F')
     m_visCor = array('f', [ 0 ] )
     m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
+    m_visCor_UP = array('f', [ 0 ] )
+    m_visCor_UPB = tnew.Branch('m_visCor_UP', m_visCor_UP, 'm_visCor_UP/F')
+    m_visCor_DM0_UP = array('f', [ 0 ] )
+    m_visCor_DM0_UPB = tnew.Branch('m_visCor_DM0_UP', m_visCor_DM0_UP, 'm_visCor_DM0_UP/F')
+    m_visCor_DM1_UP = array('f', [ 0 ] )
+    m_visCor_DM1_UPB = tnew.Branch('m_visCor_DM1_UP', m_visCor_DM1_UP, 'm_visCor_DM1_UP/F')
+    m_visCor_DM10_UP = array('f', [ 0 ] )
+    m_visCor_DM10_UPB = tnew.Branch('m_visCor_DM10_UP', m_visCor_DM10_UP, 'm_visCor_DM10_UP/F')
+    m_visCor_DOWN = array('f', [ 0 ] )
+    m_visCor_DOWNB = tnew.Branch('m_visCor_DOWN', m_visCor_DOWN, 'm_visCor_DOWN/F')
+    m_visCor_DM0_DOWN = array('f', [ 0 ] )
+    m_visCor_DM0_DOWNB = tnew.Branch('m_visCor_DM0_DOWN', m_visCor_DM0_DOWN, 'm_visCor_DM0_DOWN/F')
+    m_visCor_DM1_DOWN = array('f', [ 0 ] )
+    m_visCor_DM1_DOWNB = tnew.Branch('m_visCor_DM1_DOWN', m_visCor_DM1_DOWN, 'm_visCor_DM1_DOWN/F')
+    m_visCor_DM10_DOWN = array('f', [ 0 ] )
+    m_visCor_DM10_DOWNB = tnew.Branch('m_visCor_DM10_DOWN', m_visCor_DM10_DOWN, 'm_visCor_DM10_DOWN/F')
     __WEIGHT__ = array('f', [ 0 ] )
     __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
     __ZWEIGHT__ = array('f', [ 0 ] )
@@ -911,6 +967,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             phi2 = getattr( row, l2+'Phi' )
             eta2 = getattr( row, l2+'Eta' )
             m2 = getattr( row, l2+'Mass' )
+            if channel == 'tt' :
+                dm1 = getattr( row, l1+'DecayMode' )
+                dm2 = getattr( row, l2+'DecayMode' )
             if len( channel ) > 2 :
                 pt3 = getattr( row, l3+'Pt' )
                 phi3 = getattr( row, l3+'Phi' )
@@ -1033,12 +1092,40 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             isoCode2[0] = -1
             pt_1_UP[0] = pt1
             pt_1_DOWN[0] = pt1
+            pt_1_DM0_UP[0] = pt1
+            pt_1_DM0_DOWN[0] = pt1
+            pt_1_DM1_UP[0] = pt1
+            pt_1_DM1_DOWN[0] = pt1
+            pt_1_DM10_UP[0] = pt1
+            pt_1_DM10_DOWN[0] = pt1
             pt_2_UP[0] = pt2
             pt_2_DOWN[0] = pt2
+            pt_2_DM0_UP[0] = pt2
+            pt_2_DM0_DOWN[0] = pt2
+            pt_2_DM1_UP[0] = pt2
+            pt_2_DM1_DOWN[0] = pt2
+            pt_2_DM10_UP[0] = pt2
+            pt_2_DM10_DOWN[0] = pt2
             ptCor_1[0] = pt1
             ptCor_2[0] = pt2
             Higgs_PtCor[0] = Higgs_Pt[0]
+            Higgs_PtCor_UP[0] = Higgs_Pt[0]
+            Higgs_PtCor_DM0_UP[0] = Higgs_Pt[0]
+            Higgs_PtCor_DM1_UP[0] = Higgs_Pt[0]
+            Higgs_PtCor_DM10_UP[0] = Higgs_Pt[0]
+            Higgs_PtCor_DOWN[0] = Higgs_Pt[0]
+            Higgs_PtCor_DM0_DOWN[0] = Higgs_Pt[0]
+            Higgs_PtCor_DM1_DOWN[0] = Higgs_Pt[0]
+            Higgs_PtCor_DM10_DOWN[0] = Higgs_Pt[0]
             m_visCor[0] = getattr( row, l1+'_'+l2+'_Mass' )
+            m_visCor_UP[0] = m_visCor[0]
+            m_visCor_DM0_UP[0] = m_visCor[0]
+            m_visCor_DM1_UP[0] = m_visCor[0]
+            m_visCor_DM10_UP[0] = m_visCor[0]
+            m_visCor_DOWN[0] = m_visCor[0]
+            m_visCor_DM0_DOWN[0] = m_visCor[0]
+            m_visCor_DM1_DOWN[0] = m_visCor[0]
+            m_visCor_DM10_DOWN[0] = m_visCor[0]
             zhFR0[0] = 0
             zhFR1[0] = 0
             zhFR2[0] = 0
@@ -1172,7 +1259,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0], getattr(row, l1+'DecayMode') )
+                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0], dm1 )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VLooseIso'
@@ -1185,16 +1272,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0], getattr(row, l2+'DecayMode') )
+                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0], dm2 )
 
 
                     # Tau Energy Correction
                     # also propagated to Higgs_Pt and m_vis
-                    ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], getattr( row, l1+'DecayMode' ) )
-                    ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], getattr( row, l2+'DecayMode' ) )
-                    Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                        ptCor_2[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
-                    m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
+                    ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], dm1 )
+                    ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], dm2 )
                     # Tau Energy Scale Saved
                     # 15 Feb 2017, TES uncertainty == 0.6%
                     # TES used to be 3% with no central shift
@@ -1202,18 +1286,60 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         tauIDweight_1[0] = 0.95 # 06 Feb 2017
                         pt_1_UP[0] = ptCor_1[0] * 1.006
                         pt_1_DOWN[0] = ptCor_1[0] * 0.994
-                    else :
-                        tauIDweight_1[0] = 1.
-                        pt_1_UP[0] = pt1
-                        pt_1_DOWN[0] = pt1
+                        # For the combinatorics
+                        if dm1 == 0 :
+                            pt_1_DM0_UP[0] = ptCor_1[0] * 1.006
+                            pt_1_DM0_DOWN[0] = ptCor_1[0] * 0.994
+                        if dm1 == 1 :
+                            pt_1_DM1_UP[0] = ptCor_1[0] * 1.006
+                            pt_1_DM1_DOWN[0] = ptCor_1[0] * 0.994
+                        if dm1 == 10 :
+                            pt_1_DM10_UP[0] = ptCor_1[0] * 1.006
+                            pt_1_DM10_DOWN[0] = ptCor_1[0] * 0.994
                     if gen_match_2[0] == 5 :
                         tauIDweight_2[0] = 0.95 # 06 Feb 2017
                         pt_2_UP[0] = ptCor_2[0] * 1.006
                         pt_2_DOWN[0] = ptCor_2[0] * 0.994
-                    else :
-                        tauIDweight_2[0] = 1.
-                        pt_2_UP[0] = pt2
-                        pt_2_DOWN[0] = pt2
+                        if dm2 == 0 :
+                            pt_2_DM0_UP[0] = ptCor_2[0] * 1.006
+                            pt_2_DM0_DOWN[0] = ptCor_2[0] * 0.994
+                        if dm2 == 1 :
+                            pt_2_DM1_UP[0] = ptCor_2[0] * 1.006
+                            pt_2_DM1_DOWN[0] = ptCor_2[0] * 0.994
+                        if dm2 == 10 :
+                            pt_2_DM10_UP[0] = ptCor_2[0] * 1.006
+                            pt_2_DM10_DOWN[0] = ptCor_2[0] * 0.994
+
+                    # All shifts for Higgs_Pt with combinatorics
+                    Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                        ptCor_2[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_UP[0] = getHiggsPt( pt_1_UP[0], eta1, phi1, m1,\
+                        pt_2_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_DM0_UP[0] = getHiggsPt( pt_1_DM0_UP[0], eta1, phi1, m1,\
+                        pt_2_DM0_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_DM1_UP[0] = getHiggsPt( pt_1_DM1_UP[0], eta1, phi1, m1,\
+                        pt_2_DM1_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_DM10_UP[0] = getHiggsPt( pt_1_DM10_UP[0], eta1, phi1, m1,\
+                        pt_2_DM10_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_DOWN[0] = getHiggsPt( pt_1_DOWN[0], eta1, phi1, m1,\
+                        pt_2_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_DM0_DOWN[0] = getHiggsPt( pt_1_DM0_DOWN[0], eta1, phi1, m1,\
+                        pt_2_DM0_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_DM1_DOWN[0] = getHiggsPt( pt_1_DM1_DOWN[0], eta1, phi1, m1,\
+                        pt_2_DM1_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    Higgs_PtCor_DM10_DOWN[0] = getHiggsPt( pt_1_DM10_DOWN[0], eta1, phi1, m1,\
+                        pt_2_DM10_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+
+                    m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
+                    m_visCor_UP[0] = mVisTESCor( l1, l2, row, pt_1_UP[0], pt_2_UP[0] )
+                    m_visCor_DM0_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM0_UP[0], pt_2_DM0_UP[0] )
+                    m_visCor_DM1_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM1_UP[0], pt_2_DM1_UP[0] )
+                    m_visCor_DM10_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM10_UP[0], pt_2_DM10_UP[0] )
+                    m_visCor_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DOWN[0], pt_2_DOWN[0] )
+                    m_visCor_DM0_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM0_DOWN[0], pt_2_DM0_DOWN[0] )
+                    m_visCor_DM1_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM1_DOWN[0], pt_2_DM1_DOWN[0] )
+                    m_visCor_DM10_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM10_DOWN[0], pt_2_DM10_DOWN[0] )
+
 
 
                 # ggH reweighting, only for ggH120,125,130

@@ -113,29 +113,47 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
 
 
 # Make specific extra cuts for different TES requirements
-def ESCuts( sample, channel, var ) :
+def ESCuts( ESMap, sample, channel, var ) :
     tau2PtCut = 40.
     tau1PtCut = 50.
     if len( channel ) == 4 : return '*(1.)'
     if 'data' in sample :
         if channel == 'tt' :
             return '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)
-        if channel == 'em' :
-            return '*(pt_1 > 13 && pt_2 > 10)'
+        #if channel == 'em' :
+        #    return '*(pt_1 > 13 && pt_2 > 10)'
+
+    shiftDir = ''
+    if 'Up' in var[-2:] : shiftDir = 'Up'
+    elif 'Down' in var[-4:] : shiftDir = 'Down'
+    elif 'energyScale' not in var : return ESMap[ channel ]['_NoShift']
+
+    if '_energyScaleAll'+shiftDir in var : return ESMap[ channel ]['_energyScaleAll'+shiftDir]
+    if '_energyScaleDM0'+shiftDir in var : return ESMap[ channel ]['_energyScaleDM0'+shiftDir]
+    if '_energyScaleDM1'+shiftDir in var : return ESMap[ channel ]['_energyScaleDM1'+shiftDir]
+    if '_energyScaleDM10'+shiftDir in var : return ESMap[ channel ]['_energyScaleDM10'+shiftDir]
+    return ESMap[ channel ]['_NoShift']
+
+def getESMap() :
+    tau2PtCut = 40.
+    tau1PtCut = 50.
     ESMap = {
         'tt' : { 
-            '_energyScaleUp' : '*( pt_1_UP > %s && pt_2_UP > %s)' % (tau1PtCut, tau2PtCut),
-            '_energyScaleDown' : '*( pt_1_DOWN > %s && pt_2_DOWN > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleAllUp' : '*( pt_1_UP > %s && pt_2_UP > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleAllDown' : '*( pt_1_DOWN > %s && pt_2_DOWN > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleDM0Up' : '*( pt_1_DM0_UP > %s && pt_2_DM0_UP > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleDM0Down' : '*( pt_1_DM0_DOWN > %s && pt_2_DM0_DOWN > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleDM1Up' : '*( pt_1_DM1_UP > %s && pt_2_DM1_UP > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleDM1Down' : '*( pt_1_DM1_DOWN > %s && pt_2_DM1_DOWN > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleDM10Up' : '*( pt_1_DM10_UP > %s && pt_2_DM10_UP > %s)' % (tau1PtCut, tau2PtCut),
+            '_energyScaleDM10Down' : '*( pt_1_DM10_DOWN > %s && pt_2_DM10_DOWN > %s)' % (tau1PtCut, tau2PtCut),
             '_NoShift' : '*(ptCor_1 > %s && ptCor_2 > %s)' % (tau1PtCut, tau2PtCut)},
-        'em' : { 
-            '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
-            '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
-            '_NoShift' : '*(pt_1 > 13 && pt_2 > 10)'}
+        #'em' : { 
+        #    '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
+        #    '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
+        #    '_NoShift' : '*(pt_1 > 13 && pt_2 > 10)'}
         }
-    if '_energyScaleUp' in var : return ESMap[ channel ]['_energyScaleUp']
-    elif '_energyScaleDown' in var : return ESMap[ channel ]['_energyScaleDown']
-    else : return ESMap[ channel ]['_NoShift']
-
+    return ESMap
 
 
 # Specific high pt tau reweighting for shape uncertainties
@@ -271,6 +289,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     histos = {}
 
 
+    ''' Get Energy Scale Map which is now confusing with
+        decay mode specific shifts '''
+    esMap = getESMap()
+
+
     ### Check if we intend to do Fake Factor based MC cuts
     ### These differ because of requiring a random choice
     ### of l1 and l2, then seeing if l1 is gen matched
@@ -367,17 +390,22 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # this is not an "if" style shape b/c we need to apply
         # normal pt cuts if the shape syst is not called
         # so instead we appeand it to what ever else we have
-        shapeSyst += ESCuts( sample, channel, var )
+        shapeSyst += ESCuts( esMap, sample, channel, var )
         # Additionally, if we have Energy Scale, we also need
         # to change any Higgs_PtCor vars to Higgs_PtCor_UP/DOWN
         additionalCutToUse = additionalCut
         if 'energyScale' in var and 'data' not in sample :
-            if 'Up' in var and ('pt_sv' in additionalCutToUse or 'Higgs_PtCor' in additionalCutToUse) :
-                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_UP')
-                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_UP')
-            elif 'Down' in var and ('pt_sv' in additionalCutToUse or 'Higgs_PtCor' in additionalCutToUse) :
-                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_DOWN')
-                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_DOWN')
+            dm = ''
+            if 'energyScaleAll' in var : dm == '_'
+            elif 'energyScaleDM0' in var : dm == '_DM0_'
+            elif 'energyScaleDM1' in var : dm == '_DM1_'
+            elif 'energyScaleDM10' in var : dm == '_DM10_'
+
+            if 'Up' in var[-2:] : shiftDir = 'UP'
+            if 'Down' in var[-4:] : shiftDir = 'DOWN'
+
+            additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv%s%s' % (dm, shiftDir) )
+            additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor%s%s' % (dm, shiftDir) )
 
 
         # Jet Energy Scale:
@@ -456,12 +484,27 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             shapeName = tmp.pop()
             varBase = '_'.join(tmp)
             if 'energyScale' in shapeName :
+                shiftDir = 'UP' if 'Up' in var else 'DOWN'
                 if 'pt_sv:m_sv' in var :
-                    if 'Up' in var : plotVar = 'pt_sv_UP:m_sv_UP'
-                    if 'Down' in var : plotVar = 'pt_sv_DOWN:m_sv_DOWN'
-                if 'pt_1:m_sv' in var :
-                    if 'Up' in var : plotVar = 'pt_1_UP:m_sv_UP'
-                    if 'Down' in var : plotVar = 'pt_1_DOWN:m_sv_DOWN'
+                    if 'All'  in var : plotVar = 'pt_sv_%s:m_sv_%s' % (shiftDir, shiftDir)
+                    if 'DM0'  in var : plotVar = 'pt_sv_DM0_%s:m_sv_DM0_%s' % (shiftDir, shiftDir)
+                    if 'DM1'  in var : plotVar = 'pt_sv_DM1_%s:m_sv_DM1_%s' % (shiftDir, shiftDir)
+                    if 'DM10' in var : plotVar = 'pt_sv_DM10_%s:m_sv_DM10_%s' % (shiftDir, shiftDir)
+                elif 'Higgs_PtCor:m_visCor' in var :
+                    if 'All'  in var : plotVar = 'Higgs_PtCor_%s:m_visCor_%s' % (shiftDir, shiftDir)
+                    if 'DM0'  in var : plotVar = 'Higgs_PtCor_DM0_%s:m_visCor_DM0_%s' % (shiftDir, shiftDir)
+                    if 'DM1'  in var : plotVar = 'Higgs_PtCor_DM1_%s:m_visCor_DM1_%s' % (shiftDir, shiftDir)
+                    if 'DM10' in var : plotVar = 'Higgs_PtCor_DM10_%s:m_visCor_DM10_%s' % (shiftDir, shiftDir)
+                elif 'mjj:m_visCor' in var :
+                    if 'All'  in var : plotVar = 'mjj:m_visCor_%s' % shiftDir
+                    if 'DM0'  in var : plotVar = 'mjj:m_visCor_DM0_%s' % shiftDir
+                    if 'DM1'  in var : plotVar = 'mjj:m_visCor_DM1_%s' % shiftDir
+                    if 'DM10' in var : plotVar = 'mjj:m_visCor_DM10_%s' % shiftDir
+                elif 'm_visCor' in var :
+                    if 'All'  in var : plotVar = 'm_visCor_%s' % shiftDir
+                    if 'DM0'  in var : plotVar = 'm_visCor_DM0_%s' % shiftDir
+                    if 'DM1'  in var : plotVar = 'm_visCor_DM1_%s' % shiftDir
+                    if 'DM10' in var : plotVar = 'm_visCor_DM10_%s' % shiftDir
                 elif 'Up' in var :
                     plotVar = varBase + '_UP'
                 elif 'Down' in var :
@@ -514,7 +557,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             #print "trying"
             print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             if isData : # Data has no GenWeight and by def has puweight = 1
-                dataES = ESCuts( 'data', channel, var )
+                dataES = ESCuts( esMap, 'data', channel, var )
                 #print 'dataES',dataES
                 chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
@@ -584,14 +627,14 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
 #FIXME            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
 #FIXME            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
-            'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
+            'm_vis' : [30, 0, 300, 1, 'M_{vis} Uncor [GeV]', ' GeV'],
+            'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
 #FIXME            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            #'pt_1:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'], # unrolling pt_1 provides nothing
             #'mt_sv_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
             #'mt_tot_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
 #            'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
@@ -611,7 +654,10 @@ def getHistoDict( analysis, channel ) :
             #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
         shapesToAdd = {
-                    'energyScale':'TES',
+                    'energyScaleAll':'TES All',
+                    'energyScaleDM0':'TES DM0',
+                    'energyScaleDM1':'TES DM1',
+                    'energyScaleDM10':'TES DM10',
                     'zPt':'Z p_{T}/Mass Reweight',
                     #'metResponse':'Met Response',
                     #'metResolution':'Met Resolution',
