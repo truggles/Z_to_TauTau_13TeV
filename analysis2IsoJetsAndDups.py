@@ -79,6 +79,21 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     return scalar1
 
 
+# Apply Tau Energy Scale corrections to a corrected PT variable
+def correctTauPt( pt, gen_match, decayMode ) :
+    # only correct good decay modes
+    if decayMode not in [0, 1, 10] : return pt
+    # only correct real taus
+    if gen_match != 5 : return pt
+
+    # Values from my reposting for Alex Nehrkorn's slides
+    # https://indico.cern.ch/event/607882/contributions/2450164/attachments/1412727/2161541/nehrkorn_tau_es_summer16.pdf
+    if decayMode == 0  : return pt * 0.982
+    if decayMode == 1  : return pt * 1.010
+    if decayMode == 10 : return pt * 1.004    
+
+
+
 # make a var which fills with the tighest iso WP passed
 def setIsoCode( row, lep, VVTight, VVLoose ) :
     # None = 0, VVL = 1, VL = 2, L = 3, M = 4, T = 5, VT = 6, VVT = 7
@@ -134,6 +149,21 @@ def mVisTES( cand1, cand2, row, TES ) :
     lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
     shifted = lorentz1 + lorentz2
     return shifted.M()
+
+
+def mVisTESCor( cand1, cand2, row, pt1, pt2 ) :
+    eta1 = getattr( row, cand1+'Eta' )
+    phi1 = getattr( row, cand1+'Phi' )
+    m1 = getattr( row, cand1+'Mass' )
+    eta2 = getattr( row, cand2+'Eta' )
+    phi2 = getattr( row, cand2+'Phi' )
+    m2 = getattr( row, cand2+'Mass' )
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz1.SetPtEtaPhiM( pt1, eta1, phi1, m1 )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz2.SetPtEtaPhiM( pt2, eta2, phi2, m2 )
+    corrected = lorentz1 + lorentz2
+    return corrected.M()
 
 
 def getMTTotal( pt1, phi1, pt2, phi2, row, channel, esUP=True ) :
@@ -806,6 +836,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     zhFR2B = tnew.Branch('zhFR2', zhFR2, 'zhFR2/F')
     LT_higgs = array('f', [ 0 ] )
     LT_higgsB = tnew.Branch('LT_higgs', LT_higgs, 'LT_higgs/F')
+    ptCor_1 = array('f', [ 0 ] )
+    ptCor_1B = tnew.Branch('ptCor_1', ptCor_1, 'ptCor_1/F')
+    ptCor_2 = array('f', [ 0 ] )
+    ptCor_2B = tnew.Branch('ptCor_2', ptCor_2, 'ptCor_2/F')
+    Higgs_PtCor = array('f', [ 0 ] )
+    Higgs_PtCorB = tnew.Branch('Higgs_PtCor', Higgs_PtCor, 'Higgs_PtCor/F')
+    m_visCor = array('f', [ 0 ] )
+    m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
     __WEIGHT__ = array('f', [ 0 ] )
     __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
     __ZWEIGHT__ = array('f', [ 0 ] )
@@ -907,25 +945,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
             
-            if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
-                mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
-                mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
-                mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
-                mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
-                mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
-                mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
-                mt_1[0]= getTransMass( mvamet[0], mvametphi[0], pt1, phi1 )
-                mt_2[0]= getTransMass( mvamet[0], mvametphi[0], pt2, phi2 )
-                pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
-                if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
-                    pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
-                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
-                         pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
-            else : # Not l1_l2_MvaMet
-                mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
-                mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
-                Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
-                        pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+            #if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
+            #    mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
+            #    mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
+            #    mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
+            #    mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
+            #    mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
+            #    mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
+            #    mt_1[0]= getTransMass( mvamet[0], mvametphi[0], pt1, phi1 )
+            #    mt_2[0]= getTransMass( mvamet[0], mvametphi[0], pt2, phi2 )
+            #    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
+            #    if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+            #        pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+            #    Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+            #             pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
+            #else : # Not l1_l2_MvaMet
+            mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
+            mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
+            Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+                    pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
 
 
 
@@ -993,10 +1031,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = -1
             isoCode1[0] = -1
             isoCode2[0] = -1
-            pt_1_UP[0] = -1
-            pt_1_DOWN[0] = -1
-            pt_2_UP[0] = -1
-            pt_2_DOWN[0] = -1
+            pt_1_UP[0] = pt1
+            pt_1_DOWN[0] = pt1
+            pt_2_UP[0] = pt2
+            pt_2_DOWN[0] = pt2
+            ptCor_1[0] = pt1
+            ptCor_2[0] = pt2
+            Higgs_PtCor[0] = Higgs_Pt[0]
+            m_visCor[0] = getattr( row, l1+'_'+l2+'_Mass' )
             zhFR0[0] = 0
             zhFR1[0] = 0
             zhFR2[0] = 0
@@ -1145,23 +1187,33 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
                     trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0], getattr(row, l2+'DecayMode') )
 
+
+                    # Tau Energy Correction
+                    # also propagated to Higgs_Pt and m_vis
+                    ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], getattr( row, l1+'DecayMode' ) )
+                    ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], getattr( row, l2+'DecayMode' ) )
+                    Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                        ptCor_2[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                    m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
                     # Tau Energy Scale Saved
+                    # 15 Feb 2017, TES uncertainty == 0.6%
+                    # TES used to be 3% with no central shift
                     if gen_match_1[0] == 5 :
                         tauIDweight_1[0] = 0.95 # 06 Feb 2017
-                        pt_1_UP[0] = getattr( row, l1+'Pt' ) * 1.03
-                        pt_1_DOWN[0] = getattr( row, l1+'Pt' ) * 0.97
+                        pt_1_UP[0] = ptCor_1[0] * 1.006
+                        pt_1_DOWN[0] = ptCor_1[0] * 0.994
                     else :
                         tauIDweight_1[0] = 1.
-                        pt_1_UP[0] = getattr( row, l1+'Pt' )
-                        pt_1_DOWN[0] = getattr( row, l1+'Pt' )
+                        pt_1_UP[0] = pt1
+                        pt_1_DOWN[0] = pt1
                     if gen_match_2[0] == 5 :
                         tauIDweight_2[0] = 0.95 # 06 Feb 2017
-                        pt_2_UP[0] = getattr( row, l2+'Pt' ) * 1.03
-                        pt_2_DOWN[0] = getattr( row, l2+'Pt' ) * 0.97
+                        pt_2_UP[0] = ptCor_2[0] * 1.006
+                        pt_2_DOWN[0] = ptCor_2[0] * 0.994
                     else :
                         tauIDweight_2[0] = 1.
-                        pt_2_UP[0] = getattr( row, l2+'Pt' )
-                        pt_2_DOWN[0] = getattr( row, l2+'Pt' )
+                        pt_2_UP[0] = pt2
+                        pt_2_DOWN[0] = pt2
 
 
                 # ggH reweighting, only for ggH120,125,130

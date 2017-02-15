@@ -26,10 +26,10 @@ def get2DVars( cutName ) :
     #if 'mjj' in cutName and 'm_sv' in cutName :
     #    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
     #    yBins = array( 'd', [0,300,500,800,10000] )
-    if 'Higgs_Pt' in cutName and 'm_vis' in cutName :
+    if 'Higgs_PtCor' in cutName and 'm_visCor' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,1000] )
-    if 'mjj' in cutName and 'm_vis' in cutName :
+    if 'mjj' in cutName and 'm_visCor' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
     #if 'pt_1' in cutName and 'm_sv' in cutName :
@@ -126,7 +126,7 @@ def ESCuts( sample, channel, var ) :
         'tt' : { 
             '_energyScaleUp' : '*( pt_1_UP > %s && pt_2_UP > %s)' % (tau1PtCut, tau2PtCut),
             '_energyScaleDown' : '*( pt_1_DOWN > %s && pt_2_DOWN > %s)' % (tau1PtCut, tau2PtCut),
-            '_NoShift' : '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)},
+            '_NoShift' : '*(ptCor_1 > %s && ptCor_2 > %s)' % (tau1PtCut, tau2PtCut)},
         'em' : { 
             '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
             '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
@@ -294,7 +294,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     if doFullJES : jesUncerts = getUncerts()
 
     for var, info in newVarMap.iteritems() :
-        if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_vis')  : continue
+        if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_visCor')  : continue
         print var
 
 
@@ -369,13 +369,15 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # so instead we appeand it to what ever else we have
         shapeSyst += ESCuts( sample, channel, var )
         # Additionally, if we have Energy Scale, we also need
-        # to change any Higgs_Pt vars to Higgs_Pt_UP/DOWN
+        # to change any Higgs_PtCor vars to Higgs_PtCor_UP/DOWN
         additionalCutToUse = additionalCut
         if 'energyScale' in var and 'data' not in sample :
-            if 'Up' in var and 'pt_sv' in additionalCutToUse :
+            if 'Up' in var and ('pt_sv' in additionalCutToUse or 'Higgs_PtCor' in additionalCutToUse) :
                 additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_UP')
-            elif 'Down' in var and 'pt_sv' in additionalCutToUse :
+                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_UP')
+            elif 'Down' in var and ('pt_sv' in additionalCutToUse or 'Higgs_PtCor' in additionalCutToUse) :
                 additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_DOWN')
+                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_DOWN')
 
 
         # Jet Energy Scale:
@@ -478,16 +480,16 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if 'data' in sample :
                     plotVar = varBase
                 #if 'mjj:m_sv' in var :
-                if 'mjj:m_vis' in var :
+                if 'mjj:m_visCor' in var :
                     # Strip _ffSub off for a comparison with the actual shifts
                     if doFF : compVar = var.replace('_ffSub','')
                     else : compVar = var
                     if 'Up' in compVar[-2:] : # Make sure we check the last 2 chars
                         #plotVar = 'vbfMass_Jet%sUp:m_sv' % jesUnc
-                        plotVar = 'vbfMass_Jet%sUp:m_vis' % jesUnc
+                        plotVar = 'vbfMass_Jet%sUp:m_visCor' % jesUnc
                     if 'Down' in compVar[-4:] : # Make sure we check the last 4 chars
                         #plotVar = 'vbfMass_Jet%sDown:m_sv' % jesUnc
-                        plotVar = 'vbfMass_Jet%sDown:m_vis' % jesUnc
+                        plotVar = 'vbfMass_Jet%sDown:m_visCor' % jesUnc
                 else : # For this one, we adjust the additionalCuts to 
                     # provide different yields
                     plotVar = varBase
@@ -516,8 +518,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 #print 'dataES',dataES
                 chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
-                if var == 'm_vis' :
-                    print 'm_vis'
+                if var == 'm_visCor' :
+                    print 'm_visCor'
                     #print "Data Count:", histos[ var ].Integral()
                     print "Cut: %s%s" % (additionalCutToUse, dataES)
             else :
@@ -526,8 +528,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 ''' No reweighting at the moment! '''
                 histos[ var ] = gPad.GetPrimitive( var )
                 integralPost = histos[ var ].Integral()
-                if var == 'm_vis' :
-                    #print 'm_vis'
+                if var == 'm_visCor' :
+                    #print 'm_visCor'
                     print "tmpIntPost: %f" % integralPost
                     #print "Cut: %s" % totalCutAndWeightMC
 
@@ -551,6 +553,7 @@ def getHistoDict( analysis, channel ) :
 #FIXME            'mjj' : [40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'],
 #FIXME            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
 #FIXME            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+#FIXME            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
 #FIXME#XXX            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
 #FIXME            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
 #FIXME#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
@@ -582,8 +585,8 @@ def getHistoDict( analysis, channel ) :
 #FIXME            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
 #FIXME            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
             'm_vis' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
-            'mjj:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'Higgs_Pt:m_vis' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
 #FIXME            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
@@ -599,8 +602,8 @@ def getHistoDict( analysis, channel ) :
         }
 
         ''' added shape systematics '''
-#FIXME        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_vis', 'm_sv'] # No extra shapes
-        toAdd = ['Higgs_Pt:m_vis', 'mjj:m_vis', 'm_vis'] # No extra shapes
+#FIXME        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_visCor', 'm_sv'] # No extra shapes
+        toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
         #toAdd = ['m_sv', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :

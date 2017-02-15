@@ -31,7 +31,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     'qcdSF' : 1.0,
     'mssm' : False,
     'category' : 'inclusive',
-    'fitShape' : 'm_vis',
+    'fitShape' : 'm_visCor',
     'btag' : False,
     'ES' : False,
     'tauPt' : False,
@@ -142,14 +142,14 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         baseVar = ops['fitShape']
         #if 'data' in sample : print "Fitting",baseVar
         appendMap = {
-            'm_vis' : 'visMass',
+            'm_visCor' : 'visMass',
             'm_sv' : 'svFitMass',
             'mt_sv' : 'svFitMt',
             'mt_tot' : 'mtTot',
             #'pt_sv:m_sv' : 'svFitMass2D',
             #'mjj:m_sv' : 'svFitMass2D',
-            'Higgs_Pt:m_vis' : 'visMass2D',
-            'mjj:m_vis' : 'visMass2D',
+            'Higgs_Pt:m_visCor' : 'visMass2D',
+            'mjj:m_visCor' : 'visMass2D',
             'Mass' : '4LMass',
             }
         if '0jet2D' in ops['category'] : 
@@ -180,7 +180,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             print var
             if not baseVar in var : continue
             if ops['fitShape'] == 'm_sv' and ':' in var : continue # Get rid of the 2D shapes in 0jet
-            if ops['fitShape'] == 'm_vis' and ':' in var : continue # Get rid of the 2D shapes in 0jet
+            if ops['fitShape'] == 'm_visCor' and ':' in var : continue # Get rid of the 2D shapes in 0jet
             print "\n\n=============================================================="
             if ops['allShapes'] :
                 print "All Shapes Applied: %s" % var
@@ -243,7 +243,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             if ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
             # This is the proposed binning for ZTT 2015 paper
-            elif doFF and ('m_sv' in var or 'm_vis' in var) :
+            elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 else : binArray = array( 'd', [i*10 for i in range( 31 )] )
             else :
@@ -536,7 +536,7 @@ if __name__ == '__main__' :
     'qcdSF' : 0.653408213966,
     'mssm' : False,
     'category' : 'inclusive',
-    'fitShape' : 'm_vis',
+    'fitShape' : 'm_visCor',
     'ES' : True,
     }
     makeDataCards( analysis, samples, channels, folderDetails, **kwargs )

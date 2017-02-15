@@ -222,8 +222,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for var, info in newVarMap.iteritems() :
     
             # This is to speed up the Data Card making process by 2x and not
-            # create all the plots for SS when all we need it the yield from m_vis
-            if ops['isSSQCD'] and not var == 'm_vis' : continue
+            # create all the plots for SS when all we need it the yield from m_visCor
+            if ops['isSSQCD'] and not var == 'm_visCor' : continue
 
             # speed up 2D plotting
             if ":" in var :
@@ -247,7 +247,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             isVBFCat = False
             is1JetCat = False
             is0JetCat = False
-            if 'm_sv' in var or 'm_vis' in var :
+            if 'm_sv' in var or 'm_visCor' in var :
                 if ('1jet_low' in ops['useQCDMakeName'] or '1jet_high' in ops['useQCDMakeName']\
                         or '1jet_low' in ops['qcdMakeDM'] or '1jet_high' in ops['qcdMakeDM']) :
                     is1JetCat = True
@@ -275,19 +275,19 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
                         1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
                         3300.0,3500.0,3700.0,3900.0] )
-            elif var == 'm_vis_mssm' :
+            elif var == 'm_visCor_mssm' :
                 #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
                 xBins = array( 'd', [] )
                 for i in range(0, 351 ) :
                     xBins.append( i * 10 )
-            elif ops['sync'] and 'm_vis' in var :
+            elif ops['sync'] and 'm_visCor' in var :
                 xBins = array( 'd', [] )
                 for i in range( 21 ) :
                     xBins.append( i * 17.5 )
             # This is the proposed binning for ZTT 2015 paper
-            elif doFF and ('m_sv' in var or 'm_vis' in var) :
+            elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 xBins = array( 'd', [i*10 for i in range( 31 )] )
-            elif 'm_sv' in var or 'm_vis' in var :
+            elif 'm_sv' in var or 'm_visCor' in var :
                 if is1JetCat :
                     xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
                 elif isVBFCat :
@@ -375,7 +375,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 print sample
                 #if not ops['qcdMC'] and 'QCD' in sample and '-' in sample : continue # Why was this line here? QCD pt binned MC???
     
-                #if var == 'm_vis' : print sample
+                #if var == 'm_visCor' : print sample
                 #print '%s2IsoOrderAndDups/%s_%s.root' % (analysis, sample, channel)
     
                 if 'QCD' in sample :
@@ -483,7 +483,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         hist = preHist.Rebin( xNum, "rebinned", xBins )
     
     
-                if var == 'm_vis' :
+                if var == 'm_visCor' :
                     if 'data' in sample and qcdMake : finalDataYield = hist.Integral()
     
                 ''' Good Debugging stuff '''
@@ -501,7 +501,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             ''' Change bin yield to make this make sense with variable binning
                 this is only for viewing, the DC process is seperate '''
             for samp in sampHistos.keys() :
-                if var == 'm_vis' :
+                if var == 'm_visCor' :
                     print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
             #    # With Variable binning, need to set bin content appropriately
             #    if not varBinned : continue
@@ -618,14 +618,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 qcdVar.SetLineWidth( 2 )
                 # Add the shape estimated here to the stack pre-scaling!!!
                 stack.Add( qcdVar ) 
-                if var == 'm_vis_mssm' :
+                if var == 'm_visCor_mssm' :
                     print "M_VIS_MSSM plot details: %f %f" % (info[1], info[2])
                 if varBinned :
                     qcdVar.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
                 else :
                     qcdVar.GetXaxis().SetRangeUser( info[1], info[2] )
                 print "qcdVar: %f   mean %f" % (qcdVar.Integral(), qcdVar.GetMean() )
-                if var == 'm_vis' :
+                if var == 'm_visCor' :
                     finalQCDYield = qcdVar.Integral()
                 qcdDir.cd()
                 qcdVar.Write()
@@ -806,7 +806,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             """ Blinding Data """
             if ops['blind'] :
-                if (analysis == 'htt' and ('m_vis' in var or 'm_sv' in var or 'mt_sv' in var\
+                if (analysis == 'htt' and ('m_visCor' in var or 'm_sv' in var or 'mt_sv' in var\
                          or 'mt_tot' in var) ) or\
                          (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
                     if ops['mssm'] :
@@ -820,7 +820,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         #elif 'vbf_high' in ops['targetDir'] : targetMassLow = 80
                         #else : targetMassLow = 80
                         targetMassUp = 149
-                    elif analysis == 'htt' and 'm_vis' in var :
+                    elif analysis == 'htt' and 'm_visCor' in var :
                         targetMassLow = 81
                         targetMassUp = 149
                     else :
@@ -858,11 +858,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             """ Additional views for Visible Mass """
-            #if 'm_vis' in var :
+            #if 'm_visCor' in var :
             #    pad1.SetLogy()
             #    stack.SetMaximum( stack.GetMaximum() * 10 )
             #    stack.SetMinimum( higgs.GetMaximum() * .1 )
-            #    if var == 'm_vis_mssm' :
+            #    if var == 'm_visCor_mssm' :
             #        pad1.SetLogx()
             #        if ratio : ratioPad.SetLogx()
             #    pad1.Update()

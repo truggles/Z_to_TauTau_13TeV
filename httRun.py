@@ -86,20 +86,16 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
-    'mid1' : '1Jan26jesCheck1',
-    'mid2' : '2Jan26jesCheck1',
-    'mid3' : '3Jan26jesCheck1',
-    'mid1' : '1Jan31checkMatchFFx',
-    'mid2' : '2Jan31checkMatchFFx',
-    'mid3' : '3Jan31checkMatchFFx',
     'mid1' : '1Feb06jesCheck',
     'mid2' : '2Feb06jesCheck',
     'mid3' : '3Feb06jesCheck',
-    'mid1' : '1Feb08FF',
-    'mid2' : '2Feb08FF',
-    'mid3' : '3Feb08FF',
-    'mid2' : '2Feb08FFx',
-    'mid3' : '3Feb08FFx',
+    'mid2' : '2Feb14jesCheckX',
+    'mid3' : '3Feb14jesCheckX',
+    'mid2' : '2Feb15jesCheckX',
+    'mid3' : '3Feb15jesCheckX',
+    #'mid1' : '1Feb08FF',
+    #'mid2' : '2Feb08FFx',
+    #'mid3' : '3Feb08FFx',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -119,7 +115,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -137,7 +133,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 #cats = ['inclusive', '0jet2D', 'boosted','VBF',]
@@ -230,15 +226,15 @@ for isoVal in isoVals :
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
-        #for var in ['m_vis','m_sv'] :
+        #for var in ['m_visCor','m_sv'] :
         #for var in ['m_sv',] :
-        for var in ['m_vis',] :
+        for var in ['m_visCor',] :
             for cat in cats :
-                #if var == 'm_vis' and cat in ['boosted','VBF','0jet2D'] : continue
+                #if var == 'm_visCor' and cat in ['boosted','VBF','0jet2D'] : continue
                 #if cat == 'boosted' : var = 'pt_sv:m_sv'
                 #if cat == 'VBF' : var = 'mjj:m_sv'
-                if cat == 'boosted' : var = 'Higgs_Pt:m_vis'
-                if cat == 'VBF' : var = 'mjj:m_vis'
+                if cat == 'boosted' : var = 'Higgs_Pt:m_visCor'
+                if cat == 'VBF' : var = 'mjj:m_visCor'
                 finalCat = cat
                 if doFF :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
@@ -256,7 +252,7 @@ for isoVal in isoVals :
                     'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
                     'qcdSF' : qcdSF,
                     'category' : finalCat,
-                    #'fitShape' : 'm_vis',
+                    #'fitShape' : 'm_visCor',
                     'fitShape' : var,
                     'allShapes' : True,
                     'sync' : sync,
@@ -269,16 +265,18 @@ for isoVal in isoVals :
                     'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
                     'qcdSF' : qcdSF,
                     'category' : finalCat+'_qcd_cr',
-                    #'fitShape' : 'm_vis',
+                    #'fitShape' : 'm_visCor',
                     'fitShape' : var,
                     'allShapes' : True,
                     'sync' : sync,
                     }
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+
+        app = '-FF' if doFF else '-StdMthd'
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''
