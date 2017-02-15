@@ -148,7 +148,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'mt_tot' : 'mtTot',
             #'pt_sv:m_sv' : 'svFitMass2D',
             #'mjj:m_sv' : 'svFitMass2D',
-            'Higgs_Pt:m_visCor' : 'visMass2D',
+            'Higgs_PtCor:m_visCor' : 'visMass2D',
             'mjj:m_visCor' : 'visMass2D',
             'Mass' : '4LMass',
             }
@@ -205,11 +205,11 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             #    if var != baseVar : continue
             #elif ops['ES'] :
             elif ops['ES'] and not ops['tauPt'] :
-                if not (('_energyScaleUp' in var) or ('_energyScaleDown' in var) or (baseVar == var)) : continue
+                if not (('_energyScale' in var) or (baseVar == var)) : continue
             elif ops['tauPt'] and not ops['ES'] :
                 if not (('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
             elif ops['tauPt'] and ops['ES'] :
-                if not (('_energyScaleUp' in var) or ('_energyScaleDown' in var) or ('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
+                if not (('_energyScale' in var) or ('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
             else :
                 if not var == baseVar : continue
     
@@ -472,9 +472,22 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
                     #elif name in ['TTT','TTJ'] : continue # this is to catch TT when it's not wanted
-                    elif '_energyScale' in var :
+                    elif '_energyScaleAll' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeV'+shiftDir )
+                        altName = histos[ name ].Clone( name.strip('_')+'_CMS_scale_'+lep+'_13TeV'+shiftDir )
+                        altName.SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_13TeV'+shiftDir )
+                        altName.Write()
+                        del altName
+                    elif '_energyScaleDM0' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_1prong_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_1prong_13TeV'+shiftDir )
+                    elif '_energyScaleDM10' in var : # Gotta do this one first to elif DM10 and DM1
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_3prong_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_3prong_13TeV'+shiftDir )
+                    elif '_energyScaleDM1' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_1prong1pizero_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_1prong1pizero_13TeV'+shiftDir )
                     elif '_JES' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_'+jesUnc )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_'+jesUnc )

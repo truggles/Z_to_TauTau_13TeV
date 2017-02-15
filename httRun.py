@@ -93,6 +93,8 @@ params = {
     'mid3' : '3Feb14jesCheckX',
     'mid2' : '2Feb15jesCheckX',
     'mid3' : '3Feb15jesCheckX',
+    'mid2' : '2Feb15jesCheckY',
+    'mid3' : '3Feb15jesCheckY',
     #'mid1' : '1Feb08FF',
     #'mid2' : '2Feb08FFx',
     #'mid3' : '3Feb08FFx',
@@ -115,7 +117,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -133,7 +135,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 #cats = ['inclusive', '0jet2D', 'boosted','VBF',]
@@ -233,7 +235,7 @@ for isoVal in isoVals :
                 #if var == 'm_visCor' and cat in ['boosted','VBF','0jet2D'] : continue
                 #if cat == 'boosted' : var = 'pt_sv:m_sv'
                 #if cat == 'VBF' : var = 'mjj:m_sv'
-                if cat == 'boosted' : var = 'Higgs_Pt:m_visCor'
+                if cat == 'boosted' : var = 'Higgs_PtCor:m_visCor'
                 if cat == 'VBF' : var = 'mjj:m_visCor'
                 finalCat = cat
                 if doFF :
