@@ -126,7 +126,7 @@ def plotShifts( region, name, var ) :
             ratioHist1.SetMaximum( 1.2 )
             ratioHist1.SetMinimum( 0.80 )
         ratioHist1.SetLineColor( ROOT.kBlack )
-        ratioHist1.GetYaxis().SetTitle('Nominal / Shift')
+        ratioHist1.GetYaxis().SetTitle('Shift / Nominal')
         ratioHist1.GetXaxis().SetTitle( xAxis )
         ratioHist1.GetYaxis().SetTitleSize( ratioHist1.GetYaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
         ratioHist1.GetYaxis().SetTitleOffset( smlPadSize*2 )
@@ -137,15 +137,15 @@ def plotShifts( region, name, var ) :
 
         ratioHist3 = ROOT.TH1D('ratio %s Up3' % shape, '', nBins,nMin,nMax )
         ratioHist3.Sumw2()
-        ratioHist3.Add( h1 )
-        ratioHist3.Divide( h2 )
+        ratioHist3.Add( h2 )
+        ratioHist3.Divide( h1 )
         ratioHist3.SetLineColor( ROOT.kBlue )
         ratioHist3.Draw('SAME E1')
 
         ratioHist2 = ROOT.TH1D('ratio %s Down' % shape, 'ratio', nBins,nMin,nMax )
         ratioHist2.Sumw2()
-        ratioHist2.Add( h1 )
-        ratioHist2.Divide( h3 )
+        ratioHist2.Add( h3 )
+        ratioHist2.Divide( h1 )
         ratioHist2.SetLineColor( ROOT.kRed )
         ratioHist2.Draw('SAME E1')
 
