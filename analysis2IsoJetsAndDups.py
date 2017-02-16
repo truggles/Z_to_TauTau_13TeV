@@ -281,9 +281,10 @@ def isoOrder( channel, row ) :
             setattr( row, 't1%s' % uw, tmp2 )
             setattr( row, 't2%s' % uw, tmp1 )
 
-def vbfClean( row ) :
+def vbfClean( row, analysis ) :
     if row.jetVeto20 < 2 :
-        setattr( row, 'vbfMass', -10000 )
+        if analysis == 'Sync' : # This just makes sync ntuples prettier
+            setattr( row, 'vbfMass', -10000 )
         setattr( row, 'vbfDeta', -10 )
         setattr( row, 'vbfDphi', -10 )
         setattr( row, 'vbfJetVeto30', -10 )
@@ -944,7 +945,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #if channel == 'tt' : #and 'Sync-' in sample : 
             #    #print "### Iso Ordering %s ###" % sample
             #    isoOrder( channel, row )
-            vbfClean( row )
+            vbfClean( row, analysis )
 
 
             #FFWeightQCD[0] = -1
