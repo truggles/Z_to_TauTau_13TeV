@@ -1280,6 +1280,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # also propagated to Higgs_Pt and m_vis
                     ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], dm1 )
                     ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], dm2 )
+                    pt_1_UP[0] = ptCor_1[0]
+                    pt_1_DOWN[0] = ptCor_1[0]
+                    pt_1_DM0_UP[0] = ptCor_1[0]
+                    pt_1_DM0_DOWN[0] = ptCor_1[0]
+                    pt_1_DM1_UP[0] = ptCor_1[0]
+                    pt_1_DM1_DOWN[0] = ptCor_1[0]
+                    pt_1_DM10_UP[0] = ptCor_1[0]
+                    pt_1_DM10_DOWN[0] = ptCor_1[0]
+                    pt_2_UP[0] = ptCor_2[0]
+                    pt_2_DOWN[0] = ptCor_2[0]
+                    pt_2_DM0_UP[0] = ptCor_2[0]
+                    pt_2_DM0_DOWN[0] = ptCor_2[0]
+                    pt_2_DM1_UP[0] = ptCor_2[0]
+                    pt_2_DM1_DOWN[0] = ptCor_2[0]
+                    pt_2_DM10_UP[0] = ptCor_2[0]
+                    pt_2_DM10_DOWN[0] = ptCor_2[0]
                     # Tau Energy Scale Saved
                     # 15 Feb 2017, TES uncertainty == 0.6%
                     # TES used to be 3% with no central shift
