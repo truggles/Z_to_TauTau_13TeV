@@ -373,15 +373,15 @@ def sampleDetails( analysis ) :
 	'SM-Higgs' : {
             'ggHtoTauTau120': {
                'DASPath' : '/GluGluHToTauTau_M120_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
-               'xsec' : 47.38 * 0.0698,
+               'xsec' : 52.22 * 0.0698,
                'group' : 'higgs'},
             'ggHtoTauTau125': {
                'DASPath' : '/GluGluHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
-               'xsec' : 44.14 * 0.0627,
+               'xsec' : 48.58 * 0.0627,
                'group' : 'higgs'},
             'ggHtoTauTau130': {
                'DASPath' : '/GluGluHToTauTau_M130_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80xReHLT,
-               'xsec' : 41.23 * 0.0541,
+               'xsec' : 45.31 * 0.0541,
                'group' : 'higgs'},
 
             'VBFHtoTauTau120': {
