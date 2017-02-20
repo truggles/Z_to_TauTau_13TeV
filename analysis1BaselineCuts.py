@@ -219,7 +219,13 @@ def doInitialCuts(analysis, samples, **fargs) :
     
     num = 0
     for sample in samples :
-   
+
+        # Close pool between subsequent uses to reduce memory usage   
+        if fargs['debug'] != 'true' and fargs['skimHdfs'] == 'true' :
+            pool.close()
+            pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
+
+
         numFilesPerCycle = fargs['numFilesPerCycle']
         if sample in mergeMap.keys() and fargs[ 'skimmed' ] != 'true' :
             numFilesPerCycle = mergeMap[sample]
@@ -285,6 +291,16 @@ def doInitialCuts(analysis, samples, **fargs) :
                 count += 1
                 # Make sure we loop over large samples to get all files
                 if count * numFilesPerCycle >= fileLen : go = False
+
+        if fargs['debug'] != 'true' and fargs['skimHdfs'] == 'true' :
+            mpResults = [p.get() for p in multiprocessingOutputs]
+
+            print "\n"
+            print "#################################################################"
+            print "###       skimHdfs finished for %20s          ###" % sample
+            print "#################################################################"
+            print "\n"
+            multiprocessingOutputs = []
     
             
     if fargs['debug'] == 'true' :
@@ -293,7 +309,7 @@ def doInitialCuts(analysis, samples, **fargs) :
         print "#################################################################"
     
     
-    if fargs['debug'] != 'true' :
+    if fargs['debug'] != 'true' and fargs['skimHdfs'] != 'true' :
         mpResults = [p.get() for p in multiprocessingOutputs]
     
         print "#################################################################"
