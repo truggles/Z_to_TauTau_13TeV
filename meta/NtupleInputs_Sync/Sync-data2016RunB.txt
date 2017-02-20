@@ -1,0 +1,14 @@
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_0_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_10_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_11_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_12_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_13_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_1_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_2_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_3_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_4_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_5_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_6_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_7_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_8_tt.root
+/data/truggles/httFeb06skimHTTMerged/dataTT-B_9_tt.root
