@@ -60,7 +60,10 @@ for mass in [125,] :
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
-#SamplesDataCards = ['VBFHtoTauTau125',]
+SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]
+#SamplesDataCards = ['DYJets',] 
+#SamplesDataCards = ['dataTT-C',] 
+SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
 samples = SamplesDataCards
 
@@ -92,6 +95,9 @@ params = {
     'mid3' : '3Feb15jesCheckX',
     'mid2' : '2Feb15jesCheckY',
     'mid3' : '3Feb15jesCheckY',
+    'mid1' : '1Feb15cutCheck',
+    'mid2' : '2Feb15cutCheck',
+    'mid3' : '3Feb15cutCheck',
     #'mid1' : '1Feb08FF',
     #'mid2' : '2Feb08FFx',
     #'mid3' : '3Feb08FFx',
@@ -113,8 +119,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
