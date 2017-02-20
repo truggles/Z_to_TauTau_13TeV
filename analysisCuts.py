@@ -47,6 +47,7 @@ ttDR    = 't1_t2_DR > 0.5'
 ttVtx   = 'abs( t1PVDZ ) < 0.2 && abs( t2PVDZ ) < 0.2'
 tt40    = 'doubleTau40Pass == 1 && t1MatchesDoubleTau40Path == 1 && t2MatchesDoubleTau40Path == 1 && t1MatchesDoubleTau40Filter > 0 && t2MatchesDoubleTau40Filter > 0'
 tt35    = '((doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0) || (doubleTauCmbIso35RegPass > 0 && t1MatchesDoubleTauCmbIso35RegPath > 0 && t2MatchesDoubleTauCmbIso35RegPath > 0 && t1MatchesDoubleTauCmbIso35RegFilter > 0 && t2MatchesDoubleTauCmbIso35RegFilter > 0))'
+tt35_all    = '((doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0) || (doubleTauCmbIso35RegPass > 0 && t1MatchesDoubleTauCmbIso35RegPath > 0 && t2MatchesDoubleTauCmbIso35RegPath > 0 && t1MatchesDoubleTauCmbIso35RegFilter > 0 && t2MatchesDoubleTauCmbIso35RegFilter > 0))'
 tt35mc    = '(doubleTau35Pass > 0 && t1MatchesDoubleTau35Path > 0 && t2MatchesDoubleTau35Path > 0 && t1MatchesDoubleTau35Filter > 0 && t2MatchesDoubleTau35Filter > 0)'
 tt32    = 'doubleTau32Pass > 0 && t1MatchesDoubleTau32Path > 0 && t2MatchesDoubleTau32Path > 0 && t1MatchesDoubleTau32Filter > 0 && t2MatchesDoubleTau32Filter > 0'
 # TT PostSync
@@ -58,6 +59,7 @@ ttIso   = 't1ByVTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVTightIsolationMV
 ttIsoTight   = 't1ByTightIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByTightIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoLooseMVA   = 't1ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
 ttIsoVLooseMVA   = 't1ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5 && t2ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5'
+ttIsoVLooseMVA_all   = '((t1ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5 || t1RerunMVArun2v1DBoldDMwLTVLoose > 0.5) && (t2ByVLooseIsolationMVArun2v1DBoldDMwLT > 0.5 || t2RerunMVArun2v1DBoldDMwLTVLoose > 0.5))'
 ttIsoVVLooseMVA   = 't1ByIsolationMVArun2v1DBoldDMwLTraw > 0. && t2ByIsolationMVArun2v1DBoldDMwLTraw > 0.' # This corresponds to the loosest mva cut at high pt for VVLoose. The actual VVLoose variable is added after our initial cuts in step 2
 ttDisc  = 't1AgainstElectronVLooseMVA6 > 0.5 && t1AgainstMuonLoose3 > 0.5 && t2AgainstElectronVLooseMVA6 > 0.5 && t2AgainstMuonLoose3 > 0.5'
 # TT Studies
@@ -216,6 +218,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
             'syncCutsDCqcdTES5040VVLoose' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVVLooseMVA ],
             'syncCutsDCqcdTES5040' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
             'syncCutsDCqcdTES5040VL' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVLooseMVA],
+            'syncCutsDCqcdTES5040VL_HdfsSkim' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35_all, DecayMode, ttIsoVLooseMVA_all],
             'syncCutsDCqcdTESNoIso' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode],
             # Selection which only does baseline for sync sample
             'syncCutsMSSMNtuple' : [ttKin40, ttCharge, ttDR, ttVtx, tt35, DecayMode],
