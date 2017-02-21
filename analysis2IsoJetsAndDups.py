@@ -24,6 +24,7 @@ prodMap = getProdMap()
 #XXX XXX XXX FIXME so that this does N Jet binned correct once we have ReHLT
 def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
+    assert( shortName in sampDict.keys() ), "Sample %s not in your meta samples.json" % shortName
     if shortName in ['DYJetsAMCNLO', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJetsLow'] : # or shortName == 'DYJets' : # Uncomment last part to study relations between all 4
         return cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
     if 'data' in shortName : return 1.0 #XXX#
