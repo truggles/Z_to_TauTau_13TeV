@@ -1,2 +1,2 @@
-/data/truggles/httFeb06skimHTTMerged/VBFHtoTauTau125_0_tt.root
-/data/truggles/httFeb06skimHTTMerged/VBFHtoTauTau125_1_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/VBFHtoTauTau125_0_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/VBFHtoTauTau125_1_tt.root

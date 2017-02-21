@@ -1,3 +1,2 @@
-/data/truggles/httFeb06skimHTTMerged/WJets4_0_tt.root
-/data/truggles/httFeb06skimHTTMerged/WJets4_1_tt.root
-/data/truggles/httFeb06skimHTTMerged/WJets4_2_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/WJets4_0_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/WJets4_1_tt.root

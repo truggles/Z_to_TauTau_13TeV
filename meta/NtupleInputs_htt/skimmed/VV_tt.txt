@@ -1,1 +1,2 @@
-/data/truggles/httFeb06skimHTTMerged/VV_0_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/VV_0_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/VV_1_tt.root

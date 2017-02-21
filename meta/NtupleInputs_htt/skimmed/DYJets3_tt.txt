@@ -1,2 +1,1 @@
-/data/truggles/httFeb06skimHTTMerged/DYJets3_0_tt.root
-/data/truggles/httFeb06skimHTTMerged/DYJets3_1_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/DYJets3_0_tt.root

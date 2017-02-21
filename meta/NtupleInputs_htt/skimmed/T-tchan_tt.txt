@@ -1,4 +1,2 @@
-/data/truggles/httFeb06skimHTTMerged/T-tchan_0_tt.root
-/data/truggles/httFeb06skimHTTMerged/T-tchan_1_tt.root
-/data/truggles/httFeb06skimHTTMerged/T-tchan_2_tt.root
-/data/truggles/httFeb06skimHTTMerged/T-tchan_3_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/T-tchan_0_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/T-tchan_1_tt.root

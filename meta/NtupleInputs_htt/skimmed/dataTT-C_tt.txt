@@ -1,8 +1,8 @@
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_0_tt.root
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_1_tt.root
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_2_tt.root
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_3_tt.root
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_4_tt.root
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_5_tt.root
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_6_tt.root
-/data/truggles/httFeb06skimHTTMerged/dataTT-C_7_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_0_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_1_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_2_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_3_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_4_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_5_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_6_tt.root
+/data/truggles/svFitFeb17_SM-HTT_Merged/dataTT-C_7_tt.root
