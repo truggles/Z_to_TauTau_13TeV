@@ -390,7 +390,7 @@ def sampleDetails( analysis ) :
                'group' : 'higgs'},
 
             'VBFHtoWW2l2nu125': {
-               'DASPath' : '/VBFHToTauTau_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
+               'DASPath' : '/VBFHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                'xsec' : -999,
                'group' : 'higgs'},
 
@@ -447,7 +447,7 @@ def sampleDetails( analysis ) :
                 'group' : 'VH'},
 
             'HtoWW2l2nu125' : {
-                'DASPath' : 'XXX/ttHJetToTT_M130_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'DASPath' : '/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 999,
                 'group' : 'VH'},
 	} # end SM-Higgs
