@@ -20,114 +20,22 @@ class DoubleTau35Efficiencies :
 
     def __init__( self, channel ):
 
-        # Lumi weighted trigger
-        totalLumi = 36773.0
-        runBCDEFH = 27916.0
-        runG = totalLumi-runBCDEFH
-        self.bcdefgWeight = runBCDEFH/totalLumi
-        self.gWeight = runG/totalLumi
-
         if channel == 'tt' :
             #print "Initializing LepWeight class for channel ",channel
             #effType = 'binned'
             #effType = 'cumulative'
             #with open('data/triggerSF/di-tau/high_mt_%s.json' % effType) as f1 :
             #    self.high_mt_json = json.load(f1)
-            with open('data/triggerSF/di-tau/tightMVAiso/real_taus_Tightiso.json') as f2 :
+            with open('data/triggerSF/di-tau/fitresults_tt_moriond2017.json') as f2 :
                 self.real_taus_json = json.load(f2)
             #with open('data/triggerSF/di-tau/same_sign_%s.json' % effType) as f3 :
             #    self.same_sign_json = json.load(f3)
 
-            ### New Method
-        #    self.fVL = ROOT.TFile('data/doubleTau35/allRuns-VLoose.root','r')
-        #    self.vloose = getTH1FfromTGraphAsymmErrors( \
-        #        self.fVL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vloose')
-        #    self.fL = ROOT.TFile('data/doubleTau35/allRuns-Loose.root','r')
-        #    self.loose = getTH1FfromTGraphAsymmErrors( \
-        #        self.fL.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'loose')
-        #    self.fM = ROOT.TFile('data/doubleTau35/allRuns-Medium.root','r')
-        #    self.medium = getTH1FfromTGraphAsymmErrors( \
-        #        self.fM.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'medium')
-        #    self.fT = ROOT.TFile('data/doubleTau35/allRuns-Tight.root','r')
-        #    self.tight = getTH1FfromTGraphAsymmErrors( \
-        #        self.fT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'tight')
-        #    self.fVT = ROOT.TFile('data/doubleTau35/allRuns-VTight.root','r')
-        #    self.vtight = getTH1FfromTGraphAsymmErrors( \
-        #        self.fVT.Get('divide_OSPassAllRuns_by_OSAllAllRuns'), 'vtight')
         else :
             #self.high_mt_json = ''
             self.real_taus_json = ''
             #self.high_mt_json = ''
 
-        # These are the 2.1/fb efficiencies
-        #self.effMap = {
-        #    'Real Tau' : {
-        #        'VTight' : {
-        #            'm_{0}'     : 3.77850E+01,
-        #            'sigma'  : 4.93611E+00,
-        #            'alpha'  : 4.22634E+00,
-        #            'n'      : 2.85533E+00,
-        #            'norm'   : 9.92196E-01 },
-        #        'Tight' : {
-        #            'm_{0}'     : 3.81919E+01,
-        #            'sigma'  : 5.38746E+00,
-        #            'alpha'  : 4.44730E+00,
-        #            'n'      : 7.39646E+00,
-        #            'norm'   : 9.33402E-01 },
-        #        'Medium' : {
-        #            'm_{0}'     : 3.81821E+01,
-        #            'sigma'  : 5.33452E+00,
-        #            'alpha'  : 4.42570E+00,
-        #            'n'      : 4.70512E+00,
-        #            'norm'   : 9.45637E-01 },
-        #        'Loose' : {
-        #            'm_{0}'     : 3.85953E+01,
-        #            'sigma'  : 5.74632E+00,
-        #            'alpha'  : 5.08553E+00,
-        #            'n'      : 5.45593E+00,
-        #            'norm'   : 9.42168E-01 },
-        #        'NoIso' : {
-        #            'm_{0}'     : 3.86506E+01,
-        #            'sigma'  : 5.81155E+00,
-        #            'alpha'  : 5.82783E+00,
-        #            'n'      : 3.38903E+00,
-        #            'norm'   : 9.33449E+00 
-        #        },
-        #    }, # end Real Tau
-        #    'Fake Tau SS' : {
-        #        'VTight' : {
-        #            'm_{0}'     : 3.96158e+01,
-        #            'sigma'  : 7.87478e+00,
-        #            'alpha'  : 3.99837e+01,
-        #            'n'      : 6.70004e+01,
-        #            'norm'   : 7.57548e-01 },
-        #        'Tight' : {
-        #            'm_{0}'     : 3.99131e+01,
-        #            'sigma'  : 7.77317e+00,
-        #            'alpha'  : 3.99403e+01,
-        #            'n'      : 1.40999e+02,
-        #            'norm'   : 7.84025e-01 },
-        #        'Medium' : {
-        #            'm_{0}'     : 4.04241e+01,
-        #            'sigma'  : 7.95194e+00,
-        #            'alpha'  : 3.99649e+01,
-        #            'n'      : 1.41000e+02,
-        #            'norm'   : 8.00926e-01 },
-        #        'Loose' : {
-        #            'm_{0}'     : 4.05980e+01,
-        #            'sigma'  : 7.87581e+00,
-        #            'alpha'  : 3.98818e+01,
-        #            'n'      : 1.41000e+02,
-        #            'norm'   : 7.98198e-01 },
-        #        'NoIso' : {
-        #            'm_{0}'     : 4.14353e+01,
-        #            'sigma'  : 8.10732e+00,
-        #            'alpha'  : 9.58501e+00,
-        #            'n'      : 1.41000e+02,
-        #            'norm'   : 7.99738e-01 
-        #        },
-        #    } # Fake Tau - SS
-        #} # end coefMap
 
 
     # Directly from Riccardo
@@ -165,89 +73,24 @@ class DoubleTau35Efficiencies :
         assert( decayMode in [0,1,10]), "You have not cleaned your decay \
             modes of your taus!"
 
-        # For Sync, they want all taus considered as "VTight" 
-        #iso = 'TightIso'
-
-        ### 2.1/FB EFFICIENCIES
-        ### If you want to use 2.1/fb, uncomment the 'effMap'
-        ### related lines and directly below
-        #iso = iso.strip('Iso')
-
-        """ 2016 Current Set up has differing efficiencies per decay mode
-            and per Run, so we need a lumi weighted approach, with Data/MC
+        """ 2016 Moriond17 set up has differing efficiencies per decay mode
+            remove the lumi weighted approach. Calculate Data/MC
             SF as final output """
-        if decayMode == 0 :
-            paramGroups = ["Data BCDEFG decay mode =  0",
-                "Data H decay mode =  0",
-                "MC decay mode =  0"]
-        if decayMode == 1 :
-            paramGroups = ["Data BCDEFG decay mode =  1",
-                "Data H decay mode =  1",
-                "MC decay mode =  1"]
-        if decayMode == 10 :
-            paramGroups = ["Data BCDEFG decay mode = 10",
-                "Data H decay mode = 10",
-                "MC decay mode = 10"]
+        m0      = self.real_taus_json['data_genuine_TightIso_dm%i' % int(decayMode)]['m_{0}']
+        sigma   = self.real_taus_json['data_genuine_TightIso_dm%i' % int(decayMode)]['sigma']
+        alpha   = self.real_taus_json['data_genuine_TightIso_dm%i' % int(decayMode)]['alpha']
+        n       = self.real_taus_json['data_genuine_TightIso_dm%i' % int(decayMode)]['n']
+        norm    = self.real_taus_json['data_genuine_TightIso_dm%i' % int(decayMode)]['norm']
+        dataW   = self.CBeff( pt, m0, sigma, alpha, n, norm )
 
-        m0      = self.real_taus_json[paramGroups[0]]['m_{0}']
-        sigma   = self.real_taus_json[paramGroups[0]]['sigma']
-        alpha   = self.real_taus_json[paramGroups[0]]['alpha']
-        n       = self.real_taus_json[paramGroups[0]]['n']
-        norm    = self.real_taus_json[paramGroups[0]]['norm']
-        dataW   = self.bcdefgWeight * self.CBeff( pt, m0, sigma, alpha, n, norm )
-
-        m0      = self.real_taus_json[paramGroups[1]]['m_{0}']
-        sigma   = self.real_taus_json[paramGroups[1]]['sigma']
-        alpha   = self.real_taus_json[paramGroups[1]]['alpha']
-        n       = self.real_taus_json[paramGroups[1]]['n']
-        norm    = self.real_taus_json[paramGroups[1]]['norm']
-        dataW  += self.gWeight * self.CBeff( pt, m0, sigma, alpha, n, norm )
-
-        m0      = self.real_taus_json[paramGroups[2]]['m_{0}']
-        sigma   = self.real_taus_json[paramGroups[2]]['sigma']
-        alpha   = self.real_taus_json[paramGroups[2]]['alpha']
-        n       = self.real_taus_json[paramGroups[2]]['n']
-        norm    = self.real_taus_json[paramGroups[2]]['norm']
+        m0      = self.real_taus_json['mc_genuine_TightIso_dm%i' % int(decayMode)]['m_{0}']
+        sigma   = self.real_taus_json['mc_genuine_TightIso_dm%i' % int(decayMode)]['sigma']
+        alpha   = self.real_taus_json['mc_genuine_TightIso_dm%i' % int(decayMode)]['alpha']
+        n       = self.real_taus_json['mc_genuine_TightIso_dm%i' % int(decayMode)]['n']
+        norm    = self.real_taus_json['mc_genuine_TightIso_dm%i' % int(decayMode)]['norm']
         mcW     = self.CBeff( pt, m0, sigma, alpha, n, norm )
 
-        return dataW / mcW
-
-        #if genCode == 5 : # Real Hadronically decay Tau
-        #    m0 = self.real_taus_json[iso]['m_{0}']
-        #    sigma = self.real_taus_json[iso]['sigma']
-        #    alpha = self.real_taus_json[iso]['alpha']
-        #    n = self.real_taus_json[iso]['n']
-        #    norm = self.real_taus_json[iso]['norm']
-        #    #m0 = self.effMap['Real Tau'][iso]['m_{0}']
-        #    #sigma = self.effMap['Real Tau'][iso]['sigma']
-        #    #alpha = self.effMap['Real Tau'][iso]['alpha']
-        #    #n = self.effMap['Real Tau'][iso]['n']
-        #    #norm = self.effMap['Real Tau'][iso]['norm']
-        #    ''' for the moment stick with real vs. fake '''
-        #else : # Fake Tau (measurements were done in SS region)
-        #    m0 = self.same_sign_json[iso]['m_{0}']
-        #    sigma = self.same_sign_json[iso]['sigma']
-        #    alpha = self.same_sign_json[iso]['alpha']
-        #    n = self.same_sign_json[iso]['n']
-        #    norm = self.same_sign_json[iso]['norm']
-        #    #m0 = self.effMap['Fake Tau SS'][iso]['m_{0}']
-        #    #sigma = self.effMap['Fake Tau SS'][iso]['sigma']
-        #    #alpha = self.effMap['Fake Tau SS'][iso]['alpha']
-        #    #n = self.effMap['Fake Tau SS'][iso]['n']
-        #    #norm = self.effMap['Fake Tau SS'][iso]['norm']
-        
-        ### Temporary check using efficiency bins instead of fit function
-        #if pt > 160 : pt = 159
-        #if 'VLoose' in iso : return self.vloose.GetBinContent( self.vloose.FindBin( pt ) )
-        #if 'Loose' in iso : return self.loose.GetBinContent( self.loose.FindBin( pt ) )
-        #if 'Medium' in iso : return self.medium.GetBinContent( self.medium.FindBin( pt ) )
-        #if 'Tight' in iso : return self.tight.GetBinContent( self.tight.FindBin( pt ) )
-        #if 'VTight' in iso : return self.vtight.GetBinContent( self.vtight.FindBin( pt ) )
-        #return self.tight.GetBinContent( self.tight.FindBin( pt ) )
-
-
-        #return self.CBeff( pt, m0, sigma, alpha, n, norm )
-
+        return 1.*dataW / mcW
 
 
 

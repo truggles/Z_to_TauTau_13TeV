@@ -317,14 +317,14 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
     cuts1 = cutMap[ analysis ][ channel ][ cutName ]
 
     # Remove trigger requirements if MC except reHLT samples
-    if not isData :
-        #if not isReHLT : 
-        for trig in triggers :
-            if hdfsSkim : continue # We want to keep all versions of double Tau 35 trigger for svFitting
-            if trig in cuts1 :
-                cuts1.remove( trig )
-                if analysis == 'htt' :
-                    cuts1.append( tt35mc )
+    #if not isData :
+    #    #if not isReHLT : 
+    #    for trig in triggers :
+    #        if hdfsSkim : continue # We want to keep all versions of double Tau 35 trigger for svFitting
+    #        if trig in cuts1 :
+    #            cuts1.remove( trig )
+    #            if analysis == 'htt' :
+    #                cuts1.append( tt35mc )
 
     prodMap = {
         'em' : ('e', 'm'),
