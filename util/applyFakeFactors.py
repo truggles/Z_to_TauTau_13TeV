@@ -20,8 +20,8 @@ def fillFakeFactorValues( analysis, mid2, sample, channel ) :
     # FF values for data events
     cmssw_base = os.getenv('CMSSW_BASE')
     ffQCD = fakeFactors()
-    #fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
-    #    ffQCD.getInclusive(), 'Inc' )
+    fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
+        ffQCD.getInclusive(), 'Inc' )
     fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,
         ffQCD.get0Jet(), '0Jet' )
     fillFakeFactorValuesPerCat( analysis, mid2, sample, channel,

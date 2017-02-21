@@ -222,7 +222,7 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
         if   'ZTT0jet' in fName     : app = "FFWeight0Jet"
         elif 'ZTTboosted' in fName  : app = "FFWeightBoosted"
         elif 'ZTTVBF' in fName      : app = "FFWeightVBF"
-        else                        : app = "FFWeight0Jet"
+        else                        : app = "FFWeightInc"
 
         # Check if a FF shape variable
         # Stat
