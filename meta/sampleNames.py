@@ -42,6 +42,10 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 54.8 * 1.1638,
                 'group' : 'dyj'},
+            'Sync-data2016RunB' : {
+                'DASPath' : '/Tau/Run2016B-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
         }, # end Sync sample
 
         'htt' : {
