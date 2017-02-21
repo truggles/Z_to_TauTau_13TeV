@@ -56,14 +56,13 @@ for mass in [125,] :
     SamplesDataCards.append('ZHTauTau%i' % mass)
     SamplesDataCards.append('HtoWW2l2nu%i' % mass)
 
-    
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
-SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]
+#SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]
 #SamplesDataCards = ['DYJets',] 
-#SamplesDataCards = ['dataTT-C',] 
-SamplesDataCards = ['VBFHtoTauTau125',]
+#SamplesDataCards = ['dataTT-B',] 
+#SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
 samples = SamplesDataCards
 
@@ -75,7 +74,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 16,
+    'numCores' : 12,
     'numFilesPerCycle' : 1,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
@@ -85,22 +84,10 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
-    'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1Feb06jesCheck',
-    'mid2' : '2Feb06jesCheck',
-    'mid3' : '3Feb06jesCheck',
-    'mid2' : '2Feb14jesCheckX',
-    'mid3' : '3Feb14jesCheckX',
-    'mid2' : '2Feb15jesCheckX',
-    'mid3' : '3Feb15jesCheckX',
-    'mid2' : '2Feb15jesCheckY',
-    'mid3' : '3Feb15jesCheckY',
-    'mid1' : '1Feb15cutCheck',
-    'mid2' : '2Feb15cutCheck',
-    'mid3' : '3Feb15cutCheck',
-    #'mid1' : '1Feb08FF',
-    #'mid2' : '2Feb08FFx',
-    #'mid3' : '3Feb08FFx',
+    #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
+    'mid1' : '1Feb21newSamples',
+    'mid2' : '2Feb21newSamples',
+    'mid3' : '3Feb21newSamples',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -119,8 +106,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -130,7 +117,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -231,15 +218,15 @@ for isoVal in isoVals :
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
-        #for var in ['m_visCor','m_sv'] :
+        for var in ['m_visCor','m_sv'] :
         #for var in ['m_sv',] :
-        for var in ['m_visCor',] :
+        #for var in ['m_visCor',] :
             for cat in cats :
                 #if var == 'm_visCor' and cat in ['boosted','VBF','0jet2D'] : continue
-                #if cat == 'boosted' : var = 'pt_sv:m_sv'
-                #if cat == 'VBF' : var = 'mjj:m_sv'
-                if cat == 'boosted' : var = 'Higgs_PtCor:m_visCor'
-                if cat == 'VBF' : var = 'mjj:m_visCor'
+                if cat == 'boosted' : var = 'pt_sv:m_sv'
+                if cat == 'VBF' : var = 'mjj:m_sv'
+                #if cat == 'boosted' : var = 'Higgs_PtCor:m_visCor'
+                #if cat == 'VBF' : var = 'mjj:m_visCor'
                 finalCat = cat
                 if doFF :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat

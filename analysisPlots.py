@@ -20,21 +20,18 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 # Make a 2D histo
 def get2DVars( cutName ) :
-    #if 'pt_sv' in cutName and 'm_sv' in cutName :
-    #    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-    #    yBins = array( 'd', [0,100,170,300,1000] )
-    #if 'mjj' in cutName and 'm_sv' in cutName :
-    #    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-    #    yBins = array( 'd', [0,300,500,800,10000] )
+    if 'pt_sv' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,1000] )
+    if 'mjj' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,300,500,800,10000] )
     if 'Higgs_PtCor' in cutName and 'm_visCor' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,1000] )
     if 'mjj' in cutName and 'm_visCor' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
-    #if 'pt_1' in cutName and 'm_sv' in cutName :
-    #    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-    #    yBins = array( 'd', [0,60,100,5000] )
     return (xBins, yBins)
 
 
@@ -396,10 +393,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         additionalCutToUse = additionalCut
         if 'energyScale' in var and 'data' not in sample :
             dm = ''
-            if 'energyScaleAll' in var : dm == '_'
-            elif 'energyScaleDM0' in var : dm == '_DM0_'
-            elif 'energyScaleDM1' in var : dm == '_DM1_'
-            elif 'energyScaleDM10' in var : dm == '_DM10_'
+            if 'energyScaleAll' in var : dm = '_'
+            elif 'energyScaleDM0' in var : dm = '_DM0_'
+            elif 'energyScaleDM1' in var : dm = '_DM1_'
+            elif 'energyScaleDM10' in var : dm = '_DM10_'
 
             if 'Up' in var[-2:] : shiftDir = 'UP'
             if 'Down' in var[-4:] : shiftDir = 'DOWN'
@@ -490,6 +487,16 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     if 'DM0'  in var : plotVar = 'pt_sv_DM0_%s:m_sv_DM0_%s' % (shiftDir, shiftDir)
                     if 'DM1'  in var : plotVar = 'pt_sv_DM1_%s:m_sv_DM1_%s' % (shiftDir, shiftDir)
                     if 'DM10' in var : plotVar = 'pt_sv_DM10_%s:m_sv_DM10_%s' % (shiftDir, shiftDir)
+                elif 'mjj:m_sv' in var :
+                    if 'All'  in var : plotVar = 'mjj:m_sv_%s' % shiftDir
+                    if 'DM0'  in var : plotVar = 'mjj:m_sv_DM0_%s' % shiftDir
+                    if 'DM1'  in var : plotVar = 'mjj:m_sv_DM1_%s' % shiftDir
+                    if 'DM10' in var : plotVar = 'mjj:m_sv_DM10_%s' % shiftDir
+                elif 'm_sv' in var :
+                    if 'All'  in var : plotVar = 'm_sv_%s' % shiftDir
+                    if 'DM0'  in var : plotVar = 'm_sv_DM0_%s' % shiftDir
+                    if 'DM1'  in var : plotVar = 'm_sv_DM1_%s' % shiftDir
+                    if 'DM10' in var : plotVar = 'm_sv_DM10_%s' % shiftDir
                 elif 'Higgs_PtCor:m_visCor' in var :
                     if 'All'  in var : plotVar = 'Higgs_PtCor_%s:m_visCor_%s' % (shiftDir, shiftDir)
                     if 'DM0'  in var : plotVar = 'Higgs_PtCor_DM0_%s:m_visCor_DM0_%s' % (shiftDir, shiftDir)
@@ -523,16 +530,17 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if 'data' in sample :
                     plotVar = varBase
                 #if 'mjj:m_sv' in var :
-                if 'mjj:m_visCor' in var :
+                if 'mjj:m_sv' in var or 'mjj:m_visCor' in var :
                     # Strip _ffSub off for a comparison with the actual shifts
                     if doFF : compVar = var.replace('_ffSub','')
                     else : compVar = var
+                    mass = 'm_sv' if 'm_sv' in var else 'm_visCor'
                     if 'Up' in compVar[-2:] : # Make sure we check the last 2 chars
                         #plotVar = 'vbfMass_Jet%sUp:m_sv' % jesUnc
-                        plotVar = 'vbfMass_Jet%sUp:m_visCor' % jesUnc
+                        plotVar = 'vbfMass_Jet%sUp:%s' % (jesUnc, mass)
                     if 'Down' in compVar[-4:] : # Make sure we check the last 4 chars
                         #plotVar = 'vbfMass_Jet%sDown:m_sv' % jesUnc
-                        plotVar = 'vbfMass_Jet%sDown:m_visCor' % jesUnc
+                        plotVar = 'vbfMass_Jet%sDown:%s' % (jesUnc, mass)
                 else : # For this one, we adjust the additionalCuts to 
                     # provide different yields
                     plotVar = varBase
@@ -596,8 +604,8 @@ def getHistoDict( analysis, channel ) :
             'mjj' : [40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'],
 #FIXME            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
 #            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} Uncor [GeV]', ' GeV'],
-#            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
-#FIXME#XXX            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
+            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
 #FIXME            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
 #FIXME#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
 #FIXME#            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
@@ -612,7 +620,7 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
 #FIXME#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 #FIXME#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-#            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
 #FIXME            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
 #FIXME#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
 #FIXME#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
@@ -632,9 +640,9 @@ def getHistoDict( analysis, channel ) :
             'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
-#FIXME            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-#            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-#            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'mt_sv_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
             #'mt_tot_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
 #            'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
@@ -645,8 +653,8 @@ def getHistoDict( analysis, channel ) :
         }
 
         ''' added shape systematics '''
-#FIXME        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_visCor', 'm_sv'] # No extra shapes
-        toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
+        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_visCor', 'm_sv'] # No extra shapes
+        #toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
         #toAdd = ['m_sv', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
@@ -727,10 +735,10 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-#                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} Uncor [GeV]', ' GeV'],
-#                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} Uncor [GeV]', ' GeV'],
-#                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
-#                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} Uncor [GeV]', ' GeV'],
+                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} Uncor [GeV]', ' GeV'],
+                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
 #FIXME                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
 #                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
 #                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],

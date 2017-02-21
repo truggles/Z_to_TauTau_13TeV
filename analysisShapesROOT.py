@@ -146,15 +146,17 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'm_sv' : 'svFitMass',
             'mt_sv' : 'svFitMt',
             'mt_tot' : 'mtTot',
-            #'pt_sv:m_sv' : 'svFitMass2D',
-            #'mjj:m_sv' : 'svFitMass2D',
+            'pt_sv:m_sv' : 'svFitMass2D',
+            'mjj:m_sv' : 'svFitMass2D',
             'Higgs_PtCor:m_visCor' : 'visMass2D',
             'mjj:m_visCor' : 'visMass2D',
             'Mass' : '4LMass',
             }
         if '0jet2D' in ops['category'] : 
-            #append = '_svFitMass2D'
-            append = '_visMass2D'
+            if ops['fitShape'] == 'm_sv' :
+                append = '_svFitMass2D'
+            else :
+                append = '_visMass2D'
         else :
             append = '_'+appendMap[baseVar]
     
