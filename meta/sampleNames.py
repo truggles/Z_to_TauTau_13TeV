@@ -46,6 +46,10 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/Tau/Run2016B-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
+            'Sync-data2016RunH' : {
+                'DASPath' : '/Tau/Run2016H-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
         }, # end Sync sample
 
         'htt' : {

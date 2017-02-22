@@ -34,7 +34,8 @@ os.chdir('..')
 ''' Preset samples '''
 SamplesSync = ['Sync-HtoTT','Sync-VBF125','Sync-DYJets4']
 SamplesSync = ['Sync-VBF125',]
-SamplesSync = ['Sync-data2016RunB',]
+SamplesSync = ['Sync-data2016RunH',]
+#SamplesSync = ['Sync-data2016RunB',]
 #SamplesSync = ['Sync-DYJets4',]
 samples = SamplesSync
 
@@ -48,12 +49,14 @@ params = {
     'debug' : 'false',
     'numCores' : 14,
     'numFilesPerCycle' : 1,
+    #'numFilesPerCycle' : 2,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsSMHTTNtuple', # Standard synchronization ntuple
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # This is the same cut as applied for signal extraction, we choose the "best" version of an event after this cut, then perform additional cuts below if "makeSyncCategories" == True 
-    'mid1' : '1Feb20_dataB_1evt4',
-    'mid2' : '2Feb20_dataB_1evt4',
-    'mid3' : '3Feb20_dataB_1evt4',
+###    'cutMapper' : 'syncCutsDCqcdTES5040VL_CutRuns', # This is the same cut as applied for signal extraction, we choose the "best" version of an event after this cut, then perform additional cuts below if "makeSyncCategories" == True 
+    'mid1' : '1Feb22b',
+    'mid2' : '2Feb22b',
+    'mid3' : '3Feb22b',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -78,7 +81,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 makeSyncCategories = True
-makeSyncCategories = False
+#makeSyncCategories = False
 if makeSyncCategories :
     print "Making Sync Categories"
     print "\n\n  Make sure you have dealt with any svFit vs. non-svFit changes!!!!\n\n"
@@ -97,14 +100,18 @@ if makeSyncCategories :
 
     forAll = '(byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5 && Z_SS==0 && ptCor_1 > 50 && ptCor_2 > 40)'
 
-    oldFile = 'tmp.root'
+    #oldFile = 'newDataB.root'
+    #oldFile = 'removed4Runs.root'
+    oldFile = 'runHSync.root'
     oldTreePath = 'Ntuple'
 
     for cat in ['VBF','Boosted','0Jet'] :
         print "Category!  %s" % cat
         cut = forAll + ' * ' + cutsMap[cat]
         
-        fOutName = 'syncNtuple_DATA_NEW_%s.root' % cat
+        #fOutName = 'SyncNtuple_DATAB_reminiAOD_%s.root' % cat
+        #fOutName = 'SyncNtuple_DATAB_rm4Runs_reminiAOD_%s.root' % cat
+        fOutName = 'SyncNtuple_DATAH_reminiAOD_%s.root' % cat
         ttreeWithCuts( oldFile, oldTreePath, fOutName, cut )
         
 

@@ -54,5 +54,19 @@
     "nevents": 71901374, 
     "nNtupleFiles": 14, 
     "nlumis": 64042
+  },
+  "Sync-data2016RunH": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 66891163, 
+    "DAS Path": "/Tau/Run2016H-PromptReco-v1/MINIAOD", 
+    "nfiles": 896, 
+    "nblocks": 126, 
+    "Cross Section (pb)": 999.0, 
+    "summedWeightsNorm": -13986, 
+    "summedWeights": 0.0, 
+    "nevents": 71901374, 
+    "nNtupleFiles": 14, 
+    "nlumis": 64042
   }
 }
