@@ -230,10 +230,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if 'VBF' in ops['qcdMakeDM'] :
                     if not ('mjj' in var or 'vbfMass' in var) : continue
                 elif 'boosted' in ops['qcdMakeDM'] :
-                    if not ('Higgs_Pt' in var) : continue
-                    #FIXME if not ('pt_sv' in var) : continue
-                #elif '0jet' in ops['qcdMakeDM'] :
-                #    if not ('pt_1' in var) : continue
+                    if not ('pt_sv' in var or 'Higgs_Pt' in var) : continue
                 else : continue
 
 
@@ -599,8 +596,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
                     if samp in ['azh','sm','VH'] : continue
-                    toRoot += (sampHistos[samp].GetBinContent(k)*\
-                        uncertNormMap[analysis][samp])**2
+                    #toRoot += (sampHistos[samp].GetBinContent(k)*\
+                    #    uncertNormMap[analysis][samp])**2
                     toRoot += sampHistos[samp].GetBinError(k)**2
 
                 binErrors.append( math.sqrt(toRoot) )
@@ -849,12 +846,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 plotDir = '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'] )
                 c1.SaveAs(plotDir+'%s.png' % var )
                 c1.SaveAs(plotDir+'%s.pdf' % var )
+                c1.SaveAs(plotDir+'%s.root' % var )
+                c1.SaveAs(plotDir+'%s.C' % var )
 
                 # To speed up, just copy the new png/pdfs to other dir
                 # this will help with 2D plots
                 newPlotDir = plotDir.replace('Plots/','PlotsList/')
                 subprocess.call(['cp',plotDir+'%s.png' % var, newPlotDir+'%s.png' % var])
                 subprocess.call(['cp',plotDir+'%s.pdf' % var, newPlotDir+'%s.pdf' % var])
+                subprocess.call(['cp',plotDir+'%s.root' % var, newPlotDir+'%s.root' % var])
+                subprocess.call(['cp',plotDir+'%s.C' % var, newPlotDir+'%s.C' % var])
     
     
             """ Additional views for Visible Mass """
