@@ -117,7 +117,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -125,11 +125,11 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
-#cats = ['inclusive', '0jet2D', 'boosted','VBF',]
-cats = ['0jet2D', 'boosted','VBF',]
+cats = ['inclusive', '0jet2D', 'boosted','VBF',]
+#cats = ['0jet2D', 'boosted','VBF',]
 #cats = ['boosted',]
 #cats = ['inclusive',]
 pt = '5040'
@@ -142,6 +142,9 @@ cleanPlots = True
 isoVals = ['Tight',]
 doFF = getenv('doFF', type=bool)
 
+toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]
+for remove in toRemove :
+    if remove in samples.keys() : del samples[remove]
 
 for isoVal in isoVals :
     if isoVal == 'Tight' : lIso = 'Loose'
@@ -197,8 +200,8 @@ for isoVal in isoVals :
             ROOT.gROOT.Reset()
             tDir = cat
             blind = True
-            if cat in ['inclusive', '0jet', '1jet'] :
-                blind = False
+            #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
+            #    blind = False
             
             if doFF :
                 kwargs = { 'text':text, 'blind':blind, 'targetDir':'/'+tDir,'sync':sync }
@@ -222,6 +225,7 @@ for isoVal in isoVals :
         #for var in ['m_sv',] :
         #for var in ['m_visCor',] :
             for cat in cats :
+                if var == 'm_visCor' and cat in ['boosted', 'VBF'] : continue
                 #if var == 'm_visCor' and cat in ['boosted','VBF','0jet2D'] : continue
                 if cat == 'boosted' : var = 'pt_sv:m_sv'
                 if cat == 'VBF' : var = 'mjj:m_sv'
@@ -255,7 +259,7 @@ for isoVal in isoVals :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
                     kwargs = {
                     'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
-                    'qcdSF' : qcdSF,
+                    'qcdSF' : 1.0,
                     'category' : finalCat+'_qcd_cr',
                     #'fitShape' : 'm_visCor',
                     'fitShape' : var,
