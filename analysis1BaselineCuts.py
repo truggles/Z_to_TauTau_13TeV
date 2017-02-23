@@ -469,8 +469,6 @@ def drawHistos(analysis, samples, **fargs ) :
                 'tt' : '*(gen_match_1 < 6 && gen_match_2 < 6 && !(gen_match_1 == 5 && gen_match_2 == 5))'},
         'ZJ' : {'em' : '',
                 'tt' : '*(gen_match_2 == 6 || gen_match_1 == 6)'},
-        'ZLL' : {'em' : '*(gen_match_1 < 3 || gen_match_2 < 4)',
-                'tt' : '*(gen_match_1 != 5 && gen_match_2 != 5)'},
         'QCD' : {'em' : '*(FFWeightQCD)',
                 'tt' : '*(FFWeightQCD)'},
         'TTT' : {
@@ -504,7 +502,7 @@ def drawHistos(analysis, samples, **fargs ) :
         loopList = []
         doFF = getenv('doFF', type=bool)
         if 'DYJets' in sample and analysis == 'htt' :
-            genList = ['ZTT', 'ZL', 'ZJ', 'ZLL']
+            genList = ['ZTT', 'ZL', 'ZJ']
             loopList = genList
             #loopList.append( sample ) # don't keep full original
         elif sample == 'TT' and analysis == 'htt' :
