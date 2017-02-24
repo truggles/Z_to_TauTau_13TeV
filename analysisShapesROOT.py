@@ -379,10 +379,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                 histos[ samples[ sample ] ].Add( hNew )
     
-                if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
-                    print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
-                else :
-                    print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
+                #XXX LOTS OF PRINT OUTS if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
+                #XXX LOTS OF PRINT OUTS     print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
+                #XXX LOTS OF PRINT OUTS else :
+                #XXX LOTS OF PRINT OUTS     print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
                 #hist2 = hist.Rebin( 18, 'rebinned', binArray )
                 #histos[ samples[ sample ] ].Add( hist2 )
                 tFile.Close()
@@ -463,7 +463,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         else : jesUnc += '_13TeV'+shiftDir
 
                     # For naming conventions for systematics    
-                    if category == 'vbf' tmpCat = 'VBF' else tmpCat = category
+                    if category == 'vbf' : tmpCat = 'VBF'
+                    else : tmpCat = category
 
                     if '_zPt' in var :
                         if name not in ['ZTT','ZL','ZJ','ZLL','ZJ_rest'] : continue
