@@ -85,9 +85,9 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1Feb21newSamples',
-    'mid2' : '2Feb21newSamples',
-    'mid3' : '3Feb21newSamples',
+    'mid1' : '1Feb24_dyShapeNew',
+    'mid2' : '2Feb24_dyShapeNew',
+    'mid3' : '3Feb24_dyShapeNew',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -128,8 +128,8 @@ makeDataCards = True
 #makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
-cats = ['inclusive', '0jet2D', 'boosted','VBF',]
-#cats = ['0jet2D', 'boosted','VBF',]
+cats = ['inclusive', '0jet2D', 'boosted','vbf',]
+#cats = ['0jet2D', 'boosted','vbf',]
 #cats = ['boosted',]
 #cats = ['inclusive',]
 pt = '5040'
@@ -225,12 +225,13 @@ for isoVal in isoVals :
         #for var in ['m_sv',] :
         #for var in ['m_visCor',] :
             for cat in cats :
-                if var == 'm_visCor' and cat in ['boosted', 'VBF'] : continue
-                #if var == 'm_visCor' and cat in ['boosted','VBF','0jet2D'] : continue
-                if cat == 'boosted' : var = 'pt_sv:m_sv'
-                if cat == 'VBF' : var = 'mjj:m_sv'
+                #if var == 'm_visCor' and cat in ['boosted', 'vbf'] : continue
+                #if var == 'm_visCor' and cat in ['boosted','vbf','0jet2D'] : continue
+                if 'm_sv' in var :
+                    if cat == 'boosted' : var = 'pt_sv:m_sv'
+                    if cat == 'vbf' : var = 'mjj:m_sv'
                 #if cat == 'boosted' : var = 'Higgs_PtCor:m_visCor'
-                #if cat == 'VBF' : var = 'mjj:m_visCor'
+                #if cat == 'vbf' : var = 'mjj:m_visCor'
                 finalCat = cat
                 if doFF :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
@@ -245,7 +246,7 @@ for isoVal in isoVals :
                     qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                     kwargs = {
-                    'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
+                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
                     'qcdSF' : qcdSF,
                     'category' : finalCat,
                     #'fitShape' : 'm_visCor',
@@ -258,7 +259,7 @@ for isoVal in isoVals :
                     # Make OS Loose QCD CR
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
                     kwargs = {
-                    'useQCDMakeName' : params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat,
+                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
                     'qcdSF' : 1.0,
                     'category' : finalCat+'_qcd_cr',
                     #'fitShape' : 'm_visCor',

@@ -227,7 +227,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             # speed up 2D plotting
             if ":" in var :
-                if 'VBF' in ops['qcdMakeDM'] :
+                if 'vbf' in ops['qcdMakeDM'] :
                     if not ('mjj' in var or 'vbfMass' in var) : continue
                 elif 'boosted' in ops['qcdMakeDM'] :
                     if not ('pt_sv' in var or 'Higgs_Pt' in var) : continue
@@ -345,7 +345,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
             for sample in samples.keys() :
-                print sample
+                #print sample
                 #print samples[sample]
     
                 ''' Shape systematics are plotted with their 
@@ -369,7 +369,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if channel == 'em' and '-ZJ' in sample : continue
                 if channel == 'em' and '-ZL' in sample and not '-ZLL' in sample : continue
                 if ops['qcdMC'] and sample == 'QCD' : continue
-                print sample
+                #print sample
                 #if not ops['qcdMC'] and 'QCD' in sample and '-' in sample : continue # Why was this line here? QCD pt binned MC???
     
                 #if var == 'm_visCor' : print sample

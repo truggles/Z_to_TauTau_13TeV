@@ -142,23 +142,22 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         baseVar = ops['fitShape']
         #if 'data' in sample : print "Fitting",baseVar
         appendMap = {
-            'm_visCor' : 'visMass',
-            'm_sv' : 'svFitMass',
-            'mt_sv' : 'svFitMt',
-            'mt_tot' : 'mtTot',
+            'm_sv' : 'svFitMass2D',
             'pt_sv:m_sv' : 'svFitMass2D',
             'mjj:m_sv' : 'svFitMass2D',
+            'm_visCor' : 'visMass2D',
             'Higgs_PtCor:m_visCor' : 'visMass2D',
             'mjj:m_visCor' : 'visMass2D',
             'Mass' : '4LMass',
             }
-        if '0jet2D' in ops['category'] : 
-            if ops['fitShape'] == 'm_sv' :
-                append = '_svFitMass2D'
-            else :
-                append = '_visMass2D'
-        else :
-            append = '_'+appendMap[baseVar]
+        #if '0jet2D' in ops['category'] : 
+        #    if ops['fitShape'] == 'm_sv' :
+        #        Append = '_svFitMass2D'
+        #    else :
+        #        Append = '_visMass2D'
+        #else :
+        #    Append = '_'+appendMap[baseVar]
+        Append = '_'+appendMap[baseVar]
     
         if ops['mssm'] :
         #    if not var == baseVar+'_mssm' : continue
@@ -167,7 +166,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             mid = 'sm'
     
         nameChan = 'tt' if analysis != 'azh' else 'zh'
-        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, nameChan, mid, append), 'UPDATE')
+        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, nameChan, mid, Append), 'UPDATE')
         # We have two pathways to create tt_0jet and need to maintain their seperate root files for 1D vs 2D
         # so we need this override that renames 0jet2D -> 0jet and places in the unrolled root file
         if '0jet2D' in ops['category'] : 
@@ -439,7 +438,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
                     if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest'] or \
-                            category != 'VBF') : continue # Shape only used in VBF category atm
+                            category != 'vbf') : continue # Shape only used in vbf category atm
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
@@ -462,7 +461,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         # Keep a normal shift included for checks at Combine level
                         elif 'Total' in jesUnc and 'Sub' not in jesUnc : jesUnc = '13TeV'+shiftDir
                         else : jesUnc += '_13TeV'+shiftDir
-    
+
+                    # For naming conventions for systematics    
+                    if category == 'vbf' tmpCat = 'VBF' else tmpCat = category
+
                     if '_zPt' in var :
                         if name not in ['ZTT','ZL','ZJ','ZLL','ZJ_rest'] : continue
                         elif '_zPt' in var :
@@ -503,8 +505,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
                     elif '_Zmumu' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+category+'_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )
                     ### For these Fake Factor shapes, we need 2 copies with slightly different names
                     elif 'ffSyst' in var :
                         if 'qcdffSyst' in var :
@@ -539,7 +541,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         shapeFile.Close()
     
     
-        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (analysis, extra, nameChan, mid, append)
+        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (analysis, extra, nameChan, mid, Append)
     
 if __name__ == '__main__' :
     analysis = 'htt'

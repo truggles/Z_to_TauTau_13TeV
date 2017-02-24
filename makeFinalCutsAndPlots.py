@@ -122,7 +122,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     import analysis3Plots
     from meta.sampleNames import returnSampleDetails
     samples = returnSampleDetails( analysis, samples )
-    #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     #### LEGACY HTT CATEGORIES ###
     #higgsPtVar = 'Higgs_Pt'
@@ -171,7 +171,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTVBF' % (sign, isoT, isoL)
+    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5)*%s' % (Zsign, higgsPtVar, isoL1ML2loose)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )

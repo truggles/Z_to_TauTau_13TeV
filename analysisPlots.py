@@ -218,7 +218,7 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
         # Choose appropriate weight for the category
         if   'ZTT0jet' in fName     : app = "FFWeight0Jet"
         elif 'ZTTboosted' in fName  : app = "FFWeightBoosted"
-        elif 'ZTTVBF' in fName      : app = "FFWeightVBF"
+        elif 'ZTTvbf' in fName      : app = "FFWeightVBF"
         else                        : app = "FFWeightInc"
 
         # Check if a FF shape variable
@@ -315,6 +315,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_visCor')  : continue
+
+        ''' Skip plotting 2D vars for 0jet and inclusive selections '''
+        if 'ZTTinclusive' in outFile.GetName() or 'ZTT0jet' in outFile.GetName() :
+            if ":" in var : continue
+
         print var
 
 
@@ -346,7 +351,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             elif 'ZTTboosted' in outFile.GetName() :
                 if '_ggHUp' in var : shapeSyst = '*(ggHWeightBoost)'
                 elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightBoost)'
-            elif 'ZTTVBF' in outFile.GetName() :
+            elif 'ZTTvbf' in outFile.GetName() :
                 if '_ggHUp' in var : shapeSyst = '*(ggHWeightVBF)'
                 elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightVBF)'
             else : "\n\n\nWhy didn't I find a file?\n"
@@ -366,11 +371,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         elif '_Zmumu' in var :
             if '_ZmumuUp' in var and 'ZTTboosted' in outFile.GetName() :
                 shapeSyst = '*((1. + 2*zmumuBoostWeight)/(1. + zmumuBoostWeight))'
-            elif '_ZmumuUp' in var and 'ZTTVBF' in outFile.GetName() :
+            elif '_ZmumuUp' in var and 'ZTTvbf' in outFile.GetName() :
                 shapeSyst = '*((1. + 2*zmumuVBFWeight)/(1. + zmumuVBFWeight))'
             elif '_ZmumuDown' in var and 'ZTTboosted' in outFile.GetName() :
                 shapeSyst = '*(1./(1. + zmumuBoostWeight))'
-            elif '_ZmumuDown' in var and 'ZTTVBF' in outFile.GetName() :
+            elif '_ZmumuDown' in var and 'ZTTvbf' in outFile.GetName() :
                 shapeSyst = '*(1./(1. + zmumuVBFWeight))'
 
 
@@ -378,7 +383,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # from Nov 18, 2016 SM-HTT
         if 'DYJets' in sample and 'ZTTboosted' in outFile.GetName() :
             shapeSyst += '*(1. + zmumuBoostWeight)'
-        elif 'DYJets' in sample and 'ZTTVBF' in outFile.GetName() :
+        elif 'DYJets' in sample and 'ZTTvbf' in outFile.GetName() :
             shapeSyst += '*(1. + zmumuVBFWeight)'
         
             
@@ -601,11 +606,11 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
-            'mjj' : [40, 0, 2000, 1, 'M_{jj} [GeV]', ' GeV'],
+#XXX            'mjj' : [20, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'],
 #FIXME            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
 #            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} Uncor [GeV]', ' GeV'],
-            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
-            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
+#XXX            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+#XXX            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
 #FIXME            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
 #FIXME#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
 #FIXME#            'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
@@ -620,7 +625,7 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
 #FIXME#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 #FIXME#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+#XXX            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
 #FIXME            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
 #FIXME#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
 #FIXME#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
@@ -637,8 +642,8 @@ def getHistoDict( analysis, channel ) :
 #FIXME            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
 #            'm_vis' : [30, 0, 300, 1, 'M_{vis} Uncor [GeV]', ' GeV'],
             'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
-            'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#XXX            'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#XXX            'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
@@ -735,11 +740,11 @@ def getHistoDict( analysis, channel ) :
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :
             chanVarMapTT = {
-                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} Uncor [GeV]', ' GeV'],
-                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} Uncor [GeV]', ' GeV'],
-                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
-                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
-#FIXME                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
+#                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} Uncor [GeV]', ' GeV'],
+#                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} Uncor [GeV]', ' GeV'],
+#                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+#                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+##FIXME                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
 #                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
 #                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
 #                'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
