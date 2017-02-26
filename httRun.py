@@ -121,11 +121,11 @@ runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False # Use this with FF
+#makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
@@ -141,6 +141,11 @@ cleanPlots = True
 #isoVals = ['Tight', 'Loose',]
 isoVals = ['Tight',]
 doFF = getenv('doFF', type=bool)
+
+# Make CR plots for AN
+#plotAntiIso = True
+plotAntiIso = False
+
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]
 for remove in toRemove :
@@ -197,24 +202,33 @@ for isoVal in isoVals :
     if makeFinalPlots :
         from util.helpers import getQCDSF, checkDir
         for cat in cats :
-            ROOT.gROOT.Reset()
-            tDir = cat
-            blind = True
-            #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
-            #    blind = False
-            
-            if doFF :
-                kwargs = { 'text':text, 'blind':blind, 'targetDir':'/'+tDir,'sync':sync }
-            else :
-                qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
-                kwargs = { 'text':text, 'useQCDMake':True, 'blind':blind, 
-                    'useQCDMakeName':'OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat, 'qcdSF':qcdSF,
-                    'targetDir':'/'+tDir,'sync':sync }
-            analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
-                params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat, **kwargs  )
-            cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s" % params['mid2'].strip('2')
-            checkDir( cpDir )
-            subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/tt/"+cat, cpDir] )
+            for isoRegion in [isoVal+'_'+lIso, isoVal+'_'] :
+                if not plotAntiIso and isoRegion == isoVal+'_'+lIso : continue
+                if doFF and isoRegion == isoVal+'_'+lIso : continue
+                ROOT.gROOT.Reset()
+                tDir = cat if isoRegion == isoVal+'_' else cat+'_'+isoVal+'_'+lIso
+                blind = True
+                #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
+                #    blind = False
+                
+                if doFF :
+                    kwargs = { 'text':text, 'blind':blind, 'targetDir':'/'+tDir,'sync':sync }
+                else :
+                    kwargs = { 'text':text, 'blind':blind, 
+                        'targetDir':'/'+tDir,'sync':sync }
+                    if isoRegion == isoVal+'_'+lIso :
+                        kwargs['qcdMakeDM'] = cat+'_plotMe'
+                        kwargs['qcdSF'] = 1.0
+                    else :
+                        kwargs['useQCDMakeName'] = str('OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_','')
+                        #str(.replace('dyShapeNew_',''),
+                        kwargs['qcdSF'] = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
+                        kwargs['useQCDMake'] = True
+                analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
+                    params['mid2']+'_OSl1ml2_'+isoRegion+'ZTT'+cat, **kwargs  )
+                cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s" % params['mid2'].strip('2')
+                checkDir( cpDir )
+                subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/tt/"+cat, cpDir] )
         
         
     if makeDataCards :

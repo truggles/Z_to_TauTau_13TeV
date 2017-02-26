@@ -227,11 +227,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             # speed up 2D plotting
             if ":" in var :
-                if 'vbf' in ops['qcdMakeDM'] :
+                # Skip 1 bin plot of 2D vars
+                if 'plotMe' in ops['qcdMakeDM'] : continue
+                elif 'vbf' in ops['qcdMakeDM'] :
                     if not ('mjj' in var or 'vbfMass' in var) : continue
                 elif 'boosted' in ops['qcdMakeDM'] :
                     if not ('pt_sv' in var or 'Higgs_Pt' in var) : continue
                 else : continue
+
 
 
             #if 'mt_sv' in var : continue
@@ -304,6 +307,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         xBins.append( round(i*binWidth+first,2) )
                     else :
                         xBins.append( round(i*binWidth+first,1) )
+            
+            # Make a single bin version for QCD CR plots
+            if 'plotMe' in ops['qcdMakeDM'] :
+                xBins = array( 'd', [xBins[0], xBins[-1]] )
+
             xNum = len( xBins ) - 1
             #print "Binning scheme: ",xBins
                 
@@ -319,7 +327,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         if samp in ['zl', 'zj'] : continue
                     if analysis == 'htt' and channel == 'tt' :
                         if samp == 'zll' : continue
+
                     sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')), samp, xNum, xBins )
+
                     sampHistos[samp].Sumw2()
                     sampHistos[samp].SetFillColor( sampInfo[analysis][samp][0] )
                     sampHistos[samp].SetLineColor( ROOT.kBlack )
@@ -470,14 +480,20 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     preHist.Scale( ops['qcdSF'] )
                     #print "QCD yield: %f" % preHist.Integral()
                     if not ":" in var :
-                        hist = ROOT.TH1D( preHist )
+                        histX = ROOT.TH1D( preHist )
                     else :
-                        hist = ROOT.TH2D( preHist )
+                        histX = ROOT.TH2D( preHist )
                 else :
                     if ":" in var :
-                        hist = preHist.Rebin2D( 1, 1, "rebinned" )
+                        histX = preHist.Rebin2D( 1, 1, "rebinned" )
                     else : 
-                        hist = preHist.Rebin( xNum, "rebinned", xBins )
+                        histX = preHist.Rebin( xNum, "rebinned", xBins )
+
+                # If plotting qcd CR, we want a single bin for all
+                if 'plotMe' in ops['qcdMakeDM'] :
+                    nBins = histX.GetNbinsX()
+                    hist = histX.Rebin( nBins )
+                else : hist = histX.Clone()
     
     
                 if var == 'm_visCor' :
@@ -485,7 +501,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 ''' Good Debugging stuff '''
                 #nBins = hist.GetNbinsX()
-                #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 0 ), hist.GetBinLowEdge( nBins+1 ))
+                #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 1 ), hist.GetBinLowEdge( nBins+1 ))
     
     
                 sampHistos[ samples[ sample ]['group'] ].Add( hist )
@@ -602,7 +618,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
                 binErrors.append( math.sqrt(toRoot) )
     
-    
             if qcdMake :
                 if not ":" in var :
                     qcdVar = ROOT.TH1D( var, 'qcd%s%s' % (append,var), xNum, xBins )
@@ -636,7 +651,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 pad1.Draw()
                 pad1.cd()
                 stack.Draw('hist')
-                sampHistos[signal].Draw('same')
+                if not 'plotMe' in ops['qcdMakeDM'] :
+                    sampHistos[signal].Draw('same')
                 sampHistos['obs'].Draw('esamex0')
                 # X Axis!
                 stack.GetXaxis().SetTitle("%s" % info[ 4 ])
@@ -701,7 +717,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 pad1.cd()
                 stack.Draw('hist')
-                sampHistos[signal].Draw('same')
+                if not 'plotMe' in ops['qcdMakeDM'] :
+                    sampHistos[signal].Draw('same')
                 sampHistos['obs'].Draw('esamex0')
     
     
@@ -733,10 +750,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             legend.SetMargin(0.3)
             legend.SetBorderSize(0)
             legend.AddEntry( sampHistos['obs'], "Data", 'lep')
-            legend.AddEntry( sampHistos[signal], sampHistos[signal].GetTitle(), 'l')
+            if not 'plotMe' in ops['qcdMakeDM'] :
+                legend.AddEntry( sampHistos[signal], sampHistos[signal].GetTitle(), 'l')
             for j in range(0, stack.GetStack().GetLast() + 1) :
                 last = stack.GetStack().GetLast()
-                legend.AddEntry( stack.GetStack()[ last - j ], stack.GetStack()[last - j ].GetTitle(), 'f')
+                name_str = stack.GetStack()[last - j ].GetTitle()
+                if 'qcd' in name_str or 'QCD' in name_str : name_str = 'QCD'
+                legend.AddEntry( stack.GetStack()[ last - j ], name_str, 'f')
             legend.Draw()
     
 
@@ -802,7 +822,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             """ Blinding Data """
-            if ops['blind'] :
+            if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
                 if (analysis == 'htt' and ('m_visCor' in var or 'm_sv' in var or 'mt_sv' in var\
                          or 'mt_tot' in var) ) or\
                          (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
@@ -842,7 +862,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 
     
     
-            if ops['qcdMakeDM'] == 'x' :
+            if ops['qcdMakeDM'] == 'x' or 'plotMe' in ops['qcdMakeDM'] :
                 plotDir = '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'] )
                 c1.SaveAs(plotDir+'%s.png' % var )
                 c1.SaveAs(plotDir+'%s.pdf' % var )
