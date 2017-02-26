@@ -32,9 +32,10 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-SamplesSync = ['Sync-HtoTT','Sync-VBF125','Sync-DYJets4']
+SamplesSync = ['Sync-HtoTT','Sync-VBF125','Sync-DYJets4',]
 SamplesSync = ['Sync-VBF125',]
 SamplesSync = ['Sync-data2016RunH',]
+SamplesSync = ['Sync-DYJets4',]
 #SamplesSync = ['Sync-data2016RunB',]
 #SamplesSync = ['Sync-DYJets4',]
 samples = SamplesSync
@@ -54,9 +55,9 @@ params = {
     #'cutMapper' : 'syncCutsSMHTTNtuple', # Standard synchronization ntuple
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # This is the same cut as applied for signal extraction, we choose the "best" version of an event after this cut, then perform additional cuts below if "makeSyncCategories" == True 
 ###    'cutMapper' : 'syncCutsDCqcdTES5040VL_CutRuns', # This is the same cut as applied for signal extraction, we choose the "best" version of an event after this cut, then perform additional cuts below if "makeSyncCategories" == True 
-    'mid1' : '1Feb22b',
-    'mid2' : '2Feb22b',
-    'mid3' : '3Feb22b',
+    'mid1' : '1Feb26a',
+    'mid2' : '2Feb26a',
+    'mid3' : '3Feb26a',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -75,8 +76,8 @@ import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 
@@ -91,6 +92,7 @@ if makeSyncCategories :
     from util.ttreeWithCuts import ttreeWithCuts
 
     higgsPtVar = 'Higgs_PtCor'
+    higgsPtVar = 'pt_sv'
 
     cutsMap = {
         'VBF' : '((jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5))' % higgsPtVar,
@@ -102,7 +104,7 @@ if makeSyncCategories :
 
     #oldFile = 'newDataB.root'
     #oldFile = 'removed4Runs.root'
-    oldFile = 'runHSync.root'
+    oldFile = 'Sync2Feb26a/Sync-DYJets4_0_tt.root'
     oldTreePath = 'Ntuple'
 
     for cat in ['VBF','Boosted','0Jet'] :
@@ -111,7 +113,7 @@ if makeSyncCategories :
         
         #fOutName = 'SyncNtuple_DATAB_reminiAOD_%s.root' % cat
         #fOutName = 'SyncNtuple_DATAB_rm4Runs_reminiAOD_%s.root' % cat
-        fOutName = 'SyncNtuple_DATAH_reminiAOD_%s.root' % cat
+        fOutName = 'SyncNtuple_DYJets4_%s.root' % cat
         ttreeWithCuts( oldFile, oldTreePath, fOutName, cut )
         
 
