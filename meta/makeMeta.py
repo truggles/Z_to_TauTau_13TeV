@@ -18,20 +18,21 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
     }
 
     # SM-HTT
-    for mass in [120, 125, 130] :
+    for mass in [110, 120, 125, 130, 140] :
         currentDASSamples['htt'].append('ggHtoTauTau%i' % mass)
+        currentDASSamples['htt'].append('HtoWW2l2nu%i' % mass)
         currentDASSamples['htt'].append('VBFHtoTauTau%i' % mass)
+        currentDASSamples['htt'].append('VBFHtoWW2l2nu%i' % mass)
         currentDASSamples['htt'].append('WMinusHTauTau%i' % mass)
         currentDASSamples['htt'].append('WPlusHTauTau%i' % mass)
         currentDASSamples['htt'].append('ZHTauTau%i' % mass)
+        currentDASSamples['htt'].append('ttHTauTau%i' % mass)
         currentDASSamples['azh'].append('ggHtoTauTau%i' % mass)
         currentDASSamples['azh'].append('VBFHtoTauTau%i' % mass)
         currentDASSamples['azh'].append('WMinusHTauTau%i' % mass)
         currentDASSamples['azh'].append('WPlusHTauTau%i' % mass)
         currentDASSamples['azh'].append('ZHTauTau%i' % mass)
         currentDASSamples['azh'].append('ttHTauTau%i' % mass)
-    currentDASSamples['htt'].append('VBFHtoWW2l2nu125')
-    currentDASSamples['htt'].append('HtoWW2l2nu125')
 
     # A to Zh sample masses
     for mass in [220, 240, 260, 280, 300, 320, 350, 400] :

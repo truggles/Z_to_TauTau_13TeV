@@ -1,2 +1,14 @@
-/hdfs/store/user/caillol/SMHTT_oct25/WplusHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-1C459242-E542-E611-9CD8-842B2B42B2B1.root
-/hdfs/store/user/caillol/SMHTT_oct25/WplusHToTauTau_M130_13TeV_powheg_pythia8/make_ntuples_cfg-6C3EF697-DF45-E611-A7B5-6C3BE5B5E4C0.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-1EA706AA-65C8-E611-932C-001E67A4055F.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-28E43897-C7C8-E611-9500-0CC47A4D764A.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-34435E13-FCC8-E611-B3A1-0090FAA58274.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-64907632-FCC8-E611-A523-6CC2173BBA70.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-7A20F477-CAC8-E611-8040-0CC47A4D761A.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-AAA0F146-1CC8-E611-87EB-A0369F30FFD2.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-B47C70D7-C1C8-E611-9954-008CFA19741C.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-BEB8B95A-FFC8-E611-B37D-00266CF9AB88.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-D2412948-ABC8-E611-8ECF-FA163E6A86B3.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-DE945B25-F1C8-E611-B0D2-001E674FB2D4.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-E2123750-FFC8-E611-BE8C-001E67E6F7C4.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-EAD62701-A1C8-E611-9918-D4AE526DF427.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-EC2C752A-FFC8-E611-B9A1-0CC47A7DFFC6.root
+/hdfs/store/user/caillol/SMHTT_mc_feb13/WplusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-FAF79AB8-FEC8-E611-8F0C-002590E7D5A6.root
