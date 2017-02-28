@@ -482,3 +482,13 @@
 /hdfs/store/user/caillol/SMHTT_reminiaod_feb14/data_Tau_Run2016B_v2/make_ntuples_cfg-FE25663B-95EE-E611-99F8-0CC47A4D7692.root
 /hdfs/store/user/caillol/SMHTT_reminiaod_feb14/data_Tau_Run2016B_v2/make_ntuples_cfg-FE27D5D0-98EE-E611-813F-0CC47A7C34E6.root
 /hdfs/store/user/caillol/SMHTT_reminiaod_feb14/data_Tau_Run2016B_v2/make_ntuples_cfg-FEA2C009-86EE-E611-A996-0025905B85B2.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-0082F042-51ED-E611-B3B6-0025905A48D6.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-28678EF5-52ED-E611-991D-0025905B8594.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-42A773D7-54ED-E611-8943-0CC47A4C8EBA.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-509F53D7-55ED-E611-A36D-0CC47A4C8E16.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-50C98F14-62ED-E611-B422-0025905A608E.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-6C018842-51ED-E611-8043-0025905A60B2.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-6ED59648-8DEE-E611-A925-0CC47A7C345E.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-BA4FA5F5-52ED-E611-9D2D-0025905A48EC.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-EAF2132F-95EE-E611-AA97-0CC47A4D7636.root
+/hdfs/store/user/ndev/LFV_reminiaod_feb18/data_Tau_Run2016B_v2/make_ntuples_cfg-FA1985DB-55ED-E611-938D-0025905A607A.root
