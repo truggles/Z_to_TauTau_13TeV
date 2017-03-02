@@ -694,7 +694,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 er.SetLineColor( 0 )
                 er.SetLineWidth( 0 )
                 er.SetMarkerSize( 0 )
-                er.SetFillStyle( 3002 )
+                er.SetFillStyle( 3001 )
                 er.SetFillColor( 15 )
                 er.Draw('same e2')
                 ratioHist.Draw('esamex0')
@@ -816,7 +816,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 e1.SetLineColor( 0 )
                 e1.SetLineWidth( 0 )
                 e1.SetMarkerSize( 0 )
-                e1.SetFillStyle( 3002 )
+                e1.SetFillStyle( 3001 )
                 e1.SetFillColor( 15 )
                 e1.Draw('same e2')
     
