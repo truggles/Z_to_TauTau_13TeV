@@ -1,8 +1,8 @@
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-0047F44E-9FC0-E611-85B6-A0000420FE80.root
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-1AA22A58-9FC0-E611-9903-001E67DDD22B.root
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-3E2E0159-9FC0-E611-A93B-0025901D08BA.root
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-68C46011-9FC0-E611-AADC-FA163ED88756.root
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-6C044D40-9FC0-E611-9374-782BCB538FDF.root
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-A07C7502-9FC0-E611-B9A6-001E67457DFA.root
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-C870AFFC-9EC0-E611-95FC-0025905A610C.root
-/hdfs/store/user/caillol/SMHTT_mc_feb13/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-EEEF0119-9FC0-E611-B3B1-0025905A60BE.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-0047F44E-9FC0-E611-85B6-A0000420FE80.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-1AA22A58-9FC0-E611-9903-001E67DDD22B.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-3E2E0159-9FC0-E611-A93B-0025901D08BA.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-68C46011-9FC0-E611-AADC-FA163ED88756.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-6C044D40-9FC0-E611-9374-782BCB538FDF.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-A07C7502-9FC0-E611-B9A6-001E67457DFA.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-C870AFFC-9EC0-E611-95FC-0025905A610C.root
+/hdfs/store/user/ndev/LFV_feb18_mc/WminusHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-EEEF0119-9FC0-E611-B3B1-0025905A60BE.root
