@@ -368,23 +368,28 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # This is the Zmumu CR shape uncertainty from data/MC correction
         # below.  It is currently only applied to VBF
         # This shape will be skipped if not DYJets
-        elif '_Zmumu' in var :
-            if '_ZmumuUp' in var and 'ZTTboosted' in outFile.GetName() :
-                shapeSyst = '*((1. + 2*zmumuBoostWeight)/(1. + zmumuBoostWeight))'
-            elif '_ZmumuUp' in var and 'ZTTvbf' in outFile.GetName() :
-                shapeSyst = '*((1. + 2*zmumuVBFWeight)/(1. + zmumuVBFWeight))'
-            elif '_ZmumuDown' in var and 'ZTTboosted' in outFile.GetName() :
-                shapeSyst = '*(1./(1. + zmumuBoostWeight))'
-            elif '_ZmumuDown' in var and 'ZTTvbf' in outFile.GetName() :
-                shapeSyst = '*(1./(1. + zmumuVBFWeight))'
+        # Update - 2 Mar 2017, no more shape uncertainty
+        #elif '_Zmumu' in var :
+        #    if '_ZmumuUp' in var and 'ZTTboosted' in outFile.GetName() :
+        #        shapeSyst = '*((1. + 2*zmumuBoostWeight)/(1. + zmumuBoostWeight))'
+        #    elif '_ZmumuUp' in var and 'ZTTvbf' in outFile.GetName() :
+        #        shapeSyst = '*((1. + 2*zmumuVBFWeight)/(1. + zmumuVBFWeight))'
+        #    elif '_ZmumuDown' in var and 'ZTTboosted' in outFile.GetName() :
+        #        shapeSyst = '*(1./(1. + zmumuBoostWeight))'
+        #    elif '_ZmumuDown' in var and 'ZTTvbf' in outFile.GetName() :
+        #        shapeSyst = '*(1./(1. + zmumuVBFWeight))'
 
 
         # Add the Zmumu CR normalizations from Cecile's studies
         # from Nov 18, 2016 SM-HTT
-        if 'DYJets' in sample and 'ZTTboosted' in outFile.GetName() :
-            shapeSyst += '*(1. + zmumuBoostWeight)'
-        elif 'DYJets' in sample and 'ZTTvbf' in outFile.GetName() :
-            shapeSyst += '*(1. + zmumuVBFWeight)'
+        # Update 2 Mar, 2017:
+        # - 2% correction for All regions
+        # - VBF has specific shape correction too
+        if 'DYJets' in sample or 'EWKZ' in sample :
+            if 'ZTTvbf' in outFile.GetName() :
+                shapeSyst += '*(1.02 + zmumuVBFWeight)'
+            else : # Applied to ALL categories
+                shapeSyst += '*(1.02)'
         
             
         # Energy Scale reweighting applied to all Real Hadronic Taus
@@ -679,7 +684,7 @@ def getHistoDict( analysis, channel ) :
                     'JES' : 'Jet Energy Scale',
                     'JetToTau' : 'Jet to Tau Fake',
                     'ggH' : 'ggH Scale',
-                    'Zmumu' : 'Z mumu DY Reweight',
+                    # Removed 2 Mar 2017 - 'Zmumu' : 'Z mumu DY Reweight',
                     }
 
         # Add FF shape systs if doFF

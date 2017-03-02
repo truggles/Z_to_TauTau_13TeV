@@ -716,8 +716,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
-    zmumuBoostWeight = array('f', [ 0 ] )
-    zmumuBoostWeightB = tnew.Branch('zmumuBoostWeight', zmumuBoostWeight, 'zmumuBoostWeight/F')
+    #zmumuBoostWeight = array('f', [ 0 ] )
+    #zmumuBoostWeightB = tnew.Branch('zmumuBoostWeight', zmumuBoostWeight, 'zmumuBoostWeight/F')
     zmumuVBFWeight = array('f', [ 0 ] )
     zmumuVBFWeightB = tnew.Branch('zmumuVBFWeight', zmumuVBFWeight, 'zmumuVBFWeight/F')
     ggHWeight0Jet = array('f', [ 0 ] )
@@ -1240,7 +1240,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tauIDweight_2[0] = 1
             topWeight[0] = 1
             zPtWeight[0] = 1
-            zmumuBoostWeight[0] = 1
+            #zmumuBoostWeight[0] = 1
             zmumuVBFWeight[0] = 1
             ggHWeight0Jet[0] = 1
             ggHWeightBoost[0] = 1
@@ -1533,24 +1533,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
 
                 # Reweighting 2D distributions based on Zmumu CR
-                if 'DYJets' in sample :
+                if 'DYJets' in sample or 'EWKZ' in sample :
 
-                    # Boosted Category
-                    boostPt = 0.
-                    if hasattr( row, 'pt_sv' ) : boostPt = row.pt_sv
-                    else : boostPt = Higgs_Pt[0]
-                    if boostPt <= 100.   : zmumuBoostWeight[0] = (-1. + 0.973)
-                    elif boostPt <= 170. : zmumuBoostWeight[0] = (-1. + 0.959)
-                    elif boostPt <= 300. : zmumuBoostWeight[0] = (-1. + 0.934)
-                    else                 : zmumuBoostWeight[0] = (-1. + 0.993) # > 300
+                    # Boosted Category - XXX No longer needed with reminiAOD
+                    #boostPt = 0.
+                    #if hasattr( row, 'pt_sv' ) : boostPt = row.pt_sv
+                    #else : boostPt = Higgs_Pt[0]
+                    #if boostPt <= 100.   : zmumuBoostWeight[0] = (-1. + 0.973)
+                    #elif boostPt <= 170. : zmumuBoostWeight[0] = (-1. + 0.959)
+                    #elif boostPt <= 300. : zmumuBoostWeight[0] = (-1. + 0.934)
+                    #else                 : zmumuBoostWeight[0] = (-1. + 0.993) # > 300
 
                     # VBF Category
                     # Change application method and add shape with nominal
                     # shift at 1/2 the initial value
-                    if row.vbfMass <= 300   : zmumuVBFWeight[0] = (-1. + 1.010) / 2.
-                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = (-1. + 1.064) / 2.
-                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = (-1. + 1.088) / 2.
-                    else                    : zmumuVBFWeight[0] = (-1. + 1.003) / 2. # > 800
+                    # Update 2 Mar 2017, no more shape uncert, just weight correction
+                    if row.vbfMass <= 300   : zmumuVBFWeight[0] = 0.0
+                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = 0.04
+                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = 0.12
+                    else                    : zmumuVBFWeight[0] = 0.08 # > 800
 
                 # Jet to Tau Fake weight
                 if not 'date' in sample :
