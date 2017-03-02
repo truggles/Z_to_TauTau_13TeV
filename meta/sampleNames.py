@@ -523,7 +523,7 @@ def sampleDetails( analysis ) :
             #    'xsec' : 0.570 * 0.0704,
             #    'group' : 'VH'},
             'ttHTauTau125' : {
-                'DASPath' : '/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'DASPath' : '/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/%s_ext4-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.507 * 0.0632,
                 'group' : 'VH'},
             #'ttHTauTau130' : {

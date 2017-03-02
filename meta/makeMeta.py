@@ -24,14 +24,17 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
         currentDASSamples['htt'].append('WMinusHTauTau%i' % mass)
         currentDASSamples['htt'].append('WPlusHTauTau%i' % mass)
         currentDASSamples['htt'].append('ZHTauTau%i' % mass)
+    
+    for mass in [120, 125, 130] :
         currentDASSamples['azh'].append('ggHtoTauTau%i' % mass)
         currentDASSamples['azh'].append('VBFHtoTauTau%i' % mass)
         currentDASSamples['azh'].append('WMinusHTauTau%i' % mass)
         currentDASSamples['azh'].append('WPlusHTauTau%i' % mass)
         currentDASSamples['azh'].append('ZHTauTau%i' % mass)
+        currentDASSamples['azh'].append('ttHTauTau125%i' % mass)
 
     # These are the background like Higgs samples
-    currentDASSamples['azh'].append('ttHTauTau125')
+    currentDASSamples['htt'].append('ttHTauTau125')
     currentDASSamples['htt'].append('HtoWW2l2nu125')
     currentDASSamples['htt'].append('VBFHtoWW2l2nu125')
 
