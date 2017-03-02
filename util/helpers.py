@@ -247,7 +247,7 @@ def dataCardGenMatchedSamples( inSamples ) :
         if 'dataMM-%s' % era in inSamples :
             samples['dataMM-%s' % era]  = 'data_obs'
 
-    for mass in ['120', '125', '130'] :
+    for mass in ['110', '120', '125', '130', '140'] :
         if 'VBFHtoTauTau%s' % mass in inSamples :
             samples['VBFHtoTauTau%s' % mass] = 'qqH%s' % mass
         if 'ggHtoTauTau%s' % mass in inSamples :

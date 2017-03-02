@@ -434,10 +434,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if name == 'jetFakes' and not doFF : continue
                     if name == 'jetFakes' and not ('ffSyst' in var or 'ffStat' in var) : continue
                     if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
-                    if '_ggH' in var and not name in ['ggH120','ggH125','ggH130'] : continue
+                    if '_ggH' in var and not name in ['ggH110', 'ggH120','ggH125','ggH130', 'ggH140'] : continue
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
-                    if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest'] or \
+                    if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] or \
                             category != 'vbf') : continue # Shape only used in vbf category atm
                     lep = 'x'
                     if channel == 'tt' : lep = 't'

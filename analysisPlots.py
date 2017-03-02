@@ -94,9 +94,11 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
         elif '_ggH' in var :
             if not 'ggHtoTauTau' in sample : return True
 
-        # Zmumu yields by slices, only for DYJets, and only VBF at the moment
+        # Zmumu yields by slices, only for DYJets and EWKZ, and only VBF at the moment
         elif '_Zmumu' in var :
-            if not 'DYJets' in sample : return True
+            if 'DYJets' in sample : return False
+            if 'EWKZ' in sample : return False
+            else : return True
 
         elif 'ffSyst' in var or 'ffStat' in var :
             if not ('ZJ' in genCode or 'ZJ' in sample or \
