@@ -1549,9 +1549,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # shift at 1/2 the initial value
                     # Update 2 Mar 2017, no more shape uncert, just weight correction
                     if row.vbfMass <= 300   : zmumuVBFWeight[0] = 0.0
-                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = 0.04
-                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = 0.12
-                    else                    : zmumuVBFWeight[0] = 0.08 # > 800
+                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = 0.02
+                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = 0.06
+                    else                    : zmumuVBFWeight[0] = 0.04 # > 800
 
                 # Jet to Tau Fake weight
                 if not 'date' in sample :
