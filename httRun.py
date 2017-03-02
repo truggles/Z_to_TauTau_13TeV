@@ -192,6 +192,9 @@ for isoVal in isoVals :
         qcdFile = open('httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']),'w')
         for cat in cats :
             qcdSF = qcdYields['SS'+isoVal+'_'+cat] / qcdYields['SS'+isoVal+'_'+lIso+cat]
+            if qcdYields['SS'+isoVal+'_'+lIso+cat] > 0 :
+                qcdSF = qcdYields['SS'+isoVal+'_'+cat] / qcdYields['SS'+isoVal+'_'+lIso+cat]
+            else : qcdSF = 9999 # Obviously a problem
             qcdFile.write( cat+":"+str(qcdSF)+"\n" )
         for key in qcdYields :
             qcdFile.write( "%s : %.2f\n" % (key, qcdYields[key]) )
