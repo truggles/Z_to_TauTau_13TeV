@@ -88,7 +88,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
         # Don't plot sm higgs 120, 130
-        smHiggs = ['ggHtoTauTau120', 'ggHtoTauTau130', 'VBFHtoTauTau120', 'VBFHtoTauTau130']
+        smMassesNoInclude = ['110', '120', '130', '140']
+        smHiggs = []
+        for mass in smMassesNoInclude :
+            smHiggs.append('ggHtoTauTau%s' % mass)
+            smHiggs.append('VBFHtoTauTau%s' % mass)
+            smHiggs.append('WMinusHTauTau%s' % mass)
+            smHiggs.append('WPlusHTauTau%s' % mass)
+            smHiggs.append('ZHTauTau%s' % mass)
         for higgs in smHiggs :
             if higgs in samples : del samples[ higgs ]
 
@@ -247,13 +254,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             isVBFCat = False
             is1JetCat = False
             is0JetCat = False
-            if 'm_sv' in var or 'm_visCor' in var :
-                if ('1jet_low' in ops['useQCDMakeName'] or '1jet_high' in ops['useQCDMakeName']\
-                        or '1jet_low' in ops['qcdMakeDM'] or '1jet_high' in ops['qcdMakeDM']) :
-                    is1JetCat = True
-                if ('vbf' in ops['useQCDMakeName'] or 'vbf' in ops['qcdMakeDM']) :
-                    isVBFCat = True
-                if not (isVBFCat or is1JetCat) : is0JetCat = True
+            # This was useful for lower stats sub-divided categories pre-unrolling
+            #if 'm_sv' in var or 'm_visCor' in var :
+            #    if ('1jet_low' in ops['useQCDMakeName'] or '1jet_high' in ops['useQCDMakeName']\
+            #            or '1jet_low' in ops['qcdMakeDM'] or '1jet_high' in ops['qcdMakeDM']) :
+            #        is1JetCat = True
+            #    if ('vbf' in ops['useQCDMakeName'] or 'vbf' in ops['qcdMakeDM']) :
+            #        isVBFCat = True
+            #    if not (isVBFCat or is1JetCat) : is0JetCat = True
 
 
             varBinned = True
