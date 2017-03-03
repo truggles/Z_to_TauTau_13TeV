@@ -22,13 +22,13 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 def get2DVars( cutName ) :
     if 'pt_sv' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,100,170,300,1000] )
+        yBins = array( 'd', [0,100,170,300,10000] )
     if 'mjj' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
     if 'Higgs_PtCor' in cutName and 'm_visCor' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,100,170,300,1000] )
+        yBins = array( 'd', [0,100,170,300,10000] )
     if 'mjj' in cutName and 'm_visCor' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
