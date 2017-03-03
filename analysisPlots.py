@@ -340,9 +340,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             elif '_topPtDown' in var : shapeSyst = '*(1./topWeight)'
 
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
-        elif '_zPt' in var :
-            if '_zPtUp' in var : shapeSyst = '*(zPtWeight)'
-            elif '_zPtDown' in var : shapeSyst = '*(1./zPtWeight)'
+        elif '_zPt' in var : # Shifts has been changed to 10% of correction
+            if '_zPtUp' in var : shapeSyst = '*(1. + (-1. + zPtWeight) * 0.1 )' 
+            elif '_zPtDown' in var : shapeSyst = '*(1. - (-1. + zPtWeight) * 0.1 )'
 
         # ggH scale to ggHtoTauTau signal
         elif '_ggH' in var :
