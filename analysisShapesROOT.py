@@ -14,6 +14,7 @@ from util.helpers import checkDir, unroll2D, returnSortedDict, \
 from analysis1BaselineCuts import skipChanDataCombo
 import os
 from smart_getenv import getenv
+from math import sqrt
 
 
 def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
@@ -403,6 +404,54 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
             print ".............................................................."
             shapeDir.cd()
+
+            # We need to check for any total bkg bins which have 0
+            # Only do this for nominal bkg, not systematic shifts
+            # Recall ROOT TH1 bin numbers start at 1 for the useful bins
+
+            # Don't worry about this in QCD CR
+            if not ('Up' in var[-2:] or 'Down' in var[-4:] or '_qcd_cr' in ops['category']) : 
+                #dataArray = []
+                bkgArray = [0] * numBins
+                for name in histos :
+                    if 'ggH' in name or 'qqH' in name or 'ZH' in name or 'WH' in name :
+                        continue # we don't care about signal here
+                    elif name == 'data_obs' : continue # can use this later if need be
+                    #    for bin_id in range( histos[ name ].GetNbinsX() ) :
+                    #        dataArray.append( histos[ name ].GetBinContent( bin_id+1 ) )
+                    else : # All backgrounds
+                        for bin_id in range( histos[ name ].GetNbinsX() ) :
+                            bkgArray[bin_id] = bkgArray[bin_id] + histos[ name ].GetBinContent( bin_id+1 )
+                #print dataArray
+                #print bkgArray
+                #assert( len(dataArray) == len(bkgArray) ), "Zero bin check is not working, are you missing data_obs?"
+
+                # Find problem bins
+                problemBins = []
+                print "Checking for problem bins"
+                for bin_id in range( len(bkgArray) ) :
+                    #if dataArray[bin_id] > 0. and bkgArray[bin_id] == 0. :
+                    print bin_id+1, bkgArray[bin_id], " QCD val: ",histos[ 'QCD' ].GetBinContent( bin_id+1 )
+                    if bkgArray[bin_id] == 0. :
+                        problemBins.append( bin_id+1 ) # +1 here gets us to ROOT coords
+
+                # Apply correction and set an empyt bin to QCD = 1e-5
+                if 'QCD' in histos.keys() :
+                    for problemBin in problemBins :
+                        print "Setting QCD bin_id %i to 1e-5" % problemBin
+                        histos[ 'QCD' ].SetBinContent( problemBin, 0.00001 )
+                        histos[ 'QCD' ].SetBinError( problemBin, sqrt(0.00001) )
+                elif len(problemBins) > 0 :
+                    print "\nQCD Bkg not included so zero bins are not being corrected properly"
+                    print problemBins
+                    print "\n\n\n"
+
+
+                # Check QCD 
+                for bin_id in range( 1, histos[ 'QCD' ].GetNbinsX()+1 ) :
+                    print bin_id, histos[ 'QCD' ].GetBinContent( bin_id )
+
+
             for name in histos :
                 #print "name: %s Yield Pre: %f" % (name, histos[ name ].Integral() )
                 # First, if we are doing Fake Factor and jetFakes is negative
@@ -413,8 +462,14 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Make sure we have no negative bins
                 for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
                     setVal = 0.0
+                    if name == 'QCD' : # Set all QCD 0.0 and negative vals to 1e-5
+                        if histos[ name ].GetBinContent( bin_ ) <= 0 :
+                            histos[ name ].SetBinContent( bin_, 0.00001 )
+                            histos[ name ].SetBinError( bin_, sqrt(0.00001) )
+                            print "name: %s   Set bin %i to value: 0.00001" % (name, bin_)
                     if histos[ name ].GetBinContent( bin_ ) < 0 :
                         histos[ name ].SetBinContent( bin_, setVal )
+                        histos[ name ].SetBinError( bin_, sqrt(0.00001) )
                         print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
                 if histos[ name ].Integral() != 0.0 :
                     print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
