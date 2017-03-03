@@ -3,7 +3,8 @@ from util.helpers import checkDir
 
 
 def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
-    files = glob.glob(originalDir+'/%s%s_*_%s.root' % (jobId, sample, channel) )
+    print "Checking here: "+originalDir+'%s%s_*_%s.root' % (jobId, sample, channel)
+    files = glob.glob(originalDir+'%s%s_*_%s.root' % (jobId, sample, channel) )
     for file in files :
         print file
     checkDir( targetDir )
@@ -71,10 +72,9 @@ if __name__ == '__main__' :
     
 
     # HTT Feb 21 hdfs -> UW
-    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
+    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
     
-    #for mass in [120, 125, 130] :
-    for mass in [125,] :
+    for mass in [110, 120, 125, 130, 140] :
         SamplesDataCards.append('ggHtoTauTau%i' % mass)
         SamplesDataCards.append('VBFHtoTauTau%i' % mass)
         SamplesDataCards.append('VBFHtoWW2l2nu%i' % mass)
@@ -82,16 +82,16 @@ if __name__ == '__main__' :
         SamplesDataCards.append('WPlusHTauTau%i' % mass)
         SamplesDataCards.append('ZHTauTau%i' % mass)
         SamplesDataCards.append('HtoWW2l2nu%i' % mass)
+        SamplesDataCards.append('ttHTauTau%i' % mass)
     
         
     for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
         SamplesDataCards.append('dataTT-%s' % era)
-    SamplesDataCards = ['DYJets',] # Feb17 for Moriond17 
 
-    originalDir = '/data/truggles/svFitFeb17_SM-HTT/*'
-    targetDir = '/data/truggles/svFitFeb17_SM-HTT_Merged'
+    originalDir = '/data/truggles/svFitMar01_SM-HTT/*'
+    targetDir = '/data/truggles/svFitMar01_SM-HTT_Merged'
     jobId = 'TauTau_13*'
     for sample in SamplesDataCards :
-            mergeSample( jobId, sample, 'tt', originalDir, targetDir )
+        mergeSample( jobId, sample, 'tt', originalDir, targetDir )
 
 
