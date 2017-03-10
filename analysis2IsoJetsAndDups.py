@@ -1435,33 +1435,35 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # Tau Energy Scale Saved
                     # 15 Feb 2017, TES uncertainty == 0.6%
                     # TES used to be 3% with no central shift
+                    tesUp = 1.006
+                    tesDown = 0.994
                     if gen_match_1[0] == 5 :
                         tauIDweight_1[0] = 0.95 # 06 Feb 2017
-                        pt_1_UP[0] = ptCor_1[0] * 1.006
-                        pt_1_DOWN[0] = ptCor_1[0] * 0.994
+                        pt_1_UP[0] = ptCor_1[0] * tesUp
+                        pt_1_DOWN[0] = ptCor_1[0] * tesDown
                         # For the combinatorics
                         if dm1 == 0 :
-                            pt_1_DM0_UP[0] = ptCor_1[0] * 1.006
-                            pt_1_DM0_DOWN[0] = ptCor_1[0] * 0.994
+                            pt_1_DM0_UP[0] = ptCor_1[0] * tesUp
+                            pt_1_DM0_DOWN[0] = ptCor_1[0] * tesDown
                         if dm1 == 1 :
-                            pt_1_DM1_UP[0] = ptCor_1[0] * 1.006
-                            pt_1_DM1_DOWN[0] = ptCor_1[0] * 0.994
+                            pt_1_DM1_UP[0] = ptCor_1[0] * tesUp
+                            pt_1_DM1_DOWN[0] = ptCor_1[0] * tesDown
                         if dm1 == 10 :
-                            pt_1_DM10_UP[0] = ptCor_1[0] * 1.006
-                            pt_1_DM10_DOWN[0] = ptCor_1[0] * 0.994
+                            pt_1_DM10_UP[0] = ptCor_1[0] * tesUp
+                            pt_1_DM10_DOWN[0] = ptCor_1[0] * tesDown
                     if gen_match_2[0] == 5 :
                         tauIDweight_2[0] = 0.95 # 06 Feb 2017
-                        pt_2_UP[0] = ptCor_2[0] * 1.006
-                        pt_2_DOWN[0] = ptCor_2[0] * 0.994
+                        pt_2_UP[0] = ptCor_2[0] * tesUp
+                        pt_2_DOWN[0] = ptCor_2[0] * tesDown
                         if dm2 == 0 :
-                            pt_2_DM0_UP[0] = ptCor_2[0] * 1.006
-                            pt_2_DM0_DOWN[0] = ptCor_2[0] * 0.994
+                            pt_2_DM0_UP[0] = ptCor_2[0] * tesUp
+                            pt_2_DM0_DOWN[0] = ptCor_2[0] * tesDown
                         if dm2 == 1 :
-                            pt_2_DM1_UP[0] = ptCor_2[0] * 1.006
-                            pt_2_DM1_DOWN[0] = ptCor_2[0] * 0.994
+                            pt_2_DM1_UP[0] = ptCor_2[0] * tesUp
+                            pt_2_DM1_DOWN[0] = ptCor_2[0] * tesDown
                         if dm2 == 10 :
-                            pt_2_DM10_UP[0] = ptCor_2[0] * 1.006
-                            pt_2_DM10_DOWN[0] = ptCor_2[0] * 0.994
+                            pt_2_DM10_UP[0] = ptCor_2[0] * tesUp
+                            pt_2_DM10_DOWN[0] = ptCor_2[0] * tesDown
 
                     # All shifts for Higgs_Pt with combinatorics
                     Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
