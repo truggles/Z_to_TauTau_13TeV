@@ -22,8 +22,8 @@ echo "Setting Fake Factor Method to: $doFF"
 echo " "
 echo " "
 
-export doFullJES=false
-#export doFullJES=true
+#export doFullJES=false
+export doFullJES=true
 echo " "
 echo "Setting Full JES Method to: $doFullJES"
 echo " "
