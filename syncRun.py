@@ -75,13 +75,13 @@ import analysis3Plots
 from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 
 makeSyncCategories = True
-makeSyncCategories = False
+#makeSyncCategories = False
 if makeSyncCategories :
     print "Making Sync Categories"
     print "\n\n  Make sure you have dealt with any svFit vs. non-svFit changes!!!!\n\n"
@@ -92,27 +92,27 @@ if makeSyncCategories :
 
     higgsPtVar = 'Higgs_PtCor'
     higgsPtVar = 'pt_sv'
+    massWindow = '*(m_sv<250)'
+    massWindow0Jet = '*(m_sv<300)'
+    #massWindow = ''
+    #massWindow0Jet = ''
 
     cutsMap = {
-        'VBF' : '((jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5))' % higgsPtVar,
-        'Boosted' : '(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && %s>100)))' % higgsPtVar,
-        '0Jet' : '(jetVeto30==0)',
+        'VBF' : '((jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5))%s' % (higgsPtVar, massWindow),
+        'Boosted' : '(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && %s>100)))%s' % (higgsPtVar, massWindow),
+        '0Jet' : '(jetVeto30==0)%s' % massWindow0Jet,
     }
 
     forAll = '(byTightIsolationMVArun2v1DBoldDMwLT_1 > 0.5 && byTightIsolationMVArun2v1DBoldDMwLT_2 > 0.5 && Z_SS==0 && ptCor_1 > 50 && ptCor_2 > 40)'
 
-    #oldFile = 'newDataB.root'
-    #oldFile = 'removed4Runs.root'
-    oldFile = 'Sync2Feb26a/Sync-DYJets4_0_tt.root'
+    oldFile = 'dataAll.root'
     oldTreePath = 'Ntuple'
 
     for cat in ['VBF','Boosted','0Jet'] :
         print "Category!  %s" % cat
         cut = forAll + ' * ' + cutsMap[cat]
         
-        #fOutName = 'SyncNtuple_DATAB_reminiAOD_%s.root' % cat
-        #fOutName = 'SyncNtuple_DATAB_rm4Runs_reminiAOD_%s.root' % cat
-        fOutName = 'SyncNtuple_DYJets4_%s.root' % cat
+        fOutName = 'SyncNtuple_dataAll_%s.root' % cat
         ttreeWithCuts( oldFile, oldTreePath, fOutName, cut )
         
 
