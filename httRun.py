@@ -61,6 +61,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
+#SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
 #SamplesDataCards = [ 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets',] 
 #SamplesDataCards = ['dataTT-C',] 
@@ -88,8 +89,11 @@ params = {
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
     'mid1' : '1March02',
-    'mid2' : '2March02b',
-    'mid3' : '3March02b',
+    'mid2' : '2March02',
+    'mid3' : '3March02',
+    'mid1' : '1March10tes2p0',
+    'mid2' : '2March10tes2p0',
+    'mid3' : '3March10tes2p0',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -121,13 +125,13 @@ samples = returnSampleDetails( analysis, samples )
 runPlots = True
 runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False # Use this with FF
+makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
@@ -240,8 +244,8 @@ for isoVal in isoVals :
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
-        for var in ['m_visCor','m_sv'] :
-        #for var in ['m_sv',] :
+        #for var in ['m_visCor','m_sv'] :
+        for var in ['m_sv',] :
         #for var in ['m_visCor',] :
             for cat in cats :
                 #if var == 'm_visCor' and cat in ['boosted', 'vbf'] : continue
@@ -290,9 +294,9 @@ for isoVal in isoVals :
 
         app = '-FF' if doFF else '-StdMthd'
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''

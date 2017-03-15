@@ -1,5 +1,5 @@
-/data/truggles/svFitFeb17_SM-HTT_Merged/TT_0_tt.root
-/data/truggles/svFitFeb17_SM-HTT_Merged/TT_1_tt.root
-/data/truggles/svFitFeb17_SM-HTT_Merged/TT_2_tt.root
-/data/truggles/svFitFeb17_SM-HTT_Merged/TT_3_tt.root
-/data/truggles/svFitFeb17_SM-HTT_Merged/TT_4_tt.root
+/data/truggles/svFitMar07_SM-HTT_v3_Merged/TT_0_tt.root
+/data/truggles/svFitMar07_SM-HTT_v3_Merged/TT_1_tt.root
+/data/truggles/svFitMar07_SM-HTT_v3_Merged/TT_2_tt.root
+/data/truggles/svFitMar07_SM-HTT_v3_Merged/TT_3_tt.root
+/data/truggles/svFitMar07_SM-HTT_v3_Merged/TT_4_tt.root
