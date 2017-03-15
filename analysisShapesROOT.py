@@ -463,13 +463,20 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
                     setVal = 0.0
                     if name == 'QCD' : # Set all QCD 0.0 and negative vals to 1e-5
-                        if histos[ name ].GetBinContent( bin_ ) <= 0 :
+                        if histos[ name ].GetBinContent( bin_ ) == 0. :
                             histos[ name ].SetBinContent( bin_, 0.00001 )
-                            histos[ name ].SetBinError( bin_, sqrt(0.00001) )
+                            # Poissonian error for 0
+                            histos[ name ].SetBinError( bin_, 1.8 )
+                            print "name: %s   Set bin %i to value: 0.00001" % (name, bin_)
+                        elif histos[ name ].GetBinContent( bin_ ) < 0. :
+                            # Don't change the uncertainty on the bin
+                            # it was set by the negative content, leave it as is
+                            histos[ name ].SetBinContent( bin_, 0.00001 )
                             print "name: %s   Set bin %i to value: 0.00001" % (name, bin_)
                     if histos[ name ].GetBinContent( bin_ ) < 0 :
+                        # Don't change the uncertainty on the bin
+                        # it was set by the negative content, leave it as is
                         histos[ name ].SetBinContent( bin_, setVal )
-                        histos[ name ].SetBinError( bin_, sqrt(0.00001) )
                         print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
                 if histos[ name ].Integral() != 0.0 :
                     print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
