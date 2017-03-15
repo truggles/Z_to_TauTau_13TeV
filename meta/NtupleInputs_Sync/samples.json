@@ -1,4 +1,18 @@
 {
+  "Sync-VBF125": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 1499400, 
+    "DAS Path": "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 48, 
+    "nblocks": 30, 
+    "Cross Section (pb)": 0.23713140000000002, 
+    "summedWeightsNorm": 1495503.7751713803, 
+    "summedWeights": 5599600.0, 
+    "nevents": 1499400, 
+    "nNtupleFiles": 48, 
+    "nlumis": 7716
+  }, 
   "Sync-data2016RunH": {
     "STATUS": "Error", 
     "DAS status": "ok", 
@@ -13,19 +27,19 @@
     "nNtupleFiles": 20, 
     "nlumis": 5711
   }, 
-  "Sync-VBF125": {
+  "Sync-DYJets4": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
-    "nEvents": 1499400, 
-    "DAS Path": "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
-    "nfiles": 48, 
-    "nblocks": 30, 
-    "Cross Section (pb)": 0.23713140000000002, 
-    "summedWeightsNorm": 1495503.7751713803, 
-    "summedWeights": 5599600.0, 
-    "nevents": 1499400, 
-    "nNtupleFiles": 48, 
-    "nlumis": 7716
+    "nEvents": 4197868, 
+    "DAS Path": "/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 59, 
+    "nblocks": 3, 
+    "Cross Section (pb)": 63.776239999999994, 
+    "summedWeightsNorm": 4197868.0, 
+    "summedWeights": 4197868.0, 
+    "nevents": 4197868, 
+    "nNtupleFiles": 1, 
+    "nlumis": 30869
   }, 
   "Sync-data2016RunB": {
     "STATUS": "Error", 
@@ -55,18 +69,18 @@
     "nNtupleFiles": 6, 
     "nlumis": 2702
   }, 
-  "Sync-DYJets4": {
-    "STATUS": "Good to Go!", 
+  "Sync-data2016All": {
+    "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 4197868, 
-    "DAS Path": "/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
-    "nfiles": 59, 
-    "nblocks": 3, 
-    "Cross Section (pb)": 63.776239999999994, 
-    "summedWeightsNorm": 4197868.0, 
-    "summedWeights": 4197868.0, 
-    "nevents": 4197868, 
-    "nNtupleFiles": 1, 
-    "nlumis": 30869
+    "nEvents": 406939979, 
+    "DAS Path": "/Tau/Run2016H-PromptReco-v1/MINIAOD", 
+    "nfiles": 15, 
+    "nblocks": 13, 
+    "Cross Section (pb)": 999.0, 
+    "summedWeightsNorm": -102897, 
+    "summedWeights": 0.0, 
+    "nevents": 5, 
+    "nNtupleFiles": 103, 
+    "nlumis": 5711
   }
 }

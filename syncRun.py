@@ -26,8 +26,6 @@ from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
 ''' General samples.json file from /data/truggles files '''
 #makeMetaJSON( analysis, channel='tt' )
-''' samples.json for post /hdfs skim -> uwlogin samples '''
-#makeMetaJSON( analysis, channel='tt', skimmed=True )
 os.chdir('..')
 
 
@@ -35,7 +33,8 @@ os.chdir('..')
 SamplesSync = ['Sync-HtoTT','Sync-VBF125','Sync-DYJets4',]
 SamplesSync = ['Sync-VBF125',]
 SamplesSync = ['Sync-data2016RunH',]
-SamplesSync = ['Sync-DYJets4',]
+SamplesSync = ['Sync-data2016All',]
+#SamplesSync = ['Sync-DYJets4',]
 #SamplesSync = ['Sync-data2016RunB',]
 #SamplesSync = ['Sync-DYJets4',]
 samples = SamplesSync
@@ -55,9 +54,9 @@ params = {
     #'cutMapper' : 'syncCutsSMHTTNtuple', # Standard synchronization ntuple
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # This is the same cut as applied for signal extraction, we choose the "best" version of an event after this cut, then perform additional cuts below if "makeSyncCategories" == True 
 ###    'cutMapper' : 'syncCutsDCqcdTES5040VL_CutRuns', # This is the same cut as applied for signal extraction, we choose the "best" version of an event after this cut, then perform additional cuts below if "makeSyncCategories" == True 
-    'mid1' : '1Feb26a',
-    'mid2' : '2Feb26a',
-    'mid3' : '3Feb26a',
+    'mid1' : '1Mar15a',
+    'mid2' : '2Mar15a',
+    'mid3' : '3Mar15a',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -82,7 +81,7 @@ analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 makeSyncCategories = True
-#makeSyncCategories = False
+makeSyncCategories = False
 if makeSyncCategories :
     print "Making Sync Categories"
     print "\n\n  Make sure you have dealt with any svFit vs. non-svFit changes!!!!\n\n"
