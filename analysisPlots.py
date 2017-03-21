@@ -49,8 +49,11 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
         #print "Skip Vars:",sample, var, genCode
         if '_tauPt' in var :
             if channel == 'em' : return True
-            if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample) :
-                return True
+            if 'data' in sample : return True
+            # This is QCD with an era
+            # thus means fake factor 
+            # method which is fully data driven
+            if 'QCD-' in sample : return True
             
         # Energy Scale reweighting applied to all MC based on gen_match
         elif '_energyScale' in var :
@@ -330,7 +333,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         ''' Define syst shape weights if applicable '''
         shapeSyst = ''
-        # High Pt tau reweighting only applied to DYJets and signal
+        # High Pt tau reweighting,
+        # not applied to data or FF jetToTauFakes 
         if '_tauPt' in var :
             shapeSyst = HighPtTauWeight( var )
 
@@ -680,7 +684,7 @@ def getHistoDict( analysis, channel ) :
                     'zPt':'Z p_{T}/Mass Reweight',
                     #'metResponse':'Met Response',
                     #'metResolution':'Met Resolution',
-                    #'tauPt':'High P_{T} Tau',
+                    'tauPt':'High P_{T} Tau',
                     'topPt':'Top P_{T} Reweight',
                     'JES' : 'Jet Energy Scale',
                     'JetToTau' : 'Jet to Tau Fake',

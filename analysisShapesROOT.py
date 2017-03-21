@@ -33,9 +33,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     'mssm' : False,
     'category' : 'inclusive',
     'fitShape' : 'm_visCor',
-    'btag' : False,
-    'ES' : False,
-    'tauPt' : False,
     'sync' : False,
     'redBkg' : False,
     'allShapes' : False,}
@@ -186,7 +183,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             print "\n\n=============================================================="
             if ops['allShapes'] :
                 print "All Shapes Applied: %s" % var
-                #if not (('_energyScale' in var) or ('_tauPt' in var)  or ('_zPt' in var) or ('_topPt' in var) or (baseVar == var)) :
                 if doFF :
                     if not (('_energyScale' in var) or ('_zPt' in var) or\
                             ('ffSyst' in var) or ('ffStat' in var) or ('_topPt' in var) or\
@@ -199,19 +195,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 else :
                     if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
                         or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) \
-                        or ('_Zmumu' in var) or (baseVar == var)) :
+                        or ('_Zmumu' in var) or ('_tauPt' in var) or (baseVar == var)) :
                         print "Did we fail?"
                         continue
-            #if ops['mssm'] :
-            #    if not var == baseVar+'_mssm' : continue
-            #    if var != baseVar : continue
-            #elif ops['ES'] :
-            elif ops['ES'] and not ops['tauPt'] :
-                if not (('_energyScale' in var) or (baseVar == var)) : continue
-            elif ops['tauPt'] and not ops['ES'] :
-                if not (('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
-            elif ops['tauPt'] and ops['ES'] :
-                if not (('_energyScale' in var) or ('_tauPtUp' in var) or ('_tauPtDown' in var) or (baseVar == var)) : continue
             else :
                 if not var == baseVar : continue
     
@@ -219,11 +205,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             # Defined out here for large scope
             print "\nVar: ",var
     
-            #print "MSSM btag option:",ops['btag']
             binArray = array( 'd', [] )
             #if ops['mssm'] :
-            #    print "MSSM btag option:",ops['btag']
-            #    #if ops['btag'] == True :
             #    #if doBTagging == True :
             #    if 'ZTT' in folderDetails :
             #        print "Inclusive"
@@ -263,7 +246,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             histos = OrderedDict()
             for name in nameArray :
                 title = name
-                if ops['ES'] or ops['tauPt'] or ops['allShapes'] :
+                if ops['allShapes'] :
 
                     if '_' in var and ('Up' in var or 'Down' in var) :
                         systName = var.split('_')[-1]
@@ -485,7 +468,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 
     
                 # Proper naming of output histos
-                if (ops['ES'] or ops['allShapes']) and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
+                if ops['allShapes'] and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
                         or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var \
                         or 'ffSyst' in var or 'ffStat' in var) :
 
@@ -562,8 +545,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_jetToTauFake_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_jetToTauFake_13TeV'+shiftDir )
                     elif '_tauPt' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_mssmHigh_'+channel+'_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_High_'+channel+'_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_High_'+channel+'_13TeV'+shiftDir )
                     elif '_ggH' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
@@ -617,7 +600,6 @@ if __name__ == '__main__' :
     'mssm' : False,
     'category' : 'inclusive',
     'fitShape' : 'm_visCor',
-    'ES' : True,
     }
     makeDataCards( analysis, samples, channels, folderDetails, **kwargs )
     
