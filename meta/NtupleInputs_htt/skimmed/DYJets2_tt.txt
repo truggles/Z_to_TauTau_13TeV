@@ -1,3 +1,3 @@
-/data/truggles/svFitFeb17_SM-HTT_Merged/DYJets2_0_tt.root
-/data/truggles/svFitFeb17_SM-HTT_Merged/DYJets2_1_tt.root
-/data/truggles/svFitFeb17_SM-HTT_Merged/DYJets2_2_tt.root
+/data/truggles/svFitMar20_SM-HTT_Merged/DYJets2_0_tt.root
+/data/truggles/svFitMar20_SM-HTT_Merged/DYJets2_1_tt.root
+/data/truggles/svFitMar20_SM-HTT_Merged/DYJets2_2_tt.root

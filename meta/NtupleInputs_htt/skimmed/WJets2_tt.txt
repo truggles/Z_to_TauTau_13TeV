@@ -1,2 +1,2 @@
-/data/truggles/svFitFeb17_SM-HTT_Merged/WJets2_0_tt.root
-/data/truggles/svFitFeb17_SM-HTT_Merged/WJets2_1_tt.root
+/data/truggles/svFitMar20_SM-HTT_Merged/WJets2_0_tt.root
+/data/truggles/svFitMar20_SM-HTT_Merged/WJets2_1_tt.root

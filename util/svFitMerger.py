@@ -88,8 +88,8 @@ if __name__ == '__main__' :
     for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
         SamplesDataCards.append('dataTT-%s' % era)
 
-    originalDir = '/data/truggles/svFitMar01_SM-HTT/*'
-    targetDir = '/data/truggles/svFitMar01_SM-HTT_Merged'
+    originalDir = '/data/truggles/svFitMar20_SM-HTT/*'
+    targetDir = '/data/truggles/svFitMar20_SM-HTT_Merged'
     jobId = 'TauTau_13*'
     for sample in SamplesDataCards :
         mergeSample( jobId, sample, 'tt', originalDir, targetDir )
