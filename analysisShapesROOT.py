@@ -405,12 +405,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             print ".............................................................."
             shapeDir.cd()
 
-            # We need to check for any total bkg bins which have 0
-            # Only do this for nominal bkg, not systematic shifts
-            # Recall ROOT TH1 bin numbers start at 1 for the useful bins
 
+            # We need to check for any total bkg bins which have 0
+            # Recall ROOT TH1 bin numbers start at 1 for the useful bins
             # Don't worry about this in QCD CR
-            if not ('Up' in var[-2:] or 'Down' in var[-4:] or '_qcd_cr' in ops['category']) : 
+            setVal = 0.00001
+            if not '_qcd_cr' in ops['category'] : 
                 #dataArray = []
                 bkgArray = [0] * numBins
                 for name in histos :
@@ -438,9 +438,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Apply correction and set an empyt bin to QCD = 1e-5
                 if 'QCD' in histos.keys() :
                     for problemBin in problemBins :
-                        print "Setting QCD bin_id %i to 1e-5" % problemBin
-                        histos[ 'QCD' ].SetBinContent( problemBin, 0.00001 )
-                        histos[ 'QCD' ].SetBinError( problemBin, sqrt(0.00001) )
+                        print "Setting QCD bin_id %i to %s" % (problemBin, setVal)
+                        histos[ 'QCD' ].SetBinContent( problemBin, setVal )
+                        # Poissonian error for 0
+                        histos[ 'QCD' ].SetBinError( problemBin, 1.8 )
                 elif len(problemBins) > 0 :
                     print "\nQCD Bkg not included so zero bins are not being corrected properly"
                     print problemBins
@@ -448,8 +449,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
 
                 # Check QCD 
-                for bin_id in range( 1, histos[ 'QCD' ].GetNbinsX()+1 ) :
-                    print bin_id, histos[ 'QCD' ].GetBinContent( bin_id )
+                #for bin_id in range( 1, histos[ 'QCD' ].GetNbinsX()+1 ) :
+                #    print bin_id, histos[ 'QCD' ].GetBinContent( bin_id )
 
 
             for name in histos :
@@ -461,18 +462,17 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetBinContent( bin_, setVal )
                 # Make sure we have no negative bins
                 for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
-                    setVal = 0.0
                     if name == 'QCD' : # Set all QCD 0.0 and negative vals to 1e-5
                         if histos[ name ].GetBinContent( bin_ ) == 0. :
-                            histos[ name ].SetBinContent( bin_, 0.00001 )
+                            histos[ name ].SetBinContent( bin_, setVal )
                             # Poissonian error for 0
                             histos[ name ].SetBinError( bin_, 1.8 )
-                            print "name: %s   Set bin %i to value: 0.00001" % (name, bin_)
+                            print "name: %s   Set bin %i to value: %s" % (name, bin_, setVal)
                         elif histos[ name ].GetBinContent( bin_ ) < 0. :
                             # Don't change the uncertainty on the bin
                             # it was set by the negative content, leave it as is
-                            histos[ name ].SetBinContent( bin_, 0.00001 )
-                            print "name: %s   Set bin %i to value: 0.00001" % (name, bin_)
+                            histos[ name ].SetBinContent( bin_, setVal )
+                            print "name: %s   Set bin %i to value: %s" % (name, bin_, setVal)
                     if histos[ name ].GetBinContent( bin_ ) < 0 :
                         # Don't change the uncertainty on the bin
                         # it was set by the negative content, leave it as is
