@@ -1435,8 +1435,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # Tau Energy Scale Saved
                     # 15 Feb 2017, TES uncertainty == 0.6%
                     # TES used to be 3% with no central shift
-                    tesUp = 1.006
-                    tesDown = 0.994
+                    tesUp = 1.012
+                    tesDown = 0.988
                     if gen_match_1[0] == 5 :
                         tauIDweight_1[0] = 0.95 # 06 Feb 2017
                         pt_1_UP[0] = ptCor_1[0] * tesUp
