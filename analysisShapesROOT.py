@@ -184,9 +184,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             if ops['allShapes'] :
                 print "All Shapes Applied: %s" % var
                 if doFF :
-                    if not (('_energyScale' in var) or ('_zPt' in var) or\
-                            ('ffSyst' in var) or ('ffStat' in var) or ('_topPt' in var) or\
-                            ('_metResponse' in var) or ('_metResolution' in var)\
+                    if not (('_energyScale' in var) or ('_zPt' in var) or \
+                            ('ffSyst' in var) or ('ffStat' in var) or ('_topPt' in var) or \
+                            ('_metUnclustered' in var) or ('_metClustered' in var) \
                             or ('_JES' in var) or ('_JetToTau' in var) or \
                             ('_Zmumu' in var) or ('_ggH' in var) \
                             or ('_ffSub' in var) or (baseVar == var)) :
@@ -195,6 +195,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 else :
                     if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
                         or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) \
+                        or ('_metUnclustered' in var) or ('_metClustered' in var) \
                         or ('_Zmumu' in var) or ('_tauPt' in var) or (baseVar == var)) :
                         print "Did we fail?"
                         continue
@@ -470,6 +471,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Proper naming of output histos
                 if ops['allShapes'] and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
                         or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var \
+                        or '_metUnclustered' in var or '_metClustered' in var \
                         or 'ffSyst' in var or 'ffStat' in var) :
 
                     # Systematics naming removes CRs
@@ -553,6 +555,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     elif '_Zmumu' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )
+                    elif '_metClustered' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_met_clustered_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_met_clustered_13TeV'+shiftDir )
+                    elif '_metUnclustered' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_met_unclustered_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_met_unclustered_13TeV'+shiftDir )
                     ### For these Fake Factor shapes, we need 2 copies with slightly different names
                     elif 'ffSyst' in var :
                         if 'qcdffSyst' in var :

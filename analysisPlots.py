@@ -83,6 +83,15 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
             if 'QCD-' in genCode : return True
             if 'QCD-' in sample : return True
 
+        # Jet Energy Scale, no data
+        elif ('_metClustered' in var or '_metUnclustered' in var) :
+            if 'data' in sample : return True
+            # This is QCD with an era
+            # thus means fake factor 
+            # method which is fully data driven
+            if 'QCD-' in genCode : return True
+            if 'QCD-' in sample : return True
+
         # Jet to Tau Fake, no data
         elif '_JetToTau' in var :
             #if 'data' in sample : return True
@@ -451,6 +460,19 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     additionalCutToUse = additionalCutToUse.replace('jdeta','vbfDeta_JetEnDown')
                 #print additionalCutToUse+"\n"
 
+        # Met Systematics propagated to svFit
+        # make sure to get proper Higgs_Pt (pt_sv)
+        if '_metClustered' in var and 'data' not in sample :
+            if 'Up' in var[-2:] :
+                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_ClusteredMet_UP')
+            if 'Down' in var[-4:] :
+                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_ClusteredMet_DOWN')
+        if '_metUnclustered' in var and 'data' not in sample :
+            if 'Up' in var[-2:] :
+                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_UncMet_UP')
+            if 'Down' in var[-4:] :
+                additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_UncMet_DOWN')
+
 
         # This addes the Fake Factor shape systematics weights
         # And add the variable specific Fake Factor cut
@@ -530,16 +552,26 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     plotVar = varBase + '_UP'
                 elif 'Down' in var :
                     plotVar = varBase + '_DOWN'
-            elif 'metResolution' in shapeName :
-                if 'Up' in var :
-                    plotVar = varBase + '_ResolutionUP'
-                if 'Down' in var :
-                    plotVar = varBase + '_ResolutionDOWN'
-            elif 'metResponse' in shapeName :
-                if 'Up' in var :
-                    plotVar = varBase + '_ResponseUP'
-                if 'Down' in var :
-                    plotVar = varBase + '_ResponseDOWN'
+            elif 'metClustered' in shapeName :
+                if 'm_sv' in var :
+                    if 'Up' in var[-2:] :
+                        plotVar = plotVar.replace('_metClusteredUp','')
+                        plotVar = plotVar.replace('m_sv','m_sv_ClusteredMet_UP')
+                        plotVar = plotVar.replace('pt_sv','pt_sv_ClusteredMet_UP')
+                    if 'Down' in var[-4:] :
+                        plotVar = plotVar.replace('_metClusteredDown','')
+                        plotVar = plotVar.replace('m_sv','m_sv_ClusteredMet_DOWN')
+                        plotVar = plotVar.replace('pt_sv','pt_sv_ClusteredMet_DOWN')
+            elif 'metUnclustered' in shapeName :
+                if 'm_sv' in var :
+                    if 'Up' in var[-2:] :
+                        plotVar = plotVar.replace('_metUnclusteredUp','')
+                        plotVar = plotVar.replace('m_sv','m_sv_UncMet_UP')
+                        plotVar = plotVar.replace('pt_sv','pt_sv_UncMet_UP')
+                    if 'Down' in var[-4:] :
+                        plotVar = plotVar.replace('_metUnclusteredDown','')
+                        plotVar = plotVar.replace('m_sv','m_sv_UncMet_DOWN')
+                        plotVar = plotVar.replace('pt_sv','pt_sv_UncMet_DOWN')
             elif 'JES' in shapeName :
                 if 'data' in sample :
                     plotVar = varBase
@@ -596,7 +628,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 if var == 'm_visCor' :
                     #print 'm_visCor'
                     print "tmpIntPost: %f" % integralPost
-                    #print "Cut: %s" % totalCutAndWeightMC
+                    print "Cut: %s" % totalCutAndWeightMC
 
         # didn't have var in chain
         else : 
@@ -690,6 +722,8 @@ def getHistoDict( analysis, channel ) :
                     'JetToTau' : 'Jet to Tau Fake',
                     'ggH' : 'ggH Scale',
                     'Zmumu' : 'Z mumu DY Reweight',
+                    'metClustered':'Clustered MET',
+                    'metUnclustered':'Unclustered MET',
                     }
 
         # Add FF shape systs if doFF
