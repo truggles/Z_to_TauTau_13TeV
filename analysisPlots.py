@@ -26,6 +26,9 @@ def get2DVars( cutName ) :
     if 'mjj' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
+    if 'Higgs_PtCor' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,10000] )
     if 'Higgs_PtCor' in cutName and 'm_visCor' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,10000] )
@@ -533,6 +536,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     if 'DM0'  in var : plotVar = 'm_sv_DM0_%s' % shiftDir
                     if 'DM1'  in var : plotVar = 'm_sv_DM1_%s' % shiftDir
                     if 'DM10' in var : plotVar = 'm_sv_DM10_%s' % shiftDir
+                elif 'Higgs_PtCor:m_sv' in var :
+                    if 'All'  in var : plotVar = 'Higgs_PtCor_%s:m_sv_%s' % (shiftDir, shiftDir)
+                    if 'DM0'  in var : plotVar = 'Higgs_PtCor_DM0_%s:m_sv_DM0_%s' % (shiftDir, shiftDir)
+                    if 'DM1'  in var : plotVar = 'Higgs_PtCor_DM1_%s:m_sv_DM1_%s' % (shiftDir, shiftDir)
+                    if 'DM10' in var : plotVar = 'Higgs_PtCor_DM10_%s:m_sv_DM10_%s' % (shiftDir, shiftDir)
                 elif 'Higgs_PtCor:m_visCor' in var :
                     if 'All'  in var : plotVar = 'Higgs_PtCor_%s:m_visCor_%s' % (shiftDir, shiftDir)
                     if 'DM0'  in var : plotVar = 'Higgs_PtCor_DM0_%s:m_visCor_DM0_%s' % (shiftDir, shiftDir)
@@ -680,17 +688,14 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
 #FIXME#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
 #FIXME            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
-#FIXME            #'m_vis_mssm' : [3900, 0, 3900, 20, 'Z Vis Mass [GeV]', ' GeV'],
 #            'm_vis' : [30, 0, 300, 1, 'M_{vis} Uncor [GeV]', ' GeV'],
             'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
 #XXX            'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #XXX            'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            #'m_sv_mssm' : [3900, 0, 3900, 10, 'Z svFit Mass [GeV]', ' GeV'],
+            'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            #'mt_sv_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
-            #'mt_tot_mssm' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
 #            'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
 #            'mt_tot' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
             #'pzetavis' : [300, 0, 300, 20, 'pZetaVis', ' GeV'],
@@ -700,13 +705,12 @@ def getHistoDict( analysis, channel ) :
 
         ''' added shape systematics '''
         #toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_visCor', 'm_sv'] # No extra shapes
-        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv'] # No extra shapes
+        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
         #toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
         #toAdd = ['m_sv', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
             varsForShapeSyst.append( item )
-            #varsForShapeSyst.append( item+'_mssm' )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
         shapesToAdd = {
                     'energyScaleAll':'TES All',

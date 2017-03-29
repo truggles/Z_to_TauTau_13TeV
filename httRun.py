@@ -61,6 +61,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
+#SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
 #SamplesDataCards = [ 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets',] 
 #SamplesDataCards = ['dataTT-C',] 
@@ -76,7 +77,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 12,
+    'numCores' : 6,
     'numFilesPerCycle' : 1,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
@@ -87,9 +88,11 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1March02',
-    'mid2' : '2March02b',
-    'mid3' : '3March02b',
+    'mid1' : '1March20withMetUnc',
+    'mid2' : '2March23withMetUnc',
+    'mid3' : '3March23withMetUnc',
+    'mid2' : '2March28withMetUnc',
+    'mid3' : '3March28withMetUnc',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -109,7 +112,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -119,15 +122,15 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
-#makeQCDBkg = False
+makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False # Use this with FF
+makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
@@ -147,6 +150,8 @@ doFF = getenv('doFF', type=bool)
 # Make CR plots for AN
 #plotAntiIso = True
 plotAntiIso = False
+higgsPt = 'pt_sv'
+#higgsPt = 'Higgs_PtCor'
 
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]
@@ -240,14 +245,14 @@ for isoVal in isoVals :
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
-        for var in ['m_visCor','m_sv'] :
-        #for var in ['m_sv',] :
+        #for var in ['m_visCor','m_sv'] :
+        for var in ['m_sv',] :
         #for var in ['m_visCor',] :
             for cat in cats :
                 #if var == 'm_visCor' and cat in ['boosted', 'vbf'] : continue
                 #if var == 'm_visCor' and cat in ['boosted','vbf','0jet2D'] : continue
                 if 'm_sv' in var :
-                    if cat == 'boosted' : var = 'pt_sv:m_sv'
+                    if cat == 'boosted' : var = '%s:m_sv' % higgsPt
                     if cat == 'vbf' : var = 'mjj:m_sv'
                 #if cat == 'boosted' : var = 'Higgs_PtCor:m_visCor'
                 #if cat == 'vbf' : var = 'mjj:m_visCor'
@@ -290,9 +295,9 @@ for isoVal in isoVals :
 
         app = '-FF' if doFF else '-StdMthd'
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''
