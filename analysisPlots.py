@@ -468,13 +468,17 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         if '_metClustered' in var and 'data' not in sample :
             if 'Up' in var[-2:] :
                 additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_ClusteredMet_UP')
+                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_ClusteredMet_UP')
             if 'Down' in var[-4:] :
                 additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_ClusteredMet_DOWN')
+                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_ClusteredMet_DOWN')
         if '_metUnclustered' in var and 'data' not in sample :
             if 'Up' in var[-2:] :
                 additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_UncMet_UP')
+                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_UncMet_UP')
             if 'Down' in var[-4:] :
                 additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv_UncMet_DOWN')
+                additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_UncMet_DOWN')
 
 
         # This addes the Fake Factor shape systematics weights
@@ -526,6 +530,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     if 'DM0'  in var : plotVar = 'pt_sv_DM0_%s:m_sv_DM0_%s' % (shiftDir, shiftDir)
                     if 'DM1'  in var : plotVar = 'pt_sv_DM1_%s:m_sv_DM1_%s' % (shiftDir, shiftDir)
                     if 'DM10' in var : plotVar = 'pt_sv_DM10_%s:m_sv_DM10_%s' % (shiftDir, shiftDir)
+                elif 'Higgs_PtCor:m_sv' in var :
+                    if 'All'  in var : plotVar = 'Higgs_PtCor_%s:m_sv_%s' % (shiftDir, shiftDir)
+                    if 'DM0'  in var : plotVar = 'Higgs_PtCor_DM0_%s:m_sv_DM0_%s' % (shiftDir, shiftDir)
+                    if 'DM1'  in var : plotVar = 'Higgs_PtCor_DM1_%s:m_sv_DM1_%s' % (shiftDir, shiftDir)
+                    if 'DM10' in var : plotVar = 'Higgs_PtCor_DM10_%s:m_sv_DM10_%s' % (shiftDir, shiftDir)
                 elif 'mjj:m_sv' in var :
                     if 'All'  in var : plotVar = 'mjj:m_sv_%s' % shiftDir
                     if 'DM0'  in var : plotVar = 'mjj:m_sv_DM0_%s' % shiftDir
@@ -536,11 +545,6 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                     if 'DM0'  in var : plotVar = 'm_sv_DM0_%s' % shiftDir
                     if 'DM1'  in var : plotVar = 'm_sv_DM1_%s' % shiftDir
                     if 'DM10' in var : plotVar = 'm_sv_DM10_%s' % shiftDir
-                elif 'Higgs_PtCor:m_sv' in var :
-                    if 'All'  in var : plotVar = 'Higgs_PtCor_%s:m_sv_%s' % (shiftDir, shiftDir)
-                    if 'DM0'  in var : plotVar = 'Higgs_PtCor_DM0_%s:m_sv_DM0_%s' % (shiftDir, shiftDir)
-                    if 'DM1'  in var : plotVar = 'Higgs_PtCor_DM1_%s:m_sv_DM1_%s' % (shiftDir, shiftDir)
-                    if 'DM10' in var : plotVar = 'Higgs_PtCor_DM10_%s:m_sv_DM10_%s' % (shiftDir, shiftDir)
                 elif 'Higgs_PtCor:m_visCor' in var :
                     if 'All'  in var : plotVar = 'Higgs_PtCor_%s:m_visCor_%s' % (shiftDir, shiftDir)
                     if 'DM0'  in var : plotVar = 'Higgs_PtCor_DM0_%s:m_visCor_DM0_%s' % (shiftDir, shiftDir)
@@ -566,20 +570,24 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                         plotVar = plotVar.replace('_metClusteredUp','')
                         plotVar = plotVar.replace('m_sv','m_sv_ClusteredMet_UP')
                         plotVar = plotVar.replace('pt_sv','pt_sv_ClusteredMet_UP')
+                        plotVar = plotVar.replace('Higgs_PtCor','Higgs_PtCor_ClusteredMet_UP')
                     if 'Down' in var[-4:] :
                         plotVar = plotVar.replace('_metClusteredDown','')
                         plotVar = plotVar.replace('m_sv','m_sv_ClusteredMet_DOWN')
                         plotVar = plotVar.replace('pt_sv','pt_sv_ClusteredMet_DOWN')
+                        plotVar = plotVar.replace('Higgs_PtCor','Higgs_PtCor_ClusteredMet_DOWN')
             elif 'metUnclustered' in shapeName :
                 if 'm_sv' in var :
                     if 'Up' in var[-2:] :
                         plotVar = plotVar.replace('_metUnclusteredUp','')
                         plotVar = plotVar.replace('m_sv','m_sv_UncMet_UP')
                         plotVar = plotVar.replace('pt_sv','pt_sv_UncMet_UP')
+                        plotVar = plotVar.replace('Higgs_PtCor','Higgs_PtCor_UncMet_UP')
                     if 'Down' in var[-4:] :
                         plotVar = plotVar.replace('_metUnclusteredDown','')
                         plotVar = plotVar.replace('m_sv','m_sv_UncMet_DOWN')
                         plotVar = plotVar.replace('pt_sv','pt_sv_UncMet_DOWN')
+                        plotVar = plotVar.replace('Higgs_PtCor','Higgs_PtCor_UncMet_DOWN')
             elif 'JES' in shapeName :
                 if 'data' in sample :
                     plotVar = varBase
@@ -617,7 +625,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         ### Check that the target var is in the TTrees
         elif hasattr( chain, plotVar ) or ":" in varBase :
             #print "trying"
-            print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
+            if sample == 'DYJets' : print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( esMap, 'data', channel, var )
                 #print 'dataES',dataES

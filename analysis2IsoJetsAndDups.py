@@ -866,6 +866,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     Higgs_PtCor_DM10_UPB = tnew.Branch('Higgs_PtCor_DM10_UP', Higgs_PtCor_DM10_UP, 'Higgs_PtCor_DM10_UP/F')
     Higgs_PtCor_DM10_DOWN = array('f', [ 0 ] )
     Higgs_PtCor_DM10_DOWNB = tnew.Branch('Higgs_PtCor_DM10_DOWN', Higgs_PtCor_DM10_DOWN, 'Higgs_PtCor_DM10_DOWN/F')
+    Higgs_PtCor_UncMet_UP = array('f', [ 0 ] )
+    Higgs_PtCor_UncMet_UPB = tnew.Branch('Higgs_PtCor_UncMet_UP', Higgs_PtCor_UncMet_UP, 'Higgs_PtCor_UncMet_UP/F')
+    Higgs_PtCor_UncMet_DOWN = array('f', [ 0 ] )
+    Higgs_PtCor_UncMet_DOWNB = tnew.Branch('Higgs_PtCor_UncMet_DOWN', Higgs_PtCor_UncMet_DOWN, 'Higgs_PtCor_UncMet_DOWN/F')
+    Higgs_PtCor_ClusteredMet_UP = array('f', [ 0 ] )
+    Higgs_PtCor_ClusteredMet_UPB = tnew.Branch('Higgs_PtCor_ClusteredMet_UP', Higgs_PtCor_ClusteredMet_UP, 'Higgs_PtCor_ClusteredMet_UP/F')
+    Higgs_PtCor_ClusteredMet_DOWN = array('f', [ 0 ] )
+    Higgs_PtCor_ClusteredMet_DOWNB = tnew.Branch('Higgs_PtCor_ClusteredMet_DOWN', Higgs_PtCor_ClusteredMet_DOWN, 'Higgs_PtCor_ClusteredMet_DOWN/F')
     m_visCor = array('f', [ 0 ] )
     m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
     m_visCor_UP = array('f', [ 0 ] )
@@ -1283,10 +1291,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             Higgs_PtCor_DM0_UP[0] = Higgs_Pt[0]
             Higgs_PtCor_DM1_UP[0] = Higgs_Pt[0]
             Higgs_PtCor_DM10_UP[0] = Higgs_Pt[0]
+            Higgs_PtCor_UncMet_UP[0] = Higgs_Pt[0]
+            Higgs_PtCor_ClusteredMet_UP[0] = Higgs_Pt[0]
             Higgs_PtCor_DOWN[0] = Higgs_Pt[0]
             Higgs_PtCor_DM0_DOWN[0] = Higgs_Pt[0]
             Higgs_PtCor_DM1_DOWN[0] = Higgs_Pt[0]
             Higgs_PtCor_DM10_DOWN[0] = Higgs_Pt[0]
+            Higgs_PtCor_UncMet_DOWN[0] = Higgs_Pt[0]
+            Higgs_PtCor_ClusteredMet_DOWN[0] = Higgs_Pt[0]
             m_visCor[0] = getattr( row, l1+'_'+l2+'_Mass' )
             m_visCor_UP[0] = m_visCor[0]
             m_visCor_DM0_UP[0] = m_visCor[0]
@@ -1466,24 +1478,40 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                             pt_2_DM10_DOWN[0] = ptCor_2[0] * tesDown
 
                     # All shifts for Higgs_Pt with combinatorics
+                    # This should use recoil corrected, TEC MET from svFit if available
+                    if hasattr( row, 'metcor' ) : metTmp = row.metcor
+                    else : metTmp = row.type1_pfMetEt
+                    if hasattr( row, 'metcorphi' ) : metPhiTmp = row.metcorphi
+                    else : metPhiTmp = row.type1_pfMetPhi
                     Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                        ptCor_2[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        ptCor_2[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_UP[0] = getHiggsPt( pt_1_UP[0], eta1, phi1, m1,\
-                        pt_2_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_DM0_UP[0] = getHiggsPt( pt_1_DM0_UP[0], eta1, phi1, m1,\
-                        pt_2_DM0_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_DM0_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_DM1_UP[0] = getHiggsPt( pt_1_DM1_UP[0], eta1, phi1, m1,\
-                        pt_2_DM1_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_DM1_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_DM10_UP[0] = getHiggsPt( pt_1_DM10_UP[0], eta1, phi1, m1,\
-                        pt_2_DM10_UP[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_DM10_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_DOWN[0] = getHiggsPt( pt_1_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_DM0_DOWN[0] = getHiggsPt( pt_1_DM0_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM0_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_DM0_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_DM1_DOWN[0] = getHiggsPt( pt_1_DM1_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM1_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_DM1_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
                     Higgs_PtCor_DM10_DOWN[0] = getHiggsPt( pt_1_DM10_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM10_DOWN[0], eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
+                        pt_2_DM10_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    # For the met shifted Higgs Pt, check 1 hasattr
+                    if hasattr( row, 'metcorClusteredUp' ) :
+                        Higgs_PtCor_UncMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                            ptCor_2[0], eta2, phi2, m2, row.metcorUncUp, row.metcorphiUncUp)
+                        Higgs_PtCor_UncMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                            ptCor_2[0], eta2, phi2, m2, row.metcorUncDown, row.metcorphiUncDown)
+                        Higgs_PtCor_ClusteredMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                            ptCor_2[0], eta2, phi2, m2, row.metcorClusteredUp, row.metcorphiClusteredUp)
+                        Higgs_PtCor_ClusteredMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                            ptCor_2[0], eta2, phi2, m2, row.metcorClusteredDown, row.metcorphiClusteredDown)
+                    
 
                     m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
                     m_visCor_UP[0] = mVisTESCor( l1, l2, row, pt_1_UP[0], pt_2_UP[0] )

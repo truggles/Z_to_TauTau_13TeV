@@ -112,8 +112,8 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     #### LEGACY HTT CATEGORIES ###
-    #higgsPtVar = 'Higgs_PtCor'
-    higgsPtVar = 'pt_sv'
+    higgsPtVar = 'Higgs_PtCor'
+    #higgsPtVar = 'pt_sv'
 #    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT1jet_low' % (sign, isoT, isoL)
 #    params['additionalCut'] = '*(Z_SS==%i)*(%s>100 && %s<170)*(jetVeto30==1 ||\
 #        (jetVeto30>=2 && !(mjj>300 && abs(jdeta) > 2.5 && njetingap < 1)))*%s' % (Zsign, higgsPtVar, higgsPtVar, isoCutter)

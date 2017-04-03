@@ -144,7 +144,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'pt_sv:m_sv' : 'svFitMass2D',
             'mjj:m_sv' : 'svFitMass2D',
             'm_visCor' : 'visMass2D',
-            'Higgs_PtCor:m_sv' : 'visMass2D',
+            'Higgs_PtCor:m_sv' : 'svFitMass2D',
             'Higgs_PtCor:m_visCor' : 'visMass2D',
             'mjj:m_visCor' : 'visMass2D',
             'Mass' : '4LMass',
