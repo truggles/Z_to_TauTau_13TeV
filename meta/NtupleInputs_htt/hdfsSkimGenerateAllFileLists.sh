@@ -1,5 +1,5 @@
 
-ALL=/data/truggles/svFitMar20_SM-HTT_Merged
+ALL=/data/truggles/svFitApr01_SM-HTT_Merged
 CHANNEL=tt
 
 

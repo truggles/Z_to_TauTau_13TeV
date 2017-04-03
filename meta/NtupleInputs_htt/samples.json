@@ -168,15 +168,15 @@
     "nlumis": 5046
   }, 
   "VBFHtoTauTau125": {
-    "STATUS": "Good to Go!", 
+    "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 1499400, 
+    "nEvents": 1405576, 
     "DAS Path": "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
     "nfiles": 48, 
     "nblocks": 30, 
     "Cross Section (pb)": 0.24609750000000002, 
-    "summedWeightsNorm": 1495503.7751713803, 
-    "summedWeights": 5599600.0, 
+    "summedWeightsNorm": 1401930.0964808539, 
+    "summedWeights": 5249233.0, 
     "nevents": 1499400, 
     "nNtupleFiles": 3, 
     "nlumis": 7716

@@ -1,2 +1,2 @@
-/data/truggles/svFitMar20_SM-HTT_Merged/ZZ4l_0_tt.root
-/data/truggles/svFitMar20_SM-HTT_Merged/ZZ4l_1_tt.root
+/data/truggles/svFitApr01_SM-HTT_Merged/ZZ4l_0_tt.root
+/data/truggles/svFitApr01_SM-HTT_Merged/ZZ4l_1_tt.root
