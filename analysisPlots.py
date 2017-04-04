@@ -399,13 +399,13 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # Add the Zmumu CR normalizations from Cecile's studies
         # from Nov 18, 2016 SM-HTT
         # Update 2 Mar, 2017:
-        # - 2% correction for All regions
         # - VBF has specific shape correction too
+        # Removed 2% global normalization adjustment, April 4, 2017
         if 'DYJets' in sample or 'EWKZ' in sample :
             if 'ZTTvbf' in outFile.GetName() :
-                shapeSyst += '*(1.02 + zmumuVBFWeight)'
+                shapeSyst += '*(1.00 + zmumuVBFWeight)'
             else : # Applied to ALL categories
-                shapeSyst += '*(1.02)'
+                shapeSyst += '*(1.00)'
         
             
         # Energy Scale reweighting applied to all Real Hadronic Taus
