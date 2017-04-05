@@ -337,7 +337,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         if 'ZTTinclusive' in outFile.GetName() or 'ZTT0jet' in outFile.GetName() :
             if ":" in var : continue
 
-        print var
+        #print var
 
 
         ''' Skip plotting unused shape systematics '''
@@ -625,7 +625,8 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         ### Check that the target var is in the TTrees
         elif hasattr( chain, plotVar ) or ":" in varBase :
             #print "trying"
-            if sample == 'DYJets' : print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
+            #if sample == 'DYJets' : print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
+            print "%20s  Var: %40s   VarBase: %30s    VarPlot: %s" % (sample, var, varBase, plotVar)
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( esMap, 'data', channel, var )
                 #print 'dataES',dataES
