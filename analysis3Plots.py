@@ -301,7 +301,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 elif isVBFCat :
                     xBins = array( 'd', [0,40,60,80,100,120,150,200,250] )
                 else :
-                    xBins = array( 'd', [i*10 for i in range( 31 )] )
+                    #xBins = array( 'd', [i*10 for i in range( 31 )] )
+                    xBins = array( 'd', [0,50,60,70,80,90,100,110,120,130,\
+                        140,150,160,170,180,190,200,210,220,230,240,250,\
+                        260,270,280,290,300] )
             else :
                 varBinned = False
                 first = info[1] * 1.

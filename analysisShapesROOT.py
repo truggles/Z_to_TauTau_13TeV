@@ -240,7 +240,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 elif 'vbf' in ops['category'] :
                     binArray = array( 'd', [0,40,60,80,100,120,150,200,250] )
                 else :
-                    binArray = array( 'd', [i*10 for i in range( 31 )] )
+                    #binArray = array( 'd', [i*10 for i in range( 31 )] )
+                    binArray = array( 'd', [0,50,60,70,80,90,100,110,120,130,\
+                        140,150,160,170,180,190,200,210,220,230,240,250,\
+                        260,270,280,290,300] )
             numBins = len( binArray ) - 1
             #print binArray
             #print numBins
