@@ -1,2 +1,2 @@
-/data/truggles/svFitApr01_SM-HTT_Merged/VV_0_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/VV_1_tt.root
+/data/truggles/httMay14triggerStudiesMerged/VV_0_tt.root
+/data/truggles/httMay14triggerStudiesMerged/VV_1_tt.root

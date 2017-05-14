@@ -1,1 +1,2 @@
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets1Low_0_tt.root
+/data/truggles/httMay14triggerStudiesMerged/DYJets1Low_0_tt.root
+/data/truggles/httMay14triggerStudiesMerged/DYJets1Low_1_tt.root
