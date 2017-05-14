@@ -8,9 +8,9 @@ for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 DYJetsLow DYJets1Low DYJets
 done
 
 
-#for SAMPLE in dataTT-B dataTT-C dataTT-D dataTT-E dataTT-F dataTT-G dataTT-H; do
-#    ls ${ALL}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
-#done
+for SAMPLE in dataTT-B dataTT-C dataTT-D dataTT-E dataTT-F dataTT-G dataTT-H; do
+    ls ${ALL}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+done
 
 for MASS in 110 120 125 130 140; do
     for SAMPLE in ggHtoTauTau VBFHtoTauTau WMinusHTauTau WPlusHTauTau ZHTauTau; do
