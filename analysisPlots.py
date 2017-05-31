@@ -51,7 +51,6 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
         # Tau Pt Scale reweighting only applied to DYJets and signal
         #print "Skip Vars:",sample, var, genCode
         if '_tauPt' in var :
-            if channel == 'em' : return True
             if 'data' in sample : return True
             # This is QCD with an era
             # thus means fake factor 
@@ -134,8 +133,6 @@ def ESCuts( ESMap, sample, channel, var ) :
     if 'data' in sample :
         if channel == 'tt' :
             return '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)
-        #if channel == 'em' :
-        #    return '*(pt_1 > 13 && pt_2 > 10)'
 
     shiftDir = ''
     if 'Up' in var[-2:] : shiftDir = 'Up'
@@ -162,10 +159,6 @@ def getESMap() :
             '_energyScaleDM10Up' : '*( pt_1_DM10_UP > %s && pt_2_DM10_UP > %s)' % (tau1PtCut, tau2PtCut),
             '_energyScaleDM10Down' : '*( pt_1_DM10_DOWN > %s && pt_2_DM10_DOWN > %s)' % (tau1PtCut, tau2PtCut),
             '_NoShift' : '*(ptCor_1 > %s && ptCor_2 > %s)' % (tau1PtCut, tau2PtCut)},
-        #'em' : { 
-        #    '_energyScaleUp' : '*((pt_1*1.03) > 13 && pt_2 > 10)',
-        #    '_energyScaleDown' : '*((pt_1*0.97) > 13 && pt_2 > 10)',
-        #    '_NoShift' : '*(pt_1 > 13 && pt_2 > 10)'}
         }
     return ESMap
 
@@ -770,29 +763,6 @@ def getHistoDict( analysis, channel ) :
                     genVarMap[ var+'_'+shape+'Down' ] = list(genVarMap[ var ])
                     genVarMap[ var+'_'+shape+'Down' ][4] = genVarMap[ var+'_'+shape+'Down' ][4]+' '+app+' Down'
             
-
-        if channel == 'em' :
-            # Provides a list of histos to create for 'EM' channel
-            chanVarMapEM = {
-                'pt_1' : [200, 0, 200, 10, 'e p_{T} [GeV]', ' GeV'],
-                'eta_1' : [60, -3, 3, 2, 'e Eta', ' Eta'],
-                #'iso_1' : [20, 0, 0.2, 1, 'e RelIsoDB03', ''],
-                'mt_1' : [200, 0, 200, 5, 'e m_{T} [GeV]', ' GeV'],
-                'pt_2' : [200, 0, 200, 10, 'm p_{T} [GeV]', ' GeV'],
-                'eta_2' : [60, -3, 3, 2, 'm Eta', ' Eta'],
-                #'iso_2' : [20, 0, 0.2, 1, 'm RelIsoDB03', ''],
-                'mt_2' : [200, 0, 200, 5, 'm m_{T} [GeV]', ' GeV'],
-                'eJetPt' : [200, 0, 200, 10, 'e Overlapping Jet Pt', ' GeV'],
-                'mJetPt' : [200, 0, 200, 10, 'm Overlapping Jet Pt', ' GeV'],
-                #'e_m_Pt + mvamet' : [400, 0, 400, 10, 'ditau Pt + mvamet', ' GeV'],
-                #'ePVDZ' : [25, -.25, .25, 1, "e PVDZ [cm]", " cm"],
-                #'ePVDXY' : [50, -.1, .1, 2, "e PVDXY [cm]", " cm"],
-                #'mPVDZ' : [25, -.25, .25, 1, "m PVDZ [cm]", " cm"],
-                #'mPVDXY' : [50, -.1, .1, 2, "m PVDXY [cm]", " cm"],
-            }
-            for key in chanVarMapEM.keys() :
-                genVarMap[ key ] = chanVarMapEM[ key ]
-            return genVarMap
 
         # Provides a list of histos to create for 'TT' channel
         if channel == 'tt' :

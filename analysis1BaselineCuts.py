@@ -463,13 +463,13 @@ def drawHistos(analysis, samples, **fargs ) :
 
     genMap = {
         # sample : em , tt
-        'ZTT' : {'em' : '*(gen_match_1 > 2 && gen_match_2 > 3)',
+        'ZTT' : {
                 'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
-        'ZL' : {'em' : '',
+        'ZL' : {
                 'tt' : '*(gen_match_1 < 6 && gen_match_2 < 6 && !(gen_match_1 == 5 && gen_match_2 == 5))'},
-        'ZJ' : {'em' : '',
+        'ZJ' : {
                 'tt' : '*(gen_match_2 == 6 || gen_match_1 == 6)'},
-        'QCD' : {'em' : '*(FFWeightQCD)',
+        'QCD' : {
                 'tt' : '*(FFWeightQCD)'},
         'TTT' : {
                 'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
@@ -607,5 +607,6 @@ def drawHistos(analysis, samples, **fargs ) :
     print "#################################################################"
          
 
-if __name__ == '__main__' :
-    runCutsAndIso('25ns', 'dataEM', 'em', 3, 1, 'None', '1nov2newNtups', '2nov2newNtups','signalCuts','PostSync',25)
+
+
+
