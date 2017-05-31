@@ -1,3 +1,2 @@
-/data/truggles/httMay14triggerStudiesMerged/Tbar-tchan_0_tt.root
-/data/truggles/httMay14triggerStudiesMerged/Tbar-tchan_1_tt.root
-/data/truggles/httMay14triggerStudiesMerged/Tbar-tchan_2_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/Tbar-tchan_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/Tbar-tchan_1_tt.root

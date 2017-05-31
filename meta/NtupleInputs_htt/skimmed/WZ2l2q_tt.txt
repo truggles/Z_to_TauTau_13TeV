@@ -1,5 +1,6 @@
-/data/truggles/httMay14triggerStudiesMerged/WZ2l2q_0_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WZ2l2q_1_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WZ2l2q_2_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WZ2l2q_3_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WZ2l2q_4_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WZ2l2q_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WZ2l2q_1_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WZ2l2q_2_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WZ2l2q_3_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WZ2l2q_4_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WZ2l2q_5_tt.root

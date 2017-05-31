@@ -22,16 +22,20 @@ p.add_argument('--isoVal', action='store', default='Tight', dest='isoVal', help=
 p.add_argument('--skimmed', action='store', default='false', dest='skimmed', help="Using skimmed samples?")
 p.add_argument('--skipSSQCDDetails', action='store', default=False, dest='skipSSQCDDetails', type=bool, help="Using skimmed samples?")
 p.add_argument('--samples', action='store', dest='samples', nargs='+', type=str, help="Pass in a list of space separated samples")
+p.add_argument('--pt1', action='store', dest='pt1', type=int, help="Pt cut of leading Tau")
+p.add_argument('--pt2', action='store', dest='pt2', type=int, help="Pt cut of sub-leading Tau")
 options = p.parse_args()
 folder = options.folder
 skimmed = options.skimmed
 skipSSQCDDetails = options.skipSSQCDDetails
 isoVal = options.isoVal
 samples = options.samples
+pt1 = options.pt1
+pt2 = options.pt2
 print "Options Skimmed:",skimmed
 print "samples: ",samples
 
-def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
+def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, pt1, pt2, doFF=False ) :
     if folder == 'xxx' :
         print "ERROR: Folder was not choosen"
         return
@@ -109,7 +113,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     import analysis3Plots
     from meta.sampleNames import returnSampleDetails
     samples = returnSampleDetails( analysis, samples )
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    analysis1BaselineCuts.drawHistos( analysis, samples, pt1, pt2, **params )
 
     #### LEGACY HTT CATEGORIES ###
     higgsPtVar = 'Higgs_PtCor'
@@ -156,17 +160,17 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTboosted' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && %s>100)))*%s' % (Zsign, higgsPtVar, isoCutter)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    analysis1BaselineCuts.drawHistos( analysis, samples, pt1, pt2, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5)*%s' % (Zsign, higgsPtVar, isoCutter)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    analysis1BaselineCuts.drawHistos( analysis, samples, pt1, pt2, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTT0jet2D' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==0)*%s' % (Zsign, isoCutter)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+    analysis1BaselineCuts.drawHistos( analysis, samples, pt1, pt2, **params )
 
 
     
@@ -264,11 +268,11 @@ if __name__ == '__main__' :
     doFF = getenv('doFF', type=bool)
     if doFF :
         # The '' in the following line gives us the signal region
-        testQCDCuts( folder, samples, isoVal, '', isoVal, 'OS', doFF )
+        testQCDCuts( folder, samples, isoVal, '', isoVal, 'OS', pt1, pt2, doFF )
     else :
         for pair in isoPairs :
             for sign in ['OS', 'SS']:
-                testQCDCuts( folder, samples, isoVal, pair[0], pair[1], sign )
+                testQCDCuts( folder, samples, isoVal, pair[0], pair[1], sign, pt1, pt2 )
 
 #XXX    testQCDCuts( folder, '', 'VTight', 'OS' )
 

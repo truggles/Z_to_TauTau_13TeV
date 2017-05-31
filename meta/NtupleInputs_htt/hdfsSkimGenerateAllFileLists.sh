@@ -1,5 +1,5 @@
 
-ALL=/data/truggles/httMay14triggerStudiesMerged
+ALL=/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged
 CHANNEL=tt
 
 

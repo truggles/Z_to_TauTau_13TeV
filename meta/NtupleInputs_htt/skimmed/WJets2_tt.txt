@@ -1,5 +1,3 @@
-/data/truggles/httMay14triggerStudiesMerged/WJets2_0_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WJets2_1_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WJets2_2_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WJets2_3_tt.root
-/data/truggles/httMay14triggerStudiesMerged/WJets2_4_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WJets2_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WJets2_1_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WJets2_2_tt.root

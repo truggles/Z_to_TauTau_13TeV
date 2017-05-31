@@ -1,1 +1,2 @@
-/data/truggles/httMay14triggerStudiesMerged/WPlusHTauTau140_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WPlusHTauTau140_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/WPlusHTauTau140_1_tt.root

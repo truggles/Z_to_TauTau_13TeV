@@ -170,7 +170,7 @@ def runCuts(analysis, sample, samples, channel, count, num, mid1, mid2,cutMapper
         print "Over 1000 iterations.  Summary skipped"
 
 
-def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle) :
+def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numFilesPerCycle,pt1,pt2) :
 
     #if svFitPost == 'true' : SVF = True
     #else : SVF = False
@@ -181,7 +181,7 @@ def runIsoOrder(analysis, sample, channel, count, num, mid1, mid2,cutMapper,numF
 
     ''' 2. Rename branches, Tau and Iso order legs '''
     print "%5i %20s %10s %3i: Started Iso Ordering" % (num, sample, channel, count)
-    isoQty = renameBranches( analysis, mid1, mid2, save, channel, count )
+    isoQty = renameBranches( analysis, mid1, mid2, save, channel, count, pt1, pt2 )
 
     ### FF values for data events
     doFF = getenv('doFF', type=bool)
@@ -343,7 +343,7 @@ def doInitialCuts(analysis, samples, **fargs) :
     print "End Time:   %s" % str( strftime("%Y-%m-%d %H:%M:%S", gmtime()) )
 
 
-def doInitialOrder(analysis, samples, **fargs) :
+def doInitialOrder(analysis, samples, pt1, pt2, **fargs) :
     assert isinstance(samples,dict)
 
     mergeMap = getMergeMap(analysis)
@@ -395,7 +395,7 @@ def doInitialOrder(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    numFilesPerCycle)) )
+                                                                                    numFilesPerCycle,pt1,pt2)) )
                 """ for debugging without multiprocessing """
                 if fargs['debug'] == 'true' :
                     runIsoOrder(analysis,
@@ -406,7 +406,7 @@ def doInitialOrder(analysis, samples, **fargs) :
                                                                                     fargs['mid1'],
                                                                                     fargs['mid2'],
                                                                                     fargs['cutMapper'],
-                                                                                    numFilesPerCycle)
+                                                                                    numFilesPerCycle,pt1,pt2)
                 num +=  1
                 count += 1
                 # Make sure we loop over large samples to get all files
@@ -450,7 +450,7 @@ def doInitialOrder(analysis, samples, **fargs) :
 
 
 
-def drawHistos(analysis, samples, **fargs ) :
+def drawHistos(analysis, samples, pt1, pt2, **fargs ) :
 
     print "\n%s\n" % fargs['mid3']
 
@@ -580,6 +580,8 @@ def drawHistos(analysis, samples, **fargs ) :
                                                                                     channel,
                                                                                     isData,
                                                                                     additionalCut,
+                                                                                    pt1,
+                                                                                    pt2,
                                                                                     blind,
                                                                                     skipSSQCDDetails,
                                                                                     sample+'-'+subName)) )
@@ -593,6 +595,8 @@ def drawHistos(analysis, samples, **fargs ) :
                                                                                     channel,
                                                                                     isData,
                                                                                     additionalCut,
+                                                                                    pt1,
+                                                                                    pt2,
                                                                                     blind,
                                                                                     skipSSQCDDetails,
                                                                                     sample+'-'+subName) 

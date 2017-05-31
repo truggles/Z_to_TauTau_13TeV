@@ -1,1 +1,2 @@
-/data/truggles/httMay14triggerStudiesMerged/ZHTauTau125_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/ZHTauTau125_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/ZHTauTau125_1_tt.root

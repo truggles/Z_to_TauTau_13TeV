@@ -1,3 +1,4 @@
-/data/truggles/httMay14triggerStudiesMerged/DYJets2_0_tt.root
-/data/truggles/httMay14triggerStudiesMerged/DYJets2_1_tt.root
-/data/truggles/httMay14triggerStudiesMerged/DYJets2_2_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/DYJets2_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/DYJets2_1_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/DYJets2_2_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/DYJets2_3_tt.root

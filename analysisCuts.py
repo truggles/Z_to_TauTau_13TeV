@@ -1,9 +1,9 @@
 import ROOT
 
 def makeGenCut( inTree, cutString ) :
-	#print "l1 %s, l2 %s" % (l1, l2)
-	outTree = inTree.CopyTree( cutString )
-	return outTree
+    #print "l1 %s, l2 %s" % (l1, l2)
+    outTree = inTree.CopyTree( cutString )
+    return outTree
 
 
 #######################
@@ -37,7 +37,7 @@ extraVeto   = 'eVetoZTTp001dxyz == 0 && muVetoZTTp001dxyz == 0'
 extraVetoTT   = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 == 0'
 #DecayMode = '(t1DecayMode != 5 && t1DecayMode != 6) && (t2DecayMode != 5 && t2DecayMode != 6)'
 DecayMode = 't1DecayModeFinding == 1 && t2DecayModeFinding == 1'
-ttKin37   = 't1Pt > 37 && t1AbsEta < 2.1 && t2Pt > 37 && t2AbsEta < 2.1'
+ttKin33   = 't1Pt > 33 && t1AbsEta < 2.1 && t2Pt > 33 && t2AbsEta < 2.1'
 ttKin40   = 't1Pt > 40 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
 ttKin5040   = 't1Pt > 50 && t1AbsEta < 2.1 && t2Pt > 40 && t2AbsEta < 2.1'
 ttKin40TES   = '(t1Pt*1.03) > 40 && t1AbsEta < 2.1 && (t2Pt*1.03) > 40 && t2AbsEta < 2.1'
@@ -218,6 +218,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
             'syncCutsDCqcdTES5040VVLoose' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVVLooseMVA ],
             'syncCutsDCqcdTES5040' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoLooseMVA],
             'syncCutsDCqcdTES5040VL' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVLooseMVA],
+            'syncCutsDCqcdTES33VL' : [ttKin33, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode, ttIsoVLooseMVA],
             'syncCutsDCqcdTES5040VL_HdfsSkim' : [ttKin5040TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35_all, DecayMode, ttIsoVLooseMVA_all],
             'syncCutsDCqcdTESNoIso' : [ttKin40TES, ttCharge, ttDR, ttVtx, ttDisc, extraVetoTT, tt35, DecayMode],
             # Selection which only does baseline for sync sample

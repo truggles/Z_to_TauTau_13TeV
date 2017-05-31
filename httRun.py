@@ -57,6 +57,7 @@ SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
     
+#SamplesDataCards = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
     
@@ -86,13 +87,11 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES',
     #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
-    'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
+    'cutMapper' : 'syncCutsDCqcdTES33VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1March20withMetUnc',
-    'mid2' : '2March23withMetUnc',
-    'mid3' : '3March23withMetUnc',
-    'mid2' : '2March28withMetUnc',
-    'mid3' : '3March28withMetUnc',
+    'mid1' : '1May18triggerStudies',
+    'mid2' : '2May18triggerStudies',
+    'mid3' : '3May18triggerStudies',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -112,7 +111,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+###analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -121,12 +120,14 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
     
 
+doInitialOrdering = True
+doInitialOrdering = False
 runPlots = True
 #runPlots = False
 makeQCDBkg = True
-makeQCDBkg = False
+#makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False # Use this with FF
+#makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
@@ -137,11 +138,11 @@ cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
 #cats = ['boosted',]
 #cats = ['inclusive',]
-pt = '5040'
 #sync = True
 sync = False
 #cleanPlots = False
 cleanPlots = True
+cleanDir = True
 #isoVals = ['Tight', 'Medium', 'Loose',]
 #isoVals = ['Tight', 'Loose',]
 isoVals = ['Tight',]
@@ -150,23 +151,50 @@ doFF = getenv('doFF', type=bool)
 # Make CR plots for AN
 #plotAntiIso = True
 plotAntiIso = False
-higgsPt = 'pt_sv'
-#higgsPt = 'Higgs_PtCor'
+#higgsPt = 'pt_sv'
+higgsPt = 'Higgs_PtCor'
 
+# Do Tau Pt Cuts:
+leadingPts = [40, 45, 50, 55]
+subleadingPts = [40, 45, 50, 55]
+ptList = []
+for leadingPt in leadingPts :
+    for subPt in subleadingPts :
+        if leadingPt >= subPt : ptList.append( [leadingPt, subPt] )
+#pt = '5040'
+
+#ptList = []
+#ptList.append([50,40])
+print ptList
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]
 for remove in toRemove :
     if remove in samples.keys() : del samples[remove]
 
-for isoVal in isoVals :
+originalMid2 = params['mid2']
+#for isoVal in isoVals :
+for pts in ptList :
+    pt1 = pts[0]
+    pt2 = pts[1]
+    pt = str(pts[0])+str(pts[1])
+    #params['mid2'] = originalMid2+pt
+    params['mid2'] = originalMid2
+    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+    print pt1, pt2, pt, params['mid2']
+    isoVal = isoVals[0]
     if isoVal == 'Tight' : lIso = 'Loose'
     #if isoVal == 'Medium' : lIso = 'Loose'
     #if isoVal == 'Loose' : lIso = 'VLoose'
-    samplesX = copy.deepcopy(samples)
+
+    if doInitialOrdering :
+        analysis1BaselineCuts.doInitialOrder(analysis, samples, pt1, pt2, **params)
+
     if runPlots :
+        samplesX = copy.deepcopy(samples)
         skipSSQCDDetails=True
         process = ["python", "makeFinalCutsAndPlots.py", "--folder=%s" % params['mid2'],\
             "--isoVal=%s" % isoVal, "--skimmed=%s" % params['skimmed'],\
+            "--pt1=%s" % pt1, "--pt2=%s" % pt2,\
             "--skipSSQCDDetails=%r" % skipSSQCDDetails, "--samples"]
         for sample in samplesX.keys() :
             process.append( sample )
@@ -178,9 +206,9 @@ for isoVal in isoVals :
             if 'data' in sample :
                 era = sample.split('-')[1]
                 samples[ 'QCD-'+era ] = {'group' : 'jetFakes'}
-    samplesX = copy.deepcopy(samples)
        
     if makeQCDBkg :    
+        samplesX = copy.deepcopy(samples)
         qcdYields = {}
         for sign in ['SS', 'OS'] :
             for name in [isoVal+'_'+lIso, isoVal+'_'] :
@@ -210,6 +238,7 @@ for isoVal in isoVals :
     
     
     if makeFinalPlots :
+        samplesX = copy.deepcopy(samples)
         from util.helpers import getQCDSF, checkDir
         for cat in cats :
             for isoRegion in [isoVal+'_'+lIso, isoVal+'_'] :
@@ -217,7 +246,7 @@ for isoVal in isoVals :
                 if doFF and isoRegion == isoVal+'_'+lIso : continue
                 ROOT.gROOT.Reset()
                 tDir = cat if isoRegion == isoVal+'_' else cat+'_'+isoVal+'_'+lIso
-                blind = True
+                blind = False
                 #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
                 #    blind = False
                 
@@ -230,18 +259,18 @@ for isoVal in isoVals :
                         kwargs['qcdMakeDM'] = cat+'_plotMe'
                         kwargs['qcdSF'] = 1.0
                     else :
-                        kwargs['useQCDMakeName'] = str('OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_','')
-                        #str(.replace('dyShapeNew_',''),
+                        kwargs['useQCDMakeName'] = str('OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat)
                         kwargs['qcdSF'] = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                         kwargs['useQCDMake'] = True
                 analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                     params['mid2']+'_OSl1ml2_'+isoRegion+'ZTT'+cat, **kwargs  )
-                cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s" % params['mid2'].strip('2')
+                cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s%s" % (params['mid2'].strip('2'), pt)
                 checkDir( cpDir )
                 subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/httPlots/tt/"+cat, cpDir] )
         
         
     if makeDataCards :
+        samplesX = copy.deepcopy(samples)
         ROOT.gROOT.Reset()
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
@@ -270,7 +299,7 @@ for isoVal in isoVals :
                     qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                     kwargs = {
-                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
+                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat),
                     'qcdSF' : qcdSF,
                     'category' : finalCat,
                     #'fitShape' : 'm_visCor',
@@ -283,7 +312,7 @@ for isoVal in isoVals :
                     # Make OS Loose QCD CR
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
                     kwargs = {
-                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
+                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat),
                     'qcdSF' : 1.0,
                     'category' : finalCat+'_qcd_cr',
                     #'fitShape' : 'm_visCor',
@@ -305,6 +334,8 @@ for isoVal in isoVals :
         print "\nTrying to remove pngs used to build QCD Bkg\n"
         subprocess.call(["bash", "util/cleanDirs.sh"])
     
+    #if cleanDir :
+    #    subprocess.call(["rm","-r","htt%s" % params['mid2']])
 
 
 

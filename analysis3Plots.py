@@ -876,9 +876,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['qcdMakeDM'] == 'x' or 'plotMe' in ops['qcdMakeDM'] :
                 plotDir = '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'] )
                 c1.SaveAs(plotDir+'%s.png' % var )
-                c1.SaveAs(plotDir+'%s.pdf' % var )
-                c1.SaveAs(plotDir+'%s.root' % var )
-                c1.SaveAs(plotDir+'%s.C' % var )
+                #c1.SaveAs(plotDir+'%s.pdf' % var )
+                #c1.SaveAs(plotDir+'%s.root' % var )
+                #c1.SaveAs(plotDir+'%s.C' % var )
 
                 # To speed up, just copy the new png/pdfs to other dir
                 # this will help with 2D plots

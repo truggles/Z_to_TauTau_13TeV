@@ -296,7 +296,7 @@ def calcDR( eta1, phi1, eta2, phi2 ) :
 
 
 
-def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
+def renameBranches( analysis, mid1, mid2, sample, channel, count, pt1Cut, pt2Cut ) :
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
         sampDict = json.load( sampFile )
 
@@ -1396,6 +1396,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # L1 trigger efficiency is dependent on tau isolation
                     # and real / fake tau status
                     # find tau iso and pass string for mapping appropriately
+
+                    # Apply a correction to shift the trigger turn on
+                    # for mu value study
+                    modPt1 = pt1Cut - 40.
+                    modPt2 = pt2Cut - 40.
+                    modPt1 = 0.
+                    modPt2 = 0.
+
                     tauIso = 'NoIso'
                     if getattr( row, l1+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VLooseIso'
@@ -1408,7 +1416,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0], dm1 )
+                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1+modPt1, tauIso, gen_match_1[0], dm1 )
                     tauIso = 'NoIso'
                     if getattr( row, l2+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VLooseIso'
@@ -1421,7 +1429,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
                         tauIso = 'VTightIso'
                     if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0], dm2 )
+                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2+modPt2, tauIso, gen_match_2[0], dm2 )
 
 
                     # Tau Energy Correction

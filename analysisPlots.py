@@ -127,9 +127,9 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
 
 
 # Make specific extra cuts for different TES requirements
-def ESCuts( ESMap, sample, channel, var ) :
-    tau2PtCut = 40.
-    tau1PtCut = 50.
+def ESCuts( ESMap, sample, channel, var, tau1PtCut, tau2PtCut ) :
+    #tau2PtCut = 40.
+    #tau1PtCut = 50.
     if len( channel ) == 4 : return '*(1.)'
     if 'data' in sample :
         if channel == 'tt' :
@@ -148,9 +148,9 @@ def ESCuts( ESMap, sample, channel, var ) :
     if '_energyScaleDM10'+shiftDir in var : return ESMap[ channel ]['_energyScaleDM10'+shiftDir]
     return ESMap[ channel ]['_NoShift']
 
-def getESMap() :
-    tau2PtCut = 40.
-    tau1PtCut = 50.
+def getESMap( tau1PtCut, tau2PtCut ) :
+    #tau2PtCut = 40.
+    #tau1PtCut = 50.
     ESMap = {
         'tt' : { 
             '_energyScaleAllUp' : '*( pt_1_UP > %s && pt_2_UP > %s)' % (tau1PtCut, tau2PtCut),
@@ -268,7 +268,7 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False, genCode='x' ) :
+def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, pt1, pt2, blind=False, skipSSQCDDetails=False, genCode='x' ) :
     if genCode == 'x' : genCode = sample
 
     ''' Make a channel specific selection of desired histos and fill them '''
@@ -305,7 +305,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
     ''' Get Energy Scale Map which is now confusing with
         decay mode specific shifts '''
-    esMap = getESMap()
+    esMap = getESMap(pt1, pt2)
 
 
     ### Check if we intend to do Fake Factor based MC cuts
@@ -413,7 +413,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # this is not an "if" style shape b/c we need to apply
         # normal pt cuts if the shape syst is not called
         # so instead we appeand it to what ever else we have
-        shapeSyst += ESCuts( esMap, sample, channel, var )
+        shapeSyst += ESCuts( esMap, sample, channel, var, pt1, pt2 )
         # Additionally, if we have Energy Scale, we also need
         # to change any Higgs_PtCor vars to Higgs_PtCor_UP/DOWN
         additionalCutToUse = additionalCut
@@ -628,7 +628,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             #if sample == 'DYJets' : print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             print "%20s  Var: %40s   VarBase: %30s    VarPlot: %s" % (sample, var, varBase, plotVar)
             if isData : # Data has no GenWeight and by def has puweight = 1
-                dataES = ESCuts( esMap, 'data', channel, var )
+                dataES = ESCuts( esMap, 'data', channel, var, pt1, pt2 )
                 #print 'dataES',dataES
                 chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
@@ -698,12 +698,12 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
 #FIXME            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
 #            'm_vis' : [30, 0, 300, 1, 'M_{vis} Uncor [GeV]', ' GeV'],
-            'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
-#XXX            'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-#XXX            'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+             'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
+# XXX             'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+# XXX             'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
 #            'mt_tot' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
@@ -799,8 +799,8 @@ def getHistoDict( analysis, channel ) :
             chanVarMapTT = {
 #                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} Uncor [GeV]', ' GeV'],
 #                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} Uncor [GeV]', ' GeV'],
-#                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
-#                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
 ##FIXME                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
 #                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
 #                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],

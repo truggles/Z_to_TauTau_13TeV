@@ -1,1 +1,1 @@
-/data/truggles/httMay14triggerStudiesMerged/ggHtoTauTau120_0_tt.root
+/data/truggles/svFitMay17_trigStudy_SM-HTT_Merged/ggHtoTauTau120_0_tt.root
