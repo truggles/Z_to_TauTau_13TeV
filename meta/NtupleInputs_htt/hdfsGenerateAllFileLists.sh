@@ -1,7 +1,7 @@
 
 DATA=/hdfs/store/user/caillol/SMHTT_reminiaod_feb14
 ALL=/hdfs/store/user/caillol/SMHTT_mc_feb13
-SIGNALS=/hdfs/store/user/ndev/LFV_feb18_mc
+SIGNALS=/hdfs/store/user/truggles/SMHTT_signals_may30
 
 #ls ${DATA}/data_Tau_Run2016B*/*.root                                            		 > hdfs/dataTT-B.txt 
 #ls ${DATA}/data_Tau_Run2016C/*.root                                            		     > hdfs/dataTT-C.txt 
@@ -59,7 +59,7 @@ for MASS in 110 120 125 130 140; do
     ls ${SIGNALS}/WminusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                        > hdfs/WMinusHTauTau${MASS}.txt
     ls ${SIGNALS}/WplusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                         > hdfs/WPlusHTauTau${MASS}.txt
     ls ${SIGNALS}/ZHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                             > hdfs/ZHTauTau${MASS}.txt
-    ls ${SIGNALS}/ttHJetToTT_M${MASS}_13TeV_amcatnloFXFX_madspin_pythia8_v6*-v1/*.root              > hdfs/ttHTauTau${MASS}.txt
+    ls ${SIGNALS}/ttHJetToTT_M${MASS}_13TeV_amcatnloFXFX_madspin_pythia8_v6*v1/*.root               > hdfs/ttHTauTau${MASS}.txt
 done
 
 
