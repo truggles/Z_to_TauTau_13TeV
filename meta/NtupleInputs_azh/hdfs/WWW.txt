@@ -1,4 +1,4 @@
-/hdfs/store/user/caillol/LLTT_jan14/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-06CEB378-7EC0-E611-8D9B-A0000420FE80.root
-/hdfs/store/user/caillol/LLTT_jan14/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-4A41203C-74C0-E611-9613-A0000420FE80.root
-/hdfs/store/user/caillol/LLTT_jan14/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-66078AB8-7EC0-E611-A5A9-0025904AC2C6.root
-/hdfs/store/user/caillol/LLTT_jan14/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-FA797D56-73C0-E611-885E-A0000420FE80.root
+/hdfs/store/user/eerodoto/LLTT_mc_31march/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-06CEB378-7EC0-E611-8D9B-A0000420FE80.root
+/hdfs/store/user/eerodoto/LLTT_mc_31march/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-4A41203C-74C0-E611-9613-A0000420FE80.root
+/hdfs/store/user/eerodoto/LLTT_mc_31march/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-66078AB8-7EC0-E611-A5A9-0025904AC2C6.root
+/hdfs/store/user/eerodoto/LLTT_mc_31march/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/make_ntuples_cfg-FA797D56-73C0-E611-885E-A0000420FE80.root
