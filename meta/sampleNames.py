@@ -538,6 +538,10 @@ def sampleDetails( analysis ) :
             #    'DASPath' : '/ttHJetToTT_M140_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % moriond17,
             #    'xsec' : 0.454 * 0.0545,
             #    'group' : 'VH'},
+            'ZHWW125' : {
+                'DASPath' : '/HZJ_HToWW_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.8839 * 0.2137 * 0.3258 * 0.3258, # From Cecile
+                'group' : 'ZHWW'},
 	} # end SM-Higgs
     } # end sample Map
 

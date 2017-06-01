@@ -33,10 +33,9 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW', 'ZZ4l', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',]
-azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataEE-G', 'dataEE-H', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'dataMM-G', 'dataMM-H', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4l', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'WWW', 'WWZ', 'WZ', 'WZZ', 'ZZ', 'ZZZ'] # Jan 14 samples
+azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
 
-for mass in [120, 125, 130] :
+for mass in [110, 120, 125, 130, 140] :
     #azhSamples.append('ggHtoTauTau%i' % mass)
     #azhSamples.append('VBFHtoTauTau%i' % mass)
     #azhSamples.append('WMinusHTauTau%i' % mass)
@@ -46,17 +45,17 @@ for mass in [120, 125, 130] :
 for mass in [125,] :
     azhSamples.append('WMinusHTauTau%i' % mass)
     azhSamples.append('WPlusHTauTau%i' % mass)
+    azhSamples.append('ZHWW%i' % mass)
 
-#azhSamples = []
-for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-    azhSamples.append('azh%i' % mass)
+#for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
+#    azhSamples.append('azh%i' % mass)
 
-#azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F',]
-#azhSamples=['ZZ4lAMCNLO',]
-#azhSamples=['dataEE-D',]
-#azhSamples=['azh300',]
-azhSamples=['ZHTauTau125',]
-#azhSamples=['ggZZ4m','ggZZ2m2tau']
+for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+    azhSamples.append('dataEE-%s' % era)
+    azhSamples.append('dataMM-%s' % era)
+    
+#azhSamples = ['ZHWW125']
+
 samples = azhSamples
 
 ''' These parameters are fed into the 2 main function calls.
@@ -67,32 +66,22 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 16,
+    'numCores' : 8,
     'numFilesPerCycle' : 1,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
-    'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
-    #'channels' : ['eeet','eett','eemt','eeem'],
-    #'channels' : ['eeee','mmmm','eemm'],
-    'channels' : ['eemt',],
-    #'channels' : ['emmt',],
-    #'channels' : ['eeee','eeet','eett','eemt'],
-    #'cutMapper' : 'HSS',
+    'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     'cutMapper' : 'Skim',
-    'cutMapper' : 'Sync2',
-    #'mid1' : '1Jan12redBkgOS',
-    #'mid2' : '2Jan12redBkgOSnewFR',
-    #'mid3' : '3Jan12redBkgOSnewFR',
-    'mid1' : '1Jan20sync',
-    'mid2' : '2Jan20sync',
-    'mid3' : '3Jan20sync',
+    'mid1' : '1May31skim',
+    'mid2' : '2May31skim',
+    'mid3' : '3May31skim',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
     'skimmed' : 'false',
     #'skimmed' : 'true',
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true',
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true',
 }
 
 """ Get samples with map of attributes """
@@ -103,7 +92,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True

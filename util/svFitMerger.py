@@ -1,5 +1,6 @@
 import os, glob, subprocess
 from util.helpers import checkDir
+import multiprocessing
 
 
 def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
@@ -47,51 +48,91 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
 
 
 if __name__ == '__main__' :
+    ''' Start multiprocessing tests '''
+    pool = multiprocessing.Pool(processes = 6 )
+    multiprocessingOutputs = []
+    debug = False
+    doAZH = False
+    doHTT = False
 
-#    # AZH Jan 19 hdfs -> UW
-#    azhSamples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataEE-G', 'dataEE-H', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'dataMM-G', 'dataMM-H', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4l', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'WWW', 'WWZ', 'WZ', 'WZZ', 'ZZ', 'ZZZ'] # Jan 14 samples
-#    azhSamples.append('WMinusHTauTau125')
-#    azhSamples.append('WPlusHTauTau125')
-#    #azhSamples = []
-#    for mass in [120, 125, 130] :
-#        #azhSamples.append('ggHtoTauTau%i' % mass)
-#        #azhSamples.append('VBFHtoTauTau%i' % mass)
-#        #azhSamples.append('WMinusHTauTau%i' % mass)
-#        #azhSamples.append('WPlusHTauTau%i' % mass)
-#        azhSamples.append('ZHTauTau%i' % mass)
-#        #azhSamples.append('ttHTauTau%i' % mass)
-#    for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-#        azhSamples.append('azh%i' % mass)
-#    originalDir = '/nfs_scratch/truggles/azhJan19newSkim'
-#    targetDir = '/nfs_scratch/truggles/azhJan19newSkimMerged'
-#    jobId = ''
-#    channels = ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
-#    for channel in channels :
-#        for sample in azhSamples :
-#                mergeSample( jobId, sample, channel, originalDir, targetDir )
-    
 
-    # HTT Feb 21 hdfs -> UW
-    SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
-    
-    for mass in [110, 120, 125, 130, 140] :
-        SamplesDataCards.append('ggHtoTauTau%i' % mass)
-        SamplesDataCards.append('VBFHtoTauTau%i' % mass)
-        SamplesDataCards.append('VBFHtoWW2l2nu%i' % mass)
-        SamplesDataCards.append('WMinusHTauTau%i' % mass)
-        SamplesDataCards.append('WPlusHTauTau%i' % mass)
-        SamplesDataCards.append('ZHTauTau%i' % mass)
-        SamplesDataCards.append('HtoWW2l2nu%i' % mass)
-        SamplesDataCards.append('ttHTauTau%i' % mass)
-    
+    if doAZH :
+        # AZH June 01 Wisconsin -> uwlogin
+        azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
         
-    for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-        SamplesDataCards.append('dataTT-%s' % era)
+        for mass in [110, 120, 125, 130, 140] :
+            #azhSamples.append('ggHtoTauTau%i' % mass)
+            #azhSamples.append('VBFHtoTauTau%i' % mass)
+            #azhSamples.append('WMinusHTauTau%i' % mass)
+            #azhSamples.append('WPlusHTauTau%i' % mass)
+            azhSamples.append('ZHTauTau%i' % mass)
+            #azhSamples.append('ttHTauTau%i' % mass)
+        for mass in [125,] :
+            azhSamples.append('WMinusHTauTau%i' % mass)
+            azhSamples.append('WPlusHTauTau%i' % mass)
+            azhSamples.append('ZHWW%i' % mass)
+        
+        #for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
+        #    azhSamples.append('azh%i' % mass)
+        
+        for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+            azhSamples.append('dataEE-%s' % era)
+            azhSamples.append('dataMM-%s' % era)
+        originalDir = '/nfs_scratch/truggles/azhMay31skim/'
+        targetDir = '/nfs_scratch/truggles/azhMay31skimMerged'
+        jobId = ''
+        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
+        for channel in channels :
+            for sample in azhSamples :
+                if debug:
+                    mergeSample( jobId, sample, channel, originalDir, targetDir )
+                else :
+                    multiprocessingOutputs.append( pool.apply_async(mergeSample, args=(
+                        jobId,
+                        sample,
+                        channel,
+                        originalDir,
+                        targetDir )))
+        if not debug :
+            mpResults = [p.get() for p in multiprocessingOutputs]
+    
 
-    originalDir = '/data/truggles/svFitApr01_SM-HTT/Re*/*'
-    targetDir = '/data/truggles/svFitApr01_SM-HTT_Merged'
-    jobId = 'TauTau_13*'
-    for sample in SamplesDataCards :
-        mergeSample( jobId, sample, 'tt', originalDir, targetDir )
+
+    if doHTT :
+        # HTT Feb 21 hdfs -> UW
+        SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
+        
+        for mass in [110, 120, 125, 130, 140] :
+            SamplesDataCards.append('ggHtoTauTau%i' % mass)
+            SamplesDataCards.append('VBFHtoTauTau%i' % mass)
+            SamplesDataCards.append('VBFHtoWW2l2nu%i' % mass)
+            SamplesDataCards.append('WMinusHTauTau%i' % mass)
+            SamplesDataCards.append('WPlusHTauTau%i' % mass)
+            SamplesDataCards.append('ZHTauTau%i' % mass)
+            SamplesDataCards.append('HtoWW2l2nu%i' % mass)
+            SamplesDataCards.append('ttHTauTau%i' % mass)
+        
+            
+        for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+            SamplesDataCards.append('dataTT-%s' % era)
+
+        originalDir = '/hdfs/store/user/truggles/svFitMay30_RivetSignals_SM-HTT/Recoil*/*'
+        targetDir = '/nfs_scratch/truggles/svFitMay30_RivetSignals_SM-HTT_Merged'
+        jobId = 'TauTau_13*'
+        for sample in SamplesDataCards :
+             if debug:
+                 mergeSample( jobId, sample, 'tt', originalDir, targetDir )
+             else :
+                 multiprocessingOutputs.append( pool.apply_async(mergeSample, args=(
+                     jobId,
+                     sample,
+                     'tt',
+                     originalDir,
+                     targetDir )))
+        if not debug :
+            mpResults = [p.get() for p in multiprocessingOutputs]
+
+
+
 
 
