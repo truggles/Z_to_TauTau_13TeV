@@ -1,0 +1,2 @@
+/data/truggles/azhMay31skimMerged/dataMM-G_0_mmmt.root
+/data/truggles/azhMay31skimMerged/dataMM-G_1_mmmt.root

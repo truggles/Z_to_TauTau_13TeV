@@ -1,1 +1,9 @@
-/data/truggles/azhDec07SkimMerged/TT_0_emmt.root
+/data/truggles/azhMay31skimMerged/TT_0_emmt.root
+/data/truggles/azhMay31skimMerged/TT_1_emmt.root
+/data/truggles/azhMay31skimMerged/TT_2_emmt.root
+/data/truggles/azhMay31skimMerged/TT_3_emmt.root
+/data/truggles/azhMay31skimMerged/TT_4_emmt.root
+/data/truggles/azhMay31skimMerged/TT_5_emmt.root
+/data/truggles/azhMay31skimMerged/TT_6_emmt.root
+/data/truggles/azhMay31skimMerged/TT_7_emmt.root
+/data/truggles/azhMay31skimMerged/TT_8_emmt.root

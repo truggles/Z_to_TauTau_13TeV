@@ -1,1 +1,2 @@
-/data/truggles/azhDec07SkimMerged/dataEE-E_0_eett.root
+/data/truggles/azhMay31skimMerged/dataEE-E_0_eett.root
+/data/truggles/azhMay31skimMerged/dataEE-E_1_eett.root

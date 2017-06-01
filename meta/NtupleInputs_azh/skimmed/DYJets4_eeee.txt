@@ -1,2 +1,2 @@
-/data/truggles/azhDec07SkimMerged/DYJets4_0_eeee.root
-/data/truggles/azhDec07SkimMerged/DYJets4_1_eeee.root
+/data/truggles/azhMay31skimMerged/DYJets4_0_eeee.root
+/data/truggles/azhMay31skimMerged/DYJets4_1_eeee.root

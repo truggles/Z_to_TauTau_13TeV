@@ -1,3 +1,10 @@
-/data/truggles/azhDec07SkimMerged/DYJets_0_eett.root
-/data/truggles/azhDec07SkimMerged/DYJets_1_eett.root
-/data/truggles/azhDec07SkimMerged/DYJets_2_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_0_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_1_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_2_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_3_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_4_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_5_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_6_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_7_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_8_eett.root
+/data/truggles/azhMay31skimMerged/DYJets_9_eett.root

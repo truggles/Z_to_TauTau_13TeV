@@ -1,2 +1,2 @@
-/data/truggles/azhDec07SkimMerged/dataMM-D_0_emmt.root
-/data/truggles/azhDec07SkimMerged/dataMM-D_1_emmt.root
+/data/truggles/azhMay31skimMerged/dataMM-D_0_emmt.root
+/data/truggles/azhMay31skimMerged/dataMM-D_1_emmt.root
