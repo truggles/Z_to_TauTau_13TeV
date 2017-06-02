@@ -22,11 +22,6 @@ def returnSampleDetails( analysis, samples=[] ) :
 
 
 def sampleDetails( analysis ) :
-    c74x = 'RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2'
-    c76x = 'RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12'
-    c80x = 'RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3'
-    c80xReHLT = 'RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14'
-    c80xMAOD2 = 'RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0'
     moriond17 = 'RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6'
     sampleMap = {
         'Sync' : {
@@ -85,6 +80,8 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
+        }, # end HTT data
+        'common' : {
             'EWKWMinus' :   { 
                 'DASPath' : '/EWKWMinus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 20.25,
@@ -146,18 +143,44 @@ def sampleDetails( analysis ) :
                 'xsec' : 831.76,
                 'group' : 'top'},
             'ZZ4l' : {
-                'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % c80x,
+                'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 1.256 * 1.1, # See 1.1 k-factor in Devin's HIG-16-036
-                'group' : 'dib'},
+                'group' : 'dib'}, # swappted to 'zz' below for azh analysis
             'WZ3l1nu' : {
                 'DASPath' : '/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 4.708, # MCM
-                'group' : 'dib'},
-        }, # end HTT
+                'group' : 'dib'}, # swappted to 'wz' below for azh analysis
+            'ZZ4lAMCNLO' : {
+                'DASPath' : '/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 1.212 * 1.1, # See 1.1 k-factor in Devin's HIG-16-036
+                'group' : 'zz'},
+            'ggZZ2e2m' : {
+                'DASPath' : '/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.00319 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
+                'group' : 'zz'},
+            'ggZZ2e2tau' : {
+                'DASPath' : '/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.00319 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
+                'group' : 'zz'},
+            'ggZZ2m2tau' : {
+                'DASPath' : '/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.00319 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
+                'group' : 'zz'},
+            'ggZZ4e' : {
+                'DASPath' : '/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.00159 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
+                'group' : 'zz'},
+            'ggZZ4m' : {
+                'DASPath' : '/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.00159 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
+                'group' : 'zz'},
+            'ggZZ4tau' : {
+                'DASPath' : '/GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.00159 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
+                'group' : 'zz'},
+        }, # end common
         'azh' : {
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
-            #'WZ3l1nu' : ('/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/%s-v1/MINIAODSIM' % c80x, 4.666 ),
-            #'ZZ4l' :    ('/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % c80x, 1.212 ),
             'dataEE-B' : {
                 'DASPath' : '/DoubleEG/Run2016B-PromptReco-v2/MINIAOD',
                 'xsec' : 999.,
@@ -214,68 +237,7 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/DoubleMuon/Run2016H-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
-            'ZZ4l' : {
-                'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 1.256 * 1.1, # See 1.1 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'ZZ4lAMCNLO' : {
-                'DASPath' : '/ZZTo4L_13TeV-amcatnloFXFX-pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 1.212 * 1.1, # See 1.1 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'ggZZ2e2m' : {
-                'DASPath' : '/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 0.00319 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'ggZZ2e2tau' : {
-                'DASPath' : '/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 0.00319 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'ggZZ2m2tau' : {
-                'DASPath' : '/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 0.00319 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'ggZZ4e' : {
-                'DASPath' : '/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 0.00159 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'ggZZ4m' : {
-                'DASPath' : '/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 0.00159 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'ggZZ4tau' : {
-                'DASPath' : '/GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 0.00159 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
-                'group' : 'zz'},
-            'WZ3l1nu' : {
-                'DASPath' : '/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 4.42965, # Devin's
-                'group' : 'wz'},
-            'TT' :         { 
-                'DASPath' : '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/%s_ext3-v1/MINIAODSIM' % moriond17,
-                'xsec' : 831.76,
-                'group' : 'top'},
-            
-            #'TTZ' : {
-            #    'DASPath' : '/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s-v3/MINIAODSIM' % c80x,
-            #    'xsec' : 999.,
-            #    'group' : ''},
-            #'WZ3l1nu' : {
-            #    'DASPath' : '/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % c80x,
-            #    'xsec' : 999.,
-            #    'group' : ''},
-            #'TTTT' : {
-            #    'DASPath' : '/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s_ext1-v2/MINIAODSIM' % c80x,
-            #    'xsec' : 999.,
-            #    'group' : ''},
-            #'ggZZ4l' : {
-            #    'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v3/MINIAODSIM',
-            #    'xsec' : 999.,
-            #    'group' : ''},
-            #'ggHtoZZ4l' : {
-            #    'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv1-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
-            #    'xsec' : 0.01212,
-            #    'group' : ''}
-        }, # end AtoZh
+        }, # end AZh data
         'WandDYJets' : {
             'WJets' :      { 
                 'DASPath' : '/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/%s-v1/MINIAODSIM' % moriond17,
@@ -541,7 +503,11 @@ def sampleDetails( analysis ) :
             'ZHWW125' : {
                 'DASPath' : '/HZJ_HToWW_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.8839 * 0.2137 * 0.3258 * 0.3258, # From Cecile
-                'group' : 'ZHWW'},
+                'group' : 'VH'},
+            #'ggHtoZZ4l' : {
+            #    'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv1-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+            #    'xsec' : 0.01212,
+            #    'group' : ''}
 	} # end SM-Higgs
     } # end sample Map
 
@@ -554,7 +520,18 @@ def sampleDetails( analysis ) :
                 'xsec' : 1.,
                 'group' : 'azh'}
 
+    # Adjust some group codes based on analysis
+    if analysis == 'azh' :
+        sampleMap['common']['ZZ4l']['group'] = 'zz'
+        sampleMap['common']['WZ3l1nu']['group'] = 'wz'
+        sampleMap['TriBoson']['WWW']['group'] = 'rare'
+        sampleMap['TriBoson']['WWZ']['group'] = 'rare'
+        sampleMap['TriBoson']['WZZ']['group'] = 'rare'
+        sampleMap['TriBoson']['ZZZ']['group'] = 'rare'
+
     # Simplify tracking SM-Higgs and add to all returned maps
+    for common in sampleMap['common'].keys() :
+        sampleMap[analysis][common] = sampleMap['common'][common]
     for smHiggs in sampleMap['SM-Higgs'].keys() :
         sampleMap[analysis][smHiggs] = sampleMap['SM-Higgs'][smHiggs]
     for di in sampleMap['DiBoson'].keys() :
@@ -565,17 +542,6 @@ def sampleDetails( analysis ) :
         sampleMap[analysis][WorDY] = sampleMap['WandDYJets'][WorDY]
             
     return sampleMap[ analysis ]
-    
-    #masses = [80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2300, 2600, 2900, 3200]
-    #for mass in masses :
-    #    samplesHTT['ggH%i' % mass] = ('/SUSYGluGluToHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c80x), 1 )
-    #    samplesHTT['bbH%i' % mass] = ('/SUSYGluGluToBBHToTauTau_M-%i_TuneCUETP8M1_13TeV-pythia8/%s-v1/MINIAODSIM' % (mass, c80x), 1 )
-    #samplesHTT['bbH200'] = ('/SUSYGluGluToBBHToTauTau_M-200_TuneCUETP8M1_13TeV-pythia8/%s-v4/MINIAODSIM' % c80x, 1 )
-    #samplesHTT['bbH2300'] = ('/SUSYGluGluToBBHToTauTau_M-2300_TuneCUETP8M1_13TeV-pythia8/%s-v4/MINIAODSIM' % c80x, 1 )
-    #samplesHTT['ggH250'] = ('/SUSYGluGluToHToTauTau_M-250_TuneCUETP8M1_13TeV-pythia8/%s-v2/MINIAODSIM' % c80x, 1 )
-    #samplesHTT['ggH300'] = ('/SUSYGluGluToHToTauTau_M-300_TuneCUETP8M1_13TeV-pythia8/%s-v2/MINIAODSIM' % c80x, 1 )
-    #samplesHTT['ggH400'] = ('/SUSYGluGluToHToTauTau_M-400_TuneCUETP8M1_13TeV-pythia8/%s-v3/MINIAODSIM' % c80x, 1 )
-
 
 
 

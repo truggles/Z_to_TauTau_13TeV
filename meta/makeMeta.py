@@ -13,9 +13,15 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
 
     currentDASSamples = {
         'Sync' : ['Sync-SUSY160','Sync-VBF125','Sync-DYJets4', 'Sync-data2016RunB', 'Sync-data2016RunH', 'Sync-data2016All',],
-        'azh' : ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'ZZ4l', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4m', 'ggZZ4tau', 'WWW'],
-        'htt' : ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'dataTT-G', 'dataTT-H', 'WZ3l1nu'], # just removed WZJets, ZZ4l, WW, WZ, ZZ
+        'azh' : ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',], # May 31 samples, no ZZ->all, use ZZ4l
+        'htt' : ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWPlus', 'EWKWMinus', 'EWKZ2l', 'EWKZ2nu', 'WWW', 'WWZ', 'WZZ', 'ZZZ', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ3l1nu', 'WZ2l2q', 'ZZ2l2q', 'ZZ4l', 'VV', 'WZ3l1nu'], # just removed WZJets, ZZ4l, WW, WZ, ZZ
     }
+
+    # Data
+    for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+        currentDASSamples['htt'].append('dataTT-%s' % era)
+        currentDASSamples['azh'].append('dataEE-%s' % era)
+        currentDASSamples['azh'].append('dataMM-%s' % era)
 
     # SM-HTT
     for mass in [110, 120, 125, 130, 140] :
@@ -25,22 +31,26 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
         currentDASSamples['htt'].append('WPlusHTauTau%i' % mass)
         currentDASSamples['htt'].append('ZHTauTau%i' % mass)
     
-    for mass in [120, 125, 130] :
-        currentDASSamples['azh'].append('ggHtoTauTau%i' % mass)
-        currentDASSamples['azh'].append('VBFHtoTauTau%i' % mass)
-        currentDASSamples['azh'].append('WMinusHTauTau%i' % mass)
-        currentDASSamples['azh'].append('WPlusHTauTau%i' % mass)
+    # ZH
+    for mass in [110, 120, 125, 130, 140] :
+        #currentDASSamples['azh'].append('ggHtoTauTau%i' % mass)
+        #currentDASSamples['azh'].append('VBFHtoTauTau%i' % mass)
+        #currentDASSamples['azh'].append('WMinusHTauTau%i' % mass)
+        #currentDASSamples['azh'].append('WPlusHTauTau%i' % mass)
         currentDASSamples['azh'].append('ZHTauTau%i' % mass)
-        currentDASSamples['azh'].append('ttHTauTau125%i' % mass)
+        #currentDASSamples['azh'].append('ttHTauTau125%i' % mass)
 
     # These are the background like Higgs samples
     currentDASSamples['htt'].append('ttHTauTau125')
     currentDASSamples['htt'].append('HtoWW2l2nu125')
     currentDASSamples['htt'].append('VBFHtoWW2l2nu125')
+    currentDASSamples['azh'].append('WMinusHTauTau125')
+    currentDASSamples['azh'].append('WPlusHTauTau125')
+    currentDASSamples['azh'].append('ZHWW125')
 
     # A to Zh sample masses
-    for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-        currentDASSamples['azh'].append('azh%i' % mass)
+    #for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
+    #    currentDASSamples['azh'].append('azh%i' % mass)
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 
