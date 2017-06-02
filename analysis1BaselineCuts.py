@@ -570,11 +570,12 @@ def drawHistos(analysis, samples, **fargs ) :
                 #print "AdditionalCuts",additionalCut
 
                 blind = False
-                outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
+                #outFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel), 'RECREATE')
+                outFileName = '%s%s/%s_%s.root' % (analysis, fargs['mid3'], saveName , channel)
                 if not fargs['debug'] == 'true' :
                     multiprocessingOutputs.append( pool.apply_async(analysisPlots.plotHistosProof,
                                                                                     args=(analysis,
-                                                                                    outFile,
+                                                                                    outFileName,
                                                                                     chain,
                                                                                     sample,
                                                                                     channel,
@@ -587,7 +588,7 @@ def drawHistos(analysis, samples, **fargs ) :
                 if fargs['debug'] == 'true' :
                     analysisPlots.plotHistosProof(
                                                                                     analysis,
-                                                                                    outFile,
+                                                                                    outFileName,
                                                                                     chain,
                                                                                     sample,
                                                                                     channel,

@@ -261,7 +261,8 @@ def getFFShapeSystApp( ffRegion, isData, outFile, var ) :
 
 
 # Plot histos using TTree::Draw which works very well with Proof
-def plotHistosProof( analysis, outFile, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False, genCode='x' ) :
+def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, additionalCut, blind=False, skipSSQCDDetails=False, genCode='x' ) :
+    outFile = ROOT.TFile(outFileName, 'RECREATE')
     if genCode == 'x' : genCode = sample
 
     ''' Make a channel specific selection of desired histos and fill them '''
@@ -625,7 +626,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 #print 'dataES',dataES
                 chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
-                if var == 'm_visCor' :
+                if var == 'm_visCor' or var == 'Mass' :
                     print 'm_visCor'
                     #print "Data Count:", histos[ var ].Integral()
                     print "Cut: %s%s" % (additionalCutToUse, dataES)
@@ -635,7 +636,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 ''' No reweighting at the moment! '''
                 histos[ var ] = gPad.GetPrimitive( var )
                 integralPost = histos[ var ].Integral()
-                if var == 'm_visCor' :
+                if var == 'm_visCor' or var == 'Mass' :
                     #print 'm_visCor'
                     print "tmpIntPost: %f" % integralPost
                     print "Cut: %s" % totalCutAndWeightMC
