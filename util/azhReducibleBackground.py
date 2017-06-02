@@ -75,7 +75,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
     binInfo = [50, 0, 200]
 
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Dec11'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/June02'
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -173,7 +173,6 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
                 print "Denom Cut:",denomCutX
                 print "Passing Cut:",passCutX
-                if channel == 'emmt' : passCutX = passCutX.replace('id_e_mva_nt_loose_3', 'eMVANonTrigWP90')
 
                 # Denominator selection
                 hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
@@ -273,18 +272,23 @@ if '__main__' in __name__ :
     
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
-    samples = ['dataEE-B', 'dataEE-C', 'dataEE-D', 'dataEE-E', 'dataEE-F', 'dataMM-B', 'dataMM-C', 'dataMM-D', 'dataMM-E', 'dataMM-F', 'TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'ZZ4lAMCNLO', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau',] # No WWW, data-E,F, ZZ4l MadGraph
+    
+    dataSamples = []
+    for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+        dataSamples.append('dataEE-%s' % era)
+        dataSamples.append('dataMM-%s' % era)
+
     params = {
         #'debug' : 'true',
         'debug' : 'false',
-        'numCores' : 5,
+        'numCores' : 15,
         'numFilesPerCycle' : 1,
-        'channels' : ['eemm','eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
+        'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
         #'channels' : ['eeet',],
         'cutMapper' : 'RedBkg',
-        'mid1' : '1Jan13mkFR',
-        'mid2' : '2Jan13mkFR',
-        'mid3' : '3Jan13mkFR',
+        'mid1' : '1June02rb',
+        'mid2' : '2June02rb',
+        'mid3' : '3June02rb',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',
@@ -294,5 +298,5 @@ if '__main__' in __name__ :
         'skimHdfs' : 'false',
         #'skimHdfs' : 'true',
     }
-    buildRedBkgFakeFunctions( samples, **params )
+    buildRedBkgFakeFunctions( dataSamples, **params )
 
