@@ -1,4 +1,5 @@
 import ROOT
+import copy
 
 def makeGenCut( inTree, cutString ) :
 	#print "l1 %s, l2 %s" % (l1, l2)
@@ -190,6 +191,18 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         } # end MMEM
         } # end AZH analysis cuts
     } # end cutMap
+
+    # Add repetitive basic cuts to ZH/AZh cuts
+    if analysis == 'azh' :
+        chans = ['eeem', 'eeet', 'eemt', 'eett', 'emmm', 'emmt', 'mmmt', 'mmtt', 'eeee', 'eemm', 'mmmm']
+        for chan in chans :
+            l = copy.deepcopy(cutMap['azh'][chan]['Skim'])
+            l.append( HSS )
+            cutMap['azh'][chan]['RedBkg'] = l
+            l = copy.deepcopy(cutMap['azh'][chan]['Skim'])
+            l.append( HSS )
+            cutMap['azh'][chan]['SignalRegion'] = l
+    
     
     # Add a copy of the 'htt' analysis cuts under 'Sync'
     cutMap[ 'Sync' ] = cutMap[ 'htt' ]
