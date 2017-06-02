@@ -408,7 +408,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB03' : 'iso',
         'cand_MVANonTrigWP90' : 'id_e_mva_nt_loose',
-        'cand_MtToPfMet_Raw' : 'pfmt',
+        'cand_MtToPfMet_type1' : 'pfmt',
         }
     branchMappingMuon = {
         'cand_Pt' : 'pt',
@@ -419,7 +419,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB04' : 'iso',
-        'cand_MtToPfMet_Raw' : 'pfmt',
+        'cand_MtToPfMet_type1' : 'pfmt',
         }
     branchMappingTau = {
         'cand_Pt' : 'pt',
@@ -447,7 +447,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
         'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
         'cand_PuCorrPtSum' : 'puCorrPtSum',
-        #'cand_MtToPfMet_Raw' : 'pfmt',
+        'cand_MtToPfMet_type1' : 'pfmt',
         'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
@@ -1098,10 +1098,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 t2MtToPfMet_UnclusteredEnDownB = tnew.Branch('t2MtToPfMet_UnclusteredEnDown', t2MtToPfMet_UnclusteredEnDown, 't2MtToPfMet_UnclusteredEnDown/F')
                 t2MtToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
                 t2MtToPfMet_UnclusteredEnUpB = tnew.Branch('t2MtToPfMet_UnclusteredEnUp', t2MtToPfMet_UnclusteredEnUp, 't2MtToPfMet_UnclusteredEnUp/F')
-                t2MtToPfMet_Raw = array('f', [ 0 ] )
-                t2MtToPfMet_RawB = tnew.Branch('t2MtToPfMet_Raw', t2MtToPfMet_Raw, 't2MtToPfMet_Raw/F')
-                t1MtToPfMet_Raw = array('f', [ 0 ] )
-                t1MtToPfMet_RawB = tnew.Branch('t1MtToPfMet_Raw', t1MtToPfMet_Raw, 't1MtToPfMet_Raw/F')
+                t2MtToPfMet_type1 = array('f', [ 0 ] )
+                t2MtToPfMet_type1B = tnew.Branch('t2MtToPfMet_type1', t2MtToPfMet_type1, 't2MtToPfMet_type1/F')
+                t1MtToPfMet_type1 = array('f', [ 0 ] )
+                t1MtToPfMet_type1B = tnew.Branch('t1MtToPfMet_type1', t1MtToPfMet_type1, 't1MtToPfMet_type1/F')
         
                 t1MatchesEle24Tau20L1Filter = array('f', [ 0 ] )
                 t1MatchesEle24Tau20L1FilterB = tnew.Branch('t1MatchesEle24Tau20L1Filter', t1MatchesEle24Tau20L1Filter, 't1MatchesEle24Tau20L1Filter/F')
@@ -1197,8 +1197,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #    Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
             #             pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
             #else : # Not l1_l2_MvaMet
-            #mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
-            #mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
+            #mt_1[0] = getattr( row, l1+'MtToPfMet_type1' )
+            #mt_2[0] = getattr( row, l2+'MtToPfMet_type1' )
             Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
                     pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
 
