@@ -160,6 +160,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'obs' : [ROOT.kBlack, 'Data'],
         'zz' : [ROOT.kGreen-9, 'ZZ'],
         'wz' : [ROOT.kRed-4, 'WZ'],
+        'rare' : [ROOT.kBlue, 'Rare'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
         'redBkg' : [ROOT.kCyan, 'Reducible Bkg.'],
@@ -515,6 +516,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 1 ), hist.GetBinLowEdge( nBins+1 ))
     
     
+                print sample, samples[ sample ]['group']
                 sampHistos[ samples[ sample ]['group'] ].Add( hist )
                 #if samples[ sample ]['group'] == 'jetFakes' :
                 #    print "jetFakes Stack yield: %f" % hist.Integral()
@@ -563,6 +565,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     stack.Add( sampHistos['top'] )
                     stack.Add( sampHistos['dyj'] )
                     stack.Add( sampHistos['wz'] )
+                    stack.Add( sampHistos['rare'] )
                 stack.Add( sampHistos['zz'] )
     
             # Scale signal samples for viewing
@@ -611,6 +614,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'top' : .10,
                 'dyj' : .10,
                 'wz' : .10,
+                'rare' : .10,
                 'zz' : .10,
                 'redBkg' : .0,
                 'azh' : .0,
@@ -876,17 +880,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['qcdMakeDM'] == 'x' or 'plotMe' in ops['qcdMakeDM'] :
                 plotDir = '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'] )
                 c1.SaveAs(plotDir+'%s.png' % var )
-                c1.SaveAs(plotDir+'%s.pdf' % var )
-                c1.SaveAs(plotDir+'%s.root' % var )
-                c1.SaveAs(plotDir+'%s.C' % var )
+                #c1.SaveAs(plotDir+'%s.pdf' % var )
+                #c1.SaveAs(plotDir+'%s.root' % var )
+                #c1.SaveAs(plotDir+'%s.C' % var )
 
                 # To speed up, just copy the new png/pdfs to other dir
                 # this will help with 2D plots
                 newPlotDir = plotDir.replace('Plots/','PlotsList/')
                 subprocess.call(['cp',plotDir+'%s.png' % var, newPlotDir+'%s.png' % var])
-                subprocess.call(['cp',plotDir+'%s.pdf' % var, newPlotDir+'%s.pdf' % var])
-                subprocess.call(['cp',plotDir+'%s.root' % var, newPlotDir+'%s.root' % var])
-                subprocess.call(['cp',plotDir+'%s.C' % var, newPlotDir+'%s.C' % var])
+                #subprocess.call(['cp',plotDir+'%s.pdf' % var, newPlotDir+'%s.pdf' % var])
+                #subprocess.call(['cp',plotDir+'%s.root' % var, newPlotDir+'%s.root' % var])
+                #subprocess.call(['cp',plotDir+'%s.C' % var, newPlotDir+'%s.C' % var])
     
     
             """ Additional views for Visible Mass """
