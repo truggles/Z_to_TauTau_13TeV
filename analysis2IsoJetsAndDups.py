@@ -167,38 +167,38 @@ def mVisTESCor( cand1, cand2, row, pt1, pt2 ) :
     return corrected.M()
 
 
-def getMTTotal( pt1, phi1, pt2, phi2, row, channel, esUP=True ) :
-    if channel == 'tt' :
-        es = 0.03
-    elif channel == 'em' :
-        if abs( row.eEta ) < 1.479 : # BarrelEndcap transition at eta = 1.479
-            es = 0.01
-        else :
-            es = 0.025
-    else : es = 0.0
-
-    shift = 1.
-    if esUP : shift += es
-    else : shift -= es
-
-    # Get ES corrected mva met
-    dx1_UP = pt1 * math.cos( phi1 ) * (( 1. / (shift) ) - 1.)
-    dy1_UP = pt1 * math.sin( phi1 ) * (( 1. / (shift) ) - 1.)
-    if hasattr( row, "mvametcorr_ex" ) :
-        mvametcorr_ex_UP = row.mvametcorr_ex + dx1_UP
-        mvametcorr_ey_UP = row.mvametcorr_ey + dy1_UP
-    else : return -10
-    mvametcorr = math.sqrt( mvametcorr_ex_UP**2 + mvametcorr_ey_UP**2 )
-    mvametcorrphi = ROOT.TMath.ATan2( mvametcorr_ey_UP, mvametcorr_ex_UP )
-
-    mt_1_UP = getTransMass( mvametcorr, mvametcorrphi, pt1*shift, phi1 )
-    mt_2_UP = getTransMass( mvametcorr, mvametcorrphi, pt2*shift, phi2 )
-    return calcMTTotal( pt1*shift, phi1, pt2*shift, phi2, mt_1_UP, mt_2_UP )
-
-
-def calcMTTotal( pt1, phi1, pt2, phi2, mt1, mt2 ) :
-    mt_diTau = getTransMass( pt1, phi1, pt2, phi2 )
-    return math.sqrt( mt_diTau**2 + mt1**2 + mt2**2 )
+#def getMTTotal( pt1, phi1, pt2, phi2, row, channel, esUP=True ) :
+#    if channel == 'tt' :
+#        es = 0.03
+#    elif channel == 'em' :
+#        if abs( row.eEta ) < 1.479 : # BarrelEndcap transition at eta = 1.479
+#            es = 0.01
+#        else :
+#            es = 0.025
+#    else : es = 0.0
+#
+#    shift = 1.
+#    if esUP : shift += es
+#    else : shift -= es
+#
+#    # Get ES corrected mva met
+#    dx1_UP = pt1 * math.cos( phi1 ) * (( 1. / (shift) ) - 1.)
+#    dy1_UP = pt1 * math.sin( phi1 ) * (( 1. / (shift) ) - 1.)
+#    if hasattr( row, "mvametcorr_ex" ) :
+#        mvametcorr_ex_UP = row.mvametcorr_ex + dx1_UP
+#        mvametcorr_ey_UP = row.mvametcorr_ey + dy1_UP
+#    else : return -10
+#    mvametcorr = math.sqrt( mvametcorr_ex_UP**2 + mvametcorr_ey_UP**2 )
+#    mvametcorrphi = ROOT.TMath.ATan2( mvametcorr_ey_UP, mvametcorr_ex_UP )
+#
+#    mt_1_UP = getTransMass( mvametcorr, mvametcorrphi, pt1*shift, phi1 )
+#    mt_2_UP = getTransMass( mvametcorr, mvametcorrphi, pt2*shift, phi2 )
+#    return calcMTTotal( pt1*shift, phi1, pt2*shift, phi2, mt_1_UP, mt_2_UP )
+#
+#
+#def calcMTTotal( pt1, phi1, pt2, phi2, mt1, mt2 ) :
+#    mt_diTau = getTransMass( pt1, phi1, pt2, phi2 )
+#    return math.sqrt( mt_diTau**2 + mt1**2 + mt2**2 )
 
 
 def getTransMass( met, metphi, l1pt, l1phi ) :
@@ -372,27 +372,21 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'vbfDphi' : 'jdphi',
         'vbfJetVeto30' : 'njetingap',
         'vbfJetVeto20' : 'njetingap20',
+        'puppiMetEt' : 'puppimet',
+        'puppiMetPhi' : 'puppimetphi',
         }
-
-    if analysis != 'azh' : # Stupid fix for old ntuples
-        branchMapping['puppiMetEt'] = 'puppimet'
-        branchMapping['puppiMetPhi'] = 'puppimetphi'
 
     doubleProds = {
         'Mass' : 'm_vis',
-        #'SVfitMass' : 'm_sv',
         'PZeta' : 'pfpzetamis',
         'PZetaVis' : 'pzetavis',
         'SS' : 'Z_SS',
         'Pt' : 'Z_Pt',
         'DR' : 'Z_DR',
         'DPhi' : 'Z_DPhi',
-        #XXX#'pt_tt' : 'pp_tt',
-        #XXX#'MtTotal' : 'mt_tot',
         }
     quadFSDoubleProds = {
         'Mass' : 'H_vis',
-        #'SVfitMass' : 'm_sv',
         'SS' : 'H_SS',
         'Pt' : 'H_Pt',
         'DR' : 'H_DR',
@@ -525,8 +519,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     
     # A few branches are ints instead of floats and must be treated specially
     # I think these are all the ones in FSA ntuples, but add more if you find them
-    #intBranches = set(['run', 'evt', 'lumi', 'isdata', 'pvIsValid', 'pvIsFake'])
-    #intBranches = set(['run', 'evt', 'lumi', 'isdata',])
     intBranches = set(['run', 'lumi', 'isdata',])
     ulongBranches = set(['evt',])
     
@@ -716,8 +708,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     topWeightB = tnew.Branch('topWeight', topWeight, 'topWeight/F')
     zPtWeight = array('f', [ 0 ] )
     zPtWeightB = tnew.Branch('zPtWeight', zPtWeight, 'zPtWeight/F')
-    #zmumuBoostWeight = array('f', [ 0 ] )
-    #zmumuBoostWeightB = tnew.Branch('zmumuBoostWeight', zmumuBoostWeight, 'zmumuBoostWeight/F')
     zmumuVBFWeight = array('f', [ 0 ] )
     zmumuVBFWeightB = tnew.Branch('zmumuVBFWeight', zmumuVBFWeight, 'zmumuVBFWeight/F')
     ggHWeight0Jet = array('f', [ 0 ] )
@@ -740,12 +730,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     m_vis_UPB = tnew.Branch('m_vis_UP', m_vis_UP, 'm_vis_UP/F')
     m_vis_DOWN = array('f', [ 0 ] )
     m_vis_DOWNB = tnew.Branch('m_vis_DOWN', m_vis_DOWN, 'm_vis_DOWN/F')
-    mt_tot = array('f', [ 0 ] )
-    mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
-    mt_tot_UP = array('f', [ 0 ] )
-    mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
-    mt_tot_DOWN = array('f', [ 0 ] )
-    mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
+    #mt_tot = array('f', [ 0 ] )
+    #mt_totB = tnew.Branch('mt_tot', mt_tot, 'mt_tot/F')
+    #mt_tot_UP = array('f', [ 0 ] )
+    #mt_tot_UPB = tnew.Branch('mt_tot_UP', mt_tot_UP, 'mt_tot_UP/F')
+    #mt_tot_DOWN = array('f', [ 0 ] )
+    #mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
     mt_1 = array('f', [ 0 ] )
     mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
     mt_2 = array('f', [ 0 ] )
@@ -892,12 +882,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     m_visCor_DM1_DOWNB = tnew.Branch('m_visCor_DM1_DOWN', m_visCor_DM1_DOWN, 'm_visCor_DM1_DOWN/F')
     m_visCor_DM10_DOWN = array('f', [ 0 ] )
     m_visCor_DM10_DOWNB = tnew.Branch('m_visCor_DM10_DOWN', m_visCor_DM10_DOWN, 'm_visCor_DM10_DOWN/F')
-    __WEIGHT__ = array('f', [ 0 ] )
-    __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
-    __ZWEIGHT__ = array('f', [ 0 ] )
-    __ZWEIGHT__B = tnew.Branch('__ZWEIGHT__', __ZWEIGHT__, '__ZWEIGHT__/F')
-    __CORR__ = array('f', [ 0 ] )
-    __CORR__B = tnew.Branch('__CORR__', __CORR__, '__CORR__/F')
 
 
     ''' Set MvaMet base vars defaults in case we didn't fill that value '''
@@ -1211,8 +1195,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
                 m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
                 m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
-                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
-                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+                #mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+                #mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
             else :
                 m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
                 m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
@@ -1221,8 +1205,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
                     setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
                     setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
-                mt_tot_UP[0] = mt_tot[0]
-                mt_tot_DOWN[0] = mt_tot[0]
+                #mt_tot_UP[0] = mt_tot[0]
+                #mt_tot_DOWN[0] = mt_tot[0]
             #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
 
 
@@ -1248,7 +1232,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tauIDweight_2[0] = 1
             topWeight[0] = 1
             zPtWeight[0] = 1
-            #zmumuBoostWeight[0] = 1
             zmumuVBFWeight[0] = 1
             ggHWeight0Jet[0] = 1
             ggHWeightBoost[0] = 1
@@ -1565,15 +1548,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Reweighting 2D distributions based on Zmumu CR
                 if 'DYJets' in sample or 'EWKZ' in sample :
 
-                    # Boosted Category - XXX No longer needed with reminiAOD
-                    #boostPt = 0.
-                    #if hasattr( row, 'pt_sv' ) : boostPt = row.pt_sv
-                    #else : boostPt = Higgs_Pt[0]
-                    #if boostPt <= 100.   : zmumuBoostWeight[0] = (-1. + 0.973)
-                    #elif boostPt <= 170. : zmumuBoostWeight[0] = (-1. + 0.959)
-                    #elif boostPt <= 300. : zmumuBoostWeight[0] = (-1. + 0.934)
-                    #else                 : zmumuBoostWeight[0] = (-1. + 0.993) # > 300
-
                     # VBF Category
                     # Change application method and add shape with nominal
                     # shift at 1/2 the initial value
@@ -1658,12 +1632,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if 't' in l4 :
                     byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = isoWPAdder.getVVLoose(
                             getattr(row, l4+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt4 )
-
-
-            # Set branch for syncing with other groups:
-            __ZWEIGHT__[0] = zPtWeight[0]
-            __WEIGHT__[0] = XSecLumiWeight[0]
-            __CORR__[0] = trigweight_1[0] * trigweight_2[0]
 
 
 
