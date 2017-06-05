@@ -75,7 +75,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
     binInfo = [50, 0, 200]
 
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/June02'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/June02l'
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -153,6 +153,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
         denomCut = ' && '.join( cuts[obj.split('-')[0]]['denom'] )
         denomCut += ' && '+etaCut
+
         passCut = ' && '.join( cuts[obj.split('-')[0]]['pass'] )
         passCut = denomCut+' && '+passCut
 
@@ -210,30 +211,40 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         #graph.SetMaximum( 10 )
         #graph.SetMinimum( 0.0005 )
         ## For Linear
-        graph.SetMaximum( .25 )
+        if obj == 'muon' :
+            graph.SetMaximum( .3 )
+        else :
+            graph.SetMaximum( .15 )
         graph.SetMinimum( 0 )
 
         graph.Draw("AP")
 
         # do fit
         fitMin = binInfo[1] if binInfo[1] != 0 else 10
-        f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2])
+        #f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+        f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
         f1.SetParName( 0, "y rise" )
         f1.SetParName( 1, "scale" )
-        f1.SetParName( 2, "decay" )
-        if obj == 'electron' :
+        f1.SetParName( 2, "approx. max" )
+        f1.SetParName( 3, "sigma param" )
+        if obj == 'electron' or obj == 'muon' :
             f1.SetParameter( 0, 0. )
-            f1.SetParameter( 1, .01 )
-            f1.SetParameter( 2, .05 )
-        else :
+            f1.SetParameter( 1, .1 )
+            f1.SetParameter( 2, 20. )
+            f1.SetParameter( 3, 5. )
+        else : # is tau
             f1.SetParameter( 0, 0. )
-            f1.SetParameter( 1, 1. )
-            f1.SetParameter( 2, .05 )
+            f1.SetParameter( 1, 0.1 )
+            f1.SetParameter( 2, 30. )
+            f1.SetParameter( 3, 5. )
         graph.Fit('f1', 'S' )
-        f2 = ROOT.TF1( 'f2', '([0] + [1]*TMath::Exp(-[2]*x))', binInfo[1], binInfo[2])
+
+        f2 = ROOT.TF1( 'f2', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', binInfo[1], binInfo[2])
         f2.SetParameter( 0, f1.GetParameter( 0 ) )
         f2.SetParameter( 1, f1.GetParameter( 1 ) )
         f2.SetParameter( 2, f1.GetParameter( 2 ) )
+        f2.SetParameter( 3, f1.GetParameter( 3 ) )
+        
         f2.Draw('SAME')
 
         ROOT.gStyle.SetStatX(.95)
@@ -242,6 +253,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         ROOT.gStyle.SetStatW(.2)
         setText( "Fake Rate: %s %s" % (obj, etaRegion), cmsLumi )
         c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.png' )
+        c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.pdf' )
         pad1.SetLogy(0)
 
         # Add FR fit to map
