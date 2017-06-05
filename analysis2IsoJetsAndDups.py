@@ -240,7 +240,7 @@ def getCurrentEvt( analysis, channel, row ) :
         leg3Pt = getattr(row, l3+'Pt')
         leg4Pt = getattr(row, l4+'Pt')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
-        LT = leg1Pt +leg2Pt + leg3Pt + leg4Pt
+        LT = leg3Pt + leg4Pt # LT here is just Higgs_LT
         currentEvt = (closeZ, LT)
     else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
 
@@ -640,7 +640,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         if currentEvt[ 3 ] > prevEvt[ 3 ] :
                             prevEvt = currentEvt
         elif analysis == 'azh' :
-            # closest Z to Z mass top priority, then highest total LT
+            # closest Z to Z mass top priority, then highest Higgs LT
             if currentEvt[ 0 ] < prevEvt[ 0 ] :
                 prevEvt = currentEvt
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
