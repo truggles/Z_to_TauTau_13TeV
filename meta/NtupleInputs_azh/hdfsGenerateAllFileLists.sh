@@ -1,9 +1,9 @@
 
-ALL=/hdfs/store/user/caillol/LLTT_jan14
 DoubleE=/hdfs/store/user/caillol/LLTT_reminiaod_4april
 DoubleMu=/hdfs/store/user/eerodoto/LLTT_reminiaod_4april
 MainMC=/hdfs/store/user/eerodoto/LLTT_mc_31march
 OtherMC=/hdfs/store/user/caillol/LLTT_mc_31march
+AZH=/hdfs/store/user/caillol/AZH_signal_1june
 
 ls ${DoubleMu}/data_DoubleMuon_Run2016B*/*.root                                                > hdfs/dataMM-B.txt 
 ls ${DoubleMu}/data_DoubleMuon_Run2016C/*.root                                                 > hdfs/dataMM-C.txt 
@@ -49,9 +49,9 @@ ls ${MainMC}/ZZTo4L_13TeV_powheg_pythia8_ext1_v6-v1/*.root                      
 ls ${MainMC}/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/*.root                            > hdfs/ZZZ.txt
 ls ${MainMC}/ZZ_TuneCUETP8M1_13TeV-pythia8_v6*/*.root                                        > hdfs/ZZ.txt
 
-#for MASS in 220 240 260 280 300 320 350 400; do
-#    ls ${ALL}/AToZhToLLTauTau_M-${MASS}_13TeV_madgraph_4f_LO/*.root > hdfs/azh${MASS}.txt
-#done
+for MASS in 220 240 260 280 300 320 340 350 400; do
+    ls ${AZH}/AToZhToLLTauTau_M-${MASS}_13TeV_madgraph_4f_LO*/*.root > hdfs/azh${MASS}.txt
+done
 
 # Higgs samples
 for MASS in 110 120 125 130 140; do

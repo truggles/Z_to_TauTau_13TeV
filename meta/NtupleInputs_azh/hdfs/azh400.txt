@@ -1,2 +1,14 @@
-/hdfs/store/user/caillol/LLTT_dec2_v1/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO/make_ntuples_cfg-0270BC34-BB49-E611-91C7-F46D042E833B.root
-/hdfs/store/user/caillol/LLTT_dec2_v1/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO/make_ntuples_cfg-EAB27E51-CA49-E611-BCD6-0242AC130002.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-0A084E92-44C7-E611-8DA3-0CC47AD98A9A.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-2CB62F04-3FC7-E611-A8F6-3417EBE706ED.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-3C832E87-44C7-E611-BF86-A0000420FE80.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-4C691587-44C7-E611-B711-141877410EC1.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-642355C1-A7C7-E611-88C7-90B11C064B50.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-7AE43086-44C7-E611-A230-001E673476AA.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-868AB619-42C7-E611-BB72-ECF4BBE16230.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-94F9DE80-44C7-E611-A22B-0CC47A4D769E.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-AAA9FECC-3AC7-E611-9108-001E67DFF735.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-B03C0CD5-2CC7-E611-B139-3417EBE706C3.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-B46F93CC-3AC7-E611-9600-90B11C06954E.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-DCBBDCCD-44C7-E611-BDBD-002590DE38C8.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-E037BE5D-44C7-E611-A520-FA163E5CBD23.root
+/hdfs/store/user/caillol/AZH_signal_1june/AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO_v6_ext1-v1/make_ntuples_cfg-FE489994-44C7-E611-A368-FA163E351C17.root

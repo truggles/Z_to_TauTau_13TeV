@@ -546,11 +546,11 @@ def sampleDetails( analysis ) :
     } # end sample Map
 
     # A to Zh sample masses
-    for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-        version = 'v1'
-        if mass == 260 : version = 'v2'
+    for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+        version = '_ext1-v1'
+        if mass in [240, 260] : version = '-v1'
         sampleMap['azh']['azh%i' % mass] = {
-                'DASPath' : '/AToZhToLLTauTau_M-%i_13TeV_madgraph_4f_LO/%s-%s/MINIAODSIM' % (mass, moriond17, version),
+                'DASPath' : '/AToZhToLLTauTau_M-%i_13TeV_madgraph_4f_LO/%s%s/MINIAODSIM' % (mass, moriond17, version),
                 'xsec' : 1.,
                 'group' : 'azh'}
 
