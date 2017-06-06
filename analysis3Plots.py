@@ -114,7 +114,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     mssmMass = 250
     azhMass = 350
     mssmSF = 100
-    higgsSF = 10
+    higgsSF = 2.5
     if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
     azhSF = .025
     
@@ -616,7 +616,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'wz' : .10,
                 'rare' : .10,
                 'zz' : .10,
-                'redBkg' : .0,
+                'redBkg' : .10,
                 'azh' : .0,
                 'sm' : .0,
                 'VH' : .0,
@@ -626,10 +626,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
-                    if samp in ['azh','sm','VH'] : continue
-                    #toRoot += (sampHistos[samp].GetBinContent(k)*\
-                    #    uncertNormMap[analysis][samp])**2
-                    toRoot += sampHistos[samp].GetBinError(k)**2
+                    if samp in ['obs', 'azh','sm','VH'] : continue
+                    toRoot += (sampHistos[samp].GetBinContent(k)*\
+                        uncertNormMap[analysis][samp])**2
+                    #toRoot += sampHistos[samp].GetBinError(k)**2
 
                 binErrors.append( math.sqrt(toRoot) )
     
