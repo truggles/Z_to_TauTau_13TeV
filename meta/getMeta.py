@@ -73,8 +73,11 @@ def getSummedWeights( fileName, channel ) :
         print "\nNon-data file with TTree length == 0"
         print " -- Checking file from other channel:"
         print " -- previous file: ",fileName
-        print " -- new file: ",nFileName,"\n"
-        return getSummedWeights( nFileName, 'mmmt' )
+        #print " -- new file: ",nFileName,"\n"
+        print " -- In case you have different length file lists"
+        print " -- you will need to go edit the summedWieghts manually, sorry"
+        #return getSummedWeights( nFileName, 'mmmt' )
+        return (-999999,-999999)
     tree2.GetEntry( 1 )
     weight = abs( tree2.GenWeight )
     #print "weight: ",weight
