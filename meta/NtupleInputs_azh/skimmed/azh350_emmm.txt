@@ -1,1 +1,4 @@
-/data/truggles/azhDec07SkimMerged/azh350_0_emmm.root
+/data/truggles/azhJune06skimMerged/azh350_0_emmm.root
+/data/truggles/azhJune06skimMerged/azh350_1_emmm.root
+/data/truggles/azhJune06skimMerged/azh350_2_emmm.root
+/data/truggles/azhJune06skimMerged/azh350_3_emmm.root

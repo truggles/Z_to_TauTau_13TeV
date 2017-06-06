@@ -1,9 +1,11 @@
 
 ALL=/data/truggles/azhMay31skimMerged
+AZH=/data/truggles/azhJune06skimMerged
 
 # Preset samples
 for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
-    for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 ggZZ4m ggZZ2e2m ggZZ2e2tau ggZZ4e ggZZ2m2tau ggZZ4tau TT WWW WWZ WZ3l1nu WZZ WZ ZZ4l ZZZ; do
+    #for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 ggZZ4m ggZZ2e2m ggZZ2e2tau ggZZ4e ggZZ2m2tau ggZZ4tau TT WWW WWZ WZ3l1nu WZZ WZ ZZ4l ZZZ; do
+    for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 ggZZ2e2m ggZZ2e2tau ggZZ2m2tau ggZZ4tau TT WWW WWZ WZ3l1nu WZZ WZ ZZ4l ZZZ; do
         ls ${ALL}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 
@@ -19,10 +21,12 @@ for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
         done
     done
 
+    ls ${AZH}/ggZZ4e_*_${CHANNEL}.root > skimmed/ggZZ4e_${CHANNEL}.txt
+    ls ${AZH}/ggZZ4m_*_${CHANNEL}.root > skimmed/ggZZ4m_${CHANNEL}.txt
     # AZH
-    #for MASS in 220 240 260 280 300 320 350 400; do
-    #    ls ${ALL}/azh${MASS}_*_${CHANNEL}.root > skimmed/azh${MASS}_${CHANNEL}.txt
-    #done
+    for MASS in 220 240 260 280 300 320 340 350 400; do
+        ls ${AZH}/azh${MASS}_*_${CHANNEL}.root > skimmed/azh${MASS}_${CHANNEL}.txt
+    done
 done
 
 # for data

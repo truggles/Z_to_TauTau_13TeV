@@ -1,1 +1,7 @@
-/data/truggles/azhDec07SkimMerged/azh280_0_mmtt.root
+/data/truggles/azhJune06skimMerged/azh280_0_mmtt.root
+/data/truggles/azhJune06skimMerged/azh280_1_mmtt.root
+/data/truggles/azhJune06skimMerged/azh280_2_mmtt.root
+/data/truggles/azhJune06skimMerged/azh280_3_mmtt.root
+/data/truggles/azhJune06skimMerged/azh280_4_mmtt.root
+/data/truggles/azhJune06skimMerged/azh280_5_mmtt.root
+/data/truggles/azhJune06skimMerged/azh280_6_mmtt.root

@@ -1,0 +1,5 @@
+/data/truggles/azhJune06skimMerged/azh340_0_eemt.root
+/data/truggles/azhJune06skimMerged/azh340_1_eemt.root
+/data/truggles/azhJune06skimMerged/azh340_2_eemt.root
+/data/truggles/azhJune06skimMerged/azh340_3_eemt.root
+/data/truggles/azhJune06skimMerged/azh340_4_eemt.root

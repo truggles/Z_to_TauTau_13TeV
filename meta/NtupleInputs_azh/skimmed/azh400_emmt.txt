@@ -1,1 +1,8 @@
-/data/truggles/azhDec07SkimMerged/azh400_0_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_0_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_1_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_2_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_3_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_4_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_5_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_6_emmt.root
+/data/truggles/azhJune06skimMerged/azh400_7_emmt.root

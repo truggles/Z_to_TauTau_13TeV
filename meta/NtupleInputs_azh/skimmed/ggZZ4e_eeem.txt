@@ -1,3 +1,7 @@
-/data/truggles/azhMay31skimMerged/ggZZ4e_0_eeem.root
-/data/truggles/azhMay31skimMerged/ggZZ4e_1_eeem.root
-/data/truggles/azhMay31skimMerged/ggZZ4e_2_eeem.root
+/data/truggles/azhJune06skimMerged/ggZZ4e_0_eeem.root
+/data/truggles/azhJune06skimMerged/ggZZ4e_1_eeem.root
+/data/truggles/azhJune06skimMerged/ggZZ4e_2_eeem.root
+/data/truggles/azhJune06skimMerged/ggZZ4e_3_eeem.root
+/data/truggles/azhJune06skimMerged/ggZZ4e_4_eeem.root
+/data/truggles/azhJune06skimMerged/ggZZ4e_5_eeem.root
+/data/truggles/azhJune06skimMerged/ggZZ4e_6_eeem.root
