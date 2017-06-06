@@ -1,7 +1,7 @@
 '''
 A Class to interface with Electron Scale Factors:
-https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Efficiencies_and_scale_factors
-Currently using WP80
+https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Electron_efficiencies_and_scale
+Currently using WP90
 Also, GSF SFs must be applied on top as well
 '''
 
@@ -16,13 +16,13 @@ class ElectronSF :
     def __init__( self ):
 
         ### Load the ICHEP SFs provided by the Electron POG
-        self.electronGSFFile = ROOT.TFile( 'data/egammaEffiGSF.txt_SF2D.root', 'r' )
+        self.electronGSFFile = ROOT.TFile( 'data/2016Electron_GSF_EG2D.root', 'r' )
         self.gsfSF = self.electronGSFFile.Get( 'EGamma_SF2D' )
 
-        self.electronWP80File = ROOT.TFile( 'data/egammaEffiWP80.txt_SF2D.root', 'r' )
+        self.electronWP80File = ROOT.TFile( 'data/2016Electron_WP80_EG2D.root', 'r' )
         self.wp80SF = self.electronWP80File.Get( 'EGamma_SF2D' )
 
-        self.electronWP90File = ROOT.TFile( 'data/egammaEffiWP90.txt_SF2D.root', 'r' )
+        self.electronWP90File = ROOT.TFile( 'data/2016Electron_WP90_EG2D.root', 'r' )
         self.wp90SF = self.electronWP90File.Get( 'EGamma_SF2D' )
 
 
@@ -35,7 +35,9 @@ class ElectronSF :
         if eta > 2.5 : eta = 2.5
         elif eta < -2.5 : eta = -2.5
 
-        SF = self.gsfSF.GetBinContent( self.gsfSF.FindBin( eta, pt ) )
+        # GSF file cuts off at pt 25 GeV
+        ptGSF = pt if pt > 26 else 26
+        SF = self.gsfSF.GetBinContent( self.gsfSF.FindBin( eta, ptGSF ) )
         if wp == 'WP90' :
             SF *= self.wp90SF.GetBinContent( self.wp90SF.FindBin( eta, pt ) )
             return SF
