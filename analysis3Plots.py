@@ -159,8 +159,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             'azh' : {
         'obs' : [ROOT.kBlack, 'Data'],
         'zz' : [ROOT.kGreen-9, 'ZZ'],
-        'wz' : [ROOT.kRed-4, 'WZ'],
-        'rare' : [ROOT.kBlue, 'Rare'],
+        'wz' : [ROOT.kRed+1, 'WZ'],
+        'rare' : [ROOT.kOrange+7, 'Rare'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
         'redBkg' : [ROOT.kCyan, 'Reducible Bkg.'],
@@ -348,7 +348,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     sampHistos[samp].SetLineWidth( 2 )
                     sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
                     sampHistos[samp].SetDirectory( 0 )
-                sampHistos[ signal ].SetLineColor( ROOT.kPink )
+                #sampHistos[ signal ].SetLineColor( ROOT.kPink )
+                sampHistos[ signal ].SetLineColor( ROOT.kMagenta+2 )
                 sampHistos[ signal ].SetLineWidth( 4 )
                 sampHistos[ signal ].SetLineStyle( 7 )
                 sampHistos[ signal ].SetMarkerStyle( 0 )
@@ -565,7 +566,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     stack.Add( sampHistos['top'] )
                     stack.Add( sampHistos['dyj'] )
                     stack.Add( sampHistos['wz'] )
-                    stack.Add( sampHistos['rare'] )
+                stack.Add( sampHistos['rare'] )
                 stack.Add( sampHistos['zz'] )
     
             # Scale signal samples for viewing
@@ -616,7 +617,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'wz' : .10,
                 'rare' : .10,
                 'zz' : .10,
-                'redBkg' : .10,
+                'redBkg' : .20,
                 'azh' : .0,
                 'sm' : .0,
                 'VH' : .0,
