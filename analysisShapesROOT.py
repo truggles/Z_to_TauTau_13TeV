@@ -23,7 +23,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         is a dict or OrderedDict"
 
     # Get expanded list of samples with gen appended names
-    samples = dataCardGenMatchedSamples( inSamples )
+    samples = dataCardGenMatchedSamples( analysis, inSamples )
     #for key in samples :
     #    print key, samples[key]
 
@@ -54,6 +54,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
     # Change or alter samples based on flags
     if analysis == 'azh' :
+        eras =  []
+        for s in samples :
+            if 'dataMM' in s : eras.append( s.split('-').pop() )
         samples['ZZ4l'] = 'ZZ'
         for era in eras :
             samples['RedBkgShape-%s' % era] = 'RedBkg'
@@ -105,7 +108,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
 
     extra = ''
-    checkDir( '%sShapes' % analysis )
+    checkDir( '%sShapes/%s' % (analysis, analysis) )
     if ops['mssm'] : 
         checkDir( '%sShapes/mssm' % analysis )
         extra = 'mssm'
@@ -173,7 +176,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             shapeDir = shapeFile.mkdir( channel + '_0jet'+cr, channel + '_0jet'+cr )
         else :
             shapeDir = shapeFile.mkdir( channel + '_%s' % ops['category'], channel + '_%s' % ops['category'] )
-        assert( shapeDir != None ), "It looks like the directory already exists, remove the old root file and start again: rm httShapes/htt/htt_tt.inputs-sm-13TeV_ ..."
+        assert( shapeDir != None ), "It looks like the directory already exists, remove the old root file and start again: rm %sShapes/%s/htt_%s.inputs-sm-13TeV_ ..." % (analysis, analysis, nameChan)
     
         for var in newVarMap.keys() :
     
@@ -417,19 +420,22 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Find problem bins
                 problemBins = []
                 print "Checking for problem bins"
+                sampToCheck = ''
+                if analysis == 'htt' : sampToCheck = 'QCD'
+                if analysis == 'azh' : sampToCheck = 'RedBkg'
                 for bin_id in range( len(bkgArray) ) :
                     #if dataArray[bin_id] > 0. and bkgArray[bin_id] == 0. :
-                    print bin_id+1, bkgArray[bin_id], " QCD val: ",histos[ 'QCD' ].GetBinContent( bin_id+1 )
+                    print bin_id+1, bkgArray[bin_id], " QCD/RedBkg val: ",histos[ sampToCheck ].GetBinContent( bin_id+1 )
                     if bkgArray[bin_id] == 0. :
                         problemBins.append( bin_id+1 ) # +1 here gets us to ROOT coords
 
                 # Apply correction and set an empyt bin to QCD = 1e-5
-                if 'QCD' in histos.keys() :
+                if sampToCheck in histos.keys() :
                     for problemBin in problemBins :
                         print "Setting QCD bin_id %i to %s" % (problemBin, setVal)
-                        histos[ 'QCD' ].SetBinContent( problemBin, setVal )
+                        histos[ sampToCheck ].SetBinContent( problemBin, setVal )
                         # Poissonian error for 0
-                        histos[ 'QCD' ].SetBinError( problemBin, 1.8 )
+                        histos[ sampToCheck ].SetBinError( problemBin, 1.8 )
                 elif len(problemBins) > 0 :
                     print "\nQCD Bkg not included so zero bins are not being corrected properly"
                     print problemBins

@@ -12,6 +12,7 @@ from ROOT import gROOT
 import analysis1BaselineCuts
 from util.helpers import setUpDirs, mergeChannels
 import subprocess
+from util.helpers import checkDir
 ROOT.gROOT.Reset()
 
 
@@ -47,14 +48,18 @@ for mass in [125,] :
     azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHWW%i' % mass)
 
-#for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
+#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 #    azhSamples.append('azh%i' % mass)
 
+#azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataEE-%s' % era)
     azhSamples.append('dataMM-%s' % era)
     
 #azhSamples = ['ZHWW125']
+#azhSamples = ['dataEE-B']
+#azhSamples = ['DYJets',]
+
 
 samples = azhSamples
 
@@ -66,22 +71,23 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 8,
+    'numCores' : 20,
     'numFilesPerCycle' : 1,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
+    #'channels' : ['eett',],
     'cutMapper' : 'Skim',
-    'mid1' : '1May31skim',
-    'mid2' : '2May31skim',
-    'mid3' : '3May31skim',
+    'mid1' : '1June05skim',
+    'mid2' : '2June05skim',
+    'mid3' : '3June05skim',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true',
+    #'skimmed' : 'false',
+    'skimmed' : 'true', # Use at uwlogin
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # Use for initial skim
 }
 
 """ Get samples with map of attributes """
@@ -91,7 +97,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -101,17 +107,20 @@ makeFinalPlots = True
 doDataCards = True
 
 
-doMerge = False
 runPlots = False
+doMerge = False
 makeFinalPlots = False
-doDataCards = False
+#doDataCards = False
 
 
 useRedBkg = True
 #useRedBkg = False
 
+if useRedBkg :
+    params['doRedBkg'] = True
+else : params['doRedBkg'] = False
+
 if runPlots :
-    from util.helpers import checkDir
     print params
     ''' Draw histos from TTrees '''
     params['additionalCut'] = '*ADD_CHANNEL_SPECIFIC_ISO_CUTS'
@@ -123,7 +132,7 @@ if useRedBkg :
             era = sample.split('-')[1]
             samples[ 'RedBkgYield-'+era ] = {'xsec' : 0.0, 'group' : 'redBkgYield'}
             samples[ 'RedBkgShape-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
-    redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu',]
+    redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
     for sample in samples.keys() :
         if sample in redBkgList :
             del samples[ sample ]
@@ -155,11 +164,16 @@ if doMerge :
         for m in merge :
             params['channels'].append( m )
 
+# Remove WZ sample, we have WZ3l1nu
+if 'WZ' in samples :
+    del samples[ 'WZ' ]
+
 if makeFinalPlots :
-    #text=False
-    text=True
+    text=False
+    #text=True
     kwargs = { 'text':text, 'blind':False, 'redBkg':useRedBkg }
     print params
+
     if useRedBkg : # Delete the yield sample from samples, will be loaded
         # in analysis3Plot.py
         for sample in samples :
@@ -174,6 +188,11 @@ if makeFinalPlots :
     
     
 if doDataCards :
+
+    # don't add eeee or mmmm
+    if 'eeee' in params['channels'] : params['channels'].remove( 'eeee' ) 
+    if 'mmmm' in params['channels'] : params['channels'].remove( 'mmmm' ) 
+
     ROOT.gROOT.Reset()
     from analysisShapesROOT import makeDataCards
     var = 'Mass'
@@ -187,6 +206,7 @@ if doDataCards :
     }
     makeDataCards( analysis, samples, params['channels'], folderDetails, **kwargs )
     subprocess.call( ["mv", "azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass.root", "azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass_new.root"] )
+    print "moved to : azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass_new.root"
 
 
 

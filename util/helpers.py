@@ -205,40 +205,74 @@ def getProdMap() :
 
 # Provides a gen matched expanded list of samples
 # with the key, val being name = data card name
-def dataCardGenMatchedSamples( inSamples ) :
+def dataCardGenMatchedSamples( analysis, inSamples ) :
     assert( type(inSamples) == type(OrderedDict())
         or type(inSamples) == type({}) ), "Provide a samples list which \
         is a dict or OrderedDict"
-    samples = OrderedDict()
-    genMapDYJ = ['ZTT', 'ZLL', 'ZL', 'ZJ']
-    dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]# 'DYJetsLow']
-    for dyj in dyJets :
-        if dyj in inSamples :
-            for gen in genMapDYJ : samples[dyj+'-'+gen] = gen
 
-    genMapTT = ['TTT', 'TTJ']
-    if 'TT' in inSamples :
-        for gen in genMapTT : samples['TT-'+gen] = gen
-    
-    genMapVV = ['VVT', 'VVJ']
-    vvs = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
-         'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
-         'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
-    for vv in vvs :
-        if vv in inSamples :
-            for gen in genMapVV : samples[vv+'-'+gen] = gen
-
-    WJets = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'EWKWPlus', 'EWKWMinus']
-    for wjet in WJets :
-        if wjet in inSamples : samples[wjet] = 'W'
-
-    ewkZs = ['EWKZ2l', 'EWKZ2nu']
-    for ewkZ in ewkZs :
-        if ewkZ in inSamples : samples[ewkZ] = 'EWKZ'
-
-    samples['QCD'] = 'QCD'
-
+    # Eras of 2016 data
     eras =  ['B', 'C', 'D', 'E', 'F', 'G', 'H']
+
+    samples = OrderedDict()
+    if analysis == 'htt' :
+        genMapDYJ = ['ZTT', 'ZLL', 'ZL', 'ZJ']
+        dyJets = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4',]# 'DYJetsLow']
+        for dyj in dyJets :
+            if dyj in inSamples :
+                for gen in genMapDYJ : samples[dyj+'-'+gen] = gen
+
+        genMapTT = ['TTT', 'TTJ']
+        if 'TT' in inSamples :
+            for gen in genMapTT : samples['TT-'+gen] = gen
+        
+        genMapVV = ['VVT', 'VVJ']
+        vvs = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
+             'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
+             'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
+        for vv in vvs :
+            if vv in inSamples :
+                for gen in genMapVV : samples[vv+'-'+gen] = gen
+
+        WJets = ['WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'EWKWPlus', 'EWKWMinus']
+        for wjet in WJets :
+            if wjet in inSamples : samples[wjet] = 'W'
+
+        ewkZs = ['EWKZ2l', 'EWKZ2nu']
+        for ewkZ in ewkZs :
+            if ewkZ in inSamples : samples[ewkZ] = 'EWKZ'
+
+        samples['QCD'] = 'QCD'
+
+    if analysis == 'azh' :
+        useRedBkg = False
+        # Check for reducible bkg samples
+        # if RedBkg present, skim DYJ and WZ later
+        for era in eras :
+            if 'RedBkgYield-%s' % era in inSamples :
+                useRedBkg = True
+                samples['RedBkgYield-%s' % era]  = 'RedBkg'
+            if 'RedBkgShape-%s' % era in inSamples :
+                useRedBkg = True
+                samples['RedBkgShape-%s' % era]  = 'RedBkg'
+        if not useRedBkg :
+            redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
+            for rb in redBkgList :
+                if rb in inSamples :
+                    if rb == 'TT' : samples['TT']  = 'TT'
+                    elif rb == 'WZ3l1nu' : samples['TT']  = 'WZ'
+                    elif rb == 'WWW' : samples['WWW']  = 'TriBoson'
+                    else : samples[rb]  = 'DYJ'
+
+        triBosons = ['WWZ', 'WZZ', 'ZZZ',] # WWW is reducible
+        for tri in triBosons :
+            if tri in inSamples :
+                samples[tri]  = 'TriBoson'
+        ZZs = ['ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'ZZ4l',]
+        for zz in ZZs :
+            if zz in inSamples :
+                samples[zz]  = 'ZZ'
+
+    # Common to all
     for era in eras :
         if 'dataTT-%s' % era in inSamples :
             samples['dataTT-%s' % era]  = 'data_obs'
@@ -258,6 +292,8 @@ def dataCardGenMatchedSamples( inSamples ) :
             samples['WPlusHTauTau%s' % mass] = 'WH%s' % mass
         if 'ZHTauTau%s' % mass in inSamples :
             samples['ZHTauTau%s' % mass] = 'ZH%s' % mass
+        if 'ZHWW%s' % mass in inSamples :
+            samples['ZHWW%s' % mass] = 'ZHWW%s' % mass
     
 
     return samples
