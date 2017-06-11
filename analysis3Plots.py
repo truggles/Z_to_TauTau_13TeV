@@ -191,10 +191,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         print channel
     
         # Make an index file for web viewing
-        checkDir( '%sPlots/em' % analysis )
-        checkDir( '%sPlots/tt' % analysis )
-        checkDir( '%sPlotsList/em' % analysis )
-        checkDir( '%sPlotsList/tt' % analysis )
         checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir']))
         checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/' % (analysis, channel, ops['targetDir']))
         htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/index.html' % (analysis, channel, ops['targetDir']), 'w')
