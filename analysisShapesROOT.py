@@ -31,6 +31,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     'useQCDMakeName' : 'x',
     'qcdSF' : 1.0,
     'mssm' : False,
+    'azh' : False,
     'category' : 'inclusive',
     'fitShape' : 'm_visCor',
     'sync' : False,
@@ -211,31 +212,16 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             print "\nVar: ",var
     
             binArray = array( 'd', [] )
-            #if ops['mssm'] :
-            #    #if doBTagging == True :
-            #    if 'ZTT' in folderDetails :
-            #        print "Inclusive"
-            #        binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-            #    elif 'NoBTL' in ops['folderDetails'] :
-            #        print "No-BTAGGING"
-            #        binArray = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-            #    elif 'NoBTL' not in ops['folderDetails'] :
-            #        print "BTAGGING"
-            #        binArray = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-
-            #elif var == 'mt_tot' :
-            #    binArray = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
-            #            80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
-            #            170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
-            #            350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
-            #            1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
-            #            3300.0,3500.0,3700.0,3900.0] )
             if ops['sync'] :
                 binArray = array( 'd', [i*20 for i in range( 11 )] )
             # This is the proposed binning for ZTT 2015 paper
             elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 else : binArray = array( 'd', [i*10 for i in range( 31 )] )
+            elif analysis == 'azh' and ops['azh'] :
+                binArray = array( 'd', [i*40 for i in range( 16 )] )
+            elif analysis == 'azh' :
+                binArray = array( 'd', [i*20 for i in range( 16 )] )
             else :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 elif ops['category'] in ['1jet_low', '1jet_high'] :
@@ -369,6 +355,11 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if nBins == nBinsHistos :
                         histos[ samples[ sample ] ].Rebin( nBins )
 
+                # Before adding, make sure to remove RedBkgYield histos
+                # in case it was forgotten earlier
+                if ops['redBkg'] and 'RedBkgYield' in sample : continue
+
+                # Add samples to final histos
                 histos[ samples[ sample ] ].Add( hNew )
     
                 #XXX LOTS OF PRINT OUTS if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
@@ -405,7 +396,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #dataArray = []
                 bkgArray = [0] * numBins
                 for name in histos :
-                    if 'ggH' in name or 'qqH' in name or 'ZH' in name or 'WH' in name :
+                    if 'ggH' in name or 'qqH' in name or 'ZH' in name or 'WH' in name or 'azh' in name :
                         continue # we don't care about signal here
                     elif name == 'data_obs' : continue # can use this later if need be
                     #    for bin_id in range( histos[ name ].GetNbinsX() ) :

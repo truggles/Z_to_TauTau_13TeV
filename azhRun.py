@@ -113,6 +113,8 @@ makeFinalPlots = False
 #doDataCards = False
 
 
+doAZH = True
+doAZH = False
 useRedBkg = True
 #useRedBkg = False
 
@@ -189,6 +191,10 @@ if makeFinalPlots :
     
 if doDataCards :
 
+    # Remove RedBkgYield samples from list to run over 
+    for sample in  samples :
+        if 'RedBkgYield' in sample : del samples[ sample ]
+
     # don't add eeee or mmmm
     if 'eeee' in params['channels'] : params['channels'].remove( 'eeee' ) 
     if 'mmmm' in params['channels'] : params['channels'].remove( 'mmmm' ) 
@@ -199,6 +205,7 @@ if doDataCards :
     finalCat = 'inclusive'
     folderDetails = params['mid3']
     kwargs = {
+    'azh' : doAZH,
     'category' : finalCat,
     'fitShape' : var,
     'allShapes' : False,
