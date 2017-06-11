@@ -294,10 +294,10 @@ for isoVal in isoVals :
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
 
         app = '-FF' if doFF else '-StdMthd'
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
+        #subprocess.call( ["mv", "shapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "shapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "shapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "shapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "shapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "shapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "shapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "shapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
     
     ''' Remove the .pngs used to build the QCD Bkg
     from the web directory so we can view easitly '''

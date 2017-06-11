@@ -31,7 +31,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     'useQCDMakeName' : 'x',
     'qcdSF' : 1.0,
     'mssm' : False,
-    'azh' : False,
+    'doZH' : False,
     'category' : 'inclusive',
     'fitShape' : 'm_visCor',
     'sync' : False,
@@ -109,15 +109,15 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
 
     extra = ''
-    checkDir( '%sShapes/%s' % (analysis, analysis) )
     if ops['mssm'] : 
-        checkDir( '%sShapes/mssm' % analysis )
         extra = 'mssm'
-    if analysis == 'azh' :
+    elif ops['doZH'] :
+        extra = 'zh'
+    elif analysis == 'azh' : # and not doZH
         extra = 'azh'
     else : 
-        checkDir( '%sShapes/htt' % analysis )
         extra = 'htt'
+    checkDir( 'shapes/%s' % analysis )
     
     for channel in channels :
     
@@ -162,14 +162,14 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         #    Append = '_'+appendMap[baseVar]
         Append = '_'+appendMap[baseVar]
     
-        if ops['mssm'] :
-        #    if not var == baseVar+'_mssm' : continue
+        if ops['mssm'] or not ops['doZH'] :
             mid = 'mssm'
         else :
             mid = 'sm'
     
         nameChan = 'tt' if analysis != 'azh' else 'zh'
-        shapeFile = ROOT.TFile('%sShapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, extra, nameChan, mid, Append), 'UPDATE')
+        shapeFileName = 'shapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, nameChan, mid, Append)
+        shapeFile = ROOT.TFile(shapeFileName, 'UPDATE')
         # We have two pathways to create tt_0jet and need to maintain their seperate root files for 1D vs 2D
         # so we need this override that renames 0jet2D -> 0jet and places in the unrolled root file
         if '0jet2D' in ops['category'] : 
@@ -177,7 +177,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             shapeDir = shapeFile.mkdir( channel + '_0jet'+cr, channel + '_0jet'+cr )
         else :
             shapeDir = shapeFile.mkdir( channel + '_%s' % ops['category'], channel + '_%s' % ops['category'] )
-        assert( shapeDir != None ), "It looks like the directory already exists, remove the old root file and start again: rm %sShapes/%s/htt_%s.inputs-sm-13TeV_ ..." % (analysis, analysis, nameChan)
+        assert( shapeDir != None ), "It looks like the directory already exists, remove the old root file and start again: rm %s" % shapeFileName
     
         for var in newVarMap.keys() :
     
@@ -218,10 +218,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 else : binArray = array( 'd', [i*10 for i in range( 31 )] )
-            elif analysis == 'azh' and ops['azh'] :
-                binArray = array( 'd', [i*40 for i in range( 16 )] )
-            elif analysis == 'azh' :
+            elif analysis == 'azh' and ops['doZH'] :
                 binArray = array( 'd', [i*20 for i in range( 16 )] )
+            elif analysis == 'azh' :
+                binArray = array( 'd', [i*40 for i in range( 16 )] )
             else :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 elif ops['category'] in ['1jet_low', '1jet_high'] :
@@ -596,7 +596,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         shapeFile.Close()
     
     
-        print "\n Output shapes file: %sShapes/%s/htt_%s.inputs-%s-13TeV%s.root \n" % (analysis, extra, nameChan, mid, Append)
+        print "\n Output shapes file: ", shapeFileName 
     
 if __name__ == '__main__' :
     analysis = 'htt'

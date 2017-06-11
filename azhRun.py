@@ -113,8 +113,8 @@ makeFinalPlots = False
 #doDataCards = False
 
 
-doAZH = True
-doAZH = False
+doZH = True
+#doZH = False
 useRedBkg = True
 #useRedBkg = False
 
@@ -205,15 +205,16 @@ if doDataCards :
     finalCat = 'inclusive'
     folderDetails = params['mid3']
     kwargs = {
-    'azh' : doAZH,
+    'doZH' : doZH,
     'category' : finalCat,
     'fitShape' : var,
     'allShapes' : False,
     'redBkg' : useRedBkg, 
     }
     makeDataCards( analysis, samples, params['channels'], folderDetails, **kwargs )
-    subprocess.call( ["mv", "azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass.root", "azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass_new.root"] )
-    print "moved to : azhShapes/azh/htt_zh.inputs-sm-13TeV_4LMass_new.root"
+    extra = 'sm' if doZH else 'mssm'
+    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-%s-13TeV_4LMass.root" % extra, "shapes/azh/htt_zh.inputs-%s-13TeV_4LMass_new.root" % extra] )
+    print "moved to : shapes/azh/htt_zh.inputs-%s-13TeV_4LMass_new.root" % extra
 
 
 
