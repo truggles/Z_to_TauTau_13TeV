@@ -144,7 +144,8 @@ def sampleDetails( analysis ) :
                 'group' : 'top'},
             'ZZ4l' : {
                 'DASPath' : '/ZZTo4L_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
-                'xsec' : 1.256 * 1.1, # See 1.1 k-factor in Devin's HIG-16-036
+                'xsec' : 1.256, # See 1.1 k-factor is default, but just added a genMass based
+                                # reweighting here util/qqZZ4l_reweight.py
                 'group' : 'dib'}, # swappted to 'zz' below for azh analysis
             'WZ3l1nu' : {
                 'DASPath' : '/WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8/%s-v1/MINIAODSIM' % moriond17,

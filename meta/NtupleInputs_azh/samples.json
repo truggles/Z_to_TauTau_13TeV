@@ -328,7 +328,7 @@
     "DAS Path": "/ZZTo4L_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
     "nfiles": 96, 
     "nblocks": 24, 
-    "Cross Section (pb)": 1.3816000000000002, 
+    "Cross Section (pb)": 1.256, 
     "summedWeightsNorm": 75943497.0, 
     "summedWeights": 75943497.0, 
     "nevents": 6669988, 

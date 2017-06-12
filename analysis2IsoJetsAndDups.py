@@ -325,6 +325,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.extraTauMVArun2v1IsoWPs import IsoWPAdder
     isoWPAdder = IsoWPAdder()
 
+    from util.qqZZ4l_reweight import qqZZ4l_nnlo_weight
+
     if len(channel) > 3 : # either AZH or ZH analysis
         from util.applyReducibleBkg import ReducibleBkgWeights
         zhFRObj = ReducibleBkgWeights( channel )
@@ -700,6 +702,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     azhWeightB = tnew.Branch('azhWeight', azhWeight, 'azhWeight/F')
     puweight = array('f', [ 0 ] )
     puweightB = tnew.Branch('puweight', puweight, 'puweight/F')
+    qqZZ4lWeight = array('f', [ 0 ] )
+    qqZZ4lWeightB = tnew.Branch('qqZZ4lWeight', qqZZ4lWeight, 'qqZZ4lWeight/F')
     tauPtWeightUp = array('f', [ 0 ] )
     tauPtWeightUpB = tnew.Branch('tauPtWeightUp', tauPtWeightUp, 'tauPtWeightUp/F')
     tauPtWeightDown = array('f', [ 0 ] )
@@ -1222,6 +1226,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             electronSF4[0] = 1
             azhWeight[0] = 1
             puweight[0] = 1
+            qqZZ4lWeight[0] = 1
             tauPtWeightUp[0] = 1
             tauPtWeightDown[0] = 1
             trigweight_1[0] = 1
@@ -1323,6 +1328,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
                 if analysis == 'azh' :
+
+                    if 'ZZ4l' in sample :
+                        qqZZ4lWeight[0] = qqZZ4l_nnlo_weight( row.genM, \
+                                row.isZee, row.isZmumu, row.isZtautau )
 
                     if hasattr( row, l3+'ZTTGenMatching2' ) : # GenMatching2 is best var
                         gen_match_3[0] = getattr( row, l3+'ZTTGenMatching2' )
@@ -1576,6 +1585,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
+                azhWeight[0] *= qqZZ4lWeight[0]
 
 
 
