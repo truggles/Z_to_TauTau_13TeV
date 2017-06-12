@@ -403,6 +403,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB03' : 'iso',
+        'cand_MVANonTrigWP80' : 'id_e_mva_nt_tight',
         'cand_MVANonTrigWP90' : 'id_e_mva_nt_loose',
         'cand_MtToPfMet_type1' : 'pfmt',
         }
