@@ -19,7 +19,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
         print size, " KB ", file_
         runningSize += size
         toMerge.append( file_ )
-        if runningSize > 15000 : # 7.5 MB is reasonal for doing duplicate removal later
+        if runningSize > 5000 : # 7.5 MB is reasonal for doing duplicate removal later
             runningSize = 0
             mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
             for f in toMerge :
@@ -51,8 +51,8 @@ if __name__ == '__main__' :
     ''' Start multiprocessing tests '''
     pool = multiprocessing.Pool(processes = 6 )
     multiprocessingOutputs = []
-    debug = False
-    doAZH = False
+    debug = True
+    doAZH = True
     doHTT = False
 
 
@@ -71,15 +71,18 @@ if __name__ == '__main__' :
             azhSamples.append('WMinusHTauTau%i' % mass)
             azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHWW%i' % mass)
+            azhSamples.append('HZZ%i' % mass)
         
-        #for mass in [220, 240, 260, 280, 300, 320, 350, 400] :
-        #    azhSamples.append('azh%i' % mass)
+        for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+            azhSamples.append('azh%i' % mass)
         
         for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
             azhSamples.append('dataEE-%s' % era)
             azhSamples.append('dataMM-%s' % era)
-        originalDir = '/nfs_scratch/truggles/azhMay31skim/'
-        targetDir = '/nfs_scratch/truggles/azhMay31skimMerged'
+
+        name = 'azhJune12skim'
+        originalDir = '/nfs_scratch/truggles/'+name+'/'
+        targetDir = '/nfs_scratch/truggles/'+name+'Merged'
         jobId = ''
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         for channel in channels :
