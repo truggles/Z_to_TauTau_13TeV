@@ -4,6 +4,7 @@ DoubleMu=/hdfs/store/user/eerodoto/LLTT_reminiaod_4april
 MainMC=/hdfs/store/user/eerodoto/LLTT_mc_31march
 OtherMC=/hdfs/store/user/caillol/LLTT_mc_31march
 AZH=/hdfs/store/user/caillol/AZH_signal_1june
+HZZ=/hdfs/store/user/caillol/LLTT_mc_31march
 
 ls ${DoubleMu}/data_DoubleMuon_Run2016B*/*.root                                                > hdfs/dataMM-B.txt 
 ls ${DoubleMu}/data_DoubleMuon_Run2016C/*.root                                                 > hdfs/dataMM-C.txt 
@@ -67,6 +68,7 @@ done
 for MASS in 125; do
     ls ${MainMC}/WminusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6-v1/*.root                  > hdfs/WMinusHTauTau${MASS}.txt
     ls ${MainMC}/WplusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6-v1/*.root                   > hdfs/WPlusHTauTau${MASS}.txt
-    ls ${OtherMC}/HZJ_HToWW_M${MASS}_13TeV_powheg_pythia8_v6-v1/*.root                    > hdfs/ZHWW${MASS}.txt
+    ls ${OtherMC}/HZJ_HToWW_M${MASS}_13TeV_powheg_pythia8_v6-v1/*.root                       > hdfs/ZHWW${MASS}.txt
+    ls ${HZZ}/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8_v6-v1/*.root               > hdfs/HZZ${MASS}.txt
 done
 

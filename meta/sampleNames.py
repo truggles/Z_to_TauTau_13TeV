@@ -504,6 +504,10 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/HZJ_HToWW_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.8839 * 0.2137 * 0.3258 * 0.3258, # From Cecile
                 'group' : 'VH'},
+            'HZZ125' : {
+                'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.01212, # From HZZ 2016 twiki
+                'group' : 'higgs'},
             #'ggHtoZZ4l' : {
             #    'DASPath' : '/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISpring16MiniAODv1-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
             #    'xsec' : 0.01212,
