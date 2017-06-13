@@ -1,1 +1,2 @@
-/data/truggles/azhMay31skimMerged/ZHTauTau125_0_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ZHTauTau125_0_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ZHTauTau125_1_mmtt.root

@@ -1,2 +1,5 @@
-/data/truggles/azhMay31skimMerged/dataEE-B_0_eemt.root
-/data/truggles/azhMay31skimMerged/dataEE-B_1_eemt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-dataEE-B_0_eemt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-dataEE-B_1_eemt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-dataEE-B_2_eemt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-dataEE-B_3_eemt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-dataEE-B_4_eemt.root

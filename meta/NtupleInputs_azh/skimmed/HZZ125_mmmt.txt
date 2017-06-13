@@ -1,0 +1,5 @@
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_0_mmmt.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_1_mmmt.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_2_mmmt.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_3_mmmt.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_4_mmmt.root

@@ -1,3 +1,4 @@
-/data/truggles/azhJune06skimMerged/azh280_0_eeem.root
-/data/truggles/azhJune06skimMerged/azh280_1_eeem.root
-/data/truggles/azhJune06skimMerged/azh280_2_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh280_0_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh280_1_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh280_2_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh280_3_eeem.root

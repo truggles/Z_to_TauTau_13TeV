@@ -1,0 +1,8 @@
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_0_eeee.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_1_eeee.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_2_eeee.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_3_eeee.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_4_eeee.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_5_eeee.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_6_eeee.root
+/data/truggles/azhJune12skimMergedHZZ/HZZ125_7_eeee.root

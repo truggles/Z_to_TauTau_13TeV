@@ -1,2 +1,4 @@
-/data/truggles/azhMay31skimMerged/DYJets_0_eeem.root
-/data/truggles/azhMay31skimMerged/DYJets_1_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrepDYJ-DYJets_0_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrepDYJ-DYJets_1_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrepDYJ-DYJets_2_eeem.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrepDYJ-DYJets_3_eeem.root

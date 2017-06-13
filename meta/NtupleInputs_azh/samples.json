@@ -24,7 +24,7 @@
     "summedWeightsNorm": 19970551.0, 
     "summedWeights": 19970551.0, 
     "nevents": 19970551, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 10, 
     "nlumis": 100052
   }, 
   "DYJets3": {
@@ -38,7 +38,7 @@
     "summedWeightsNorm": 5792225.0, 
     "summedWeights": 5792225.0, 
     "nevents": 5856110, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 7, 
     "nlumis": 29086
   }, 
   "DYJets4": {
@@ -63,10 +63,10 @@
     "nfiles": 581, 
     "nblocks": 37, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -5994, 
     "summedWeights": 0.0, 
     "nevents": 50009839, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 6, 
     "nlumis": 27431
   }, 
   "ggZZ2e2m": {
@@ -108,7 +108,7 @@
     "summedWeightsNorm": 499377.0, 
     "summedWeights": 499377.0, 
     "nevents": 499377, 
-    "nNtupleFiles": 6, 
+    "nNtupleFiles": 7, 
     "nlumis": 3206
   }, 
   "azh320": {
@@ -122,7 +122,7 @@
     "summedWeightsNorm": 474784.0, 
     "summedWeights": 474784.0, 
     "nevents": 474784, 
-    "nNtupleFiles": 6, 
+    "nNtupleFiles": 9, 
     "nlumis": 2411
   }, 
   "azh260": {
@@ -150,7 +150,7 @@
     "summedWeightsNorm": 491744.0, 
     "summedWeights": 491744.0, 
     "nevents": 491744, 
-    "nNtupleFiles": 7, 
+    "nNtupleFiles": 8, 
     "nlumis": 2859
   }, 
   "azh400": {
@@ -164,7 +164,7 @@
     "summedWeightsNorm": 495692.0, 
     "summedWeights": 495692.0, 
     "nevents": 495692, 
-    "nNtupleFiles": 8, 
+    "nNtupleFiles": 9, 
     "nlumis": 2762
   }, 
   "dataEE-F": {
@@ -175,10 +175,10 @@
     "nfiles": 441, 
     "nblocks": 50, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -4995, 
     "summedWeights": 0.0, 
     "nevents": 34610483, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 5, 
     "nlumis": 19720
   }, 
   "WZ": {
@@ -192,7 +192,7 @@
     "summedWeightsNorm": 3995828.0, 
     "summedWeights": 3995828.0, 
     "nevents": 1000000, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 3, 
     "nlumis": 5209
   }, 
   "ggZZ4m": {
@@ -209,6 +209,20 @@
     "nNtupleFiles": 1, 
     "nlumis": 4976
   }, 
+  "HZZ125": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 999800, 
+    "DAS Path": "/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 23, 
+    "nblocks": 12, 
+    "Cross Section (pb)": 0.01212, 
+    "summedWeightsNorm": 999800.0, 
+    "summedWeights": 999800.0, 
+    "nevents": 999800, 
+    "nNtupleFiles": 4, 
+    "nlumis": 5026
+  }, 
   "ZZZ": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
@@ -220,7 +234,7 @@
     "summedWeightsNorm": 155658.40979596876, 
     "summedWeights": 2555.0, 
     "nevents": 249237, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 2, 
     "nlumis": 1248
   }, 
   "ggZZ4e": {
@@ -234,7 +248,7 @@
     "summedWeightsNorm": 965000.0, 
     "summedWeights": 965000.0, 
     "nevents": 965000, 
-    "nNtupleFiles": 18, 
+    "nNtupleFiles": 19, 
     "nlumis": 4825
   }, 
   "TT": {
@@ -248,7 +262,7 @@
     "summedWeightsNorm": 77229341.0, 
     "summedWeights": 77229341.0, 
     "nevents": 77081156, 
-    "nNtupleFiles": 7, 
+    "nNtupleFiles": 19, 
     "nlumis": 481156
   }, 
   "dataEE-B": {
@@ -259,10 +273,10 @@
     "nfiles": 1656, 
     "nblocks": 123, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -2997, 
+    "summedWeightsNorm": -9990, 
     "summedWeights": 0.0, 
     "nevents": 143350085, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 10, 
     "nlumis": 64190
   }, 
   "ggZZ4tau": {
@@ -287,10 +301,10 @@
     "nfiles": 596, 
     "nblocks": 26, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -6993, 
     "summedWeights": 0.0, 
     "nevents": 53758157, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 7, 
     "nlumis": 30881
   }, 
   "dataEE-G": {
@@ -301,10 +315,10 @@
     "nfiles": 997, 
     "nblocks": 87, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -2997, 
+    "summedWeightsNorm": -11988, 
     "summedWeights": 0.0, 
     "nevents": 78839757, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 12, 
     "nlumis": 46787
   }, 
   "ggZZ2e2tau": {
@@ -318,7 +332,7 @@
     "summedWeightsNorm": 500000.0, 
     "summedWeights": 500000.0, 
     "nevents": 500000, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 8, 
     "nlumis": 2500
   }, 
   "ZZ4l": {
@@ -332,7 +346,7 @@
     "summedWeightsNorm": 75943497.0, 
     "summedWeights": 75943497.0, 
     "nevents": 6669988, 
-    "nNtupleFiles": 47, 
+    "nNtupleFiles": 199, 
     "nlumis": 34502
   }, 
   "ZHTauTau110": {
@@ -399,10 +413,10 @@
     "nfiles": 14, 
     "nblocks": 12, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -9990, 
     "summedWeights": 0.0, 
     "nevents": 3064, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 10, 
     "nlumis": 5605
   }, 
   "ZHTauTau125": {
@@ -416,7 +430,7 @@
     "summedWeightsNorm": 532279.5261767044, 
     "summedWeights": 426885.0, 
     "nevents": 571597, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 2, 
     "nlumis": 5774
   }, 
   "WZZ": {
@@ -430,7 +444,7 @@
     "summedWeightsNorm": 194654.1355368735, 
     "summedWeights": 12358.0, 
     "nevents": 246800, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 2, 
     "nlumis": 2473
   }, 
   "WMinusHTauTau125": {
@@ -458,7 +472,7 @@
     "summedWeightsNorm": 1197037.3941416983, 
     "summedWeights": 15791239.0, 
     "nevents": 1930828, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 5, 
     "nlumis": 9969
   }, 
   "dataMM-C": {
@@ -469,10 +483,10 @@
     "nfiles": 357, 
     "nblocks": 50, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -2997, 
     "summedWeights": 0.0, 
     "nevents": 28055320, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 3, 
     "nlumis": 20871
   }, 
   "dataMM-B": {
@@ -483,10 +497,10 @@
     "nfiles": 963, 
     "nblocks": 106, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -5994, 
     "summedWeights": 0.0, 
     "nevents": 82573239, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 6, 
     "nlumis": 60388
   }, 
   "dataMM-E": {
@@ -497,10 +511,10 @@
     "nfiles": 339, 
     "nblocks": 47, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -3996, 
     "summedWeights": 0.0, 
     "nevents": 28248383, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 4, 
     "nlumis": 27248
   }, 
   "dataMM-D": {
@@ -511,10 +525,10 @@
     "nfiles": 386, 
     "nblocks": 25, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -3996, 
     "summedWeights": 0.0, 
     "nevents": 33887603, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 4, 
     "nlumis": 30696
   }, 
   "dataMM-G": {
@@ -525,10 +539,10 @@
     "nfiles": 606, 
     "nblocks": 88, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -7992, 
     "summedWeights": 0.0, 
     "nevents": 45819967, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 8, 
     "nlumis": 48094
   }, 
   "dataMM-F": {
@@ -539,24 +553,24 @@
     "nfiles": 260, 
     "nblocks": 42, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -2997, 
     "summedWeights": 0.0, 
     "nevents": 20334266, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 3, 
     "nlumis": 19378
   }, 
   "dataEE-H": {
-    "STATUS": "Error", 
+    "STATUS": "Files Match", 
     "DAS status": "ok", 
     "nEvents": 82569062, 
     "DAS Path": "/DoubleEG/Run2016H-PromptReco-v1/MINIAOD", 
     "nfiles": 13, 
     "nblocks": 12, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -2997, 
+    "summedWeightsNorm": -12987, 
     "summedWeights": 0.0, 
     "nevents": 352, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 13, 
     "nlumis": 145
   }, 
   "azh240": {
@@ -570,7 +584,7 @@
     "summedWeightsNorm": 499387.0, 
     "summedWeights": 499387.0, 
     "nevents": 499387, 
-    "nNtupleFiles": 4, 
+    "nNtupleFiles": 8, 
     "nlumis": 2957
   }, 
   "azh350": {
@@ -598,7 +612,7 @@
     "summedWeightsNorm": 500000.0, 
     "summedWeights": 500000.0, 
     "nevents": 500000, 
-    "nNtupleFiles": 5, 
+    "nNtupleFiles": 8, 
     "nlumis": 2961
   }, 
   "WWW": {
@@ -668,7 +682,7 @@
     "summedWeightsNorm": 144630814.0, 
     "summedWeights": 144630814.0, 
     "nevents": 49144274, 
-    "nNtupleFiles": 7, 
+    "nNtupleFiles": 28, 
     "nlumis": 710475
   }, 
   "dataEE-C": {
@@ -679,10 +693,10 @@
     "nfiles": 585, 
     "nblocks": 49, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -999, 
+    "summedWeightsNorm": -3996, 
     "summedWeights": 0.0, 
     "nevents": 49193716, 
-    "nNtupleFiles": 1, 
+    "nNtupleFiles": 4, 
     "nlumis": 20569
   }, 
   "azh280": {
@@ -696,7 +710,7 @@
     "summedWeightsNorm": 497392.0, 
     "summedWeights": 497392.0, 
     "nevents": 497392, 
-    "nNtupleFiles": 7, 
+    "nNtupleFiles": 9, 
     "nlumis": 3051
   }
 }

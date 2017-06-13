@@ -1,6 +1,8 @@
-/data/truggles/azhJune06skimMerged/azh220_0_mmtt.root
-/data/truggles/azhJune06skimMerged/azh220_1_mmtt.root
-/data/truggles/azhJune06skimMerged/azh220_2_mmtt.root
-/data/truggles/azhJune06skimMerged/azh220_3_mmtt.root
-/data/truggles/azhJune06skimMerged/azh220_4_mmtt.root
-/data/truggles/azhJune06skimMerged/azh220_5_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_0_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_1_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_2_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_3_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_4_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_5_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_6_mmtt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-azh220_7_mmtt.root

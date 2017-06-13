@@ -1,3 +1,7 @@
-/data/truggles/azhMay31skimMerged/ggZZ2m2tau_0_mmmt.root
-/data/truggles/azhMay31skimMerged/ggZZ2m2tau_1_mmmt.root
-/data/truggles/azhMay31skimMerged/ggZZ2m2tau_2_mmmt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ggZZ2m2tau_0_mmmt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ggZZ2m2tau_1_mmmt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ggZZ2m2tau_2_mmmt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ggZZ2m2tau_3_mmmt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ggZZ2m2tau_4_mmmt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ggZZ2m2tau_5_mmmt.root
+/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-ggZZ2m2tau_6_mmmt.root
