@@ -61,6 +61,13 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         samples['ZZ4l'] = 'ZZ'
         for era in eras :
             samples['RedBkgShape-%s' % era] = 'RedBkg'
+        if ops['doZH'] : # then remove AZH samples
+            for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+                if 'azh%i' % mass in samples : del samples['azh%i' % mass]
+        if not ops['doZH'] : # then removed 110 120 130 140 mass points for SM Higgs
+            for mass in ['110', '120', '130', '140'] :
+                if 'ZHTauTau%s' % mass in samples : del samples['ZHTauTau%s' % mass]
+                if 'WHTauTau%s' % mass in samples : del samples['WHTauTau%s' % mass]
 
 
     # Use FF built QCD backgrounds
@@ -152,7 +159,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'Higgs_PtCor:m_visCor' : 'visMass2D',
             'mjj:m_visCor' : 'visMass2D',
             'Mass' : '4LMass',
+            'A_Mass' : 'AMass',
+            'm_vis' : 'VisMass',
             }
+        if analysis == 'azh' : appendMap['m_sv'] = 'svFitMass'
         #if '0jet2D' in ops['category'] : 
         #    if ops['fitShape'] == 'm_sv' :
         #        Append = '_svFitMass2D'
@@ -219,7 +229,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 else : binArray = array( 'd', [i*10 for i in range( 31 )] )
             elif analysis == 'azh' and ops['doZH'] :
-                binArray = array( 'd', [i*20 for i in range( 16 )] )
+                binArray = array( 'd', [i*10 for i in range( 31 )] )
             elif analysis == 'azh' :
                 binArray = array( 'd', [i*40 for i in range( 16 )] )
             else :
