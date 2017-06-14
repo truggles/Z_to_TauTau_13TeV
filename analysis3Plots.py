@@ -87,17 +87,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         if not doFF :
             samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
-        # Don't plot sm higgs 120, 130
-        smMassesNoInclude = ['110', '120', '130', '140']
-        smHiggs = []
-        for mass in smMassesNoInclude :
-            smHiggs.append('ggHtoTauTau%s' % mass)
-            smHiggs.append('VBFHtoTauTau%s' % mass)
-            smHiggs.append('WMinusHTauTau%s' % mass)
-            smHiggs.append('WPlusHTauTau%s' % mass)
-            smHiggs.append('ZHTauTau%s' % mass)
-        for higgs in smHiggs :
-            if higgs in samples : del samples[ higgs ]
+    # Don't plot sm higgs 120, 130
+    smMassesNoInclude = ['110', '120', '130', '140']
+    smHiggs = []
+    for mass in smMassesNoInclude :
+        smHiggs.append('ggHtoTauTau%s' % mass)
+        smHiggs.append('VBFHtoTauTau%s' % mass)
+        smHiggs.append('WMinusHTauTau%s' % mass)
+        smHiggs.append('WPlusHTauTau%s' % mass)
+        smHiggs.append('ZHTauTau%s' % mass)
+    for higgs in smHiggs :
+        if higgs in samples : del samples[ higgs ]
 
     for sample in samples :
         print sample
@@ -114,7 +114,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     mssmMass = 250
     azhMass = 350
     mssmSF = 100
-    higgsSF = 1.0
+    higgsSF = 10.0
     if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
     azhSF = .025
     
@@ -526,7 +526,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             ''' Change bin yield to make this make sense with variable binning
                 this is only for viewing, the DC process is seperate '''
             for samp in sampHistos.keys() :
-                if var == 'm_visCor' :
+                if var == 'm_visCor' or var == 'A_Mass' :
                     print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
             #    # With Variable binning, need to set bin content appropriately
             #    if not varBinned : continue
@@ -872,10 +872,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 # Do official sensitivity blinding
                 zhBlindVars = {
                     'LT_higgs' : [71,999],
-                    'm_sv' : [91,119],
-}
+                    'm_sv' : [101,119],
+                }
+
+
                 if analysis == 'azh' and var in zhBlindVars :
-                    #b_criteria = 0.5
+                    #b_criteria = 1.
                     targetMassLow = zhBlindVars[var][0]
                     targetMassHigh = zhBlindVars[var][1]
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()

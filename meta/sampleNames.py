@@ -533,6 +533,12 @@ def sampleDetails( analysis ) :
         sampleMap['TriBoson']['WWZ']['group'] = 'rare'
         sampleMap['TriBoson']['WZZ']['group'] = 'rare'
         sampleMap['TriBoson']['ZZZ']['group'] = 'rare'
+        for mass in [110, 120, 125, 130, 140] :
+            if 'WMinusHTauTau%i' % mass in sampleMap['SM-Higgs'] : sampleMap['SM-Higgs']['WMinusHTauTau%i' % mass]['group'] = 'higgs'
+            if 'WPlusHTauTau%i' % mass in sampleMap['SM-Higgs'] : sampleMap['SM-Higgs']['WPlusHTauTau%i' % mass]['group'] = 'higgs' 
+            if 'ZHWW%i' % mass in sampleMap['SM-Higgs'] : sampleMap['SM-Higgs']['ZHWW%i' % mass]['group'] = 'higgs' 
+            if 'HZZ%i' % mass in sampleMap['SM-Higgs'] : sampleMap['SM-Higgs']['HZZ%i' % mass]['group'] = 'higgs' 
+            
 
     # Simplify tracking SM-Higgs and add to all returned maps
     for common in sampleMap['common'].keys() :
