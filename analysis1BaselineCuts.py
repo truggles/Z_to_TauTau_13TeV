@@ -65,8 +65,8 @@ def skipChanDataCombo( channel, sample, analysis ) :
         if (channel == 'tt') and ('data' in sample) and not ('dataTT' in sample) : return True
     # AZH
     if analysis == 'azh' :
-        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett']) and ('data' in sample) and not ('dataEE' in sample) : return True
-        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt']) and ('data' in sample) and not ('dataMM' in sample) : return True
+        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett', 'ZEE']) and ('data' in sample) and not ('dataEE' in sample) : return True
+        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt', 'ZMM']) and ('data' in sample) and not ('dataMM' in sample) : return True
     return False
 
 
