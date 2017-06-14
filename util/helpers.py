@@ -272,6 +272,10 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
             if zz in inSamples :
                 samples[zz]  = 'ZZ'
 
+        for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+            if 'azh%i' % mass in inSamples :
+                samples['azh%i' % mass] = 'azh%i' % mass
+
     # Common to all
     for era in eras :
         if 'dataTT-%s' % era in inSamples :
@@ -294,6 +298,8 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
             samples['ZHTauTau%s' % mass] = 'ZH%s' % mass
         if 'ZHWW%s' % mass in inSamples :
             samples['ZHWW%s' % mass] = 'ZHWW%s' % mass
+        if 'HZZ%s' % mass in inSamples :
+            samples['HZZ%s' % mass] = 'HZZ%s' % mass
     
 
     return samples
