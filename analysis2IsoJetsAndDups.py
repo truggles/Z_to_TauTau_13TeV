@@ -207,6 +207,17 @@ def getTransMass( met, metphi, l1pt, l1phi ) :
     return math.sqrt( 2 * l1pt * metTmp * (1 - math.cos( l1phi - metphi)))
 
 
+
+def get_A_mass( zMass, zPt, zEta, zPhi, hMass, hPt, hEta, hPhi) :
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz1.SetPtEtaPhiM( zPt, zEta, zPhi, zMass )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz2.SetPtEtaPhiM( hPt, hEta, hPhi, hMass )
+    A_vect = lorentz1 + lorentz2
+    return A_vect.M()
+
+
+
 def getIso( cand, row ) :
     if 'e' in cand :
         return getattr(row, cand+'RelPFIsoDB')
@@ -887,6 +898,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     m_visCor_DM1_DOWNB = tnew.Branch('m_visCor_DM1_DOWN', m_visCor_DM1_DOWN, 'm_visCor_DM1_DOWN/F')
     m_visCor_DM10_DOWN = array('f', [ 0 ] )
     m_visCor_DM10_DOWNB = tnew.Branch('m_visCor_DM10_DOWN', m_visCor_DM10_DOWN, 'm_visCor_DM10_DOWN/F')
+    A_Mass = array('f', [ 0 ] )
+    A_MassB = tnew.Branch('A_Mass', A_Mass, 'A_Mass/F')
 
 
     ''' Set MvaMet base vars defaults in case we didn't fill that value '''
@@ -911,6 +924,17 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             # FIXME ugly kludge to handle that some TTrees are missing some
             # branches.  This allows us to HADD the samples
             # REMOVE THIS IN THE FUTURE!
+            try : print row[0].m_sv
+            except KeyError :
+                m_sv = array('f', [ 0 ] )
+                m_svB = tnew.Branch('m_sv', m_sv, 'm_sv/F')
+                pt_sv = array('f', [ 0 ] )
+                pt_svB = tnew.Branch('pt_sv', pt_sv, 'pt_sv/F')
+                eta_sv = array('f', [ 0 ] )
+                eta_svB = tnew.Branch('eta_sv', eta_sv, 'eta_sv/F')
+                phi_sv = array('f', [ 0 ] )
+                phi_svB = tnew.Branch('phi_sv', phi_sv, 'phi_sv/F')
+                
             try : print row[0].type1_pfMet_shiftedPt_UnclusteredEnUp
             except KeyError :
                 type1_pfMet_shiftedPhi_ElectronEnDown = array('f', [ 0 ] )
@@ -1301,6 +1325,35 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             zhFR1[0] = 0
             zhFR2[0] = 0
             LT_higgs[0] = 0
+            A_Mass[0] = 0
+
+
+            if analysis == 'azh' :
+                # Build A mass for AZh analysis
+                # If sample didn't do svFit, take m_vis related vars
+                zMass = getattr( row, l1+"_"+l2+"_Mass" )
+                zPt = getattr( row, l1+"_"+l2+"_Pt" )
+                zEta = getattr( row, l1+"_"+l2+"_Eta" )
+                zPhi = getattr( row, l1+"_"+l2+"_Phi" )
+                if hasattr( row, "met_sv" ) : # Then svFit happened
+                    hMass = getattr( row, "m_sv" )
+                    hPt = getattr( row, "pt_sv" )
+                    hEta = getattr( row, "eta_sv" )
+                    hPhi = getattr( row, "phi_sv" )
+                else : # no svFit
+                    hMass = getattr( row, l3+"_"+l4+"_Mass" )
+                    hPt = getattr( row, l3+"_"+l4+"_Pt" )
+                    hEta = getattr( row, l3+"_"+l4+"_Eta" )
+                    hPhi = getattr( row, l3+"_"+l4+"_Phi" )
+
+                    # While we're at it, fill svFit values with vis vals
+                    m_sv[0] = getattr( row, l3+"_"+l4+"_Mass" )
+                    pt_sv[0] = getattr( row, l3+"_"+l4+"_Pt" )
+                    eta_sv[0] = getattr( row, l3+"_"+l4+"_Eta" )
+                    phi_sv[0] = getattr( row, l3+"_"+l4+"_Phi" )
+                A_Mass[0] = get_A_mass( zMass, zPt, zEta, zPhi, \
+                        hMass, hPt, hEta, hPhi)
+
 
             # Data specific vars
             if 'data' in sample :
