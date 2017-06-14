@@ -114,7 +114,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     mssmMass = 250
     azhMass = 350
     mssmSF = 100
-    higgsSF = 2.5
+    higgsSF = 1.0
     if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
     azhSF = .025
     
@@ -164,7 +164,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
         'redBkg' : [ROOT.kCyan, 'Reducible Bkg.'],
-        #'sm' : [ROOT.kGreen, 'SM Higgs (125)'],
+        'higgs' : [ROOT.kRed-4, 'SM HZZ (125)'],
         'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
         } # azh
@@ -290,6 +290,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 for i in range( 21 ) :
                     xBins.append( i * 17.5 )
             # This is the proposed binning for ZTT 2015 paper
+            elif analysis == 'azh' and 'm_sv' in var :
+                xBins = array( 'd', [i*20 for i in range( 16 )] )
             elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 xBins = array( 'd', [i*10 for i in range( 31 )] )
             elif 'm_sv' in var or 'm_visCor' in var :
@@ -513,7 +515,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 1 ), hist.GetBinLowEdge( nBins+1 ))
     
     
-                print sample, samples[ sample ]['group']
+                #print sample, samples[ sample ]['group']
                 sampHistos[ samples[ sample ]['group'] ].Add( hist )
                 #if samples[ sample ]['group'] == 'jetFakes' :
                 #    print "jetFakes Stack yield: %f" % hist.Integral()
@@ -564,6 +566,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     stack.Add( sampHistos['wz'] )
                 stack.Add( sampHistos['rare'] )
                 stack.Add( sampHistos['zz'] )
+                stack.Add( sampHistos['higgs'] )
     
             # Scale signal samples for viewing
             sampHistos[ signal ].Scale( signalSF )
@@ -615,7 +618,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'zz' : .10,
                 'redBkg' : .20,
                 'azh' : .0,
-                'sm' : .0,
+                'higgs' : .1,
                 'VH' : .0,
                 'obs' : .0,}
             }
@@ -623,7 +626,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
-                    if samp in ['obs', 'azh','sm','VH'] : continue
+                    if samp in ['obs', 'azh', 'VH'] : continue
                     toRoot += (sampHistos[samp].GetBinContent(k)*\
                         uncertNormMap[analysis][samp])**2
                     #toRoot += sampHistos[samp].GetBinError(k)**2
@@ -866,10 +869,39 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                             if ops['ratio'] and not ":" in var :
                                 ratioHist.SetBinContent(k, 0.)
                                 ratioHist.SetBinError(k, 0.)
-                    if ops['ratio'] and not ":" in var : 
-                        ratioPad.cd()
-                        ratioHist.Draw('esamex0')
-                    pad1.cd()
+                # Do official sensitivity blinding
+                zhBlindVars = {
+                    'LT_higgs' : [71,999],
+                    'm_sv' : [91,119],
+}
+                if analysis == 'azh' and var in zhBlindVars :
+                    #b_criteria = 0.5
+                    targetMassLow = zhBlindVars[var][0]
+                    targetMassHigh = zhBlindVars[var][1]
+                    nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+                    print channel, var
+                    for k in range( 1, nBins+1 ) :
+                        binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
+                                sampHistos['obs'].GetXaxis().GetBinWidth(k)
+                        binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
+                        if binHigh>targetMassLow and binLow<=targetMassUp :
+                        #b_tot = stack.GetStack().Last().GetBinContent(k)
+                        #if b_tot > 0.0 :
+                        #    criteria = ( (sampHistos[signal].GetBinContent(k)/signalSF) / \
+                        #            math.sqrt( b_tot + (0.1*b_tot)**2 ) )
+                        #    print "Bin ",k, "val: ", criteria
+                        #    if criteria >= b_criteria :
+                        #        print "Blinded!"
+                            sampHistos['obs'].SetBinContent(k, 0.)
+                            sampHistos['obs'].SetBinError(k, 0.)
+                            if ops['ratio'] and not ":" in var :
+                                ratioHist.SetBinContent(k, 0.)
+                                ratioHist.SetBinError(k, 0.)
+                if ops['ratio'] and not ":" in var : 
+                    ratioPad.cd()
+                    ratioHist.Draw('esamex0')
+                pad1.cd()
+                    
             sampHistos['obs'].Draw('esamex0')
                 
     
@@ -877,17 +909,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['qcdMakeDM'] == 'x' or 'plotMe' in ops['qcdMakeDM'] :
                 plotDir = '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'] )
                 c1.SaveAs(plotDir+'%s.png' % var )
-                #c1.SaveAs(plotDir+'%s.pdf' % var )
+                c1.SaveAs(plotDir+'%s.pdf' % var )
                 #c1.SaveAs(plotDir+'%s.root' % var )
-                #c1.SaveAs(plotDir+'%s.C' % var )
+                c1.SaveAs(plotDir+'%s.C' % var )
 
                 # To speed up, just copy the new png/pdfs to other dir
                 # this will help with 2D plots
                 newPlotDir = plotDir.replace('Plots/','PlotsList/')
                 subprocess.call(['cp',plotDir+'%s.png' % var, newPlotDir+'%s.png' % var])
-                #subprocess.call(['cp',plotDir+'%s.pdf' % var, newPlotDir+'%s.pdf' % var])
+                subprocess.call(['cp',plotDir+'%s.pdf' % var, newPlotDir+'%s.pdf' % var])
                 #subprocess.call(['cp',plotDir+'%s.root' % var, newPlotDir+'%s.root' % var])
-                #subprocess.call(['cp',plotDir+'%s.C' % var, newPlotDir+'%s.C' % var])
+                subprocess.call(['cp',plotDir+'%s.C' % var, newPlotDir+'%s.C' % var])
     
     
             """ Additional views for Visible Mass """
