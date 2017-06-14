@@ -477,6 +477,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
                 #if not ops['mssm'] :
                 #    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
+
+                # Scale AZh to 1 fb cross section, it is set at 1 pb in meta
+                if analysis == 'azh' and not ops['doZH'] and 'azh' in name :
+                    histos[ name ].Scale( 1. / histos[ name ].Integral() )
                 
     
                 # Proper naming of output histos
