@@ -189,13 +189,13 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             ('ffSyst' in var) or ('ffStat' in var) or ('_topPt' in var) or \
                             ('_metUnclustered' in var) or ('_metClustered' in var) \
                             or ('_JES' in var) or ('_JetToTau' in var) or \
-                            ('_Zmumu' in var) or ('_ggH' in var) \
+                            ('_Zmumu' in var) or ('_ggH' in var) or ('_topQuarkggH' in var) \
                             or ('_ffSub' in var) or (baseVar == var)) :
                         continue
 
                 else :
                     if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
-                        or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) \
+                        or ('_JES' in var) or ('_ggH' in var) or ('_topQuarkggH' in var) or ('_JetToTau' in var) \
                         or ('_metUnclustered' in var) or ('_metClustered' in var) \
                         or ('_Zmumu' in var) or ('_tauPt' in var) or (baseVar == var)) :
                         print "Did we fail?"
@@ -475,7 +475,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Proper naming of output histos
                 if ops['allShapes'] and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
                         or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var \
-                        or '_metUnclustered' in var or '_metClustered' in var \
+                        or '_metUnclustered' in var or '_metClustered' in var or '_topQuarkggH' in var \
                         or 'ffSyst' in var or 'ffStat' in var) :
 
                     # Systematics naming removes CRs
@@ -486,6 +486,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if name == 'jetFakes' and not ('ffSyst' in var or 'ffStat' in var) : continue
                     if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
                     if '_ggH' in var and not name in ['ggH110', 'ggH120','ggH125','ggH130', 'ggH140'] : continue
+                    if '_topQuarkggH' in var and not name in ['ggH110', 'ggH120','ggH125','ggH130', 'ggH140'] : continue
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
                     if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] or \
@@ -556,6 +557,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     elif '_ggH' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
+                    elif '_topQuarkggH' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_TopMassTreatment_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_TopMassTreatment_13TeV'+shiftDir )
                     elif '_Zmumu' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )

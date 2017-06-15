@@ -108,6 +108,10 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
         elif '_ggH' in var :
             if not 'ggHtoTauTau' in sample : return True
 
+        # topQuarkggH Scale, only for ggH
+        elif '_topQuarkggH' in var :
+            if not 'ggHtoTauTau' in sample : return True
+
         # Zmumu yields by slices, only for DYJets and EWKZ, and only VBF at the moment
         elif '_Zmumu' in var :
             if 'DYJets' in sample : return False
@@ -368,6 +372,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             else : # Probably inclusive
                 if '_ggHUp' in var : shapeSyst = '*(ggHWeight0Jet)'
                 elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeight0Jet)'
+
+        # topQuarkggH scale to ggHtoTauTau signal
+        elif '_topQuarkggH' in var :
+            if '_topQuarkggHUp' in var : shapeSyst = '*(ggHtopQuarkWeight)'
+            elif '_topQuarkggHDown' in var : shapeSyst = '*(2.-ggHtopQuarkWeight)'
 
         # Jet to Tau Fake
         # These look to be applied in reverse
@@ -696,7 +705,7 @@ def getHistoDict( analysis, channel ) :
 #XXX            'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+#XXX            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
 #            'mt_tot' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
@@ -727,6 +736,7 @@ def getHistoDict( analysis, channel ) :
                     'JES' : 'Jet Energy Scale',
                     'JetToTau' : 'Jet to Tau Fake',
                     'ggH' : 'ggH Scale',
+                    'topQuarkggH' : 'Top Quark Scale for ggH',
                     'Zmumu' : 'Z mumu DY Reweight',
                     'metClustered':'Clustered MET',
                     'metUnclustered':'Unclustered MET',

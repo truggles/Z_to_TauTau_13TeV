@@ -726,6 +726,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ggHWeightBoostB = tnew.Branch('ggHWeightBoost', ggHWeightBoost, 'ggHWeightBoost/F')
     ggHWeightVBF = array('f', [ 0 ] )
     ggHWeightVBFB = tnew.Branch('ggHWeightVBF', ggHWeightVBF, 'ggHWeightVBF/F')
+    ggHtopQuarkWeight = array('f', [ 0 ] )
+    ggHtopQuarkWeightB = tnew.Branch('ggHtopQuarkWeight', ggHtopQuarkWeight, 'ggHtopQuarkWeight/F')
     jetToTauFakeWeight = array('f', [ 0 ] )
     jetToTauFakeWeightB = tnew.Branch('jetToTauFakeWeight', jetToTauFakeWeight, 'jetToTauFakeWeight/F')
     pzetamiss = array('f', [ 0 ] )
@@ -1253,6 +1255,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             ggHWeight0Jet[0] = 1
             ggHWeightBoost[0] = 1
             ggHWeightVBF[0] = 1
+            ggHtopQuarkWeight[0] = 1
             jetToTauFakeWeight[0] = 1
             weight[0] = 1
             XSecLumiWeight[0] = 1
@@ -1529,7 +1532,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # estimated by Cecile, Nov 15, 2016
                 # See: https://indico.cern.ch/event/578552/contributions/2343738/attachments/1372271/2081852/systematics_SMH.pdf
                 # Slide 10 for tautau
-                if shortName in ['ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] :
+                #
+                # Also do top quark loop reweighting
+                # Based on: slides 10 https://indico.cern.ch/event/628660/contributions/2593406/attachments/1459912/2255407/May-16-HIG_Massironi.pdf
+                if shortName in ['ggHtoTauTau110','ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'ggHtoTauTau140'] :
 
                     ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
                     # 2 options for boosted category in case we haven't run svFit
@@ -1541,6 +1547,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                     if hasattr( row, 'vbfMass' ) :
                         ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
+
+                    # Also do top quark loop reweighting
+                    if hasattr( row, 'genpT' ) :
+                        if getattr( row, 'genpT' ) > 150. :
+                            ggHtopQuarkWeight[0] = 1. + 0.01*(0.114 * getattr( row, 'genpT' ) - 17.14)
+                        else : ggHtopQuarkWeight[0] = 1.
+                    
 
                 
                 # top pt reweighting, only for ttbar events
