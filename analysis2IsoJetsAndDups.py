@@ -794,22 +794,22 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     gen_match_3B = tnew.Branch('gen_match_3', gen_match_3, 'gen_match_3/F')
     gen_match_4 = array('f', [ 0 ] )
     gen_match_4B = tnew.Branch('gen_match_4', gen_match_4, 'gen_match_4/F')
-    muonSF1 = array('f', [ 0 ] )
-    muonSF1B = tnew.Branch('muonSF1', muonSF1, 'muonSF1/F')
-    muonSF2 = array('f', [ 0 ] )
-    muonSF2B = tnew.Branch('muonSF2', muonSF2, 'muonSF2/F')
-    muonSF3 = array('f', [ 0 ] )
-    muonSF3B = tnew.Branch('muonSF3', muonSF3, 'muonSF3/F')
-    muonSF4 = array('f', [ 0 ] )
-    muonSF4B = tnew.Branch('muonSF4', muonSF4, 'muonSF4/F')
-    electronSF1 = array('f', [ 0 ] )
-    electronSF1B = tnew.Branch('electronSF1', electronSF1, 'electronSF1/F')
-    electronSF2 = array('f', [ 0 ] )
-    electronSF2B = tnew.Branch('electronSF2', electronSF2, 'electronSF2/F')
-    electronSF3 = array('f', [ 0 ] )
-    electronSF3B = tnew.Branch('electronSF3', electronSF3, 'electronSF3/F')
-    electronSF4 = array('f', [ 0 ] )
-    electronSF4B = tnew.Branch('electronSF4', electronSF4, 'electronSF4/F')
+    muonSF_1 = array('f', [ 0 ] )
+    muonSF_1B = tnew.Branch('muonSF_1', muonSF_1, 'muonSF_1/F')
+    muonSF_2 = array('f', [ 0 ] )
+    muonSF_2B = tnew.Branch('muonSF_2', muonSF_2, 'muonSF_2/F')
+    muonSF_3 = array('f', [ 0 ] )
+    muonSF_3B = tnew.Branch('muonSF_3', muonSF_3, 'muonSF_3/F')
+    muonSF_4 = array('f', [ 0 ] )
+    muonSF_4B = tnew.Branch('muonSF_4', muonSF_4, 'muonSF_4/F')
+    electronSF_1 = array('f', [ 0 ] )
+    electronSF_1B = tnew.Branch('electronSF_1', electronSF_1, 'electronSF_1/F')
+    electronSF_2 = array('f', [ 0 ] )
+    electronSF_2B = tnew.Branch('electronSF_2', electronSF_2, 'electronSF_2/F')
+    electronSF_3 = array('f', [ 0 ] )
+    electronSF_3B = tnew.Branch('electronSF_3', electronSF_3, 'electronSF_3/F')
+    electronSF_4 = array('f', [ 0 ] )
+    electronSF_4B = tnew.Branch('electronSF_4', electronSF_4, 'electronSF_4/F')
     zhFR0 = array('f', [ 0 ] )
     zhFR0B = tnew.Branch('zhFR0', zhFR0, 'zhFR0/F')
     zhFR1 = array('f', [ 0 ] )
@@ -1241,14 +1241,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
 
-            muonSF1[0] = 1
-            muonSF2[0] = 1
-            muonSF3[0] = 1
-            muonSF4[0] = 1
-            electronSF1[0] = 1
-            electronSF2[0] = 1
-            electronSF3[0] = 1
-            electronSF4[0] = 1
+            muonSF_1[0] = 1
+            muonSF_2[0] = 1
+            muonSF_3[0] = 1
+            muonSF_4[0] = 1
+            electronSF_1[0] = 1
+            electronSF_2[0] = 1
+            electronSF_3[0] = 1
+            electronSF_4[0] = 1
             azhWeight[0] = 1
             puweight[0] = 1
             qqZZ4lWeight[0] = 1
@@ -1400,30 +1400,30 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # Currently using PFIDLoose and Loose RelIso for all muons
                     
                     if 'm' in l1 :
-                        muonSF1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
-                        muonSF1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
-                        muonSF1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
+                        muonSF_1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
+                        muonSF_1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
+                        muonSF_1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
                     if 'm' in l2 :
-                        muonSF2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
-                        muonSF2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
-                        muonSF2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
+                        muonSF_2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
+                        muonSF_2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
+                        muonSF_2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
                     if 'm' in l3 :
-                        muonSF3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
-                        muonSF3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
-                        muonSF3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
+                        muonSF_3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
+                        muonSF_3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
+                        muonSF_3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
                     if 'm' in l4 :
-                        muonSF4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
-                        muonSF4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
-                        muonSF4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
+                        muonSF_4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
+                        muonSF_4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
+                        muonSF_4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
                     # Currently using WP90 in all electrons
                     if 'e' in l1 :
-                        electronSF1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
+                        electronSF_1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
                     if 'e' in l2 :
-                        electronSF2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
+                        electronSF_2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
                     if 'e' in l3 :
-                        electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
+                        electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
                     if 'e' in l4 :
-                        electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
+                        electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
 
 
                 # Isolation / ID weights
@@ -1637,8 +1637,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
                 weight[0] *= zPtWeight[0] * topWeight[0]
                 # Below set to 1. for HTT
-                azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
-                azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
+                azhWeight[0] *= muonSF_1[0] * muonSF_2[0] * muonSF_3[0] * muonSF_4[0]
+                azhWeight[0] *= electronSF_1[0] * electronSF_2[0] * electronSF_3[0] * electronSF_4[0]
                 azhWeight[0] *= qqZZ4lWeight[0]
 
 
