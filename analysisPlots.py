@@ -37,6 +37,17 @@ def get2DVars( cutName ) :
         yBins = array( 'd', [0,300,500,800,10000] )
     return (xBins, yBins)
 
+def get3DVars( cutName ) :
+    if 'mjj' in cutName and 'm_sv' in cutName and 'KD_bsm_mlt' in cutName :
+        xBins = array( 'd', [0,95,115,135,155,400] )
+        yBins = array( 'd', [0,300,700,1100,1500,10000] )
+        zBins = array( 'd', [0,.2,.4,.6,.8,1] )
+    if 'mjj' in cutName and 'm_sv' in cutName and 'KD_int' in cutName :
+        xBins = array( 'd', [0,95,115,135,155,400] )
+        yBins = array( 'd', [0,300,700,1100,1500,10000] )
+        zBins = array( 'd', [-1,0,1] )
+    return (xBins, yBins, zBins)
+
 
 # Make a 2D histo
 def make2DHisto( cutName ) :
@@ -44,6 +55,16 @@ def make2DHisto( cutName ) :
     xBins = info[0]
     yBins = info[1]
     hist = ROOT.TH2D( cutName, cutName, len(xBins)-1, xBins, len(yBins)-1, yBins )
+    return hist
+
+
+# Make a 3D histo
+def make3DHisto( cutName ) :
+    info = get3DVars( cutName )
+    xBins = info[0]
+    yBins = info[1]
+    zBins = info[2]
+    hist = ROOT.TH3D( cutName, cutName, len(xBins)-1, xBins, len(yBins)-1, yBins, len(zBins)-1, zBins )
     return hist
 
 
@@ -493,7 +514,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             ffShapeSyst += getFFCutsAndWeights( ffRegion, isData, outFile )
 
 
-        if ":" in var :
+        if ":m_sv:" in var :
+    	    histos[ var ] = make3DHisto( var )
+        elif ":" in var :
     	    histos[ var ] = make2DHisto( var )
         else :
     	    histos[ var ] = makeHisto( var, info[0], info[1], info[2])
@@ -619,7 +642,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         ### we still save a blank histo for use later
         if chain.GetEntries() == 0 :
             print " #### ENTRIES = 0 #### "
-            if ":" in var :
+            if ":m_sv:" in var :
+                histos[ var ] = make3DHisto( var )
+            elif ":" in var :
                 histos[ var ] = make2DHisto( var )
             else :
                 histos[ var ] = makeHisto( var, info[0], info[1], info[2])
@@ -700,25 +725,27 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
 #FIXME            #'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
 #            'm_vis' : [30, 0, 300, 1, 'M_{vis} Uncor [GeV]', ' GeV'],
-            'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
 #XXX            'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #XXX            'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #XXX            'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
 #            'mt_tot' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
             #'pzetavis' : [300, 0, 300, 20, 'pZetaVis', ' GeV'],
             #'pfpzetamis' : [300, 0, 300, 20, 'pfpZetaMis', ' GeV'],
             #'pzetamiss' : [500, -200, 300, 20, 'pZetaMis', ' GeV'],
+# MELA            'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
+# MELA            'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+# MELA            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
         }
 
         ''' added shape systematics '''
         #toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_visCor', 'm_sv'] # No extra shapes
-        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
+        #toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
         #toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
-        #toAdd = ['m_sv', ] # No extra shapes
+        toAdd = [] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
             varsForShapeSyst.append( item )

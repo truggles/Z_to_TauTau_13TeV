@@ -103,3 +103,11 @@ To run:<BR>
 Fake Factors additions:
 Fake factors have been derived to estimate QCD, WJets and TTJets from data, initially for the MuTau channel, but are being tested in double hadronic channel.  Find documentations here: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
 
+# MELA Stuff
+You will need to update the file list in MELA/anaHTT.C to newest working files
+cp MELA/anaHTT.C ../ZZMatrixElement/MELA/test/anaHTT.C
+cd ../ZZMatrixElement/MELA/test/
+mkdir mela
+root -l loadMELA.C
+IN ROOT CINT: root [1] .L anaHTT.C+2I
+IN ROOT CINT: root [2] runAll()

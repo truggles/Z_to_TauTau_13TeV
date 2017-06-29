@@ -27,5 +27,13 @@ mkdir -p FakeFactors/tt
 cp -r /afs/cern.ch/user/j/jbrandst/public/Htautau/FakeRate/2016/20170215/tt/* ./FakeFactors/tt/
 popd
 
+print "Checking out MELA stuff"
+# From: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MELAProject#Instructions
+pushd $CMSSW_BASE/src
+git clone https://github.com/cms-analysis/HiggsAnalysis-ZZMatrixElement.git ZZMatrixElement
+cd ZZMatrixElement
+git checkout -b from-v205 v2.0.5 
+. setup.sh -j 12
+popd
 
 echo "You must <scram b -j 8>"
