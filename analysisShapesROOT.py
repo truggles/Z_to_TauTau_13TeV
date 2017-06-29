@@ -156,7 +156,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         #        Append = '_visMass2D'
         #else :
         #    Append = '_'+appendMap[baseVar]
-        Append = '_'+appendMap[baseVar]
+        if 'mjj:m_sv:' in baseVar :
+            Append = '-MELA'
+        else :
+            Append = '_'+appendMap[baseVar]
     
         if ops['mssm'] :
         #    if not var == baseVar+'_mssm' : continue
@@ -258,6 +261,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ] = ROOT.TH1D( name+systName, name+systName, numBins, binArray )
                     else :
                         histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
+                elif ":m_sv:" in var :
+                    twoDVars = analysisPlots.get2DVars( var )
+                    histos[ name ] = ROOT.TH2D( name, name, len(twoDVars[0])-1, twoDVars[0], len(twoDVars[1])-1, twoDVars[1] )
                 else :
                     histos[ name ] = ROOT.TH1D( name, name, numBins, binArray )
                 histos[ name ].Sumw2()
@@ -351,7 +357,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #    hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
                 #    #print "hist # bins post: %i" % hNew.GetXaxis().GetNbins()
                 #    histos[ samples[ sample ] ].Add( hNew )
-                if ":" in var :
+                if ":m_sv:" in var :
+                    hNew = hist.Clone( "new%s%s" % (sample, var) )
+                elif ":" in var :
                     hNew = unroll2D( hist )
                     #print "nbinsX",hNew.GetNbinsX() ,hNew.GetBinLowEdge(1),hNew.GetBinLowEdge( hNew.GetNbinsX()+1 )
                 else :
@@ -366,6 +374,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if nBins == nBinsHistos :
                         histos[ samples[ sample ] ].Rebin( nBins )
 
+                print hNew
+                print histos[ samples[ sample ] ]
                 histos[ samples[ sample ] ].Add( hNew )
     
                 #XXX LOTS OF PRINT OUTS if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :

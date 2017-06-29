@@ -20,34 +20,31 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 # Make a 2D histo
 def get2DVars( cutName ) :
-    if 'pt_sv' in cutName and 'm_sv' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,100,170,300,10000] )
-    if 'mjj' in cutName and 'm_sv' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,300,500,800,10000] )
-    if 'Higgs_PtCor' in cutName and 'm_sv' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,100,170,300,10000] )
-    if 'Higgs_PtCor' in cutName and 'm_visCor' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,100,170,300,10000] )
-    if 'mjj' in cutName and 'm_visCor' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-        yBins = array( 'd', [0,300,500,800,10000] )
-    return (xBins, yBins)
-
-def get3DVars( cutName ) :
     if 'mjj' in cutName and 'm_sv' in cutName and 'KD_bsm_mlt' in cutName :
         xBins = array( 'd', [0,95,115,135,155,400] )
         yBins = array( 'd', [0,300,700,1100,1500,10000] )
         zBins = array( 'd', [0,.2,.4,.6,.8,1] )
-    if 'mjj' in cutName and 'm_sv' in cutName and 'KD_int' in cutName :
+    elif 'mjj' in cutName and 'm_sv' in cutName and 'KD_int' in cutName :
         xBins = array( 'd', [0,95,115,135,155,400] )
         yBins = array( 'd', [0,300,700,1100,1500,10000] )
         zBins = array( 'd', [-1,0,1] )
-    return (xBins, yBins, zBins)
 
+    elif 'pt_sv' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,10000] )
+    elif 'mjj' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,300,500,800,10000] )
+    elif 'Higgs_PtCor' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,10000] )
+    elif 'Higgs_PtCor' in cutName and 'm_visCor' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,100,170,300,10000] )
+    elif 'mjj' in cutName and 'm_visCor' in cutName :
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,300,500,800,10000] )
+    return (xBins, yBins)
 
 # Make a 2D histo
 def make2DHisto( cutName ) :
@@ -55,16 +52,6 @@ def make2DHisto( cutName ) :
     xBins = info[0]
     yBins = info[1]
     hist = ROOT.TH2D( cutName, cutName, len(xBins)-1, xBins, len(yBins)-1, yBins )
-    return hist
-
-
-# Make a 3D histo
-def make3DHisto( cutName ) :
-    info = get3DVars( cutName )
-    xBins = info[0]
-    yBins = info[1]
-    zBins = info[2]
-    hist = ROOT.TH3D( cutName, cutName, len(xBins)-1, xBins, len(yBins)-1, yBins, len(zBins)-1, zBins )
     return hist
 
 
@@ -514,9 +501,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             ffShapeSyst += getFFCutsAndWeights( ffRegion, isData, outFile )
 
 
-        if ":m_sv:" in var :
-    	    histos[ var ] = make3DHisto( var )
-        elif ":" in var :
+        if ":" in var :
     	    histos[ var ] = make2DHisto( var )
         else :
     	    histos[ var ] = makeHisto( var, info[0], info[1], info[2])
@@ -534,6 +519,24 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             sfs = '*(puweight*azhWeight)' 
         xsec = '*(XSecLumiWeight)'
 
+        # Add MELA cuts
+        if 'KD_int' in var :
+            if 'KD_int_neg1-0' in var :
+                additionalCutToUse += '*(KD_int <= 0)'
+            if 'KD_int_0-1' in var :
+                additionalCutToUse += '*(KD_int > 0)'
+        if 'KD_bsm_mlt' in var :
+            if 'KD_bsm_mlt_0-p2' in var : 
+                additionalCutToUse += '*(KD_bsm_mlt < .2)'
+            if 'KD_bsm_mlt_p2-p4' in var :
+                additionalCutToUse += '*(KD_bsm_mlt >= 0.2 && KD_bsm_mlt < .4)'
+            if 'KD_bsm_mlt_p4-p6' in var :
+                additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .6)'
+            if 'KD_bsm_mlt_p6-p8' in var :
+                additionalCutToUse += '*(KD_bsm_mlt >= 0.6 && KD_bsm_mlt < .8)'
+            if 'KD_bsm_mlt_p8-1' in var : 
+                additionalCutToUse += '*(KD_bsm_mlt >= 0.8)'
+
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
         totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst, ffShapeSyst) 
@@ -544,6 +547,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # don't crash on systematics based variables
         varBase = var.replace('_ffSub','')
         plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
+        # MELA
+        plotVar = plotVar.replace( ':KD_int_neg1-0', '' )
+        plotVar = plotVar.replace( ':KD_int_0-1', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_0-p2', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_p2-p4', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_p4-p6', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_p6-p8', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_p8-1', '' )
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
             shapeName = tmp.pop()
@@ -642,9 +653,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         ### we still save a blank histo for use later
         if chain.GetEntries() == 0 :
             print " #### ENTRIES = 0 #### "
-            if ":m_sv:" in var :
-                histos[ var ] = make3DHisto( var )
-            elif ":" in var :
+            if ":" in var :
                 histos[ var ] = make2DHisto( var )
             else :
                 histos[ var ] = makeHisto( var, info[0], info[1], info[2])
@@ -733,12 +742,18 @@ def getHistoDict( analysis, channel ) :
             #'pzetavis' : [300, 0, 300, 20, 'pZetaVis', ' GeV'],
             #'pfpzetamis' : [300, 0, 300, 20, 'pfpZetaMis', ' GeV'],
             #'pzetamiss' : [500, -200, 300, 20, 'pZetaMis', ' GeV'],
-# MELA            'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
+            'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
 # MELA            'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 # MELA            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_0-p2' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_p2-p4' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_p4-p6' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_p6-p8' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_p8-1' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_int_neg1-0' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_int_0-1' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
         }
 
         ''' added shape systematics '''

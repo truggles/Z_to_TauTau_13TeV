@@ -109,7 +109,7 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     import analysis3Plots
     from meta.sampleNames import returnSampleDetails
     samples = returnSampleDetails( analysis, samples )
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+# MELA    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     #### LEGACY HTT CATEGORIES ###
     higgsPtVar = 'Higgs_PtCor'
@@ -153,20 +153,20 @@ def testQCDCuts( folder, samples, isoVal, isoL, isoT, sign, doFF=False ) :
     #analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     ### 2D Distributions ###
-    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTboosted' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && %s>100)))*%s' % (Zsign, higgsPtVar, isoCutter)
-    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+# MELA    params['mid3'] = folder+'_%sl1ml2_%s_%sZTTboosted' % (sign, isoT, isoL)
+# MELA    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==1 || ((jetVeto30>=2)*!(abs(jdeta) > 2.5 && %s>100)))*%s' % (Zsign, higgsPtVar, isoCutter)
+# MELA    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+# MELA    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
     params['mid3'] = folder+'_%sl1ml2_%s_%sZTTvbf' % (sign, isoT, isoL)
     params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30>=2)*(%s>100)*(abs(jdeta)>2.5)*%s' % (Zsign, higgsPtVar, isoCutter)
     setUpDirs( samples, params, analysis ) # Print config file and set up dirs
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
-    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT0jet2D' % (sign, isoT, isoL)
-    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==0)*%s' % (Zsign, isoCutter)
-    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
-    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
+# MELA    params['mid3'] = folder+'_%sl1ml2_%s_%sZTT0jet2D' % (sign, isoT, isoL)
+# MELA    params['additionalCut'] = '*(Z_SS==%i)*(jetVeto30==0)*%s' % (Zsign, isoCutter)
+# MELA    setUpDirs( samples, params, analysis ) # Print config file and set up dirs
+# MELA    analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
 
     

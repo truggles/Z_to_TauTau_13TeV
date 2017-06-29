@@ -88,11 +88,9 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1March20withMetUnc',
-    'mid2' : '2March23withMetUnc',
-    'mid3' : '3March23withMetUnc',
-    'mid2' : '2March28withMetUnc',
-    'mid3' : '3March28withMetUnc',
+    'mid1' : '1June29mela',
+    'mid2' : '2June29mela',
+    'mid3' : '3June29mela',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -112,7 +110,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -122,7 +120,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -153,6 +151,8 @@ plotAntiIso = False
 higgsPt = 'pt_sv'
 #higgsPt = 'Higgs_PtCor'
 
+# MELA
+cats = ['vbf',]
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]
 for remove in toRemove :
@@ -246,17 +246,17 @@ for isoVal in isoVals :
         from util.helpers import getQCDSF
         from analysisShapesROOT import makeDataCards
         #for var in ['m_visCor','m_sv'] :
-        for var in ['m_sv',] :
-        #for var in ['m_visCor',] :
+        vars = [
+        'mjj:m_sv:KD_int_neg1-0',
+        'mjj:m_sv:KD_int_0-1',
+        'mjj:m_sv:KD_bsm_mlt_0-p2',
+        'mjj:m_sv:KD_bsm_mlt_p2-p4',
+        'mjj:m_sv:KD_bsm_mlt_p4-p6',
+        'mjj:m_sv:KD_bsm_mlt_p6-p8',
+        'mjj:m_sv:KD_bsm_mlt_p8-1',]
+        for var in vars :
             for cat in cats :
-                #if var == 'm_visCor' and cat in ['boosted', 'vbf'] : continue
-                #if var == 'm_visCor' and cat in ['boosted','vbf','0jet2D'] : continue
-                if 'm_sv' in var :
-                    if cat == 'boosted' : var = '%s:m_sv' % higgsPt
-                    if cat == 'vbf' : var = 'mjj:m_sv'
-                #if cat == 'boosted' : var = 'Higgs_PtCor:m_visCor'
-                #if cat == 'vbf' : var = 'mjj:m_visCor'
-                finalCat = cat
+                finalCat = cat + '_' + var.replace('mjj:m_sv:','')
                 if doFF :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                     kwargs = {
@@ -275,23 +275,23 @@ for isoVal in isoVals :
                     'category' : finalCat,
                     #'fitShape' : 'm_visCor',
                     'fitShape' : var,
-                    'allShapes' : True,
+                    'allShapes' : False,
                     'sync' : sync,
                     }
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
 
-                    # Make OS Loose QCD CR
-                    folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
-                    kwargs = {
-                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
-                    'qcdSF' : 1.0,
-                    'category' : finalCat+'_qcd_cr',
-                    #'fitShape' : 'm_visCor',
-                    'fitShape' : var,
-                    'allShapes' : True,
-                    'sync' : sync,
-                    }
-                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                    ## Make OS Loose QCD CR
+                    #folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
+                    #kwargs = {
+                    #'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
+                    #'qcdSF' : 1.0,
+                    #'category' : finalCat+'_qcd_cr',
+                    ##'fitShape' : 'm_visCor',
+                    #'fitShape' : var,
+                    #'allShapes' : True,
+                    #'sync' : sync,
+                    #}
+                    #makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
 
         app = '-FF' if doFF else '-StdMthd'
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
