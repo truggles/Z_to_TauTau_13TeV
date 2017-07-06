@@ -113,7 +113,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -152,8 +152,8 @@ doFF = getenv('doFF', type=bool)
 # Make CR plots for AN
 #plotAntiIso = True
 plotAntiIso = False
-higgsPt = 'pt_sv'
-#higgsPt = 'Higgs_PtCor'
+#higgsPt = 'pt_sv'
+higgsPt = 'Higgs_PtCor'
 
 # MELA
 cats = ['vbf',]
