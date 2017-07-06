@@ -88,11 +88,9 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1March20withMetUnc',
-    'mid2' : '2March23withMetUnc',
-    'mid3' : '3March23withMetUnc',
-    'mid2' : '2March28withMetUnc',
-    'mid3' : '3March28withMetUnc',
+    'mid1' : '1May31withTopMassForGGH',
+    'mid2' : '2May31withTopMassForGGH',
+    'mid3' : '3May31withTopMassForGGH',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -112,7 +110,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -122,7 +120,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -150,8 +148,8 @@ doFF = getenv('doFF', type=bool)
 # Make CR plots for AN
 #plotAntiIso = True
 plotAntiIso = False
-higgsPt = 'pt_sv'
-#higgsPt = 'Higgs_PtCor'
+#higgsPt = 'pt_sv'
+higgsPt = 'Higgs_PtCor'
 
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]

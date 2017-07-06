@@ -368,7 +368,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                 histos[ samples[ sample ] ].Add( hNew )
     
-                #XXX LOTS OF PRINT OUTS if ops['mssm'] and not 'ggH' in sample and not 'bbH' in sample :
+                #XXX LOTS OF PRINT OUTS if ops['mssm'] and not 'ggH_htt' in sample and not 'bbH' in sample :
                 #XXX LOTS OF PRINT OUTS     print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
                 #XXX LOTS OF PRINT OUTS else :
                 #XXX LOTS OF PRINT OUTS     print "SampleName: %20s   Hist yield %.2f" % (sample, hist.Integral())
@@ -402,7 +402,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #dataArray = []
                 bkgArray = [0] * numBins
                 for name in histos :
-                    if 'ggH' in name or 'qqH' in name or 'ZH' in name or 'WH' in name :
+                    if 'ggH_htt' in name or 'qqH_htt' in name or 'ZH_htt' in name or 'WH_htt' in name :
                         continue # we don't care about signal here
                     elif name == 'data_obs' : continue # can use this later if need be
                     #    for bin_id in range( histos[ name ].GetNbinsX() ) :
@@ -485,8 +485,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if name == 'jetFakes' and not doFF : continue
                     if name == 'jetFakes' and not ('ffSyst' in var or 'ffStat' in var) : continue
                     if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
-                    if '_ggH' in var and not name in ['ggH110', 'ggH120','ggH125','ggH130', 'ggH140'] : continue
-                    if '_topQuarkggH' in var and not name in ['ggH110', 'ggH120','ggH125','ggH130', 'ggH140'] : continue
+                    if '_ggH' in var and not name in ['ggH_htt110', 'ggH_htt120','ggH_htt125','ggH_htt130', 'ggH_htt140'] : continue
+                    if '_topQuarkggH' in var and not name in ['ggH_htt110', 'ggH_htt120','ggH_htt125','ggH_htt130', 'ggH_htt140'] : continue
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
                     if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] or \
