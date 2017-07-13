@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''#################################################################
 ##     Analysis run file for Z or Higgs -> TauTau                 ##
 ##     Tyler Ruggles                                              ##
@@ -70,7 +71,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #SamplesDataCards = ['dataTT-C',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
-SamplesDataCards = anomalousVBF
+#SamplesDataCards = anomalousVBF
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -92,19 +93,19 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1July12melaSig',
-    'mid2' : '2July1umelaSig',
-    'mid3' : '3July1umelaSig',
+    'mid1' : '1June29mela',
+    'mid2' : '2June29mela',
+    'mid3' : '3June29mela',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true', # This means "do the hdfs skim"
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # This means "do the hdfs skim"
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -124,7 +125,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -134,7 +135,6 @@ text=False
 makeDataCards = True
 makeDataCards = False
 
-cats = ['inclusive', 'vbf_low', 'vbf_high', '1jet_low', '1jet_high', '0jet','1jet','2jet']
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
 #cats = ['boosted',]
@@ -156,7 +156,8 @@ plotAntiIso = False
 higgsPt = 'Higgs_PtCor'
 
 # MELA
-cats = ['vbf',]
+cats = ['inclusive', '0jet2D', 'boosted','vbf',]
+#cats = ['vbf',]
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]
 for remove in toRemove :
@@ -251,16 +252,16 @@ for isoVal in isoVals :
         from analysisShapesROOT import makeDataCards
         #for var in ['m_visCor','m_sv'] :
         vars = [
-        'mjj:m_sv:KD_int_neg1-0',
-        'mjj:m_sv:KD_int_0-1',
-        'mjj:m_sv:KD_bsm_mlt_0-p2',
-        'mjj:m_sv:KD_bsm_mlt_p2-p4',
-        'mjj:m_sv:KD_bsm_mlt_p4-p6',
-        'mjj:m_sv:KD_bsm_mlt_p6-p8',
-        'mjj:m_sv:KD_bsm_mlt_p8-1',]
+        'mjj:m_sv:KD_int_DCP_neg1to0',
+        'mjj:m_sv:KD_int_DCP_0to1',
+        'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',]
         for var in vars :
             for cat in cats :
-                finalCat = cat + '_' + var.replace('mjj:m_sv:','')
+                finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('KD_bsm_mlt_','').replace('KD_int_','')
                 if doFF :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                     kwargs = {
@@ -274,7 +275,7 @@ for isoVal in isoVals :
                     qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                     kwargs = {
-                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
+                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat),
                     'qcdSF' : qcdSF,
                     'category' : finalCat,
                     #'fitShape' : 'm_visCor',
@@ -284,18 +285,18 @@ for isoVal in isoVals :
                     }
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
 
-                    ## Make OS Loose QCD CR
-                    #folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
-                    #kwargs = {
-                    #'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_',''),
-                    #'qcdSF' : 1.0,
-                    #'category' : finalCat+'_qcd_cr',
-                    ##'fitShape' : 'm_visCor',
-                    #'fitShape' : var,
-                    #'allShapes' : True,
-                    #'sync' : sync,
-                    #}
-                    #makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                    # Make OS Loose QCD CR
+                    folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
+                    kwargs = {
+                    'useQCDMakeName' : str(params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat),
+                    'qcdSF' : 1.0,
+                    'category' : finalCat+'_qcd_cr',
+                    #'fitShape' : 'm_visCor',
+                    'fitShape' : var,
+                    'allShapes' : False,
+                    'sync' : sync,
+                    }
+                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
 
         app = '-FF' if doFF else '-StdMthd'
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )

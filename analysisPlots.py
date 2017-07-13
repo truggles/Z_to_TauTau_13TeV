@@ -521,20 +521,20 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         # Add MELA cuts
         if 'KD_int' in var :
-            if 'KD_int_neg1-0' in var :
+            if 'KD_int_DCP_neg1to0' in var :
                 additionalCutToUse += '*(KD_int <= 0)'
-            if 'KD_int_0-1' in var :
+            if 'KD_int_DCP_0to1' in var :
                 additionalCutToUse += '*(KD_int > 0)'
         if 'KD_bsm_mlt' in var :
-            if 'KD_bsm_mlt_0-p2' in var : 
+            if 'KD_bsm_mlt_D0_0to0p2' in var : 
                 additionalCutToUse += '*(KD_bsm_mlt < .2)'
-            if 'KD_bsm_mlt_p2-p4' in var :
+            if 'KD_bsm_mlt_D0_0p2to0p4' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.2 && KD_bsm_mlt < .4)'
-            if 'KD_bsm_mlt_p4-p6' in var :
+            if 'KD_bsm_mlt_D0_0p4to0p6' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .6)'
-            if 'KD_bsm_mlt_p6-p8' in var :
+            if 'KD_bsm_mlt_D0_0p6to0p8' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.6 && KD_bsm_mlt < .8)'
-            if 'KD_bsm_mlt_p8-1' in var : 
+            if 'KD_bsm_mlt_D0_0p8to1' in var : 
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.8)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
@@ -548,13 +548,13 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         varBase = var.replace('_ffSub','')
         plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
         # MELA
-        plotVar = plotVar.replace( ':KD_int_neg1-0', '' )
-        plotVar = plotVar.replace( ':KD_int_0-1', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_0-p2', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_p2-p4', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_p4-p6', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_p6-p8', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_p8-1', '' )
+        plotVar = plotVar.replace( ':KD_int_DCP_neg1to0', '' )
+        plotVar = plotVar.replace( ':KD_int_DCP_0to1', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0to0p2', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p2to0p4', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p6', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p6to0p8', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p8to1', '' )
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
             shapeName = tmp.pop()
@@ -746,14 +746,16 @@ def getHistoDict( analysis, channel ) :
 # MELA            'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 # MELA            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_0-p2' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_p2-p4' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_p4-p6' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_p6-p8' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_p8-1' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_int_neg1-0' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_int_0-1' : [300, 0, 300, 10, 'KT_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_int_DCP_0to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'KD_int' : [20, -1, 1, 1, 'KD_int', ' GeV'],
+            'KD_bsm_mlt' : [20, 0, 1, 1, 'KD_bsm_mlt', ' GeV'],
         }
 
         ''' added shape systematics '''
