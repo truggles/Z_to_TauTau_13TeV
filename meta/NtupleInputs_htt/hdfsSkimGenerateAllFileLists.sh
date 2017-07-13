@@ -1,5 +1,6 @@
 
 ALL=/data/truggles/svFitApr01_SM-HTT_Merged
+aHTT=/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged
 CHANNEL=tt
 
 
@@ -23,3 +24,8 @@ for MASS in 125; do
         ls ${ALL}/${SAMPLE}${MASS}_*_${CHANNEL}.root > skimmed/${SAMPLE}${MASS}_${CHANNEL}.txt
     done
 done
+
+for SAMPLE in VBFHtoTauTau0PHf05ph0125 VBFHtoTauTau0L1f05ph0125 VBFHtoTauTau0L1125 VBFHtoTauTau0PM125 VBFHtoTauTau0Mf05ph0125 VBFHtoTauTau0PH125 VBFHtoTauTau0M125 VBFHtoTauTau0PM-v5125; do
+    ls ${aHTT}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+done
+

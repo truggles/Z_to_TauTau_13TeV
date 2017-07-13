@@ -1,0 +1,3 @@
+/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0PH125_0_tt.root
+/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0PH125_1_tt.root
+/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0PH125_2_tt.root
