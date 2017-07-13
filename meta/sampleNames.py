@@ -370,7 +370,7 @@ def sampleDetails( analysis ) :
                 'xsec' : 0.001,
                 'group' : 'dib'},
         }, # end diiboson
-	'SM-Higgs' : { # See Yellow Report 4: https://twiki.cern.ch/twiki/pub/LHCPhysics/LHCHXSWG/Higgs_XSBR_YR4_update.xlsx
+    'SM-Higgs' : { # See Yellow Report 4: https://twiki.cern.ch/twiki/pub/LHCPhysics/LHCHXSWG/Higgs_XSBR_YR4_update.xlsx
             'ggHtoTauTau110': {
                'DASPath' : '/GluGluHToTauTau_M110_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                'xsec' : 57.90 * 0.0698,
@@ -542,7 +542,7 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/HZJ_HToWW_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.8839 * 0.2137 * 0.3258 * 0.3258, # From Cecile
                 'group' : 'ZHWW'},
-	} # end SM-Higgs
+    } # end SM-Higgs
     } # end sample Map
 
     # A to Zh sample masses
@@ -553,6 +553,14 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/AToZhToLLTauTau_M-%i_13TeV_madgraph_4f_LO/%s%s/MINIAODSIM' % (mass, moriond17, version),
                 'xsec' : 1.,
                 'group' : 'azh'}
+
+    # Adding anomalous couplings VBF Higgs, these are normalized based on VBF125
+    # We don't have the DAS details here, so just copy VBF125
+    anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125',
+        'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
+    for aHiggs in anomalousVBF :
+        sampleMap['SM-Higgs'][ aHiggs ] = sampleMap['SM-Higgs']['VBFHtoTauTau125']
+
 
     # Simplify tracking SM-Higgs and add to all returned maps
     for smHiggs in sampleMap['SM-Higgs'].keys() :

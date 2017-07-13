@@ -2,6 +2,7 @@
 DATA=/hdfs/store/user/caillol/SMHTT_reminiaod_feb14
 ALL=/hdfs/store/user/caillol/SMHTT_mc_feb13
 SIGNALS=/hdfs/store/user/truggles/SMHTT_signals_may30
+aHTT=/hdfs/store/user/truggles/aHTT_signals_july11_v3
 
 #ls ${DATA}/data_Tau_Run2016B*/*.root                                            		 > hdfs/dataTT-B.txt 
 #ls ${DATA}/data_Tau_Run2016C/*.root                                            		     > hdfs/dataTT-C.txt 
@@ -50,17 +51,25 @@ SIGNALS=/hdfs/store/user/truggles/SMHTT_signals_may30
 #ls ${ALL}/ZZTo4L_13TeV-amcatnloFXFX-pythia8_v6_ext1-v1/*.root                                      > hdfs/ZZ4l.txt 
 
 
-for MASS in 110 120 125 130 140; do
-#for MASS in 125; do
-    ls ${SIGNALS}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                        > hdfs/ggHtoTauTau${MASS}.txt
-    ls ${SIGNALS}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                           > hdfs/VBFHtoTauTau${MASS}.txt
-    ls ${SIGNALS}/GluGluHToWWTo2L2Nu_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                     > hdfs/HtoWW2l2nu${MASS}.txt
-    ls ${SIGNALS}/VBFHToWWTo2L2Nu_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                        > hdfs/VBFHtoWW2l2nu${MASS}.txt
-    ls ${SIGNALS}/WminusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                        > hdfs/WMinusHTauTau${MASS}.txt
-    ls ${SIGNALS}/WplusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                         > hdfs/WPlusHTauTau${MASS}.txt
-    ls ${SIGNALS}/ZHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                             > hdfs/ZHTauTau${MASS}.txt
-    ls ${SIGNALS}/ttHJetToTT_M${MASS}_13TeV_amcatnloFXFX_madspin_pythia8_v6*v1/*.root               > hdfs/ttHTauTau${MASS}.txt
-done
+#for MASS in 110 120 125 130 140; do
+##for MASS in 125; do
+#    ls ${SIGNALS}/GluGluHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                        > hdfs/ggHtoTauTau${MASS}.txt
+#    ls ${SIGNALS}/VBFHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                           > hdfs/VBFHtoTauTau${MASS}.txt
+#    ls ${SIGNALS}/GluGluHToWWTo2L2Nu_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                     > hdfs/HtoWW2l2nu${MASS}.txt
+#    ls ${SIGNALS}/VBFHToWWTo2L2Nu_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                        > hdfs/VBFHtoWW2l2nu${MASS}.txt
+#    ls ${SIGNALS}/WminusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                        > hdfs/WMinusHTauTau${MASS}.txt
+#    ls ${SIGNALS}/WplusHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                         > hdfs/WPlusHTauTau${MASS}.txt
+#    ls ${SIGNALS}/ZHToTauTau_M${MASS}_13TeV_powheg_pythia8_v6*v1/*.root                             > hdfs/ZHTauTau${MASS}.txt
+#    ls ${SIGNALS}/ttHJetToTT_M${MASS}_13TeV_amcatnloFXFX_madspin_pythia8_v6*v1/*.root               > hdfs/ttHTauTau${MASS}.txt
+#done
 
-
+# aHTT Signals
+ls ${aHTT}/VBFHiggs0PHf05ph0/*.root                                                           > hdfs/VBFHtoTauTau0PHf05ph0125.txt
+ls ${aHTT}/VBFHiggs0L1f05ph0/*.root                                                           > hdfs/VBFHtoTauTau0L1f05ph0125.txt
+ls ${aHTT}/VBFHiggs0L1/*.root                                                                 > hdfs/VBFHtoTauTau0L1125.txt
+ls ${aHTT}/VBFHiggs0PM_v6/*.root                                                              > hdfs/VBFHtoTauTau0PM125.txt
+ls ${aHTT}/VBFHiggs0Mf05ph0/*.root                                                            > hdfs/VBFHtoTauTau0Mf05ph0125.txt
+ls ${aHTT}/VBFHiggs0PH/*.root                                                                 > hdfs/VBFHtoTauTau0PH125.txt
+ls ${aHTT}/VBFHiggs0M/*.root                                                                  > hdfs/VBFHtoTauTau0M125.txt
+ls ${aHTT}/VBFHiggs0PM/*.root                                                                 > hdfs/VBFHtoTauTau0PM-v5125.txt
 
