@@ -109,5 +109,5 @@ cp MELA/anaHTT.C ../ZZMatrixElement/MELA/test/anaHTT.C
 cd ../ZZMatrixElement/MELA/test/
 mkdir mela
 root -l loadMELA.C
-IN ROOT CINT: root [1] .L anaHTT.C+2I
+IN ROOT CINT: root [1] .L anaHTT.C+
 IN ROOT CINT: root [2] runAll()
