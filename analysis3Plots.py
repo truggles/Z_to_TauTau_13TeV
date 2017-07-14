@@ -49,6 +49,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
          'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
          'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
+    anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125', 
+        'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
@@ -84,6 +86,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for vvSamp in vv :
             if vvSamp in samples.keys() :
                 del samples[ vvSamp ]
+        # Skip aHTT for now
+        for aHTT in anomalousVBF :
+            if aHTT in samples.keys() :
+                del samples[ aHTT ]
         if not doFF :
             samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
@@ -115,7 +121,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     azhMass = 350
     mssmSF = 100
     higgsSF = 10
-    if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
+    if 'vbf' in ops['targetDir'] : higgsSF = 1
     azhSF = .025
     
 

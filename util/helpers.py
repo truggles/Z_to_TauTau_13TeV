@@ -264,7 +264,7 @@ def dataCardGenMatchedSamples( inSamples ) :
     for anom in anomalousVBF :
         if anom in inSamples :
             addName = anom.replace('VBFHtoTauTau','')
-            samples[ anom ] = 'qqH_htt_%s' % anomalousVBF
+            samples[ anom ] = 'qqH_htt_%s' % addName
 
     return samples
 

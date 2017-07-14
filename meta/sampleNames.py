@@ -559,7 +559,8 @@ def sampleDetails( analysis ) :
     anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125',
         'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
     for aHiggs in anomalousVBF :
-        sampleMap['SM-Higgs'][ aHiggs ] = sampleMap['SM-Higgs']['VBFHtoTauTau125']
+        sampleMap['SM-Higgs'][ aHiggs ] = dict(sampleMap['SM-Higgs']['VBFHtoTauTau125'])
+        sampleMap['SM-Higgs'][ aHiggs ]['group'] = 'aHTT'
 
 
     # Simplify tracking SM-Higgs and add to all returned maps

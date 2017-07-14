@@ -743,7 +743,7 @@ def getHistoDict( analysis, channel ) :
             #'pfpzetamis' : [300, 0, 300, 20, 'pfpZetaMis', ' GeV'],
             #'pzetamiss' : [500, -200, 300, 20, 'pZetaMis', ' GeV'],
             'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
-# MELA            'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 # MELA            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0to0p2' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
@@ -754,8 +754,8 @@ def getHistoDict( analysis, channel ) :
             #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_0to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'KD_int' : [20, -1, 1, 1, 'KD_int', ' GeV'],
-            'KD_bsm_mlt' : [20, 0, 1, 1, 'KD_bsm_mlt', ' GeV'],
+            'KD_int' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
+            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0', ' GeV'],
         }
 
         ''' added shape systematics '''

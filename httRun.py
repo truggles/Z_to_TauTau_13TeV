@@ -125,7 +125,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -133,7 +133,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -159,7 +159,7 @@ higgsPt = 'Higgs_PtCor'
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['vbf',]
 
-toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125',]
+toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125', 'VBFHtoTauTau0PM-v5125']
 for remove in toRemove :
     if remove in samples.keys() : del samples[remove]
 
@@ -235,8 +235,7 @@ for isoVal in isoVals :
                         kwargs['qcdMakeDM'] = cat+'_plotMe'
                         kwargs['qcdSF'] = 1.0
                     else :
-                        kwargs['useQCDMakeName'] = str('OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat).replace('dyShapeNew_','')
-                        #str(.replace('dyShapeNew_',''),
+                        kwargs['useQCDMakeName'] = str('OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat)
                         kwargs['qcdSF'] = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                         kwargs['useQCDMake'] = True
                 analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
@@ -252,6 +251,8 @@ for isoVal in isoVals :
         from analysisShapesROOT import makeDataCards
         #for var in ['m_visCor','m_sv'] :
         vars = [
+        'm_sv',
+        '%s:m_sv' % higgsPt,
         'mjj:m_sv:KD_int_DCP_neg1to0',
         'mjj:m_sv:KD_int_DCP_0to1',
         'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
@@ -259,9 +260,18 @@ for isoVal in isoVals :
         'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
         'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
         'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',]
-        for var in vars :
-            for cat in cats :
-                finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('KD_bsm_mlt_','').replace('KD_int_','')
+        for cat in cats :
+            for var in vars :
+                # Get normal vars for normal cats
+                if cat == 'boosted' and not var == '%s:m_sv' % higgsPt : continue
+                if (cat == 'inclusive' or cat == '0jet2D') and not var == 'm_sv' : continue
+                if cat == 'vbf' and not 'mjj:m_sv:KD' in var : continue
+
+                # Proper category naming
+                if cat == 'vbf' :
+                    finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('KD_bsm_mlt_','').replace('KD_int_','')
+                else : finalCat = cat
+
                 if doFF :
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
                     kwargs = {
@@ -300,7 +310,8 @@ for isoVal in isoVals :
 
         app = '-FF' if doFF else '-StdMthd'
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
-        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
+        #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass2D-%s-%s.root" % (pt, isoVal)] )
+        subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV-MELA.root", "httShapes/htt/htt_tt.inputs-sm-13TeV-MELA-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_visMass2D-%s-%s%s.root" % (pt, isoVal, app)] )
     
