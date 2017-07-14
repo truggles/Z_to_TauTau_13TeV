@@ -1,2 +1,1 @@
-/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-dataEE-C_0_eemt.root
-/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-dataEE-C_1_eemt.root
+/data/truggles/azhJuly13skimMergedNoSVFit/dataEE-C_0_eemt.root
