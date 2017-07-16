@@ -137,6 +137,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     azhMass = 350
     mssmSF = 100
     higgsSF = 10
+    if 'inclusive' in ops['targetDir'] : higgsSF = 30
     if 'vbf' in ops['targetDir'] : higgsSF = 2.5
     azhSF = .025
     
