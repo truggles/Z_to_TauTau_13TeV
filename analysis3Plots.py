@@ -29,6 +29,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'qcdSF' : 1.0,
     'ratio' : True,
     'blind' : True,
+    'fullBlind' : False,
     'text' : False,
     'mssm' : False,
     'log' : False,
@@ -49,8 +50,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
          'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
          'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
+    #anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125', 
+    #    'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
+    # Allow pure SM and pure BSM through
     anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125', 
-        'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
+        'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0PM-v5125']
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
@@ -65,6 +69,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     #print gen, sample+'-'+gen
                     samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
                     genApp = gen.lower()
+                    if genApp in ['zl', 'zj'] : genApp = 'zj'
                     samples[ sample+'-'+gen ]['group'] = genApp
             if sample == 'TT' :
                 for gen in ['TTT', 'TTJ'] :
@@ -74,8 +79,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if sample in vv : 
                 for gen in ['VVT', 'VVJ'] :
                     samples[ sample+'-'+gen ] = deepcopy(samples[ sample ])
-                    genApp = 'dib'
+                    genApp = 'ewk'
                     samples[ sample+'-'+gen ]['group'] = genApp
+            if samples[ sample ]['group'] == 'dib' :
+                samples[ sample ]['group'] = 'ewk'
+            if samples[ sample ]['group'] == 'wjets' :
+                samples[ sample ]['group'] = 'ewk'
+            if sample == 'VBFHtoTauTau0PM125' :
+                samples[ sample ]['group'] = 'qqH_aHTT_SM'
+            if sample == 'VBFHtoTauTau0M125' :
+                samples[ sample ]['group'] = 'qqH_aHTT_BSM'
 
         # Clean the samples list
         if analysis == 'htt' and 'TT' in samples.keys() :
@@ -90,6 +103,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for aHTT in anomalousVBF :
             if aHTT in samples.keys() :
                 del samples[ aHTT ]
+        # Skip centrally produced VBF for now
+        if 'VBFHtoTauTau125' in samples.keys() :
+            del samples[ 'VBFHtoTauTau125' ]
         if not doFF :
             samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
@@ -121,7 +137,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     azhMass = 350
     mssmSF = 100
     higgsSF = 10
-    if 'vbf' in ops['targetDir'] : higgsSF = 1
+    if 'vbf' in ops['targetDir'] : higgsSF = 2.5
     azhSF = .025
     
 
@@ -149,16 +165,18 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
     sampInfo = { 'htt' : {
-        'dib' : [ROOT.kRed+2, 'VV'],
+        'ewk' : [ROOT.kRed+2, 'electroweak'],
         'ttbar' : [ROOT.kBlue-8, 't#bar{t}'],
         'qcd' : [ROOT.TColor.GetColor(250,202,255), 'QCD'], #kMagenta-10
         'ztt' : [ROOT.TColor.GetColor(248,206,104), 'Z#rightarrow#tau#tau'], #kOrange-4,
-        'zl' : [ROOT.kAzure+2, 'Z#rightarrowee (lepton)'],
-        'zj' : [ROOT.kGreen+2, 'Z#rightarrowee (jet)'],
+        #'zl' : [ROOT.kAzure+2, 'Z#rightarrowee (lepton)'],
+        'zj' : [ROOT.kGreen+2, 'Z#rightarrowee (fake)'],
         'zll' : [ROOT.TColor.GetColor(100,182,232), 'Z#rightarrowee'],
-        'wjets' : [ROOT.kAzure+6, 'WJets'],
-        'higgs' : [ROOT.kBlue, 'SM Higgs(125)'],
-        'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
+        #'wjets' : [ROOT.kAzure+6, 'WJets'],
+        'ggH' : [ROOT.kBlue, 'ggH, SM(125)'],
+        'qqH_aHTT_SM' : [3, 'qqH, SM(125)'],
+        'qqH_aHTT_BSM' : [6, 'qqH, BSM(125)'],
+        'VH' : [2, 'VH, SM(125)'],
         #'mssm' : [ROOT.kPink, 'MSSM(%i) x %i' % (mssmMass, mssmSF)],
         'obs' : [ROOT.kBlack, 'Data'],
         }, # htt
@@ -174,12 +192,22 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
         } # azh
     } # sampInfo
-    if not ops['mssm'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %.1f" % higgsSF
+    if not ops['mssm'] :
+        sampInfo['htt']['ggH'][1] = "ggH, SM(125) x %.1f" % higgsSF
+        sampInfo['htt']['VH'][1] = "VH, SM(125) x %.1f" % higgsSF
+        sampInfo['htt']['qqH_aHTT_SM'][1] = "qqH, SM(125) x %.1f" % higgsSF
+        sampInfo['htt']['qqH_aHTT_BSM'][1] = "qqH, BSM(125) x %.1f" % higgsSF
 
     # Make signal variable for later easy mapping
-    signal = ''
+    signalVH = ''
+    signalggH = ''
+    signalqqH = ''
+    signalqqH_bsm = ''
     if analysis == 'htt' : 
-        signal = 'higgs'
+        signalVH = 'VH'
+        signalggH = 'ggH'
+        signalqqH = 'qqH_aHTT_SM'
+        signalqqH_bsm = 'qqH_aHTT_BSM'
         signalSF = higgsSF
     if analysis == 'azh' : 
         #signal = 'azh'
@@ -338,6 +366,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             stack = ROOT.THStack("All Backgrounds stack", "%s, %s" % (channel, var) )
             sampHistos = {}
             if ":" not in var :
+                print sampInfo[analysis]
                 for samp in sampInfo[analysis].keys() :
                     # Skip some DY gen based combos
                     if analysis == 'htt' and channel == 'em' :
@@ -353,10 +382,23 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     sampHistos[samp].SetLineWidth( 2 )
                     sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
                     sampHistos[samp].SetDirectory( 0 )
-                sampHistos[ signal ].SetLineColor( ROOT.kPink )
-                sampHistos[ signal ].SetLineWidth( 4 )
-                sampHistos[ signal ].SetLineStyle( 7 )
-                sampHistos[ signal ].SetMarkerStyle( 0 )
+                # Redo the 4 signals
+                sampHistos[ signalVH ].SetLineColor( sampInfo[analysis][ signalVH ][0] )
+                sampHistos[ signalVH ].SetLineWidth( 4 )
+                sampHistos[ signalVH ].SetLineStyle( 7 )
+                sampHistos[ signalVH ].SetMarkerStyle( 0 )
+                sampHistos[ signalqqH ].SetLineColor( sampInfo[analysis][ signalqqH ][0] )
+                sampHistos[ signalqqH ].SetLineWidth( 4 )
+                sampHistos[ signalqqH ].SetLineStyle( 7 )
+                sampHistos[ signalqqH ].SetMarkerStyle( 0 )
+                sampHistos[ signalggH ].SetLineColor( sampInfo[analysis][ signalggH ][0] )
+                sampHistos[ signalggH ].SetLineWidth( 4 )
+                sampHistos[ signalggH ].SetLineStyle( 7 )
+                sampHistos[ signalggH ].SetMarkerStyle( 0 )
+                sampHistos[ signalqqH_bsm ].SetLineColor( sampInfo[analysis][ signalqqH_bsm ][0] )
+                sampHistos[ signalqqH_bsm ].SetLineWidth( 4 )
+                sampHistos[ signalqqH_bsm ].SetLineStyle( 7 )
+                sampHistos[ signalqqH_bsm ].SetMarkerStyle( 0 )
             else :
                 twoDVars = analysisPlots.get2DVars( var )
                 for samp in sampInfo[analysis].keys() :
@@ -552,10 +594,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     #print "Adding QCD: ",sampHistos['qcd'].Integral()
                     stack.Add( sampHistos['qcd'] )
                 stack.Add( sampHistos['ttbar'] )
-                stack.Add( sampHistos['dib'] )
-                stack.Add( sampHistos['wjets'] )
+                stack.Add( sampHistos['ewk'] )
+                #stack.Add( sampHistos['wjets'] )
                 if channel != 'em' :
-                    stack.Add( sampHistos['zl'] )
+                    #stack.Add( sampHistos['zl'] )
                     stack.Add( sampHistos['zj'] )
                 if channel == 'em' :
                     stack.Add( sampHistos['zll'] )
@@ -572,7 +614,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.Add( sampHistos['zz'] )
     
             # Scale signal samples for viewing
-            sampHistos[ signal ].Scale( signalSF )
+            sampHistos[ signalVH ].Scale( signalSF )
+            sampHistos[ signalqqH ].Scale( signalSF )
+            sampHistos[ signalggH ].Scale( signalSF )
+            sampHistos[ signalqqH_bsm ].Scale( signalSF )
     
             ''' Print out yields for a given distribution '''
             #sensitivityVars = ['Higgs_Pt', 'pt_1', 'pt_2', 'mjj', 'jdeta', 'pt_sv']
@@ -605,13 +650,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'qcd' : .20,
                 'jetFakes' : .0,
                 'ttbar' : .15,
-                'dib' : .10,
-                'wjets' : .10,
+                'ewk' : .10,
+                #'wjets' : .10,
                 'ztt' : .05,
-                'zl' : .30,
+                #'zl' : .30,
                 'zj' : .30,
-                'higgs' : .0,
-                'VH' : .2,
+                'ggH' : .0,
+                'qqH_aHTT_SM' : .0,
+                'qqH_aHTT_BSM' : .0,
+                'VH' : .0,
                 'obs' : .0,},
             'azh' : {
                 'top' : .10,
@@ -669,8 +716,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 pad1.cd()
                 stack.Draw('hist')
                 if not 'plotMe' in ops['qcdMakeDM'] :
-                    sampHistos[signal].Draw('same')
-                sampHistos['obs'].Draw('esamex0')
+                    sampHistos[signalVH].Draw('same')
+                    sampHistos[signalggH].Draw('same')
+                    sampHistos[signalqqH].Draw('same')
+                    sampHistos[signalqqH_bsm].Draw('same')
+                if not ops['fullBlind'] :
+                    sampHistos['obs'].Draw('esamex0')
                 # X Axis!
                 stack.GetXaxis().SetTitle("%s" % info[ 4 ])
     
@@ -679,14 +730,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 pads = ratioPlot( c1, 1-smlPadSize )
                 pad1 = pads[0]
                 ratioPad = pads[1]
-                ratioPad.SetTopMargin(0.00)
+                ratioPad.SetTopMargin(0.07)
                 ratioPad.SetBottomMargin(0.3)
                 pad1.SetBottomMargin(0.00)
                 ratioPad.SetGridy()
                 ratioHist = ROOT.TH1D('ratio %s' % append, 'ratio', xNum, xBins )
                 ratioHist.Sumw2()
-                ratioHist.Add( sampHistos['obs'] )
-                ratioHist.Divide( stack.GetStack().Last() )
+                if not ops['fullBlind'] :
+                    ratioHist.Add( sampHistos['obs'] )
+                    ratioHist.Divide( stack.GetStack().Last() )
                 ratioHist.SetMaximum( 2. )
                 ratioHist.SetMinimum( 0. )
                 if channel == 'tt' :
@@ -734,9 +786,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 pad1.cd()
                 stack.Draw('hist')
+                stack.GetXaxis().SetLabelSize( 0.0 )
+                stack.GetYaxis().SetLabelSize( stack.GetYaxis().GetLabelSize() / (1-smlPadSize) )
                 if not 'plotMe' in ops['qcdMakeDM'] :
-                    sampHistos[signal].Draw('same')
-                sampHistos['obs'].Draw('esamex0')
+                    sampHistos[signalVH].Draw('same')
+                    sampHistos[signalggH].Draw('same')
+                    sampHistos[signalqqH].Draw('same')
+                    sampHistos[signalqqH_bsm].Draw('same')
+                if not ops['fullBlind'] :
+                    sampHistos['obs'].Draw('esamex0')
     
     
             # Set labels appropriately
@@ -753,7 +811,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Set axis and viewing area
             stackMax = stack.GetStack().Last().GetMaximum()
             dataMax = sampHistos['obs'].GetMaximum()
-            stack.SetMaximum( max(dataMax, stackMax) * 1.5 )
+            #stack.SetMaximum( max(dataMax, stackMax) * 1.5 )
+            stack.SetMaximum( max(dataMax, stackMax) * 1.7 )
             if ops['targetDir'] == '/vbf_low' :
                 stack.SetMaximum( max(dataMax, stackMax) * 1.8 )
             if ops['log'] :
@@ -763,17 +822,21 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
 
             ''' Build the legend explicitly so we can specify marker styles '''
-            legend = ROOT.TLegend(0.60, 0.65, 0.95, 0.93)
+            legend = ROOT.TLegend(0.50, 0.65, 0.95, 0.93)
             legend.SetMargin(0.3)
             legend.SetBorderSize(0)
-            legend.AddEntry( sampHistos['obs'], "Data", 'lep')
-            if not 'plotMe' in ops['qcdMakeDM'] :
-                legend.AddEntry( sampHistos[signal], sampHistos[signal].GetTitle(), 'l')
+            if not ops['fullBlind'] :
+                legend.AddEntry( sampHistos['obs'], "Data", 'lep')
             for j in range(0, stack.GetStack().GetLast() + 1) :
                 last = stack.GetStack().GetLast()
                 name_str = stack.GetStack()[last - j ].GetTitle()
                 if 'qcd' in name_str or 'QCD' in name_str : name_str = 'QCD'
                 legend.AddEntry( stack.GetStack()[ last - j ], name_str, 'f')
+            if not 'plotMe' in ops['qcdMakeDM'] :
+                legend.AddEntry( sampHistos[signalVH], sampHistos[signalVH].GetTitle(), 'l')
+                legend.AddEntry( sampHistos[signalggH], sampHistos[signalggH].GetTitle(), 'l')
+                legend.AddEntry( sampHistos[signalqqH], sampHistos[signalqqH].GetTitle(), 'l')
+                legend.AddEntry( sampHistos[signalqqH_bsm], sampHistos[signalqqH_bsm].GetTitle(), 'l')
             legend.Draw()
     
 
@@ -875,7 +938,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         ratioPad.cd()
                         ratioHist.Draw('esamex0')
                     pad1.cd()
-            sampHistos['obs'].Draw('esamex0')
+            if not ops['fullBlind'] :
+                sampHistos['obs'].Draw('esamex0')
                 
     
     

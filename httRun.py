@@ -129,11 +129,11 @@ runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
-makeFinalPlots = False # Use this with FF
+#makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -223,14 +223,17 @@ for isoVal in isoVals :
                 ROOT.gROOT.Reset()
                 tDir = cat if isoRegion == isoVal+'_' else cat+'_'+isoVal+'_'+lIso
                 blind = True
+                fullBlind = True
+                ratio = False
                 #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
                 #    blind = False
                 
                 if doFF :
-                    kwargs = { 'text':text, 'blind':blind, 'targetDir':'/'+tDir,'sync':sync }
+                    kwargs = { 'text':text, 'blind':blind,
+                        'ratio':ratio, 'targetDir':'/'+tDir,'sync':sync }
                 else :
-                    kwargs = { 'text':text, 'blind':blind, 
-                        'targetDir':'/'+tDir,'sync':sync }
+                    kwargs = { 'text':text, 'blind':blind,
+                        'ratio':ratio, 'targetDir':'/'+tDir,'sync':sync }
                     if isoRegion == isoVal+'_'+lIso :
                         kwargs['qcdMakeDM'] = cat+'_plotMe'
                         kwargs['qcdSF'] = 1.0
@@ -238,6 +241,7 @@ for isoVal in isoVals :
                         kwargs['useQCDMakeName'] = str('OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat)
                         kwargs['qcdSF'] = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                         kwargs['useQCDMake'] = True
+                        kwargs['fullBlind'] = fullBlind
                 analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
                     params['mid2']+'_OSl1ml2_'+isoRegion+'ZTT'+cat, **kwargs  )
                 cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s" % params['mid2'].strip('2')

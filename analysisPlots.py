@@ -528,14 +528,27 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         if 'KD_bsm_mlt' in var :
             if 'KD_bsm_mlt_D0_0to0p2' in var : 
                 additionalCutToUse += '*(KD_bsm_mlt < .2)'
-            if 'KD_bsm_mlt_D0_0p2to0p4' in var :
+            elif 'KD_bsm_mlt_D0_0p2to0p4' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.2 && KD_bsm_mlt < .4)'
-            if 'KD_bsm_mlt_D0_0p4to0p6' in var :
+            elif 'KD_bsm_mlt_D0_0p4to0p6' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .6)'
-            if 'KD_bsm_mlt_D0_0p6to0p8' in var :
+            elif 'KD_bsm_mlt_D0_0p6to0p8' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.6 && KD_bsm_mlt < .8)'
-            if 'KD_bsm_mlt_D0_0p8to1' in var : 
+            elif 'KD_bsm_mlt_D0_0p8to1' in var : 
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.8)'
+            # For 1D MELA vars in slices of mjj
+            elif 'KD_bsm_mlt_mjj0-300' in var : 
+                additionalCutToUse += '*(mjj <= 300)'
+            elif 'KD_bsm_mlt_mjj300-700' in var : 
+                additionalCutToUse += '*(mjj > 300 && mjj <= 700)'
+            elif 'KD_bsm_mlt_mjj700-1100' in var : 
+                additionalCutToUse += '*(mjj > 700 && mjj <= 1100)'
+            elif 'KD_bsm_mlt_mjj1100-inf' in var : 
+                additionalCutToUse += '*(mjj > 1100)'
+            elif 'KD_bsm_mlt_mjj1100-1500' in var : 
+                additionalCutToUse += '*(mjj > 1100 && mjj <= 1500)'
+            elif 'KD_bsm_mlt_mjj1500-inf' in var : 
+                additionalCutToUse += '*(mjj > 1500)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
@@ -555,6 +568,12 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p6', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p6to0p8', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p8to1', '' )
+        plotVar = plotVar.replace( '_mjj0-300', '' )
+        plotVar = plotVar.replace( '_mjj300-700', '' )
+        plotVar = plotVar.replace( '_mjj700-1100', '' )
+        plotVar = plotVar.replace( '_mjj1100-1500', '' )
+        plotVar = plotVar.replace( '_mjj1500-inf', '' )
+        plotVar = plotVar.replace( '_mjj1100-inf', '' )
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
             shapeName = tmp.pop()
@@ -755,7 +774,13 @@ def getHistoDict( analysis, channel ) :
             'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_0to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'KD_int' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
-            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0', ' GeV'],
+            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
+            'KD_bsm_mlt_mjj0-300' : [140, -0.2, 1.2, 20, 'D0- (mjj [0,300])', ' GeV'],
+            'KD_bsm_mlt_mjj300-700' : [140, -0.2, 1.2, 20, 'D0- (mjj [300,700])', ' GeV'],
+            'KD_bsm_mlt_mjj700-1100' : [140, -0.2, 1.2, 20, 'D0- (mjj [700,1100])', ' GeV'],
+            'KD_bsm_mlt_mjj1100-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,inf])', ' GeV'],
+            'KD_bsm_mlt_mjj1100-1500' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,1500])', ' GeV'],
+            'KD_bsm_mlt_mjj1500-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1500,inf])', ' GeV'],
         }
 
         ''' added shape systematics '''
