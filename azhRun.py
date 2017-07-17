@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''#################################################################
 ##     Analysis run file for A -> Z + sm-Higgs -> ll TauTau       ##
 ##     Tyler Ruggles                                              ##
@@ -47,6 +49,7 @@ for mass in [125,] :
     azhSamples.append('WMinusHTauTau%i' % mass)
     azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHWW%i' % mass)
+    azhSamples.append('HZZ%i' % mass)
 
 #for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 #    azhSamples.append('azh%i' % mass)
@@ -58,7 +61,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     
 #azhSamples = ['ZHWW125']
 #azhSamples = ['dataEE-B']
-#azhSamples = ['DYJets',]
+#azhSamples = ['HZZ125',]
 
 
 samples = azhSamples
@@ -71,15 +74,15 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 20,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eett',],
     'cutMapper' : 'Skim',
-    'mid1' : '1June05skim',
-    'mid2' : '2June05skim',
-    'mid3' : '3June05skim',
+    'mid1' : '1July17FR',
+    'mid2' : '2July17FR',
+    'mid3' : '3July17FR',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -97,8 +100,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
@@ -109,8 +112,8 @@ doDataCards = True
 
 runPlots = False
 doMerge = False
-makeFinalPlots = False
-#doDataCards = False
+#makeFinalPlots = False
+doDataCards = False
 
 
 doZH = True
@@ -173,7 +176,8 @@ if 'WZ' in samples :
 if makeFinalPlots :
     text=False
     #text=True
-    kwargs = { 'text':text, 'blind':False, 'redBkg':useRedBkg }
+    blind = True
+    kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
     print params
 
     if useRedBkg : # Delete the yield sample from samples, will be loaded
