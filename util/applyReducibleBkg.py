@@ -16,44 +16,47 @@ class ReducibleBkgWeights :
             Reducible Bkg component." % channel
         self.channel = channel
         self.file = ROOT.TFile('data/azhFakeRateFits.root','READ')
+        self.tauFitCut = 20.
+        self.electronFitCut = 15.
+        self.muonFitCut = 12.5
 
         # Set Leg3 FR graphs
         if self.channel in ['eeet','eeem','emmt','emmm','eeee'] :
-            #self.frGraphBarrelL3 = self.file.Get( 'electron_Barrel_graph' )
+            self.frGraphBarrelL3 = self.file.Get( 'electron_Barrel_graph' )
             self.frFitBarrelL3 = self.file.Get( 'electron_Barrel_fit' )
-            #self.frGraphEndcapL3 = self.file.Get( 'electron_Endcap_graph' )
+            self.frGraphEndcapL3 = self.file.Get( 'electron_Endcap_graph' )
             self.frFitEndcapL3 = self.file.Get( 'electron_Endcap_fit' )
         elif self.channel in ['eemm','eemt','mmmt','mmmm'] :
-            #self.frGraphBarrelL3 = self.file.Get( 'muon_Barrel_graph' )
+            self.frGraphBarrelL3 = self.file.Get( 'muon_Barrel_graph' )
             self.frFitBarrelL3 = self.file.Get( 'muon_Barrel_fit' )
-            #self.frGraphEndcapL3 = self.file.Get( 'muon_Endcap_graph' )
+            self.frGraphEndcapL3 = self.file.Get( 'muon_Endcap_graph' )
             self.frFitEndcapL3 = self.file.Get( 'muon_Endcap_fit' )
         elif self.channel in ['eett','mmtt'] :
-            #self.frGraphBarrelL3 = self.file.Get( 'tau-lltt_Barrel_graph' )
+            self.frGraphBarrelL3 = self.file.Get( 'tau-lltt_Barrel_graph' )
             self.frFitBarrelL3 = self.file.Get( 'tau-lltt_Barrel_fit' )
-            #self.frGraphEndcapL3 = self.file.Get( 'tau-lltt_Endcap_graph' )
+            self.frGraphEndcapL3 = self.file.Get( 'tau-lltt_Endcap_graph' )
             self.frFitEndcapL3 = self.file.Get( 'tau-lltt_Endcap_fit' )
 
         # Set Leg4 FR graphs
         if self.channel in ['eeet','emmt','eemt','mmmt',] :
-            #self.frGraphBarrelL4 = self.file.Get( 'tau-lllt_Barrel_graph' )
+            self.frGraphBarrelL4 = self.file.Get( 'tau-lllt_Barrel_graph' )
             self.frFitBarrelL4 = self.file.Get( 'tau-lllt_Barrel_fit' )
-            #self.frGraphEndcapL4 = self.file.Get( 'tau-lllt_Endcap_graph' )
+            self.frGraphEndcapL4 = self.file.Get( 'tau-lllt_Endcap_graph' )
             self.frFitEndcapL4 = self.file.Get( 'tau-lllt_Endcap_fit' )
         elif self.channel in ['eett','mmtt',] :
-            #self.frGraphBarrelL4 = self.file.Get( 'tau-lltt_Barrel_graph' )
+            self.frGraphBarrelL4 = self.file.Get( 'tau-lltt_Barrel_graph' )
             self.frFitBarrelL4 = self.file.Get( 'tau-lltt_Barrel_fit' )
-            #self.frGraphEndcapL4 = self.file.Get( 'tau-lltt_Endcap_graph' )
+            self.frGraphEndcapL4 = self.file.Get( 'tau-lltt_Endcap_graph' )
             self.frFitEndcapL4 = self.file.Get( 'tau-lltt_Endcap_fit' )
         elif self.channel in ['eeem','eemm','emmm','mmmm'] :
-            #self.frGraphBarrelL4 = self.file.Get( 'muon_Barrel_graph' )
+            self.frGraphBarrelL4 = self.file.Get( 'muon_Barrel_graph' )
             self.frFitBarrelL4 = self.file.Get( 'muon_Barrel_fit' )
-            #self.frGraphEndcapL4 = self.file.Get( 'muon_Endcap_graph' )
+            self.frGraphEndcapL4 = self.file.Get( 'muon_Endcap_graph' )
             self.frFitEndcapL4 = self.file.Get( 'muon_Endcap_fit' )
         elif self.channel in ['eeee',] :
-            #self.frGraphBarrelL4 = self.file.Get( 'electron_Barrel_graph' )
+            self.frGraphBarrelL4 = self.file.Get( 'electron_Barrel_graph' )
             self.frFitBarrelL4 = self.file.Get( 'electron_Barrel_fit' )
-            #self.frGraphEndcapL4 = self.file.Get( 'electron_Endcap_graph' )
+            self.frGraphEndcapL4 = self.file.Get( 'electron_Endcap_graph' )
             self.frFitEndcapL4 = self.file.Get( 'electron_Endcap_fit' )
 
 
@@ -69,10 +72,28 @@ class ReducibleBkgWeights :
             if self.tauPasses( lep, row ) : return 0.
         
         if pt > 200 : pt = 199
+
+        # Check if we should use the graph points instead of the fit
+        # for elec and muon, fits end before out lowest threshold
+        # Also make sure we stay on the lowest threshold for the graphs
+        useFit = True
+        if 'e' in lep :
+            if pt < self.electronFitCut : useFit = False
+            if pt <= 10 : pt = 10.1
+        elif 'm' in lep :
+            if pt < self.muonFitCut : useFit = False
+            if pt <= 10 : pt = 10.1
+
         if abs(eta) < 1.4 :
-            return self.frFitBarrelL3.Eval( pt ) / ( 1. - self.frFitBarrelL3.Eval( pt ) )
+            if useFit :
+                return self.frFitBarrelL3.Eval( pt ) / ( 1. - self.frFitBarrelL3.Eval( pt ) )
+            else :
+                return self.frGraphBarrelL3.Eval( pt ) / ( 1. - self.frGraphBarrelL3.Eval( pt ) )
         if abs(eta) >= 1.4 :
-            return self.frFitEndcapL3.Eval( pt ) / ( 1. - self.frFitEndcapL3.Eval( pt ) )
+            if useFit :
+                return self.frFitEndcapL3.Eval( pt ) / ( 1. - self.frFitEndcapL3.Eval( pt ) )
+            else :
+                return self.frGraphEndcapL3.Eval( pt ) / ( 1. - self.frGraphEndcapL3.Eval( pt ) )
 
 
     def getFRWeightL4( self, pt, eta, lep, row ):
@@ -84,10 +105,28 @@ class ReducibleBkgWeights :
             if self.electronPasses( lep, row ) : return 0.
         
         if pt > 200 : pt = 199
+
+        # Check if we should use the graph points instead of the fit
+        # for elec and muon, fits end before out lowest threshold
+        # Also make sure we stay on the lowest threshold for the graphs
+        useFit = True
+        if 'e' in lep :
+            if pt < self.electronFitCut : useFit = False
+            if pt <= 10 : pt = 10.1
+        elif 'm' in lep :
+            if pt < self.muonFitCut : useFit = False
+            if pt <= 10 : pt = 10.1
+
         if abs(eta) < 1.4 :
-            return self.frFitBarrelL4.Eval( pt ) / ( 1. - self.frFitBarrelL4.Eval( pt ) )
+            if useFit :
+                return self.frFitBarrelL4.Eval( pt ) / ( 1. - self.frFitBarrelL4.Eval( pt ) )
+            else :
+                return self.frGraphBarrelL4.Eval( pt ) / ( 1. - self.frGraphBarrelL4.Eval( pt ) )
         if abs(eta) >= 1.4 :
-            return self.frFitEndcapL4.Eval( pt ) / ( 1. - self.frFitEndcapL4.Eval( pt ) )
+            if useFit :
+                return self.frFitEndcapL4.Eval( pt ) / ( 1. - self.frFitEndcapL4.Eval( pt ) )
+            else :
+                return self.frGraphEndcapL4.Eval( pt ) / ( 1. - self.frGraphEndcapL4.Eval( pt ) )
 
  
     # Check to see if e/m/t pass their cuts
