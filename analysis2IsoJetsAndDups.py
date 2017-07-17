@@ -1683,7 +1683,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # This uses the 1+2-0 method detailed in AN2014/109
                 if 'data' in sample :
                     zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
+                    if zhFR1[0] < 0. : zhFR1[0] = 0.
                     zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
+                    if zhFR2[0] < 0. : zhFR2[0] = 0.
                     zhFR0[0] = zhFR1[0] * zhFR2[0]
                 
                 # Define the LT varialbe we use in analysis (LT from FSA is all 4 objects)
