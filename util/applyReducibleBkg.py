@@ -10,54 +10,60 @@ class ReducibleBkgWeights :
     AZH/ZH analysis"""
     
 
-    def __init__( self, channel ):
+    def __init__( self, channel, jetMatched ):
         assert(channel in ['eemm','eeet','eett','eemt','eeem','emmt','mmtt',
             'mmmt','emmm','eeee','mmmm']), "Channel: %s does not have a \
             Reducible Bkg component." % channel
         self.channel = channel
         self.file = ROOT.TFile('data/azhFakeRateFits.root','READ')
+        self.jetMatched = jetMatched
         self.tauFitCut = 20.
         self.electronFitCut = 15.
         self.muonFitCut = 12.5
+        self.app = ''
+        if self.jetMatched :
+            self.app = 'jetMatch'
+        if not self.jetMatched :
+            self.app = 'noJetMatch'
 
         # Set Leg3 FR graphs
         if self.channel in ['eeet','eeem','emmt','emmm','eeee'] :
-            self.frGraphBarrelL3 = self.file.Get( 'electron_Barrel_graph' )
-            self.frFitBarrelL3 = self.file.Get( 'electron_Barrel_fit' )
-            self.frGraphEndcapL3 = self.file.Get( 'electron_Endcap_graph' )
-            self.frFitEndcapL3 = self.file.Get( 'electron_Endcap_fit' )
+            self.frGraphBarrelL3 = self.file.Get( 'electron_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL3 = self.file.Get( 'electron_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL3 = self.file.Get( 'electron_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL3 = self.file.Get( 'electron_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eemm','eemt','mmmt','mmmm'] :
-            self.frGraphBarrelL3 = self.file.Get( 'muon_Barrel_graph' )
-            self.frFitBarrelL3 = self.file.Get( 'muon_Barrel_fit' )
-            self.frGraphEndcapL3 = self.file.Get( 'muon_Endcap_graph' )
-            self.frFitEndcapL3 = self.file.Get( 'muon_Endcap_fit' )
+            self.frGraphBarrelL3 = self.file.Get( 'muon_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL3 = self.file.Get( 'muon_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL3 = self.file.Get( 'muon_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL3 = self.file.Get( 'muon_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt'] :
-            self.frGraphBarrelL3 = self.file.Get( 'tau-lltt_Barrel_graph' )
-            self.frFitBarrelL3 = self.file.Get( 'tau-lltt_Barrel_fit' )
-            self.frGraphEndcapL3 = self.file.Get( 'tau-lltt_Endcap_graph' )
-            self.frFitEndcapL3 = self.file.Get( 'tau-lltt_Endcap_fit' )
+            self.frGraphBarrelL3 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL3 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL3 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL3 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_fit' )
 
         # Set Leg4 FR graphs
         if self.channel in ['eeet','emmt','eemt','mmmt',] :
-            self.frGraphBarrelL4 = self.file.Get( 'tau-lllt_Barrel_graph' )
-            self.frFitBarrelL4 = self.file.Get( 'tau-lllt_Barrel_fit' )
-            self.frGraphEndcapL4 = self.file.Get( 'tau-lllt_Endcap_graph' )
-            self.frFitEndcapL4 = self.file.Get( 'tau-lllt_Endcap_fit' )
+            self.frGraphBarrelL4 = self.file.Get( 'tau-lllt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'tau-lllt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'tau-lllt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'tau-lllt_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt',] :
-            self.frGraphBarrelL4 = self.file.Get( 'tau-lltt_Barrel_graph' )
-            self.frFitBarrelL4 = self.file.Get( 'tau-lltt_Barrel_fit' )
-            self.frGraphEndcapL4 = self.file.Get( 'tau-lltt_Endcap_graph' )
-            self.frFitEndcapL4 = self.file.Get( 'tau-lltt_Endcap_fit' )
+            self.frGraphBarrelL4 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eeem','eemm','emmm','mmmm'] :
-            self.frGraphBarrelL4 = self.file.Get( 'muon_Barrel_graph' )
-            self.frFitBarrelL4 = self.file.Get( 'muon_Barrel_fit' )
-            self.frGraphEndcapL4 = self.file.Get( 'muon_Endcap_graph' )
-            self.frFitEndcapL4 = self.file.Get( 'muon_Endcap_fit' )
+            self.frGraphBarrelL4 = self.file.Get( 'muon_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'muon_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'muon_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'muon_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eeee',] :
-            self.frGraphBarrelL4 = self.file.Get( 'electron_Barrel_graph' )
-            self.frFitBarrelL4 = self.file.Get( 'electron_Barrel_fit' )
-            self.frGraphEndcapL4 = self.file.Get( 'electron_Endcap_graph' )
-            self.frFitEndcapL4 = self.file.Get( 'electron_Endcap_fit' )
+            self.frGraphBarrelL4 = self.file.Get( 'electron_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4 = self.file.Get( 'electron_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4 = self.file.Get( 'electron_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4 = self.file.Get( 'electron_Endcap_'+self.app+'_fit' )
 
 
     # Retrieve values
@@ -77,6 +83,7 @@ class ReducibleBkgWeights :
         # for elec and muon, fits end before out lowest threshold
         # Also make sure we stay on the lowest threshold for the graphs
         useFit = True
+        if self.jetMatched : useFit = False # This is coarsely binned
         if 'e' in lep :
             if pt < self.electronFitCut : useFit = False
             if pt <= 10 : pt = 10.1
@@ -110,6 +117,7 @@ class ReducibleBkgWeights :
         # for elec and muon, fits end before out lowest threshold
         # Also make sure we stay on the lowest threshold for the graphs
         useFit = True
+        if self.jetMatched : useFit = False # This is coarsely binned
         if 'e' in lep :
             if pt < self.electronFitCut : useFit = False
             if pt <= 10 : pt = 10.1

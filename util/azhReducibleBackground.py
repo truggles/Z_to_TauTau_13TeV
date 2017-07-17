@@ -50,10 +50,12 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     }
 
     fakeRateMap = {}
-    for obj, chans in redBkgMap.iteritems() :
-        tmpMap = doRedBkgPlots( obj, chans, dir2 )
-        for name, info in tmpMap.iteritems() :
-            fakeRateMap[name] = info
+    for matched in [True, False] :
+        app = 'jetMatch' if matched else 'noJetMatch'
+        for obj, chans in redBkgMap.iteritems() :
+            tmpMap = doRedBkgPlots( obj, chans, dir2, matched )
+            for name, info in tmpMap.iteritems() :
+                fakeRateMap[name+'_'+app] = info
 
     # Save fits to out file
     outFile = ROOT.TFile('data/azhFakeRateFits.root', 'RECREATE')
@@ -69,7 +71,7 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     outFile.Close()
 
 
-def doRedBkgPlots( obj, channels, inputDir ) :
+def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
     cmsLumi = float(os.getenv('LUMI'))/1000
     print "Lumi = %.1f / fb" % cmsLumi
@@ -77,11 +79,15 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     print channels
 
 
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July13_All'
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July13_JetPtGtrLep'
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July14_Landau'
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July14_Exponential'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July14_xxx'
+    if jetMatched :
+        xAxis = 'Jet p_{T} [GeV]'
+        jetCut = 'cand_JetPt > pt_Num && cand_JetDR < 0.5'
+        app = 'jetMatch'
+    else :
+        xAxis = 'Lepton p_{T} [GeV]'
+        jetCut = '(cand_JetPt <= pt_Num || cand_JetDR >= 0.5)'
+        app = 'noJetMatch'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July17final_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -89,9 +95,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     pad1.Draw()
     pad1.cd()
 
-    # Master histos
-    #xAxis = 'Lepton p_{T} [GeV]'
-    xAxis = 'Jet p_{T} [GeV]'
+
     yAxis2 = 'Fake Rate'
     binInfo = [80, 0, 200]
     yAxis1 = 'Events / %i GeV' % ( (binInfo[2] - binInfo[1]) / binInfo[0] )
@@ -101,15 +105,19 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
     else :
         xBins = array('d', [])
-        for i in range( 0, 40, 1) :
-            j = i * 2.5
-            if j >= 40 : continue
-            xBins.append( j )
-        for i in range( 40, 60, 5) :
-            xBins.append( i )
-        for i in range( 60, 100, 10) :
-            xBins.append( i )
-        for i in range( 100, 220, 20) :
+        if jetMatched :
+            for i in range( 0, 40, 1) :
+                j = i * 2.5
+                if j >= 40 : continue
+                xBins.append( j )
+            for i in range( 40, 60, 5) :
+                xBins.append( i )
+            for i in range( 60, 100, 10) :
+                xBins.append( i )
+        else :
+            for i in range( 10, 100, 30) :
+                xBins.append( i )
+        for i in range( 100, 250, 50) :
             xBins.append( i )
         print xBins
         binInfo = ['x', xBins[0], xBins[-1]]
@@ -181,7 +189,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
         denomCut = ' && '.join( cuts[obj.split('-')[0]]['denom'] )
         denomCut += ' && '+etaCut
-        denomCut += ' && cand_JetPt > pt_Num && cand_JetDR < 0.5'
+        denomCut += ' && '+jetCut
 
         passCut = ' && '.join( cuts[obj.split('-')[0]]['pass'] )
         passCut = denomCut+' && '+passCut
@@ -253,22 +261,26 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         graph.GetXaxis().SetTitle(xAxis)
         graph.GetYaxis().SetTitle(yAxis2)
         graph.GetYaxis().SetTitle("Fake Rate")
+        graph.SetName( graph.GetName()+' '+app )
         pad1.SetGrid()
 
         # For Log
-#XXX        pad1.SetLogy()
-#XXX        graph.SetMaximum( 10 )
-#XXX        graph.SetMinimum( 0.0005 )
-        # For Linear
-        if obj == 'muon' :
-            graph.SetMaximum( 1 )
-        #else :
-        #    graph.SetMaximum( .15 )
-        elif obj == 'electron' :
-            graph.SetMaximum( 1 )
-        else :
-            graph.SetMaximum( 1 )
-        graph.SetMinimum( 0 )
+        doLinear = True
+        #doLinear = False
+        if not doLinear :
+            pad1.SetLogy()
+            graph.SetMaximum( 10 )
+            graph.SetMinimum( 0.0005 )
+        if doLinear :
+            if obj == 'muon' :
+                graph.SetMaximum( 1 )
+            #else :
+            #    graph.SetMaximum( .15 )
+            elif obj == 'electron' :
+                graph.SetMaximum( 1 )
+            else :
+                graph.SetMaximum( 1 )
+            graph.SetMinimum( 0 )
 
         graph.Draw("AP")
 
@@ -276,12 +288,16 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         #fitMin = binInfo[1] if binInfo[1] != 0 else 10
 
         # Set fit min for different objects
-        fitMin = 50
         if 'tau' in obj : fitMin = 20
-        if obj == 'electron' : fitMin = 15
-        if obj == 'muon' : fitMin = 12.5
+        if jetMatched :
+            if obj == 'electron' : fitMin = 15
+            if obj == 'muon' : fitMin = 12.5
+        else :
+            if obj == 'electron' : fitMin = 10
+            if obj == 'muon' : fitMin = 10
 
         useExp = True
+        useExp = False
         if useExp :
             f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
             f1.SetParName( 2, "decay" )
@@ -297,21 +313,33 @@ def doRedBkgPlots( obj, channels, inputDir ) :
             f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
             f1.SetParName( 2, "approx. max" )
             f1.SetParName( 3, "sigma param" )
-            if obj == 'electron' or obj == 'muon' :
-                f1.SetParameter( 2, 20. )
-            else : # is tau
-                f1.SetParameter( 2, 30. )
-            f1.SetParameter( 1, 0.1 )
             f1.SetParameter( 0, 0. )
-            f1.SetParameter( 3, 5. )
+            f1.SetParameter( 1, 1 )
+            if jetMatched :
+                if obj == 'electron' or obj == 'muon' :
+                    f1.SetParameter( 2, 20. )
+                else : # is tau
+                    f1.SetParameter( 2, 30. )
+                f1.SetParameter( 3, 5. )
+            else : # Not Jet Matched
+                if obj == 'electron' :
+                    f1.SetParameter( 2, 25. )
+                    f1.SetParameter( 3, 2.5 )
+                elif obj == 'muon' :
+                    f1.SetParameter( 2, 15. )
+                    f1.SetParameter( 3, 2.5 )
+                else : # is tau
+                    f1.SetParameter( 2, 45. )
+                    f1.SetParameter( 3, 15. )
+
         f1.SetParName( 0, "y rise" )
         f1.SetParName( 1, "scale" )
         graph.Fit('f1', 'SR' )
 
         if useExp :
-            f2 = ROOT.TF1( 'f2', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+            f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
         else :
-            f2 = ROOT.TF1( 'f2', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+            f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
             f2.SetParameter( 3, f1.GetParameter( 3 ) )
         f2.SetParameter( 0, f1.GetParameter( 0 ) )
         f2.SetParameter( 1, f1.GetParameter( 1 ) )
@@ -370,10 +398,9 @@ if '__main__' in __name__ :
         'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
         #'channels' : ['eeet',],
         'cutMapper' : 'RedBkg',
-        #'mid1' : '1June02rb',
-        'mid1' : '1July13rb',
-        'mid2' : '2July13rb',
-        'mid3' : '3July13rb',
+        'mid1' : '1July17rb2',
+        'mid2' : '2July17rb2',
+        'mid3' : '3July17rb2',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',
