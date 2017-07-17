@@ -812,13 +812,14 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Set axis and viewing area
             stackMax = stack.GetStack().Last().GetMaximum()
             dataMax = sampHistos['obs'].GetMaximum()
-            #stack.SetMaximum( max(dataMax, stackMax) * 1.5 )
-            stack.SetMaximum( max(dataMax, stackMax) * 1.7 )
-            if ops['targetDir'] == '/vbf_low' :
-                stack.SetMaximum( max(dataMax, stackMax) * 1.8 )
+            toSet = max(dataMax, stackMax) * 1.7
+            # Check BSM qqH max as it can go off the plot easily
+            bsmMax = sampHistos[ signalqqH_bsm ].GetMaximum() * 1.3
+            toSet = max(toSet, bsmMax )
+            stack.SetMaximum( toSet )
             if ops['log'] :
                 pad1.SetLogy()
-                stack.SetMaximum( max(dataMax, stackMax) * 10 )
+                stack.SetMaximum( toSet * 5 )
                 stack.SetMinimum( min(dataMax, stackMax) * .005 )
     
 
