@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import ROOT
 import os
 from util.helpers import checkDir
@@ -6,6 +8,7 @@ from meta.sampleNames import returnSampleDetails
 from util.helpers import setUpDirs 
 import pyplotter.tdrstyle as tdr
 import subprocess
+from array import array
 
 
 
@@ -73,9 +76,12 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     print "doing Red Bkg Plots for",obj
     print channels
 
-    binInfo = [50, 0, 200]
 
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/June02l'
+    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July13_All'
+    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July13_JetPtGtrLep'
+    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July14_Landau'
+    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July14_Exponential'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July14_xxx'
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -84,11 +90,33 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     pad1.cd()
 
     # Master histos
+    #xAxis = 'Lepton p_{T} [GeV]'
     xAxis = 'Jet p_{T} [GeV]'
-    yAxis1 = 'Events / %i GeV' % ( (binInfo[2] - binInfo[1]) / binInfo[0] )
     yAxis2 = 'Fake Rate'
-    denomAll = ROOT.TH1D( obj+'_denom', obj+'_denom;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
-    passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
+    binInfo = [80, 0, 200]
+    yAxis1 = 'Events / %i GeV' % ( (binInfo[2] - binInfo[1]) / binInfo[0] )
+    useVariableBinning = True
+    if not useVariableBinning :
+        denomAll = ROOT.TH1D( obj+'_denom', obj+'_denom;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
+        passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
+    else :
+        xBins = array('d', [])
+        for i in range( 0, 40, 1) :
+            j = i * 2.5
+            if j >= 40 : continue
+            xBins.append( j )
+        for i in range( 40, 60, 5) :
+            xBins.append( i )
+        for i in range( 60, 100, 10) :
+            xBins.append( i )
+        for i in range( 100, 220, 20) :
+            xBins.append( i )
+        print xBins
+        binInfo = ['x', xBins[0], xBins[-1]]
+        yAxis1 = 'Events'
+        denomAll = ROOT.TH1D( obj+'_denom', obj+'_denom;%s;%s'%(xAxis,yAxis1), len(xBins)-1, xBins )
+        passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), len(xBins)-1, xBins )
+
     denomAll.Sumw2()
     passAll.Sumw2()
 
@@ -153,9 +181,13 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
         denomCut = ' && '.join( cuts[obj.split('-')[0]]['denom'] )
         denomCut += ' && '+etaCut
+        denomCut += ' && cand_JetPt > pt_Num && cand_JetDR < 0.5'
 
         passCut = ' && '.join( cuts[obj.split('-')[0]]['pass'] )
         passCut = denomCut+' && '+passCut
+
+        totalDenomAll = 0.
+        totalPassingAll = 0.
 
         for channel in channels :
             print channel
@@ -176,19 +208,36 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 print "Passing Cut:",passCutX
 
                 # Denominator selection
-                hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
+                if not useVariableBinning :
+                    hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
+                else :
+                    hTmp = ROOT.TH1D( 'hTmp', 'hTmp', len(xBins)-1, xBins )
+
+                #t.Draw( 'pt_'+str(i+3)+' >> hTmp', denomCutX )
                 t.Draw( leg+'JetPt >> hTmp', denomCutX )
+
                 #print channel, leg, hTmp.Integral()
                 denomAll.Add( hTmp )
                 print " -- denomAll Int:",denomAll.Integral()
+                totalDenomAll += hTmp.Integral()
 
                 # Passing selection
-                hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', binInfo[0], binInfo[1], binInfo[2] )
+                if not useVariableBinning :
+                    hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', binInfo[0], binInfo[1], binInfo[2] )
+                else :
+                    hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', len(xBins)-1, xBins )
+
+                #t.Draw( 'pt_'+str(i+3)+' >> hTmpPass', passCutX )
                 t.Draw( leg+'JetPt >> hTmpPass', passCutX )
+
                 passAll.Add( hTmpPass )
                 print " -- passAll Int:",passAll.Integral()
+                totalPassingAll += hTmpPass.Integral()
                 del hTmp, hTmpPass
 
+
+        # Print totals for each plot
+        print ' ---- '+obj+' '+etaRegion+'   denom: '+str(totalDenomAll)+'    passing: '+str(totalPassingAll)
 
         #denomAll.SetMaximum( denomAll.GetMaximum() * 1.3 )
         #denomAll.Draw()
@@ -207,45 +256,68 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         pad1.SetGrid()
 
         # For Log
-        #pad1.SetLogy()
-        #graph.SetMaximum( 10 )
-        #graph.SetMinimum( 0.0005 )
-        ## For Linear
+#XXX        pad1.SetLogy()
+#XXX        graph.SetMaximum( 10 )
+#XXX        graph.SetMinimum( 0.0005 )
+        # For Linear
         if obj == 'muon' :
-            graph.SetMaximum( .3 )
+            graph.SetMaximum( 1 )
+        #else :
+        #    graph.SetMaximum( .15 )
+        elif obj == 'electron' :
+            graph.SetMaximum( 1 )
         else :
-            graph.SetMaximum( .15 )
+            graph.SetMaximum( 1 )
         graph.SetMinimum( 0 )
 
         graph.Draw("AP")
 
         # do fit
-        fitMin = binInfo[1] if binInfo[1] != 0 else 10
-        #f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
-        f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+        #fitMin = binInfo[1] if binInfo[1] != 0 else 10
+
+        # Set fit min for different objects
+        fitMin = 50
+        if 'tau' in obj : fitMin = 20
+        if obj == 'electron' : fitMin = 15
+        if obj == 'muon' : fitMin = 12.5
+
+        useExp = True
+        if useExp :
+            f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+            f1.SetParName( 2, "decay" )
+            if obj == 'electron' or obj == 'muon' :
+                f1.SetParameter( 0, 0. )
+                f1.SetParameter( 1, 1 )
+                f1.SetParameter( 2, .05 )
+            else : # is tau
+                f1.SetParameter( 0, 0. )
+                f1.SetParameter( 1, 1 )
+                f1.SetParameter( 2, .05 )
+        else : # No Exponential
+            f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+            f1.SetParName( 2, "approx. max" )
+            f1.SetParName( 3, "sigma param" )
+            if obj == 'electron' or obj == 'muon' :
+                f1.SetParameter( 2, 20. )
+            else : # is tau
+                f1.SetParameter( 2, 30. )
+            f1.SetParameter( 1, 0.1 )
+            f1.SetParameter( 0, 0. )
+            f1.SetParameter( 3, 5. )
         f1.SetParName( 0, "y rise" )
         f1.SetParName( 1, "scale" )
-        f1.SetParName( 2, "approx. max" )
-        f1.SetParName( 3, "sigma param" )
-        if obj == 'electron' or obj == 'muon' :
-            f1.SetParameter( 0, 0. )
-            f1.SetParameter( 1, .1 )
-            f1.SetParameter( 2, 20. )
-            f1.SetParameter( 3, 5. )
-        else : # is tau
-            f1.SetParameter( 0, 0. )
-            f1.SetParameter( 1, 0.1 )
-            f1.SetParameter( 2, 30. )
-            f1.SetParameter( 3, 5. )
-        graph.Fit('f1', 'S' )
+        graph.Fit('f1', 'SR' )
 
-        f2 = ROOT.TF1( 'f2', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', binInfo[1], binInfo[2])
+        if useExp :
+            f2 = ROOT.TF1( 'f2', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+        else :
+            f2 = ROOT.TF1( 'f2', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+            f2.SetParameter( 3, f1.GetParameter( 3 ) )
         f2.SetParameter( 0, f1.GetParameter( 0 ) )
         f2.SetParameter( 1, f1.GetParameter( 1 ) )
         f2.SetParameter( 2, f1.GetParameter( 2 ) )
-        f2.SetParameter( 3, f1.GetParameter( 3 ) )
         
-        f2.Draw('SAME')
+        f2.Draw('SAME R')
 
         ROOT.gStyle.SetStatX(.95)
         ROOT.gStyle.SetStatY(0.8)
@@ -298,9 +370,10 @@ if '__main__' in __name__ :
         'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
         #'channels' : ['eeet',],
         'cutMapper' : 'RedBkg',
-        'mid1' : '1June02rb',
-        'mid2' : '2June02rb',
-        'mid3' : '3June02rb',
+        #'mid1' : '1June02rb',
+        'mid1' : '1July13rb',
+        'mid2' : '2July13rb',
+        'mid3' : '3July13rb',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',
