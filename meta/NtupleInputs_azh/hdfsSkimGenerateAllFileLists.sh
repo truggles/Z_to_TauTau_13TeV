@@ -35,14 +35,14 @@ for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm; do
 done
 
 # for data
-#for CHANNEL in eeet eett eemt eeem eeee; do
-for CHANNEL in eeet eett eemt eeem; do
+for CHANNEL in eeet eett eemt eeem eeee; do
+#for CHANNEL in eeet eett eemt eeem; do
     for SAMPLE in dataEE-B dataEE-C dataEE-D dataEE-E dataEE-F dataEE-G dataEE-H; do
         ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 done
-#for CHANNEL in emmt mmtt mmmt emmm mmmm; do
-for CHANNEL in emmt mmtt mmmt emmm; do
+for CHANNEL in emmt mmtt mmmt emmm mmmm; do
+#for CHANNEL in emmt mmtt mmmt emmm; do
     for SAMPLE in dataMM-B dataMM-C dataMM-D dataMM-E dataMM-F dataMM-G dataMM-H; do
         ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
