@@ -139,6 +139,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'ZEE' : 'Z#rightarrowee',
         'ZMM' : 'Z#rightarrow#mu#mu',
         'ZXX' : 'Z#rightarrowee/#mu#mu',
+        'LLET' : 'Z#rightarrowee/#mu#mu,H#rightarrowe#tau_{h}',
+        'LLMT' : 'Z#rightarrowee/#mu#mu,H#rightarrow#mu#tau_{h}',
+        'LLTT' : 'Z#rightarrowee/#mu#mu,H#rightarrow#tau_{h}#tau_{h}',
+        'LLEM' : 'Z#rightarrowee/#mu#mu,H#rightarrowe#mu',
     }
     
     

@@ -80,9 +80,12 @@ params = {
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eett',],
     'cutMapper' : 'Skim',
-    'mid1' : '1July17FR',
-    'mid2' : '2July17FR',
-    'mid3' : '3July17FR',
+    #'mid1' : '1July17FR',
+    #'mid2' : '2July17FR',
+    #'mid3' : '3July17FR',
+    'mid1' : '1June13svFitted',
+    'mid2' : '2June13svFitted',
+    'mid3' : '3June13svFitted',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -100,8 +103,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
@@ -110,8 +113,8 @@ makeFinalPlots = True
 doDataCards = True
 
 
-runPlots = False
-doMerge = False
+#runPlots = False
+#doMerge = False
 #makeFinalPlots = False
 doDataCards = False
 
@@ -158,6 +161,10 @@ if doMerge :
             if channel not in params['channels'] : ZXX = False
         if ZXX == True :
             merge.append( 'ZXX' )
+            merge.append( 'LLET' )
+            merge.append( 'LLMT' )
+            merge.append( 'LLTT' )
+            merge.append( 'LLEM' )
     if useMerge :
         
         if 'ZEE' in merge :
@@ -166,6 +173,14 @@ if doMerge :
             mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
         if 'ZXX' in merge :
             mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
+        if 'LLET' in merge :
+            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','emmt'], 'LLET' )
+        if 'LLMT' in merge :
+            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eemt','mmmt'], 'LLMT' )
+        if 'LLTT' in merge :
+            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eett','mmtt'], 'LLTT' )
+        if 'LLEM' in merge :
+            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeem','emmm'], 'LLEM' )
         for m in merge :
             params['channels'].append( m )
 

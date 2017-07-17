@@ -83,8 +83,24 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
         if final == 'ZMM' and 'dataEE' in sample : continue
 
         if final == 'ZEE' : getChan = 'eeet' 
-        if final == 'ZMM' : getChan = 'emmt' 
-        if final == 'ZXX' : 
+        elif final == 'ZMM' : getChan = 'emmt' 
+        elif final == 'LLET' :
+            getChan = 'eeet' 
+            if 'dataMM' in sample :
+                getChan = 'emmt' 
+        elif final == 'LLMT' :
+            getChan = 'eemt' 
+            if 'dataMM' in sample :
+                getChan = 'mmmt' 
+        elif final == 'LLTT' :
+            getChan = 'eett' 
+            if 'dataMM' in sample :
+                getChan = 'mmtt' 
+        elif final == 'LLEM' :
+            getChan = 'eeem' 
+            if 'dataMM' in sample :
+                getChan = 'emmm' 
+        elif final == 'ZXX' : 
             getChan = 'eeet' 
             if 'dataMM' in sample :
                 getChan = 'emmt' 
