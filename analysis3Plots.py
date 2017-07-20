@@ -139,10 +139,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'ZEE' : 'Z#rightarrowee',
         'ZMM' : 'Z#rightarrow#mu#mu',
         'ZXX' : 'Z#rightarrowee/#mu#mu',
-        'LLET' : 'Z#rightarrowee/#mu#mu,H#rightarrowe#tau_{h}',
-        'LLMT' : 'Z#rightarrowee/#mu#mu,H#rightarrow#mu#tau_{h}',
-        'LLTT' : 'Z#rightarrowee/#mu#mu,H#rightarrow#tau_{h}#tau_{h}',
-        'LLEM' : 'Z#rightarrowee/#mu#mu,H#rightarrowe#mu',
+        'LLET' : "ll'e#tau_{h}",
+        'LLMT' : "ll'#mu#tau_{h}",
+        'LLTT' : "ll'#tau_{h}#tau_{h}",
+        'LLEM' : "ll'e#mu",
     }
     
     
@@ -681,7 +681,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 pads = ratioPlot( c1, 1-smlPadSize )
                 pad1 = pads[0]
                 ratioPad = pads[1]
-                ratioPad.SetTopMargin(0.00)
+                ratioPad.SetTopMargin(0.07)
                 ratioPad.SetBottomMargin(0.3)
                 pad1.SetBottomMargin(0.00)
                 ratioPad.SetGridy()
@@ -736,6 +736,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 pad1.cd()
                 stack.Draw('hist')
+                stack.GetXaxis().SetLabelSize( 0.0 )
+                stack.GetYaxis().SetLabelSize( stack.GetYaxis().GetLabelSize() / (1-smlPadSize) )
                 if not 'plotMe' in ops['qcdMakeDM'] :
                     sampHistos[signal].Draw('same')
                 sampHistos['obs'].Draw('esamex0')

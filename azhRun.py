@@ -59,7 +59,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataEE-%s' % era)
     azhSamples.append('dataMM-%s' % era)
     
-#azhSamples = ['ZHWW125']
+#azhSamples = ['ZHWW125','HZZ125']
 #azhSamples = ['dataEE-B']
 #azhSamples = ['HZZ125',]
 
@@ -78,14 +78,14 @@ params = {
     'numFilesPerCycle' : 1,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
-    #'channels' : ['eett',],
+    #'channels' : ['eeee','mmmm'],
     'cutMapper' : 'Skim',
-    #'mid1' : '1July17FR',
-    #'mid2' : '2July17FR',
-    #'mid3' : '3July17FR',
-    'mid1' : '1June13svFitted',
-    'mid2' : '2June13svFitted',
-    'mid3' : '3June13svFitted',
+    'mid1' : '1July17FR',
+    'mid2' : '2July17FR',
+    'mid3' : '3July17FR',
+    #'mid1' : '1June13svFitted',
+    #'mid2' : '2June13svFitted',
+    #'mid3' : '3June13svFitted',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -113,8 +113,8 @@ makeFinalPlots = True
 doDataCards = True
 
 
-#runPlots = False
-#doMerge = False
+runPlots = False
+doMerge = False
 #makeFinalPlots = False
 doDataCards = False
 
@@ -146,27 +146,29 @@ if useRedBkg :
             del samples[ sample ]
 
 ''' merge channels '''
+useMerge = False
+merge = []
+if len( params['channels'] ) > 3 :
+    if 'eeet' in params['channels'] and 'eemt' in params['channels'] and 'eett' in params['channels'] and 'eeem' in params['channels'] :
+        useMerge = True
+        merge.append( 'ZEE' )
+    if 'emmt' in params['channels'] and 'mmmt' in params['channels'] and 'mmtt' in params['channels'] and 'emmm' in params['channels'] :
+        useMerge = True
+        merge.append( 'ZMM' )
+    ZXX = True
+    for channel in ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] :
+        if channel not in params['channels'] : ZXX = False
+    if ZXX == True :
+        merge.append( 'ZXX' )
+        merge.append( 'LLET' )
+        merge.append( 'LLMT' )
+        merge.append( 'LLTT' )
+        merge.append( 'LLEM' )
+    for m in merge :
+        params['channels'].append( m )
+
 if doMerge :
-    useMerge = False
-    merge = []
-    if len( params['channels'] ) > 3 :
-        if 'eeet' in params['channels'] and 'eemt' in params['channels'] and 'eett' in params['channels'] and 'eeem' in params['channels'] :
-            useMerge = True
-            merge.append( 'ZEE' )
-        if 'emmt' in params['channels'] and 'mmmt' in params['channels'] and 'mmtt' in params['channels'] and 'emmm' in params['channels'] :
-            useMerge = True
-            merge.append( 'ZMM' )
-        ZXX = True
-        for channel in ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] :
-            if channel not in params['channels'] : ZXX = False
-        if ZXX == True :
-            merge.append( 'ZXX' )
-            merge.append( 'LLET' )
-            merge.append( 'LLMT' )
-            merge.append( 'LLTT' )
-            merge.append( 'LLEM' )
-    if useMerge :
-        
+    if useMerge :        
         if 'ZEE' in merge :
             mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem'], 'ZEE' )
         if 'ZMM' in merge :
@@ -181,8 +183,6 @@ if doMerge :
             mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eett','mmtt'], 'LLTT' )
         if 'LLEM' in merge :
             mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeem','emmm'], 'LLEM' )
-        for m in merge :
-            params['channels'].append( m )
 
 # Remove WZ sample, we have WZ3l1nu
 if 'WZ' in samples :
@@ -190,7 +190,7 @@ if 'WZ' in samples :
 
 if makeFinalPlots :
     text=False
-    #text=True
+    text=True
     blind = True
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
     print params

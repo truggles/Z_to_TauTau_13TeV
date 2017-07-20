@@ -87,7 +87,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         xAxis = 'Lepton p_{T} [GeV]'
         jetCut = '(cand_JetPt <= pt_Num || cand_JetDR >= 0.5)'
         app = 'noJetMatch'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July17final_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July18final_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -334,7 +334,10 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         f1.SetParName( 0, "y rise" )
         f1.SetParName( 1, "scale" )
-        graph.Fit('f1', 'SR' )
+        if jetMatched :
+            graph.Fit('f1', 'SR' )
+        else :
+            graph.Fit('f1', 'SRN' ) # N skips drawing
 
         if useExp :
             f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
@@ -345,7 +348,8 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         f2.SetParameter( 1, f1.GetParameter( 1 ) )
         f2.SetParameter( 2, f1.GetParameter( 2 ) )
         
-        f2.Draw('SAME R')
+        if jetMatched :
+            f2.Draw('SAME R')
 
         ROOT.gStyle.SetStatX(.95)
         ROOT.gStyle.SetStatY(0.8)
