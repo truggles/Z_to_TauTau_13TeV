@@ -62,6 +62,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #azhSamples = ['ZHWW125','HZZ125']
 #azhSamples = ['dataEE-B']
 #azhSamples = ['HZZ125',]
+azhSamples = ['azh300',]
 
 
 samples = azhSamples
@@ -79,10 +80,15 @@ params = {
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeee','mmmm'],
+    'channels' : ['eemt',],
     'cutMapper' : 'Skim',
+    'cutMapper' : 'SkimNoTrig',
     'mid1' : '1July17FR',
     'mid2' : '2July17FR',
     'mid3' : '3July17FR',
+    'mid1' : '1Aug02Sync2',
+    'mid2' : '2Aug02Sync2',
+    'mid3' : '3Aug02Sync2',
     #'mid1' : '1June13svFitted',
     #'mid2' : '2June13svFitted',
     #'mid3' : '3June13svFitted',
@@ -90,8 +96,8 @@ params = {
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimmed' : 'false',
-    'skimmed' : 'true', # Use at uwlogin
+    'skimmed' : 'false',
+    #'skimmed' : 'true', # Use at uwlogin
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true', # Use for initial skim
 }
@@ -103,8 +109,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
@@ -115,7 +121,7 @@ doDataCards = True
 
 runPlots = False
 doMerge = False
-#makeFinalPlots = False
+makeFinalPlots = False
 doDataCards = False
 
 

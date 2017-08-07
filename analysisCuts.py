@@ -167,6 +167,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end EETT
          'eemt' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
+            'SkimNoTrig'   : [ZOS, ZMass, llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
         }, # end EEMT
          'eeem' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), eeemVetos, eTight('e1'), eTight('e2'), eBase('e3'), mBase('m')],
