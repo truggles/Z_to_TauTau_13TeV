@@ -201,7 +201,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
             l.append( HSS )
             cutMap['azh'][chan]['RedBkg'] = l
             l = copy.deepcopy(cutMap['azh'][chan]['Skim'])
-            l.append( HSS )
+            l.append( HOS )
             cutMap['azh'][chan]['SignalRegion'] = l
     
     
