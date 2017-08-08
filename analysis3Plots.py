@@ -819,7 +819,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             stack.SetMaximum( toSet )
             if ops['log'] :
                 pad1.SetLogy()
-                stack.SetMaximum( toSet * 5 )
+                stack.SetMaximum( toSet * 12 )
                 stack.SetMinimum( min(dataMax, stackMax) * .005 )
     
 

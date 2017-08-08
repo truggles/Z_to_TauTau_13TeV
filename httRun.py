@@ -225,6 +225,8 @@ for isoVal in isoVals :
                 blind = True
                 fullBlind = True
                 ratio = False
+                log = False
+                #log = True
                 #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
                 #    blind = False
                 
@@ -232,7 +234,7 @@ for isoVal in isoVals :
                     kwargs = { 'text':text, 'blind':blind,
                         'ratio':ratio, 'targetDir':'/'+tDir,'sync':sync }
                 else :
-                    kwargs = { 'text':text, 'blind':blind,
+                    kwargs = { 'text':text, 'blind':blind, 'log':log,
                         'ratio':ratio, 'targetDir':'/'+tDir,'sync':sync }
                     if isoRegion == isoVal+'_'+lIso :
                         kwargs['qcdMakeDM'] = cat+'_plotMe'
