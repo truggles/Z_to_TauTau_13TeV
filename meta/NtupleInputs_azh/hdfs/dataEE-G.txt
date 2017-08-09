@@ -736,6 +736,7 @@
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-E6E36634-EAEA-E611-8559-0CC47A13CDB0.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-E80C459C-ABEA-E611-A6FB-0CC47AD990C4.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-E80DD69B-C9EA-E611-8307-0CC47A6C1038.root
+/hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-E83DA8AD-CEEA-E611-8773-0CC47A6C14C8.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-E8C6EDA0-8AEA-E611-8C0C-002590E2DDC8.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-E8C7FF9E-C9EA-E611-824B-002590E3A212.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-EA04A0C4-D8EA-E611-BD30-0CC47A4D7628.root
@@ -798,6 +799,7 @@
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-FA0B10AA-C1EA-E611-BE3B-0025905A48D0.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-FA0F6F1B-E3EA-E611-B006-0CC47AA99438.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-FA12BD45-EFEA-E611-8A00-0CC47AD99062.root
+/hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-FA440AC3-E3EA-E611-A110-008CFA197A04.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-FA47AA9E-C9EA-E611-8F8F-0CC47A13D09C.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-FA5C6F60-D8EA-E611-997D-0CC47AA989BC.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016G/make_ntuples_cfg-FA8A191C-C2EA-E611-BF9D-0CC47A13D416.root

@@ -75,6 +75,7 @@
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleMuon_Run2016G/make_ntuples_cfg-2AD8CC20-05EB-E611-A57E-001E67DFFB4F.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleMuon_Run2016G/make_ntuples_cfg-2C42EC33-EEEA-E611-8383-001E67DFFF5F.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleMuon_Run2016G/make_ntuples_cfg-2CDE93FC-59EB-E611-AC32-6CC2173CAAE0.root
+/hdfs/store/user/truggles/ZH_data_july12/data_DoubleMuon_Run2016G/make_ntuples_cfg-2CEA4822-05EB-E611-9F53-A4BF01025FF9.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleMuon_Run2016G/make_ntuples_cfg-2E41F4CE-21EB-E611-A400-0017A4771068.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleMuon_Run2016G/make_ntuples_cfg-2EFC133C-EEEA-E611-86D4-001E67DDC0FB.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleMuon_Run2016G/make_ntuples_cfg-302FFC55-57EB-E611-9926-ECB1D79E5C40.root

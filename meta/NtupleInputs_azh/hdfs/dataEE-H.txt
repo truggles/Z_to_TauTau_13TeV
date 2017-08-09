@@ -647,7 +647,9 @@
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8CE1D1FE-6FEB-E611-A342-002590DB9252.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8CF09058-BBEB-E611-8F4C-0CC47A7E018E.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8CF8337B-9DEB-E611-9FA7-70106F48BCE2.root
+/hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8E015F90-1BEB-E611-BB61-002590AC4B54.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8E276A8C-5AED-E611-92E9-0025907FD2D8.root
+/hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8E3F3B9C-F0EA-E611-8927-0025901D4D20.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8E4D26C2-94EB-E611-8D37-0CC47A7FC722.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8EA9BF1D-76F0-E611-A233-047D7BD6DE30.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-8ECA70CF-38EB-E611-A336-047D7B881D04.root
@@ -1105,6 +1107,7 @@
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-F4965689-75EB-E611-A806-0CC47A7FC7B8.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-F4A37FCF-7BF0-E611-8AD5-0CC47A7DFFE2.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-F4AAF507-65ED-E611-91CB-047D7BD6DD40.root
+/hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-F4B7F84E-ACEA-E611-AC63-0CC47A7D9870.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-F4FF96B2-6EED-E611-A001-002590AC4FEC.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-F60F7B4C-31EB-E611-8B58-0CC47A7DFE62.root
 /hdfs/store/user/truggles/ZH_data_july12/data_DoubleEG_Run2016H_v2/make_ntuples_cfg-F6127C19-F2EA-E611-AD8F-0CC47A7DFF3C.root
