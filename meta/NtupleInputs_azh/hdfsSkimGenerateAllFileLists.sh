@@ -2,6 +2,7 @@
 ALL=/data/truggles/svFitJune06_azh
 HZZandDY4=/data/truggles/azhJune12skimMergedHZZ
 DATA=/data/truggles/azhJuly13skimMergedNoSVFit
+DATA=/data/truggles/azhAug08RBSyncMerged
 
 
 echo ""

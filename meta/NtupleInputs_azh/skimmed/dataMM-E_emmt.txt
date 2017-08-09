@@ -1,2 +1,4 @@
-/data/truggles/azhJuly13skimMergedNoSVFit/dataMM-E_0_emmt.root
-/data/truggles/azhJuly13skimMergedNoSVFit/dataMM-E_1_emmt.root
+/data/truggles/azhAug08RBSyncMerged/dataMM-E_0_emmt.root
+/data/truggles/azhAug08RBSyncMerged/dataMM-E_1_emmt.root
+/data/truggles/azhAug08RBSyncMerged/dataMM-E_2_emmt.root
+/data/truggles/azhAug08RBSyncMerged/dataMM-E_3_emmt.root

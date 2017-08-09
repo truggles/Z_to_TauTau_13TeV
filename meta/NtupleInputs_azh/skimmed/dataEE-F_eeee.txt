@@ -1,1 +1,2 @@
-/data/truggles/azhJuly13skimMergedNoSVFit/dataEE-F_0_eeee.root
+/data/truggles/azhAug08RBSyncMerged/dataEE-F_0_eeee.root
+/data/truggles/azhAug08RBSyncMerged/dataEE-F_1_eeee.root

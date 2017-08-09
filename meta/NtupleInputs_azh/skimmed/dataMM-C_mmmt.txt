@@ -1,1 +1,2 @@
-/data/truggles/azhJuly13skimMergedNoSVFit/dataMM-C_0_mmmt.root
+/data/truggles/azhAug08RBSyncMerged/dataMM-C_0_mmmt.root
+/data/truggles/azhAug08RBSyncMerged/dataMM-C_1_mmmt.root
