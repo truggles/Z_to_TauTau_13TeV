@@ -53,17 +53,29 @@ HSS = 'LEG3_LEG4_SS == 1'
 eeTrig = 'doubleE_23_12Pass > 0'
 mmTrig = 'doubleMuPass > 0'
 
-eeetVetos =                            'muVetoAZHdR0 == 0'
-mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoAZHdR0 <= 2'
-eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 1'
+#eeetVetos =                            'muVetoAZHdR0 == 0'
+#mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoAZHdR0 <= 2'
+#eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 1'
+#mmmtVetos = 'eVetoZTTp001dxyzR0 == 0'
+#eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 == 0'
+#mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 2'
+#eeemVetos =                            'muVetoAZHdR0 <= 1'
+#mmemVetos = 'eVetoZTTp001dxyzR0 <= 1'
+#eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoAZHdR0 == 0'
+#mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 4'
+#eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 2'
+
+eeetVetos =                            'muVetoZTTp001dxyzR0 == 0'
+mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
+eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 1'
 mmmtVetos = 'eVetoZTTp001dxyzR0 == 0'
-eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 == 0'
-mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 2'
-eeemVetos =                            'muVetoAZHdR0 <= 1'
+eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 == 0'
+mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 2'
+eeemVetos =                            'muVetoZTTp001dxyzR0 <= 1'
 mmemVetos = 'eVetoZTTp001dxyzR0 <= 1'
-eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoAZHdR0 == 0'
-mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 4'
-eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 2'
+eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoZTTp001dxyzR0 == 0'
+mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 4'
+eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
 
 # Basic lepton definitions for ZH analysis
 def eBase( lep ) :
@@ -87,6 +99,7 @@ def tAntiMV ( lep ) :
 
 def eeTrigPt(lep1='e1', lep2='e2') :
     return '(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path > 0 && LEG2_MatchesDoubleE23_12Path > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    #return '(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path && LEG1_MatchesDoubleE23_12Filter && LEG2_MatchesDoubleE23_12Path && LEG2_MatchesDoubleE23_12Filter)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
 def eeeTrigPt() :
     match1_2 = eeTrigPt('e1', 'e2')
     match1_3 = eeTrigPt('e1', 'e3')
@@ -105,6 +118,7 @@ def eeeeTrigPt() :
 
 def mmTrigPt(lep1='m1', lep2='m2') :
     return '((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu > 0 && LEG2_MatchesDoubleMu > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    #return '((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu && (LEG1_MatchesDoubleMuFilter1 || LEG1_MatchesDoubleMuFilter2) && LEG2_MatchesDoubleMu && (LEG2_MatchesDoubleMuFilter1 || LEG2_MatchesDoubleMuFilter2))'.replace('LEG1_',lep1).replace('LEG2_',lep2)
 def mmmTrigPt() :
     match1_2 = mmTrigPt('m1', 'm2')
     match1_3 = mmTrigPt('m1', 'm3')
