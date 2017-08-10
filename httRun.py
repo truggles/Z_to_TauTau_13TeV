@@ -129,11 +129,11 @@ runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
-#makeFinalPlots = False # Use this with FF
+makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -296,7 +296,7 @@ for isoVal in isoVals :
                     'category' : finalCat,
                     #'fitShape' : 'm_visCor',
                     'fitShape' : var,
-                    'allShapes' : False,
+                    'allShapes' : True,
                     'sync' : sync,
                     }
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
@@ -309,7 +309,7 @@ for isoVal in isoVals :
                     'category' : finalCat+'_qcd_cr',
                     #'fitShape' : 'm_visCor',
                     'fitShape' : var,
-                    'allShapes' : False,
+                    'allShapes' : True,
                     'sync' : sync,
                     }
                     makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )

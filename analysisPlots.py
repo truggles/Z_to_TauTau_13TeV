@@ -338,9 +338,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_visCor')  : continue
 
-        ''' Skip plotting 2D vars for 0jet and inclusive selections '''
+        ''' Skip plotting 2D vars for 0jet and inclusive selections 
+            and VBF vars for Boosted and Higgs Pt vars for VBF cat '''
         if 'ZTTinclusive' in outFile.GetName() or 'ZTT0jet' in outFile.GetName() :
             if ":" in var : continue
+        elif 'ZTTboosted' in outFile.GetName() :
+            if 'mjj:m_sv:' in var : continue
+        elif 'ZTTvbf' in outFile.GetName() :
+            if 'Higgs_PtCor:m_sv' in var : continue
 
         #print var
 
@@ -661,6 +666,31 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 else : # For this one, we adjust the additionalCuts to 
                     # provide different yields
                     plotVar = varBase
+            # This is to keep the above MELA replacements intact
+            elif varBase.count(':') == 2 :
+                if '_Zmumu' in var :
+                    plotVar = plotVar.replace('_ZmumuUp','')
+                    plotVar = plotVar.replace('_ZmumuDown','')
+                elif '_tauPt' in var :
+                    plotVar = plotVar.replace('_tauPtUp','')
+                    plotVar = plotVar.replace('_tauPtDown','')
+                elif '_zPt' in var :
+                    plotVar = plotVar.replace('_zPtUp','')
+                    plotVar = plotVar.replace('_zPtDown','')
+                elif '_JetToTau' in var :
+                    plotVar = plotVar.replace('_JetToTauUp','')
+                    plotVar = plotVar.replace('_JetToTauDown','')
+                elif '_topPt' in var :
+                    plotVar = plotVar.replace('_topPtUp','')
+                    plotVar = plotVar.replace('_topPtDown','')
+                elif '_ggH' in var :
+                    plotVar = plotVar.replace('_ggHUp','')
+                    plotVar = plotVar.replace('_ggHDown','')
+                elif '_topQuarkggH' in var :
+                    plotVar = plotVar.replace('_topQuarkggHUp','')
+                    plotVar = plotVar.replace('_topQuarkggHDown','')
+                else :
+                    plotVar = plotVar
             # Else includes zPt and topPt  
             else :
                 plotVar = varBase
@@ -722,7 +752,7 @@ def getHistoDict( analysis, channel ) :
 #XXX            'mjj' : [20, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'],
 #FIXME            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
 #            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} Uncor [GeV]', ' GeV'],
-            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+#            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
 #XXX            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
 #FIXME            'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
 #FIXME#            'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
@@ -745,9 +775,9 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
 #FIXME#            #'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
 #FIXME#            #'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
-            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
+#            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
 #FIXME#            'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
-            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
+#            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
 #FIXME#            'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
 #FIXME#            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
 #FIXME#            'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
@@ -773,21 +803,30 @@ def getHistoDict( analysis, channel ) :
             #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_0to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'KD_int' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
-            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
-            'KD_bsm_mlt_mjj0-300' : [140, -0.2, 1.2, 20, 'D0- (mjj [0,300])', ' GeV'],
-            'KD_bsm_mlt_mjj300-700' : [140, -0.2, 1.2, 20, 'D0- (mjj [300,700])', ' GeV'],
-            'KD_bsm_mlt_mjj700-1100' : [140, -0.2, 1.2, 20, 'D0- (mjj [700,1100])', ' GeV'],
-            'KD_bsm_mlt_mjj1100-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,inf])', ' GeV'],
-            'KD_bsm_mlt_mjj1100-1500' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,1500])', ' GeV'],
-            'KD_bsm_mlt_mjj1500-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1500,inf])', ' GeV'],
+#            'KD_int' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
+#            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
+#            'KD_bsm_mlt_mjj0-300' : [140, -0.2, 1.2, 20, 'D0- (mjj [0,300])', ' GeV'],
+#            'KD_bsm_mlt_mjj300-700' : [140, -0.2, 1.2, 20, 'D0- (mjj [300,700])', ' GeV'],
+#            'KD_bsm_mlt_mjj700-1100' : [140, -0.2, 1.2, 20, 'D0- (mjj [700,1100])', ' GeV'],
+#            'KD_bsm_mlt_mjj1100-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,inf])', ' GeV'],
+#            'KD_bsm_mlt_mjj1100-1500' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,1500])', ' GeV'],
+#            'KD_bsm_mlt_mjj1500-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1500,inf])', ' GeV'],
         }
 
         ''' added shape systematics '''
         #toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_visCor', 'm_sv'] # No extra shapes
-        #toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
+        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
         #toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
-        toAdd = [] # No extra shapes
+        #toAdd = [] # No extra shapes
+        toAdd = ['mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv',
+            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
+            'mjj:m_sv:KD_int_DCP_neg1to0',
+            'mjj:m_sv:KD_int_DCP_0to1',
+        ] # All aHTT Shapes
         varsForShapeSyst = []
         for item in toAdd :
             varsForShapeSyst.append( item )
@@ -848,8 +887,8 @@ def getHistoDict( analysis, channel ) :
             chanVarMapTT = {
 #                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} Uncor [GeV]', ' GeV'],
 #                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} Uncor [GeV]', ' GeV'],
-                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
-                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+#                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+#                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
 ##FIXME                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
 #                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
 #                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],

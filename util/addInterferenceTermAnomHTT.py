@@ -39,9 +39,11 @@ def get_key_matching_inputs( histKeys, baseToMatch, toMatch, sample ) :
     for k in histKeys :
         hName = k.GetName()
         if baseToMatch == toMatch : # (not shape uncert)
+            #print "not shape uncert"
             if hName == sample : return k
         elif baseToMatch != toMatch : # (shape uncert)
-            if hName in sample and shapeUncert in sample : return k
+            #print "shape uncert hist: %s   uncert tgt: %s  samp: %s" % (hName, shapeUncert, sample)
+            if sample in hName and shapeUncert in hName : return k
     print "No matching hist found, baseToMatch: %s toMatch: %s and sample: %s" % (baseToMatch, toMatch, sample)
     return None
 
@@ -116,7 +118,7 @@ if '__main__' in __name__ :
 
                     shapeUncert = ''
                     if smBaseSample != name : # (shape uncert)
-                        shapeUncert = '_'+name.replace( smBaseSample, '' )
+                        shapeUncert = name.replace( smBaseSample, '' )
 
                     hPos.SetName( 'qqH_htt_0MintP125'+shapeUncert )
                     hPos.SetTitle( 'qqH_htt_0MintP125'+shapeUncert )
