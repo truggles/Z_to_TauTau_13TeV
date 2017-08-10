@@ -111,3 +111,11 @@ mkdir mela
 root -l loadMELA.C
 IN ROOT CINT: root [1] .L anaHTT.C+
 IN ROOT CINT: root [2] runAll()
+
+
+Other aHTT notes: To produce the interferance terms between SM and BSM, after making DCs, you need to run:
+```
+python util/addInterferenceTermAnomHTT.py
+```
+
+
