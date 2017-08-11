@@ -53,29 +53,29 @@ HSS = 'LEG3_LEG4_SS == 1'
 eeTrig = 'doubleE_23_12Pass > 0'
 mmTrig = 'doubleMuPass > 0'
 
-#eeetVetos =                            'muVetoAZHdR0 == 0'
-#mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoAZHdR0 <= 2'
-#eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 1'
-#mmmtVetos = 'eVetoZTTp001dxyzR0 == 0'
-#eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 == 0'
-#mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 2'
-#eeemVetos =                            'muVetoAZHdR0 <= 1'
-#mmemVetos = 'eVetoZTTp001dxyzR0 <= 1'
-#eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoAZHdR0 == 0'
-#mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 4'
-#eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 2'
+eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoAZHdR0 == 0'
+mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoAZHdR0 <= 2'
+eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 1'
+mmmtVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 3'
+eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 == 0'
+mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 2'
+eeemVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoAZHdR0 <= 1'
+mmemVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoAZHdR0 <= 3'
+eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoAZHdR0 == 0'
+mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 4'
+eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 2'
 
-eeetVetos =                            'muVetoZTTp001dxyzR0 == 0'
-mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
-eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 1'
-mmmtVetos = 'eVetoZTTp001dxyzR0 == 0'
-eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 == 0'
-mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 2'
-eeemVetos =                            'muVetoZTTp001dxyzR0 <= 1'
-mmemVetos = 'eVetoZTTp001dxyzR0 <= 1'
-eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoZTTp001dxyzR0 == 0'
-mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 4'
-eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
+#eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
+#mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
+#eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 1'
+#mmmtVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 3'
+#eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 == 0'
+#mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 2'
+#eeemVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 <= 1'
+#mmemVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 3'
+#eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoZTTp001dxyzR0 == 0'
+#mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoZTTp001dxyzR0 <= 4'
+#eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoZTTp001dxyzR0 <= 2'
 
 # Basic lepton definitions for ZH analysis
 def eBase( lep ) :
@@ -98,8 +98,8 @@ def tAntiMV ( lep ) :
     return 'LEG_AgainstMuonTight3 == 1'.replace('LEG_',lep)
 
 def eeTrigPt(lep1='e1', lep2='e2') :
-    return '(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path > 0 && LEG2_MatchesDoubleE23_12Path > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
-    #return '(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path && LEG1_MatchesDoubleE23_12Filter && LEG2_MatchesDoubleE23_12Path && LEG2_MatchesDoubleE23_12Filter)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    #return '(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path > 0 && LEG2_MatchesDoubleE23_12Path > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    return '(((LEG1_Pt > 24 && LEG2_Pt > 13) || (LEG2_Pt > 24 && LEG1_Pt > 13)) && LEG1_MatchesDoubleE23_12Path > 0 && LEG1_MatchesDoubleE23_12Filter > 0 && LEG2_MatchesDoubleE23_12Path > 0 && LEG2_MatchesDoubleE23_12Filter > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
 def eeeTrigPt() :
     match1_2 = eeTrigPt('e1', 'e2')
     match1_3 = eeTrigPt('e1', 'e3')
@@ -117,8 +117,8 @@ def eeeeTrigPt() :
     return '('+comb+')'
 
 def mmTrigPt(lep1='m1', lep2='m2') :
-    return '((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu > 0 && LEG2_MatchesDoubleMu > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
-    #return '((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu && (LEG1_MatchesDoubleMuFilter1 || LEG1_MatchesDoubleMuFilter2) && LEG2_MatchesDoubleMu && (LEG2_MatchesDoubleMuFilter1 || LEG2_MatchesDoubleMuFilter2))'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    #return '((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu > 0 && LEG2_MatchesDoubleMu > 0)'.replace('LEG1_',lep1).replace('LEG2_',lep2)
+    return '((LEG1_Pt > 18 || LEG2_Pt > 18) && LEG1_MatchesDoubleMu > 0 && (LEG1_MatchesDoubleMuFilter1 > 0 || LEG1_MatchesDoubleMuFilter2 > 0) && LEG2_MatchesDoubleMu > 0 && (LEG2_MatchesDoubleMuFilter1 > 0 || LEG2_MatchesDoubleMuFilter2 > 0))'.replace('LEG1_',lep1).replace('LEG2_',lep2)
 def mmmTrigPt() :
     match1_2 = mmTrigPt('m1', 'm2')
     match1_3 = mmTrigPt('m1', 'm3')
@@ -175,6 +175,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end EEEE
          'eeet' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), llltDR('e1','e2','e3','t'), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
+            'SkimNoTrig'   : [ZOS, ZMass, llltDR('e1','e2','e3','t'), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
         }, # end EEET
          'eett' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
@@ -185,6 +186,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end EEMT
          'eeem' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), eeemVetos, eTight('e1'), eTight('e2'), eBase('e3'), mBase('m')],
+            'SkimNoTrig'   : [ZOS, ZMass, eeemVetos, eTight('e1'), eTight('e2'), eBase('e3'), mBase('m')],
         }, # end EEEM
          'eemm' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), eemmVetos, eTight('e1'), eTight('e2'), mBase('m1'), mBase('m2')],
@@ -194,6 +196,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end MMMM
          'emmt' : {
             'Skim'   : [ZOS, ZMass, mmTrig, mmTrigPt(), llltDR('m1','m2','e','t'), mmetVetos, mTight('m1'), mTight('m2'), eBase('e'), tBase('t'), tAntiEV('t')],
+            'SkimNoTrig'   : [ZOS, ZMass, llltDR('m1','m2','e','t'), mmetVetos, mTight('m1'), mTight('m2'), eBase('e'), tBase('t'), tAntiEV('t')],
         }, # end MMET
          'mmtt' : {
             'Skim'   : [ZOS, ZMass, mmTrig, mmTrigPt(), llttDR('m1','m2','t1','t2'), mmttVetos, mTight('m1'), mTight('m2'), tBase('t1'), tBase('t2')],
