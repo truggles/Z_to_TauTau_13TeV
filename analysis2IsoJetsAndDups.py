@@ -398,6 +398,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'Pt' : 'Z_Pt',
         'DR' : 'Z_DR',
         'DPhi' : 'Z_DPhi',
+        'Eta' : 'Z_Eta',
+        'Phi' : 'Z_Phi',
         }
     quadFSDoubleProds = {
         'Mass' : 'H_vis',
@@ -405,6 +407,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'Pt' : 'H_Pt',
         'DR' : 'H_DR',
         'DPhi' : 'H_DPhi',
+        'Eta' : 'H_Eta',
+        'Phi' : 'H_Phi',
         }
     branchMappingElec = {
         'cand_Pt' : 'pt', # rename ePt to pt_1

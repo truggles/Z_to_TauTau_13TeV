@@ -60,10 +60,13 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataMM-%s' % era)
     
 #azhSamples = ['ZHWW125','HZZ125']
-#azhSamples = ['dataEE-B']
+azhSamples = ['dataEE-B']
 #azhSamples = ['HZZ125',]
 azhSamples = ['azh300',]
 
+azhSamples = []
+for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+    azhSamples.append('azh%i' % mass)
 
 samples = azhSamples
 
@@ -75,20 +78,17 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 10,
+    'numCores' : 12,
     'numFilesPerCycle' : 1,
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeee','mmmm'],
-    'channels' : ['eemt',],
+    #'channels' : ['eeem',],
     'cutMapper' : 'Skim',
-    'cutMapper' : 'SkimNoTrig',
+    #'cutMapper' : 'SkimNoTrig',
     'mid1' : '1July17FR',
     'mid2' : '2July17FR',
     'mid3' : '3July17FR',
-    'mid1' : '1Aug02Sync2',
-    'mid2' : '2Aug02Sync2',
-    'mid3' : '3Aug02Sync2',
     #'mid1' : '1June13svFitted',
     #'mid2' : '2June13svFitted',
     #'mid3' : '3June13svFitted',
@@ -96,10 +96,34 @@ params = {
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimmed' : 'false',
-    #'skimmed' : 'true', # Use at uwlogin
+    #'skimmed' : 'false',
+    'skimmed' : 'true', # Use at uwlogin
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true', # Use for initial skim
+
+    ## Signal Sync
+    #'channels' : ['eemt','mmmt','emmt',],
+    #'channels' : ['eeet','eett','eeem','mmtt','emmm',],
+    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
+    #'channels' : ['emmt',],
+    #'channels' : ['eeem','eeet',],
+    #'channels' : ['emmt','mmtt','mmmt','emmm'],
+    #'skimmed' : 'false',
+    #'skimHdfs' : 'false',
+    #'mid1' : '1Aug13Sync2',
+    #'mid2' : '2Aug13Sync2',
+    #'mid3' : '3Aug13Sync2',
+    #'cutMapper' : 'Skim',
+    #'cutMapper' : 'SkimNoTrig',
+
+    ## RedBkg Sync
+    #'channels' : ['eeem',],
+    #'mid1' : '1Aug09RBSync',
+    #'mid2' : '2Aug09RBSync',
+    #'mid3' : '3Aug09RBSync',
+    #'skimmed' : 'true', # Use at uwlogin
+    #'skimHdfs' : 'false',
+    #'cutMapper' : 'Skim',
 }
 
 """ Get samples with map of attributes """
@@ -109,8 +133,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
@@ -119,8 +143,8 @@ makeFinalPlots = True
 doDataCards = True
 
 
-runPlots = False
-doMerge = False
+#runPlots = False
+#doMerge = False
 makeFinalPlots = False
 doDataCards = False
 
