@@ -38,6 +38,7 @@ def run(path) :
     htmlFile.write( '<body>\n' )
     for file_ in files :
         if '.pdf' in file_ : continue
+        if 'index.html' in file_ : continue
         htmlFile.write( '<img src="%s">\n' % file_.strip().split('/')[-1] )
         #htmlFile.write( '<br>\n' )
     htmlFile.write( '</body></html>' )
