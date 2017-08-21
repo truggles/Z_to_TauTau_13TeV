@@ -51,7 +51,7 @@ if __name__ == '__main__' :
     ''' Start multiprocessing tests '''
     pool = multiprocessing.Pool(processes = 6 )
     multiprocessingOutputs = []
-    debug = True
+    debug = False
     doAZH = True
     doHTT = False
 
@@ -80,9 +80,10 @@ if __name__ == '__main__' :
             azhSamples.append('dataEE-%s' % era)
             azhSamples.append('dataMM-%s' % era)
 
-        name = 'azhJune12skim'
+        name = 'azhAug08RBSync'
         originalDir = '/nfs_scratch/truggles/'+name+'/'
         targetDir = '/nfs_scratch/truggles/'+name+'Merged'
+        checkDir( targetDir )
         jobId = ''
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         for channel in channels :
@@ -121,6 +122,7 @@ if __name__ == '__main__' :
 
         originalDir = '/hdfs/store/user/truggles/svFitMay30_RivetSignals_SM-HTT/Recoil*/*'
         targetDir = '/nfs_scratch/truggles/svFitMay30_RivetSignals_SM-HTT_Merged'
+        checkDir( targetDir )
         jobId = 'TauTau_13*'
         for sample in SamplesDataCards :
              if debug:
