@@ -44,8 +44,8 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125', 
-    'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
+anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
+    'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125']
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'dataTT-G', 'dataTT-H']
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
 
@@ -58,11 +58,15 @@ for mass in [110, 120, 125, 130, 140] :
 SamplesDataCards.append('HtoWW2l2nu125')
 SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
-for aHiggs in anomalousVBF :
-    SamplesDataCards.append( aHiggs )
+
+SamplesDataCards = []
+for aHiggs in anomalous :
+    SamplesDataCards.append( 'VBF'+aHiggs )
+    SamplesDataCards.append( 'W'+aHiggs )
+    SamplesDataCards.append( 'Z'+aHiggs )
     
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-    SamplesDataCards.append('dataTT-%s' % era)
+#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+#    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
@@ -71,7 +75,6 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #SamplesDataCards = ['dataTT-C',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
-#SamplesDataCards = anomalousVBF
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -82,7 +85,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 6,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
@@ -93,19 +96,19 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1June29mela',
-    'mid2' : '2June29mela',
-    'mid3' : '3June29mela',
+    'mid1' : '1aug21official',
+    'mid2' : '2aug21official',
+    'mid3' : '3aug21official',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true', # This means "do the hdfs skim"
-    #'skimmed' : 'false',
-    'skimmed' : 'true',
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true', # This means "do the hdfs skim"
+    'skimmed' : 'false',
+    #'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -114,7 +117,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -133,7 +136,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]

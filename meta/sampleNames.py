@@ -554,13 +554,17 @@ def sampleDetails( analysis ) :
                 'xsec' : 1.,
                 'group' : 'azh'}
 
-    # Adding anomalous couplings VBF Higgs, these are normalized based on VBF125
-    # We don't have the DAS details here, so just copy VBF125
-    anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125',
-        'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
-    for aHiggs in anomalousVBF :
-        sampleMap['SM-Higgs'][ aHiggs ] = dict(sampleMap['SM-Higgs']['VBFHtoTauTau125'])
-        sampleMap['SM-Higgs'][ aHiggs ]['group'] = 'qqH_aHTT'
+    # Adding anomalous couplings VBF, WH, ZH Higgs, these are normalized based on SM xsections
+    # lazy and didn't add official DAS paths :-(
+    anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125',
+        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125']
+    for aHiggs in anomalous :
+        sampleMap['SM-Higgs'][ 'VBF'+aHiggs ] = dict(sampleMap['SM-Higgs']['VBFHtoTauTau125'])
+        sampleMap['SM-Higgs'][ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'
+        sampleMap['SM-Higgs'][ 'W'+aHiggs ] = dict(sampleMap['SM-Higgs']['WPlusHTauTau125'])
+        sampleMap['SM-Higgs'][ 'W'+aHiggs ]['group'] = 'WH_aHTT'
+        sampleMap['SM-Higgs'][ 'Z'+aHiggs ] = dict(sampleMap['SM-Higgs']['ZHTauTau125'])
+        sampleMap['SM-Higgs'][ 'Z'+aHiggs ]['group'] = 'ZH_aHTT'
 
 
     # Simplify tracking SM-Higgs and add to all returned maps

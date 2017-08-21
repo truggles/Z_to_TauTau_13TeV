@@ -2,7 +2,8 @@
 DATA=/hdfs/store/user/caillol/SMHTT_reminiaod_feb14
 ALL=/hdfs/store/user/caillol/SMHTT_mc_feb13
 SIGNALS=/hdfs/store/user/truggles/SMHTT_signals_may30
-aHTT=/hdfs/store/user/truggles/aHTT_signals_july11_v3
+#aHTT=/hdfs/store/user/truggles/aHTT_signals_july11_v3
+aHTT=/hdfs/store/user/truggles/aHTT_signals_aug16
 
 #ls ${DATA}/data_Tau_Run2016B*/*.root                                            		 > hdfs/dataTT-B.txt 
 #ls ${DATA}/data_Tau_Run2016C/*.root                                            		     > hdfs/dataTT-C.txt 
@@ -64,12 +65,38 @@ aHTT=/hdfs/store/user/truggles/aHTT_signals_july11_v3
 #done
 
 # aHTT Signals
-ls ${aHTT}/VBFHiggs0PHf05ph0/*.root                                                           > hdfs/VBFHtoTauTau0PHf05ph0125.txt
-ls ${aHTT}/VBFHiggs0L1f05ph0/*.root                                                           > hdfs/VBFHtoTauTau0L1f05ph0125.txt
-ls ${aHTT}/VBFHiggs0L1/*.root                                                                 > hdfs/VBFHtoTauTau0L1125.txt
-ls ${aHTT}/VBFHiggs0PM_v6/*.root                                                              > hdfs/VBFHtoTauTau0PM125.txt
-ls ${aHTT}/VBFHiggs0Mf05ph0/*.root                                                            > hdfs/VBFHtoTauTau0Mf05ph0125.txt
-ls ${aHTT}/VBFHiggs0PH/*.root                                                                 > hdfs/VBFHtoTauTau0PH125.txt
-ls ${aHTT}/VBFHiggs0M/*.root                                                                  > hdfs/VBFHtoTauTau0M125.txt
-ls ${aHTT}/VBFHiggs0PM/*.root                                                                 > hdfs/VBFHtoTauTau0PM-v5125.txt
+#ls ${aHTT}/VBFHiggs0PHf05ph0/*.root                                                           > hdfs/VBFHtoTauTau0PHf05ph0125.txt
+#ls ${aHTT}/VBFHiggs0L1f05ph0/*.root                                                           > hdfs/VBFHtoTauTau0L1f05ph0125.txt
+#ls ${aHTT}/VBFHiggs0L1/*.root                                                                 > hdfs/VBFHtoTauTau0L1125.txt
+#ls ${aHTT}/VBFHiggs0PM_v6/*.root                                                              > hdfs/VBFHtoTauTau0PM125.txt
+#ls ${aHTT}/VBFHiggs0Mf05ph0/*.root                                                            > hdfs/VBFHtoTauTau0Mf05ph0125.txt
+#ls ${aHTT}/VBFHiggs0PH/*.root                                                                 > hdfs/VBFHtoTauTau0PH125.txt
+#ls ${aHTT}/VBFHiggs0M/*.root                                                                  > hdfs/VBFHtoTauTau0M125.txt
+#ls ${aHTT}/VBFHiggs0PM/*.root                                                                 > hdfs/VBFHtoTauTau0PM-v5125.txt
+
+
+ls ${aHTT}/VBFHiggs0L1_M-125_13TeV-JHUGenV6_v6-v1/*.root                                     > hdfs/VBFHtoTauTau0L1125.txt
+ls ${aHTT}/VBFHiggs0L1f05ph0_M-125_13TeV-JHUGenV6_v6-v1/*.root                               > hdfs/VBFHtoTauTau0L1f05ph0125.txt
+ls ${aHTT}/VBFHiggs0M_M-125_13TeV-JHUGenV6_v6-v1/*.root                                      > hdfs/VBFHtoTauTau0M125.txt
+ls ${aHTT}/VBFHiggs0Mf05ph0_M-125_13TeV-JHUGenV6_v6-v1/*.root                                > hdfs/VBFHtoTauTau0Mf05ph0125.txt
+ls ${aHTT}/VBFHiggs0PH_M-125_13TeV-JHUGenV6_v6-v1/*.root                                     > hdfs/VBFHtoTauTau0PH125.txt
+ls ${aHTT}/VBFHiggs0PHf05ph0_M-125_13TeV-JHUGenV6_v6-v1/*.root                               > hdfs/VBFHtoTauTau0PHf05ph0125.txt
+ls ${aHTT}/VBFHiggs0PM_M-125_13TeV-JHUGenV6_v6-v1/*.root                                     > hdfs/VBFHtoTauTau0PM125.txt
+
+ls ${aHTT}/WHiggs0L1_Undecayed_M-125_13TeV-JHUgenV6_v6-v1/*.root                             > hdfs/WHtoTauTau0L1125.txt
+ls ${aHTT}/WHiggs0L1fWH05ph0_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                     > hdfs/WHtoTauTau0L1f05ph0125.txt
+ls ${aHTT}/WHiggs0M_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                              > hdfs/WHtoTauTau0M125.txt
+ls ${aHTT}/WHiggs0MfWH05ph0_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                      > hdfs/WHtoTauTau0Mf05ph0125.txt
+ls ${aHTT}/WHiggs0PH_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                             > hdfs/WHtoTauTau0PH125.txt
+ls ${aHTT}/WHiggs0PHfWH05ph0_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                     > hdfs/WHtoTauTau0PHf05ph0125.txt
+ls ${aHTT}/WHiggs0PM_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                             > hdfs/WHtoTauTau0PM125.txt
+
+ls ${aHTT}/ZHiggs0L1_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                             > hdfs/ZHtoTauTau0L1125.txt
+ls ${aHTT}/ZHiggs0L1fZH05ph0_Undecayed_M-125_13TeV-JHUgenV6_v6-v1/*.root                     > hdfs/ZHtoTauTau0L1f05ph0125.txt
+ls ${aHTT}/ZHiggs0M_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                              > hdfs/ZHtoTauTau0M125.txt
+ls ${aHTT}/ZHiggs0MfZH05ph0_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                      > hdfs/ZHtoTauTau0Mf05ph0125.txt
+ls ${aHTT}/ZHiggs0PH_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                             > hdfs/ZHtoTauTau0PH125.txt
+ls ${aHTT}/ZHiggs0PHfZH05ph0_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                     > hdfs/ZHtoTauTau0PHf05ph0125.txt
+ls ${aHTT}/ZHiggs0PM_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                             > hdfs/ZHtoTauTau0PM125.txt
+
 

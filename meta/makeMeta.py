@@ -43,10 +43,12 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
         currentDASSamples['azh'].append('azh%i' % mass)
 
     # Adding anomalous couplings VBF Higgs, these are normalized based on VBF125
-    anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125',
-        'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
-    for aHiggs in anomalousVBF :
-        currentDASSamples['htt'].append( aHiggs )
+    anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125',
+        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125']
+    for aHiggs in anomalous :
+        currentDASSamples['htt'].append( 'VBF'+aHiggs )
+        currentDASSamples['htt'].append( 'W'+aHiggs )
+        currentDASSamples['htt'].append( 'Z'+aHiggs )
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 
