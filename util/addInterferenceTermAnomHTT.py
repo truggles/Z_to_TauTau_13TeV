@@ -69,68 +69,74 @@ if '__main__' in __name__ :
     base = os.getenv('CMSSW_BASE')
     print base
     base += '/src/Z_to_TauTau_13TeV/httShapes/htt/'
-    smBaseSample = 'qqH_htt125'
-    bsmBaseSample = 'qqH_htt_0M125'
 
-    for channel in channels :
-        fileName = base+'htt_%s.inputs-sm-13TeV-MELA-5040-Tight.root' % channel
-        file = ROOT.TFile( fileName, "UPDATE" )
-        print file
+    for signal in ['qqH', 'WH', 'ZH'] :
 
-        for catBase in catBases :
-            print "\n === %s ===" % catBase
-            histKeys = get_Keys_Of_Class( file, catBase, "TH1D" )
-            dir = file.Get( catBase )
-            dir.cd()
+        # More looping
+        #smBaseSample =  signal+'_htt125' # standard SM signal
+        smBaseSample =  signal+'_htt_0PM125' # SM from aHTT production
+        bsmBaseSample = signal+'_htt_0M125'
 
-            for k in histKeys :
-                name = k.GetName()
-                #print name
+        for channel in channels :
+            fileName = base+'htt_%s.inputs-sm-13TeV-MELA-5040-Tight.root' % channel
+            file = ROOT.TFile( fileName, "UPDATE" )
+            print file
 
-                # get SM qqH including shape uncertainties
-                if smBaseSample in name :
-                    # Find pure BSM qqH associated with SM (including uncert)
-                    k2 = get_key_matching_inputs( histKeys, smBaseSample, name, bsmBaseSample )
-                    name2 = k2.GetName()
-                    print name, name2
-                    h = k.ReadObj()
-                    h2 = k2.ReadObj()
-                    hPos = h.Clone()
-                    hPos.Add( -1 * h2 )
-                    # hNeg is the same here, will be inverted later
-                    hNeg = h.Clone()
-                    hNeg.Add( -1 * h2 )
-                    print h.Integral()
-                    print h2.Integral()
-                    for b in range( 1, hPos.GetNbinsX()+1 ) :
-                        if hPos.GetBinContent( b ) <= 0 :
-                            hPos.SetBinContent( b, 0. )
-                            hPos.SetBinError( b, 0. )
-                        if hNeg.GetBinContent( b ) > 0 :
-                            hNeg.SetBinContent( b, 0. )
-                            hNeg.SetBinError( b, 0. )
-                        #print " * ",hPos.GetBinContent( b )
-                        #print " x ",hNeg.GetBinContent( b )
-                    print "hPos:",hPos.Integral()
-                    # Invert hNeg for Combine
-                    hNeg.Scale( -1. )
-                    print "hNeg",hNeg.Integral()
+            for catBase in catBases :
+                print "\n === %s ===" % catBase
+                histKeys = get_Keys_Of_Class( file, catBase, "TH1D" )
+                dir = file.Get( catBase )
+                dir.cd()
 
-                    shapeUncert = ''
-                    if smBaseSample != name : # (shape uncert)
-                        shapeUncert = name.replace( smBaseSample, '' )
+                for k in histKeys :
+                    name = k.GetName()
+                    #print name
 
-                    hPos.SetName( 'qqH_htt_0MintP125'+shapeUncert )
-                    hPos.SetTitle( 'qqH_htt_0MintP125'+shapeUncert )
-                    hPos.Write()
-                    hNeg.SetName( 'qqH_htt_0MintN125'+shapeUncert )
-                    hNeg.SetTitle( 'qqH_htt_0MintN125'+shapeUncert )
-                    hNeg.Write()
-                    print "Combine:",name," and ",name2," --> ",hPos.GetName(),hNeg.GetName()
+                    # get SM signal including shape uncertainties
+                    if smBaseSample in name :
+                        # Find pure BSM signal associated with SM (including uncert)
+                        k2 = get_key_matching_inputs( histKeys, smBaseSample, name, bsmBaseSample )
+                        name2 = k2.GetName()
+                        print name, name2
+                        h = k.ReadObj()
+                        h2 = k2.ReadObj()
+                        hPos = h.Clone()
+                        hPos.Add( -1 * h2 )
+                        # hNeg is the same here, will be inverted later
+                        hNeg = h.Clone()
+                        hNeg.Add( -1 * h2 )
+                        print h.Integral()
+                        print h2.Integral()
+                        for b in range( 1, hPos.GetNbinsX()+1 ) :
+                            if hPos.GetBinContent( b ) <= 0 :
+                                hPos.SetBinContent( b, 0. )
+                                hPos.SetBinError( b, 0. )
+                            if hNeg.GetBinContent( b ) > 0 :
+                                hNeg.SetBinContent( b, 0. )
+                                hNeg.SetBinError( b, 0. )
+                            #print " * ",hPos.GetBinContent( b )
+                            #print " x ",hNeg.GetBinContent( b )
+                        print "hPos:",hPos.Integral()
+                        # Invert hNeg for Combine
+                        hNeg.Scale( -1. )
+                        print "hNeg",hNeg.Integral()
 
-                    print "Checking qqH_htt_0MintP125 - qqH_htt_0MintN125 = qqH_htt125 - qqH_htt_0M125"
-                    if ((hPos - hNeg).Integral() == (h - h2).Integral()) :
-                        print " --- Great Success!"
+                        shapeUncert = ''
+                        if smBaseSample != name : # (shape uncert)
+                            shapeUncert = name.replace( smBaseSample, '' )
+
+                        hPos.SetName( signal+'_htt_0MintP125'+shapeUncert )
+                        hPos.SetTitle( signal+'_htt_0MintP125'+shapeUncert )
+                        hPos.Write()
+                        hNeg.SetName( signal+'_htt_0MintN125'+shapeUncert )
+                        hNeg.SetTitle( signal+'_htt_0MintN125'+shapeUncert )
+                        hNeg.Write()
+                        print "Combine:",name," and ",name2," --> ",hPos.GetName(),hNeg.GetName()
+
+                        print "Checking %s_htt_0MintP125 - %s_htt_0MintN125 = %s_htt125 - %s_htt_0M125" % (signal, signal, signal, signal)
+                        if ((hPos - hNeg).Integral() == (h - h2).Integral()) :
+                            print " --- Great Success!"
+            file.Close()
 
 
 
