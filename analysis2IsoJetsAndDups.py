@@ -252,7 +252,8 @@ def getCurrentEvt( analysis, channel, row ) :
         leg4Pt = getattr(row, l4+'Pt')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
         LT = leg3Pt + leg4Pt # LT here is just Higgs_LT
-        currentEvt = (closeZ, LT)
+        currentEvt = (closeZ, LT, leg3Pt) # leg3Pt is to distinguish
+        # when an object can be a slimmedElec and slimmedTau
     else : currentEvt = (leg1Iso, leg1Pt, leg2Iso, leg2Pt)
 
     return currentEvt
@@ -657,6 +658,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
                 if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
+                # This is for events where both higgs legs
+                # can be reconstructed as electrons and taus
+                # therefore both combinations have same Higgs_LT
+                # choose electron to have higher pt
+                elif currentEvt[ 1 ] == prevEvt[ 1 ] :
+                    if currentEvt[ 2 ] > prevEvt[ 2 ] :
+                        prevEvt = currentEvt
         else :
             # lowest iso_1
             if currentEvt[ 0 ] < prevEvt[ 0 ] :
