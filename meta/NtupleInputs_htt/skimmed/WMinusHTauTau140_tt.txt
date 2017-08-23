@@ -1,2 +1,2 @@
-/data/truggles/svFitApr01_SM-HTT_Merged/WMinusHTauTau140_0_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/WMinusHTauTau140_1_tt.root
+/data/truggles/svFitMay30_RivetSignals_SM-HTT_Merged/WMinusHTauTau140_0_tt.root
+/data/truggles/svFitMay30_RivetSignals_SM-HTT_Merged/WMinusHTauTau140_1_tt.root
