@@ -53,17 +53,17 @@ HSS = 'LEG3_LEG4_SS == 1'
 eeTrig = 'doubleE_23_12Pass > 0'
 mmTrig = 'doubleMuPass > 0'
 
-eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoAZHdR0 == 0'
-mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoAZHdR0 <= 2'
-eemtVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 1'
-mmmtVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 3'
-eettVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 == 0'
-mmttVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 2'
-eeemVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoAZHdR0 <= 1'
-mmemVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoAZHdR0 <= 3'
-eeeeVetos = 'eVetoZTTp001dxyzR0 <= 4 && muVetoAZHdR0 == 0'
-mmmmVetos = 'eVetoZTTp001dxyzR0 == 0 && muVetoAZHdR0 <= 4'
-eemmVetos = 'eVetoZTTp001dxyzR0 <= 2 && muVetoAZHdR0 <= 2'
+eeetVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0_2 == 0'
+mmetVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0_2 <= 2'
+eemtVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0_2 <= 1'
+mmmtVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0_2 <= 3'
+eettVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0_2 == 0'
+mmttVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0_2 <= 2'
+eeemVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0_2 <= 1'
+mmemVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0_2 <= 3'
+eeeeVetos = 'eVetoAZHdR0 <= 4 && muVetoAZHdR0_2 == 0'
+mmmmVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0_2 <= 4'
+eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0_2 <= 2'
 
 #eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
 #mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
@@ -179,6 +179,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end EEET
          'eett' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
+            'SkimNoTrig'   : [ZOS, ZMass, llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
         }, # end EETT
          'eemt' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
@@ -200,12 +201,15 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end MMET
          'mmtt' : {
             'Skim'   : [ZOS, ZMass, mmTrig, mmTrigPt(), llttDR('m1','m2','t1','t2'), mmttVetos, mTight('m1'), mTight('m2'), tBase('t1'), tBase('t2')],
+            'SkimNoTrig'   : [ZOS, ZMass, llttDR('m1','m2','t1','t2'), mmttVetos, mTight('m1'), mTight('m2'), tBase('t1'), tBase('t2')],
         }, # end MMTT
          'mmmt' : {
             'Skim'   : [ZOS, ZMass, mmTrig, mmmTrigPt(), llltDR('m1','m2','m3','t'), mmmtVetos, mTight('m1'), mTight('m2'), mBase('m3'), tBase('t'), tAntiMV('t')],
+            'SkimNoTrig'   : [ZOS, ZMass, llltDR('m1','m2','m3','t'), mmmtVetos, mTight('m1'), mTight('m2'), mBase('m3'), tBase('t'), tAntiMV('t')],
         }, # end MMMT
          'emmm' : {
             'Skim'   : [ZOS, ZMass, mmTrig, mmmTrigPt(), mmemVetos, mTight('m1'), mTight('m2'), mBase('m3'), eBase('e')],
+            'SkimNoTrig'   : [ZOS, ZMass, mmemVetos, mTight('m1'), mTight('m2'), mBase('m3'), eBase('e')],
         } # end MMEM
         } # end AZH analysis cuts
     } # end cutMap
