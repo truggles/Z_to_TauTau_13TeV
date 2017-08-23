@@ -53,7 +53,7 @@ if __name__ == '__main__' :
     multiprocessingOutputs = []
     debug = False
     doAZH = False
-    doHTT = False
+    doHTT = True
 
 
     if doAZH :
@@ -80,6 +80,7 @@ if __name__ == '__main__' :
             azhSamples.append('dataMM-%s' % era)
         originalDir = '/nfs_scratch/truggles/azhMay31skim/'
         targetDir = '/nfs_scratch/truggles/azhMay31skimMerged'
+        checkDir( targetDir )
         jobId = ''
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         for channel in channels :
@@ -116,8 +117,18 @@ if __name__ == '__main__' :
         for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
             SamplesDataCards.append('dataTT-%s' % era)
 
-        originalDir = '/hdfs/store/user/truggles/svFitMay30_RivetSignals_SM-HTT/Recoil*/*'
-        targetDir = '/nfs_scratch/truggles/svFitMay30_RivetSignals_SM-HTT_Merged'
+        anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
+            'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125']
+        SamplesDataCards = []
+        for aHiggs in anomalous :
+            SamplesDataCards.append( 'VBF'+aHiggs )
+            SamplesDataCards.append( 'W'+aHiggs )
+            SamplesDataCards.append( 'Z'+aHiggs )
+
+        name = 'svFitAug21_aHTT_officialSigs'
+        originalDir = '/hdfs/store/user/truggles/'+name+'/Recoil*/*'
+        targetDir = '/nfs_scratch/truggles/'+name+'_Merged'
+        checkDir( targetDir )
         jobId = 'TauTau_13*'
         for sample in SamplesDataCards :
              if debug:
