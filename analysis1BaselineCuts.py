@@ -12,6 +12,7 @@ from ROOT import gPad, gROOT
 from util.helpers import checkDir
 import os
 from smart_getenv import getenv
+from util.htxsTools import getHtxsCutMapStage0
 
 
 
@@ -482,6 +483,9 @@ def drawHistos(analysis, samples, **fargs ) :
         'RedBkgYield' : {'xxxx' : '*(1.)'},
         'RedBkgShape' : {'xxxx' : '*(1.)'},
     }
+
+    htxsStage0 = getHtxsCutMapStage0()
+
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
     #ROOT.TProof.Open('workers=%s' % str( int(fargs['numCores']) ) )
@@ -516,6 +520,29 @@ def drawHistos(analysis, samples, **fargs ) :
             genList = ['VVT', 'VVJ']
             loopList = genList
             #loopList.append( sample ) # don't keep full original
+
+        # HTXS / Rivet Section
+        elif 'ggHtoTauTau' in sample :
+            loopList.append( sample )
+            for cat in htxsStage0[ 'ggHtoTauTau' ].keys() :
+                loopList.append( cat )
+        elif 'VBFHtoTauTau' in sample :
+            loopList.append( sample )
+            for cat in htxsStage0[ 'VBFHtoTauTau' ].keys() :
+                loopList.append( cat )
+        elif 'WMinusHTauTau' in sample :
+            loopList.append( sample )
+            for cat in htxsStage0[ 'WMinusHTauTau' ].keys() :
+                loopList.append( cat )
+        elif 'WPlusHTauTau' in sample :
+            loopList.append( sample )
+            for cat in htxsStage0[ 'WPlusHTauTau' ].keys() :
+                loopList.append( cat )
+        elif 'ZHTauTau' in sample :
+            loopList.append( sample )
+            for cat in htxsStage0[ 'ZHTauTau' ].keys() :
+                loopList.append( cat )
+
         elif 'data' in sample and doFF :
             loopList.append( sample )
             loopList.append( 'QCD-'+sample.split('-')[1] )
@@ -564,9 +591,16 @@ def drawHistos(analysis, samples, **fargs ) :
                 else : isData = False
                 additionalCut = fargs['additionalCut']
                 if subName != sample and 'RedBkg' not in subName and 'QCD-' not in subName : 
-                    if genMap[subName][channel] == '' : continue
-                    if additionalCut == '' : additionalCut = genMap[subName][channel] 
-                    else : additionalCut += genMap[subName][channel] 
+                    if subName in genMap.keys() :
+                        if genMap[subName][channel] == '' : continue
+                        if additionalCut == '' : additionalCut = genMap[subName][channel] 
+                        else : additionalCut += genMap[subName][channel] 
+                    else : # hopefully HTXS
+                        noMassSig = sample[:-3] # sample sans 3 digit mass
+                        if subName in htxsStage0[noMassSig].keys() :
+                            if additionalCut == '' : additionalCut = htxsStage0[noMassSig][subName]
+                            else : additionalCut += htxsStage0[noMassSig][subName]
+                                
                 #print "AdditionalCuts",additionalCut
 
                 blind = False

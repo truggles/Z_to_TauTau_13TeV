@@ -259,6 +259,27 @@ def dataCardGenMatchedSamples( inSamples ) :
         if 'ZHTauTau%s' % mass in inSamples :
             samples['ZHTauTau%s' % mass] = 'ZH_htt%s' % mass
     
+    # add the HTXS categories, we will add all versions to the DCs
+    # normal, cat0, cat1
+    from util.htxsTools import getHtxsCutMapStage0
+    htxsStage0 = getHtxsCutMapStage0()
+    # HTXS / Rivet Section
+    for sample in inSamples :
+        if 'ggHtoTauTau' in sample :
+            for cat in htxsStage0[ 'ggHtoTauTau' ].keys() :
+                samples[ sample+'-'+cat ] = 'ggH_htt_'+cat+sample[-3:]
+        elif 'VBFHtoTauTau' in sample :
+            for cat in htxsStage0[ 'VBFHtoTauTau' ].keys() :
+                samples[ sample+'-'+cat ] = 'qqH_htt_'+cat+sample[-3:]
+        elif 'WMinusHTauTau' in sample :
+            for cat in htxsStage0[ 'WMinusHTauTau' ].keys() :
+                samples[ sample+'-'+cat ] = 'WH_htt_'+cat+sample[-3:]
+        elif 'WPlusHTauTau' in sample :
+            for cat in htxsStage0[ 'WPlusHTauTau' ].keys() :
+                samples[ sample+'-'+cat ] = 'WH_htt_'+cat+sample[-3:]
+        elif 'ZHTauTau' in sample :
+            for cat in htxsStage0[ 'ZHTauTau' ].keys() :
+                samples[ sample+'-'+cat ] = 'ZH_htt_'+cat+sample[-3:]
 
     return samples
 
