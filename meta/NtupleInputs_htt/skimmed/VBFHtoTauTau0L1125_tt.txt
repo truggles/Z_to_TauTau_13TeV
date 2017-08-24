@@ -1,3 +1,4 @@
-/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0L1125_0_tt.root
-/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0L1125_1_tt.root
-/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0L1125_2_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/VBFHtoTauTau0L1125_0_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/VBFHtoTauTau0L1125_1_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/VBFHtoTauTau0L1125_2_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/VBFHtoTauTau0L1125_3_tt.root

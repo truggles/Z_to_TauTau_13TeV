@@ -1,6 +1,6 @@
 
 ALL=/data/truggles/svFitApr01_SM-HTT_Merged
-aHTT=/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged
+aHTT=/data/truggles/svFitAug21_aHTT_officialSigs_Merged
 CHANNEL=tt
 
 
@@ -25,7 +25,9 @@ for MASS in 125; do
     done
 done
 
-for SAMPLE in VBFHtoTauTau0PHf05ph0125 VBFHtoTauTau0L1f05ph0125 VBFHtoTauTau0L1125 VBFHtoTauTau0PM125 VBFHtoTauTau0Mf05ph0125 VBFHtoTauTau0PH125 VBFHtoTauTau0M125 VBFHtoTauTau0PM-v5125; do
-    ls ${aHTT}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+for SAMPLE in VBF W Z; do
+    for MODE in HtoTauTau0PHf05ph0125 HtoTauTau0L1f05ph0125 HtoTauTau0L1125 HtoTauTau0PM125 HtoTauTau0Mf05ph0125 HtoTauTau0PH125 HtoTauTau0M125; do
+        ls ${aHTT}/${SAMPLE}${MODE}_*_${CHANNEL}.root > skimmed/${SAMPLE}${MODE}_${CHANNEL}.txt
+    done
 done
 

@@ -1,0 +1,3 @@
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/ZHtoTauTau0PHf05ph0125_0_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/ZHtoTauTau0PHf05ph0125_1_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/ZHtoTauTau0PHf05ph0125_2_tt.root

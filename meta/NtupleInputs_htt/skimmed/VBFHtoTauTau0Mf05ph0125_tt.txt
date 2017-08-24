@@ -1,2 +1,2 @@
-/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0Mf05ph0125_0_tt.root
-/data/truggles/svFitJuly13_VBFSignals_aHTT_Merged/VBFHtoTauTau0Mf05ph0125_1_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/VBFHtoTauTau0Mf05ph0125_0_tt.root
+/data/truggles/svFitAug21_aHTT_officialSigs_Merged/VBFHtoTauTau0Mf05ph0125_1_tt.root

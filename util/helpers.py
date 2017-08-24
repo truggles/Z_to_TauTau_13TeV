@@ -259,12 +259,15 @@ def dataCardGenMatchedSamples( inSamples ) :
         if 'ZHTauTau%s' % mass in inSamples :
             samples['ZHTauTau%s' % mass] = 'ZH_htt%s' % mass
     
-    anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125', 
-        'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
-    for anom in anomalousVBF :
-        if anom in inSamples :
-            addName = anom.replace('VBFHtoTauTau','')
-            samples[ anom ] = 'qqH_htt_%s' % addName
+    anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
+        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125']
+    for anom in anomalous :
+        if 'VBF'+anom in inSamples :
+            samples[ 'VBF'+anom ] = 'qqH_htt_%s' % anom.replace('HtoTauTau','')
+        if 'W'+anom in inSamples :
+            samples[ 'W'+anom ] = 'WH_htt_%s' % anom.replace('HtoTauTau','')
+        if 'Z'+anom in inSamples :
+            samples[ 'Z'+anom ] = 'ZH_htt_%s' % anom.replace('HtoTauTau','')
 
     return samples
 
