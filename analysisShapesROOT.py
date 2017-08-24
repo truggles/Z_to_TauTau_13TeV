@@ -508,8 +508,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if '_topQuarkggH' in var and not name in ['ggH_htt110', 'ggH_htt120','ggH_htt125','ggH_htt130', 'ggH_htt140'] : continue
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
-                    if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] or \
-                            category != 'vbf') : continue # Shape only used in vbf category atm
+                    if '_Zmumu' in var and name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] : continue
+                    if '_Zmumu' in var and 'vbf' not in shapeDir.GetPath() : continue # Shape only used in vbf category atm
+
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
@@ -532,10 +533,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         # Keep a normal shift included for checks at Combine level
                         elif 'Total' in jesUnc and 'Sub' not in jesUnc : jesUnc = '13TeV'+shiftDir
                         else : jesUnc += '_13TeV'+shiftDir
-
-                    # For naming conventions for systematics    
-                    if category == 'vbf' : tmpCat = 'VBF'
-                    else : tmpCat = category
 
                     if '_zPt' in var :
                         if name not in ['ZTT','ZL','ZJ','ZLL','ZJ_rest'] : continue
@@ -580,8 +577,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_TopMassTreatment_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_TopMassTreatment_13TeV'+shiftDir )
                     elif '_Zmumu' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_'+tmpCat+'_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_VBF_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_VBF_13TeV'+shiftDir )
                     elif '_metClustered' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_met_clustered_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_met_clustered_13TeV'+shiftDir )
