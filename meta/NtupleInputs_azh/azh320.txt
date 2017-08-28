@@ -1,1 +1,0 @@
-/data/truggles/aug04_azh/AToZhToLLTauTau_M-320_13TeV_madgraph_4f_LO/submit/make_ntuples_cfg-82E753B1-8E4C-E611-93E2-0017A4770434/make_ntuples_cfg-82E753B1-8E4C-E611-93E2-0017A4770434.root
