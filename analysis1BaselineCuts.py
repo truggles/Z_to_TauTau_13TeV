@@ -12,7 +12,7 @@ from ROOT import gPad, gROOT
 from util.helpers import checkDir
 import os
 from smart_getenv import getenv
-from util.htxsTools import getHtxsCutMapStage0
+from util.htxsTools import getHtxsCutMapStage0, getHtxsCutMapStage1
 
 
 
@@ -485,6 +485,7 @@ def drawHistos(analysis, samples, **fargs ) :
     }
 
     htxsStage0 = getHtxsCutMapStage0()
+    htxsStage1 = getHtxsCutMapStage1()
 
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -526,21 +527,31 @@ def drawHistos(analysis, samples, **fargs ) :
             loopList.append( sample )
             for cat in htxsStage0[ 'ggHtoTauTau' ].keys() :
                 loopList.append( cat )
+            for cat in htxsStage1[ 'ggHtoTauTau' ].keys() :
+                loopList.append( cat )
         elif 'VBFHtoTauTau' in sample :
             loopList.append( sample )
             for cat in htxsStage0[ 'VBFHtoTauTau' ].keys() :
+                loopList.append( cat )
+            for cat in htxsStage1[ 'VBFHtoTauTau' ].keys() :
                 loopList.append( cat )
         elif 'WMinusHTauTau' in sample :
             loopList.append( sample )
             for cat in htxsStage0[ 'WMinusHTauTau' ].keys() :
                 loopList.append( cat )
+            for cat in htxsStage1[ 'WMinusHTauTau' ].keys() :
+                loopList.append( cat )
         elif 'WPlusHTauTau' in sample :
             loopList.append( sample )
             for cat in htxsStage0[ 'WPlusHTauTau' ].keys() :
                 loopList.append( cat )
+            for cat in htxsStage1[ 'WPlusHTauTau' ].keys() :
+                loopList.append( cat )
         elif 'ZHTauTau' in sample :
             loopList.append( sample )
             for cat in htxsStage0[ 'ZHTauTau' ].keys() :
+                loopList.append( cat )
+            for cat in htxsStage1[ 'ZHTauTau' ].keys() :
                 loopList.append( cat )
 
         elif 'data' in sample and doFF :
@@ -600,6 +611,9 @@ def drawHistos(analysis, samples, **fargs ) :
                         if subName in htxsStage0[noMassSig].keys() :
                             if additionalCut == '' : additionalCut = htxsStage0[noMassSig][subName]
                             else : additionalCut += htxsStage0[noMassSig][subName]
+                        if subName in htxsStage1[noMassSig].keys() :
+                            if additionalCut == '' : additionalCut = htxsStage1[noMassSig][subName]
+                            else : additionalCut += htxsStage1[noMassSig][subName]
                                 
                 #print "AdditionalCuts",additionalCut
 
