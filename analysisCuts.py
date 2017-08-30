@@ -53,17 +53,17 @@ HSS = 'LEG3_LEG4_SS == 1'
 eeTrig = 'doubleE_23_12Pass > 0'
 mmTrig = 'doubleMuPass > 0'
 
-eeetVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0_2 == 0'
-mmetVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0_2 <= 2'
-eemtVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0_2 <= 1'
-mmmtVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0_2 <= 3'
-eettVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0_2 == 0'
-mmttVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0_2 <= 2'
-eeemVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0_2 <= 1'
-mmemVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0_2 <= 3'
-eeeeVetos = 'eVetoAZHdR0 <= 4 && muVetoAZHdR0_2 == 0'
-mmmmVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0_2 <= 4'
-eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0_2 <= 2'
+eeetVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 == 0'
+mmetVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0 <= 2'
+eemtVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 1'
+mmmtVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 3'
+eettVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 == 0'
+mmttVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 2'
+eeemVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 <= 1'
+mmemVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0 <= 3'
+eeeeVetos = 'eVetoAZHdR0 <= 4 && muVetoAZHdR0 == 0'
+mmmmVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 4'
+eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 2'
 
 #eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
 #mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
@@ -81,6 +81,8 @@ eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0_2 <= 2'
 def eBase( lep ) :
     return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
 def eTight( lep ) :
+    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
+def eTightWithIso( lep ) :
     return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_IsoDB03 < 0.3 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
 
 def mBase( lep ) :
@@ -175,18 +177,22 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end EEEE
          'eeet' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), llltDR('e1','e2','e3','t'), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
+            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), llltDR('e1','e2','e3','t'), eeetVetos, eTightWithIso('e1'), eTightWithIso('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
             'SkimNoTrig'   : [ZOS, ZMass, llltDR('e1','e2','e3','t'), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
         }, # end EEET
          'eett' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
+            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llttDR('e1','e2','t1','t2'), eettVetos, eTightWithIso('e1'), eTightWithIso('e2'), tBase('t1'), tBase('t2')],
             'SkimNoTrig'   : [ZOS, ZMass, llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
         }, # end EETT
          'eemt' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
+            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eemtVetos, eTightWithIso('e1'), eTightWithIso('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
             'SkimNoTrig'   : [ZOS, ZMass, llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
         }, # end EEMT
          'eeem' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), eeemVetos, eTight('e1'), eTight('e2'), eBase('e3'), mBase('m')],
+            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), eeemVetos, eTightWithIso('e1'), eTightWithIso('e2'), eBase('e3'), mBase('m')],
             'SkimNoTrig'   : [ZOS, ZMass, eeemVetos, eTight('e1'), eTight('e2'), eBase('e3'), mBase('m')],
         }, # end EEEM
          'eemm' : {
@@ -224,6 +230,9 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
             l = copy.deepcopy(cutMap['azh'][chan]['Skim'])
             l.append( HOS )
             cutMap['azh'][chan]['SignalRegion'] = l
+            # Keep non-isolated electron passing ID using normal Skim
+            if 'SkimAZH' not in cutMap['azh'][chan] :
+                cutMap['azh'][chan]['SkimAZH'] = copy.deepcopy(cutMap['azh'][chan]['Skim'])
     
     
     # Add a copy of the 'htt' analysis cuts under 'Sync'
