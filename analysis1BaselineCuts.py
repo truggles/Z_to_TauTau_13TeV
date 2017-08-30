@@ -237,6 +237,11 @@ def doInitialCuts(analysis, samples, **fargs) :
 
         for channel in channels :
 
+            # ZZ4l is crazy huge, close pool each channel to reduce memory usage   
+            if fargs['debug'] != 'true' and fargs['skimHdfs'] == 'true' and sample in ['ZZ4l', 'TT'] :
+                pool.close()
+                pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
+
             # Check if we should skip running over data set
             if skipChanDataCombo( channel, sample, analysis ) : continue
 
@@ -291,6 +296,16 @@ def doInitialCuts(analysis, samples, **fargs) :
                 count += 1
                 # Make sure we loop over large samples to get all files
                 if count * numFilesPerCycle >= fileLen : go = False
+
+            if fargs['debug'] != 'true' and fargs['skimHdfs'] == 'true' and sample in ['ZZ4l', 'TT'] :
+                mpResults = [p.get() for p in multiprocessingOutputs]
+
+                print "\n"
+                print "#################################################################"
+                print "###       skimHdfs finished for %20s %20s         ###" % (sample, channel)
+                print "#################################################################"
+                print "\n"
+                multiprocessingOutputs = []
 
         if fargs['debug'] != 'true' and fargs['skimHdfs'] == 'true' :
             mpResults = [p.get() for p in multiprocessingOutputs]
