@@ -39,20 +39,15 @@ os.chdir('..')
 azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
 
 for mass in [110, 120, 125, 130, 140] :
-    #azhSamples.append('ggHtoTauTau%i' % mass)
-    #azhSamples.append('VBFHtoTauTau%i' % mass)
-    #azhSamples.append('WMinusHTauTau%i' % mass)
-    #azhSamples.append('WPlusHTauTau%i' % mass)
+    azhSamples.append('ggHtoTauTau%i' % mass)
+    azhSamples.append('VBFHtoTauTau%i' % mass)
+    azhSamples.append('WMinusHTauTau%i' % mass)
+    azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHTauTau%i' % mass)
     #azhSamples.append('ttHTauTau%i' % mass)
 for mass in [125,] :
-    azhSamples.append('WMinusHTauTau%i' % mass)
-    azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
-
-#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-#    azhSamples.append('azh%i' % mass)
 
 #azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
@@ -60,13 +55,14 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataMM-%s' % era)
     
 #azhSamples = ['ZHWW125','HZZ125']
-azhSamples = ['dataEE-B']
+#azhSamples = ['dataEE-B']
 #azhSamples = ['HZZ125',]
-azhSamples = ['azh300',]
+#azhSamples = ['azh300',]
 
-azhSamples = []
+#azhSamples = []
 for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
     azhSamples.append('azh%i' % mass)
+#azhSamples = ['ZZ4l',]
 
 samples = azhSamples
 
@@ -86,20 +82,17 @@ params = {
     #'channels' : ['eeem',],
     'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
-    'mid1' : '1July17FR',
-    'mid2' : '2July17FR',
-    'mid3' : '3July17FR',
-    #'mid1' : '1June13svFitted',
-    #'mid2' : '2June13svFitted',
-    #'mid3' : '3June13svFitted',
+    'mid1' : '1Aug29skim',
+    'mid2' : '2Aug29skim',
+    'mid3' : '3Aug29skim',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimmed' : 'false',
-    'skimmed' : 'true', # Use at uwlogin
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true', # Use for initial skim
+    'skimmed' : 'false',
+    #'skimmed' : 'true', # Use at uwlogin
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true', # Use for initial skim
 
     ## Signal Sync
     #'channels' : ['eemt','mmmt','emmt',],
@@ -133,7 +126,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -143,8 +136,8 @@ makeFinalPlots = True
 doDataCards = True
 
 
-#runPlots = False
-#doMerge = False
+runPlots = False
+doMerge = False
 makeFinalPlots = False
 doDataCards = False
 
