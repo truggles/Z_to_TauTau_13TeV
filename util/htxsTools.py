@@ -11,22 +11,28 @@
 def getHtxsCutMapStage0() :
     htxsMap = {
     'ggHtoTauTau' : {
-        'GG2H' : '*(Rivet_stage0_cat == 11)'
+        'stage0GG2H-FWDH' : '*(Rivet_stage0_cat == 10)',
+        'stage0GG2H' : '*(Rivet_stage0_cat == 11)'
     },
     'VBFHtoTauTau' : {
-        'VBF' : '*(Rivet_stage0_cat == 21)'
+        'stage0VBF-FWDH' : '*(Rivet_stage0_cat == 20)',
+        'stage0VBF' : '*(Rivet_stage0_cat == 21)'
     },
     'WMinusHTauTau' : {
-        'VH2HQQ' : '*(Rivet_stage0_cat == 23)',
-        'QQ2HLNU' : '*(Rivet_stage0_cat == 31)'
+        'stage0VH2HQQ' : '*(Rivet_stage0_cat == 23)',
+        'stage0QQ2HLNU-FWDH' : '*(Rivet_stage0_cat == 30)',
+        'stage0QQ2HLNU' : '*(Rivet_stage0_cat == 31)'
     },
     'WPlusHTauTau' : {
-        'VH2HQQ' : '*(Rivet_stage0_cat == 23)',
-        'QQ2HLNU' : '*(Rivet_stage0_cat == 31)'
+        'stage0VH2HQQ' : '*(Rivet_stage0_cat == 23)',
+        'stage0QQ2HLNU-FWDH' : '*(Rivet_stage0_cat == 30)',
+        'stage0QQ2HLNU' : '*(Rivet_stage0_cat == 31)'
     },
     'ZHTauTau' : {
-        'VH2HQQ' : '*(Rivet_stage0_cat == 23)',
-        'QQ2HLL' : '*(Rivet_stage0_cat == 41)'
+        'stage0VH2HQQ-FWDH' : '*(Rivet_stage0_cat == 22)',
+        'stage0VH2HQQ' : '*(Rivet_stage0_cat == 23)',
+        'stage0QQ2HLL-FWDH' : '*(Rivet_stage0_cat == 40)',
+        'stage0QQ2HLL' : '*(Rivet_stage0_cat == 41)'
     }}
 
     return htxsMap
@@ -35,51 +41,62 @@ def getHtxsCutMapStage0() :
 def getHtxsCutMapStage1() :
     htxsMap = {
     'ggHtoTauTau' : {
-        'GG2H-VBFTOPO-JET3VETO' : '*(Rivet_stage1_cat_pTjet30GeV == 101)',
-        'GG2H-VBFTOPO-JET3' : '*(Rivet_stage1_cat_pTjet30GeV == 102)',
-        'GG2H-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 103)',
-        'GG2H-1J-PTH-0-60' : '*(Rivet_stage1_cat_pTjet30GeV == 104)',
-        'GG2H-1J-PTH-60-120' : '*(Rivet_stage1_cat_pTjet30GeV == 105)',
-        'GG2H-1J-PTH-120-200' : '*(Rivet_stage1_cat_pTjet30GeV == 106)',
-        'GG2H-1J-PTH-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 107)',
-        'GG2H-GE2J-PTH-0-60' : '*(Rivet_stage1_cat_pTjet30GeV == 108)',
-        'GG2H-GE2J-PTH-60-120' : '*(Rivet_stage1_cat_pTjet30GeV == 109)',
-        'GG2H-GE2J-PTH-120-200' : '*(Rivet_stage1_cat_pTjet30GeV == 110)',
-        'GG2H-GE2J-PTH-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 111)',
+        'stage1GG2H-VBFTOPO-JET3VETO' : '*(Rivet_stage1_cat_pTjet30GeV == 101)',
+        'stage1GG2H-VBFTOPO-JET3' : '*(Rivet_stage1_cat_pTjet30GeV == 102)',
+        'stage1GG2H-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 103)',
+        'stage1GG2H-1J-PTH-0-60' : '*(Rivet_stage1_cat_pTjet30GeV == 104)',
+        'stage1GG2H-1J-PTH-60-120' : '*(Rivet_stage1_cat_pTjet30GeV == 105)',
+        'stage1GG2H-1J-PTH-120-200' : '*(Rivet_stage1_cat_pTjet30GeV == 106)',
+        'stage1GG2H-1J-PTH-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 107)',
+        'stage1GG2H-GE2J-PTH-0-60' : '*(Rivet_stage1_cat_pTjet30GeV == 108)',
+        'stage1GG2H-GE2J-PTH-60-120' : '*(Rivet_stage1_cat_pTjet30GeV == 109)',
+        'stage1GG2H-GE2J-PTH-120-200' : '*(Rivet_stage1_cat_pTjet30GeV == 110)',
+        'stage1GG2H-GE2J-PTH-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 111)',
     },
     'VBFHtoTauTau' : {
-        'QQ2HQQ-VBFTOPO-JET3VETO' : '*(Rivet_stage1_cat_pTjet30GeV == 201)',
-        'QQ2HQQ-VBFTOPO-JET3' : '*(Rivet_stage1_cat_pTjet30GeV == 202)',
-        'QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
-        'QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
-        'QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
+        'stage1QQ2HQQ-FWDH' : '*(Rivet_stage1_cat_pTjet30GeV == 200)',
+        'stage1QQ2HQQ-VBFTOPO-JET3VETO' : '*(Rivet_stage1_cat_pTjet30GeV == 201)',
+        'stage1QQ2HQQ-VBFTOPO-JET3' : '*(Rivet_stage1_cat_pTjet30GeV == 202)',
+        'stage1QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
+        'stage1QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
+        'stage1QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
     },
     'WMinusHTauTau' : {
-        'QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
-        'QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
-        'QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
-        'QQ2HLNU-PTV-0-150' : '*(Rivet_stage1_cat_pTjet30GeV == 301)',
-        'QQ2HLNU-PTV-150-250-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 302)',
-        'QQ2HLNU-PTV-150-250-GE1J' : '*(Rivet_stage1_cat_pTjet30GeV == 303)',
-        'QQ2HLNU-PTV-GT250' : '*(Rivet_stage1_cat_pTjet30GeV == 304)',
+        'stage1QQ2HQQ-VBFTOPO-JET3VETO' : '*(Rivet_stage1_cat_pTjet30GeV == 201)',
+        'stage1QQ2HQQ-VBFTOPO-JET3' : '*(Rivet_stage1_cat_pTjet30GeV == 202)',
+        'stage1QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
+        'stage1QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
+        'stage1QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
+        'stage1QQ2HLNU-FWDH' : '*(Rivet_stage1_cat_pTjet30GeV == 300)',
+        'stage1QQ2HLNU-PTV-0-150' : '*(Rivet_stage1_cat_pTjet30GeV == 301)',
+        'stage1QQ2HLNU-PTV-150-250-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 302)',
+        'stage1QQ2HLNU-PTV-150-250-GE1J' : '*(Rivet_stage1_cat_pTjet30GeV == 303)',
+        'stage1QQ2HLNU-PTV-GT250' : '*(Rivet_stage1_cat_pTjet30GeV == 304)',
     },
     'WPlusHTauTau' : {
-        'QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
-        'QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
-        'QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
-        'QQ2HLNU-PTV-0-150' : '*(Rivet_stage1_cat_pTjet30GeV == 301)',
-        'QQ2HLNU-PTV-150-250-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 302)',
-        'QQ2HLNU-PTV-150-250-GE1J' : '*(Rivet_stage1_cat_pTjet30GeV == 303)',
-        'QQ2HLNU-PTV-GT250' : '*(Rivet_stage1_cat_pTjet30GeV == 304)',
+        'stage1QQ2HQQ-VBFTOPO-JET3VETO' : '*(Rivet_stage1_cat_pTjet30GeV == 201)',
+        'stage1QQ2HQQ-VBFTOPO-JET3' : '*(Rivet_stage1_cat_pTjet30GeV == 202)',
+        'stage1QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
+        'stage1QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
+        'stage1QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
+        'stage1QQ2HLNU-FWDH' : '*(Rivet_stage1_cat_pTjet30GeV == 300)',
+        'stage1QQ2HLNU-PTV-0-150' : '*(Rivet_stage1_cat_pTjet30GeV == 301)',
+        'stage1QQ2HLNU-PTV-150-250-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 302)',
+        'stage1QQ2HLNU-PTV-150-250-GE1J' : '*(Rivet_stage1_cat_pTjet30GeV == 303)',
+        'stage1QQ2HLNU-PTV-GT250' : '*(Rivet_stage1_cat_pTjet30GeV == 304)',
     },
     'ZHTauTau' : {
-        'QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
-        'QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
-        'QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
-        'QQ2HLL-PTV-0-150' : '*(Rivet_stage1_cat_pTjet30GeV == 401)',
-        'QQ2HLL-PTV-150-250-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 402)',
-        'QQ2HLL-PTV-150-250-GE1J' : '*(Rivet_stage1_cat_pTjet30GeV == 403)',
-        'QQ2HLL-PTV-GT250' : '*(Rivet_stage1_cat_pTjet30GeV == 404)',
+        'stage1QQ2HQQ-FWDH' : '*(Rivet_stage1_cat_pTjet30GeV == 200)',
+        'stage1QQ2HQQ-VBFTOPO-JET3VETO' : '*(Rivet_stage1_cat_pTjet30GeV == 201)',
+        'stage1QQ2HQQ-VBFTOPO-JET3' : '*(Rivet_stage1_cat_pTjet30GeV == 202)',
+        'stage1QQ2HQQ-VH2JET' : '*(Rivet_stage1_cat_pTjet30GeV == 203)',
+        'stage1QQ2HQQ-REST' : '*(Rivet_stage1_cat_pTjet30GeV == 204)',
+        'stage1QQ2HQQ-PTJET1-GT200' : '*(Rivet_stage1_cat_pTjet30GeV == 205)',
+        'stage1QQ2HLL-FWDH' : '*(Rivet_stage1_cat_pTjet30GeV == 400)',
+        'stage1QQ2HLL-PTV-0-150' : '*(Rivet_stage1_cat_pTjet30GeV == 401)',
+        'stage1QQ2HLL-PTV-150-250-0J' : '*(Rivet_stage1_cat_pTjet30GeV == 402)',
+        'stage1QQ2HLL-PTV-150-250-GE1J' : '*(Rivet_stage1_cat_pTjet30GeV == 403)',
+        'stage1QQ2HLL-PTV-GT250' : '*(Rivet_stage1_cat_pTjet30GeV == 404)',
     }}
 
     return htxsMap

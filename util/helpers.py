@@ -268,33 +268,38 @@ def dataCardGenMatchedSamples( inSamples ) :
     for sample in inSamples :
         if 'ggHtoTauTau' in sample :
             for cat in htxsStage0[ 'ggHtoTauTau' ].keys() :
-                samples[ sample+'-'+cat ] = 'ggH_htt_'+cat+sample[-3:]
+                catName = cat.replace('-','_').replace('stage0','')
+                samples[ sample+'-'+cat ] = 'ggH_htt_'+catName+sample[-3:]
             for cat in htxsStage1[ 'ggHtoTauTau' ].keys() :
-                catName = cat.replace('-','_')
+                catName = cat.replace('-','_').replace('stage1','')
                 samples[ sample+'-'+cat ] = 'ggH_htt_'+catName+sample[-3:]
         elif 'VBFHtoTauTau' in sample :
             for cat in htxsStage0[ 'VBFHtoTauTau' ].keys() :
-                samples[ sample+'-'+cat ] = 'qqH_htt_'+cat+sample[-3:]
+                catName = cat.replace('-','_').replace('stage0','')
+                samples[ sample+'-'+cat ] = 'qqH_htt_'+catName+sample[-3:]
             for cat in htxsStage1[ 'VBFHtoTauTau' ].keys() :
-                catName = cat.replace('-','_')
+                catName = cat.replace('-','_').replace('stage1','')
                 samples[ sample+'-'+cat ] = 'qqH_htt_'+catName+sample[-3:]
         elif 'WMinusHTauTau' in sample :
             for cat in htxsStage0[ 'WMinusHTauTau' ].keys() :
-                samples[ sample+'-'+cat ] = 'WH_htt_'+cat+sample[-3:]
+                catName = cat.replace('-','_').replace('stage0','')
+                samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
             for cat in htxsStage1[ 'WMinusHTauTau' ].keys() :
-                catName = cat.replace('-','_')
+                catName = cat.replace('-','_').replace('stage1','')
                 samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
         elif 'WPlusHTauTau' in sample :
             for cat in htxsStage0[ 'WPlusHTauTau' ].keys() :
-                samples[ sample+'-'+cat ] = 'WH_htt_'+cat+sample[-3:]
+                catName = cat.replace('-','_').replace('stage0','')
+                samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
             for cat in htxsStage1[ 'WPlusHTauTau' ].keys() :
-                catName = cat.replace('-','_')
+                catName = cat.replace('-','_').replace('stage1','')
                 samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
         elif 'ZHTauTau' in sample :
             for cat in htxsStage0[ 'ZHTauTau' ].keys() :
-                samples[ sample+'-'+cat ] = 'ZH_htt_'+cat+sample[-3:]
+                catName = cat.replace('-','_').replace('stage0','')
+                samples[ sample+'-'+cat ] = 'ZH_htt_'+catName+sample[-3:]
             for cat in htxsStage1[ 'ZHTauTau' ].keys() :
-                catName = cat.replace('-','_')
+                catName = cat.replace('-','_').replace('stage1','')
                 samples[ sample+'-'+cat ] = 'ZH_htt_'+catName+sample[-3:]
 
     return samples
