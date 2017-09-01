@@ -2,7 +2,7 @@
 DATA=/hdfs/store/user/caillol/SMHTT_reminiaod_feb14
 ALL=/hdfs/store/user/caillol/SMHTT_mc_feb13
 SIGNALS=/hdfs/store/user/truggles/SMHTT_signals_may30
-NNLOPS=/hdfs/store/user/truggles/SM-HTT_ggH_NNLOPS_aug31_v5
+NNLOPS=/hdfs/store/user/truggles/SM-HTT_ggH_NNLOPS_aug31_v6
 GGH=/hdfs/store/user/truggles/SM-HTT_HTXS_ggH_aug31_v1
 GGH110=/hdfs/store/user/truggles/SM-HTT_HTXS_ggH_aug31_v2
 
