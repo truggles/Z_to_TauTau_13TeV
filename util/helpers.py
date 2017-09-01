@@ -248,10 +248,16 @@ def dataCardGenMatchedSamples( inSamples ) :
             samples['dataMM-%s' % era]  = 'data_obs'
 
     for mass in ['110', '120', '125', '130', '140'] :
-        if 'VBFHtoTauTau%s' % mass in inSamples :
-            samples['VBFHtoTauTau%s' % mass] = 'qqH_htt%s' % mass
-        if 'ggHtoTauTau%s' % mass in inSamples :
-            samples['ggHtoTauTau%s' % mass] = 'ggH_htt%s' % mass
+        # ggH and qqH are both taken care of by HTXS with zero
+        # loss of precision in yields.  Stage0 categorization
+        # repeats ggH_htt and qqH_htt in yield, shape, and naming
+        # this is not the case for WH and ZH, so I am keeping these
+        # here so both interpretations are avialable.
+        #
+        #if 'VBFHtoTauTau%s' % mass in inSamples :
+        #    samples['VBFHtoTauTau%s' % mass] = 'qqH_htt%s' % mass
+        #if 'ggHtoTauTau%s' % mass in inSamples :
+        #    samples['ggHtoTauTau%s' % mass] = 'ggH_htt%s' % mass
         if 'WMinusHTauTau%s' % mass in inSamples :
             samples['WMinusHTauTau%s' % mass] = 'WH_htt%s' % mass
         if 'WPlusHTauTau%s' % mass in inSamples :
@@ -267,40 +273,30 @@ def dataCardGenMatchedSamples( inSamples ) :
     # HTXS / Rivet Section
     for sample in inSamples :
         if 'ggHtoTauTau' in sample :
-            for cat in htxsStage0[ 'ggHtoTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage0','')
-                samples[ sample+'-'+cat ] = 'ggH_htt_'+catName+sample[-3:]
-            for cat in htxsStage1[ 'ggHtoTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage1','')
-                samples[ sample+'-'+cat ] = 'ggH_htt_'+catName+sample[-3:]
+            for cat, val in htxsStage0[ 'ggHtoTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:] 
+            for cat, val in htxsStage1[ 'ggHtoTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
         elif 'VBFHtoTauTau' in sample :
-            for cat in htxsStage0[ 'VBFHtoTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage0','')
-                samples[ sample+'-'+cat ] = 'qqH_htt_'+catName+sample[-3:]
-            for cat in htxsStage1[ 'VBFHtoTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage1','')
-                samples[ sample+'-'+cat ] = 'qqH_htt_'+catName+sample[-3:]
+            for cat, val in htxsStage0[ 'VBFHtoTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
+            for cat, val in htxsStage1[ 'VBFHtoTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
         elif 'WMinusHTauTau' in sample :
-            for cat in htxsStage0[ 'WMinusHTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage0','')
-                samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
-            for cat in htxsStage1[ 'WMinusHTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage1','')
-                samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
+            for cat, val in htxsStage0[ 'WMinusHTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
+            for cat, val in htxsStage1[ 'WMinusHTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
         elif 'WPlusHTauTau' in sample :
-            for cat in htxsStage0[ 'WPlusHTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage0','')
-                samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
-            for cat in htxsStage1[ 'WPlusHTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage1','')
-                samples[ sample+'-'+cat ] = 'WH_htt_'+catName+sample[-3:]
+            for cat, val in htxsStage0[ 'WPlusHTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
+            for cat, val in htxsStage1[ 'WPlusHTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
         elif 'ZHTauTau' in sample :
-            for cat in htxsStage0[ 'ZHTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage0','')
-                samples[ sample+'-'+cat ] = 'ZH_htt_'+catName+sample[-3:]
-            for cat in htxsStage1[ 'ZHTauTau' ].keys() :
-                catName = cat.replace('-','_').replace('stage1','')
-                samples[ sample+'-'+cat ] = 'ZH_htt_'+catName+sample[-3:]
+            for cat, val in htxsStage0[ 'ZHTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
+            for cat, val in htxsStage1[ 'ZHTauTau' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:]
 
     return samples
 

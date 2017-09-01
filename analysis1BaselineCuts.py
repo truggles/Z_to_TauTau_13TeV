@@ -609,11 +609,11 @@ def drawHistos(analysis, samples, **fargs ) :
                     else : # hopefully HTXS
                         noMassSig = sample[:-3] # sample sans 3 digit mass
                         if subName in htxsStage0[noMassSig].keys() :
-                            if additionalCut == '' : additionalCut = htxsStage0[noMassSig][subName]
-                            else : additionalCut += htxsStage0[noMassSig][subName]
+                            if additionalCut == '' : additionalCut = htxsStage0[noMassSig][subName][1]
+                            else : additionalCut += htxsStage0[noMassSig][subName][1]
                         if subName in htxsStage1[noMassSig].keys() :
-                            if additionalCut == '' : additionalCut = htxsStage1[noMassSig][subName]
-                            else : additionalCut += htxsStage1[noMassSig][subName]
+                            if additionalCut == '' : additionalCut = htxsStage1[noMassSig][subName][1]
+                            else : additionalCut += htxsStage1[noMassSig][subName][1]
                                 
                 #print "AdditionalCuts",additionalCut
 
