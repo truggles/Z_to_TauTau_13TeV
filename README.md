@@ -103,3 +103,17 @@ To run:<BR>
 Fake Factors additions:
 Fake factors have been derived to estimate QCD, WJets and TTJets from data, initially for the MuTau channel, but are being tested in double hadronic channel.  Find documentations here: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
 
+
+# HTXS and Adding uncertainty weights
+Apply the official weight with their tool:
+You will need to edit the file list and new directory in 
+HTXS/applyGGFusionWG1UncertaintyScheme.C.  This can be run at any stage of
+the processing as the input values are not name changed for the sync
+```
+root HTXS/ggF_qcd_uncertainty_2017.cxx
+root [0]
+Processing HTXS/ggF_qcd_uncertainty_2017.cxx...
+warning: cannot find function 'ggF_qcd_uncertainty_2017()'; falling back to .L
+root [1] .L HTXS/applyGGFusionWG1UncertaintyScheme.C
+root [2] runAll()
+```
