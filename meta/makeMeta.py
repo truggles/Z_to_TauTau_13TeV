@@ -37,6 +37,7 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
     currentDASSamples['htt'].append('ttHTauTau125')
     currentDASSamples['htt'].append('HtoWW2l2nu125')
     currentDASSamples['htt'].append('VBFHtoWW2l2nu125')
+    currentDASSamples['htt'].append('ggHtoTauTauNNLOPS125') # New signal with only 125 GeV mass
 
     # A to Zh sample masses
     for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :

@@ -371,6 +371,10 @@ def sampleDetails( analysis ) :
                 'group' : 'dib'},
         }, # end diiboson
 	'SM-Higgs' : { # See Yellow Report 4: https://twiki.cern.ch/twiki/pub/LHCPhysics/LHCHXSWG/Higgs_XSBR_YR4_update.xlsx
+            'ggHtoTauTauNNLOPS125': { # Special NNLOPS new sample, yes the DAS path is wrong, if you want to verify look at the parent sample
+               'DASPath' : '/GluGluHToGG_M-125_13TeV_powheg_MINLO_NNLOPS_pythia8/%s-v3/MINIAODSIM' % moriond17,
+               'xsec' : 48.58 * 0.0627,
+               'group' : 'higgs'},
             'ggHtoTauTau110': {
                'DASPath' : '/GluGluHToTauTau_M110_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                'xsec' : 57.90 * 0.0698,

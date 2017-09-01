@@ -55,6 +55,7 @@ for mass in [110, 120, 125, 130, 140] :
 SamplesDataCards.append('HtoWW2l2nu125')
 SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
+SamplesDataCards.append('ggHtoTauTauNNLOPS125')
 
     
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
