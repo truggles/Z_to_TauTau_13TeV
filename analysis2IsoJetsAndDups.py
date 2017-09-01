@@ -325,6 +325,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.extraTauMVArun2v1IsoWPs import IsoWPAdder
     isoWPAdder = IsoWPAdder()
 
+    from util.ggH_NNLOPS_Reweight import ggH_NNLOPS_Reweight
+    ggH_NNLOPS_Reweighter = ggH_NNLOPS_Reweight()
+
     if len(channel) > 3 : # either AZH or ZH analysis
         from util.applyReducibleBkg import ReducibleBkgWeights
         zhFRObj = ReducibleBkgWeights( channel )
@@ -720,6 +723,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #zmumuBoostWeightB = tnew.Branch('zmumuBoostWeight', zmumuBoostWeight, 'zmumuBoostWeight/F')
     zmumuVBFWeight = array('f', [ 0 ] )
     zmumuVBFWeightB = tnew.Branch('zmumuVBFWeight', zmumuVBFWeight, 'zmumuVBFWeight/F')
+    ggHNNLOPSReweight = array('f', [ 0 ] )
+    ggHNNLOPSReweightB = tnew.Branch('ggHNNLOPSReweight', ggHNNLOPSReweight, 'ggHNNLOPSReweight/F')
     ggHWeight0Jet = array('f', [ 0 ] )
     ggHWeight0JetB = tnew.Branch('ggHWeight0Jet', ggHWeight0Jet, 'ggHWeight0Jet/F')
     ggHWeightBoost = array('f', [ 0 ] )
@@ -1252,6 +1257,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             zPtWeight[0] = 1
             #zmumuBoostWeight[0] = 1
             zmumuVBFWeight[0] = 1
+            ggHNNLOPSReweight[0] = 1
             ggHWeight0Jet[0] = 1
             ggHWeightBoost[0] = 1
             ggHWeightVBF[0] = 1
@@ -1535,6 +1541,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #
                 # Also do top quark loop reweighting
                 # Based on: slides 10 https://indico.cern.ch/event/628660/contributions/2593406/attachments/1459912/2255407/May-16-HIG_Massironi.pdf
+                # keep skipping the ggHtoTauTauNNLOPS125 sample
                 if shortName in ['ggHtoTauTau110','ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'ggHtoTauTau140'] :
 
                     ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
@@ -1553,6 +1560,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         if getattr( row, 'genpT' ) > 150. :
                             ggHtopQuarkWeight[0] = 1. + 0.01*(0.114 * getattr( row, 'genpT' ) - 17.14)
                         else : ggHtopQuarkWeight[0] = 1.
+
+                    if hasattr( row, 'Rivet_nJets30' ) :
+                        ggHNNLOPSReweight[0] = ggH_NNLOPS_Reweighter.get_ggH_NNLOPS_Reweight(
+                                getattr( row, 'Rivet_nJets30' ), getattr( row, 'Rivet_higgsPt' ) )
                     
 
                 
@@ -1611,7 +1622,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
-                weight[0] *= zPtWeight[0] * topWeight[0]
+                weight[0] *= zPtWeight[0] * topWeight[0] * ggHNNLOPSReweight[0]
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
                 azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
