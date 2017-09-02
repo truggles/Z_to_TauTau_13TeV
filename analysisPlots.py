@@ -105,7 +105,8 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
             else : return False # Needed this for some reason, not sure why
 
         # ggH Scale, only for ggH
-        elif '_ggH' in var :
+        # Also covers the Gluon Fusion WG1 Uncert Scheme now too (wg1-THU-ggH-*)
+        elif '_ggH' in var or '-ggH-' in var :
             if not 'ggHtoTauTau' in sample : return True
 
         # topQuarkggH Scale, only for ggH
@@ -358,20 +359,41 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             elif '_zPtDown' in var : shapeSyst = '*(1. - (-1. + zPtWeight) * 0.1 )'
 
         # ggH scale to ggHtoTauTau signal
-        elif '_ggH' in var :
-            # Different scale depending on final category
-            if 'ZTT0jet2D' in outFile.GetName() :
-                if '_ggHUp' in var : shapeSyst = '*(ggHWeight0Jet)'
-                elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeight0Jet)'
-            elif 'ZTTboosted' in outFile.GetName() :
-                if '_ggHUp' in var : shapeSyst = '*(ggHWeightBoost)'
-                elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightBoost)'
-            elif 'ZTTvbf' in outFile.GetName() :
-                if '_ggHUp' in var : shapeSyst = '*(ggHWeightVBF)'
-                elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightVBF)'
-            else : # Probably inclusive
-                if '_ggHUp' in var : shapeSyst = '*(ggHWeight0Jet)'
-                elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeight0Jet)'
+        elif '_ggH' in var or '-ggH-' in var :
+            if 'wg1-THU-ggH-' in var :
+                shiftDir = ''
+                if   'wg1-THU-ggH-MuUp' in var :      shapeSyst = '*(THU_ggH_Mu)'
+                elif 'wg1-THU-ggH-MuDown' in var :    shapeSyst = '*(1./THU_ggH_Mu)'
+                elif 'wg1-THU-ggH-ResUp' in var :     shapeSyst = '*(THU_ggH_Res)'
+                elif 'wg1-THU-ggH-ResDown' in var :   shapeSyst = '*(1./THU_ggH_Res)'
+                elif 'wg1-THU-ggH-Mig01Up' in var :   shapeSyst = '*(THU_ggH_Mig01)'
+                elif 'wg1-THU-ggH-Mig01Down' in var : shapeSyst = '*(1./THU_ggH_Mig01)'
+                elif 'wg1-THU-ggH-Mig12Up' in var :   shapeSyst = '*(THU_ggH_Mig12)'
+                elif 'wg1-THU-ggH-Mig12Down' in var : shapeSyst = '*(1./THU_ggH_Mig12)'
+                elif 'wg1-THU-ggH-VBF2jUp' in var :   shapeSyst = '*(THU_ggH_VBF2j)'
+                elif 'wg1-THU-ggH-VBF2jDown' in var : shapeSyst = '*(1./THU_ggH_VBF2j)'
+                elif 'wg1-THU-ggH-VBF3jUp' in var :   shapeSyst = '*(THU_ggH_VBF3j)'
+                elif 'wg1-THU-ggH-VBF3jDown' in var : shapeSyst = '*(1./THU_ggH_VBF3j)'
+                elif 'wg1-THU-ggH-PT60Up' in var :    shapeSyst = '*(THU_ggH_PT60)'
+                elif 'wg1-THU-ggH-PT60Down' in var :  shapeSyst = '*(1./THU_ggH_PT60)'
+                elif 'wg1-THU-ggH-PT120Up' in var :   shapeSyst = '*(THU_ggH_PT120)'
+                elif 'wg1-THU-ggH-PT120Down' in var : shapeSyst = '*(1./THU_ggH_PT120)'
+                elif 'wg1-THU-ggH-qmtopUp' in var :   shapeSyst = '*(THU_ggH_qmtop)'
+                elif 'wg1-THU-ggH-qmtopDown' in var : shapeSyst = '*(1./THU_ggH_qmtop)'
+            else : # normal ggH Scale
+                # Different scale depending on final category
+                if 'ZTT0jet2D' in outFile.GetName() :
+                    if '_ggHUp' in var : shapeSyst = '*(ggHWeight0Jet)'
+                    elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeight0Jet)'
+                elif 'ZTTboosted' in outFile.GetName() :
+                    if '_ggHUp' in var : shapeSyst = '*(ggHWeightBoost)'
+                    elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightBoost)'
+                elif 'ZTTvbf' in outFile.GetName() :
+                    if '_ggHUp' in var : shapeSyst = '*(ggHWeightVBF)'
+                    elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeightVBF)'
+                else : # Probably inclusive
+                    if '_ggHUp' in var : shapeSyst = '*(ggHWeight0Jet)'
+                    elif '_ggHDown' in var : shapeSyst = '*(1./ggHWeight0Jet)'
 
         # topQuarkggH scale to ggHtoTauTau signal
         elif '_topQuarkggH' in var :
@@ -740,6 +762,15 @@ def getHistoDict( analysis, channel ) :
                     'Zmumu' : 'Z mumu DY Reweight',
                     'metClustered':'Clustered MET',
                     'metUnclustered':'Unclustered MET',
+                    'wg1-THU-ggH-Mu' : 'wg1-THU-ggH-Mu',
+                    'wg1-THU-ggH-Res' : 'wg1-THU-ggH-Res',
+                    'wg1-THU-ggH-Mig01' : 'wg1-THU-ggH-Mig01',
+                    'wg1-THU-ggH-Mig12' : 'wg1-THU-ggH-Mig12',
+                    'wg1-THU-ggH-VBF2j' : 'wg1-THU-ggH-VBF2j',
+                    'wg1-THU-ggH-VBF3j' : 'wg1-THU-ggH-VBF3j',
+                    'wg1-THU-ggH-PT60' : 'wg1-THU-ggH-PT60',
+                    'wg1-THU-ggH-PT120' : 'wg1-THU-ggH-PT120',
+                    'wg1-THU-ggH-qmtop' : 'wg1-THU-ggH-qmtop',
                     }
 
         # Add FF shape systs if doFF

@@ -13,6 +13,10 @@
 
 def getHtxsCutMapStage0() :
     htxsMap = {
+    'ggHtoTauTauNNLOPS' : {
+        'stage0GG2H-FWDH'    : ['ggH_fwd', '*(Rivet_stage0_cat == 10)'],
+        'stage0GG2H'         : ['ggH', '*(Rivet_stage0_cat == 11)']
+    },
     'ggHtoTauTau' : {
         'stage0GG2H-FWDH'    : ['ggH_fwd', '*(Rivet_stage0_cat == 10)'],
         'stage0GG2H'         : ['ggH', '*(Rivet_stage0_cat == 11)']
@@ -43,6 +47,19 @@ def getHtxsCutMapStage0() :
 
 def getHtxsCutMapStage1() :
     htxsMap = {
+    'ggHtoTauTauNNLOPS' : {
+        'stage1GG2H-VBFTOPO-JET3VETO'    : ['ggH_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 101)'],
+        'stage1GG2H-VBFTOPO-JET3'        : ['ggH_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 102)'],
+        'stage1GG2H-0J'                  : ['ggH_0J', '*(Rivet_stage1_cat_pTjet30GeV == 103)'],
+        'stage1GG2H-1J-PTH-0-60'         : ['ggH_1J_PTH_0_60', '*(Rivet_stage1_cat_pTjet30GeV == 104)'],
+        'stage1GG2H-1J-PTH-60-120'       : ['ggH_1J_PTH_60_120', '*(Rivet_stage1_cat_pTjet30GeV == 105)'],
+        'stage1GG2H-1J-PTH-120-200'      : ['ggH_1J_PTH_120_200', '*(Rivet_stage1_cat_pTjet30GeV == 106)'],
+        'stage1GG2H-1J-PTH-GT200'        : ['ggH_1J_PTH_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 107)'],
+        'stage1GG2H-GE2J-PTH-0-60'       : ['ggH_GE2J_PTH_0_60', '*(Rivet_stage1_cat_pTjet30GeV == 108)'],
+        'stage1GG2H-GE2J-PTH-60-120'     : ['ggH_GE2J_PTH_60_120', '*(Rivet_stage1_cat_pTjet30GeV == 109)'],
+        'stage1GG2H-GE2J-PTH-120-200'    : ['ggH_GE2J_PTH_120_200', '*(Rivet_stage1_cat_pTjet30GeV == 110)'],
+        'stage1GG2H-GE2J-PTH-GT200'      : ['ggH_GE2J_PTH_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 111)'],
+    },
     'ggHtoTauTau' : {
         'stage1GG2H-VBFTOPO-JET3VETO'    : ['ggH_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 101)'],
         'stage1GG2H-VBFTOPO-JET3'        : ['ggH_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 102)'],

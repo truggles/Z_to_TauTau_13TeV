@@ -9,8 +9,10 @@
 #include <iomanip>
 #include "TMath.h"
 #include "TFile.h"
+#include "TH1.h"
 #include "TTree.h"
 #include "TString.h"
+#include "TDirectory.h"
 
 
 void add_ggH_HTXS_weights(TString InFile, TString OutFile)
@@ -21,7 +23,9 @@ void add_ggH_HTXS_weights(TString InFile, TString OutFile)
 
     
     TFile *finput = new TFile(InFile);
-    TTree *tree = (TTree*) finput->Get("Ntuple");
+    TTree *tree = (TTree*) finput->Get("tt/final/Ntuple");
+    TH1D *oEvtCnt = (TH1D*) finput->Get("tt/eventCount");
+    TH1D *oSumWeights = (TH1D*) finput->Get("tt/summedWeights");
     
 
     float THU_ggH_Mu, THU_ggH_Res, THU_ggH_Mig01, THU_ggH_Mig12, 
@@ -37,6 +41,18 @@ void add_ggH_HTXS_weights(TString InFile, TString OutFile)
     tree->SetBranchAddress("Rivet_stage1_cat_pTjet30GeV", &rivet_stage1_nJets30);
 
     TFile* foutput = new TFile(OutFile, "recreate");
+
+    // Keep out original TDirectory structure
+    TDirectory* d1 = foutput->mkdir("tt");
+    TDirectory* d2 = d1->mkdir("final");
+
+    // Copy our event count histos to the new file
+    TH1D *eventCount = (TH1D*)oEvtCnt->Clone("eventCount");
+    TH1D *summedWeights = (TH1D*)oSumWeights->Clone("summedWeights");
+    d1->cd();
+    eventCount->Write();
+    summedWeights->Write();
+    
     
     TTree* newtree = new TTree("TestTree", "");
     newtree = tree->CloneTree(0);
@@ -85,7 +101,8 @@ void add_ggH_HTXS_weights(TString InFile, TString OutFile)
  
         newtree->Fill();
     }
-    foutput->WriteTObject(newtree);
+    //foutput->WriteTObject(newtree);
+    d2->WriteTObject(newtree);
     delete newtree;
     foutput->Close();
     finput->Close();
@@ -95,12 +112,20 @@ void runAll() {
     std::vector<std::string> files;
     // NO .ROOT HERE!
     //files.push_back("");
+    //files.push_back("ggHtoTauTau110_0_tt");
+    //files.push_back("ggHtoTauTau110_1_tt");
+    //files.push_back("ggHtoTauTau120_0_tt");
     files.push_back("ggHtoTauTau125_0_tt");
-    std::string base = "/afs/cern.ch/work/t/truggles/Z_to_tautau/CMSSW_8_0_25/src/rivet_Z_to_TauTau_13TeV/htt2Aug22withHTXS/"; // Need last / on path
+    files.push_back("ggHtoTauTau125_1_tt");
+    //files.push_back("ggHtoTauTau130_0_tt");
+    //files.push_back("ggHtoTauTau140_0_tt");
+    //files.push_back("ggHtoTauTau140_1_tt");
+    //files.push_back("ggHtoTauTauNNLOPS125_0_tt");
+    std::string base = "/data/truggles/HTXS_ggH_svFitted_Sept01_merged/"; // Need last / on path
 
     for(auto file : files ){
         std::cout << file << std::endl;
-        add_ggH_HTXS_weights( base+file+".root", "ggH_added_weights/"+file+".root");    
+        add_ggH_HTXS_weights( base+file+".root", "/data/truggles/HTXS_ggH_svFitted_Sept01_merged2/"+file+".root");    
     }
 }
 

@@ -189,13 +189,14 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             ('ffSyst' in var) or ('ffStat' in var) or ('_topPt' in var) or \
                             ('_metUnclustered' in var) or ('_metClustered' in var) \
                             or ('_JES' in var) or ('_JetToTau' in var) or \
-                            ('_Zmumu' in var) or ('_ggH' in var) or ('_topQuarkggH' in var) \
-                            or ('_ffSub' in var) or (baseVar == var)) :
+                            ('_Zmumu' in var) or ('_ggH' in var) or ('-ggH-' in var) \
+                            or ('_topQuarkggH' in var) or ('_ffSub' in var) or (baseVar == var)) :
                         continue
 
                 else :
                     if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
-                        or ('_JES' in var) or ('_ggH' in var) or ('_topQuarkggH' in var) or ('_JetToTau' in var) \
+                        or ('_JES' in var) or ('_ggH' in var) or ('_topQuarkggH' in var) \
+                        or ('-ggH-' in var) or ('_JetToTau' in var) \
                         or ('_metUnclustered' in var) or ('_metClustered' in var) \
                         or ('_Zmumu' in var) or ('_tauPt' in var) or (baseVar == var)) :
                         print "Did we fail?"
@@ -477,7 +478,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if ops['allShapes'] and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
                         or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var \
                         or '_metUnclustered' in var or '_metClustered' in var or '_topQuarkggH' in var \
-                        or 'ffSyst' in var or 'ffStat' in var) :
+                        or '-ggH-' in var or 'ffSyst' in var or 'ffStat' in var) :
 
                     # Systematics naming removes CRs
                     category = ops['category'].strip('_qcd_cr')
@@ -488,6 +489,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
                     # removed _htt because of HTXS naming
                     if '_ggH' in var and 'ggH_' not in name : continue
+                    if '-ggH-' in var and 'ggH_' not in name : continue
                     if '_topQuarkggH' in var and 'ggH_' not in name : continue
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
@@ -556,6 +558,33 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     elif '_tauPt' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_High_'+channel+'_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_High_'+channel+'_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-Mu' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Mu_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Mu_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-Res' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Res_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Res_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-Mig01' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Mig01_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Mig01_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-Mig12' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Mig12_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Mig12_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-VBF2j' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_VBF2j_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_VBF2j_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-VBF3j' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_VBF3j_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_VBF3j_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-PT60' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_PT60_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_PT60_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-PT120' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_PT120_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_PT120_13TeV'+shiftDir )
+                    elif 'wg1-THU-ggH-qmtop' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_qmtop_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_qmtop_13TeV'+shiftDir )
                     elif '_ggH' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )

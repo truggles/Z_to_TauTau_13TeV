@@ -272,7 +272,12 @@ def dataCardGenMatchedSamples( inSamples ) :
     htxsStage1 = getHtxsCutMapStage1()
     # HTXS / Rivet Section
     for sample in inSamples :
-        if 'ggHtoTauTau' in sample :
+        if 'ggHtoTauTauNNLOPS' in sample :
+            for cat, val in htxsStage0[ 'ggHtoTauTauNNLOPS' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_NNLOPS_htt'+sample[-3:] 
+            for cat, val in htxsStage1[ 'ggHtoTauTauNNLOPS' ].iteritems() :
+                samples[ sample+'-'+cat ] = val[0]+'_NNLOPS_htt'+sample[-3:]
+        elif 'ggHtoTauTau' in sample :
             for cat, val in htxsStage0[ 'ggHtoTauTau' ].iteritems() :
                 samples[ sample+'-'+cat ] = val[0]+'_htt'+sample[-3:] 
             for cat, val in htxsStage1[ 'ggHtoTauTau' ].iteritems() :
