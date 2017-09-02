@@ -2,6 +2,7 @@
 ALL=/data/truggles/svFitApr01_SM-HTT_Merged
 CHANNEL=tt
 HTXS=/data/truggles/svFitMay30_RivetSignals_SM-HTT_Merged
+NNLOPS=/data/truggles/HTXS_ggH_svFitted_Sept01_merged
 
 
 for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 DYJetsLow DYJets1Low DYJets2Low EWKWMinus EWKWPlus EWKZ2l EWKZ2nu Tbar-tchan T-tchan TT Tbar-tW T-tW VV WJets WJets1 WJets2 WJets3 WJets4 WW1l1nu2q WWW WZ1l1nu2q WZ1l3nu WZ2l2q WZ3l1nu ZZ2l2q ZZ4l; do
@@ -13,9 +14,18 @@ done
 #    ls ${ALL}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
 #done
 
+# ggH has NNLOPS HTXS reweight vars added
 for MASS in 110 120 125 130 140; do
-    for SAMPLE in ggHtoTauTau VBFHtoTauTau WMinusHTauTau WPlusHTauTau ZHTauTau; do
+    #for SAMPLE in ggHtoTauTau VBFHtoTauTau WMinusHTauTau WPlusHTauTau ZHTauTau; do
+    for SAMPLE in VBFHtoTauTau WMinusHTauTau WPlusHTauTau ZHTauTau; do
         ls ${HTXS}/${SAMPLE}${MASS}_*_${CHANNEL}.root > skimmed/${SAMPLE}${MASS}_${CHANNEL}.txt
+    done
+done
+
+# ggH HTXS NNLOPS
+for MASS in 110 120 125 130 140; do
+    for SAMPLE in ggHtoTauTau; do
+        ls ${NNLOPS}/*${SAMPLE}${MASS}_*_${CHANNEL}.root > skimmed/${SAMPLE}${MASS}_${CHANNEL}.txt
     done
 done
 
@@ -24,3 +34,5 @@ for MASS in 125; do
         ls ${ALL}/${SAMPLE}${MASS}_*_${CHANNEL}.root > skimmed/${SAMPLE}${MASS}_${CHANNEL}.txt
     done
 done
+
+ls ${NNLOPS}/*ggHtoTauTauNNLOPS125*.root > skimmed/ggHtoTauTauNNLOPS125_${CHANNEL}.txt
