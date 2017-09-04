@@ -29,15 +29,15 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
         if 'data' in samp : samples[samp] = val
     #print samples
 
-#    # Apply initial Reducible Bkg Cuts for inclusive selection
-#    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#    # Order events and choose best interpretation
-#    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
-#
-#    # HADD each channel together so we can avoid different data runs
-#    for channel in params['channels'] :
-#        print "HADD for",channel
-#        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
+    # Apply initial Reducible Bkg Cuts for inclusive selection
+    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+    # Order events and choose best interpretation
+    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+
+    # HADD each channel together so we can avoid different data runs
+    for channel in params['channels'] :
+        print "HADD for",channel
+        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
 
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
@@ -87,7 +87,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         xAxis = 'Lepton p_{T} [GeV]'
         jetCut = '(cand_JetPt <= pt_Num || cand_JetDR >= 0.5)'
         app = 'noJetMatch'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/July18final_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept03_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -399,12 +399,12 @@ if '__main__' in __name__ :
         'debug' : 'false',
         'numCores' : 15,
         'numFilesPerCycle' : 1,
-        'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm + eemm
+        'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8
         #'channels' : ['eeet',],
         'cutMapper' : 'RedBkg',
-        'mid1' : '1July17rb2',
-        'mid2' : '2July17rb2',
-        'mid3' : '3July17rb2',
+        'mid1' : '1Sept03rb',
+        'mid2' : '2Sept03rb',
+        'mid3' : '3Sept03rb',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',
