@@ -1,4 +1,2 @@
-/data/truggles/azhAug08RBSyncMerged/dataEE-C_0_eett.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-C_1_eett.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-C_2_eett.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-C_3_eett.root
+/data/truggles/ZH_svFitAug31_Merged/dataEE-C_0_eett.root
+/data/truggles/ZH_svFitAug31_Merged/dataEE-C_1_eett.root

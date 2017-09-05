@@ -1,2 +1,1 @@
-/data/truggles/azhAug08RBSyncMerged/dataMM-E_0_mmmt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-E_1_mmmt.root
+/data/truggles/ZH_svFitAug31_Merged/dataMM-E_0_mmmt.root
