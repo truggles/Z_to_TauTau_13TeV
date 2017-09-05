@@ -1,6 +1,6 @@
 
 #ALL=/data/truggles/svFitJune06_azh
-DY4=/data/truggles/azhJune12skimMergedHZZ
+DY4=/data/truggles/ZH_noSVFitAug31_Merged_DY4
 #DATA=/data/truggles/azhJuly13skimMergedNoSVFit
 #DATA=/data/truggles/azhAug08RBSyncMerged
 
