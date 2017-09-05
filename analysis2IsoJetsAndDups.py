@@ -1588,18 +1588,19 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # estimated by Cecile, Nov 15, 2016
                 # See: https://indico.cern.ch/event/578552/contributions/2343738/attachments/1372271/2081852/systematics_SMH.pdf
                 # Slide 10 for tautau
-                if shortName in ['ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] :
+                if (analysis == 'htt' or analysis == 'Sync') and channel == 'tt' :
+                    if shortName in ['ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] :
 
-                    ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
-                    # 2 options for boosted category in case we haven't run svFit
-                    # prefer the svFit option
-                    if hasattr( row, 'pt_sv' ) :
-                        ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
-                    elif Higgs_Pt[0] != 0.0 :
-                        ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
+                        ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
+                        # 2 options for boosted category in case we haven't run svFit
+                        # prefer the svFit option
+                        if hasattr( row, 'pt_sv' ) :
+                            ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
+                        elif Higgs_Pt[0] != 0.0 :
+                            ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
 
-                    if hasattr( row, 'vbfMass' ) :
-                        ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
+                        if hasattr( row, 'vbfMass' ) :
+                            ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
 
                 
                 # top pt reweighting, only for ttbar events
