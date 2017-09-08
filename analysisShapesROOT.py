@@ -486,7 +486,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                 # Scale AZh to 1 fb cross section, it is set at 1 pb in meta
                 if analysis == 'azh' and not ops['doZH'] and 'azh' in name :
-                    histos[ name ].Scale( 1. / histos[ name ].Integral() )
+                    histos[ name ].Scale( 1. / 1000. )
                 
     
                 # Proper naming of output histos
