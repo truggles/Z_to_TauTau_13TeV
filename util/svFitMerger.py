@@ -19,7 +19,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
         print size, " KB ", file_
         runningSize += size
         toMerge.append( file_ )
-        if runningSize > 5000 : # 7.5 MB is reasonal for doing duplicate removal later
+        if runningSize > 15000 : # 7.5 MB is reasonal for doing duplicate removal later
             runningSize = 0
             mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
             for f in toMerge :
@@ -61,15 +61,13 @@ if __name__ == '__main__' :
         azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
         
         for mass in [110, 120, 125, 130, 140] :
-            #azhSamples.append('ggHtoTauTau%i' % mass)
-            #azhSamples.append('VBFHtoTauTau%i' % mass)
-            #azhSamples.append('WMinusHTauTau%i' % mass)
-            #azhSamples.append('WPlusHTauTau%i' % mass)
+            azhSamples.append('ggHtoTauTau%i' % mass)
+            azhSamples.append('VBFHtoTauTau%i' % mass)
+            azhSamples.append('WMinusHTauTau%i' % mass)
+            azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHTauTau%i' % mass)
             #azhSamples.append('ttHTauTau%i' % mass)
         for mass in [125,] :
-            azhSamples.append('WMinusHTauTau%i' % mass)
-            azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHWW%i' % mass)
             azhSamples.append('HZZ%i' % mass)
         
@@ -80,11 +78,14 @@ if __name__ == '__main__' :
             azhSamples.append('dataEE-%s' % era)
             azhSamples.append('dataMM-%s' % era)
 
-        name = 'azhAug08RBSync'
-        originalDir = '/nfs_scratch/truggles/'+name+'/'
-        targetDir = '/nfs_scratch/truggles/'+name+'Merged'
+        name = 'ZH_svFitAug31'
+        # Recoil0_TES0_WJ0  Recoil0_TES1_WJ0v2  Recoil2_TES1_WJ0
+        #originalDir = '/nfs_scratch/truggles/'+name+'/'
+        #targetDir = '/nfs_scratch/truggles/'+name+'Merged'
+        originalDir = '/data/truggles/'+name+'/Recoil*/'
+        targetDir = '/data/truggles/'+name+'_Merged'
         checkDir( targetDir )
-        jobId = ''
+        jobId = 'TauTau*'
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         for channel in channels :
             for sample in azhSamples :
