@@ -28,6 +28,7 @@ class ElectronSF :
 
 
     def getGSFAndWPScaleFactor( self, wp, pt, eta ) :
+        assert( wp in ['WP90', 'WP80', 'TrkOnly'] ), "Given WP (%s) is not supported" % wp
         #print wp
         # Make sure we stay on our histograms
         if pt > 199 : pt = 199
@@ -38,6 +39,7 @@ class ElectronSF :
         # GSF file cuts off at pt 25 GeV
         ptGSF = pt if pt > 26 else 26
         SF = self.gsfSF.GetBinContent( self.gsfSF.FindBin( eta, ptGSF ) )
+        if wp == 'TrkOnly' : return SF
         if wp == 'WP90' :
             SF *= self.wp90SF.GetBinContent( self.wp90SF.FindBin( eta, pt ) )
             return SF
@@ -56,6 +58,8 @@ if __name__ == '__main__' :
     print eSF.getGSFAndWPScaleFactor( 'WP90', 47.4, 1.9 )
     print eSF.getGSFAndWPScaleFactor( 'WP80', 25, .7 )
     print eSF.getGSFAndWPScaleFactor( 'WP90', 25, .7 )
+    print eSF.getGSFAndWPScaleFactor( 'TrkOnly', 25, .7 )
+    print eSF.getGSFAndWPScaleFactor( 'TrkOnly', 25, .7 )
 
 
 

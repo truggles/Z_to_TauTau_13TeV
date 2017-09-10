@@ -1429,6 +1429,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         muonSF_4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
                         muonSF_4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
                     # Currently using WP90 in all electrons
+                    # Available input WPs: WP90, WP80, TrkOnly - for no mva WP SF included
                     if 'e' in l1 :
                         electronSF_1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
                     if 'e' in l2 :
