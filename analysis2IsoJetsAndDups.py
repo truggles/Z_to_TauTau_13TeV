@@ -251,6 +251,16 @@ def getCurrentEvt( analysis, channel, row ) :
         leg3Pt = getattr(row, l3+'Pt')
         leg4Pt = getattr(row, l4+'Pt')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
+        if channel in ['eeet','eeem','emmm','mmmt' ] :
+            # deals with ordering in emmm channel where l3 == electron
+            l3_new = l3 if channel != 'emmm' else l4
+            closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
+            closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
+            if closeZ2 < closeZ : closeZ = 999
+            if closeZ3 < closeZ : closeZ = 999
+        else :
+            closeZ2 = 999
+            closeZ3 = 999
         LT = leg3Pt + leg4Pt # LT here is just Higgs_LT
         currentEvt = (closeZ, LT, leg3Pt) # leg3Pt is to distinguish
         # when an object can be a slimmedElec and slimmedTau
@@ -618,7 +628,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
         
         if currentRunLumiEvt != prevRunLumiEvt :
-            toFillMap[ prevRunLumiEvt ] = prevEvt
+            if analysis == 'azh' :
+                if prevEvt[0] != 999 :
+                    toFillMap[ prevRunLumiEvt ] = prevEvt
+            else :
+                toFillMap[ prevRunLumiEvt ] = prevEvt
             prevRunLumiEvt = currentRunLumiEvt
             prevEvt = currentEvt
 
@@ -627,7 +641,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #print "LastRow:",prevRunLumiEvt, prevEvt
                 prevRunLumiEvt = currentRunLumiEvt
                 prevEvt = currentEvt
-                toFillMap[ prevRunLumiEvt ] = prevEvt
+                if analysis == 'azh' :
+                    if prevEvt[0] != 999 :
+                        toFillMap[ prevRunLumiEvt ] = prevEvt
+                else :
+                    toFillMap[ prevRunLumiEvt ] = prevEvt
             continue
 
         #print "Current: ",currentRunLumiEvt, currentEvt
