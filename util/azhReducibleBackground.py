@@ -29,15 +29,15 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
         if 'data' in samp : samples[samp] = val
     #print samples
 
-#    # Apply initial Reducible Bkg Cuts for inclusive selection
-#    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#    # Order events and choose best interpretation
-#    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
-#
-#    # HADD each channel together so we can avoid different data runs
-#    for channel in params['channels'] :
-#        print "HADD for",channel
-#        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
+    # Apply initial Reducible Bkg Cuts for inclusive selection
+    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+    # Order events and choose best interpretation
+    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+
+    # HADD each channel together so we can avoid different data runs
+    for channel in params['channels'] :
+        print "HADD for",channel
+        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
 
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
@@ -87,7 +87,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         xAxis = 'Lepton p_{T} [GeV]'
         jetCut = '(cand_JetPt <= pt_Num || cand_JetDR >= 0.5)'
         app = 'noJetMatch'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept07wpTests_'+app+'_mva80Iso0p15Final'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept07wpTests_'+app+'_mva80Iso0p15FinalReally'
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
