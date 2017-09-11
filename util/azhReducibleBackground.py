@@ -29,15 +29,15 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
         if 'data' in samp : samples[samp] = val
     #print samples
 
-    # Apply initial Reducible Bkg Cuts for inclusive selection
-    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-    # Order events and choose best interpretation
-    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
-
-    # HADD each channel together so we can avoid different data runs
-    for channel in params['channels'] :
-        print "HADD for",channel
-        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
+#    # Apply initial Reducible Bkg Cuts for inclusive selection
+#    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#    # Order events and choose best interpretation
+#    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#
+#    # HADD each channel together so we can avoid different data runs
+#    for channel in params['channels'] :
+#        print "HADD for",channel
+#        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
 
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
@@ -87,7 +87,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         xAxis = 'Lepton p_{T} [GeV]'
         jetCut = '(cand_JetPt <= pt_Num || cand_JetDR >= 0.5)'
         app = 'noJetMatch'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept03_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept07wpTests_'+app+'_mva80Iso0p15Final'
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -106,10 +106,16 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
     else :
         xBins = array('d', [])
         if jetMatched :
-            for i in range( 0, 40, 1) :
-                j = i * 2.5
-                if j >= 40 : continue
-                xBins.append( j )
+            if obj == 'electron' :
+                for i in range( 0, 40, 1) :
+                    j = i * 5.0
+                    if j >= 40 : continue
+                    xBins.append( j )
+            else :
+                for i in range( 0, 40, 1) :
+                    j = i * 2.5
+                    if j >= 40 : continue
+                    xBins.append( j )
             for i in range( 40, 60, 5) :
                 xBins.append( i )
             for i in range( 60, 100, 10) :
@@ -150,7 +156,11 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         },
         'electron' : {
             'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
-            'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_loose_Num > 0.5'],
+            ####'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_tight_Num > 0.5'],
+            'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
+            #'pass' : ['iso_Num < 0.1', 'id_e_mva_nt_tight_Num > 0.5'],
+            #'pass' : ['id_e_mva_nt_tight_Num > 0.5'],
+            #'pass' : ['id_e_mva_nt_loose_Num > 0.5'],
         },
         'muon' : {
             'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
@@ -266,7 +276,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         # For Log
         doLinear = True
-        #doLinear = False
+        doLinear = False
         if not doLinear :
             pad1.SetLogy()
             graph.SetMaximum( 10 )

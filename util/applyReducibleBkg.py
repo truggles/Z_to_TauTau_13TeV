@@ -18,7 +18,8 @@ class ReducibleBkgWeights :
         self.file = ROOT.TFile('data/azhFakeRateFits.root','READ')
         self.jetMatched = jetMatched
         self.tauFitCut = 20.
-        self.electronFitCut = 15.
+        #self.electronFitCut = 15.
+        self.electronFitCut = 250.
         self.muonFitCut = 12.5
         self.app = ''
         if self.jetMatched :
@@ -140,8 +141,14 @@ class ReducibleBkgWeights :
     # Check to see if e/m/t pass their cuts
     # and should be skipped   
     def electronPasses( self, lep, row ):
-        if getattr( row, lep+'IsoDB03' ) < 0.3 and \
-            getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
+        #if getattr( row, lep+'IsoDB03' ) < 0.3 and \
+        #    getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
+        if getattr( row, lep+'IsoDB03' ) < 0.15 and \
+            getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
+        #if getattr( row, lep+'IsoDB03' ) < 0.10 and \
+        #    getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
+        #if getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
+        #if getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
         else : return False
 
     def muonPasses( self, lep, row ):

@@ -327,10 +327,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.doubleTauSF import DoubleTau35Efficiencies
     from util.muonSF import MuonSF
     from util.electronSF import ElectronSF
+    from util.electronSFhtt import ElectronSFhtt
     #lepWeights = LepWeights( channel, count )
     doublTau35 = DoubleTau35Efficiencies( channel )
     muonSF = MuonSF()
     electronSF = ElectronSF()
+    electronSFhtt = ElectronSFhtt('IdIso0p15')
+    #electronSFhtt = ElectronSFhtt('IdIso0p10')
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
@@ -1435,9 +1438,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if 'e' in l2 :
                         electronSF_2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
                     if 'e' in l3 :
-                        electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
+                        #electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'WP80', pt3, eta3 )
+                        electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'TrkOnly', pt3, eta3 )
+                        electronSF_3[0] *= electronSFhtt.getIDAndIsoScaleFactor( pt3, eta3 )
                     if 'e' in l4 :
-                        electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
+                        #electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'WP80', pt4, eta4 )
+                        electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'TrkOnly', pt4, eta4 )
+                        electronSF_4[0] *= electronSFhtt.getIDAndIsoScaleFactor( pt4, eta4 )
 
 
                 # Isolation / ID weights
