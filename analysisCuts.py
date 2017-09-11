@@ -45,6 +45,8 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 ###########################
 ### AZh and ZH Baseline ###
 ###########################
+
+########~~~~~~ LT_higgs cuts are in analysisPlots.py, search for LT_higgs ~~~~######
 ZMass = 'LEG1_LEG2_Mass > 60 && LEG1_LEG2_Mass < 120'
 ZOS = 'LEG1_LEG2_SS == 0'
 HOS = 'LEG3_LEG4_SS == 0'
