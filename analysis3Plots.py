@@ -529,6 +529,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             ''' Change bin yield to make this make sense with variable binning
                 this is only for viewing, the DC process is seperate '''
+            # old print out for some sensitivity estimates
+            #if 'id_e_mva_nt_' in var :
+            #    print "xx---"
+            #    print "xx---",channel,var
+            #    for samp in sampHistos.keys() :
+            #        if samp in ['dyj','top','wz'] : continue
+            #        print "%s xx--- yield 0 bin %f" % ( samp, sampHistos[samp].GetBinContent(1) )
+            #    for samp in sampHistos.keys() :
+            #        if samp in ['dyj','top','wz'] : continue
+            #        print "%s xx--- yield 1 bin %f" % ( samp, sampHistos[samp].GetBinContent(2) )
+
             for samp in sampHistos.keys() :
                 if var == 'm_visCor' or var == 'A_Mass' :
                     print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
