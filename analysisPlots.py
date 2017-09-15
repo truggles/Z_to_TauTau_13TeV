@@ -300,8 +300,8 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         elif channel in ['eeem','emmm'] :
             additionalCut += '*(LT_higgs > 20)'
         elif channel in ['eett','mmtt'] :
-            additionalCut += '*(LT_higgs > 60)' # > 80 GeV is 10% better, this is
-            # way more stats
+            additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            # 60 is way more stats
 
 
     ''' Combine Gen and Chan specific into one fill section '''
@@ -828,7 +828,7 @@ def getHistoDict( analysis, channel ) :
 ####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
             'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
 #XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-###            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
             'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
 ####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 ####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
