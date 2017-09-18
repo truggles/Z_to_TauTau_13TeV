@@ -257,7 +257,7 @@ class ReducibleBkgWeights :
         else : return False
 
     def muonPasses( self, lep, row ):
-        if getattr( row, lep+'IsoDB04' ) < 0.25 and \
+        if getattr( row, lep+'IsoDB04' ) < 0.15 and \
             getattr( row, lep+'PFIDLoose' ) > 0.5 : return True
         else : return False
 

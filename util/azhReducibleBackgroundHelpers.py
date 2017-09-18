@@ -16,7 +16,7 @@ def getRedBkgCutsAndWeights( analysis, channel, cut, prodMap ) :
     #electronCutF = '(iso_NUM > 0.1 || id_e_mva_nt_tight_NUM < 0.5)'
     #electronCutF = '(id_e_mva_nt_tight_NUM < 0.5)'
     #electronCutF = '(id_e_mva_nt_loose_NUM < 0.5)'
-    muonCutF = '(iso_NUM > 0.25 || CAND_PFIDLoose < 0.5)'
+    muonCutF = '(iso_NUM > 0.15 || CAND_PFIDLoose < 0.5)'
     tauCutF = '(byMediumIsolationMVArun2v1DBoldDMwLT_NUM < 0.5)'
     
     # Passing cuts
@@ -25,7 +25,7 @@ def getRedBkgCutsAndWeights( analysis, channel, cut, prodMap ) :
     #electronCutP = '(iso_NUM < 0.1 && id_e_mva_nt_tight_NUM > 0.5)'
     #electronCutP = '(id_e_mva_nt_tight_NUM > 0.5)'
     #electronCutP = '(id_e_mva_nt_loose_NUM > 0.5)'
-    muonCutP = '(iso_NUM < 0.25 && CAND_PFIDLoose > 0.5)'
+    muonCutP = '(iso_NUM < 0.15 && CAND_PFIDLoose > 0.5)'
     tauCutP = '(byMediumIsolationMVArun2v1DBoldDMwLT_NUM > 0.5)'
 
     if channel in ['eeet','eeem','emmt','emmm','eeee'] :
@@ -111,7 +111,7 @@ def getChannelSpecificFinalCuts( analysis, channel, cut, prodMap ) :
     #elec = 'iso_NUM < 0.1 && id_e_mva_nt_tight_NUM > 0.5'
     #elec = 'id_e_mva_nt_tight_NUM > 0.5'
     #elec = 'id_e_mva_nt_loose_NUM > 0.5'
-    muon = 'iso_NUM < 0.25 && CAND_PFIDLoose > 0.5'
+    muon = 'iso_NUM < 0.15 && CAND_PFIDLoose > 0.5'
     tau = 'byMediumIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
 
     if analysis == 'azh' :

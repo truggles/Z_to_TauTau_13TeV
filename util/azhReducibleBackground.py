@@ -29,22 +29,31 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
         if 'data' in samp : samples[samp] = val
     #print samples
 
-    # Apply initial Reducible Bkg Cuts for inclusive selection
-    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-    # Order events and choose best interpretation
-    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
-
-    # HADD each channel together so we can avoid different data runs
-    for channel in params['channels'] :
-        print "HADD for",channel
-        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
+#    # Apply initial Reducible Bkg Cuts for inclusive selection
+#    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#    # Order events and choose best interpretation
+#    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#
+#    # HADD each channel together so we can avoid different data runs
+#    for channel in params['channels'] :
+#        print "HADD for",channel
+#        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
 
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
         'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
         'tau-lltt' : ['eett', 'mmtt'],
+        'tau-DM0_lltt' : ['eett', 'mmtt'],
+        'tau-DM1_lltt' : ['eett', 'mmtt'],
+        'tau-DM10_lltt' : ['eett', 'mmtt'],
         'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
         'electron' : ['eeet', 'emmt'],
         'muon' : ['eemt', 'mmmt'],
     }
@@ -87,7 +96,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         xAxis = 'Lepton p_{T} [GeV]'
         jetCut = '(cand_JetPt <= pt_Num || cand_JetDR >= 0.5)'
         app = 'noJetMatch'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept07wpTests_'+app+'_mva80Iso0p15FinalReally'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept17xxx_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -164,7 +173,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         },
         'muon' : {
             'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
-            'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0.5'],
+            'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
         },
     } 
 
@@ -188,18 +197,19 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
     frMap = {}
 
-    for etaRegion, etaCut in etaCuts[obj.split('-')[0]].iteritems() :
+    etaCode = 'tau' if 'tau' in obj else obj.split('-')[0]
+    for etaRegion, etaCut in etaCuts[etaCode].iteritems() :
     # obj.split('-')[0] is to get the same cuts and mapping for
     # tau, tau-lltt, tau-lllt
-
-        # If channels are lltt, then add an LT cut that is not present
-        # for the other tau FRs
-        if channels == ['eett', 'mmtt'] :
-            cuts['tau']['denom'].append('LT_higgs > 50')
 
         denomCut = ' && '.join( cuts[obj.split('-')[0]]['denom'] )
         denomCut += ' && '+etaCut
         denomCut += ' && '+jetCut
+
+        # If using tau decay modes:
+        if 'tau-DM10' in obj : denomCut += ' && decayMode_Num == 10'
+        elif 'tau-DM0' in obj : denomCut += ' && decayMode_Num == 0'
+        elif 'tau-DM1' in obj : denomCut += ' && decayMode_Num == 1'
 
         passCut = ' && '.join( cuts[obj.split('-')[0]]['pass'] )
         passCut = denomCut+' && '+passCut
@@ -209,6 +219,19 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         for channel in channels :
             print channel
+
+            # Apply loosened LT_higgs cuts for LLTT channels and
+            # make sure to apply it for LLMT
+            # LLET and LLEM essentially have no LT_higgs cut
+            passCut2 = passCut
+            denomCut2 = denomCut
+            if channel in ['eett', 'mmtt'] :
+                passCut2 += ' && LT_higgs > 50'
+                denomCut2 += ' && LT_higgs > 50'
+            elif channel in ['eemt','mmmt'] :
+                passCut2 += ' && LT_higgs > 40'
+                denomCut2 += ' && LT_higgs > 40'
+
             f = ROOT.TFile( inputDir+'/redBkg_'+channel+'.root', 'r' )
             t = f.Get('Ntuple')
 
@@ -218,9 +241,9 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                 if not obj[0] in leg : continue
 
                 # Replace vals in the passCut to match leg
-                denomCutX = denomCut.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
+                denomCutX = denomCut2.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
                 denomCutX = denomCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
-                passCutX = passCut.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
+                passCutX = passCut2.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
                 passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
                 print "Denom Cut:",denomCutX
                 print "Passing Cut:",passCutX
@@ -276,11 +299,16 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         # For Log
         doLinear = True
-        doLinear = False
+        #doLinear = False
         if not doLinear :
             pad1.SetLogy()
             graph.SetMaximum( 10 )
-            graph.SetMinimum( 0.0005 )
+            if 'DM10' in obj :
+                graph.SetMinimum( 0.00005 )
+            elif 'DM1' in obj or 'DM0' in obj :
+                graph.SetMinimum( 0.005 )
+            else :
+                graph.SetMinimum( 0.0005 )
         if doLinear :
             if obj == 'muon' :
                 graph.SetMaximum( 1 )
@@ -367,7 +395,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         ROOT.gStyle.SetStatW(.2)
         setText( "Fake Rate: %s %s" % (obj, etaRegion), cmsLumi )
         c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.png' )
-        c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.pdf' )
+        #c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.pdf' )
         pad1.SetLogy(0)
 
         # Add FR fit to map
