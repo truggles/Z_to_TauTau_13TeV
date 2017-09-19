@@ -423,6 +423,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'DPhi' : 'H_DPhi',
         'Eta' : 'H_Eta',
         'Phi' : 'H_Phi',
+        'PZeta' : 'H_PZeta',
+        'PZetaVis' : 'H_PZetaVis',
+        'PZetaLess0p85PZetaVis' : 'H_DZeta',
         }
     branchMappingElec = {
         'cand_Pt' : 'pt', # rename ePt to pt_1
@@ -1443,11 +1446,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         muonSF_2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
                     if 'm' in l3 :
                         muonSF_3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
-                        muonSF_3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
+                        muonSF_3[0] *= muonSF.getRelIsoScaleFactor( 'Tight', pt3, eta3, nvtx )
                         muonSF_3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
                     if 'm' in l4 :
                         muonSF_4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
-                        muonSF_4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
+                        muonSF_4[0] *= muonSF.getRelIsoScaleFactor( 'Tight', pt4, eta4, nvtx )
                         muonSF_4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
                     # Currently using WP90 in all electrons
                     # Available input WPs: WP90, WP80, TrkOnly - for no mva WP SF included
