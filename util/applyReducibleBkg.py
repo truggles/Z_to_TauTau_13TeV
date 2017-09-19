@@ -100,6 +100,21 @@ class ReducibleBkgWeights :
             self.frFitEndcapL4 = self.file.Get( 'electron_Endcap_'+self.app+'_fit' )
 
 
+    # Save some space with this
+    def evalWeight( self, pt, absEta, useFit, fitBarrel, graphBarrel, fitEndcap, graphEndcap ) :
+        if absEta < 1.4 :
+            if useFit :
+                return fitBarrel.Eval( pt ) / ( 1. - fitBarrel.Eval( pt ) )
+            else :
+                return graphBarrel.Eval( pt ) / ( 1. - graphBarrel.Eval( pt ) )
+        if absEta >= 1.4 :
+            if useFit :
+                return fitEndcap.Eval( pt ) / ( 1. - fitEndcap.Eval( pt ) )
+            else :
+                return graphEndcap.Eval( pt ) / ( 1. - graphEndcap.Eval( pt ) )
+
+
+
     # Retrieve values
     # For each of these calls, check if the lepton fails their associated
     # cuts.  If it fails, assign a FF value, if it pass -> 0
@@ -126,50 +141,18 @@ class ReducibleBkgWeights :
             if pt <= 10 : pt = 10.1
 
         if not 't' in lep :
-            if abs(eta) < 1.4 :
-                if useFit :
-                    return self.frFitBarrelL3.Eval( pt ) / ( 1. - self.frFitBarrelL3.Eval( pt ) )
-                else :
-                    return self.frGraphBarrelL3.Eval( pt ) / ( 1. - self.frGraphBarrelL3.Eval( pt ) )
-            if abs(eta) >= 1.4 :
-                if useFit :
-                    return self.frFitEndcapL3.Eval( pt ) / ( 1. - self.frFitEndcapL3.Eval( pt ) )
-                else :
-                    return self.frGraphEndcapL3.Eval( pt ) / ( 1. - self.frGraphEndcapL3.Eval( pt ) )
+            return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL3, self.frGraphBarrelL3,\
+                    self.frFitEndcapL3, self.frGraphEndcapL3 )
         if 't' in lep :
             if getattr( row, lep+'DecayMode' ) == 0 :
-                if abs(eta) < 1.4 :
-                    if useFit :
-                        return self.frFitBarrelL3dm0.Eval( pt ) / ( 1. - self.frFitBarrelL3dm0.Eval( pt ) )
-                    else :
-                        return self.frGraphBarrelL3dm0.Eval( pt ) / ( 1. - self.frGraphBarrelL3dm0.Eval( pt ) )
-                if abs(eta) >= 1.4 :
-                    if useFit :
-                        return self.frFitEndcapL3dm0.Eval( pt ) / ( 1. - self.frFitEndcapL3dm0.Eval( pt ) )
-                    else :
-                        return self.frGraphEndcapL3dm0.Eval( pt ) / ( 1. - self.frGraphEndcapL3dm0.Eval( pt ) )
+                return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL3dm0, self.frGraphBarrelL3dm0,\
+                        self.frFitEndcapL3dm0, self.frGraphEndcapL3dm0 )
             if getattr( row, lep+'DecayMode' ) == 1 :
-                if abs(eta) < 1.4 :
-                    if useFit :
-                        return self.frFitBarrelL3dm1.Eval( pt ) / ( 1. - self.frFitBarrelL3dm1.Eval( pt ) )
-                    else :
-                        return self.frGraphBarrelL3dm1.Eval( pt ) / ( 1. - self.frGraphBarrelL3dm1.Eval( pt ) )
-                if abs(eta) >= 1.4 :
-                    if useFit :
-                        return self.frFitEndcapL3dm1.Eval( pt ) / ( 1. - self.frFitEndcapL3dm1.Eval( pt ) )
-                    else :
-                        return self.frGraphEndcapL3dm1.Eval( pt ) / ( 1. - self.frGraphEndcapL3dm1.Eval( pt ) )
+                return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL3dm1, self.frGraphBarrelL3dm1,\
+                        self.frFitEndcapL3dm1, self.frGraphEndcapL3dm1 )
             if getattr( row, lep+'DecayMode' ) == 10 :
-                if abs(eta) < 1.4 :
-                    if useFit :
-                        return self.frFitBarrelL3dm10.Eval( pt ) / ( 1. - self.frFitBarrelL3dm10.Eval( pt ) )
-                    else :
-                        return self.frGraphBarrelL3dm10.Eval( pt ) / ( 1. - self.frGraphBarrelL3dm10.Eval( pt ) )
-                if abs(eta) >= 1.4 :
-                    if useFit :
-                        return self.frFitEndcapL3dm10.Eval( pt ) / ( 1. - self.frFitEndcapL3dm10.Eval( pt ) )
-                    else :
-                        return self.frGraphEndcapL3dm10.Eval( pt ) / ( 1. - self.frGraphEndcapL3dm10.Eval( pt ) )
+                return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL3dm10, self.frGraphBarrelL3dm10,\
+                        self.frFitEndcapL3dm10, self.frGraphEndcapL3dm10 )
         return 0. # Default
 
 
@@ -196,64 +179,26 @@ class ReducibleBkgWeights :
             if pt <= 10 : pt = 10.1
 
         if not 't' in lep :
-            if abs(eta) < 1.4 :
-                if useFit :
-                    return self.frFitBarrelL4.Eval( pt ) / ( 1. - self.frFitBarrelL4.Eval( pt ) )
-                else :
-                    return self.frGraphBarrelL4.Eval( pt ) / ( 1. - self.frGraphBarrelL4.Eval( pt ) )
-            if abs(eta) >= 1.4 :
-                if useFit :
-                    return self.frFitEndcapL4.Eval( pt ) / ( 1. - self.frFitEndcapL4.Eval( pt ) )
-                else :
-                    return self.frGraphEndcapL4.Eval( pt ) / ( 1. - self.frGraphEndcapL4.Eval( pt ) )
+            return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL4, self.frGraphBarrelL4,\
+                    self.frFitEndcapL4, self.frGraphEndcapL4 )
         if 't' in lep :
             if getattr( row, lep+'DecayMode' ) == 0 :
-                if abs(eta) < 1.4 :
-                    if useFit :
-                        return self.frFitBarrelL4dm0.Eval( pt ) / ( 1. - self.frFitBarrelL4dm0.Eval( pt ) )
-                    else :
-                        return self.frGraphBarrelL4dm0.Eval( pt ) / ( 1. - self.frGraphBarrelL4dm0.Eval( pt ) )
-                if abs(eta) >= 1.4 :
-                    if useFit :
-                        return self.frFitEndcapL4dm0.Eval( pt ) / ( 1. - self.frFitEndcapL4dm0.Eval( pt ) )
-                    else :
-                        return self.frGraphEndcapL4dm0.Eval( pt ) / ( 1. - self.frGraphEndcapL4dm0.Eval( pt ) )
+                return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL4dm0, self.frGraphBarrelL4dm0,\
+                        self.frFitEndcapL4dm0, self.frGraphEndcapL4dm0 )
             if getattr( row, lep+'DecayMode' ) == 1 :
-                if abs(eta) < 1.4 :
-                    if useFit :
-                        return self.frFitBarrelL4dm1.Eval( pt ) / ( 1. - self.frFitBarrelL4dm1.Eval( pt ) )
-                    else :
-                        return self.frGraphBarrelL4dm1.Eval( pt ) / ( 1. - self.frGraphBarrelL4dm1.Eval( pt ) )
-                if abs(eta) >= 1.4 :
-                    if useFit :
-                        return self.frFitEndcapL4dm1.Eval( pt ) / ( 1. - self.frFitEndcapL4dm1.Eval( pt ) )
-                    else :
-                        return self.frGraphEndcapL4dm1.Eval( pt ) / ( 1. - self.frGraphEndcapL4dm1.Eval( pt ) )
+                return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL4dm1, self.frGraphBarrelL4dm1,\
+                        self.frFitEndcapL4dm1, self.frGraphEndcapL4dm1 )
             if getattr( row, lep+'DecayMode' ) == 10 :
-                if abs(eta) < 1.4 :
-                    if useFit :
-                        return self.frFitBarrelL4dm10.Eval( pt ) / ( 1. - self.frFitBarrelL4dm10.Eval( pt ) )
-                    else :
-                        return self.frGraphBarrelL4dm10.Eval( pt ) / ( 1. - self.frGraphBarrelL4dm10.Eval( pt ) )
-                if abs(eta) >= 1.4 :
-                    if useFit :
-                        return self.frFitEndcapL4dm10.Eval( pt ) / ( 1. - self.frFitEndcapL4dm10.Eval( pt ) )
-                    else :
-                        return self.frGraphEndcapL4dm10.Eval( pt ) / ( 1. - self.frGraphEndcapL4dm10.Eval( pt ) )
+                return self.evalWeight( pt, abs(eta), useFit, self.frFitBarrelL4dm10, self.frGraphBarrelL4dm10,\
+                        self.frFitEndcapL4dm10, self.frGraphEndcapL4dm10 )
         return 0. # Default
 
  
     # Check to see if e/m/t pass their cuts
     # and should be skipped   
     def electronPasses( self, lep, row ):
-        #if getattr( row, lep+'IsoDB03' ) < 0.3 and \
-        #    getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
         if getattr( row, lep+'IsoDB03' ) < 0.15 and \
             getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
-        #if getattr( row, lep+'IsoDB03' ) < 0.10 and \
-        #    getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
-        #if getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
-        #if getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
         else : return False
 
     def muonPasses( self, lep, row ):
