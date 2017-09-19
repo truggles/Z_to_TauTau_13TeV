@@ -1,8 +1,6 @@
 
-#ALL=/data/truggles/svFitJune06_azh
 DY4=/data/truggles/ZH_noSVFitAug31_Merged_DY4
-#DATA=/data/truggles/azhJuly13skimMergedNoSVFit
-#DATA=/data/truggles/azhAug08RBSyncMerged
+ttZ=/data/truggles/azhSept19skim_ttZ
 
 # ALL is all non-EEEE or MMMM channels
 ALL=/data/truggles/ZH_svFitAug31_Merged
@@ -69,4 +67,9 @@ echo ""
 ls ${DY4}/*DYJets4_*_eett.root > skimmed/DYJets4_eett.txt
 ls ${DY4}/*DYJets4_*_mmtt.root > skimmed/DYJets4_mmtt.txt
 
+for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
+    for SAMPLE in ttZ; do
+        ls ${ttZ}/${SAMPLE}_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+    done
+done
 

@@ -15,6 +15,7 @@ import analysis1BaselineCuts
 from util.helpers import setUpDirs, mergeChannels
 import subprocess
 from util.helpers import checkDir
+import copy
 ROOT.gROOT.Reset()
 
 
@@ -36,7 +37,7 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
+azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
 
 for mass in [110, 120, 125, 130, 140] :
     azhSamples.append('ggHtoTauTau%i' % mass)
@@ -61,6 +62,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #azhSamples = ['HZZ125',]
 #azhSamples = ['azh300',]
 #azhSamples = ['ZHTauTau125',]
+#azhSamples = ['ttZ',]
 
 samples = azhSamples
 
@@ -79,11 +81,10 @@ params = {
     #'channels' : ['eeee','mmmm'],
     #'channels' : ['eeem',],
     'cutMapper' : 'Skim',
-    #'cutMapper' : 'SkimAZH',
     #'cutMapper' : 'SkimNoTrig',
     'mid1' : '1Sept05',
     'mid2' : '2Sept05',
-    'mid3' : '3Sept05keepIsoReq',
+    'mid3' : '3Sept05newZSelec',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -97,16 +98,17 @@ params = {
     #'channels' : ['eemt','mmmt','emmt',],
     #'channels' : ['eeet','eett','eeem','mmtt','emmm',],
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',], # 8
-    #'channels' : ['mmmt','mmtt'],
-    #'channels' : ['eemt',],
+    ##'channels' : ['mmmt','mmtt'],
+    ##'channels' : ['eeet',],
     ##'channels' : ['eeem','eeet',],
     ##'channels' : ['emmt','mmtt','mmmt','emmm'],
     ##'channels' : ['eeet','eeem','mmmt','emmm'],
+    #'channels' : ['mmmt',],
     #'skimmed' : 'false',
     #'skimHdfs' : 'false',
-    #'mid1' : '1Aug31ZHSync',
-    #'mid2' : '2Aug31ZHSync',
-    #'mid3' : '3Aug31ZHSync',
+    #'mid1' : '1Sept08ZHSync',
+    #'mid2' : '2Sept08ZHSync',
+    #'mid3' : '3Sept08ZHSync',
     #'cutMapper' : 'Skim',
     ##'cutMapper' : 'SkimNoTrig',
     ##'cutMapper' : 'SkimNoVeto',
@@ -141,7 +143,7 @@ doDataCards = True
 runPlots = False
 doMerge = False
 makeFinalPlots = False
-#doDataCards = False
+doDataCards = False
 
 
 doZH = True
@@ -214,30 +216,33 @@ if 'WZ' in samples :
     del samples[ 'WZ' ]
 
 if makeFinalPlots :
+    samplesX = copy.deepcopy(samples)
     text=False
     text=True
     blind = True
+    #blind = False
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
     print params
 
     if useRedBkg : # Delete the yield sample from samples, will be loaded
         # in analysis3Plot.py
-        for sample in samples :
-            if 'RedBkgYield' in sample : del samples[ sample ]
+        for sample in samplesX :
+            if 'RedBkgYield' in sample : del samplesX[ sample ]
 
     ''' Make the final plots
         and copy to viewing area '''
-    analysis3Plots.makeLotsOfPlots( analysis, samples, params['channels'], params['mid3'], **kwargs  )
+    analysis3Plots.makeLotsOfPlots( analysis, samplesX, params['channels'], params['mid3'], **kwargs  )
     cpDir = "/afs/cern.ch/user/t/truggles/www/AZH_%s" % params['mid2'].strip('2')
     checkDir( cpDir )
     subprocess.call( ["cp", "-r", "/afs/cern.ch/user/t/truggles/www/azhPlots/", cpDir] )
     
     
 if doDataCards :
+    samplesX = copy.deepcopy(samples)
 
     # Remove RedBkgYield samples from list to run over 
-    for sample in  samples :
-        if 'RedBkgYield' in sample : del samples[ sample ]
+    for sample in  samplesX :
+        if 'RedBkgYield' in sample : del samplesX[ sample ]
 
     # don't add eeee or mmmm
     if 'eeee' in params['channels'] : params['channels'].remove( 'eeee' ) 
@@ -245,8 +250,9 @@ if doDataCards :
 
     ROOT.gROOT.Reset()
     from analysisShapesROOT import makeDataCards
-    for var in ['A_Mass', 'm_sv'] :
+    for var in ['m_sv', 'A_Mass', 'Mass'] :
         if var == 'A_Mass' : doZH = False
+        if var == 'Mass' : doZH = False
         finalCat = 'inclusive'
         folderDetails = params['mid3']
         kwargs = {
@@ -256,11 +262,13 @@ if doDataCards :
         'allShapes' : False,
         'redBkg' : useRedBkg, 
         }
-        makeDataCards( analysis, samples, params['channels'], folderDetails, **kwargs )
+        makeDataCards( analysis, samplesX, params['channels'], folderDetails, **kwargs )
     extra = 'mssm'
+    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
     subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
     subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass.root", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"] )
     print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
+    print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
     print "moved to : shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"
 
 

@@ -163,6 +163,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             'azh' : {
         'obs' : [ROOT.kBlack, 'Data'],
         'zz' : [ROOT.kGreen-9, 'ZZ'],
+        'ttZ' : [ROOT.kYellow-7, 'ttZ'],
         'wz' : [ROOT.kRed+1, 'WZ'],
         'rare' : [ROOT.kOrange+7, 'Rare'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
@@ -580,6 +581,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     stack.Add( sampHistos['dyj'] )
                     stack.Add( sampHistos['wz'] )
                 stack.Add( sampHistos['rare'] )
+                stack.Add( sampHistos['ttZ'] )
                 stack.Add( sampHistos['zz'] )
                 stack.Add( sampHistos['higgs'] )
     
@@ -631,6 +633,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'wz' : .10,
                 'rare' : .10,
                 'zz' : .10,
+                'ttZ' : .20,
                 'redBkg' : .20,
                 'azh' : .0,
                 'higgs' : .1,

@@ -185,6 +185,10 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.00159 * 1.7, # See 1.7 k-factor in Devin's HIG-16-036
                 'group' : 'zz'},
+            'ttZ' : {
+                'DASPath' : '/ttZJets_13TeV_madgraphMLM-pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.616,
+                'group' : 'ttZ'},
         }, # end common
         'azh' : {
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
