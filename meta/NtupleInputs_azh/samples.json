@@ -964,5 +964,19 @@
     "nevents": 497392, 
     "nNtupleFiles": 3, 
     "nlumis": 3051
+  },
+  "ttZ": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 9801544, 
+    "DAS Path": "/ttZJets_13TeV_madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 208, 
+    "nblocks": 27, 
+    "Cross Section (pb)": 0.616, 
+    "summedWeightsNorm": 9801544.0, 
+    "summedWeights": 9801544.0, 
+    "nevents": 9874825, 
+    "nNtupleFiles": 37, 
+    "nlumis": 64837
   }
 }

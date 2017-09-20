@@ -1,0 +1,15 @@
+/data/truggles/azhSept19skim_Merged/ttZ_0_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_10_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_11_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_12_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_13_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_14_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_1_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_2_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_3_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_4_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_5_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_6_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_7_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_8_eeee.root
+/data/truggles/azhSept19skim_Merged/ttZ_9_eeee.root

@@ -1,6 +1,6 @@
 
 DY4=/data/truggles/ZH_noSVFitAug31_Merged_DY4
-ttZ=/data/truggles/azhSept19skim_ttZ
+ttZ=/data/truggles/azhSept19skim_Merged
 
 # ALL is all non-EEEE or MMMM channels
 ALL=/data/truggles/ZH_svFitAug31_Merged
@@ -69,7 +69,7 @@ ls ${DY4}/*DYJets4_*_mmtt.root > skimmed/DYJets4_mmtt.txt
 
 for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
     for SAMPLE in ttZ; do
-        ls ${ttZ}/${SAMPLE}_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${ttZ}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 done
 
