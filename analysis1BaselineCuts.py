@@ -105,13 +105,9 @@ def initialCut( outFile, analysis, sample, samples, channel, cutMapper, svFitPre
     #exec 'cutMap = analysisCuts.%s( channel )' % cutMapper
     cutString = ''
     isData = False
-    hdfsSkim = False # Adjust MC trigger for final analysis (should be changed
-                     # if we are skimming
     if 'data' in sample :
         isData = True
-    if skimHdfs == 'true' :
-        hdfsSkim = True
-    cutString = analysisCuts.getCut( analysis, channel, cutMapper, isData, hdfsSkim )
+    cutString = analysisCuts.getCut( analysis, channel, cutMapper )
     #print cutString
     	
     ''' Copy and make some cuts while doing it '''
