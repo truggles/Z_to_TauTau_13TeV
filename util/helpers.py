@@ -287,6 +287,7 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
         for zz in ZZs :
             if zz in inSamples :
                 samples[zz]  = 'ZZ'
+        if 'ttZ' in inSamples : samples['ttZ'] = 'ttZ'
 
         for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
             if 'azh%i' % mass in inSamples :

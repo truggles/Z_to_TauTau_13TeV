@@ -161,6 +161,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'Mass' : '4LMass',
             'A_Mass' : 'AMass',
             'm_vis' : 'VisMass',
+            'H_vis' : 'HVisMass',
             }
         if analysis == 'azh' : appendMap['m_sv'] = 'svFitMass'
         #if '0jet2D' in ops['category'] : 
