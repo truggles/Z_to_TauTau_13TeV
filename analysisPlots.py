@@ -818,12 +818,17 @@ def getHistoDict( analysis, channel ) :
 ###            #'genMass' : [90, 100, 550, 40, 'Gen Mass [GeV]', ' GeV'],
 ###            #'Z_Phi' : [80, -4, 4, 80, 'Z Phi', ' Phi'],
 ###            #'Z_Eta' : [40, -5, 5, 10, 'Z Eta', ' Eta'],
-###            'Z_Pt' : [400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
+            'Z_Pt' : [400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
             'm_vis' : [70, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
 ###            #'H_Phi' : [40, -4, 4, 80, 'H Phi', ' Phi'],
 ###            #'H_Eta' : [40, -5, 5, 10, 'H Eta', ' Eta'],
+<<<<<<< HEAD
 ###            'H_Pt' : [300, 0, 300, 30, 'H p_{T} [GeV]', ' GeV'],
 #            'H_vis' : [300, 0, 300, 20, 'H Vis Mass [GeV]', ' GeV'],
+=======
+            'H_Pt' : [300, 0, 300, 30, 'H p_{T} [GeV]', ' GeV'],
+            'H_vis' : [300, 0, 300, 20, 'H Vis Mass [GeV]', ' GeV'],
+>>>>>>> 5aa2848... small alignments
 ####            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
 ####            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
 ####            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
