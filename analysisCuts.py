@@ -147,7 +147,7 @@ def llttDR( l1,l2,l3,l4 ) :
     return dr.replace('LEG1',l1).replace('LEG2',l2).replace('LEG3',l3).replace('LEG4',l4)
 
 
-def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
+def getCut( analysis, channel, cutName ) :
     
     triggers = [tt40, tt35,]
 
@@ -233,15 +233,6 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
 
     cuts1 = cutMap[ analysis ][ channel ][ cutName ]
 
-    # Remove trigger requirements if MC except reHLT samples
-    #if not isData :
-    #    #if not isReHLT : 
-    #    for trig in triggers :
-    #        if hdfsSkim : continue # We want to keep all versions of double Tau 35 trigger for svFitting
-    #        if trig in cuts1 :
-    #            cuts1.remove( trig )
-    #            if analysis == 'htt' :
-    #                cuts1.append( tt35mc )
 
     prodMap = {
         'em' : ('e', 'm'),
@@ -279,15 +270,7 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
 
 
 if __name__ == '__main__' :
-    isData=False
-    isReHLT=True
-    cut = getCut( 'htt', 'tt', 'syncCutsDCqcd', isData, isReHLT )
-    print cut + "\n\n"
-    cut = getCut( 'htt', 'tt', 'syncCutsDCqcd', isData, not isReHLT )
-    print cut + "\n\n"
-    cut = getCut( 'htt', 'tt', 'syncCutsDCqcd', True )
-    print cut + "\n\n"
-    cut = getCut( 'azh', 'eeet', 'goodZ' )
+    cut = getCut( 'azh', 'eeet', 'Skim' )
     print cut + "\n\n"
 
 
