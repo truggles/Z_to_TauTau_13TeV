@@ -847,6 +847,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     electronSF_3B = tnew.Branch('electronSF_3', electronSF_3, 'electronSF_3/F')
     electronSF_4 = array('f', [ 0 ] )
     electronSF_4B = tnew.Branch('electronSF_4', electronSF_4, 'electronSF_4/F')
+    tauSF_3 = array('f', [ 0 ] )
+    tauSF_3B = tnew.Branch('tauSF_3', tauSF_3, 'tauSF_3/F')
+    tauSF_4 = array('f', [ 0 ] )
+    tauSF_4B = tnew.Branch('tauSF_4', tauSF_4, 'tauSF_4/F')
     zhFR0 = array('f', [ 0 ] )
     zhFR0B = tnew.Branch('zhFR0', zhFR0, 'zhFR0/F')
     zhFR1 = array('f', [ 0 ] )
@@ -1286,6 +1290,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             electronSF_2[0] = 1
             electronSF_3[0] = 1
             electronSF_4[0] = 1
+            tauSF_3[0] = 1
+            tauSF_4[0] = 1
             azhWeight[0] = 1
             puweight[0] = 1
             qqZZ4lWeight[0] = 1
@@ -1408,13 +1414,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
                 puweight[0] = puDict[ nTrPu ]
 
-                if hasattr( row, l1+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                    gen_match_1[0] = getattr( row, l1+'ZTTGenMatching2' )
-                elif hasattr( row, l1+'ZTTGenMatching' ) :
+                if hasattr( row, l1+'ZTTGenMatching' ) :
                     gen_match_1[0] = getattr( row, l1+'ZTTGenMatching' )
-                if hasattr( row, l2+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                    gen_match_2[0] = getattr( row, l2+'ZTTGenMatching2' )
-                elif hasattr( row, l2+'ZTTGenMatching' ) :
+                if hasattr( row, l2+'ZTTGenMatching' ) :
                     gen_match_2[0] = getattr( row, l2+'ZTTGenMatching' )
 
 
@@ -1424,18 +1426,18 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         qqZZ4lWeight[0] = qqZZ4l_nnlo_weight( row.genM, \
                                 row.isZee, row.isZmumu, row.isZtautau )
 
-                    if hasattr( row, l3+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                        gen_match_3[0] = getattr( row, l3+'ZTTGenMatching2' )
-                    elif hasattr( row, l3+'ZTTGenMatching' ) :
+                    if hasattr( row, l3+'ZTTGenMatching' ) :
                         gen_match_3[0] = getattr( row, l3+'ZTTGenMatching' )
-                    if hasattr( row, l4+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                        gen_match_4[0] = getattr( row, l4+'ZTTGenMatching2' )
-                    elif hasattr( row, l4+'ZTTGenMatching' ) :
+                    if hasattr( row, l4+'ZTTGenMatching' ) :
                         gen_match_4[0] = getattr( row, l4+'ZTTGenMatching' )
 
                     nvtx = row.nvtx
                     # Currently using PFIDLoose and Loose RelIso for all muons
                     
+                    if 't' in l3 :
+                        if gen_match_3[0] == 5 : tauSF_3[0] = 0.95
+                    if 't' in l4 :
+                        if gen_match_4[0] == 5 : tauSF_4[0] = 0.95
                     if 'm' in l1 :
                         muonSF_1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
                         muonSF_1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
@@ -1682,7 +1684,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF_1[0] * muonSF_2[0] * muonSF_3[0] * muonSF_4[0]
                 azhWeight[0] *= electronSF_1[0] * electronSF_2[0] * electronSF_3[0] * electronSF_4[0]
-                azhWeight[0] *= qqZZ4lWeight[0]
+                azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0]
 
 
 
