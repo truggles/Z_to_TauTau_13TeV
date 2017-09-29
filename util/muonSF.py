@@ -18,11 +18,11 @@ class MuonSF :
     def __init__( self ):
 
     
-        #self.abcdef = 27200.0
+        #self.bcdef = 27200.0
         #self.total = 35870.0
-        #self.gh = self.total - self.abcdef
+        #self.gh = self.total - self.bcdef
         # Lumis as ratios
-        self.abcdef = 0.76
+        self.bcdef = 0.76
         self.gh = 0.24
 
         ### Load the ICHEP SFs provided by the Muon POG
@@ -79,7 +79,7 @@ class MuonSF :
             SF1 = self.RelIso_L_eta1.GetBinContent( self.RelIso_L_eta1.FindBin( eta ) )
             SF1 *= self.RelIso_L_pt1.GetBinContent( self.RelIso_L_pt1.FindBin( pt ) )
             SF1 *= self.RelIso_L_vtx1.GetBinContent( self.RelIso_L_vtx1.FindBin( vtx ) )
-            SF1 *= self.abcdef
+            SF1 *= self.bcdef
             SF2 = self.RelIso_L_eta2.GetBinContent( self.RelIso_L_eta2.FindBin( eta ) )
             SF2 *= self.RelIso_L_pt2.GetBinContent( self.RelIso_L_pt2.FindBin( pt ) )
             SF2 *= self.RelIso_L_vtx2.GetBinContent( self.RelIso_L_vtx2.FindBin( vtx ) )
@@ -89,11 +89,11 @@ class MuonSF :
             SF1 = self.RelIso_T_eta1.GetBinContent( self.RelIso_T_eta1.FindBin( eta ) )
             SF1 *= self.RelIso_T_pt1.GetBinContent( self.RelIso_T_pt1.FindBin( pt ) )
             SF1 *= self.RelIso_T_vtx1.GetBinContent( self.RelIso_T_vtx1.FindBin( vtx ) )
-            SF1 *= self.abcdef
+            SF1 *= self.bcdef
             SF2 = self.RelIso_T_eta2.GetBinContent( self.RelIso_T_eta2.FindBin( eta ) )
             SF2 *= self.RelIso_T_pt2.GetBinContent( self.RelIso_T_pt2.FindBin( pt ) )
             SF2 *= self.RelIso_T_vtx2.GetBinContent( self.RelIso_T_vtx2.FindBin( vtx ) )
-            SF2 *= self.abcdef
+            SF2 *= self.gh
             return SF1 + SF2
         else :
             return SF
@@ -110,7 +110,7 @@ class MuonSF :
             SF1 = self.ID_L_eta1.GetBinContent( self.ID_L_eta1.FindBin( eta ) )
             SF1 *= self.ID_L_pt1.GetBinContent( self.ID_L_pt1.FindBin( pt ) )
             SF1 *= self.ID_L_vtx1.GetBinContent( self.ID_L_vtx1.FindBin( vtx ) )
-            SF1 *= self.abcdef
+            SF1 *= self.bcdef
             SF2 = self.ID_L_eta2.GetBinContent( self.ID_L_eta2.FindBin( eta ) )
             SF2 *= self.ID_L_pt2.GetBinContent( self.ID_L_pt2.FindBin( pt ) )
             SF2 *= self.ID_L_vtx2.GetBinContent( self.ID_L_vtx2.FindBin( vtx ) )
@@ -120,7 +120,7 @@ class MuonSF :
             SF1 = self.ID_M_eta1.GetBinContent( self.ID_M_eta1.FindBin( eta ) )
             SF1 *= self.ID_M_pt1.GetBinContent( self.ID_M_pt1.FindBin( pt ) )
             SF1 *= self.ID_M_vtx1.GetBinContent( self.ID_M_vtx1.FindBin( vtx ) )
-            SF1 *= self.abcdef
+            SF1 *= self.bcdef
             SF2 = self.ID_M_eta2.GetBinContent( self.ID_M_eta2.FindBin( eta ) )
             SF2 *= self.ID_M_pt2.GetBinContent( self.ID_M_pt2.FindBin( pt ) )
             SF2 *= self.ID_M_vtx2.GetBinContent( self.ID_M_vtx2.FindBin( vtx ) )
