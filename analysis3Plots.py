@@ -198,10 +198,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         # Make an index file for web viewing
         checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir']))
         checkDir( '/afs/cern.ch/user/t/truggles/www/%sPlotsList/%s%s/' % (analysis, channel, ops['targetDir']))
-        htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/index.html' % (analysis, channel, ops['targetDir']), 'w')
-        htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
-        htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
-        htmlFile.write( '<body>\n' )
+        subprocess.call(['cp','util/index.php', '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'])])
+        #htmlFile = open('/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/index.html' % (analysis, channel, ops['targetDir']), 'w')
+        #htmlFile.write( '<html><head><STYLE type="text/css">img { border:0px; }</STYLE>\n' )
+        #htmlFile.write( '<title>Channel %s/</title></head>\n' % channel )
+        #htmlFile.write( '<body>\n' )
     
 
         newVarMapUnsorted = analysisPlots.getHistoDict( analysis, channel )
@@ -960,10 +961,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             #    htmlFile.write( '<img src="%s_LogY.png">\n' % var )
             c1.Close()
     
-            htmlFile.write( '<img src="%s.png">\n' % var )
+            #htmlFile.write( '<img src="%s.png">\n' % var )
             #htmlFile.write( '<br>\n' )
-        htmlFile.write( '</body></html>' )
-        htmlFile.close()
+        #htmlFile.write( '</body></html>' )
+        #htmlFile.close()
     
         if qcdMake :
             print "\n\n Final QCD and Data Info:\n -- QCD Name: %s\n -- Data Yield = %f\n -- QCD Yield = %f" % (ops['qcdMakeDM'], finalDataYield, finalQCDYield)
