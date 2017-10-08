@@ -50,11 +50,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     vv = ['WW1l1nu2q', 'WW2l2nu', 'WZ1l1nu2q', 'WZ1l3nu', 
          'WZ2l2q', 'WZ3l1nu', 'ZZ2l2nu', 'ZZ2l2q', 'ZZ4l', 
          'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
-    #anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125', 
-    #    'VBFHtoTauTau0PM125', 'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0M125', 'VBFHtoTauTau0PM-v5125']
     # Allow pure SM and pure BSM through
-    anomalousVBF = ['VBFHtoTauTau0PHf05ph0125', 'VBFHtoTauTau0L1f05ph0125', 'VBFHtoTauTau0L1125', 
-        'VBFHtoTauTau0Mf05ph0125', 'VBFHtoTauTau0PH125', 'VBFHtoTauTau0PM-v5125']
+    anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
+        'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125']
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
@@ -100,9 +98,21 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if vvSamp in samples.keys() :
                 del samples[ vvSamp ]
         # Skip aHTT for now
-        for aHTT in anomalousVBF :
-            if aHTT in samples.keys() :
-                del samples[ aHTT ]
+        for aHTT in anomalous :
+            if 'VBF'+aHTT in samples.keys() :
+                del samples[ 'VBF'+aHTT ]
+            if 'W'+aHTT in samples.keys() :
+                del samples[ 'W'+aHTT ]
+            if 'Z'+aHTT in samples.keys() :
+                del samples[ 'Z'+aHTT ]
+        if 'WHtoTauTau0PM125' in samples.keys() :
+            del samples[ 'WHtoTauTau0PM125' ]
+        if 'WHtoTauTau0M125' in samples.keys() :
+            del samples[ 'WHtoTauTau0M125' ]
+        if 'ZHtoTauTau0PM125' in samples.keys() :
+            del samples[ 'ZHtoTauTau0PM125' ]
+        if 'ZHtoTauTau0M125' in samples.keys() :
+            del samples[ 'ZHtoTauTau0M125' ]
         # Skip centrally produced VBF for now
         if 'VBFHtoTauTau125' in samples.keys() :
             del samples[ 'VBFHtoTauTau125' ]
