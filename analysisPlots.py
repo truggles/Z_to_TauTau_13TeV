@@ -21,13 +21,17 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 # Make a 2D histo
 def get2DVars( cutName ) :
     if 'mjj' in cutName and 'm_sv' in cutName and 'KD_bsm_mlt' in cutName :
-        xBins = array( 'd', [0,95,115,135,155,400] )
-        yBins = array( 'd', [0,300,700,1100,1500,10000] )
-        zBins = array( 'd', [0,.2,.4,.6,.8,1] )
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,300,500,800,10000] )
+        #xBins = array( 'd', [0,95,115,135,155,400] )
+        #yBins = array( 'd', [0,300,700,1100,1500,10000] )
+        #zBins = array( 'd', [0,.2,.4,.6,.8,1] )
     elif 'mjj' in cutName and 'm_sv' in cutName and 'KD_int' in cutName :
-        xBins = array( 'd', [0,95,115,135,155,400] )
-        yBins = array( 'd', [0,300,700,1100,1500,10000] )
-        zBins = array( 'd', [-1,0,1] )
+        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        yBins = array( 'd', [0,300,500,800,10000] )
+        #xBins = array( 'd', [0,95,115,135,155,400] )
+        #yBins = array( 'd', [0,300,700,1100,1500,10000] )
+        #zBins = array( 'd', [-1,0,1] )
 
     elif 'pt_sv' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
