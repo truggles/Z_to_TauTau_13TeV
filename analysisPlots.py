@@ -798,7 +798,7 @@ def getHistoDict( analysis, channel ) :
             'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-# MELA            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0to0p2' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],

@@ -59,14 +59,14 @@ SamplesDataCards.append('HtoWW2l2nu125')
 SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
-SamplesDataCards = []
+#SamplesDataCards = []
 for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
     SamplesDataCards.append( 'W'+aHiggs )
     SamplesDataCards.append( 'Z'+aHiggs )
     
-#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-#    SamplesDataCards.append('dataTT-%s' % era)
+for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
@@ -96,19 +96,19 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1aug21official',
-    'mid2' : '2aug21official',
-    'mid3' : '3aug21official',
+    'mid1' : '1June29mela',
+    'mid2' : '2June29mela',
+    'mid3' : '3June29mela',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true', # This means "do the hdfs skim"
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # This means "do the hdfs skim"
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -117,7 +117,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -136,9 +136,9 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
-cats = ['inclusive', '0jet2D', 'boosted','vbf',]
+#cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
 #cats = ['boosted',]
 #cats = ['inclusive',]
@@ -262,6 +262,7 @@ for isoVal in isoVals :
         vars = [
         'm_sv',
         '%s:m_sv' % higgsPt,
+        'mjj:m_sv',
         'mjj:m_sv:KD_int_DCP_neg1to0',
         'mjj:m_sv:KD_int_DCP_0to1',
         'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
@@ -274,11 +275,13 @@ for isoVal in isoVals :
                 # Get normal vars for normal cats
                 if cat == 'boosted' and not var == '%s:m_sv' % higgsPt : continue
                 if (cat == 'inclusive' or cat == '0jet2D') and not var == 'm_sv' : continue
-                if cat == 'vbf' and not 'mjj:m_sv:KD' in var : continue
+                if cat == 'vbf' and not 'mjj:m_sv' in var: continue
 
                 # Proper category naming
                 if cat == 'vbf' :
-                    finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('KD_bsm_mlt_','').replace('KD_int_','')
+                    if var == 'mjj:m_sv' : finalCat = cat
+                    else :
+                        finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('KD_bsm_mlt_','').replace('KD_int_','')
                 else : finalCat = cat
 
                 if doFF :

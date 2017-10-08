@@ -51,6 +51,7 @@ def get_key_matching_inputs( histKeys, baseToMatch, toMatch, sample ) :
 if '__main__' in __name__ :
     channels = ['tt',]
     cats = ['inclusive', '0jet', 'boosted',
+        'vbf',
         'vbf_DCP_neg1to0',
         'vbf_DCP_0to1',
         'vbf_D0_0to0p2',
