@@ -1,1 +1,0 @@
-/data/truggles/aug04_azh/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/submit/make_ntuples_cfg-EA2E00CB-AD4E-E611-BD0B-0025905C42A6/make_ntuples_cfg-EA2E00CB-AD4E-E611-BD0B-0025905C42A6.root
