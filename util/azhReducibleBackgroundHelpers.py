@@ -11,13 +11,21 @@ def getRedBkgCutsAndWeights( analysis, channel, cut, prodMap ) :
         the Red Bkg process, you must define it" % channel
 
     # Failing cuts
-    electronCutF = '(iso_NUM > 0.3 || id_e_mva_nt_loose_NUM < 0.5)'
-    muonCutF = '(iso_NUM > 0.25 || CAND_PFIDLoose < 0.5)'
+    #electronCutF = '(iso_NUM > 0.3 || id_e_mva_nt_tight_NUM < 0.5)'
+    electronCutF = '(iso_NUM > 0.15 || id_e_mva_nt_tight_NUM < 0.5)'
+    #electronCutF = '(iso_NUM > 0.1 || id_e_mva_nt_tight_NUM < 0.5)'
+    #electronCutF = '(id_e_mva_nt_tight_NUM < 0.5)'
+    #electronCutF = '(id_e_mva_nt_loose_NUM < 0.5)'
+    muonCutF = '(iso_NUM > 0.15 || CAND_PFIDLoose < 0.5)'
     tauCutF = '(byMediumIsolationMVArun2v1DBoldDMwLT_NUM < 0.5)'
     
     # Passing cuts
-    electronCutP = '(iso_NUM < 0.3 && id_e_mva_nt_loose_NUM > 0.5)'
-    muonCutP = '(iso_NUM < 0.25 && CAND_PFIDLoose > 0.5)'
+    #electronCutP = '(iso_NUM < 0.3 && id_e_mva_nt_tight_NUM > 0.5)'
+    electronCutP = '(iso_NUM < 0.15 && id_e_mva_nt_tight_NUM > 0.5)'
+    #electronCutP = '(iso_NUM < 0.1 && id_e_mva_nt_tight_NUM > 0.5)'
+    #electronCutP = '(id_e_mva_nt_tight_NUM > 0.5)'
+    #electronCutP = '(id_e_mva_nt_loose_NUM > 0.5)'
+    muonCutP = '(iso_NUM < 0.15 && CAND_PFIDLoose > 0.5)'
     tauCutP = '(byMediumIsolationMVArun2v1DBoldDMwLT_NUM > 0.5)'
 
     if channel in ['eeet','eeem','emmt','emmm','eeee'] :
@@ -60,6 +68,7 @@ def getRedBkgShape( analysis, channel, cut, prodMap ) :
         the Red Bkg process, you must define it" % channel
 
     elec = 'iso_NUM < 2 && id_e_mva_nt_loose_NUM > 0.5'
+    #elec = 'id_e_mva_nt_loose_NUM > 0.5'
     muon = 'iso_NUM < 2 && CAND_PFIDLoose > 0.5'
     tau = 'byVVLooseIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
 
@@ -97,8 +106,12 @@ def getChannelSpecificFinalCuts( analysis, channel, cut, prodMap ) :
 
     newCuts = []
     # Currently defined for ZH
-    elec = 'iso_NUM < 0.3 && id_e_mva_nt_loose_NUM > 0.5'
-    muon = 'iso_NUM < 0.25 && CAND_PFIDLoose > 0.5'
+    #elec = 'iso_NUM < 0.3 && id_e_mva_nt_tight_NUM > 0.5'
+    elec = 'iso_NUM < 0.15 && id_e_mva_nt_tight_NUM > 0.5'
+    #elec = 'iso_NUM < 0.1 && id_e_mva_nt_tight_NUM > 0.5'
+    #elec = 'id_e_mva_nt_tight_NUM > 0.5'
+    #elec = 'id_e_mva_nt_loose_NUM > 0.5'
+    muon = 'iso_NUM < 0.15 && CAND_PFIDLoose > 0.5'
     tau = 'byMediumIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
 
     if analysis == 'azh' :

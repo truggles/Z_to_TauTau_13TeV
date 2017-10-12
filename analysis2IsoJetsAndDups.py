@@ -251,6 +251,16 @@ def getCurrentEvt( analysis, channel, row ) :
         leg3Pt = getattr(row, l3+'Pt')
         leg4Pt = getattr(row, l4+'Pt')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
+        if channel in ['eeet','eeem','emmm','mmmt' ] :
+            # deals with ordering in emmm channel where l3 == electron
+            l3_new = l3 if channel != 'emmm' else l4
+            closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
+            closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
+            if closeZ2 < closeZ : closeZ = 999
+            if closeZ3 < closeZ : closeZ = 999
+        else :
+            closeZ2 = 999
+            closeZ3 = 999
         LT = leg3Pt + leg4Pt # LT here is just Higgs_LT
         currentEvt = (closeZ, LT, leg3Pt) # leg3Pt is to distinguish
         # when an object can be a slimmedElec and slimmedTau
@@ -327,10 +337,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.doubleTauSF import DoubleTau35Efficiencies
     from util.muonSF import MuonSF
     from util.electronSF import ElectronSF
+    from util.electronSFhtt import ElectronSFhtt
     #lepWeights = LepWeights( channel, count )
     doublTau35 = DoubleTau35Efficiencies( channel )
     muonSF = MuonSF()
     electronSF = ElectronSF()
+    electronSFhtt = ElectronSFhtt('IdIso0p15')
+    #electronSFhtt = ElectronSFhtt('IdIso0p10')
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
@@ -615,7 +628,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
         
         if currentRunLumiEvt != prevRunLumiEvt :
-            toFillMap[ prevRunLumiEvt ] = prevEvt
+            if analysis == 'azh' :
+                if prevEvt[0] != 999 :
+                    toFillMap[ prevRunLumiEvt ] = prevEvt
+            else :
+                toFillMap[ prevRunLumiEvt ] = prevEvt
             prevRunLumiEvt = currentRunLumiEvt
             prevEvt = currentEvt
 
@@ -624,7 +641,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #print "LastRow:",prevRunLumiEvt, prevEvt
                 prevRunLumiEvt = currentRunLumiEvt
                 prevEvt = currentEvt
-                toFillMap[ prevRunLumiEvt ] = prevEvt
+                if analysis == 'azh' :
+                    if prevEvt[0] != 999 :
+                        toFillMap[ prevRunLumiEvt ] = prevEvt
+                else :
+                    toFillMap[ prevRunLumiEvt ] = prevEvt
             continue
 
         #print "Current: ",currentRunLumiEvt, currentEvt
@@ -1429,14 +1450,19 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         muonSF_4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
                         muonSF_4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
                     # Currently using WP90 in all electrons
+                    # Available input WPs: WP90, WP80, TrkOnly - for no mva WP SF included
                     if 'e' in l1 :
                         electronSF_1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
                     if 'e' in l2 :
                         electronSF_2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
                     if 'e' in l3 :
-                        electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
+                        #electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'WP80', pt3, eta3 )
+                        electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'TrkOnly', pt3, eta3 )
+                        electronSF_3[0] *= electronSFhtt.getIDAndIsoScaleFactor( pt3, eta3 )
                     if 'e' in l4 :
-                        electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
+                        #electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'WP80', pt4, eta4 )
+                        electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'TrkOnly', pt4, eta4 )
+                        electronSF_4[0] *= electronSFhtt.getIDAndIsoScaleFactor( pt4, eta4 )
 
 
                 # Isolation / ID weights
@@ -1588,18 +1614,19 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # estimated by Cecile, Nov 15, 2016
                 # See: https://indico.cern.ch/event/578552/contributions/2343738/attachments/1372271/2081852/systematics_SMH.pdf
                 # Slide 10 for tautau
-                if shortName in ['ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] :
+                if (analysis == 'htt' or analysis == 'Sync') and channel == 'tt' :
+                    if shortName in ['ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130'] :
 
-                    ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
-                    # 2 options for boosted category in case we haven't run svFit
-                    # prefer the svFit option
-                    if hasattr( row, 'pt_sv' ) :
-                        ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
-                    elif Higgs_Pt[0] != 0.0 :
-                        ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
+                        ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
+                        # 2 options for boosted category in case we haven't run svFit
+                        # prefer the svFit option
+                        if hasattr( row, 'pt_sv' ) :
+                            ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
+                        elif Higgs_Pt[0] != 0.0 :
+                            ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
 
-                    if hasattr( row, 'vbfMass' ) :
-                        ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
+                        if hasattr( row, 'vbfMass' ) :
+                            ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
 
                 
                 # top pt reweighting, only for ttbar events

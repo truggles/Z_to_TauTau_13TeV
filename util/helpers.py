@@ -303,19 +303,19 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
 
     for mass in ['110', '120', '125', '130', '140'] :
         if 'VBFHtoTauTau%s' % mass in inSamples :
-            samples['VBFHtoTauTau%s' % mass] = 'qqH%s' % mass
+            samples['VBFHtoTauTau%s' % mass] = 'qqH_htt%s' % mass
         if 'ggHtoTauTau%s' % mass in inSamples :
-            samples['ggHtoTauTau%s' % mass] = 'ggH%s' % mass
+            samples['ggHtoTauTau%s' % mass] = 'ggH_htt%s' % mass
         if 'WMinusHTauTau%s' % mass in inSamples :
-            samples['WMinusHTauTau%s' % mass] = 'WH%s' % mass
+            samples['WMinusHTauTau%s' % mass] = 'WH_htt%s' % mass
         if 'WPlusHTauTau%s' % mass in inSamples :
-            samples['WPlusHTauTau%s' % mass] = 'WH%s' % mass
+            samples['WPlusHTauTau%s' % mass] = 'WH_htt%s' % mass
         if 'ZHTauTau%s' % mass in inSamples :
-            samples['ZHTauTau%s' % mass] = 'ZH%s' % mass
+            samples['ZHTauTau%s' % mass] = 'ZH_htt%s' % mass
         if 'ZHWW%s' % mass in inSamples :
-            samples['ZHWW%s' % mass] = 'ZHWW%s' % mass
+            samples['ZHWW%s' % mass] = 'ZH_hww%s' % mass
         if 'HZZ%s' % mass in inSamples :
-            samples['HZZ%s' % mass] = 'HZZ%s' % mass
+            samples['HZZ%s' % mass] = 'ggH_hzz%s' % mass
     
 
     return samples

@@ -1,3 +1,1 @@
-/data/truggles/azhAug08RBSyncMerged/dataEE-G_0_eeem.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-G_1_eeem.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-G_2_eeem.root
+/data/truggles/ZH_svFitAug31_Merged/dataEE-G_0_eeem.root

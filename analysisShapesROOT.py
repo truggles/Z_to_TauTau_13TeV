@@ -64,10 +64,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         if ops['doZH'] : # then remove AZH samples
             for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
                 if 'azh%i' % mass in samples : del samples['azh%i' % mass]
-        if not ops['doZH'] : # then removed 110 120 130 140 mass points for SM Higgs
-            for mass in ['110', '120', '130', '140'] :
-                if 'ZHTauTau%s' % mass in samples : del samples['ZHTauTau%s' % mass]
-                if 'WHTauTau%s' % mass in samples : del samples['WHTauTau%s' % mass]
+        #if not ops['doZH'] : # then removed 110 120 130 140 mass points for SM Higgs
+        #    for mass in ['110', '120', '130', '140'] :
+        #        if 'ZHTauTau%s' % mass in samples : del samples['ZHTauTau%s' % mass]
+        #        if 'WHTauTau%s' % mass in samples : del samples['WHTauTau%s' % mass]
 
 
     # Use FF built QCD backgrounds
@@ -176,6 +176,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             mid = 'mssm'
         else :
             mid = 'sm'
+        if 'svFitMass' in Append : mid = 'sm'
     
         nameChan = 'tt' if analysis != 'azh' else 'zh'
         shapeFileName = 'shapes/%s/htt_%s.inputs-%s-13TeV%s.root' % (analysis, nameChan, mid, Append)
@@ -430,14 +431,19 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if bkgArray[bin_id] == 0. :
                         problemBins.append( bin_id+1 ) # +1 here gets us to ROOT coords
 
+                nEntries = histos[ sampToCheck ].GetEntries()
+                integral = histos[ sampToCheck ].Integral()
+                avgW = integral/nEntries
+                print "Simple method uncer on zero bin method - avg RedBkg entry weight:",avgW
+
                 # Apply correction and set an empyt bin to QCD = 1e-5
                 if sampToCheck in histos.keys() :
                     for problemBin in problemBins :
                         print "Setting QCD bin_id %i to %s" % (problemBin, setVal)
                         histos[ sampToCheck ].SetBinContent( problemBin, setVal )
                         # Poissonian error for 0
-                        histos[ sampToCheck ].SetBinError( problemBin, 1.8 )
-                elif len(problemBins) > 0 :
+                        histos[ sampToCheck ].SetBinError( problemBin, avgW*1.8 )
+                elif len(problemBins) > 0 : 
                     print "\nQCD Bkg not included so zero bins are not being corrected properly"
                     print problemBins
                     print "\n\n\n"
@@ -480,7 +486,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                 # Scale AZh to 1 fb cross section, it is set at 1 pb in meta
                 if analysis == 'azh' and not ops['doZH'] and 'azh' in name :
-                    histos[ name ].Scale( 1. / histos[ name ].Integral() )
+                    histos[ name ].Scale( 1. / 1000. )
                 
     
                 # Proper naming of output histos

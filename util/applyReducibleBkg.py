@@ -18,7 +18,8 @@ class ReducibleBkgWeights :
         self.file = ROOT.TFile('data/azhFakeRateFits.root','READ')
         self.jetMatched = jetMatched
         self.tauFitCut = 20.
-        self.electronFitCut = 15.
+        #self.electronFitCut = 15.
+        self.electronFitCut = 250.
         self.muonFitCut = 12.5
         self.app = ''
         if self.jetMatched :
@@ -38,22 +39,55 @@ class ReducibleBkgWeights :
             self.frGraphEndcapL3 = self.file.Get( 'muon_Endcap_'+self.app+'_graph' )
             self.frFitEndcapL3 = self.file.Get( 'muon_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt'] :
-            self.frGraphBarrelL3 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL3 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL3 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL3 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_fit' )
+            # DM0
+            self.frGraphBarrelL3dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL3dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL3dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL3dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_fit' )
+            # DM1
+            self.frGraphBarrelL3dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL3dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL3dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL3dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_fit' )
+            # DM10
+            self.frGraphBarrelL3dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL3dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL3dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL3dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_fit' )
 
         # Set Leg4 FR graphs
         if self.channel in ['eeet','emmt','eemt','mmmt',] :
-            self.frGraphBarrelL4 = self.file.Get( 'tau-lllt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4 = self.file.Get( 'tau-lllt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4 = self.file.Get( 'tau-lllt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4 = self.file.Get( 'tau-lllt_Endcap_'+self.app+'_fit' )
+            # DM0
+            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_fit' )
+            # DM1
+            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_fit' )
+            # DM10
+            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt',] :
-            self.frGraphBarrelL4 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4 = self.file.Get( 'tau-lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4 = self.file.Get( 'tau-lltt_Endcap_'+self.app+'_fit' )
+            # DM0
+            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_fit' )
+            # DM1
+            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_fit' )
+            # DM10
+            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_graph' )
+            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_graph' )
+            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eeem','eemm','emmm','mmmm'] :
             self.frGraphBarrelL4 = self.file.Get( 'muon_Barrel_'+self.app+'_graph' )
             self.frFitBarrelL4 = self.file.Get( 'muon_Barrel_'+self.app+'_fit' )
@@ -91,16 +125,52 @@ class ReducibleBkgWeights :
             if pt < self.muonFitCut : useFit = False
             if pt <= 10 : pt = 10.1
 
-        if abs(eta) < 1.4 :
-            if useFit :
-                return self.frFitBarrelL3.Eval( pt ) / ( 1. - self.frFitBarrelL3.Eval( pt ) )
-            else :
-                return self.frGraphBarrelL3.Eval( pt ) / ( 1. - self.frGraphBarrelL3.Eval( pt ) )
-        if abs(eta) >= 1.4 :
-            if useFit :
-                return self.frFitEndcapL3.Eval( pt ) / ( 1. - self.frFitEndcapL3.Eval( pt ) )
-            else :
-                return self.frGraphEndcapL3.Eval( pt ) / ( 1. - self.frGraphEndcapL3.Eval( pt ) )
+        if not 't' in lep :
+            if abs(eta) < 1.4 :
+                if useFit :
+                    return self.frFitBarrelL3.Eval( pt ) / ( 1. - self.frFitBarrelL3.Eval( pt ) )
+                else :
+                    return self.frGraphBarrelL3.Eval( pt ) / ( 1. - self.frGraphBarrelL3.Eval( pt ) )
+            if abs(eta) >= 1.4 :
+                if useFit :
+                    return self.frFitEndcapL3.Eval( pt ) / ( 1. - self.frFitEndcapL3.Eval( pt ) )
+                else :
+                    return self.frGraphEndcapL3.Eval( pt ) / ( 1. - self.frGraphEndcapL3.Eval( pt ) )
+        if 't' in lep :
+            if getattr( row, lep+'DecayMode' ) == 0 :
+                if abs(eta) < 1.4 :
+                    if useFit :
+                        return self.frFitBarrelL3dm0.Eval( pt ) / ( 1. - self.frFitBarrelL3dm0.Eval( pt ) )
+                    else :
+                        return self.frGraphBarrelL3dm0.Eval( pt ) / ( 1. - self.frGraphBarrelL3dm0.Eval( pt ) )
+                if abs(eta) >= 1.4 :
+                    if useFit :
+                        return self.frFitEndcapL3dm0.Eval( pt ) / ( 1. - self.frFitEndcapL3dm0.Eval( pt ) )
+                    else :
+                        return self.frGraphEndcapL3dm0.Eval( pt ) / ( 1. - self.frGraphEndcapL3dm0.Eval( pt ) )
+            if getattr( row, lep+'DecayMode' ) == 1 :
+                if abs(eta) < 1.4 :
+                    if useFit :
+                        return self.frFitBarrelL3dm1.Eval( pt ) / ( 1. - self.frFitBarrelL3dm1.Eval( pt ) )
+                    else :
+                        return self.frGraphBarrelL3dm1.Eval( pt ) / ( 1. - self.frGraphBarrelL3dm1.Eval( pt ) )
+                if abs(eta) >= 1.4 :
+                    if useFit :
+                        return self.frFitEndcapL3dm1.Eval( pt ) / ( 1. - self.frFitEndcapL3dm1.Eval( pt ) )
+                    else :
+                        return self.frGraphEndcapL3dm1.Eval( pt ) / ( 1. - self.frGraphEndcapL3dm1.Eval( pt ) )
+            if getattr( row, lep+'DecayMode' ) == 10 :
+                if abs(eta) < 1.4 :
+                    if useFit :
+                        return self.frFitBarrelL3dm10.Eval( pt ) / ( 1. - self.frFitBarrelL3dm10.Eval( pt ) )
+                    else :
+                        return self.frGraphBarrelL3dm10.Eval( pt ) / ( 1. - self.frGraphBarrelL3dm10.Eval( pt ) )
+                if abs(eta) >= 1.4 :
+                    if useFit :
+                        return self.frFitEndcapL3dm10.Eval( pt ) / ( 1. - self.frFitEndcapL3dm10.Eval( pt ) )
+                    else :
+                        return self.frGraphEndcapL3dm10.Eval( pt ) / ( 1. - self.frGraphEndcapL3dm10.Eval( pt ) )
+        return 0. # Default
 
 
     def getFRWeightL4( self, pt, eta, lep, row ):
@@ -125,27 +195,69 @@ class ReducibleBkgWeights :
             if pt < self.muonFitCut : useFit = False
             if pt <= 10 : pt = 10.1
 
-        if abs(eta) < 1.4 :
-            if useFit :
-                return self.frFitBarrelL4.Eval( pt ) / ( 1. - self.frFitBarrelL4.Eval( pt ) )
-            else :
-                return self.frGraphBarrelL4.Eval( pt ) / ( 1. - self.frGraphBarrelL4.Eval( pt ) )
-        if abs(eta) >= 1.4 :
-            if useFit :
-                return self.frFitEndcapL4.Eval( pt ) / ( 1. - self.frFitEndcapL4.Eval( pt ) )
-            else :
-                return self.frGraphEndcapL4.Eval( pt ) / ( 1. - self.frGraphEndcapL4.Eval( pt ) )
+        if not 't' in lep :
+            if abs(eta) < 1.4 :
+                if useFit :
+                    return self.frFitBarrelL4.Eval( pt ) / ( 1. - self.frFitBarrelL4.Eval( pt ) )
+                else :
+                    return self.frGraphBarrelL4.Eval( pt ) / ( 1. - self.frGraphBarrelL4.Eval( pt ) )
+            if abs(eta) >= 1.4 :
+                if useFit :
+                    return self.frFitEndcapL4.Eval( pt ) / ( 1. - self.frFitEndcapL4.Eval( pt ) )
+                else :
+                    return self.frGraphEndcapL4.Eval( pt ) / ( 1. - self.frGraphEndcapL4.Eval( pt ) )
+        if 't' in lep :
+            if getattr( row, lep+'DecayMode' ) == 0 :
+                if abs(eta) < 1.4 :
+                    if useFit :
+                        return self.frFitBarrelL4dm0.Eval( pt ) / ( 1. - self.frFitBarrelL4dm0.Eval( pt ) )
+                    else :
+                        return self.frGraphBarrelL4dm0.Eval( pt ) / ( 1. - self.frGraphBarrelL4dm0.Eval( pt ) )
+                if abs(eta) >= 1.4 :
+                    if useFit :
+                        return self.frFitEndcapL4dm0.Eval( pt ) / ( 1. - self.frFitEndcapL4dm0.Eval( pt ) )
+                    else :
+                        return self.frGraphEndcapL4dm0.Eval( pt ) / ( 1. - self.frGraphEndcapL4dm0.Eval( pt ) )
+            if getattr( row, lep+'DecayMode' ) == 1 :
+                if abs(eta) < 1.4 :
+                    if useFit :
+                        return self.frFitBarrelL4dm1.Eval( pt ) / ( 1. - self.frFitBarrelL4dm1.Eval( pt ) )
+                    else :
+                        return self.frGraphBarrelL4dm1.Eval( pt ) / ( 1. - self.frGraphBarrelL4dm1.Eval( pt ) )
+                if abs(eta) >= 1.4 :
+                    if useFit :
+                        return self.frFitEndcapL4dm1.Eval( pt ) / ( 1. - self.frFitEndcapL4dm1.Eval( pt ) )
+                    else :
+                        return self.frGraphEndcapL4dm1.Eval( pt ) / ( 1. - self.frGraphEndcapL4dm1.Eval( pt ) )
+            if getattr( row, lep+'DecayMode' ) == 10 :
+                if abs(eta) < 1.4 :
+                    if useFit :
+                        return self.frFitBarrelL4dm10.Eval( pt ) / ( 1. - self.frFitBarrelL4dm10.Eval( pt ) )
+                    else :
+                        return self.frGraphBarrelL4dm10.Eval( pt ) / ( 1. - self.frGraphBarrelL4dm10.Eval( pt ) )
+                if abs(eta) >= 1.4 :
+                    if useFit :
+                        return self.frFitEndcapL4dm10.Eval( pt ) / ( 1. - self.frFitEndcapL4dm10.Eval( pt ) )
+                    else :
+                        return self.frGraphEndcapL4dm10.Eval( pt ) / ( 1. - self.frGraphEndcapL4dm10.Eval( pt ) )
+        return 0. # Default
 
  
     # Check to see if e/m/t pass their cuts
     # and should be skipped   
     def electronPasses( self, lep, row ):
-        if getattr( row, lep+'IsoDB03' ) < 0.3 and \
-            getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
+        #if getattr( row, lep+'IsoDB03' ) < 0.3 and \
+        #    getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
+        if getattr( row, lep+'IsoDB03' ) < 0.15 and \
+            getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
+        #if getattr( row, lep+'IsoDB03' ) < 0.10 and \
+        #    getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
+        #if getattr( row, lep+'MVANonTrigWP80' ) > 0.5 : return True
+        #if getattr( row, lep+'MVANonTrigWP90' ) > 0.5 : return True
         else : return False
 
     def muonPasses( self, lep, row ):
-        if getattr( row, lep+'IsoDB04' ) < 0.25 and \
+        if getattr( row, lep+'IsoDB04' ) < 0.15 and \
             getattr( row, lep+'PFIDLoose' ) > 0.5 : return True
         else : return False
 

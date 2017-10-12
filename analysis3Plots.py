@@ -529,6 +529,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             ''' Change bin yield to make this make sense with variable binning
                 this is only for viewing, the DC process is seperate '''
+            # old print out for some sensitivity estimates
+            #if 'id_e_mva_nt_' in var :
+            #    print "xx---"
+            #    print "xx---",channel,var
+            #    for samp in sampHistos.keys() :
+            #        if samp in ['dyj','top','wz'] : continue
+            #        print "%s xx--- yield 0 bin %f" % ( samp, sampHistos[samp].GetBinContent(1) )
+            #    for samp in sampHistos.keys() :
+            #        if samp in ['dyj','top','wz'] : continue
+            #        print "%s xx--- yield 1 bin %f" % ( samp, sampHistos[samp].GetBinContent(2) )
+
             for samp in sampHistos.keys() :
                 if var == 'm_visCor' or var == 'A_Mass' :
                     print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
@@ -681,7 +692,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 pads = ratioPlot( c1, 1-smlPadSize )
                 pad1 = pads[0]
                 ratioPad = pads[1]
-                ratioPad.SetTopMargin(0.07)
+                ratioPad.SetTopMargin(0.0)
                 ratioPad.SetBottomMargin(0.3)
                 pad1.SetBottomMargin(0.00)
                 ratioPad.SetGridy()
@@ -845,8 +856,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             """ Blinding Data """
             if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
                 if (analysis == 'htt' and ('m_visCor' in var or 'm_sv' in var or 'mt_sv' in var\
-                         or 'mt_tot' in var) ) or\
-                         (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
+                         or 'mt_tot' in var) ) : # or\
+                         #(analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
                     if ops['mssm'] :
                         targetMass = 170
                         targetMassUp = 9999
@@ -878,16 +889,18 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 # Do official sensitivity blinding
                 zhBlindVars = {
                     'LT_higgs' : [71,999],
-                    'm_sv' : [101,119],
+                    'm_sv' : [101,149],
+                    'H_vis' : [61,109],
+                    'Mass' : [201,299],
+                    'A_Mass' : [201,299],
                 }
 
 
-                if analysis == 'azh' and var in zhBlindVars :
+                if analysis == 'azh' and var in zhBlindVars.keys() :
                     #b_criteria = 1.
                     targetMassLow = zhBlindVars[var][0]
-                    targetMassHigh = zhBlindVars[var][1]
+                    targetMassUp = zhBlindVars[var][1]
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
-                    print channel, var
                     for k in range( 1, nBins+1 ) :
                         binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
                                 sampHistos['obs'].GetXaxis().GetBinWidth(k)

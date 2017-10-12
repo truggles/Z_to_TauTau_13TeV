@@ -1,9 +1,3 @@
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_0_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_1_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_2_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_3_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_4_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_5_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_6_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_7_eeet.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_8_eeet.root
+/data/truggles/ZH_svFitAug31_Merged/dataEE-H_0_eeet.root
+/data/truggles/ZH_svFitAug31_Merged/dataEE-H_1_eeet.root
+/data/truggles/ZH_svFitAug31_Merged/dataEE-H_2_eeet.root

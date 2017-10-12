@@ -1,2 +1,1 @@
-/data/truggles/azhJune12skimMergedHZZ/HZZ125_0_mmtt.root
-/data/truggles/azhJune12skimMergedHZZ/HZZ125_1_mmtt.root
+/data/truggles/ZH_svFitAug31_Merged/HZZ125_0_mmtt.root

@@ -45,6 +45,8 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 ###########################
 ### AZh and ZH Baseline ###
 ###########################
+
+########~~~~~~ LT_higgs cuts are in analysisPlots.py, search for LT_higgs ~~~~######
 ZMass = 'LEG1_LEG2_Mass > 60 && LEG1_LEG2_Mass < 120'
 ZOS = 'LEG1_LEG2_SS == 0'
 HOS = 'LEG3_LEG4_SS == 0'
@@ -82,8 +84,6 @@ def eBase( lep ) :
     return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
 def eTight( lep ) :
     return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
-def eTightWithIso( lep ) :
-    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_IsoDB03 < 0.3 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
 
 def mBase( lep ) :
     return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.4 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
@@ -177,22 +177,18 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         }, # end EEEE
          'eeet' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), llltDR('e1','e2','e3','t'), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
-            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), llltDR('e1','e2','e3','t'), eeetVetos, eTightWithIso('e1'), eTightWithIso('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
             'SkimNoTrig'   : [ZOS, ZMass, llltDR('e1','e2','e3','t'), eeetVetos, eTight('e1'), eTight('e2'), eBase('e3'), tBase('t'), tAntiEV('t')],
         }, # end EEET
          'eett' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
-            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llttDR('e1','e2','t1','t2'), eettVetos, eTightWithIso('e1'), eTightWithIso('e2'), tBase('t1'), tBase('t2')],
             'SkimNoTrig'   : [ZOS, ZMass, llttDR('e1','e2','t1','t2'), eettVetos, eTight('e1'), eTight('e2'), tBase('t1'), tBase('t2')],
         }, # end EETT
          'eemt' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
-            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeTrigPt(), llltDR('e1','e2','m','t'), eemtVetos, eTightWithIso('e1'), eTightWithIso('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
             'SkimNoTrig'   : [ZOS, ZMass, llltDR('e1','e2','m','t'), eemtVetos, eTight('e1'), eTight('e2'), mBase('m'), tBase('t'), tAntiMV('t')],
         }, # end EEMT
          'eeem' : {
             'Skim'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), eeemVetos, eTight('e1'), eTight('e2'), eBase('e3'), mBase('m')],
-            'SkimAZH'   : [ZOS, ZMass, eeTrig, eeeTrigPt(), eeemVetos, eTightWithIso('e1'), eTightWithIso('e2'), eBase('e3'), mBase('m')],
             'SkimNoTrig'   : [ZOS, ZMass, eeemVetos, eTight('e1'), eTight('e2'), eBase('e3'), mBase('m')],
         }, # end EEEM
          'eemm' : {
@@ -230,9 +226,6 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
             l = copy.deepcopy(cutMap['azh'][chan]['Skim'])
             l.append( HOS )
             cutMap['azh'][chan]['SignalRegion'] = l
-            # Keep non-isolated electron passing ID using normal Skim
-            if 'SkimAZH' not in cutMap['azh'][chan] :
-                cutMap['azh'][chan]['SkimAZH'] = copy.deepcopy(cutMap['azh'][chan]['Skim'])
     
     
     # Add a copy of the 'htt' analysis cuts under 'Sync'

@@ -292,6 +292,17 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             additionalCut = getChannelSpecificFinalCuts(
                     analysis, channel, additionalCut, prodMap )
 
+        # Add channel specific LT_higgs cuts from June Optimization
+        if channel in ['eeet','emmt'] :
+            additionalCut += '*(LT_higgs > 30)'
+        elif channel in ['eemt','mmmt'] :
+            additionalCut += '*(LT_higgs > 40)'
+        elif channel in ['eeem','emmm'] :
+            additionalCut += '*(LT_higgs > 20)'
+        elif channel in ['eett','mmtt'] :
+            additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            # 60 is way more stats
+
 
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}
@@ -800,81 +811,100 @@ def getHistoDict( analysis, channel ) :
             return genVarMap
     if analysis == 'azh' :
         genVarMap = {
-            'genpT' : [40, 0, 400, 40, 'Gen Pt [GeV]', ' GeV'],
-            'genMass' : [90, 100, 550, 40, 'Gen Mass [GeV]', ' GeV'],
-            'Z_Phi' : [80, -4, 4, 80, 'Z Phi', ' Phi'],
-            'Z_Eta' : [40, -5, 5, 10, 'Z Eta', ' Eta'],
-            'Z_Pt' : [40, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
-            'm_vis' : [40, 50, 130, 10, 'Z Mass [GeV]', ' GeV'],
-            'H_Phi' : [40, -4, 4, 80, 'H Phi', ' Phi'],
-            'H_Eta' : [40, -5, 5, 10, 'H Eta', ' Eta'],
-            'H_Pt' : [40, 0, 400, 40, 'H p_{T} [GeV]', ' GeV'],
-            'H_vis' : [40, 0, 130, 10, 'H Vis Mass [GeV]', ' GeV'],
-#            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
-#            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
-#            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
-#            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
-#            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
-            'm_sv' : [200, 0, 200, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
+###            #'genpT' : [40, 0, 400, 40, 'Gen Pt [GeV]', ' GeV'],
+###            #'genMass' : [90, 100, 550, 40, 'Gen Mass [GeV]', ' GeV'],
+###            #'Z_Phi' : [80, -4, 4, 80, 'Z Phi', ' Phi'],
+###            #'Z_Eta' : [40, -5, 5, 10, 'Z Eta', ' Eta'],
+###            'Z_Pt' : [400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
+###            'm_vis' : [80, 50, 130, 10, 'Z Mass [GeV]', ' GeV'],
+###            #'H_Phi' : [40, -4, 4, 80, 'H Phi', ' Phi'],
+###            #'H_Eta' : [40, -5, 5, 10, 'H Eta', ' Eta'],
+###            'H_Pt' : [300, 0, 300, 30, 'H p_{T} [GeV]', ' GeV'],
+###            'H_vis' : [200, 0, 200, 20, 'H Vis Mass [GeV]', ' GeV'],
+####            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
+####            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
+####            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
+####            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
+####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
+            'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
 #XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-            'Mass' : [60, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-            'A_Mass' : [60, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
-#XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
-#XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
+            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
+####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             'LT_higgs' : [150, 0, 150, 10, 'LT_{higgs} [GeV]', ' GeV'],
-            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
-#            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
-#            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
-#            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
-            'pt_1' : [20, 0, 200, 10, 'Leg1 p_{T} [GeV]', ' GeV'],
-            'pt_2' : [20, 0, 200, 10, 'Leg2 p_{T} [GeV]', ' GeV'],
-            'pt_3' : [20, 0, 200, 10, 'Leg3 p_{T} [GeV]', ' GeV'],
-            'pt_4' : [20, 0, 200, 10, 'Leg4 p_{T} [GeV]', ' GeV'],
-#XXX            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
-#XXX            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
-#XXX            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
-#XXX            'eta_4' : [60, -3, 3, 10, 'Leg4 Eta', ' Eta'],
-#            'iso_1' : [20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''],
-#            'iso_2' : [20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''],
-#XXX            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
-#XXX            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
-            'jpt_1' : [400, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
-            #'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
-            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
-            #'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
-            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
-#            'npv' : [40, 0, 40, 4, 'Number of Vertices', ''],
-#XXX            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-#XXX            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
-##            'azhWeight' : [50, 0, 2, 1, 'Muon + Electron Weights', ''],
-#            'muVetoZTTp001dxyz' : [6, -1, 5, 1, 'muVetoZTTp001dxyz', ''],
-#            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
-#            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
-#            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
-#XXX            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
+###            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
+####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
+####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
+###            'pt_1' : [200, 0, 200, 10, 'Leg1 p_{T} [GeV]', ' GeV'],
+###            'pt_2' : [200, 0, 200, 10, 'Leg2 p_{T} [GeV]', ' GeV'],
+###            'pt_3' : [200, 0, 200, 10, 'Leg3 p_{T} [GeV]', ' GeV'],
+###            'pt_4' : [200, 0, 200, 10, 'Leg4 p_{T} [GeV]', ' GeV'],
+####XXX            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
+####XXX            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
+####XXX            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
+####XXX            'eta_4' : [60, -3, 3, 10, 'Leg4 Eta', ' Eta'],
+####            'iso_1' : [20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''],
+####            'iso_2' : [20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''],
+####XXX            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
+####XXX            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
+###            'jpt_1' : [200, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
+###            #'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
+###            'jpt_2' : [200, 0, 200, 20, 'Second Jet Pt', ' GeV'],
+###            #'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
+###            #'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
+####            'npv' : [40, 0, 40, 4, 'Number of Vertices', ''],
+####XXX            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
+###            'jetVeto30' : [10, -0.5, 9.5, 1, 'nJetPt30', ''],
+#####            'azhWeight' : [50, 0, 2, 1, 'Muon + Electron Weights', ''],
+####            'muVetoZTTp001dxyz' : [6, -1, 5, 1, 'muVetoZTTp001dxyz', ''],
+####            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
+####            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
+####            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
+            'bjetCISVVeto20Medium' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
 #XXX            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 #XXX            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
         }
-        llltMap = {
+#        llltMap = {
 #            'againstElectronVLooseMVA6_4' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 4', ''],
 #            'againstElectronLooseMVA6_4' : [9, -1, 2, 1, 'Against E L MVA6 Leg 4', ''],
 #            'againstMuonLoose3_4' : [9, -1, 2, 1, 'Against M Loose 3 Leg 4', ''],
 #            'againstMuonTight3_4' : [9, -1, 2, 1, 'Against M Tight 3 Leg 4', ''],
-        }
-        llttMap = {
+#        }
+#        llttMap = {
 #            'againstElectronVLooseMVA6_3' : [9, -1, 2, 1, 'Against E VL MVA6 Leg 3', ''],
 #            'againstElectronLooseMVA6_3' : [9, -1, 2, 1, 'Against E L MVA6 Leg 3', ''],
 #            'againstMuonLoose3_3' : [9, -1, 2, 1, 'Against M Loose 3 Leg 3', ''],
 #            'againstMuonTight3_3' : [9, -1, 2, 1, 'Against M Tight 3 Leg 3', ''],
-        }
-        if channel == 'xxxx' :
-            return genVarMap
-        if channel in ['eeet', 'eemt', 'eett', 'emmt', 'mmmt', 'mmtt'] :
-            for var in llltMap.keys() :
-                genVarMap[var] = llltMap[ var ]
-        if channel in ['eett', 'mmtt'] :
-            for var in llttMap.keys() :
-                genVarMap[var] = llttMap[ var ]
+#       }
+#        zeeMap = {
+#            #'id_e_mva_nt_loose_1' : [2, -0.5, 1.5, 1, 'elec1 MVA90', ''],
+#            'id_e_mva_nt_tight_1' : [2, -0.5, 1.5, 1, 'elec1 MVA80', ''],
+#            #'id_e_mva_nt_loose_2' : [2, -0.5, 1.5, 1, 'elec2 MVA90', ''],
+#            'id_e_mva_nt_tight_2' : [2, -0.5, 1.5, 1, 'elec2 MVA80', ''],
+#            'iso_1' : [20, 0, 1, 1, 'elec1 RelIsoDB03', ''],
+#            'iso_2' : [20, 0, 1, 1, 'elec2 RelIsoDB03', ''],
+#        }
+#        llexMap = {
+#            #'id_e_mva_nt_loose_3' : [2, -0.5, 1.5, 1, 'leg3 MVA90', ''],
+#            'id_e_mva_nt_tight_3' : [2, -0.5, 1.5, 1, 'leg3 MVA80', ''],
+#            'iso_3' : [20, 0, 1, 1, 'leg3 RelIsoDB03', ''],
+#        }
+        #if channel == 'xxxx' :
+        #    return genVarMap
+        #if channel in ['eeet', 'eemt', 'eett', 'emmt', 'mmmt', 'mmtt'] :
+        #    for var in llltMap.keys() :
+        #        genVarMap[var] = llltMap[ var ]
+        #if channel in ['eett', 'mmtt'] :
+        #    for var in llttMap.keys() :
+        #        genVarMap[var] = llttMap[ var ]
+        #if channel in ['eeet','eett','eemt','eeem','eeee',] :
+        #    for k, v in zeeMap.iteritems() :
+        #        genVarMap[k] = v
+        #if channel in ['eeet', 'eeem', 'emmt', 'emmm'] :
+        #    for k, v in llexMap.iteritems() :
+        #        genVarMap[k] = v
         return genVarMap
 
 

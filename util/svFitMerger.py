@@ -61,15 +61,13 @@ if __name__ == '__main__' :
         azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
         
         for mass in [110, 120, 125, 130, 140] :
-            #azhSamples.append('ggHtoTauTau%i' % mass)
-            #azhSamples.append('VBFHtoTauTau%i' % mass)
-            #azhSamples.append('WMinusHTauTau%i' % mass)
-            #azhSamples.append('WPlusHTauTau%i' % mass)
+            azhSamples.append('ggHtoTauTau%i' % mass)
+            azhSamples.append('VBFHtoTauTau%i' % mass)
+            azhSamples.append('WMinusHTauTau%i' % mass)
+            azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHTauTau%i' % mass)
             #azhSamples.append('ttHTauTau%i' % mass)
         for mass in [125,] :
-            azhSamples.append('WMinusHTauTau%i' % mass)
-            azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHWW%i' % mass)
             azhSamples.append('HZZ%i' % mass)
         

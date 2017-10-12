@@ -1,8 +1,3 @@
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_0_mmtt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_1_mmtt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_2_mmtt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_3_mmtt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_4_mmtt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_5_mmtt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_6_mmtt.root
-/data/truggles/azhAug08RBSyncMerged/dataMM-B_7_mmtt.root
+/data/truggles/ZH_svFitAug31_Merged/dataMM-B_0_mmtt.root
+/data/truggles/ZH_svFitAug31_Merged/dataMM-B_1_mmtt.root
+/data/truggles/ZH_svFitAug31_Merged/dataMM-B_2_mmtt.root

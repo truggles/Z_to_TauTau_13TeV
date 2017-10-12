@@ -1,2 +1,3 @@
-/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-WWZ_0_eemt.root
-/data/truggles/svFitJune06_azh/TauTau_13_azhMay31AndJune06skim_svFitPrep-WZ_0_eemt.root
+/data/truggles/ZH_svFitAug31_Merged/WWZ_0_eemt.root
+/data/truggles/ZH_svFitAug31_Merged/WZ_0_eemt.root
+/data/truggles/ZH_svFitAug31_Merged/WZ_1_eemt.root

@@ -44,10 +44,12 @@ for mass in [110, 120, 125, 130, 140] :
     azhSamples.append('WMinusHTauTau%i' % mass)
     azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHTauTau%i' % mass)
-    #azhSamples.append('ttHTauTau%i' % mass)
 for mass in [125,] :
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
+
+for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+    azhSamples.append('azh%i' % mass)
 
 #azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
@@ -58,11 +60,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #azhSamples = ['dataEE-B']
 #azhSamples = ['HZZ125',]
 #azhSamples = ['azh300',]
-
-#azhSamples = []
-for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-    azhSamples.append('azh%i' % mass)
-#azhSamples = ['ZZ4l',]
+#azhSamples = ['ZHTauTau125',]
 
 samples = azhSamples
 
@@ -74,40 +72,44 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 12,
+    'numCores' : 16,
     'numFilesPerCycle' : 1,
-    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
-    'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
+    'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
+    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeee','mmmm'],
     #'channels' : ['eeem',],
     'cutMapper' : 'Skim',
+    #'cutMapper' : 'SkimAZH',
     #'cutMapper' : 'SkimNoTrig',
-    'mid1' : '1Aug29skim',
-    'mid2' : '2Aug29skim',
-    'mid3' : '3Aug29skim',
+    'mid1' : '1Sept05',
+    'mid2' : '2Sept05',
+    'mid3' : '3Sept05keepIsoReq',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimmed' : 'false',
-    #'skimmed' : 'true', # Use at uwlogin
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true', # Use for initial skim
+    #'skimmed' : 'false',
+    'skimmed' : 'true', # Use at uwlogin
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # Use for initial skim
 
     ## Signal Sync
     #'channels' : ['eemt','mmmt','emmt',],
     #'channels' : ['eeet','eett','eeem','mmtt','emmm',],
-    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
-    #'channels' : ['emmt',],
-    #'channels' : ['eeem','eeet',],
-    #'channels' : ['emmt','mmtt','mmmt','emmm'],
+    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',], # 8
+    #'channels' : ['mmmt','mmtt'],
+    #'channels' : ['eemt',],
+    ##'channels' : ['eeem','eeet',],
+    ##'channels' : ['emmt','mmtt','mmmt','emmm'],
+    ##'channels' : ['eeet','eeem','mmmt','emmm'],
     #'skimmed' : 'false',
     #'skimHdfs' : 'false',
-    #'mid1' : '1Aug13Sync2',
-    #'mid2' : '2Aug13Sync2',
-    #'mid3' : '3Aug13Sync2',
+    #'mid1' : '1Aug31ZHSync',
+    #'mid2' : '2Aug31ZHSync',
+    #'mid3' : '3Aug31ZHSync',
     #'cutMapper' : 'Skim',
-    #'cutMapper' : 'SkimNoTrig',
+    ##'cutMapper' : 'SkimNoTrig',
+    ##'cutMapper' : 'SkimNoVeto',
 
     ## RedBkg Sync
     #'channels' : ['eeem',],
@@ -126,7 +128,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -139,7 +141,7 @@ doDataCards = True
 runPlots = False
 doMerge = False
 makeFinalPlots = False
-doDataCards = False
+#doDataCards = False
 
 
 doZH = True
@@ -243,20 +245,23 @@ if doDataCards :
 
     ROOT.gROOT.Reset()
     from analysisShapesROOT import makeDataCards
-    var = 'Mass'
-    finalCat = 'inclusive'
-    folderDetails = params['mid3']
-    kwargs = {
-    'doZH' : doZH,
-    'category' : finalCat,
-    'fitShape' : var,
-    'allShapes' : False,
-    'redBkg' : useRedBkg, 
-    }
-    makeDataCards( analysis, samples, params['channels'], folderDetails, **kwargs )
-    extra = 'sm' if doZH else 'mssm'
-    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-%s-13TeV_4LMass.root" % extra, "shapes/azh/htt_zh.inputs-%s-13TeV_4LMass_new.root" % extra] )
-    print "moved to : shapes/azh/htt_zh.inputs-%s-13TeV_4LMass_new.root" % extra
+    for var in ['A_Mass', 'm_sv'] :
+        if var == 'A_Mass' : doZH = False
+        finalCat = 'inclusive'
+        folderDetails = params['mid3']
+        kwargs = {
+        'doZH' : doZH,
+        'category' : finalCat,
+        'fitShape' : var,
+        'allShapes' : False,
+        'redBkg' : useRedBkg, 
+        }
+        makeDataCards( analysis, samples, params['channels'], folderDetails, **kwargs )
+    extra = 'mssm'
+    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
+    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass.root", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"] )
+    print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
+    print "moved to : shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"
 
 
 
