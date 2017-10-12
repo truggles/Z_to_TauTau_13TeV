@@ -19,7 +19,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
         print size, " KB ", file_
         runningSize += size
         toMerge.append( file_ )
-        if runningSize > 5000 : # 7.5 MB is reasonal for doing duplicate removal later
+        if runningSize > 15000 : # 7.5 MB is reasonal for doing duplicate removal later
             runningSize = 0
             mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
             for f in toMerge :
@@ -58,7 +58,7 @@ if __name__ == '__main__' :
 
     if doAZH :
         # AZH June 01 Wisconsin -> uwlogin
-        azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
+        azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
         
         for mass in [110, 120, 125, 130, 140] :
             #azhSamples.append('ggHtoTauTau%i' % mass)
@@ -80,11 +80,14 @@ if __name__ == '__main__' :
             azhSamples.append('dataEE-%s' % era)
             azhSamples.append('dataMM-%s' % era)
 
-        name = 'azhAug08RBSync'
+        name = 'svFitSept20_ttZ_zh'
         originalDir = '/nfs_scratch/truggles/'+name+'/'
+        originalDir = '/hdfs/store/user/truggles/svFitSept20_ttZ_zh/azhSept19skim_svFitPrep/'
         targetDir = '/nfs_scratch/truggles/'+name+'Merged'
+        targetDir = '/nfs_scratch/truggles/azhSept20skim_svFit_Merged'
         checkDir( targetDir )
         jobId = ''
+        jobId = 'TauTau_13*'
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         for channel in channels :
             for sample in azhSamples :
