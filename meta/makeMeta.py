@@ -49,6 +49,8 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
         currentDASSamples['htt'].append( 'VBF'+aHiggs )
         currentDASSamples['htt'].append( 'W'+aHiggs )
         currentDASSamples['htt'].append( 'Z'+aHiggs )
+    currentDASSamples['htt'].append( 'PStemp' )
+    currentDASSamples['htt'].append( 'Scalartemp' )
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 

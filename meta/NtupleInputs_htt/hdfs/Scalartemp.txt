@@ -1,0 +1,12 @@
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_1.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_10.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_11.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_12.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_2.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_3.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_4.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_5.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_6.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_7.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_8.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_scalar_9.root

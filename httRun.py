@@ -75,6 +75,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #SamplesDataCards = ['dataTT-C',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
+SamplesDataCards = ['PStemp','Scalartemp']
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -105,10 +106,10 @@ params = {
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true', # This means "do the hdfs skim"
-    #'skimmed' : 'false',
-    'skimmed' : 'true',
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true', # This means "do the hdfs skim"
+    'skimmed' : 'false',
+    #'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -117,7 +118,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -136,7 +137,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]

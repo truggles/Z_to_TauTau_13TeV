@@ -1,0 +1,12 @@
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_1.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_10.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_11.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_12.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_2.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_3.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_4.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_5.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_6.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_7.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_8.root
+/hdfs/store/user/truggles/aHTT_oct10_Senka_Samples/aHTT_PS_9.root
