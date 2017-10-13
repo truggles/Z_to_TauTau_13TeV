@@ -251,16 +251,26 @@ def getCurrentEvt( analysis, channel, row ) :
         leg3Pt = getattr(row, l3+'Pt')
         leg4Pt = getattr(row, l4+'Pt')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
-        if channel in ['eeet','eeem','emmm','mmmt' ] :
-            # deals with ordering in emmm channel where l3 == electron
-            l3_new = l3 if channel != 'emmm' else l4
-            closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
-            closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
-            if closeZ2 < closeZ : closeZ = 999
-            if closeZ3 < closeZ : closeZ = 999
-        else :
-            closeZ2 = 999
-            closeZ3 = 999
+        bestZ = 0.
+        if channel in ['eeet','eeem','eemt','eett' ] :
+            bestZ = abs( getattr( row, 'closestMassZEE') - 91.2 )
+        elif channel in ['emmt','emmm','mmmt','mmtt' ] :
+            bestZ = abs( getattr( row, 'closestMassZMM') - 91.2 )
+        else : bestZ = closeZ # for EEEE / MMMM
+
+        # Reject event if Z pair isn't best Z mass pair
+        if closeZ != bestZ : closeZ = 999
+
+        #if channel in ['eeet','eeem','emmm','mmmt' ] :
+        #    # deals with ordering in emmm channel where l3 == electron
+        #    l3_new = l3 if channel != 'emmm' else l4
+        #    closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
+        #    closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
+        #    if closeZ2 < closeZ : closeZ = 999
+        #    if closeZ3 < closeZ : closeZ = 999
+        #else :
+        #    closeZ2 = 999
+        #    closeZ3 = 999
         LT = leg3Pt + leg4Pt # LT here is just Higgs_LT
         currentEvt = (closeZ, LT, leg3Pt) # leg3Pt is to distinguish
         # when an object can be a slimmedElec and slimmedTau
