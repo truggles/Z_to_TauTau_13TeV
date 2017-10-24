@@ -250,12 +250,12 @@ def getCurrentEvt( analysis, channel, row ) :
         l4 = prodMap[channel][3]
         leg3Pt = getattr(row, l3+'Pt')
         leg4Pt = getattr(row, l4+'Pt')
-        closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.2 )
+        closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.1876 )
         bestZ = 0.
         if channel in ['eeet','eeem','eemt','eett' ] :
-            bestZ = abs( getattr( row, 'closestMassZEE') - 91.2 )
+            bestZ = abs( getattr( row, 'closestMassZEEPlus') - 91.1876 )
         elif channel in ['emmt','emmm','mmmt','mmtt' ] :
-            bestZ = abs( getattr( row, 'closestMassZMM') - 91.2 )
+            bestZ = abs( getattr( row, 'closestMassZMMPlus') - 91.1876 )
         else : bestZ = closeZ # for EEEE / MMMM
 
         # Reject event if Z pair isn't best Z mass pair
@@ -264,8 +264,8 @@ def getCurrentEvt( analysis, channel, row ) :
         #if channel in ['eeet','eeem','emmm','mmmt' ] :
         #    # deals with ordering in emmm channel where l3 == electron
         #    l3_new = l3 if channel != 'emmm' else l4
-        #    closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
-        #    closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.2 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
+        #    closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.1876 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
+        #    closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.1876 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
         #    if closeZ2 < closeZ : closeZ = 999
         #    if closeZ3 < closeZ : closeZ = 999
         #else :
