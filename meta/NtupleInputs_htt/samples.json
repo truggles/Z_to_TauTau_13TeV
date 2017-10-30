@@ -1245,6 +1245,34 @@
     "nNtupleFiles": 1, 
     "nlumis": 331
   }, 
+  "PStemp": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 624000, 
+    "DAS Path": "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 48, 
+    "nblocks": 30, 
+    "Cross Section (pb)": 0.24609750000000002, 
+    "summedWeightsNorm": 624000.0, 
+    "summedWeights": 624000.0, 
+    "nevents": 624000,
+    "nNtupleFiles": 2, 
+    "nlumis": 7716
+  }, 
+  "Scalartemp": {
+    "STATUS": "Error", 
+    "DAS status": "ok", 
+    "nEvents": 724000,
+    "DAS Path": "/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 48, 
+    "nblocks": 30, 
+    "Cross Section (pb)": 0.24609750000000002, 
+    "summedWeightsNorm": 724000.0, 
+    "summedWeights": 724000.0, 
+    "nevents": 724000.0, 
+    "nNtupleFiles": 3, 
+    "nlumis": 7716
+  }, 
   "TT": {
     "STATUS": "Error", 
     "DAS status": "ok", 

@@ -60,13 +60,14 @@ SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
 #SamplesDataCards = []
+SamplesDataCards = ['PStemp','Scalartemp']
 for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
-    SamplesDataCards.append( 'W'+aHiggs )
-    SamplesDataCards.append( 'Z'+aHiggs )
+    #SamplesDataCards.append( 'W'+aHiggs )
+    #SamplesDataCards.append( 'Z'+aHiggs )
     
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-    SamplesDataCards.append('dataTT-%s' % era)
+#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+#    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
@@ -97,19 +98,19 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1June29mela',
-    'mid2' : '2June29mela',
-    'mid3' : '3June29mela',
+    'mid1' : '1June29melaY',
+    'mid2' : '2June29melaY',
+    'mid3' : '3June29melaY',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true', # This means "do the hdfs skim"
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # This means "do the hdfs skim"
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -118,7 +119,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -129,7 +130,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -151,6 +152,7 @@ cleanPlots = True
 #isoVals = ['Tight', 'Medium', 'Loose',]
 #isoVals = ['Tight', 'Loose',]
 isoVals = ['Tight',]
+isoVals = ['VLoose',]
 doFF = getenv('doFF', type=bool)
 
 # Make CR plots for AN
@@ -170,7 +172,8 @@ for remove in toRemove :
 for isoVal in isoVals :
     if isoVal == 'Tight' : lIso = 'Loose'
     #if isoVal == 'Medium' : lIso = 'Loose'
-    #if isoVal == 'Loose' : lIso = 'VLoose'
+    if isoVal == 'Loose' : lIso = 'VLoose'
+    if isoVal == 'VLoose' : lIso = 'VLoose'
     samplesX = copy.deepcopy(samples)
     if runPlots :
         skipSSQCDDetails=True

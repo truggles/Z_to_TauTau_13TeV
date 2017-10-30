@@ -753,7 +753,7 @@ def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
             #'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
-#XXX            'mjj' : [20, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'],
+            'mjj' : [20, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'],
 #FIXME            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
 #            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} Uncor [GeV]', ' GeV'],
 #            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
@@ -772,7 +772,7 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
 #FIXME#            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 #FIXME#            'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-#XXX            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+            'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
 #FIXME            'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
 #FIXME#            #'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
 #FIXME#            #'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
@@ -807,8 +807,8 @@ def getHistoDict( analysis, channel ) :
             #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_0to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-#            'KD_int' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
-#            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
+            'KD_int' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
+            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
 #            'KD_bsm_mlt_mjj0-300' : [140, -0.2, 1.2, 20, 'D0- (mjj [0,300])', ' GeV'],
 #            'KD_bsm_mlt_mjj300-700' : [140, -0.2, 1.2, 20, 'D0- (mjj [300,700])', ' GeV'],
 #            'KD_bsm_mlt_mjj700-1100' : [140, -0.2, 1.2, 20, 'D0- (mjj [700,1100])', ' GeV'],
@@ -822,14 +822,14 @@ def getHistoDict( analysis, channel ) :
         toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
         #toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
         #toAdd = [] # No extra shapes
-        toAdd = ['mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv',
-            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
-            'mjj:m_sv:KD_int_DCP_neg1to0',
-            'mjj:m_sv:KD_int_DCP_0to1',
+        toAdd = [ #'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv',
+            #'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
+            #'mjj:m_sv:KD_int_DCP_neg1to0',
+            #'mjj:m_sv:KD_int_DCP_0to1',
         ] # All aHTT Shapes
         varsForShapeSyst = []
         for item in toAdd :
@@ -891,8 +891,8 @@ def getHistoDict( analysis, channel ) :
             chanVarMapTT = {
 #                'pt_1' : [200, 0, 200, 5, '#tau_{1} p_{T} Uncor [GeV]', ' GeV'],
 #                'pt_2' : [200, 0, 200, 5, '#tau_{2} p_{T} Uncor [GeV]', ' GeV'],
-#                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
-#                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
+                'ptCor_1' : [200, 0, 200, 5, '#tau_{1} p_{T} [GeV]', ' GeV'],
+                'ptCor_2' : [200, 0, 200, 5, '#tau_{2} p_{T} [GeV]', ' GeV'],
 ##FIXME                'gen_match_1' : [14, 0, 7, 1, '#tau_{1} Gen Match', ''],
 #                'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
 #                'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
