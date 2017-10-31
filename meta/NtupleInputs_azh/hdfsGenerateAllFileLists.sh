@@ -1,7 +1,7 @@
 
-DATA=/hdfs/store/user/truggles/ZH_data_aug26
-MC=/hdfs/store/user/truggles/ZH_mc_aug26
-ttZ=/hdfs/store/user/truggles/ZH_mc_sept18
+DATA=/hdfs/store/user/truggles/ZH_LLTT_oct20_data
+MC=/hdfs/store/user/truggles/ZH_LLTT_oct20
+ttZ=/hdfs/store/user/truggles/ZH_LLTT_oct20_ttZs
 
 ls ${DATA}/data_DoubleMuon_Run2016B*/*.root                                                > hdfs/dataMM-B.txt 
 ls ${DATA}/data_DoubleMuon_Run2016C/*.root                                                 > hdfs/dataMM-C.txt 
@@ -11,13 +11,29 @@ ls ${DATA}/data_DoubleMuon_Run2016F/*.root                                      
 ls ${DATA}/data_DoubleMuon_Run2016G/*.root                                                 > hdfs/dataMM-G.txt 
 ls ${DATA}/data_DoubleMuon_Run2016H*/*.root                                                > hdfs/dataMM-H.txt 
 
-ls ${DATA}/data_DoubleEG_Run2016B*/*.root                                                   > hdfs/dataEE-B.txt 
-ls ${DATA}/data_DoubleEG_Run2016C/*.root                                                    > hdfs/dataEE-C.txt 
-ls ${DATA}/data_DoubleEG_Run2016D/*.root                                                    > hdfs/dataEE-D.txt 
-ls ${DATA}/data_DoubleEG_Run2016E/*.root                                                    > hdfs/dataEE-E.txt 
-ls ${DATA}/data_DoubleEG_Run2016F/*.root                                                    > hdfs/dataEE-F.txt 
-ls ${DATA}/data_DoubleEG_Run2016G/*.root                                                    > hdfs/dataEE-G.txt 
-ls ${DATA}/data_DoubleEG_Run2016H*/*.root                                                   > hdfs/dataEE-H.txt 
+ls ${DATA}/data_DoubleEG_Run2016B*/*.root                                                  > hdfs/dataEE-B.txt 
+ls ${DATA}/data_DoubleEG_Run2016C/*.root                                                   > hdfs/dataEE-C.txt 
+ls ${DATA}/data_DoubleEG_Run2016D/*.root                                                   > hdfs/dataEE-D.txt 
+ls ${DATA}/data_DoubleEG_Run2016E/*.root                                                   > hdfs/dataEE-E.txt 
+ls ${DATA}/data_DoubleEG_Run2016F/*.root                                                   > hdfs/dataEE-F.txt 
+ls ${DATA}/data_DoubleEG_Run2016G/*.root                                                   > hdfs/dataEE-G.txt 
+ls ${DATA}/data_DoubleEG_Run2016H*/*.root                                                  > hdfs/dataEE-H.txt 
+
+ls ${DATA}/data_SingleMuon_Run2016B*/*.root                                                > hdfs/dataSingleM-B.txt 
+ls ${DATA}/data_SingleMuon_Run2016C/*.root                                                 > hdfs/dataSingleM-C.txt 
+ls ${DATA}/data_SingleMuon_Run2016D/*.root                                                 > hdfs/dataSingleM-D.txt 
+ls ${DATA}/data_SingleMuon_Run2016E/*.root                                                 > hdfs/dataSingleM-E.txt 
+ls ${DATA}/data_SingleMuon_Run2016F/*.root                                                 > hdfs/dataSingleM-F.txt 
+ls ${DATA}/data_SingleMuon_Run2016G/*.root                                                 > hdfs/dataSingleM-G.txt 
+ls ${DATA}/data_SingleMuon_Run2016H*/*.root                                                > hdfs/dataSingleM-H.txt 
+
+ls ${DATA}/data_SingleElectron_Run2016B*/*.root                                            > hdfs/dataSingleE-B.txt 
+ls ${DATA}/data_SingleElectron_Run2016C/*.root                                             > hdfs/dataSingleE-C.txt 
+ls ${DATA}/data_SingleElectron_Run2016D/*.root                                             > hdfs/dataSingleE-D.txt 
+ls ${DATA}/data_SingleElectron_Run2016E/*.root                                             > hdfs/dataSingleE-E.txt 
+ls ${DATA}/data_SingleElectron_Run2016F/*.root                                             > hdfs/dataSingleE-F.txt 
+ls ${DATA}/data_SingleElectron_Run2016G/*.root                                             > hdfs/dataSingleE-G.txt 
+ls ${DATA}/data_SingleElectron_Run2016H*/*.root                                            > hdfs/dataSingleE-H.txt 
 
 
 ls ${MC}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6*/*.root               > hdfs/DYJets.txt
@@ -47,6 +63,7 @@ ls ${MC}/ZZTo4L_13TeV_powheg_pythia8_ext1_v6-v1/*.root                          
 ls ${MC}/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6-v1/*.root                            > hdfs/ZZZ.txt
 ls ${MC}/ZZ_TuneCUETP8M1_13TeV-pythia8_v6*/*.root                                        > hdfs/ZZ.txt
 ls ${ttZ}/ttZJets_13TeV_madgraphMLM-pythia8*/*.root                                      > hdfs/ttZ.txt
+ls ${ttZ}/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8_v6*/*.root                > hdfs/ttZ2.txt
 
 for MASS in 220 240 260 280 300 320 340 350 400; do
     ls ${MC}/AToZhToLLTauTau_M-${MASS}_13TeV_madgraph_4f_LO*/*.root > hdfs/azh${MASS}.txt

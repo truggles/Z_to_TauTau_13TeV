@@ -189,63 +189,123 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/ttZJets_13TeV_madgraphMLM-pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.616,
                 'group' : 'ttZ'},
+            'ttZ2' : {
+                'DASPath' : '/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s_ext3-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.616, # FIXME THIS IS WRONG!!! was copied from above inclusive version
+                'group' : 'ttZ'},
         }, # end common
         'azh' : {
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
             'dataEE-B' : {
-                'DASPath' : '/DoubleEG/Run2016B-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleEG/Run2016B-03Feb2017_ver2-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataEE-C' : {
-                'DASPath' : '/DoubleEG/Run2016C-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleEG/Run2016C-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataEE-D' : {
-                'DASPath' : '/DoubleEG/Run2016D-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleEG/Run2016D-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataEE-E' : {
-                'DASPath' : '/DoubleEG/Run2016E-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleEG/Run2016E-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataEE-F' : {
-                'DASPath' : '/DoubleEG/Run2016F-PromptReco-v1/MINIAOD',
+                'DASPath' : '/DoubleEG/Run2016F-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataEE-G' : {
-                'DASPath' : '/DoubleEG/Run2016G-PromptReco-v1/MINIAOD',
+                'DASPath' : '/DoubleEG/Run2016G-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataEE-H' : {
-                'DASPath' : '/DoubleEG/Run2016H-PromptReco-v1/MINIAOD',
+                'DASPath' : '/DoubleEG/Run2016H-03Feb2017_ver2-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataMM-B' : {
-                'DASPath' : '/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataMM-C' : {
-                'DASPath' : '/DoubleMuon/Run2016C-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleMuon/Run2016C-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataMM-D' : {
-                'DASPath' : '/DoubleMuon/Run2016D-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleMuon/Run2016D-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataMM-E' : {
-                'DASPath' : '/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD',
+                'DASPath' : '/DoubleMuon/Run2016E-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataMM-F' : {
-                'DASPath' : '/DoubleMuon/Run2016F-PromptReco-v1/MINIAOD',
+                'DASPath' : '/DoubleMuon/Run2016F-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataMM-G' : {
-                'DASPath' : '/DoubleMuon/Run2016G-PromptReco-v1/MINIAOD',
+                'DASPath' : '/DoubleMuon/Run2016G-03Feb2017-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
             'dataMM-H' : {
-                'DASPath' : '/DoubleMuon/Run2016H-PromptReco-v1/MINIAOD',
+                'DASPath' : '/DoubleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleE-B' : {
+                'DASPath' : '/SingleElectron/Run2016B-03Feb2017_ver2-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleE-C' : {
+                'DASPath' : '/SingleElectron/Run2016C-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleE-D' : {
+                'DASPath' : '/SingleElectron/Run2016D-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleE-E' : {
+                'DASPath' : '/SingleElectron/Run2016E-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleE-F' : {
+                'DASPath' : '/SingleElectron/Run2016F-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleE-G' : {
+                'DASPath' : '/SingleElectron/Run2016G-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleE-H' : {
+                'DASPath' : '/SingleElectron/Run2016H-03Feb2017_ver2-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleM-B' : {
+                'DASPath' : '/SingleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleM-C' : {
+                'DASPath' : '/SingleMuon/Run2016C-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleM-D' : {
+                'DASPath' : '/SingleMuon/Run2016D-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleM-E' : {
+                'DASPath' : '/SingleMuon/Run2016E-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleM-F' : {
+                'DASPath' : '/SingleMuon/Run2016F-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleM-G' : {
+                'DASPath' : '/SingleMuon/Run2016G-03Feb2017-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataSingleM-H' : {
+                'DASPath' : '/SingleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
         }, # end AZh data
