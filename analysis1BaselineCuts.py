@@ -36,6 +36,20 @@ def getMergeMap( analysis ) :
             'dataMM-F' : 10,
             'dataMM-G' : 10,
             'dataMM-H' : 10,
+            'dataSingleE-B' : 10,
+            'dataSingleE-C' : 10,
+            'dataSingleE-D' : 10,
+            'dataSingleE-E' : 10,
+            'dataSingleE-F' : 10,
+            'dataSingleE-G' : 10,
+            'dataSingleE-H' : 10,
+            'dataSingleM-B' : 10,
+            'dataSingleM-C' : 10,
+            'dataSingleM-D' : 10,
+            'dataSingleM-E' : 10,
+            'dataSingleM-F' : 10,
+            'dataSingleM-G' : 10,
+            'dataSingleM-H' : 10,
             'DYJets' : 20,
             'DYJets1' : 20,
             'DYJets2' : 20,
@@ -65,8 +79,8 @@ def skipChanDataCombo( channel, sample, analysis ) :
         if (channel == 'tt') and ('data' in sample) and not ('dataTT' in sample) : return True
     # AZH
     if analysis == 'azh' :
-        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett', 'ZEE']) and ('data' in sample) and not ('dataEE' in sample) : return True
-        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt', 'ZMM']) and ('data' in sample) and not ('dataMM' in sample) : return True
+        if (channel in ['eeee', 'eeem', 'eeet', 'eemt', 'eett', 'ZEE']) and ('data' in sample) and not ('dataEE' in sample or 'dataSingleE' in sample) : return True
+        if (channel in ['mmmm', 'emmm', 'emmt', 'mmmt', 'mmtt', 'ZMM']) and ('data' in sample) and not ('dataMM' in sample or 'dataSingleM' in sample) : return True
     return False
 
 
@@ -107,7 +121,7 @@ def initialCut( outFile, analysis, sample, samples, channel, cutMapper, svFitPre
     isData = False
     if 'data' in sample :
         isData = True
-    cutString = analysisCuts.getCut( analysis, channel, cutMapper )
+    cutString = analysisCuts.getCut( analysis, sample, channel, cutMapper )
     #print cutString
     	
     ''' Copy and make some cuts while doing it '''
