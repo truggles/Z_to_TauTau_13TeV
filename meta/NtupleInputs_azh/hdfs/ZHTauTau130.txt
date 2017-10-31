@@ -1,8 +1,8 @@
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-204BA193-B2C4-E611-A5AD-00266CFF0034.root
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-22AB6E6B-BCC2-E611-B175-7845C4FC3614.root
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-5A1F10E5-49C3-E611-BED9-001E67E6F4C2.root
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-6CCA8E3F-4AC3-E611-B556-002481CFE26A.root
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-A45A321E-60C2-E611-9637-C4346BC8D568.root
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-C20371B0-40C2-E611-89E5-002590D0AFF6.root
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-D6B9D643-31C3-E611-93E1-70106F4D2364.root
-/hdfs/store/user/truggles/ZH_mc_aug26/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-FE02FB30-A9C3-E611-B3B8-0090FAA57C74.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-204BA193-B2C4-E611-A5AD-00266CFF0034.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-22AB6E6B-BCC2-E611-B175-7845C4FC3614.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-5A1F10E5-49C3-E611-BED9-001E67E6F4C2.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-6CCA8E3F-4AC3-E611-B556-002481CFE26A.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-A45A321E-60C2-E611-9637-C4346BC8D568.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-C20371B0-40C2-E611-89E5-002590D0AFF6.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-D6B9D643-31C3-E611-93E1-70106F4D2364.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/ZHToTauTau_M130_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-FE02FB30-A9C3-E611-B3B8-0090FAA57C74.root

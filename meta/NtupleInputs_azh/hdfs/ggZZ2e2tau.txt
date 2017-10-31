@@ -1,8 +1,8 @@
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-14CBF8D0-FDCA-E611-8567-001E674FB207.root
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-42D32ACA-00CB-E611-9873-001E67397CB5.root
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-54C0D8CA-1BCB-E611-BDB2-001E674DA1AD.root
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-8035A84C-15CB-E611-A33A-0242AC130004.root
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-88DA1436-0DCB-E611-9C0F-D067E5F9156C.root
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-A291AFBD-FBCA-E611-9E6B-ECF4BBE16610.root
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-CC18E346-06CB-E611-A372-D067E5F9156C.root
-/hdfs/store/user/truggles/ZH_mc_aug26/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-E288C8A6-F9CA-E611-B214-0242AC130006.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-14CBF8D0-FDCA-E611-8567-001E674FB207.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-42D32ACA-00CB-E611-9873-001E67397CB5.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-54C0D8CA-1BCB-E611-BDB2-001E674DA1AD.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-8035A84C-15CB-E611-A33A-0242AC130004.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-88DA1436-0DCB-E611-9C0F-D067E5F9156C.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-A291AFBD-FBCA-E611-9E6B-ECF4BBE16610.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-CC18E346-06CB-E611-A372-D067E5F9156C.root
+/hdfs/store/user/truggles/ZH_LLTT_oct20/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8_v6-v1/make_ntuples_cfg-E288C8A6-F9CA-E611-B214-0242AC130006.root
