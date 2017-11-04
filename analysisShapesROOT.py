@@ -559,32 +559,32 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_eff_t_High_'+channel+'_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_eff_t_High_'+channel+'_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-Mu' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Mu_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Mu_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_Mu_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_Mu_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-Res' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Res_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Res_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_Res_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_Res_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-Mig01' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Mig01_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Mig01_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_Mig01_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_Mig01_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-Mig12' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_Mig12_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_Mig12_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_Mig12_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_Mig12_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-VBF2j' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_VBF2j_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_VBF2j_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_VBF2j_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_VBF2j_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-VBF3j' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_VBF3j_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_VBF3j_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_VBF3j_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_VBF3j_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-PT60' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_PT60_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_PT60_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_PT60_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_PT60_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-PT120' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_PT120_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_PT120_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_PT120_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_PT120_13TeV'+shiftDir )
                     elif 'wg1-THU-ggH-qmtop' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_THU_ggH_qmtop_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_THU_ggH_qmtop_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_THU_ggH_qmtop_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_THU_ggH_qmtop_13TeV'+shiftDir )
                     elif '_ggH' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_gg_13TeV'+shiftDir )
