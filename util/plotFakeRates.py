@@ -35,6 +35,8 @@ def plotFRObj( name, inObjs, pad, ratioPad, smlPadSize, minMax, selector='XXX'  
         h.SetMarkerColor( colors[i] )
         h.SetMarkerSize( 0 )
         h.SetLineWidth( 2 )
+        h.SetMaximum( 1. )
+        h.SetMinimum( 0.001 )
         #h.GetXaxis().SetRangeUser( minMax[0], minMax[1] )
         if i == 0 :
             h.GetXaxis().SetLabelSize( 0.0 )
@@ -46,8 +48,9 @@ def plotFRObj( name, inObjs, pad, ratioPad, smlPadSize, minMax, selector='XXX'  
         else : h.Draw('hist same')
     #objs[0].SetMaximum( maxi * 1.2 )
     #objs[0].SetMinimum( 0 )
-    back.SetMaximum( maxi * 5 )
-    back.SetMinimum( 0.001 )
+    #back.SetMaximum( maxi * 5 )
+    #back.SetMaximum( 5. )
+    #back.SetMinimum( 0.01 )
     #objs[0].GetXaxis().SetRangeUser( minMax[0], minMax[1] )
     pad.Update()
 
@@ -65,8 +68,18 @@ def plotFRObj( name, inObjs, pad, ratioPad, smlPadSize, minMax, selector='XXX'  
         print 'orig ratio',i, g
         ratio = makeRatioH( g, objs[0], minMax )
         ratios.append( ratio )
-        ratio.SetMaximum( 1.2 )
-        ratio.SetMinimum( 0.8 )
+        if 'muons' in name :
+            ratio.SetMaximum( 1.15 )
+            ratio.SetMinimum( 0.85 )
+        elif name in ['taus-DM10_lllt','taus-DM1_lllt'] :
+            ratio.SetMaximum( 1.15 )
+            ratio.SetMinimum( 0.85 )
+        elif name in ['taus-DM0_lllt',] :
+            ratio.SetMaximum( 1.3 )
+            ratio.SetMinimum( 0.7 )
+        else :
+            ratio.SetMaximum( 4 )
+            ratio.SetMinimum( 0. )
         ratio.SetLineColor( colors[i] )
         ratio.SetMarkerColor( colors[i] )
         ratio.SetMarkerSize( 0 )
@@ -88,6 +101,7 @@ def plotFRObj( name, inObjs, pad, ratioPad, smlPadSize, minMax, selector='XXX'  
 def loadKey( objs, key ) :
     l = []
     for obj in objs :
+        print obj
         if key in obj.GetName() :
             l.append( obj )
     return l
@@ -126,7 +140,8 @@ if '__main__' in __name__ :
     
     f = ROOT.TFile('data/azhFakeRateFits.root','r')
     
-    objs = ['tau-DM0','tau-DM1','tau-DM10','electron','muon',]
+    #objs = ['tau-DM0','tau-DM1','tau-DM10','electron','muon',]
+    objs = ['tau-DM0','tau-DM1','tau-DM10','muon',]
     
     newObjs = []
     for obj in objs :
@@ -161,16 +176,17 @@ if '__main__' in __name__ :
     pad1.SetGrid()
     ratioPad.SetGrid()
     
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept19_FR_Comp'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept21_Final'
     checkDir( saveDir )
     
     colors = [ROOT.kBlack, ROOT.kRed, ROOT.kBlue, ROOT.kOrange, ROOT.kGray]
     
     tdr.setTDRStyle()
 
-    electrons = loadKey( graphs, 'electron' )
-    elecMinMax = [15, 100]
-    plotFRObj( 'electrons', electrons, pad1, ratioPad, smlPadSize, elecMinMax )
+    #electrons = loadKey( graphs, 'electron' )
+    #elecMinMax = [15, 100]
+    #plotFRObj( 'electrons', electrons, pad1, ratioPad, smlPadSize, elecMinMax )
+    print graphs
     muons = loadKey( graphs, 'muon' )
     muonMinMax = [12, 100]
     plotFRObj( 'muons', muons, pad1, ratioPad, smlPadSize, muonMinMax )
@@ -191,4 +207,16 @@ if '__main__' in __name__ :
     taus = loadKey( graphs, 'tau-' )
     tauMinMax = [20, 100]
     plotFRObj( 'taus_lltt_AllEta', taus, pad1, ratioPad, smlPadSize, tauMinMax, 'lltt_AllEta' )
+    taus = loadKey( graphs, 'tau-' )
+    tauMinMax = [20, 100]
+    plotFRObj( 'taus_lllt_Barrel', taus, pad1, ratioPad, smlPadSize, tauMinMax, 'lllt_Barrel' )
+    taus = loadKey( graphs, 'tau-' )
+    tauMinMax = [20, 100]
+    plotFRObj( 'taus_lltt_Barrel', taus, pad1, ratioPad, smlPadSize, tauMinMax, 'lltt_Barrel' )
+    taus = loadKey( graphs, 'tau-' )
+    tauMinMax = [20, 100]
+    plotFRObj( 'taus_lllt_Endcap', taus, pad1, ratioPad, smlPadSize, tauMinMax, 'lllt_Endcap' )
+    taus = loadKey( graphs, 'tau-' )
+    tauMinMax = [20, 100]
+    plotFRObj( 'taus_lltt_Endcap', taus, pad1, ratioPad, smlPadSize, tauMinMax, 'lltt_Endcap' )
 
