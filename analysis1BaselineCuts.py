@@ -150,6 +150,8 @@ def runCuts(analysis, sample, samples, channel, count, num, mid1, mid2,cutMapper
         outFile1 = ROOT.TFile('/data/truggles/svFitPrep/%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     elif skimHdfs == 'true' :
         outFile1 = ROOT.TFile('/nfs_scratch/truggles/%s%s/%s.root' % (analysis, mid1.strip('1'), save), 'RECREATE')
+    elif 'uwlogin' in os.getenv('HOSTNAME') :
+        outFile1 = ROOT.TFile('/data/truggles/%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     else :
         outFile1 = ROOT.TFile('%s%s/%s.root' % (analysis, mid1, save), 'RECREATE')
     #print "initialCut: file values: cnt %i   min %i   max %i" % ( count, count * numFilesPerCycle, ((count + 1) * numFilesPerCycle) - 1 )
@@ -517,6 +519,8 @@ def drawHistos(analysis, samples, **fargs ) :
     pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
     multiprocessingOutputs = []
 
+    host = os.getenv('HOSTNAME')
+
     for sample in samples :
     
         numFilesPerCycle = fargs['numFilesPerCycle']
@@ -583,7 +587,10 @@ def drawHistos(analysis, samples, **fargs ) :
                 for i in range( numIters ) :
                     #print "%s_%i" % ( sample, i)
                     #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (analysis, fargs['mid2'], sample.split('_')[0], i, channel)
-                    chain.Add('%s%s/%s_%i_%s.root' % (analysis, fargs['mid2'], sample.split('_')[0], i, channel) )
+                    if 'uwlogin' in host :
+                        chain.Add('/data/truggles/%s%s/%s_%i_%s.root' % (analysis, fargs['mid2'], sample.split('_')[0], i, channel) )
+                    else :
+                        chain.Add('%s%s/%s_%i_%s.root' % (analysis, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True
                 else : isData = False
