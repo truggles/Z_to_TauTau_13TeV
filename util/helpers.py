@@ -275,7 +275,7 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
             for rb in redBkgList :
                 if rb in inSamples :
                     if rb == 'TT' : samples['TT']  = 'TT'
-                    elif rb == 'WZ3l1nu' : samples['TT']  = 'WZ'
+                    elif rb == 'WZ3l1nu' : samples['WZ3l1nu']  = 'WZ'
                     elif rb == 'WWW' : samples['WWW']  = 'TriBoson'
                     else : samples[rb]  = 'DYJ'
 
