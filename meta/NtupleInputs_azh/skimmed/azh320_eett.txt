@@ -1,2 +1,9 @@
-/data/truggles/ZH_svFitAug31_Merged/azh320_0_eett.root
-/data/truggles/ZH_svFitAug31_Merged/azh320_1_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_0_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_1_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_2_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_3_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_4_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_5_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_6_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_7_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh320_8_eett.root

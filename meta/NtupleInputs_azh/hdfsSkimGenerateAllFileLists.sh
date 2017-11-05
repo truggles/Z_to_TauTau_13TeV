@@ -1,10 +1,5 @@
 
-DY4=/data/truggles/ZH_noSVFitAug31_Merged_DY4
-ttZ=/data/truggles/azhSept19skim_Merged
-
-# ALL is all non-EEEE or MMMM channels
-ALL=/data/truggles/ZH_svFitAug31_Merged
-
+ALL=/data/truggles/azhHalloweenSkim_svFitPrep
 
 echo ""
 echo "For svFit optimization ignore eeee and mmmm channels"
@@ -12,9 +7,9 @@ echo ""
 
 
 # Preset samples
-#for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
-for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm; do
-    for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 ggZZ4m ggZZ2e2m ggZZ2e2tau ggZZ4e ggZZ2m2tau ggZZ4tau TT WWW WWZ WZ3l1nu WZZ WZ ZZ4l ZZZ; do
+for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
+#for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm; do
+    for SAMPLE in ttZ ttZ2 DYJets DYJets1 DYJets2 DYJets3 DYJets4 ggZZ4m ggZZ2e2m ggZZ2e2tau ggZZ4e ggZZ2m2tau ggZZ4tau TT WWW WWZ WZ3l1nu WZZ WZ ZZ4l ZZZ; do
         ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 
@@ -37,15 +32,21 @@ for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm; do
 done
 
 # for data
-#for CHANNEL in eeet eett eemt eeem eeee; do
-for CHANNEL in eeet eett eemt eeem; do
+for CHANNEL in eeet eett eemt eeem eeee; do
+#for CHANNEL in eeet eett eemt eeem; do
     for SAMPLE in dataEE-B dataEE-C dataEE-D dataEE-E dataEE-F dataEE-G dataEE-H; do
         ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
+    for SAMPLE in dataSingleE-B dataSingleE-C dataSingleE-D dataSingleE-E dataSingleE-F dataSingleE-G dataSingleE-H; do
+        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+    done
 done
-#for CHANNEL in emmt mmtt mmmt emmm mmmm; do
-for CHANNEL in emmt mmtt mmmt emmm; do
+for CHANNEL in emmt mmtt mmmt emmm mmmm; do
+#for CHANNEL in emmt mmtt mmmt emmm; do
     for SAMPLE in dataMM-B dataMM-C dataMM-D dataMM-E dataMM-F dataMM-G dataMM-H; do
+        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+    done
+    for SAMPLE in dataSingleM-B dataSingleM-C dataSingleM-D dataSingleM-E dataSingleM-F dataSingleM-G dataSingleM-H; do
         ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 done
@@ -62,14 +63,8 @@ done
 #    done
 #done
 
-echo "Overwrite failed DYJets4 files from above for EETT and MMTT (no svFit)"
-echo ""
-ls ${DY4}/*DYJets4_*_eett.root > skimmed/DYJets4_eett.txt
-ls ${DY4}/*DYJets4_*_mmtt.root > skimmed/DYJets4_mmtt.txt
-
-for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
-    for SAMPLE in ttZ; do
-        ls ${ttZ}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
-    done
-done
+#echo "Overwrite failed DYJets4 files from above for EETT and MMTT (no svFit)"
+#echo ""
+#ls ${ALL}/*DYJets4_*_eett.root > skimmed/DYJets4_eett.txt
+#ls ${ALL}/*DYJets4_*_mmtt.root > skimmed/DYJets4_mmtt.txt
 

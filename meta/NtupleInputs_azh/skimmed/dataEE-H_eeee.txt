@@ -1,4 +1,1 @@
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_0_eeee.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_1_eeee.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_2_eeee.root
-/data/truggles/azhAug08RBSyncMerged/dataEE-H_3_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataEE-H_0_eeee.root

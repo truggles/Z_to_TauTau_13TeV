@@ -1,1 +1,2 @@
-/data/truggles/ZH_svFitAug31_Merged/dataMM-E_0_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-E_0_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-E_1_mmmt.root

@@ -1,3 +1,4 @@
-/data/truggles/ZH_svFitAug31_Merged/dataMM-B_0_emmt.root
-/data/truggles/ZH_svFitAug31_Merged/dataMM-B_1_emmt.root
-/data/truggles/ZH_svFitAug31_Merged/dataMM-B_2_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-B_0_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-B_1_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-B_2_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-B_3_emmt.root

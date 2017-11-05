@@ -1,3 +1,6 @@
-/data/truggles/azhJune06skimMerged/azh220_0_eeee.root
-/data/truggles/azhJune06skimMerged/azh220_1_eeee.root
-/data/truggles/azhJune06skimMerged/azh220_2_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_0_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_1_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_2_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_3_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_4_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_5_eeee.root

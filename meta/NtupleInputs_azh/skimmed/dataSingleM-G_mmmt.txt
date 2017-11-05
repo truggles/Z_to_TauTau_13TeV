@@ -1,0 +1,2 @@
+/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleM-G_0_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleM-G_1_mmmt.root

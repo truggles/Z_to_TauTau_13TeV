@@ -1,3 +1,10 @@
-/data/truggles/ZH_svFitAug31_Merged/azh350_0_mmmt.root
-/data/truggles/ZH_svFitAug31_Merged/azh350_1_mmmt.root
-/data/truggles/ZH_svFitAug31_Merged/azh350_2_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_0_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_1_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_2_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_3_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_4_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_5_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_6_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_7_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_8_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh350_9_mmmt.root

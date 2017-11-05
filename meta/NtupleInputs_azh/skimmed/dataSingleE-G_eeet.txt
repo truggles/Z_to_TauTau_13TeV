@@ -1,0 +1,4 @@
+/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleE-G_0_eeet.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleE-G_1_eeet.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleE-G_2_eeet.root
+/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleE-G_3_eeet.root

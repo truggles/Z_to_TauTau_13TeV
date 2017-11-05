@@ -1,2 +1,9 @@
-/data/truggles/ZH_svFitAug31_Merged/azh220_0_emmt.root
-/data/truggles/ZH_svFitAug31_Merged/azh220_1_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_0_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_1_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_2_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_3_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_4_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_5_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_6_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_7_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh220_8_emmt.root

@@ -1,4 +1,9 @@
-/data/truggles/azhJune06skimMerged/azh400_0_eeee.root
-/data/truggles/azhJune06skimMerged/azh400_1_eeee.root
-/data/truggles/azhJune06skimMerged/azh400_2_eeee.root
-/data/truggles/azhJune06skimMerged/azh400_3_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_0_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_1_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_2_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_3_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_4_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_5_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_6_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_7_eeee.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh400_8_eeee.root

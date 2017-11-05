@@ -1,2 +1,4 @@
-/data/truggles/azhJune06skimMerged/azh300_0_mmmm.root
-/data/truggles/azhJune06skimMerged/azh300_1_mmmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_0_mmmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_1_mmmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_2_mmmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_3_mmmm.root

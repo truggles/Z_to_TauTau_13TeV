@@ -1,3 +1,8 @@
-/data/truggles/ZH_svFitAug31_Merged/azh300_0_mmtt.root
-/data/truggles/ZH_svFitAug31_Merged/azh300_1_mmtt.root
-/data/truggles/ZH_svFitAug31_Merged/azh300_2_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_0_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_1_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_2_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_3_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_4_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_5_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_6_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/azh300_7_mmtt.root

@@ -1,1 +1,6 @@
-/data/truggles/ZH_svFitAug31_Merged/WZ3l1nu_0_eemt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/WZ3l1nu_0_eemt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/WZ3l1nu_1_eemt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/WZ3l1nu_2_eemt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/WZ3l1nu_3_eemt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/WZ3l1nu_4_eemt.root
+/data/truggles/azhHalloweenSkim_svFitPrep/WZ3l1nu_5_eemt.root

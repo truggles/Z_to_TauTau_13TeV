@@ -1,1 +1,4 @@
-/data/truggles/ZH_svFitAug31_Merged/HZZ125_0_emmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/HZZ125_0_emmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/HZZ125_1_emmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/HZZ125_2_emmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep/HZZ125_3_emmm.root
