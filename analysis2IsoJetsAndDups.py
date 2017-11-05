@@ -546,9 +546,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     for key in l2Map.keys() :
         branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
 
-
-    oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
-    newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
+    host = os.getenv('HOSTNAME')
+    if 'uwlogin' in host :
+        oldFileName = '/data/truggles/%s%s/%s.root' % (analysis, mid1, sample)
+        newFileName = '/data/truggles/%s%s/%s.root' % (analysis, mid2, sample)
+    else :
+        oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
+        newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
 
     dirName = channel+'/final'
     treeName = 'Ntuple'
