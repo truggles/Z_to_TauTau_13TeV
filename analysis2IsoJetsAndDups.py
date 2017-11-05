@@ -253,9 +253,9 @@ def getCurrentEvt( analysis, channel, row ) :
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.1876 )
         bestZ = 0.
         if channel in ['eeet','eeem','eemt','eett' ] :
-            bestZ = abs( getattr( row, 'closestMassZEEPlus') - 91.1876 )
+            bestZ = abs( getattr( row, 'closestMassZEE') - 91.1876 )
         elif channel in ['emmt','emmm','mmmt','mmtt' ] :
-            bestZ = abs( getattr( row, 'closestMassZMMPlus') - 91.1876 )
+            bestZ = abs( getattr( row, 'closestMassZMM') - 91.1876 )
         else : bestZ = closeZ # for EEEE / MMMM
 
         # Reject event if Z pair isn't best Z mass pair
@@ -556,9 +556,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     for key in l2Map.keys() :
         branchMapping[ key.replace('cand_', l2) ] = l2Map[ key ]+'_2'
 
-
-    oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
-    newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
+    host = os.getenv('HOSTNAME')
+    if 'uwlogin' in host :
+        oldFileName = '/data/truggles/%s%s/%s.root' % (analysis, mid1, sample)
+        newFileName = '/data/truggles/%s%s/%s.root' % (analysis, mid2, sample)
+    else :
+        oldFileName = '%s%s/%s.root' % (analysis, mid1, sample)
+        newFileName = '%s%s/%s.root' % (analysis, mid2, sample)
 
     dirName = channel+'/final'
     treeName = 'Ntuple'
