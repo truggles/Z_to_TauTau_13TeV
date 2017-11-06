@@ -230,7 +230,7 @@ def buildLegend( hists, names ) :
     return legend
 
 
-def prepForPlot( h1, h2 ) :
+def prepForPlot( var, h1, h2 ) :
     maxi = h1.GetMaximum()
     if h2.GetMaximum() > maxi : maxi = h2.GetMaximum()
     h1.SetMaximum( 1.6 * maxi )
@@ -260,8 +260,117 @@ def printStatsResults( p, h1, h2 ) :
     #text.AddText('KS no norm: %2.3f' % ksNoNorm)
     #text.AddText('KS include norm: %2.3f' % ksNorm)
 
-if __name__ == '__main__' :
 def makePlots( sample ) :
+    channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm']
+    #channels = ['eeet',]#'eett','eemt','eeem','emmt','mmtt','mmmt','emmm']
+
+    err1 = ROOT.Double(0)
+    err2 = ROOT.Double(0)
+
+    shapeOnly = True
+    shapeOnly = False
+    print sample
+    combMapHists = {
+        'LLET' : {},
+        'LLMT' : {},
+        'LLTT' : {},
+        'LLEM' : {},
+        'ZXX' : {},
+    }
+    c = ROOT.TCanvas('c','c',600,600)
+    p = ROOT.TPad('p','p',0,0,1,1)
+    p.Draw()
+    p.cd()
+    for var in plotVars :
+        for group in combMapHists.keys() :
+            combMapHists[group] = {}
+            combMapHists[group][var+' '+group+' MC']  = ROOT.TH1D(var+' '+group+' MC', var+' '+group+' MC', plotVars[var][0], plotVars[var][1], plotVars[var][2])
+            combMapHists[group][var+' '+group+' RB'] = ROOT.TH1D(var+' '+group+' RB', var+' '+group+' RB', plotVars[var][0], plotVars[var][1], plotVars[var][2])
+
+    print combMapHists
+    for channel in channels :
+        print channel
+        ifile = ROOT.TFile('root_files/%s_%s.root' % (sample, channel), 'r' )
+        itree = ifile.Get('Ntuple')
+        compfile = ROOT.TFile('../azh3Sept05OSLooseForRBVal/%s_%s.root' % (sample, channel), 'r' )
+        print ifile, itree.GetEntries()
+        print compfile
+    
+        var = 'pt_3'
+        #var = 'm_vis'
+    
+        h1 = ROOT.TH1D(var+'_'+channel, var+'_'+channel, plotVars[var][0], plotVars[var][1], plotVars[var][2])
+        hComp = compfile.Get('%s_Histos/%s' % (channel, var))
+    
+        cut = '(ADD_CHANNEL_SPECIFIC_ISO_CUTS)'
+        cutString = getRedBkgCutsAndWeights( 'azh', channel, cut, prodMap ).strip('*')
+        cutString = '(GenWeight/abs( GenWeight ))*'+cutString.replace(')(',')*(')
+        #cutString += '(zhFR1 + zhFR2 - zhFR0)'
+        cutString += '*(puweight*azhWeight)' 
+        cutString += '*(XSecLumiWeight)'
+        if channel in ['eeet','emmt'] :
+            #cutString += '*(LT_higgs > 30)'
+            cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+        elif channel in ['eemt','mmmt'] :
+            #cutString += '*(LT_higgs > 40)'
+            cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+        elif channel in ['eeem','emmm'] :
+            cutString += '*(LT_higgs > 20)'
+        elif channel in ['eett','mmtt'] :
+            #cutString += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
+            cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+
+        print '\n'+cutString+'\n'
+        
+        itree.Draw( var+'>>'+var+'_'+channel, cutString )
+        h1.IntegralAndError( 0, h1.GetNbinsX(), err1 )
+        hComp.IntegralAndError( 0, hComp.GetNbinsX(), err2 )
+        print "h1 - int: %3.3f +/- %3.3f  nEntries %i" % (h1.Integral(), err1, h1.GetEntries())
+        print "hComp - int: %3.3f +/- %3.3f  nEntries %i" % (hComp.Integral(), err2, hComp.GetEntries())
+
+        if shapeOnly :
+            if h1.Integral() > 0. :
+                h1.Scale( 1. / h1.Integral() )
+            if hComp.Integral() > 0. :
+                hComp.Scale( 1. / hComp.Integral() )
+
+        prepForPlot( var, h1, hComp )
+
+        h1.Draw('')
+        hComp.Draw('SAME')
+        leg = buildLegend( [h1, hComp], [sample+' RedBkg', sample+' MC'] ) 
+        leg.Draw('SAME')
+        decorate( p, channel, h1, hComp )
+        #printStatsResults( p, h1, hComp )
+        c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s_%s_%s.png' % (sample, channel, var) )
+        h1.SetDirectory( 0 )
+        hComp.SetDirectory( 0 )
+
+        for group, chans in combMap.iteritems() :
+            if channel in chans :
+                print combMapHists[ group ]
+                combMapHists[ group ][ var+' '+group+' MC' ].Add( hComp )
+                combMapHists[ group ][ var+' '+group+' RB' ].Add( h1 )
+
+        #break
+    for group, hists in combMapHists.iteritems() :
+        for var in plotVars.keys() :
+            prepForPlot( var, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
+            hists[var+' '+group+' RB'].Draw('')
+            hists[var+' '+group+' MC'].Draw('SAME')
+            leg = buildLegend( [hists[var+' '+group+' RB'], hists[var+' '+group+' MC']], [sample+' RedBkg', sample+' MC'] ) 
+            leg.Draw('SAME')
+            decorate( p, group, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
+            #printStatsResults( p, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
+            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s/%s_%s_%s.png' % (group, sample, group, var) )
+    del combMapHists, c, p
+
+
+
+
+if __name__ == '__main__' :
+
     channelNames = {
         'eeet' : 'eee#tau_{h}',
         'eemt' : 'ee#mu#tau_{h}',
@@ -292,120 +401,10 @@ def makePlots( sample ) :
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
     analysis = 'azh'
-    #azhSamples = ['WZ3l1nu', 'DYJets4', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets', 'TT'] # May 31 samples, no ZZ->all, use ZZ4l
-    azhSamples = ['DYJets4', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets', 'TT'] # May 31 samples, no ZZ->all, use ZZ4l
-    azhSamples = [ 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets', 'TT'] # May 31 samples, no ZZ->all, use ZZ4l
-    channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm']
-    #channels = ['eeet',]#'eett','eemt','eeem','emmt','mmtt','mmmt','emmm']
     prodMap = getProdMap()
-
-    err1 = ROOT.Double(0)
-    err2 = ROOT.Double(0)
-
-    shapeOnly = True
-    shapeOnly = False
+    plotVars = getHistoDict( analysis )
+    azhSamples = ['WZ3l1nu', 'DYJets4', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets', 'TT'] # May 31 samples, no ZZ->all, use ZZ4l
     for sample in azhSamples :
-        print sample
-        plotVars = getHistoDict( analysis )
-        combMapHists = {
-            'LLET' : {},
-            'LLMT' : {},
-            'LLTT' : {},
-            'LLEM' : {},
-            'ZXX' : {},
-        }
-        c = ROOT.TCanvas('c','c',600,600)
-        p = ROOT.TPad('p','p',0,0,1,1)
-        p.Draw()
-        p.cd()
-        for var in plotVars :
-            for group in combMapHists.keys() :
-                combMapHists[group] = {}
-                combMapHists[group][var+' '+group+' MC']  = ROOT.TH1D(var+' '+group+' MC', var+' '+group+' MC', plotVars[var][0], plotVars[var][1], plotVars[var][2])
-                combMapHists[group][var+' '+group+' RB'] = ROOT.TH1D(var+' '+group+' RB', var+' '+group+' RB', plotVars[var][0], plotVars[var][1], plotVars[var][2])
-
-        print combMapHists
-        for channel in channels :
-            print channel
-            ifile = ROOT.TFile('root_files/%s_%s.root' % (sample, channel), 'r' )
-            itree = ifile.Get('Ntuple')
-            compfile = ROOT.TFile('../azh3Sept05OSLooseForRBVal/%s_%s.root' % (sample, channel), 'r' )
-            print ifile, itree.GetEntries()
-            print compfile
-        
-            var = 'pt_3'
-            #var = 'm_vis'
-        
-            h1 = ROOT.TH1D(var+'_'+channel, var+'_'+channel, plotVars[var][0], plotVars[var][1], plotVars[var][2])
-            hComp = compfile.Get('%s_Histos/%s' % (channel, var))
-        
-            cut = '(ADD_CHANNEL_SPECIFIC_ISO_CUTS)'
-            cutString = getRedBkgCutsAndWeights( 'azh', channel, cut, prodMap ).strip('*')
-            cutString = '(GenWeight/abs( GenWeight ))*'+cutString.replace(')(',')*(')
-            #cutString += '(zhFR1 + zhFR2 - zhFR0)'
-            cutString += '*(puweight*azhWeight)' 
-            cutString += '*(XSecLumiWeight)'
-            if channel in ['eeet','emmt'] :
-                #cutString += '*(LT_higgs > 30)'
-                cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-            elif channel in ['eemt','mmmt'] :
-                #cutString += '*(LT_higgs > 40)'
-                cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-            elif channel in ['eeem','emmm'] :
-                cutString += '*(LT_higgs > 20)'
-            elif channel in ['eett','mmtt'] :
-                #cutString += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
-                cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
-                cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-
-            print '\n'+cutString+'\n'
-            
-            itree.Draw( var+'>>'+var+'_'+channel, cutString )
-            h1.IntegralAndError( 0, h1.GetNbinsX(), err1 )
-            hComp.IntegralAndError( 0, hComp.GetNbinsX(), err2 )
-            print "h1 - int: %3.3f +/- %3.3f  nEntries %i" % (h1.Integral(), err1, h1.GetEntries())
-            print "hComp - int: %3.3f +/- %3.3f  nEntries %i" % (hComp.Integral(), err2, hComp.GetEntries())
-
-            if shapeOnly :
-                if h1.Integral() > 0. :
-                    h1.Scale( 1. / h1.Integral() )
-                if hComp.Integral() > 0. :
-                    hComp.Scale( 1. / hComp.Integral() )
-
-            prepForPlot( h1, hComp )
-
-            h1.Draw('')
-            hComp.Draw('SAME')
-            leg = buildLegend( [h1, hComp], [sample+' RedBkg', sample+' MC'] ) 
-            leg.Draw('SAME')
-            decorate( p, channel, h1, hComp )
-            #printStatsResults( p, h1, hComp )
-            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s_%s_%s.png' % (sample, channel, var) )
-            h1.SetDirectory( 0 )
-            hComp.SetDirectory( 0 )
-
-            for group, chans in combMap.iteritems() :
-                if channel in chans :
-                    print combMapHists[ group ]
-                    combMapHists[ group ][ var+' '+group+' MC' ].Add( hComp )
-                    combMapHists[ group ][ var+' '+group+' RB' ].Add( h1 )
-
-            #break
-        for group, hists in combMapHists.iteritems() :
-            for var in plotVars.keys() :
-                prepForPlot( hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
-                hists[var+' '+group+' RB'].Draw('')
-                hists[var+' '+group+' MC'].Draw('SAME')
-                leg = buildLegend( [hists[var+' '+group+' RB'], hists[var+' '+group+' MC']], [sample+' RedBkg', sample+' MC'] ) 
-                leg.Draw('SAME')
-                decorate( p, group, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
-                #printStatsResults( p, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
-                c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s/%s_%s_%s.png' % (group, sample, group, var) )
-        del combMapHists, c, p
-
-
-
-
-
+        makePlots( sample )
 
 
