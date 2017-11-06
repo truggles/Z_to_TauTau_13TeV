@@ -10,22 +10,23 @@ class ReducibleBkgWeights :
     AZH/ZH analysis"""
     
 
-    def __init__( self, channel, jetMatched ):
+    #def __init__( self, channel, jetMatched ):
+    def __init__( self, channel ):
         assert(channel in ['eemm','eeet','eett','eemt','eeem','emmt','mmtt',
             'mmmt','emmm','eeee','mmmm']), "Channel: %s does not have a \
             Reducible Bkg component." % channel
         self.channel = channel
         self.file = ROOT.TFile('data/azhFakeRateFits.root','READ')
-        self.jetMatched = jetMatched
-        self.tauFitCut = 20.
+        #self.jetMatched = jetMatched
+        self.tauFitCut = 19.
         #self.electronFitCut = 15.
-        self.electronFitCut = 250.
-        self.muonFitCut = 12.5
-        self.app = ''
-        if self.jetMatched :
-            self.app = 'jetMatch'
-        if not self.jetMatched :
-            self.app = 'noJetMatch'
+        self.electronFitCut = 9.
+        self.muonFitCut = 9.
+        self.app = 'leptonPt'
+        #if self.jetMatched :
+        #    self.app = 'jetMatch'
+        #if not self.jetMatched :
+        #    self.app = 'noJetMatch'
 
         # Set Leg3 FR graphs
         if self.channel in ['eeet','eeem','emmt','emmm','eeee'] :
@@ -40,54 +41,54 @@ class ReducibleBkgWeights :
             self.frFitEndcapL3 = self.file.Get( 'muon_Endcap_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt'] :
             # DM0
-            self.frGraphBarrelL3dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL3dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL3dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL3dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL3dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL3dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL3dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL3dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
             # DM1
-            self.frGraphBarrelL3dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL3dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL3dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL3dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL3dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL3dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL3dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL3dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
             # DM10
-            self.frGraphBarrelL3dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL3dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL3dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL3dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL3dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL3dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL3dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL3dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
 
         # Set Leg4 FR graphs
         if self.channel in ['eeet','emmt','eemt','mmmt',] :
             # DM0
-            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
             # DM1
-            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
             # DM10
-            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt',] :
             # DM0
-            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
             # DM1
-            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
             # DM10
-            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_graph' )
-            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_Barrel_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_graph' )
-            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_Endcap_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
         elif self.channel in ['eeem','eemm','emmm','mmmm'] :
             self.frGraphBarrelL4 = self.file.Get( 'muon_Barrel_'+self.app+'_graph' )
             self.frFitBarrelL4 = self.file.Get( 'muon_Barrel_'+self.app+'_fit' )
@@ -103,15 +104,15 @@ class ReducibleBkgWeights :
     # Save some space with this
     def evalWeight( self, pt, absEta, useFit, fitBarrel, graphBarrel, fitEndcap, graphEndcap ) :
         if absEta < 1.4 :
-            if useFit :
-                return fitBarrel.Eval( pt ) / ( 1. - fitBarrel.Eval( pt ) )
-            else :
-                return graphBarrel.Eval( pt ) / ( 1. - graphBarrel.Eval( pt ) )
+            #if useFit :
+            return fitBarrel.Eval( pt ) / ( 1. - fitBarrel.Eval( pt ) )
+            #else :
+            #    return graphBarrel.Eval( pt ) / ( 1. - graphBarrel.Eval( pt ) )
         if absEta >= 1.4 :
-            if useFit :
-                return fitEndcap.Eval( pt ) / ( 1. - fitEndcap.Eval( pt ) )
-            else :
-                return graphEndcap.Eval( pt ) / ( 1. - graphEndcap.Eval( pt ) )
+            #if useFit :
+            return fitEndcap.Eval( pt ) / ( 1. - fitEndcap.Eval( pt ) )
+            #else :
+            #    return graphEndcap.Eval( pt ) / ( 1. - graphEndcap.Eval( pt ) )
 
 
 
@@ -132,12 +133,12 @@ class ReducibleBkgWeights :
         # for elec and muon, fits end before out lowest threshold
         # Also make sure we stay on the lowest threshold for the graphs
         useFit = True
-        if self.jetMatched : useFit = False # This is coarsely binned
+        #if self.jetMatched : useFit = False # This is coarsely binned
         if 'e' in lep :
-            if pt < self.electronFitCut : useFit = False
+            #if pt < self.electronFitCut : useFit = False
             if pt <= 10 : pt = 10.1
         elif 'm' in lep :
-            if pt < self.muonFitCut : useFit = False
+            #if pt < self.muonFitCut : useFit = False
             if pt <= 10 : pt = 10.1
 
         if not 't' in lep :
@@ -170,12 +171,12 @@ class ReducibleBkgWeights :
         # for elec and muon, fits end before out lowest threshold
         # Also make sure we stay on the lowest threshold for the graphs
         useFit = True
-        if self.jetMatched : useFit = False # This is coarsely binned
+        #if self.jetMatched : useFit = False # This is coarsely binned
         if 'e' in lep :
-            if pt < self.electronFitCut : useFit = False
+            #if pt < self.electronFitCut : useFit = False
             if pt <= 10 : pt = 10.1
         elif 'm' in lep :
-            if pt < self.muonFitCut : useFit = False
+            #if pt < self.muonFitCut : useFit = False
             if pt <= 10 : pt = 10.1
 
         if not 't' in lep :
