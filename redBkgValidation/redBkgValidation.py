@@ -10,7 +10,7 @@ from util.azhReducibleBackgroundHelpers import \
     getRedBkgShape
 import pyplotter.tdrstyle as tdr
 
-def decorate( p, channel, h1, h2 ) :
+def decorate( p, channel, h1, h2, doFinal=False ) :
 
     cmsLumi = 35.9
     # Set CMS Styles Stuff
@@ -34,16 +34,22 @@ def decorate( p, channel, h1, h2 ) :
     str2 = "MC - Int: %3.2f+/-%3.2f" % (h2.Integral(), err4)
     str1c = "     evts %i" % (h1.GetEntries())
     str2c = "     evts %i" % (h2.GetEntries())
+
+    str1b = ""
+    str2b = ""
+    ksNoNorm = -99
+    ksNorm = -99
     if h1.Integral() > 0 and h2.Integral() > 0 :
         str1b = "     Int: %3.2f+/-%1.3f pct" % (h1.Integral(), err3/h1.Integral()*100)
         str2b = "     Int: %3.2f+/-%1.3f pct" % (h2.Integral(), err4/h2.Integral()*100)
+    if h1.Integral() > 0 and h2.Integral() > 0 and doFinal :
+        for b in range( 0, h1.GetNbinsX()+1 ) :
+            print "bin %i h1 %2.2f" % (b, h1.GetBinContent( b ) )
+            print "bin %i h2 %2.2f" % (b, h2.GetBinContent( b ) )
+            if h1.GetBinContent( b ) < 0 : h1.SetBinContent( b, 0. )
+            if h2.GetBinContent( b ) < 0 : h2.SetBinContent( b, 0. )
         ksNoNorm = h1.KolmogorovTest( h2, 'X' )
         ksNorm = h1.KolmogorovTest( h2, 'XN' )
-    else :
-        str1b = ""
-        str2b = ""
-        ksNoNorm = -99
-        ksNorm = -99
    
     t1 = ROOT.TText(.2, .88,"x")
     t1.SetTextSize(0.025)
@@ -59,166 +65,19 @@ def decorate( p, channel, h1, h2 ) :
     t1.DrawTextNDC(xPos, yPos-6*yGap, "KS no norm: %2.3f" % ksNoNorm)
     t1.DrawTextNDC(xPos, yPos-7*yGap, "KS inc. norm: %2.3f" % ksNorm)
 
-#from smart_getenv import getenv
-#
-#
-#
-## Make a histo, but fill it later so we can keep track of events for ALL histos at once
-#def makeHisto( cutName, varBins, varMin, varMax ) :
-#    hist = ROOT.TH1D( cutName, cutName, varBins, varMin, varMax )
-#    return hist
-#
-#
-#
-#
-#
-## Plot histos using TTree::Draw which works very well with Proof
-#def plotHistosProof( analysis, outFileName, chain, sample, channel, additionalCut) :
-#    outFile = ROOT.TFile(outFileName, 'RECREATE')
-#
-#    ''' Make a channel specific selection of desired histos and fill them '''
-#    newVarMapUnsorted = getHistoDict( analysis, channel )
-#    newVarMap = returnSortedDict( newVarMapUnsorted )
-#
-#    #print outFile, channel
-#    histosDir = outFile.mkdir( "%s_Histos" % channel )
-#    histosDir.cd()
-#
-#                
-#    # Set additionalCut to reflect ZH reducible background estimation
-#    # process
-#
-#    # Add in the ability to do Reducible Background estimations for
-#    # AZH / ZH analysis
-#    # Add channel specific cuts
-#    if 'ADD_CHANNEL_SPECIFIC_ISO_CUTS' in additionalCut :
-#        prodMap = getProdMap()
-#        if analysis == 'azh' and 'RedBkgYield' in outFile.GetName() :
-#            additionalCut = getRedBkgCutsAndWeights(
-#                    analysis, channel, additionalCut, prodMap )
-#        elif analysis == 'azh' and 'RedBkgShape' in outFile.GetName() :
-#            additionalCut = getRedBkgShape( 
-#                    analysis, channel, additionalCut, prodMap )
-#        else : # No reducible bkg
-#            additionalCut = getChannelSpecificFinalCuts(
-#                    analysis, channel, additionalCut, prodMap )
-#
-#        # Add channel specific LT_higgs cuts from June Optimization
-#        if channel in ['eeet','emmt'] :
-#            #additionalCut += '*(LT_higgs > 30)'
-#            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-#        elif channel in ['eemt','mmmt'] :
-#            #additionalCut += '*(LT_higgs > 40)'
-#            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-#        elif channel in ['eeem','emmm'] :
-#            additionalCut += '*(LT_higgs > 20)'
-#        elif channel in ['eett','mmtt'] :
-#            #additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
-#            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
-#            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-#            # 60 is way more stats
-#
-#        ## bJet Veto Tests
-#        #additionalCut += '*(bjetCISVVeto20MediumZTT == 0)'
-#
-#
-#    ''' Combine Gen and Chan specific into one fill section '''
-#    histos = {}
-#
-#
-#    ''' Get Energy Scale Map which is now confusing with
-#        decay mode specific shifts '''
-#    esMap = getESMap()
-#
-#
-#
-#    for var, info in newVarMap.iteritems() :
-#        if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_visCor')  : continue
-#
-#        ''' Skip plotting 2D vars for 0jet and inclusive selections '''
-#        if 'ZTTinclusive' in outFile.GetName() or 'ZTT0jet' in outFile.GetName() :
-#            if ":" in var : continue
-#
-#        #print var
-#
-#
-#    	histos[ var ] = makeHisto( var, info[0], info[1], info[2])
-#
-#        # Adding Trigger, ID and Iso, & Efficiency Scale Factors
-#        # and, top pt reweighting
-#        # weight is a composition of all applied MC/Data corrections
-#        sfs = '*(1.)'
-#        sfs = '*(puweight*azhWeight)' 
-#        xsec = '*(XSecLumiWeight)'
-#
-#        #print "%s     High Pt Tau Weight: %s" % (var, tauW)
-#        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s' % (additionalCutToUse, sfs, xsec) 
-#        #print totalCutAndWeightMC
-#                
-#
-#
-#        #print "Var: %s   VarBase: %s" % (var, varBase)
-#
-#        ### Make sure that if we have no events
-#        ### we still save a blank histo for use later
-#        if chain.GetEntries() == 0 :
-#            print " #### ENTRIES = 0 #### "
-#            if ":" in var :
-#                histos[ var ] = make2DHisto( var )
-#            else :
-#                histos[ var ] = makeHisto( var, info[0], info[1], info[2])
-#
-#        ### Check that the target var is in the TTrees
-#        elif hasattr( chain, plotVar ) or ":" in varBase :
-#            #print "trying"
-#            #if sample == 'DYJets' : print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
-#            print "%20s  Var: %40s   VarBase: %30s    VarPlot: %s" % (sample, var, varBase, plotVar)
-#            if isData : # Data has no GenWeight and by def has puweight = 1
-#                dataES = ESCuts( esMap, 'data', channel, var )
-#                #print 'dataES',dataES
-#                chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
-#                histos[ var ] = gPad.GetPrimitive( var )
-#                if var == 'm_visCor' or var == 'Mass' :
-#                    print 'm_visCor'
-#                    #print "Data Count:", histos[ var ].Integral()
-#                    print "Cut: %s%s" % (additionalCutToUse, dataES)
-#            else :
-#
-#                chain.Draw( '%s>>%s' % (plotVar, var), '%s' % totalCutAndWeightMC )
-#                ''' No reweighting at the moment! '''
-#                histos[ var ] = gPad.GetPrimitive( var )
-#                integralPost = histos[ var ].Integral()
-#                if var == 'm_visCor' or var == 'Mass' :
-#                    #print 'm_visCor'
-#                    print "tmpIntPost: %f" % integralPost
-#                    print "Cut: %s" % totalCutAndWeightMC
-#
-#        # didn't have var in chain
-#        else : 
-#            del histos[ var ]
-#            continue
-#
-#        histos[ var ].Write()
-#
-#    #outFile.Write()
-#    #return outFile
-#    outFile.Close()
-#
-#
 # Provides a list of histos to create for both channels
 def getHistoDict( analysis ) :
-    if analysis == 'azh' :
-        genVarMap = {
-            #'Z_Pt' : [10, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
-            #'m_vis' : [7, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
-            #'m_sv' : [15, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
-            #'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
-            #'pt_1' : [10, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'],
-            #'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
-            'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
-            #'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
-        }
-        return genVarMap
+    genVarMap = {
+        #'Z_Pt' : [10, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
+        ##'m_vis' : [7, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
+        #'m_sv' : [15, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
+        #'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
+        ##'pt_1' : [10, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'],
+        ##'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
+        'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
+        #'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
+    }
+    return genVarMap
 
 def buildLegend( hists, names ) :
     ''' Build the legend explicitly so we can specify marker styles '''
@@ -239,26 +98,6 @@ def prepForPlot( var, h1, h2 ) :
     h1.SetLineColor( ROOT.kRed )
     h2.SetLineColor( ROOT.kBlue )
 
-def printStatsResults( p, h1, h2 ) :
-    err3 = ROOT.Double(0)
-    err4 = ROOT.Double(0)
-    h1.IntegralAndError( 0, h1.GetNbinsX(), err3 )
-    h2.IntegralAndError( 0, h2.GetNbinsX(), err4 )
-    str1 = "RB - Int: %3.3f +/- %3.3f (%1.3f pct) nEntries %i" % (h1.Integral(), err3, err3/h1.Integral(), h1.GetEntries())
-    str2 = "MC - Int: %3.3f +/- %3.3f (%1.3f pct) nEntries %i" % (h2.Integral(), err4, err4/h2.Integral(), h2.GetEntries())
-    ksNoNorm = h1.KolmogorovTest( h2, 'X' )
-    ksNorm = h1.KolmogorovTest( h2, 'XN' )
-   
-    logo = ROOT.TText(.2, .88,"x")
-    logo.SetTextSize(0.03)
-    logo.DrawTextNDC(.6, .7, str1)
-    logo.DrawTextNDC(.6, .65, str2)
-
-    #text = ROOT.TPaveText(.60,.25,.95,.75)
-    #text.AddText( str1 )
-    #text.AddText( str2 )
-    #text.AddText('KS no norm: %2.3f' % ksNoNorm)
-    #text.AddText('KS include norm: %2.3f' % ksNorm)
 
 def makePlots( sample ) :
     channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm']
@@ -297,7 +136,9 @@ def makePlots( sample ) :
         print compfile
     
         var = 'pt_3'
-        #var = 'm_vis'
+        #var = 'pt_4'
+        #var = 'm_sv'
+        #var = 'met'
     
         h1 = ROOT.TH1D(var+'_'+channel, var+'_'+channel, plotVars[var][0], plotVars[var][1], plotVars[var][2])
         hComp = compfile.Get('%s_Histos/%s' % (channel, var))
@@ -342,8 +183,7 @@ def makePlots( sample ) :
         leg = buildLegend( [h1, hComp], [sample+' RedBkg', sample+' MC'] ) 
         leg.Draw('SAME')
         decorate( p, channel, h1, hComp )
-        #printStatsResults( p, h1, hComp )
-        c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s_%s_%s.png' % (sample, channel, var) )
+        c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/lots/%s_%s_%s.png' % (sample, channel, var) )
         h1.SetDirectory( 0 )
         hComp.SetDirectory( 0 )
 
@@ -362,9 +202,9 @@ def makePlots( sample ) :
             leg = buildLegend( [hists[var+' '+group+' RB'], hists[var+' '+group+' MC']], [sample+' RedBkg', sample+' MC'] ) 
             leg.Draw('SAME')
             decorate( p, group, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
-            #printStatsResults( p, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
             c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s/%s_%s_%s.png' % (group, sample, group, var) )
-    del combMapHists, c, p
+    del c, p
+    return combMapHists
 
 
 
@@ -404,7 +244,44 @@ if __name__ == '__main__' :
     prodMap = getProdMap()
     plotVars = getHistoDict( analysis )
     azhSamples = ['WZ3l1nu', 'DYJets4', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets', 'TT'] # May 31 samples, no ZZ->all, use ZZ4l
+    sampMap = {}
     for sample in azhSamples :
-        makePlots( sample )
+        sampMap[ sample ] = makePlots( sample )
+
+    print "\n\n Finished normals stuff \n\n"
+    combMapHists = {
+        'LLET' : {},
+        'LLMT' : {},
+        'LLTT' : {},
+        'LLEM' : {},
+        'ZXX' : {},
+    }
+    c = ROOT.TCanvas('c','c',600,600)
+    p = ROOT.TPad('p','p',0,0,1,1)
+    p.Draw()
+    p.cd()
+    for var in plotVars :
+        for group in combMapHists.keys() :
+            h1 = ROOT.TH1D(var+' Total RB', var+' Total RB', plotVars[var][0], plotVars[var][1], plotVars[var][2])
+            h2 = ROOT.TH1D(var+' Total MC', var+' Total MC', plotVars[var][0], plotVars[var][1], plotVars[var][2])
+            for sample in azhSamples :
+                h1.Add( sampMap[ sample ][ group ][var+' '+group+' RB'] )
+                h2.Add( sampMap[ sample ][ group ][var+' '+group+' MC'] )
+
+            err1 = ROOT.Double(0)
+            err2 = ROOT.Double(0)
+            h1.IntegralAndError( 0, h1.GetNbinsX(), err1 )
+            h2.IntegralAndError( 0, h2.GetNbinsX(), err2 )
+            print "h1 - int: %3.3f +/- %3.3f  nEntries %i" % (h1.Integral(), err1, h1.GetEntries())
+            print "h2 - int: %3.3f +/- %3.3f  nEntries %i" % (h2.Integral(), err2, h2.GetEntries())
+
+            prepForPlot( var, h1, h2 )
+            h1.Draw('')
+            h2.Draw('SAME')
+            leg = buildLegend( [h1, h2], ['Total RedBkg', 'Total MC'] ) 
+            leg.Draw('SAME')
+            decorate( p, group, h1, h2, True )
+            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s/Total_%s_%s.png' % (group, group, var) )
+            
 
 
