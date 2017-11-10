@@ -1,3 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/WWZ_0_emmm.root
-/data/truggles/azhHalloweenSkim_svFitPrep/WZ_0_emmm.root
-/data/truggles/azhHalloweenSkim_svFitPrep/WZ_1_emmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/WWZ_0_emmm.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/WZ_0_emmm.root

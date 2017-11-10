@@ -1,5 +1,7 @@
 
 ALL=/data/truggles/azhHalloweenSkim_svFitPrep
+ALL=/data/truggles/azhHalloweenSkim_svFitPrep_Merged
+DATA=/data/truggles/azhNov06SkimMerged
 
 echo ""
 echo "For svFit optimization ignore eeee and mmmm channels"
@@ -35,19 +37,19 @@ done
 for CHANNEL in eeet eett eemt eeem eeee; do
 #for CHANNEL in eeet eett eemt eeem; do
     for SAMPLE in dataEE-B dataEE-C dataEE-D dataEE-E dataEE-F dataEE-G dataEE-H; do
-        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
     for SAMPLE in dataSingleE-B dataSingleE-C dataSingleE-D dataSingleE-E dataSingleE-F dataSingleE-G dataSingleE-H; do
-        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 done
 for CHANNEL in emmt mmtt mmmt emmm mmmm; do
 #for CHANNEL in emmt mmtt mmmt emmm; do
     for SAMPLE in dataMM-B dataMM-C dataMM-D dataMM-E dataMM-F dataMM-G dataMM-H; do
-        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
     for SAMPLE in dataSingleM-B dataSingleM-C dataSingleM-D dataSingleM-E dataSingleM-F dataSingleM-G dataSingleM-H; do
-        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 done
 

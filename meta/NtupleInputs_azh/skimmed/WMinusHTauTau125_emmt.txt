@@ -1,3 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/WMinusHTauTau125_0_emmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/WMinusHTauTau125_1_emmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/WMinusHTauTau125_2_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/WMinusHTauTau125_0_emmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/WMinusHTauTau125_1_emmt.root

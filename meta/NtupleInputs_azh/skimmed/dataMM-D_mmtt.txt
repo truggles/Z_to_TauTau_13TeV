@@ -1,5 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-D_0_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-D_1_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-D_2_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-D_3_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataMM-D_4_mmtt.root
+/data/truggles/azhNov06SkimMerged/dataMM-D_0_mmtt.root
+/data/truggles/azhNov06SkimMerged/dataMM-D_1_mmtt.root

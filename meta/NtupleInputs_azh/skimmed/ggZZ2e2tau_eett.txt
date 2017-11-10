@@ -1,8 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_0_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_1_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_2_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_3_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_4_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_5_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_6_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ggZZ2e2tau_7_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/ggZZ2e2tau_0_eett.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/ggZZ2e2tau_1_eett.root

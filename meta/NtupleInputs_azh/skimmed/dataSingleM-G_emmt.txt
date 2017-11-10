@@ -1,5 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleM-G_0_emmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleM-G_1_emmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleM-G_2_emmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleM-G_3_emmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataSingleM-G_4_emmt.root
+/data/truggles/azhNov06SkimMerged/dataSingleM-G_0_emmt.root
+/data/truggles/azhNov06SkimMerged/dataSingleM-G_1_emmt.root

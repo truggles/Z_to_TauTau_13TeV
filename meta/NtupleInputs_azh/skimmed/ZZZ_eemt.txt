@@ -1,2 +1,1 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/ZZZ_0_eemt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/ZZZ_1_eemt.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/ZZZ_0_eemt.root

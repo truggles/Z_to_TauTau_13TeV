@@ -1,2 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/dataEE-G_0_eemt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/dataEE-G_1_eemt.root
+/data/truggles/azhNov06SkimMerged/dataEE-G_0_eemt.root
+/data/truggles/azhNov06SkimMerged/dataEE-G_1_eemt.root

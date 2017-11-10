@@ -1,9 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_0_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_1_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_2_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_3_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_4_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_5_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_6_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_7_mmmt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets2_8_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/DYJets2_0_mmmt.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/DYJets2_1_mmmt.root

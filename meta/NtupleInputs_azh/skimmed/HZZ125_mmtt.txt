@@ -1,3 +1,1 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/HZZ125_0_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/HZZ125_1_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/HZZ125_2_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/HZZ125_0_mmtt.root

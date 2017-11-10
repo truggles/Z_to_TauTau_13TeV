@@ -1,3 +1,1 @@
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets1_0_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets1_1_mmtt.root
-/data/truggles/azhHalloweenSkim_svFitPrep/DYJets1_2_mmtt.root
+/data/truggles/azhHalloweenSkim_svFitPrep_Merged/DYJets1_0_mmtt.root
