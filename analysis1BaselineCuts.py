@@ -319,12 +319,12 @@ def doInitialCuts(analysis, samples, **fargs) :
                 print "\n"
                 multiprocessingOutputs = []
 
-        if fargs['debug'] != 'true' and fargs['skimHdfs'] == 'true' :
+        if fargs['debug'] != 'true' :
             mpResults = [p.get() for p in multiprocessingOutputs]
 
             print "\n"
             print "#################################################################"
-            print "###       skimHdfs finished for %20s          ###" % sample
+            print "###       Finished cuts for %20s          ###" % sample
             print "#################################################################"
             print "\n"
             multiprocessingOutputs = []
@@ -438,7 +438,16 @@ def doInitialOrder(analysis, samples, **fargs) :
                 count += 1
                 # Make sure we loop over large samples to get all files
                 if count * numFilesPerCycle+1 > fileLen : go = False
-    
+
+            if fargs['debug'] != 'true' :
+                mpResults = [p.get() for p in multiprocessingOutputs]
+
+                print "\n"
+                print "#################################################################"
+                print "###       iso order finished for %20s         ###" % sample
+                print "#################################################################"
+                print "\n"
+                multiprocessingOutputs = []
     
     if fargs['debug'] == 'true' :
         print "#################################################################"
