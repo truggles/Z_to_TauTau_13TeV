@@ -44,7 +44,7 @@ def getTH1FfromTGraphAsymmErrors( asym, name ) :
 # certain bkg methods
 def setUpDirs( samples, params, analysis ) :
     
-    host = os.getenv('HOSTNAME', type=str)
+    host = os.getenv('HOSTNAME')
     if 'uwlogin' in host :
         if not os.path.exists( '/data/truggles/%s%s' % (analysis, params['mid1']) ) : os.makedirs( '/data/truggles/%s%s' % (analysis, params['mid1']) )
         if not os.path.exists( '/data/truggles/%s%s' % (analysis, params['mid2']) ) : os.makedirs( '/data/truggles/%s%s' % (analysis, params['mid2']) )
@@ -82,30 +82,30 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
     # Check if we have data files in samples
     # and remove them to correspond to the final state combo
     for sample in samples :
-        if final == 'ZEE' and 'dataMM' in sample : continue
-        if final == 'ZMM' and 'dataEE' in sample : continue
+        if final == 'ZEE' and ('dataMM' in sample or 'dataSingleM' in sample ): continue
+        if final == 'ZMM' and ('dataEE' in sample or 'dataSingleE' in sample ): continue
 
         if final == 'ZEE' : getChan = 'eeet' 
         elif final == 'ZMM' : getChan = 'emmt' 
         elif final == 'LLET' :
             getChan = 'eeet' 
-            if 'dataMM' in sample :
+            if ('dataMM' in sample or 'dataSingleM' in sample) :
                 getChan = 'emmt' 
         elif final == 'LLMT' :
             getChan = 'eemt' 
-            if 'dataMM' in sample :
+            if ('dataMM' in sample or 'dataSingleM' in sample) :
                 getChan = 'mmmt' 
         elif final == 'LLTT' :
             getChan = 'eett' 
-            if 'dataMM' in sample :
+            if ('dataMM' in sample or 'dataSingleM' in sample) :
                 getChan = 'mmtt' 
         elif final == 'LLEM' :
             getChan = 'eeem' 
-            if 'dataMM' in sample :
+            if ('dataMM' in sample or 'dataSingleM' in sample) :
                 getChan = 'emmm' 
         elif final == 'ZXX' : 
             getChan = 'eeet' 
-            if 'dataMM' in sample :
+            if ('dataMM' in sample or 'dataSingleM' in sample) :
                 getChan = 'emmt' 
 
         # Make new file to hold combined histos
@@ -137,9 +137,9 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
             if channel == getChan : 
                 print "Included as initial file"
                 continue
-            if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and 'dataMM' in sample :
+            if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm'] and ('dataMM' in sample or 'dataSingleM' in sample) :
                 continue
-            if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm'] and 'dataEE' in sample :
+            if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm'] and ('dataEE' in sample or 'dataSingleE' in sample) :
                 continue
             print channel," considered"
 
@@ -304,6 +304,10 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
             samples['dataEE-%s' % era]  = 'data_obs'
         if 'dataMM-%s' % era in inSamples :
             samples['dataMM-%s' % era]  = 'data_obs'
+        if 'dataSingleE-%s' % era in inSamples :
+            samples['dataSingleE-%s' % era]  = 'data_obs'
+        if 'dataSingleM-%s' % era in inSamples :
+            samples['dataSingleM-%s' % era]  = 'data_obs'
 
     for mass in ['110', '120', '125', '130', '140'] :
         if 'VBFHtoTauTau%s' % mass in inSamples :

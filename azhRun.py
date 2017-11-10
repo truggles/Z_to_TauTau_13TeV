@@ -37,7 +37,7 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
+azhSamples = ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
 
 for mass in [110, 120, 125, 130, 140] :
     azhSamples.append('ggHtoTauTau%i' % mass)
@@ -56,6 +56,8 @@ for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataEE-%s' % era)
     azhSamples.append('dataMM-%s' % era)
+    azhSamples.append('dataSingleE-%s' % era)
+    azhSamples.append('dataSingleM-%s' % era)
     
 #azhSamples = ['ZHWW125','HZZ125']
 #azhSamples = ['dataEE-B']
@@ -74,17 +76,18 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 16,
+    'numCores' : 8,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
-    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
+    'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeee','mmmm'],
     #'channels' : ['eeem',],
-    'cutMapper' : 'Skim',
+    #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
-    'mid1' : '1Sept05',
-    'mid2' : '2Sept05',
-    'mid3' : '3Sept05newZSelec',
+    'cutMapper' : 'SkimApplyNewTrig',
+    'mid1' : '1Nov05newTrig',
+    'mid2' : '2Nov05newTrig',
+    'mid3' : '3Nov05newTrig',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -140,16 +143,16 @@ makeFinalPlots = True
 doDataCards = True
 
 
-runPlots = False
-doMerge = False
-makeFinalPlots = False
+#runPlots = False
+#doMerge = False
+#makeFinalPlots = False
 doDataCards = False
 
 
 doZH = True
 #doZH = False
 useRedBkg = True
-#useRedBkg = False
+useRedBkg = False
 
 if useRedBkg :
     params['doRedBkg'] = True

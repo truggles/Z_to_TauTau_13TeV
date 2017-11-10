@@ -387,8 +387,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     getVar = '_'.join(breakUp)
     
                 # Remember data samples are called 'dataEE' and 'dataMM'
-                if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm', 'ZEE'] and 'dataMM' in sample : continue
-                if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm', 'ZMM'] and 'dataEE' in sample : continue
+                if channel in ['eeet', 'eemt', 'eett', 'eeem', 'eeee', 'eemm', 'ZEE'] and ('dataMM' in sample or 'dataSingleM' in sample) : continue
+                if channel in ['emmt', 'mmmt', 'mmtt', 'emmm', 'mmmm', 'ZMM'] and ('dataEE' in sample or 'dataSingleE' in sample) : continue
             
                 if channel == 'tt' and sample == 'dataEM' : continue
                 if channel == 'tt' and '-ZLL' in sample : continue
@@ -543,7 +543,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             #        print "%s xx--- yield 1 bin %f" % ( samp, sampHistos[samp].GetBinContent(2) )
 
             for samp in sampHistos.keys() :
-                if var == 'm_visCor' or var == 'A_Mass' :
+                if var == 'm_visCor' or var == 'A_Mass' or var == 'pt_1' :
                     print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
             #    # With Variable binning, need to set bin content appropriately
             #    if not varBinned : continue

@@ -58,7 +58,7 @@ if __name__ == '__main__' :
 
     if doAZH :
         # AZH June 01 Wisconsin -> uwlogin
-        azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
+        azhSamples = ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
         
         for mass in [110, 120, 125, 130, 140] :
             azhSamples.append('ggHtoTauTau%i' % mass)
@@ -77,15 +77,15 @@ if __name__ == '__main__' :
         for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
             azhSamples.append('dataEE-%s' % era)
             azhSamples.append('dataMM-%s' % era)
+            azhSamples.append('dataSingleE-%s' % era)
+            azhSamples.append('dataSingleM-%s' % era)
 
-        name = 'svFitSept20_ttZ_zh'
-        originalDir = '/nfs_scratch/truggles/'+name+'/'
-        originalDir = '/hdfs/store/user/truggles/svFitSept20_ttZ_zh/azhSept19skim_svFitPrep/'
-        targetDir = '/nfs_scratch/truggles/'+name+'Merged'
-        targetDir = '/nfs_scratch/truggles/azhSept20skim_svFit_Merged'
+        name = 'azhHalloweenSkim_svFitPrep'
+        originalDir = '/data/truggles/'+name+'/'
+        targetDir = '/data/truggles/'+name+'_Merged'
         checkDir( targetDir )
-        jobId = ''
         jobId = 'TauTau_13*'
+        jobId = ''
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         for channel in channels :
             for sample in azhSamples :
@@ -125,6 +125,7 @@ if __name__ == '__main__' :
         targetDir = '/nfs_scratch/truggles/svFitMay30_RivetSignals_SM-HTT_Merged'
         checkDir( targetDir )
         jobId = 'TauTau_13*'
+        jobId = ''
         for sample in SamplesDataCards :
              if debug:
                  mergeSample( jobId, sample, 'tt', originalDir, targetDir )
