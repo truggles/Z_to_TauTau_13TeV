@@ -164,7 +164,7 @@ def getCut( analysis, sample, channel, cutName ) :
     eeTrigDoubleE = '(doubleE_23_12Pass > 0)'
     
     mmTrigMC = '(doubleMuPass > 0 || doubleMuNoDZPass > 0 || singleIsoTkMu24Pass > 0 || singleIsoMu24Pass > 0)'
-    mmTrigSingleM = '( (doubleMuPass < 0.5 || doubleMuNoDZPass < 0.5) && (singleIsoTkMu24Pass > 0 || singleIsoMu24Pass > 0) )'
+    mmTrigSingleM = '( (doubleMuPass < 0.5 && doubleMuNoDZPass < 0.5) && (singleIsoTkMu24Pass > 0 || singleIsoMu24Pass > 0) )'
     mmTrigDoubleM = '(doubleMuPass > 0 || doubleMuNoDZPass > 0)'
 
     if 'data' in sample :
