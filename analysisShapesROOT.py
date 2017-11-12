@@ -469,12 +469,25 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetBinContent( bin_, setVal )
                 # Make sure we have no negative bins
                 for bin_ in range( 1, histos[ name ].GetXaxis().GetNbins()+1 ) :
-                    if name == 'QCD' : # Set all QCD 0.0 and negative vals to 1e-5
+                    # only check QCD if var == baseVar, else it's a shape uncert which doesn't apply to QCD
+                    if name == 'QCD' and var == baseVar : # Set all QCD 0.0 and negative vals to 1e-5
                         if histos[ name ].GetBinContent( bin_ ) == 0. :
                             histos[ name ].SetBinContent( bin_, setVal )
                             # Poissonian error for 0
                             histos[ name ].SetBinError( bin_, 1.8 )
                             print "name: %s   Set bin %i to value: %s" % (name, bin_, setVal)
+                        elif histos[ name ].GetBinContent( bin_ ) < 0. :
+                            # Don't change the uncertainty on the bin
+                            # it was set by the negative content, leave it as is
+                            histos[ name ].SetBinContent( bin_, setVal )
+                            print "name: %s   Set bin %i to value: %s" % (name, bin_, setVal)
+                    elif name == 'ZTT' : # Set all ZTT 0.0 and negative vals to 1e-5
+                        if histos[ name ].GetBinContent( bin_ ) == 0. :
+                            histos[ name ].SetBinContent( bin_, setVal )
+                            # Poissonian error for 0 on nominal ZTT event weight of 0.2
+                            nominal_ztt_event_weight = 0.2
+                            histos[ name ].SetBinError( bin_, 1.8 * nominal_ztt_event_weight )
+                            print "name: %s   Set bin %i to value: %s" % (name, bin_, setVal * nominal_ztt_event_weight )
                         elif histos[ name ].GetBinContent( bin_ ) < 0. :
                             # Don't change the uncertainty on the bin
                             # it was set by the negative content, leave it as is
