@@ -565,6 +565,12 @@ def sampleDetails( analysis ) :
         sampleMap['SM-Higgs'][ 'W'+aHiggs ]['group'] = 'WH_aHTT'
         sampleMap['SM-Higgs'][ 'Z'+aHiggs ] = dict(sampleMap['SM-Higgs']['ZHTauTau125'])
         sampleMap['SM-Higgs'][ 'Z'+aHiggs ]['group'] = 'ZH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggH125-maxmix' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
+    sampleMap['SM-Higgs'][ 'ggH125-maxmix' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggH125-pseudoscalar' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
+    sampleMap['SM-Higgs'][ 'ggH125-pseudoscalar' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggH125-sm' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
+    sampleMap['SM-Higgs'][ 'ggH125-sm' ]['group'] = 'ggH_aHTT'
 
 
     # Simplify tracking SM-Higgs and add to all returned maps

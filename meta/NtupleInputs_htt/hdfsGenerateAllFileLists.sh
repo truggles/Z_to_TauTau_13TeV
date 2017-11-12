@@ -4,6 +4,7 @@ ALL=/hdfs/store/user/caillol/SMHTT_mc_feb13
 SIGNALS=/hdfs/store/user/truggles/SMHTT_signals_may30
 #aHTT=/hdfs/store/user/truggles/aHTT_signals_july11_v3
 aHTT=/hdfs/store/user/truggles/aHTT_signals_aug16
+aHTT_ggH=/hdfs/store/user/truggles/aHTT_signals_ggH_nov11
 
 #ls ${DATA}/data_Tau_Run2016B*/*.root                                            		 > hdfs/dataTT-B.txt 
 #ls ${DATA}/data_Tau_Run2016C/*.root                                            		     > hdfs/dataTT-C.txt 
@@ -99,4 +100,7 @@ ls ${aHTT}/ZHiggs0PH_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                
 ls ${aHTT}/ZHiggs0PHfZH05ph0_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                     > hdfs/ZHtoTauTau0PHf05ph0125.txt
 ls ${aHTT}/ZHiggs0PM_Undecayed_M-125_13TeV-JHUgenV6_v6-v2/*.root                             > hdfs/ZHtoTauTau0PM125.txt
 
+ls ${aHTT_ggH}/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_sm_JHU_v6-v1/*.root                  > hdfs/ggH125-sm.txt 
+ls ${aHTT_ggH}/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_maxmix_JHU_v6-v1/*.root              > hdfs/ggH125-maxmix.txt 
+ls ${aHTT_ggH}/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_pseudoscalar_JHU_v6-v1/*.root        > hdfs/ggH125-pseudoscalar.txt 
 

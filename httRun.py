@@ -64,6 +64,9 @@ for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
     SamplesDataCards.append( 'W'+aHiggs )
     SamplesDataCards.append( 'Z'+aHiggs )
+SamplesDataCards.append('ggH125-maxmix')
+SamplesDataCards.append('ggH125-pseudoscalar')
+SamplesDataCards.append('ggH125-sm')
     
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
@@ -96,9 +99,9 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1June29mela',
-    'mid2' : '2June29mela',
-    'mid3' : '3June29mela',
+    'mid1' : '1Nov12newGGH',
+    'mid2' : '2Nov12newGGH',
+    'mid3' : '3Nov12newGGH',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -136,7 +139,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
