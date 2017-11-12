@@ -355,6 +355,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     electronSFhtt = ElectronSFhtt('IdIso0p15')
     #electronSFhtt = ElectronSFhtt('IdIso0p10')
 
+    from util.zhTriggerSFs import zhTriggerSF
+    zType = 'ZEE' if channel in ['eeet','eemt','eett','eeem','eeee'] else 'ZMM'
+    zhSF = zhTriggerSF( zType )
+
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
     from util.extraTauMVArun2v1IsoWPs import IsoWPAdder
@@ -761,6 +765,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     isoCode2B = tnew.Branch('isoCode2', isoCode2, 'isoCode2/F')
     weight = array('f', [ 0 ] )
     weightB = tnew.Branch('weight', weight, 'weight/F')
+    zhTrigWeight = array('f', [ 0 ] )
+    zhTrigWeightB = tnew.Branch('zhTrigWeight', zhTrigWeight, 'zhTrigWeight/F')
     azhWeight = array('f', [ 0 ] )
     azhWeightB = tnew.Branch('azhWeight', azhWeight, 'azhWeight/F')
     puweight = array('f', [ 0 ] )
@@ -1307,6 +1313,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tauSF_3[0] = 1
             tauSF_4[0] = 1
             azhWeight[0] = 1
+            zhTrigWeight[0] = 1
             puweight[0] = 1
             qqZZ4lWeight[0] = 1
             tauPtWeightUp[0] = 1
@@ -1410,6 +1417,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     phi_sv[0] = getattr( row, l3+"_"+l4+"_Phi" )
                 A_Mass[0] = get_A_mass( zMass, zPt, zEta, zPhi, \
                         hMass, hPt, hEta, hPhi)
+
+                if 'data' not in sample :
+                    zhTrigWeight[0] = zhSF.getZHTriggerSF( row.nvtx, pt1, eta1, pt2, eta2 )
 
 
             # Data specific vars
@@ -1698,7 +1708,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF_1[0] * muonSF_2[0] * muonSF_3[0] * muonSF_4[0]
                 azhWeight[0] *= electronSF_1[0] * electronSF_2[0] * electronSF_3[0] * electronSF_4[0]
-                azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0]
+                azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0] * zhTrigWeight[0]
 
 
 
