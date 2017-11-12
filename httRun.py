@@ -162,7 +162,8 @@ plotAntiIso = False
 higgsPt = 'Higgs_PtCor'
 
 # MELA
-cats = ['inclusive', '0jet2D', 'boosted','vbf',]
+#cats = ['inclusive', '0jet2D', 'boosted','vbf',]
+cats = ['0jet2D', 'boosted','vbf',]
 #cats = ['vbf',]
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125', 'VBFHtoTauTau0PM-v5125']
@@ -270,8 +271,9 @@ for isoVal in isoVals :
         'mjj:m_sv:KD_int_DCP_0to1',
         'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
         'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
+        #'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
+        #'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8',
         'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',]
         for cat in cats :
             for var in vars :

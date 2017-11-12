@@ -21,13 +21,15 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 # Make a 2D histo
 def get2DVars( cutName ) :
     if 'mjj' in cutName and 'm_sv' in cutName and 'KD_bsm_mlt' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
         #xBins = array( 'd', [0,95,115,135,155,400] )
         #yBins = array( 'd', [0,300,700,1100,1500,10000] )
         #zBins = array( 'd', [0,.2,.4,.6,.8,1] )
     elif 'mjj' in cutName and 'm_sv' in cutName and 'KD_int' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
         #xBins = array( 'd', [0,95,115,135,155,400] )
         #yBins = array( 'd', [0,300,700,1100,1500,10000] )
@@ -37,7 +39,8 @@ def get2DVars( cutName ) :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,10000] )
     elif 'mjj' in cutName and 'm_sv' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
     elif 'Higgs_PtCor' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
@@ -46,7 +49,8 @@ def get2DVars( cutName ) :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,10000] )
     elif 'mjj' in cutName and 'm_visCor' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
     return (xBins, yBins)
 
@@ -347,9 +351,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         if 'ZTTinclusive' in outFile.GetName() or 'ZTT0jet' in outFile.GetName() :
             if ":" in var : continue
         elif 'ZTTboosted' in outFile.GetName() :
-            if 'mjj:m_sv:' in var : continue
+            if 'mjj:' in var : continue
+            if 'm_sv' in var and ":" not in var and var != 'm_sv' : continue # skip m_sv shapes
         elif 'ZTTvbf' in outFile.GetName() :
-            if 'Higgs_PtCor:m_sv' in var : continue
+            if 'Higgs_PtCor:' in var : continue
+            if 'm_sv' in var and ":" not in var and var != 'm_sv' : continue # skip m_sv shapes
 
         #print var
 
@@ -539,10 +545,12 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 additionalCutToUse += '*(KD_bsm_mlt < .2)'
             elif 'KD_bsm_mlt_D0_0p2to0p4' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.2 && KD_bsm_mlt < .4)'
-            elif 'KD_bsm_mlt_D0_0p4to0p6' in var :
-                additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .6)'
-            elif 'KD_bsm_mlt_D0_0p6to0p8' in var :
-                additionalCutToUse += '*(KD_bsm_mlt >= 0.6 && KD_bsm_mlt < .8)'
+            #elif 'KD_bsm_mlt_D0_0p4to0p6' in var :
+            #    additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .6)'
+            elif 'KD_bsm_mlt_D0_0p4to0p8' in var :
+                additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .8)'
+            #elif 'KD_bsm_mlt_D0_0p6to0p8' in var :
+            #    additionalCutToUse += '*(KD_bsm_mlt >= 0.6 && KD_bsm_mlt < .8)'
             elif 'KD_bsm_mlt_D0_0p8to1' in var : 
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.8)'
             # For 1D MELA vars in slices of mjj
@@ -574,8 +582,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         plotVar = plotVar.replace( ':KD_int_DCP_0to1', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0to0p2', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p2to0p4', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p6', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p6to0p8', '' )
+        #plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p6', '' )
+        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p8', '' )
+        #plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p6to0p8', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p8to1', '' )
         plotVar = plotVar.replace( '_mjj0-300', '' )
         plotVar = plotVar.replace( '_mjj300-700', '' )
@@ -801,8 +810,9 @@ def getHistoDict( analysis, channel ) :
             'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0to0p2' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0p8to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
@@ -819,14 +829,18 @@ def getHistoDict( analysis, channel ) :
 
         ''' added shape systematics '''
         #toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_visCor', 'm_sv'] # No extra shapes
-        toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
+        #toAdd = ['pt_sv:m_sv', 'mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv'] # No extra shapes
         #toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
         #toAdd = [] # No extra shapes
-        toAdd = ['mjj:m_sv', 'm_sv', 'Higgs_PtCor:m_sv',
+        toAdd = [
+            'mjj:m_sv', 
+            'm_sv',
+            'Higgs_PtCor:m_sv',
             'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
             'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8',
+            #'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
             'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
             'mjj:m_sv:KD_int_DCP_neg1to0',
             'mjj:m_sv:KD_int_DCP_0to1',
