@@ -1,2 +1,2 @@
-/data/truggles/azhNov06SkimMerged/dataMM-G_0_mmmt.root
-/data/truggles/azhNov06SkimMerged/dataMM-G_1_mmmt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-G_0_mmmt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-G_1_mmmt.root

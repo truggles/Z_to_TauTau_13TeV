@@ -1,2 +1,3 @@
-/data/truggles/azhNov06SkimMerged/dataSingleM-H_0_mmmt.root
-/data/truggles/azhNov06SkimMerged/dataSingleM-H_1_mmmt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_0_mmmt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_1_mmmt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_2_mmmt.root

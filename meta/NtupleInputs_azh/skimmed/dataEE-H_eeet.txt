@@ -1,3 +1,4 @@
-/data/truggles/azhNov06SkimMerged/dataEE-H_0_eeet.root
-/data/truggles/azhNov06SkimMerged/dataEE-H_1_eeet.root
-/data/truggles/azhNov06SkimMerged/dataEE-H_2_eeet.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataEE-H_0_eeet.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataEE-H_1_eeet.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataEE-H_2_eeet.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataEE-H_3_eeet.root

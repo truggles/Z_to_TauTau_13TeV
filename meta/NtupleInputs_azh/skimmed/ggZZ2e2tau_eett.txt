@@ -1,2 +1,3 @@
-/data/truggles/azhHalloweenSkim_svFitPrep_Merged/ggZZ2e2tau_0_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep_Merged/ggZZ2e2tau_1_eett.root
+/data/truggles/zhSVFit_Nov05_MC_azh/ggZZ2e2tau_0_eett.root
+/data/truggles/zhSVFit_Nov05_MC_azh/ggZZ2e2tau_1_eett.root
+/data/truggles/zhSVFit_Nov05_MC_azh/ggZZ2e2tau_2_eett.root

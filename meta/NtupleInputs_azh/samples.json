@@ -10,7 +10,7 @@
     "summedWeightsNorm": 62627174.0, 
     "summedWeights": 62627174.0, 
     "nevents": 62627174, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 1, 
     "nlumis": 316059
   }, 
   "DYJets2": {
@@ -24,7 +24,7 @@
     "summedWeightsNorm": 19970551.0, 
     "summedWeights": 19970551.0, 
     "nevents": 19970551, 
-    "nNtupleFiles": 15, 
+    "nNtupleFiles": 3, 
     "nlumis": 100052
   }, 
   "DYJets3": {
@@ -38,7 +38,7 @@
     "summedWeightsNorm": 5856110.0, 
     "summedWeights": 5856110.0, 
     "nevents": 5856110, 
-    "nNtupleFiles": 7, 
+    "nNtupleFiles": 3, 
     "nlumis": 29086
   }, 
   "DYJets4": {
@@ -94,7 +94,7 @@
     "summedWeightsNorm": 4139587.564352153, 
     "summedWeights": 3746393.0, 
     "nevents": 428036, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 2217
   }, 
   "azh300": {
@@ -108,7 +108,7 @@
     "summedWeightsNorm": 499377.0, 
     "summedWeights": 499377.0, 
     "nevents": 499377, 
-    "nNtupleFiles": 8, 
+    "nNtupleFiles": 3, 
     "nlumis": 3206
   }, 
   "azh320": {
@@ -122,7 +122,7 @@
     "summedWeightsNorm": 474784.0, 
     "summedWeights": 474784.0, 
     "nevents": 474784, 
-    "nNtupleFiles": 9, 
+    "nNtupleFiles": 3, 
     "nlumis": 2411
   }, 
   "azh400": {
@@ -136,7 +136,7 @@
     "summedWeightsNorm": 495692.0, 
     "summedWeights": 495692.0, 
     "nevents": 495692, 
-    "nNtupleFiles": 11, 
+    "nNtupleFiles": 3, 
     "nlumis": 2762
   }, 
   "WMinusHTauTau140": {
@@ -220,7 +220,7 @@
     "summedWeightsNorm": 499387.0, 
     "summedWeights": 499387.0, 
     "nevents": 499387, 
-    "nNtupleFiles": 8, 
+    "nNtupleFiles": 2, 
     "nlumis": 2957
   }, 
   "azh340": {
@@ -234,7 +234,7 @@
     "summedWeightsNorm": 491744.0, 
     "summedWeights": 491744.0, 
     "nevents": 491744, 
-    "nNtupleFiles": 10, 
+    "nNtupleFiles": 3, 
     "nlumis": 2859
   }, 
   "VBFHtoTauTau140": {
@@ -262,7 +262,7 @@
     "summedWeightsNorm": 1197037.3941416983, 
     "summedWeights": 15791239.0, 
     "nevents": 1930828, 
-    "nNtupleFiles": 6, 
+    "nNtupleFiles": 2, 
     "nlumis": 9969
   }, 
   "dataEE-F": {
@@ -282,15 +282,15 @@
   "WZ": {
     "STATUS": "Error", 
     "DAS status": "ok", 
-    "nEvents": 4245828, 
+    "nEvents": 4495828, 
     "DAS Path": "/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
     "nfiles": 30, 
     "nblocks": 18, 
     "Cross Section (pb)": 0.001, 
-    "summedWeightsNorm": 4213693.016871285, 
-    "summedWeights": 4036330.0, 
+    "summedWeightsNorm": 14982126.407670666, 
+    "summedWeights": 4076832.0, 
     "nevents": 1000000, 
-    "nNtupleFiles": 6, 
+    "nNtupleFiles": 3, 
     "nlumis": 5209
   }, 
   "ttZ": {
@@ -304,7 +304,7 @@
     "summedWeightsNorm": 5664168.0, 
     "summedWeights": 5664168.0, 
     "nevents": 9874825, 
-    "nNtupleFiles": 101, 
+    "nNtupleFiles": 12, 
     "nlumis": 64837
   }, 
   "ggHtoTauTau125": {
@@ -332,7 +332,7 @@
     "summedWeightsNorm": 999800.0, 
     "summedWeights": 999800.0, 
     "nevents": 999800, 
-    "nNtupleFiles": 7, 
+    "nNtupleFiles": 1, 
     "nlumis": 5026
   }, 
   "ZZZ": {
@@ -346,7 +346,7 @@
     "summedWeightsNorm": 155658.40979596876, 
     "summedWeights": 2555.0, 
     "nevents": 249237, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 1, 
     "nlumis": 1248
   }, 
   "ggHtoTauTau120": {
@@ -374,7 +374,7 @@
     "summedWeightsNorm": 495745.0, 
     "summedWeights": 495745.0, 
     "nevents": 495745, 
-    "nNtupleFiles": 9, 
+    "nNtupleFiles": 3, 
     "nlumis": 2913
   }, 
   "ggZZ4e": {
@@ -388,7 +388,7 @@
     "summedWeightsNorm": 965000.0, 
     "summedWeights": 965000.0, 
     "nevents": 965000, 
-    "nNtupleFiles": 18, 
+    "nNtupleFiles": 6, 
     "nlumis": 4825
   }, 
   "TT": {
@@ -402,7 +402,7 @@
     "summedWeightsNorm": 77081156.0, 
     "summedWeights": 77081156.0, 
     "nevents": 77081156, 
-    "nNtupleFiles": 54, 
+    "nNtupleFiles": 9, 
     "nlumis": 481156
   }, 
   "dataEE-B": {
@@ -455,10 +455,10 @@
     "nfiles": 823, 
     "nblocks": 44, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -2997, 
+    "summedWeightsNorm": -3996, 
     "summedWeights": 0.0, 
     "nevents": 78764716, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 4, 
     "nlumis": 46288
   }, 
   "ggZZ2e2tau": {
@@ -472,7 +472,7 @@
     "summedWeightsNorm": 500000.0, 
     "summedWeights": 500000.0, 
     "nevents": 500000, 
-    "nNtupleFiles": 8, 
+    "nNtupleFiles": 3, 
     "nlumis": 2500
   }, 
   "ZZ4l": {
@@ -486,7 +486,7 @@
     "summedWeightsNorm": 103251098.0, 
     "summedWeights": 103251098.0, 
     "nevents": 6669988, 
-    "nNtupleFiles": 335, 
+    "nNtupleFiles": 48, 
     "nlumis": 34502
   }, 
   "ZHTauTau110": {
@@ -500,7 +500,7 @@
     "summedWeightsNorm": 447676.5146932976, 
     "summedWeights": 526960.0, 
     "nevents": 479352, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 4502
   }, 
   "ZHTauTau130": {
@@ -556,7 +556,7 @@
     "summedWeightsNorm": 500000.0, 
     "summedWeights": 500000.0, 
     "nevents": 500000, 
-    "nNtupleFiles": 9, 
+    "nNtupleFiles": 2, 
     "nlumis": 2961
   }, 
   "VBFHtoTauTau110": {
@@ -581,10 +581,10 @@
     "nfiles": 374, 
     "nblocks": 27, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -16983, 
+    "summedWeightsNorm": -1998, 
     "summedWeights": 0.0, 
     "nevents": 47693168, 
-    "nNtupleFiles": 17, 
+    "nNtupleFiles": 2, 
     "nlumis": 50502
   }, 
   "azh260": {
@@ -598,7 +598,7 @@
     "summedWeightsNorm": 499246.0, 
     "summedWeights": 499246.0, 
     "nevents": 499246, 
-    "nNtupleFiles": 7, 
+    "nNtupleFiles": 2, 
     "nlumis": 2649
   }, 
   "ZHTauTau125": {
@@ -612,7 +612,7 @@
     "summedWeightsNorm": 532279.5261767044, 
     "summedWeights": 426885.0, 
     "nevents": 571597, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 1, 
     "nlumis": 5774
   }, 
   "WZZ": {
@@ -623,10 +623,10 @@
     "nfiles": 5, 
     "nblocks": 2, 
     "Cross Section (pb)": 0.05565, 
-    "summedWeightsNorm": 194654.13553687354, 
+    "summedWeightsNorm": 194654.1355368735, 
     "summedWeights": 12358.0, 
     "nevents": 246800, 
-    "nNtupleFiles": 4, 
+    "nNtupleFiles": 1, 
     "nlumis": 2473
   }, 
   "WMinusHTauTau125": {
@@ -640,7 +640,7 @@
     "summedWeightsNorm": 4160626.5751177864, 
     "summedWeights": 2345782.0, 
     "nevents": 445200, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 2226
   }, 
   "ggZZ4m": {
@@ -693,10 +693,10 @@
     "nfiles": 215, 
     "nblocks": 15, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 28246946, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 26871
   }, 
   "dataMM-D": {
@@ -749,10 +749,10 @@
     "nfiles": 149, 
     "nblocks": 27, 
     "Cross Section (pb)": 0.616, 
-    "summedWeightsNorm": 382703.19937934465, 
+    "summedWeightsNorm": 382703.1993793447, 
     "summedWeights": 207110.0, 
     "nevents": 5934228, 
-    "nNtupleFiles": 33, 
+    "nNtupleFiles": 5, 
     "nlumis": 30316
   }, 
   "dataEE-H": {
@@ -791,10 +791,10 @@
     "nfiles": 1201, 
     "nblocks": 95, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -18981, 
+    "summedWeightsNorm": -2997, 
     "summedWeights": 0.0, 
     "nevents": 169642135, 
-    "nNtupleFiles": 19, 
+    "nNtupleFiles": 3, 
     "nlumis": 50502
   }, 
   "dataSingleM-G": {
@@ -805,10 +805,10 @@
     "nfiles": 1083, 
     "nblocks": 91, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 149916849, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 45788
   }, 
   "dataSingleM-F": {
@@ -833,10 +833,10 @@
     "nfiles": 637, 
     "nblocks": 49, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 90963495, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 26865
   }, 
   "dataSingleM-D": {
@@ -847,10 +847,10 @@
     "nfiles": 684, 
     "nblocks": 54, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 98017996, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 30072
   }, 
   "dataSingleM-C": {
@@ -875,10 +875,10 @@
     "nfiles": 972, 
     "nblocks": 92, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 158145722, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 58962
   }, 
   "ggHtoTauTau110": {
@@ -1018,7 +1018,7 @@
     "summedWeightsNorm": 217865.01687128528, 
     "summedWeights": 40502.0, 
     "nevents": 250000, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 1253
   }, 
   "dataSingleE-G": {
@@ -1029,10 +1029,10 @@
     "nfiles": 1317, 
     "nblocks": 80, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -3996, 
+    "summedWeightsNorm": -1998, 
     "summedWeights": 0.0, 
     "nevents": 153330123, 
-    "nNtupleFiles": 4, 
+    "nNtupleFiles": 2, 
     "nlumis": 46306
   }, 
   "dataSingleE-F": {
@@ -1043,10 +1043,10 @@
     "nfiles": 721, 
     "nblocks": 43, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 70593532, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 19441
   }, 
   "dataSingleE-E": {
@@ -1057,10 +1057,10 @@
     "nfiles": 1008, 
     "nblocks": 61, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 117321545, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 27153
   }, 
   "dataSingleE-D": {
@@ -1071,10 +1071,10 @@
     "nfiles": 1261, 
     "nblocks": 79, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -2997, 
+    "summedWeightsNorm": -1998, 
     "summedWeights": 0.0, 
     "nevents": 148167727, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 2, 
     "nlumis": 30238
   }, 
   "dataSingleE-C": {
@@ -1085,10 +1085,10 @@
     "nfiles": 814, 
     "nblocks": 52, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -1998, 
+    "summedWeightsNorm": -999, 
     "summedWeights": 0.0, 
     "nevents": 97259854, 
-    "nNtupleFiles": 2, 
+    "nNtupleFiles": 1, 
     "nlumis": 18769
   }, 
   "dataSingleE-B": {
@@ -1099,10 +1099,10 @@
     "nfiles": 1948, 
     "nblocks": 128, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -3996, 
+    "summedWeightsNorm": -1998, 
     "summedWeights": 0.0, 
     "nevents": 246440440, 
-    "nNtupleFiles": 4, 
+    "nNtupleFiles": 2, 
     "nlumis": 59819
   }, 
   "WMinusHTauTau120": {
@@ -1127,10 +1127,10 @@
     "nfiles": 74, 
     "nblocks": 51, 
     "Cross Section (pb)": 0.023450399999999996, 
-    "summedWeightsNorm": 450471.93615962495, 
+    "summedWeightsNorm": 450471.9361596249, 
     "summedWeights": 250789.0, 
     "nevents": 481600, 
-    "nNtupleFiles": 3, 
+    "nNtupleFiles": 1, 
     "nlumis": 3209
   }, 
   "DYJets": {
@@ -1144,7 +1144,7 @@
     "summedWeightsNorm": 145803217.0, 
     "summedWeights": 145803217.0, 
     "nevents": 49144274, 
-    "nNtupleFiles": 61, 
+    "nNtupleFiles": 8, 
     "nlumis": 710475
   }, 
   "dataEE-C": {
@@ -1172,7 +1172,7 @@
     "summedWeightsNorm": 497392.0, 
     "summedWeights": 497392.0, 
     "nevents": 497392, 
-    "nNtupleFiles": 10, 
+    "nNtupleFiles": 3, 
     "nlumis": 3051
   }, 
   "dataSingleE-H": {
@@ -1183,10 +1183,10 @@
     "nfiles": 1149, 
     "nblocks": 67, 
     "Cross Section (pb)": 999.0, 
-    "summedWeightsNorm": -4995, 
+    "summedWeightsNorm": -1998, 
     "summedWeights": 0.0, 
     "nevents": 125826667, 
-    "nNtupleFiles": 5, 
+    "nNtupleFiles": 2, 
     "nlumis": 51328
   }
 }

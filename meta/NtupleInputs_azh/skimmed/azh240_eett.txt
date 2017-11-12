@@ -1,2 +1,2 @@
-/data/truggles/azhHalloweenSkim_svFitPrep_Merged/azh240_0_eett.root
-/data/truggles/azhHalloweenSkim_svFitPrep_Merged/azh240_1_eett.root
+/data/truggles/zhSVFit_Nov05_MC_azh/azh240_0_eett.root
+/data/truggles/zhSVFit_Nov05_MC_azh/azh240_1_eett.root

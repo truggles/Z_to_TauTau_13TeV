@@ -1,5 +1,7 @@
-/data/truggles/azhNov06SkimMerged/dataSingleM-H_0_mmtt.root
-/data/truggles/azhNov06SkimMerged/dataSingleM-H_1_mmtt.root
-/data/truggles/azhNov06SkimMerged/dataSingleM-H_2_mmtt.root
-/data/truggles/azhNov06SkimMerged/dataSingleM-H_3_mmtt.root
-/data/truggles/azhNov06SkimMerged/dataSingleM-H_4_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_0_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_1_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_2_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_3_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_4_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_5_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_6_mmtt.root

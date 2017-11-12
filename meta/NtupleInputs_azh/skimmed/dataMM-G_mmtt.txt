@@ -1,4 +1,5 @@
-/data/truggles/azhNov06SkimMerged/dataMM-G_0_mmtt.root
-/data/truggles/azhNov06SkimMerged/dataMM-G_1_mmtt.root
-/data/truggles/azhNov06SkimMerged/dataMM-G_2_mmtt.root
-/data/truggles/azhNov06SkimMerged/dataMM-G_3_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-G_0_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-G_1_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-G_2_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-G_3_mmtt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-G_4_mmtt.root
