@@ -567,10 +567,13 @@ def sampleDetails( analysis ) :
         sampleMap['SM-Higgs'][ 'Z'+aHiggs ]['group'] = 'ZH_aHTT'
     sampleMap['SM-Higgs'][ 'ggH125-maxmix' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
     sampleMap['SM-Higgs'][ 'ggH125-maxmix' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggH125-maxmix' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_maxmix_JHU/%s-v1/MINIAODSIM'  % moriond17
     sampleMap['SM-Higgs'][ 'ggH125-pseudoscalar' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
     sampleMap['SM-Higgs'][ 'ggH125-pseudoscalar' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggH125-pseudoscalar' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_pseudoscalar_JHU/%s-v1/MINIAODSIM'  % moriond17
     sampleMap['SM-Higgs'][ 'ggH125-sm' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
     sampleMap['SM-Higgs'][ 'ggH125-sm' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggH125-sm' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_sm_JHU/%s-v1/MINIAODSIM' % moriond17
 
 
     # Simplify tracking SM-Higgs and add to all returned maps

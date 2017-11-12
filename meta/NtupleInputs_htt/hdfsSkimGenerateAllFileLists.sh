@@ -1,6 +1,7 @@
 
 ALL=/data/truggles/svFitApr01_SM-HTT_Merged
 aHTT=/data/truggles/svFitAug21_aHTT_officialSigs_Merged
+GGH=/data/truggles/svFitNov12_aHTT_GGH
 CHANNEL=tt
 
 
@@ -30,4 +31,9 @@ for SAMPLE in VBF W Z; do
         ls ${aHTT}/${SAMPLE}${MODE}_*_${CHANNEL}.root > skimmed/${SAMPLE}${MODE}_${CHANNEL}.txt
     done
 done
+
+for SAMPLE in ggH125-sm ggH125-maxmix ggH125-pseudoscalar; do
+    ls ${GGH}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+done
+
 

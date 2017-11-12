@@ -1258,5 +1258,47 @@
     "nevents": 77081156, 
     "nNtupleFiles": 5, 
     "nlumis": 481156
+  },
+  "ggH125-pseudoscalar": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 1478400, 
+    "DAS Path": "/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_pseudoscalar_JHU/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 39, 
+    "nblocks": 22, 
+    "Cross Section (pb)": 3.045966, 
+    "summedWeightsNorm": 1478400.0, 
+    "summedWeights": 1478400.0, 
+    "nevents": 1478400, 
+    "nNtupleFiles": 39, 
+    "nlumis": 7392
+  }, 
+  "ggH125-maxmix": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 1496800, 
+    "DAS Path": "/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_maxmix_JHU/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 35, 
+    "nblocks": 16, 
+    "Cross Section (pb)": 3.045966, 
+    "summedWeightsNorm": 1496800.0, 
+    "summedWeights": 1496800.0, 
+    "nevents": 1496800, 
+    "nNtupleFiles": 35, 
+    "nlumis": 7484
+  }, 
+  "ggH125-sm": {
+    "STATUS": "Good to Go!", 
+    "DAS status": "ok", 
+    "nEvents": 1482400, 
+    "DAS Path": "/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_sm_JHU/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
+    "nfiles": 27, 
+    "nblocks": 8, 
+    "Cross Section (pb)": 3.045966, 
+    "summedWeightsNorm": 1482400.0, 
+    "summedWeights": 1482400.0, 
+    "nevents": 1482400, 
+    "nNtupleFiles": 27, 
+    "nlumis": 7412
   }
 }
