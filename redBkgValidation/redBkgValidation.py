@@ -42,6 +42,8 @@ def decorate( p, channel, h1, h2, doFinal=False ) :
     if h1.Integral() > 0 and h2.Integral() > 0 :
         str1b = "     Int: %3.2f+/-%1.3f pct" % (h1.Integral(), err3/h1.Integral()*100)
         str2b = "     Int: %3.2f+/-%1.3f pct" % (h2.Integral(), err4/h2.Integral()*100)
+        ksNoNorm = h1.KolmogorovTest( h2, 'X' )
+        ksNorm = h1.KolmogorovTest( h2, 'XN' )
     if h1.Integral() > 0 and h2.Integral() > 0 and doFinal :
         for b in range( 0, h1.GetNbinsX()+1 ) :
             print "bin %i h1 %2.2f" % (b, h1.GetBinContent( b ) )
@@ -71,10 +73,10 @@ def getHistoDict( analysis ) :
         #'Z_Pt' : [10, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
         ##'m_vis' : [7, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
         #'m_sv' : [15, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
-        #'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
+        'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
         ##'pt_1' : [10, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'],
         ##'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
-        'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
+        #'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
         #'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
     }
     return genVarMap
@@ -136,9 +138,9 @@ def makePlots( sample ) :
         print compfile
     
         var = 'pt_3'
-        #var = 'pt_4'
-        #var = 'm_sv'
-        #var = 'met'
+        var = 'pt_4'
+        var = 'm_sv'
+        var = 'met'
     
         h1 = ROOT.TH1D(var+'_'+channel, var+'_'+channel, plotVars[var][0], plotVars[var][1], plotVars[var][2])
         hComp = compfile.Get('%s_Histos/%s' % (channel, var))
