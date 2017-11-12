@@ -66,10 +66,10 @@ class zhTriggerSF :
         if nvtx > self.nvtxMax : nvtx = self.nvtxMax
 
         # Start with double lepton SF as that applies to all events
-        ineff_data = (1. - self.doubleLeadingData.GetBinContent( self.doubleLeadingData.FindBin( pt1, eta1 ) ) )
-        ineff_data *= (1. - self.doubleSubleadingData.GetBinContent( self.doubleSubleadingData.FindBin( pt2, nvtx ) ) )
-        ineff_mc = (1. - self.doubleLeadingMC.GetBinContent( self.doubleLeadingMC.FindBin( pt1, eta1 ) ) )
-        ineff_mc *= (1. - self.doubleSubleadingMC.GetBinContent( self.doubleSubleadingMC.FindBin( pt2, nvtx ) ) )
+        ineff_data = (1. - self.doubleLeadingData.GetBinContent( self.doubleLeadingData.FindBin( pt1, eta1 ) ) \
+                * self.doubleSubleadingData.GetBinContent( self.doubleSubleadingData.FindBin( pt2, nvtx ) ) )
+        ineff_mc = (1. - self.doubleLeadingMC.GetBinContent( self.doubleLeadingMC.FindBin( pt1, eta1 ) ) \
+                * self.doubleSubleadingMC.GetBinContent( self.doubleSubleadingMC.FindBin( pt2, nvtx ) ) )
 
         # second "region"
         if pt1 > self.singleTrigThreshold :
@@ -90,8 +90,9 @@ class zhTriggerSF :
         
 
 if __name__ == '__main__' :
-    zhSF = zhTriggerSF('ZEE')
+    zhSF = zhTriggerSF('ZMM')
     # getZHTriggerSF( self, nvtx, pt1, eta1, pt2, eta2 )
+    print zhSF.getZHTriggerSF( 25.1, 18., 2.2, 11.1, -1.5 )
     print zhSF.getZHTriggerSF( 25.1, 28., 2.2, 21.1, -1.5 )
     print zhSF.getZHTriggerSF( 45, 28., 2.2, 21.1, -1.5 )
     print zhSF.getZHTriggerSF( 25.1, 90., 2.2, 21.1, -1.5 )
