@@ -168,12 +168,12 @@ def getCut( analysis, sample, channel, cutName ) :
     mmTrigDoubleM = '(doubleMuPass > 0 || doubleMuNoDZPass > 0)'
 
     if 'data' in sample :
-        if 'Double' in sample :
-            eeTrigNew = eeTrigDoubleE
-            mmTrigNew = mmTrigDoubleM
-        else : # Single Lepton Data
+        if 'Single' in sample :
             eeTrigNew = eeTrigSingleE
             mmTrigNew = mmTrigSingleM
+        else : # dataEE || dataMM
+            eeTrigNew = eeTrigDoubleE
+            mmTrigNew = mmTrigDoubleM
     else : # is MC
         eeTrigNew = eeTrigMC
         mmTrigNew = mmTrigMC
