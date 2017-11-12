@@ -49,7 +49,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
 
 if __name__ == '__main__' :
     ''' Start multiprocessing tests '''
-    pool = multiprocessing.Pool(processes = 6 )
+    pool = multiprocessing.Pool(processes = 10 )
     multiprocessingOutputs = []
     debug = False
     doAZH = True
@@ -74,18 +74,19 @@ if __name__ == '__main__' :
         for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
             azhSamples.append('azh%i' % mass)
         
+        azhSamples = []
         for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
             azhSamples.append('dataEE-%s' % era)
             azhSamples.append('dataMM-%s' % era)
+            azhSamples.append('dataSingleE-%s' % era)
+            azhSamples.append('dataSingleM-%s' % era)
 
-        name = 'svFitSept20_ttZ_zh'
+        name = 'azhNov06Skim'
         originalDir = '/nfs_scratch/truggles/'+name+'/'
-        originalDir = '/hdfs/store/user/truggles/svFitSept20_ttZ_zh/azhSept19skim_svFitPrep/'
         targetDir = '/nfs_scratch/truggles/'+name+'Merged'
-        targetDir = '/nfs_scratch/truggles/azhSept20skim_svFit_Merged'
         checkDir( targetDir )
-        jobId = ''
         jobId = 'TauTau_13*'
+        jobId = ''
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         for channel in channels :
             for sample in azhSamples :
