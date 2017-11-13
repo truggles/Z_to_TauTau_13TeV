@@ -1,3 +1,7 @@
-/data/truggles/ZH_svFitAug31_Merged/dataMM-B_0_emmt.root
-/data/truggles/ZH_svFitAug31_Merged/dataMM-B_1_emmt.root
-/data/truggles/ZH_svFitAug31_Merged/dataMM-B_2_emmt.root
+/data/truggles/ZH_svFitAug31_Merged/DYJets_0_emmt.root
+/data/truggles/ZH_svFitAug31_Merged/DYJets_1_emmt.root
+/data/truggles/ZH_svFitAug31_Merged/DYJets_2_emmt.root
+/data/truggles/ZH_svFitAug31_Merged/DYJets_3_emmt.root
+/data/truggles/ZH_svFitAug31_Merged/DYJets_4_emmt.root
+/data/truggles/ZH_svFitAug31_Merged/DYJets_5_emmt.root
+/data/truggles/ZH_svFitAug31_Merged/DYJets_6_emmt.root

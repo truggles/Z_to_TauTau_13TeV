@@ -1,4 +1,1 @@
-/data/truggles/ZH_svFitAug31_Merged/dataEE-G_0_eett.root
-/data/truggles/ZH_svFitAug31_Merged/dataEE-G_1_eett.root
-/data/truggles/ZH_svFitAug31_Merged/dataEE-G_2_eett.root
-/data/truggles/ZH_svFitAug31_Merged/dataEE-G_3_eett.root
+/data/truggles/ZH_svFitAug31_Merged/WZ3l1nu_0_eett.root

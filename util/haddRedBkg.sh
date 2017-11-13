@@ -1,5 +1,5 @@
 
-pushd ${1}
+pushd /data/truggles/${1}
 
 hadd -f redBkg_${2}.root data*_${2}.root
 

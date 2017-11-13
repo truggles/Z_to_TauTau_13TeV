@@ -102,7 +102,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
     xAxis = 'Lepton p_{T} [GeV]'
     jetCut = '(1.)'
     app = 'leptonPt'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov05v3_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov013v4_ALLMC_mcRates_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -140,17 +140,25 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                     xBins.append( i )
                 for i in range( 60, 100, 10) :
                     xBins.append( i )
+        elif 'tau-DM10_lllt' in obj :
+            #for i in range( 0, 40, 10) :
+            for i in range( 0, 3) :
+                xBins.append( 20+i*6.75 )
+            for i in range( 40, 150, 30) :
+                xBins.append( i )
         else :
             if 'tau-DM0_lltt' in obj or 'tau-DM1_lltt' in obj :
                 for i in range( 0, 40, 4) :
                     xBins.append( i )
+            if 'tau-DM10_lltt' in obj or 'tau-DM10_lllt' in obj :
+                #for i in range( 0, 40, 10) :
+                for i in range( 0, 3) :
+                    xBins.append( 20+i*6.75 )
             elif 'lllt' in obj :
                 for i in range( 0, 40, 4) :
                     xBins.append( i )
             elif 'tau' in obj :
-                for i in range( 0, 30, 2) :
-                    xBins.append( i )
-                for i in range( 30, 40, 5) :
+                for i in range( 0, 40, 5) :
                     xBins.append( i )
             else :
                 for i in range( 0, 40, 5) :
@@ -264,8 +272,11 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                 passCut2 += ' && LT_higgs > 40'
                 denomCut2 += ' && LT_higgs > 40'
 
-            f = ROOT.TFile( inputDir+'/redBkg_'+channel+'.root', 'r' )
+            f = ROOT.TFile( '/data/truggles/'+inputDir+'/redBkg_'+channel+'.root', 'r' )
             t = f.Get('Ntuple')
+            print "\n"
+            print "Input: /data/truggles/"+inputDir+'/redBkg_'+channel+'.root'
+            print t
 
             # check if first letter of 'obj' in leg3 then leg4 and draw if so
             for i, leg in enumerate(prodMap[channel]) :
@@ -277,6 +288,10 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                 denomCutX = denomCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
                 passCutX = passCut2.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
                 passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
+
+                denomCutX = '('+denomCutX+')*XSecLumiWeight*GenWeight/abs(GenWeight)'
+                passCutX = '('+passCutX+')*XSecLumiWeight*GenWeight/abs(GenWeight)'
+
                 print "Denom Cut:",denomCutX
                 print "Passing Cut:",passCutX
 
@@ -412,6 +427,16 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                     f1.SetParameter( 1, .1 )
                     f1.SetParameter( 2, 20. )
                     f1.SetParameter( 3, 3. )
+                elif 'tau-DM10_lllt' in obj :
+                    f1.SetParameter( 0, .1 )
+                    f1.SetParameter( 1, .05 )
+                    f1.SetParameter( 2, 50. )
+                    f1.SetParameter( 3, 20. )
+                elif 'tau-DM10_lltt' in obj :
+                    f1.SetParameter( 0, .13 )
+                    f1.SetParameter( 1, .3 )
+                    f1.SetParameter( 2, 37. )
+                    f1.SetParameter( 3, 2. )
                 else : # is tau
                     f1.SetParameter( 2, 30. )
                     f1.SetParameter( 3, 5. )
@@ -496,6 +521,19 @@ if '__main__' in __name__ :
     tdr.setTDRStyle()
     
     dataSamples = []
+    # B - F for DYJets
+    #for era in ['B', 'C', 'D', 'E', 'F',]:# 'G', 'H'] :
+    #    dataSamples.append('dataEE-%s' % era)
+    #    dataSamples.append('dataMM-%s' % era)
+    # G for WZ3l1nu
+    #for era in ['G',]:
+    #    dataSamples.append('dataEE-%s' % era)
+    #    dataSamples.append('dataMM-%s' % era)
+    # H for TTbar
+    #for era in ['H',]:
+    #    dataSamples.append('dataEE-%s' % era)
+    #    dataSamples.append('dataMM-%s' % era)
+    # For ALL DYJets + WZ + TTbar
     for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
         dataSamples.append('dataEE-%s' % era)
         dataSamples.append('dataMM-%s' % era)
@@ -508,9 +546,12 @@ if '__main__' in __name__ :
         'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8
         #'channels' : ['eeet',],
         'cutMapper' : 'RedBkg',
-        'mid1' : '1Sept03rb',
-        'mid2' : '2Sept03rb',
-        'mid3' : '3Sept03rb',
+        #'mid1' : '1Sept03rb', # Normally data driven
+        #'mid2' : '2Sept03rb',
+        #'mid3' : '3Sept03rb',
+        'mid1' : '1Nov13rb', # MC driven
+        'mid2' : '2Nov13rb',
+        'mid3' : '3Nov13rb',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',

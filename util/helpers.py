@@ -44,7 +44,7 @@ def getTH1FfromTGraphAsymmErrors( asym, name ) :
 # certain bkg methods
 def setUpDirs( samples, params, analysis ) :
     
-    host = os.getenv('HOSTNAME', type=str)
+    host = os.getenv('HOSTNAME')
     if 'uwlogin' in host :
         if not os.path.exists( '/data/truggles/%s%s' % (analysis, params['mid1']) ) : os.makedirs( '/data/truggles/%s%s' % (analysis, params['mid1']) )
         if not os.path.exists( '/data/truggles/%s%s' % (analysis, params['mid2']) ) : os.makedirs( '/data/truggles/%s%s' % (analysis, params['mid2']) )

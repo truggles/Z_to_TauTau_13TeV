@@ -63,6 +63,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #azhSamples = ['azh300',]
 #azhSamples = ['ZHTauTau125',]
 #azhSamples = ['ttZ',]
+azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'TT','WZ3l1nu',] # May 31 samples, no ZZ->all, use ZZ4l
 
 samples = azhSamples
 
@@ -82,9 +83,10 @@ params = {
     #'channels' : ['eeem',],
     'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
-    'mid1' : '1Sept05',
-    'mid2' : '2Sept05',
-    'mid3' : '3Sept05newZSelec',
+    'mid1' : '1Nov13RedBkgMC',
+    'mid2' : '2Nov13RedBkgMC',
+    #'mid3' : '3Sept05SSTight',
+    'mid3' : '3Nov13RedBkgMC',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -103,12 +105,12 @@ params = {
     ##'channels' : ['eeem','eeet',],
     ##'channels' : ['emmt','mmtt','mmmt','emmm'],
     ##'channels' : ['eeet','eeem','mmmt','emmm'],
-    #'channels' : ['mmmt',],
+    ##'channels' : ['mmmt',],
     #'skimmed' : 'false',
     #'skimHdfs' : 'false',
-    #'mid1' : '1Sept08ZHSync',
-    #'mid2' : '2Sept08ZHSync',
-    #'mid3' : '3Sept08ZHSync',
+    #'mid1' : '1Oct13ZHSync',
+    #'mid2' : '2Oct13ZHSync',
+    #'mid3' : '3Oct13ZHSync',
     #'cutMapper' : 'Skim',
     ##'cutMapper' : 'SkimNoTrig',
     ##'cutMapper' : 'SkimNoVeto',
@@ -130,8 +132,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True

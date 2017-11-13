@@ -252,25 +252,25 @@ def getCurrentEvt( analysis, channel, row ) :
         leg4Pt = getattr(row, l4+'Pt')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.1876 )
         bestZ = 0.
-        if channel in ['eeet','eeem','eemt','eett' ] :
-            bestZ = abs( getattr( row, 'closestMassZEE') - 91.1876 )
-        elif channel in ['emmt','emmm','mmmt','mmtt' ] :
-            bestZ = abs( getattr( row, 'closestMassZMM') - 91.1876 )
-        else : bestZ = closeZ # for EEEE / MMMM
+        #if channel in ['eeet','eeem','eemt','eett' ] :
+        #    bestZ = abs( getattr( row, 'closestMassZEE') - 91.1876 )
+        #elif channel in ['emmt','emmm','mmmt','mmtt' ] :
+        #    bestZ = abs( getattr( row, 'closestMassZMM') - 91.1876 )
+        #else : bestZ = closeZ # for EEEE / MMMM
 
-        # Reject event if Z pair isn't best Z mass pair
-        if closeZ != bestZ : closeZ = 999
+        ## Reject event if Z pair isn't best Z mass pair
+        #if closeZ != bestZ : closeZ = 999
 
-        #if channel in ['eeet','eeem','emmm','mmmt' ] :
-        #    # deals with ordering in emmm channel where l3 == electron
-        #    l3_new = l3 if channel != 'emmm' else l4
-        #    closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.1876 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
-        #    closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.1876 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
-        #    if closeZ2 < closeZ : closeZ = 999
-        #    if closeZ3 < closeZ : closeZ = 999
-        #else :
-        #    closeZ2 = 999
-        #    closeZ3 = 999
+        if channel in ['eeet','eeem','emmm','mmmt' ] :
+            # deals with ordering in emmm channel where l3 == electron
+            l3_new = l3 if channel != 'emmm' else l4
+            closeZ2 = abs( getattr(row, l1+'_'+l3_new+'_Mass') - 91.1876 ) if getattr(row, l1+'_'+l3_new+'_SS') == 0 else 999
+            closeZ3 = abs( getattr(row, l2+'_'+l3_new+'_Mass') - 91.1876 ) if getattr(row, l2+'_'+l3_new+'_SS') == 0 else 999
+            if closeZ2 < closeZ : closeZ = 999
+            if closeZ3 < closeZ : closeZ = 999
+        else :
+            closeZ2 = 999
+            closeZ3 = 999
         LT = leg3Pt + leg4Pt # LT here is just Higgs_LT
         currentEvt = (closeZ, LT, leg3Pt) # leg3Pt is to distinguish
         # when an object can be a slimmedElec and slimmedTau
@@ -334,8 +334,24 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     shortName = sample.split('_')[0]
 
-    xsec = getXSec( analysis, shortName, sampDict )
-    print "\n Sampe: %s    shortName: %s    xsec: %f" % (sample, shortName, xsec)
+    if 'data' in shortName and '-B' in shortName :
+        xsecName = 'DYJets'
+    elif 'data' in shortName and '-C' in shortName :
+        xsecName = 'DYJets1'
+    elif 'data' in shortName and '-D' in shortName :
+        xsecName = 'DYJets2'
+    elif 'data' in shortName and '-E' in shortName :
+        xsecName = 'DYJets3'
+    elif 'data' in shortName and '-F' in shortName :
+        xsecName = 'DYJets4'
+    elif 'data' in shortName and '-G' in shortName :
+        xsecName = 'WZ3l1nu'
+    elif 'data' in shortName and '-H' in shortName :
+        xsecName = 'TT'
+    else : xsecName = shortName
+
+    xsec = getXSec( analysis, xsecName, sampDict )
+    print "\n Sampe: %s    shortName: %s    xsec: %f" % (sample, xsecName, xsec)
 
     l1 = prodMap[channel][0]
     l2 = prodMap[channel][1]
@@ -990,7 +1006,189 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 eta_svB = tnew.Branch('eta_sv', eta_sv, 'eta_sv/F')
                 phi_sv = array('f', [ 0 ] )
                 phi_svB = tnew.Branch('phi_sv', phi_sv, 'phi_sv/F')
+                mt_sv = array('f', [ 0 ] )
+                mt_svB = tnew.Branch('mt_sv', mt_sv, 'mt_sv/F')
+                met_sv = array('f', [ 0 ] )
+                met_svB = tnew.Branch('met_sv', met_sv, 'met_sv/F')
                 
+            try : print row[0].metcorphiUncUp
+            except KeyError :
+                metcorUncUp = array('f', [ 0 ] )
+                metcorUncUpB = tnew.Branch('metcorUncUp', metcorUncUp, 'metcorUncUp/F')
+                metcorUncDown = array('f', [ 0 ] )
+                metcorUncDownB = tnew.Branch('metcorUncDown', metcorUncDown, 'metcorUncDown/F')
+                metcorphiUncUp = array('f', [ 0 ] )
+                metcorphiUncUpB = tnew.Branch('metcorphiUncUp', metcorphiUncUp, 'metcorphiUncUp/F')
+                metcorphiUncDown = array('f', [ 0 ] )
+                metcorphiUncDownB = tnew.Branch('metcorphiUncDown', metcorphiUncDown, 'metcorphiUncDown/F')
+                m_sv_UP = array('f', [ 0 ] )
+                m_sv_UPB = tnew.Branch('m_sv_UP', m_sv_UP, 'm_sv_UP/F')
+                m_sv_DOWN = array('f', [ 0 ] )
+                m_sv_DOWNB = tnew.Branch('m_sv_DOWN', m_sv_DOWN, 'm_sv_DOWN/F')
+                pt_sv_UP = array('f', [ 0 ] )
+                pt_sv_UPB = tnew.Branch('pt_sv_UP', pt_sv_UP, 'pt_sv_UP/F')
+                pt_sv_DOWN = array('f', [ 0 ] )
+                pt_sv_DOWNB = tnew.Branch('pt_sv_DOWN', pt_sv_DOWN, 'pt_sv_DOWN/F')
+                eta_sv_UP = array('f', [ 0 ] )
+                eta_sv_UPB = tnew.Branch('eta_sv_UP', eta_sv_UP, 'eta_sv_UP/F')
+                eta_sv_DOWN = array('f', [ 0 ] )
+                eta_sv_DOWNB = tnew.Branch('eta_sv_DOWN', eta_sv_DOWN, 'eta_sv_DOWN/F')
+                phi_sv_UP = array('f', [ 0 ] )
+                phi_sv_UPB = tnew.Branch('phi_sv_UP', phi_sv_UP, 'phi_sv_UP/F')
+                phi_sv_DOWN = array('f', [ 0 ] )
+                phi_sv_DOWNB = tnew.Branch('phi_sv_DOWN', phi_sv_DOWN, 'phi_sv_DOWN/F')
+                met_sv_UP = array('f', [ 0 ] )
+                met_sv_UPB = tnew.Branch('met_sv_UP', met_sv_UP, 'met_sv_UP/F')
+                met_sv_DOWN = array('f', [ 0 ] )
+                met_sv_DOWNB = tnew.Branch('met_sv_DOWN', met_sv_DOWN, 'met_sv_DOWN/F')
+                mt_sv_UP = array('f', [ 0 ] )
+                mt_sv_UPB = tnew.Branch('mt_sv_UP', mt_sv_UP, 'mt_sv_UP/F')
+                mt_sv_DOWN = array('f', [ 0 ] )
+                mt_sv_DOWNB = tnew.Branch('mt_sv_DOWN', mt_sv_DOWN, 'mt_sv_DOWN/F')
+                m_sv_DM0_UP = array('f', [ 0 ] )
+                m_sv_DM0_UPB = tnew.Branch('m_sv_DM0_UP', m_sv_DM0_UP, 'm_sv_DM0_UP/F')
+                m_sv_DM0_DOWN = array('f', [ 0 ] )
+                m_sv_DM0_DOWNB = tnew.Branch('m_sv_DM0_DOWN', m_sv_DM0_DOWN, 'm_sv_DM0_DOWN/F')
+                pt_sv_DM0_UP = array('f', [ 0 ] )
+                pt_sv_DM0_UPB = tnew.Branch('pt_sv_DM0_UP', pt_sv_DM0_UP, 'pt_sv_DM0_UP/F')
+                pt_sv_DM0_DOWN = array('f', [ 0 ] )
+                pt_sv_DM0_DOWNB = tnew.Branch('pt_sv_DM0_DOWN', pt_sv_DM0_DOWN, 'pt_sv_DM0_DOWN/F')
+                eta_sv_DM0_UP = array('f', [ 0 ] )
+                eta_sv_DM0_UPB = tnew.Branch('eta_sv_DM0_UP', eta_sv_DM0_UP, 'eta_sv_DM0_UP/F')
+                eta_sv_DM0_DOWN = array('f', [ 0 ] )
+                eta_sv_DM0_DOWNB = tnew.Branch('eta_sv_DM0_DOWN', eta_sv_DM0_DOWN, 'eta_sv_DM0_DOWN/F')
+                phi_sv_DM0_UP = array('f', [ 0 ] )
+                phi_sv_DM0_UPB = tnew.Branch('phi_sv_DM0_UP', phi_sv_DM0_UP, 'phi_sv_DM0_UP/F')
+                phi_sv_DM0_DOWN = array('f', [ 0 ] )
+                phi_sv_DM0_DOWNB = tnew.Branch('phi_sv_DM0_DOWN', phi_sv_DM0_DOWN, 'phi_sv_DM0_DOWN/F')
+                met_sv_DM0_UP = array('f', [ 0 ] )
+                met_sv_DM0_UPB = tnew.Branch('met_sv_DM0_UP', met_sv_DM0_UP, 'met_sv_DM0_UP/F')
+                met_sv_DM0_DOWN = array('f', [ 0 ] )
+                met_sv_DM0_DOWNB = tnew.Branch('met_sv_DM0_DOWN', met_sv_DM0_DOWN, 'met_sv_DM0_DOWN/F')
+                mt_sv_DM0_UP = array('f', [ 0 ] )
+                mt_sv_DM0_UPB = tnew.Branch('mt_sv_DM0_UP', mt_sv_DM0_UP, 'mt_sv_DM0_UP/F')
+                mt_sv_DM0_DOWN = array('f', [ 0 ] )
+                mt_sv_DM0_DOWNB = tnew.Branch('mt_sv_DM0_DOWN', mt_sv_DM0_DOWN, 'mt_sv_DM0_DOWN/F')
+                m_sv_DM1_UP = array('f', [ 0 ] )
+                m_sv_DM1_UPB = tnew.Branch('m_sv_DM1_UP', m_sv_DM1_UP, 'm_sv_DM1_UP/F')
+                m_sv_DM1_DOWN = array('f', [ 0 ] )
+                m_sv_DM1_DOWNB = tnew.Branch('m_sv_DM1_DOWN', m_sv_DM1_DOWN, 'm_sv_DM1_DOWN/F')
+                pt_sv_DM1_UP = array('f', [ 0 ] )
+                pt_sv_DM1_UPB = tnew.Branch('pt_sv_DM1_UP', pt_sv_DM1_UP, 'pt_sv_DM1_UP/F')
+                pt_sv_DM1_DOWN = array('f', [ 0 ] )
+                pt_sv_DM1_DOWNB = tnew.Branch('pt_sv_DM1_DOWN', pt_sv_DM1_DOWN, 'pt_sv_DM1_DOWN/F')
+                eta_sv_DM1_UP = array('f', [ 0 ] )
+                eta_sv_DM1_UPB = tnew.Branch('eta_sv_DM1_UP', eta_sv_DM1_UP, 'eta_sv_DM1_UP/F')
+                eta_sv_DM1_DOWN = array('f', [ 0 ] )
+                eta_sv_DM1_DOWNB = tnew.Branch('eta_sv_DM1_DOWN', eta_sv_DM1_DOWN, 'eta_sv_DM1_DOWN/F')
+                phi_sv_DM1_UP = array('f', [ 0 ] )
+                phi_sv_DM1_UPB = tnew.Branch('phi_sv_DM1_UP', phi_sv_DM1_UP, 'phi_sv_DM1_UP/F')
+                phi_sv_DM1_DOWN = array('f', [ 0 ] )
+                phi_sv_DM1_DOWNB = tnew.Branch('phi_sv_DM1_DOWN', phi_sv_DM1_DOWN, 'phi_sv_DM1_DOWN/F')
+                met_sv_DM1_UP = array('f', [ 0 ] )
+                met_sv_DM1_UPB = tnew.Branch('met_sv_DM1_UP', met_sv_DM1_UP, 'met_sv_DM1_UP/F')
+                met_sv_DM1_DOWN = array('f', [ 0 ] )
+                met_sv_DM1_DOWNB = tnew.Branch('met_sv_DM1_DOWN', met_sv_DM1_DOWN, 'met_sv_DM1_DOWN/F')
+                mt_sv_DM1_UP = array('f', [ 0 ] )
+                mt_sv_DM1_UPB = tnew.Branch('mt_sv_DM1_UP', mt_sv_DM1_UP, 'mt_sv_DM1_UP/F')
+                mt_sv_DM1_DOWN = array('f', [ 0 ] )
+                mt_sv_DM1_DOWNB = tnew.Branch('mt_sv_DM1_DOWN', mt_sv_DM1_DOWN, 'mt_sv_DM1_DOWN/F')
+                m_sv_DM10_UP = array('f', [ 0 ] )
+                m_sv_DM10_UPB = tnew.Branch('m_sv_DM10_UP', m_sv_DM10_UP, 'm_sv_DM10_UP/F')
+                m_sv_DM10_DOWN = array('f', [ 0 ] )
+                m_sv_DM10_DOWNB = tnew.Branch('m_sv_DM10_DOWN', m_sv_DM10_DOWN, 'm_sv_DM10_DOWN/F')
+                pt_sv_DM10_UP = array('f', [ 0 ] )
+                pt_sv_DM10_UPB = tnew.Branch('pt_sv_DM10_UP', pt_sv_DM10_UP, 'pt_sv_DM10_UP/F')
+                pt_sv_DM10_DOWN = array('f', [ 0 ] )
+                pt_sv_DM10_DOWNB = tnew.Branch('pt_sv_DM10_DOWN', pt_sv_DM10_DOWN, 'pt_sv_DM10_DOWN/F')
+                eta_sv_DM10_UP = array('f', [ 0 ] )
+                eta_sv_DM10_UPB = tnew.Branch('eta_sv_DM10_UP', eta_sv_DM10_UP, 'eta_sv_DM10_UP/F')
+                eta_sv_DM10_DOWN = array('f', [ 0 ] )
+                eta_sv_DM10_DOWNB = tnew.Branch('eta_sv_DM10_DOWN', eta_sv_DM10_DOWN, 'eta_sv_DM10_DOWN/F')
+                phi_sv_DM10_UP = array('f', [ 0 ] )
+                phi_sv_DM10_UPB = tnew.Branch('phi_sv_DM10_UP', phi_sv_DM10_UP, 'phi_sv_DM10_UP/F')
+                phi_sv_DM10_DOWN = array('f', [ 0 ] )
+                phi_sv_DM10_DOWNB = tnew.Branch('phi_sv_DM10_DOWN', phi_sv_DM10_DOWN, 'phi_sv_DM10_DOWN/F')
+                met_sv_DM10_UP = array('f', [ 0 ] )
+                met_sv_DM10_UPB = tnew.Branch('met_sv_DM10_UP', met_sv_DM10_UP, 'met_sv_DM10_UP/F')
+                met_sv_DM10_DOWN = array('f', [ 0 ] )
+                met_sv_DM10_DOWNB = tnew.Branch('met_sv_DM10_DOWN', met_sv_DM10_DOWN, 'met_sv_DM10_DOWN/F')
+                mt_sv_DM10_UP = array('f', [ 0 ] )
+                mt_sv_DM10_UPB = tnew.Branch('mt_sv_DM10_UP', mt_sv_DM10_UP, 'mt_sv_DM10_UP/F')
+                mt_sv_DM10_DOWN = array('f', [ 0 ] )
+                mt_sv_DM10_DOWNB = tnew.Branch('mt_sv_DM10_DOWN', mt_sv_DM10_DOWN, 'mt_sv_DM10_DOWN/F')
+                m_sv_UncMet_UP = array('f', [ 0 ] )
+                m_sv_UncMet_UPB = tnew.Branch('m_sv_UncMet_UP', m_sv_UncMet_UP, 'm_sv_UncMet_UP/F')
+                m_sv_UncMet_DOWN = array('f', [ 0 ] )
+                m_sv_UncMet_DOWNB = tnew.Branch('m_sv_UncMet_DOWN', m_sv_UncMet_DOWN, 'm_sv_UncMet_DOWN/F')
+                pt_sv_UncMet_UP = array('f', [ 0 ] )
+                pt_sv_UncMet_UPB = tnew.Branch('pt_sv_UncMet_UP', pt_sv_UncMet_UP, 'pt_sv_UncMet_UP/F')
+                pt_sv_UncMet_DOWN = array('f', [ 0 ] )
+                pt_sv_UncMet_DOWNB = tnew.Branch('pt_sv_UncMet_DOWN', pt_sv_UncMet_DOWN, 'pt_sv_UncMet_DOWN/F')
+                eta_sv_UncMet_UP = array('f', [ 0 ] )
+                eta_sv_UncMet_UPB = tnew.Branch('eta_sv_UncMet_UP', eta_sv_UncMet_UP, 'eta_sv_UncMet_UP/F')
+                eta_sv_UncMet_DOWN = array('f', [ 0 ] )
+                eta_sv_UncMet_DOWNB = tnew.Branch('eta_sv_UncMet_DOWN', eta_sv_UncMet_DOWN, 'eta_sv_UncMet_DOWN/F')
+                phi_sv_UncMet_UP = array('f', [ 0 ] )
+                phi_sv_UncMet_UPB = tnew.Branch('phi_sv_UncMet_UP', phi_sv_UncMet_UP, 'phi_sv_UncMet_UP/F')
+                phi_sv_UncMet_DOWN = array('f', [ 0 ] )
+                phi_sv_UncMet_DOWNB = tnew.Branch('phi_sv_UncMet_DOWN', phi_sv_UncMet_DOWN, 'phi_sv_UncMet_DOWN/F')
+                met_sv_UncMet_UP = array('f', [ 0 ] )
+                met_sv_UncMet_UPB = tnew.Branch('met_sv_UncMet_UP', met_sv_UncMet_UP, 'met_sv_UncMet_UP/F')
+                met_sv_UncMet_DOWN = array('f', [ 0 ] )
+                met_sv_UncMet_DOWNB = tnew.Branch('met_sv_UncMet_DOWN', met_sv_UncMet_DOWN, 'met_sv_UncMet_DOWN/F')
+                mt_sv_UncMet_UP = array('f', [ 0 ] )
+                mt_sv_UncMet_UPB = tnew.Branch('mt_sv_UncMet_UP', mt_sv_UncMet_UP, 'mt_sv_UncMet_UP/F')
+                mt_sv_UncMet_DOWN = array('f', [ 0 ] )
+                mt_sv_UncMet_DOWNB = tnew.Branch('mt_sv_UncMet_DOWN', mt_sv_UncMet_DOWN, 'mt_sv_UncMet_DOWN/F')
+                m_sv_ClusteredMet_UP = array('f', [ 0 ] )
+                m_sv_ClusteredMet_UPB = tnew.Branch('m_sv_ClusteredMet_UP', m_sv_ClusteredMet_UP, 'm_sv_ClusteredMet_UP/F')
+                m_sv_ClusteredMet_DOWN = array('f', [ 0 ] )
+                m_sv_ClusteredMet_DOWNB = tnew.Branch('m_sv_ClusteredMet_DOWN', m_sv_ClusteredMet_DOWN, 'm_sv_ClusteredMet_DOWN/F')
+                pt_sv_ClusteredMet_UP = array('f', [ 0 ] )
+                pt_sv_ClusteredMet_UPB = tnew.Branch('pt_sv_ClusteredMet_UP', pt_sv_ClusteredMet_UP, 'pt_sv_ClusteredMet_UP/F')
+                pt_sv_ClusteredMet_DOWN = array('f', [ 0 ] )
+                pt_sv_ClusteredMet_DOWNB = tnew.Branch('pt_sv_ClusteredMet_DOWN', pt_sv_ClusteredMet_DOWN, 'pt_sv_ClusteredMet_DOWN/F')
+                eta_sv_ClusteredMet_UP = array('f', [ 0 ] )
+                eta_sv_ClusteredMet_UPB = tnew.Branch('eta_sv_ClusteredMet_UP', eta_sv_ClusteredMet_UP, 'eta_sv_ClusteredMet_UP/F')
+                eta_sv_ClusteredMet_DOWN = array('f', [ 0 ] )
+                eta_sv_ClusteredMet_DOWNB = tnew.Branch('eta_sv_ClusteredMet_DOWN', eta_sv_ClusteredMet_DOWN, 'eta_sv_ClusteredMet_DOWN/F')
+                phi_sv_ClusteredMet_UP = array('f', [ 0 ] )
+                phi_sv_ClusteredMet_UPB = tnew.Branch('phi_sv_ClusteredMet_UP', phi_sv_ClusteredMet_UP, 'phi_sv_ClusteredMet_UP/F')
+                phi_sv_ClusteredMet_DOWN = array('f', [ 0 ] )
+                phi_sv_ClusteredMet_DOWNB = tnew.Branch('phi_sv_ClusteredMet_DOWN', phi_sv_ClusteredMet_DOWN, 'phi_sv_ClusteredMet_DOWN/F')
+                met_sv_ClusteredMet_UP = array('f', [ 0 ] )
+                met_sv_ClusteredMet_UPB = tnew.Branch('met_sv_ClusteredMet_UP', met_sv_ClusteredMet_UP, 'met_sv_ClusteredMet_UP/F')
+                met_sv_ClusteredMet_DOWN = array('f', [ 0 ] )
+                met_sv_ClusteredMet_DOWNB = tnew.Branch('met_sv_ClusteredMet_DOWN', met_sv_ClusteredMet_DOWN, 'met_sv_ClusteredMet_DOWN/F')
+                mt_sv_ClusteredMet_UP = array('f', [ 0 ] )
+                mt_sv_ClusteredMet_UPB = tnew.Branch('mt_sv_ClusteredMet_UP', mt_sv_ClusteredMet_UP, 'mt_sv_ClusteredMet_UP/F')
+                mt_sv_ClusteredMet_DOWN = array('f', [ 0 ] )
+                mt_sv_ClusteredMet_DOWNB = tnew.Branch('mt_sv_ClusteredMet_DOWN', mt_sv_ClusteredMet_DOWN, 'mt_sv_ClusteredMet_DOWN/F')
+                metcorr_ex = array('f', [ 0 ] )
+                metcorr_exB = tnew.Branch('metcorr_ex', metcorr_ex, 'metcorr_ex/F')
+                metcorr_ey = array('f', [ 0 ] )
+                metcorr_eyB = tnew.Branch('metcorr_ey', metcorr_ey, 'metcorr_ey/F')
+                metcor = array('f', [ 0 ] )
+                metcorB = tnew.Branch('metcor', metcor, 'metcor/F')
+                metcorphi = array('f', [ 0 ] )
+                metcorphiB = tnew.Branch('metcorphi', metcorphi, 'metcorphi/F')
+                metcorClusteredUp = array('f', [ 0 ] )
+                metcorClusteredUpB = tnew.Branch('metcorClusteredUp', metcorClusteredUp, 'metcorClusteredUp/F')
+                metcorphiClusteredUp = array('f', [ 0 ] )
+                metcorphiClusteredUpB = tnew.Branch('metcorphiClusteredUp', metcorphiClusteredUp, 'metcorphiClusteredUp/F')
+                metcorClusteredDown = array('f', [ 0 ] )
+                metcorClusteredDownB = tnew.Branch('metcorClusteredDown', metcorClusteredDown, 'metcorClusteredDown/F')
+                metcorphiClusteredDown = array('f', [ 0 ] )
+                metcorphiClusteredDownB = tnew.Branch('metcorphiClusteredDown', metcorphiClusteredDown, 'metcorphiClusteredDown/F')
+                #metcorUnclusteredDown = array('f', [ 0 ] )
+                #metcorUnclusteredDownB = tnew.Branch('metcorUnclusteredDown', metcorUnclusteredDown, 'metcorUnclusteredDown/F')
+                #metcorphiUnclusteredDown = array('f', [ 0 ] )
+                #metcorphiUnclusteredDownB = tnew.Branch('metcorphiUnclusteredDown', metcorphiUnclusteredDown, 'metcorphiUnclusteredDown/F')
+                #metcorUnclusteredUp = array('f', [ 0 ] )
+                #metcorUnclusteredUpB = tnew.Branch('metcorUnclusteredUp', metcorUnclusteredUp, 'metcorUnclusteredUp/F')
+                #metcorphiUnclusteredUp = array('f', [ 0 ] )
+                #metcorphiUnclusteredUpB = tnew.Branch('metcorphiUnclusteredUp', metcorphiUnclusteredUp, 'metcorphiUnclusteredUp/F')
             try : print row[0].type1_pfMet_shiftedPt_UnclusteredEnUp
             except KeyError :
                 type1_pfMet_shiftedPhi_ElectronEnDown = array('f', [ 0 ] )
@@ -1704,8 +1902,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
                 # Special weighting for WJets and DYJets
-                if shortName in ['DYJets', 'WJets'] :
-                    xsec = getXSec( analysis, shortName, sampDict, row.numGenJets )
+                if xsecName in ['DYJets', 'WJets'] :
+                    xsec = getXSec( analysis, xsecName, sampDict, row.numGenJets )
                     if xsec not in xsecList : xsecList.append( xsec )
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before

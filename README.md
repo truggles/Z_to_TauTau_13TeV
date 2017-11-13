@@ -103,3 +103,7 @@ To run:<BR>
 Fake Factors additions:
 Fake factors have been derived to estimate QCD, WJets and TTJets from data, initially for the MuTau channel, but are being tested in double hadronic channel.  Find documentations here: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
 
+# Moved MC samples in data skimmed file for MC fake rate studies
+see meta/NtupleInputs_azh/skimmed/mcFakeRateRearranger.sh for mapping
+
+

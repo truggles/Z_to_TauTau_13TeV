@@ -39,17 +39,17 @@ def decorate( p, channel, h1, h2, doFinal=False ) :
     str2b = ""
     ksNoNorm = -99
     ksNorm = -99
-    if h1.Integral() > 0 and h2.Integral() > 0 :
-        str1b = "     Int: %3.2f+/-%1.3f pct" % (h1.Integral(), err3/h1.Integral()*100)
-        str2b = "     Int: %3.2f+/-%1.3f pct" % (h2.Integral(), err4/h2.Integral()*100)
-        ksNoNorm = h1.KolmogorovTest( h2, 'X' )
-        ksNorm = h1.KolmogorovTest( h2, 'XN' )
     if h1.Integral() > 0 and h2.Integral() > 0 and doFinal :
         for b in range( 0, h1.GetNbinsX()+1 ) :
             print "bin %i h1 %2.2f" % (b, h1.GetBinContent( b ) )
             print "bin %i h2 %2.2f" % (b, h2.GetBinContent( b ) )
             if h1.GetBinContent( b ) < 0 : h1.SetBinContent( b, 0. )
             if h2.GetBinContent( b ) < 0 : h2.SetBinContent( b, 0. )
+        ksNoNorm = h1.KolmogorovTest( h2, 'X' )
+        ksNorm = h1.KolmogorovTest( h2, 'XN' )
+    elif h1.Integral() > 0 and h2.Integral() > 0 :
+        str1b = "     Int: %3.2f+/-%1.3f pct" % (h1.Integral(), err3/h1.Integral()*100)
+        str2b = "     Int: %3.2f+/-%1.3f pct" % (h2.Integral(), err4/h2.Integral()*100)
         ksNoNorm = h1.KolmogorovTest( h2, 'X' )
         ksNorm = h1.KolmogorovTest( h2, 'XN' )
    
@@ -185,7 +185,7 @@ def makePlots( sample ) :
         leg = buildLegend( [h1, hComp], [sample+' RedBkg', sample+' MC'] ) 
         leg.Draw('SAME')
         decorate( p, channel, h1, hComp )
-        c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/lots/%s_%s_%s.png' % (sample, channel, var) )
+        c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF/lots/%s_%s_%s.png' % (sample, channel, var) )
         h1.SetDirectory( 0 )
         hComp.SetDirectory( 0 )
 
@@ -204,7 +204,7 @@ def makePlots( sample ) :
             leg = buildLegend( [hists[var+' '+group+' RB'], hists[var+' '+group+' MC']], [sample+' RedBkg', sample+' MC'] ) 
             leg.Draw('SAME')
             decorate( p, group, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
-            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s/%s_%s_%s.png' % (group, sample, group, var) )
+            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF/%s/%s_%s_%s.png' % (group, sample, group, var) )
     del c, p
     return combMapHists
 
@@ -246,6 +246,7 @@ if __name__ == '__main__' :
     prodMap = getProdMap()
     plotVars = getHistoDict( analysis )
     azhSamples = ['WZ3l1nu', 'DYJets4', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets', 'TT'] # May 31 samples, no ZZ->all, use ZZ4l
+    #azhSamples = ['DYJets4', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets',]
     sampMap = {}
     for sample in azhSamples :
         sampMap[ sample ] = makePlots( sample )
@@ -283,7 +284,7 @@ if __name__ == '__main__' :
             leg = buildLegend( [h1, h2], ['Total RedBkg', 'Total MC'] ) 
             leg.Draw('SAME')
             decorate( p, group, h1, h2, True )
-            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal/%s/Total_%s_%s.png' % (group, group, var) )
+            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF/%s/Total_%s_%s.png' % (group, group, var) )
             
 
 
