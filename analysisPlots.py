@@ -535,7 +535,11 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst, ffShapeSyst) 
+        if 'NNLOPS' in sample :
+            # Current NNLOPS sample calculated as lheweight9 = lhe[9].wgt / abs(GenWeight), we need to undo that
+            totalCutAndWeightMC = '(lheweight9*abs(GenWeight))%s%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst, ffShapeSyst) 
+        else :
+            totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst, ffShapeSyst) 
         #print totalCutAndWeightMC
 
 

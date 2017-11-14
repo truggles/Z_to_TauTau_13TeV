@@ -38,7 +38,10 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
         elif 'WJets' in shortName :
             scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
         else :
-            scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+            if 'NNLOPS' in shortName :
+                scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / (1.02435e+07) # NNLOPS summedWeightsLHE09 non-normalized
+            else :
+                scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
             #print "DYJets not in shortName, scalar1 =",scalar1
 
     except KeyError :
@@ -1683,11 +1686,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = isoWPAdder.getVVLoose(
                             getattr(row, l4+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt4 )
 
-
-            # Set branch for syncing with other groups:
-            __ZWEIGHT__[0] = zPtWeight[0]
-            __WEIGHT__[0] = XSecLumiWeight[0]
-            __CORR__[0] = trigweight_1[0] * trigweight_2[0]
 
 
 
