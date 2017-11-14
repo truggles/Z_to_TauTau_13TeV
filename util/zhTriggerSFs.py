@@ -86,6 +86,72 @@ class zhTriggerSF :
         return eff_data / eff_mc
 
 
+    def getZHTriggerDataEff( self, nvtx, pt1, eta1, pt2, eta2 ) :
+        assert( pt1 >= pt2 ), "Lepton pTs must be ordered"
+
+        # Make sure we stay on our histograms
+        if pt1 > self.ptMax : pt1 = self.ptMax
+        elif pt1 < self.doubleLeadingMin : pt1 = self.doubleLeadingMin
+        if pt2 > self.ptMax : pt2 = self.ptMax
+        elif pt2 < self.doubleSubleadingMin : pt2 = self.doubleSubleadingMin
+
+        if eta1 > self.etaMax : eta1 = self.etaMax
+        elif eta1 < -1 * self.etaMax : eta1 = -1 * self.etaMax
+
+        if eta2 > self.etaMax : eta2 = self.etaMax
+        elif eta2 < -1 * self.etaMax : eta2 = -1 * self.etaMax
+
+        if nvtx > self.nvtxMax : nvtx = self.nvtxMax
+
+        # Start with double lepton SF as that applies to all events
+        ineff_data = (1. - self.doubleLeadingData.GetBinContent( self.doubleLeadingData.FindBin( pt1, eta1 ) ) \
+                * self.doubleSubleadingData.GetBinContent( self.doubleSubleadingData.FindBin( pt2, nvtx ) ) )
+
+        # second "region"
+        if pt1 > self.singleTrigThreshold :
+            ineff_data *= (1. - self.singleTriggerData.GetBinContent( self.singleTriggerData.FindBin( pt1, eta1 ) ) )
+
+            # third "region" only possible if second region is true
+            if pt2 > self.singleTrigThreshold :
+                ineff_data *= (1. - self.singleTriggerData.GetBinContent( self.singleTriggerData.FindBin( pt2, eta2 ) ) )
+
+        eff_data = 1.0 - ineff_data
+        return eff_data
+
+
+    def getZHTriggerMCEff( self, nvtx, pt1, eta1, pt2, eta2 ) :
+        assert( pt1 >= pt2 ), "Lepton pTs must be ordered"
+
+        # Make sure we stay on our histograms
+        if pt1 > self.ptMax : pt1 = self.ptMax
+        elif pt1 < self.doubleLeadingMin : pt1 = self.doubleLeadingMin
+        if pt2 > self.ptMax : pt2 = self.ptMax
+        elif pt2 < self.doubleSubleadingMin : pt2 = self.doubleSubleadingMin
+
+        if eta1 > self.etaMax : eta1 = self.etaMax
+        elif eta1 < -1 * self.etaMax : eta1 = -1 * self.etaMax
+
+        if eta2 > self.etaMax : eta2 = self.etaMax
+        elif eta2 < -1 * self.etaMax : eta2 = -1 * self.etaMax
+
+        if nvtx > self.nvtxMax : nvtx = self.nvtxMax
+
+        # Start with double lepton SF as that applies to all events
+        ineff_mc = (1. - self.doubleLeadingMC.GetBinContent( self.doubleLeadingMC.FindBin( pt1, eta1 ) ) \
+                * self.doubleSubleadingMC.GetBinContent( self.doubleSubleadingMC.FindBin( pt2, nvtx ) ) )
+
+        # second "region"
+        if pt1 > self.singleTrigThreshold :
+            ineff_mc *= (1. - self.singleTriggerMC.GetBinContent( self.singleTriggerMC.FindBin( pt1, eta1 ) ) )
+
+            # third "region" only possible if second region is true
+            if pt2 > self.singleTrigThreshold :
+                ineff_mc *= (1. - self.singleTriggerMC.GetBinContent( self.singleTriggerMC.FindBin( pt2, eta2 ) ) )
+
+        eff_mc = 1.0 - ineff_mc
+        return eff_mc
+
+
 
         
 
