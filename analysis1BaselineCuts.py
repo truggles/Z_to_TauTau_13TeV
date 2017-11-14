@@ -439,15 +439,15 @@ def doInitialOrder(analysis, samples, **fargs) :
                 # Make sure we loop over large samples to get all files
                 if count * numFilesPerCycle+1 > fileLen : go = False
 
-            if fargs['debug'] != 'true' :
-                mpResults = [p.get() for p in multiprocessingOutputs]
+        if fargs['debug'] != 'true' :
+            mpResults = [p.get() for p in multiprocessingOutputs]
 
-                print "\n"
-                print "#################################################################"
-                print "###       iso order finished for %20s         ###" % sample
-                print "#################################################################"
-                print "\n"
-                multiprocessingOutputs = []
+            print "\n"
+            print "#################################################################"
+            print "###       iso order finished for %20s         ###" % sample
+            print "#################################################################"
+            print "\n"
+            multiprocessingOutputs = []
     
     if fargs['debug'] == 'true' :
         print "#################################################################"
