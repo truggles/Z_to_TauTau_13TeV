@@ -144,6 +144,19 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
 
         return False
 
+# Return True for backgrounds to skip
+# Only want to plot signals and data
+def skipDCPVar( var, sample ) :
+    if '_DCPp' in var or '_DCPm' in var :
+        # Check if there is a Higgs Mass in the sample, if so, plot it
+        if '110' in sample or '120' in sample or '125' in sample or '130' in sample or '140' in sample :
+            return False
+        elif 'data' in sample : return False
+        else : return True # No Higgs mass, therefore Bkg
+
+    return False
+
+
 
 # Make specific extra cuts for different TES requirements
 def ESCuts( ESMap, sample, channel, var ) :
@@ -363,6 +376,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         ''' Skip plotting unused shape systematics '''
         if skipSystShapeVar( var, sample, channel, genCode ) : continue
 
+        ''' Skip plotting backgrounds for DCP+ and DCP- variables '''
+        if skipDCPVar( var, sample ) : continue
+
         ''' Define syst shape weights if applicable '''
         shapeSyst = ''
         # High Pt tau reweighting,
@@ -545,27 +561,30 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 additionalCutToUse += '*(KD_bsm_mlt < .2)'
             elif 'KD_bsm_mlt_D0_0p2to0p4' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.2 && KD_bsm_mlt < .4)'
-            #elif 'KD_bsm_mlt_D0_0p4to0p6' in var :
-            #    additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .6)'
             elif 'KD_bsm_mlt_D0_0p4to0p8' in var :
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .8)'
-            #elif 'KD_bsm_mlt_D0_0p6to0p8' in var :
-            #    additionalCutToUse += '*(KD_bsm_mlt >= 0.6 && KD_bsm_mlt < .8)'
             elif 'KD_bsm_mlt_D0_0p8to1' in var : 
                 additionalCutToUse += '*(KD_bsm_mlt >= 0.8)'
+
+            # DCP portion
+            if '_DCPp' in var :
+                additionalCutToUse += '*(KD_int >= 0.0)'
+            elif '_DCPm' in var :
+                additionalCutToUse += '*(KD_int < 0.0)'
+
             # For 1D MELA vars in slices of mjj
-            elif 'KD_bsm_mlt_mjj0-300' in var : 
-                additionalCutToUse += '*(mjj <= 300)'
-            elif 'KD_bsm_mlt_mjj300-700' in var : 
-                additionalCutToUse += '*(mjj > 300 && mjj <= 700)'
-            elif 'KD_bsm_mlt_mjj700-1100' in var : 
-                additionalCutToUse += '*(mjj > 700 && mjj <= 1100)'
-            elif 'KD_bsm_mlt_mjj1100-inf' in var : 
-                additionalCutToUse += '*(mjj > 1100)'
-            elif 'KD_bsm_mlt_mjj1100-1500' in var : 
-                additionalCutToUse += '*(mjj > 1100 && mjj <= 1500)'
-            elif 'KD_bsm_mlt_mjj1500-inf' in var : 
-                additionalCutToUse += '*(mjj > 1500)'
+            #elif 'KD_bsm_mlt_mjj0-300' in var : 
+            #    additionalCutToUse += '*(mjj <= 300)'
+            #elif 'KD_bsm_mlt_mjj300-700' in var : 
+            #    additionalCutToUse += '*(mjj > 300 && mjj <= 700)'
+            #elif 'KD_bsm_mlt_mjj700-1100' in var : 
+            #    additionalCutToUse += '*(mjj > 700 && mjj <= 1100)'
+            #elif 'KD_bsm_mlt_mjj1100-inf' in var : 
+            #    additionalCutToUse += '*(mjj > 1100)'
+            #elif 'KD_bsm_mlt_mjj1100-1500' in var : 
+            #    additionalCutToUse += '*(mjj > 1100 && mjj <= 1500)'
+            #elif 'KD_bsm_mlt_mjj1500-inf' in var : 
+            #    additionalCutToUse += '*(mjj > 1500)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
@@ -582,16 +601,16 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         plotVar = plotVar.replace( ':KD_int_DCP_0to1', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0to0p2', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p2to0p4', '' )
-        #plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p6', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p8', '' )
-        #plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p6to0p8', '' )
         plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p8to1', '' )
-        plotVar = plotVar.replace( '_mjj0-300', '' )
-        plotVar = plotVar.replace( '_mjj300-700', '' )
-        plotVar = plotVar.replace( '_mjj700-1100', '' )
-        plotVar = plotVar.replace( '_mjj1100-1500', '' )
-        plotVar = plotVar.replace( '_mjj1500-inf', '' )
-        plotVar = plotVar.replace( '_mjj1100-inf', '' )
+        plotVar = plotVar.replace( '_DCPp', '' )
+        plotVar = plotVar.replace( '_DCPm', '' )
+        #plotVar = plotVar.replace( '_mjj0-300', '' )
+        #plotVar = plotVar.replace( '_mjj300-700', '' )
+        #plotVar = plotVar.replace( '_mjj700-1100', '' )
+        #plotVar = plotVar.replace( '_mjj1100-1500', '' )
+        #plotVar = plotVar.replace( '_mjj1500-inf', '' )
+        #plotVar = plotVar.replace( '_mjj1100-inf', '' )
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
             shapeName = tmp.pop()
@@ -808,12 +827,22 @@ def getHistoDict( analysis, channel ) :
             'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+
             'mjj:m_sv:KD_bsm_mlt_D0_0to0p2' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            #'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            #'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_bsm_mlt_D0_0p8to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+
+            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
+
+            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
+            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
+
             #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
             'mjj:m_sv:KD_int_DCP_0to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
@@ -836,12 +865,22 @@ def getHistoDict( analysis, channel ) :
             'mjj:m_sv', 
             'm_sv',
             'Higgs_PtCor:m_sv',
+
             'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
             'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
-            #'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
             'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8',
-            #'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
             'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
+
+            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPp',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPp',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPp',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPp',
+
+            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPm',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPm',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPm',
+            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPm',
+
             'mjj:m_sv:KD_int_DCP_neg1to0',
             'mjj:m_sv:KD_int_DCP_0to1',
         ] # All aHTT Shapes

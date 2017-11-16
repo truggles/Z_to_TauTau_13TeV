@@ -74,7 +74,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
 #SamplesDataCards = [ 'EWKZ2l', 'EWKZ2nu']
-#SamplesDataCards = ['DYJets',] 
+#SamplesDataCards = ['DYJets','dataTT-C','VBFHtoTauTau125'] 
 #SamplesDataCards = ['dataTT-C',] 
 #SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
@@ -99,9 +99,12 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1Nov12newGGH',
-    'mid2' : '2Nov12newGGH',
-    'mid3' : '3Nov12newGGH',
+    'mid1' : '1June29mela',
+    'mid2' : '2June29mela',
+    'mid3' : '3June29mela',
+    #'mid1' : '1Nov12newGGH',
+    #'mid2' : '2Nov12newGGH',
+    #'mid3' : '3Nov12newGGH',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -131,7 +134,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -269,12 +272,22 @@ for isoVal in isoVals :
         'mjj:m_sv',
         'mjj:m_sv:KD_int_DCP_neg1to0',
         'mjj:m_sv:KD_int_DCP_0to1',
+
         'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
         'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
-        #'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
-        #'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
         'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',]
+        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
+
+        'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPp',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPp',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPp',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPp',
+
+        'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPm',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPm',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPm',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPm',
+        ]
         for cat in cats :
             for var in vars :
                 # Get normal vars for normal cats
