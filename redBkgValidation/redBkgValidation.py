@@ -73,11 +73,13 @@ def getHistoDict( analysis ) :
         #'Z_Pt' : [10, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
         ##'m_vis' : [7, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
         #'m_sv' : [15, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
-        'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
+        #'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
         ##'pt_1' : [10, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'],
         ##'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
         #'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
         #'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
+        'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
+        #'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
     }
     return genVarMap
 
@@ -133,7 +135,8 @@ def makePlots( sample ) :
         print channel
         ifile = ROOT.TFile('root_files/%s_%s.root' % (sample, channel), 'r' )
         itree = ifile.Get('Ntuple')
-        compfile = ROOT.TFile('../azh3Sept05OSLooseForRBVal/%s_%s.root' % (sample, channel), 'r' )
+        #compfile = ROOT.TFile('../azh3Sept05OSLooseForRBVal/%s_%s.root' % (sample, channel), 'r' )
+        compfile = ROOT.TFile('../azh3Nov13RedBkgMC/%s_%s.root' % (sample, channel), 'r' )
         print ifile, itree.GetEntries()
         print compfile
     
@@ -141,6 +144,8 @@ def makePlots( sample ) :
         var = 'pt_4'
         var = 'm_sv'
         var = 'met'
+        var = 'gen_match_3'
+        #var = 'gen_match_4'
     
         h1 = ROOT.TH1D(var+'_'+channel, var+'_'+channel, plotVars[var][0], plotVars[var][1], plotVars[var][2])
         hComp = compfile.Get('%s_Histos/%s' % (channel, var))
@@ -180,8 +185,8 @@ def makePlots( sample ) :
 
         prepForPlot( var, h1, hComp )
 
-        h1.Draw('')
-        hComp.Draw('SAME')
+        h1.Draw('E1')
+        hComp.Draw('E1 SAME')
         leg = buildLegend( [h1, hComp], [sample+' RedBkg', sample+' MC'] ) 
         leg.Draw('SAME')
         decorate( p, channel, h1, hComp )
@@ -199,8 +204,8 @@ def makePlots( sample ) :
     for group, hists in combMapHists.iteritems() :
         for var in plotVars.keys() :
             prepForPlot( var, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
-            hists[var+' '+group+' RB'].Draw('')
-            hists[var+' '+group+' MC'].Draw('SAME')
+            hists[var+' '+group+' RB'].Draw('E1')
+            hists[var+' '+group+' MC'].Draw('E1 SAME')
             leg = buildLegend( [hists[var+' '+group+' RB'], hists[var+' '+group+' MC']], [sample+' RedBkg', sample+' MC'] ) 
             leg.Draw('SAME')
             decorate( p, group, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )

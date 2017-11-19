@@ -853,6 +853,8 @@ def getHistoDict( analysis, channel ) :
             'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
             'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
             'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
+            'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
+            'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
 #####XXX            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
 #####XXX            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
 #####XXX            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
