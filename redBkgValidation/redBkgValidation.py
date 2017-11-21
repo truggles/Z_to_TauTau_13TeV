@@ -9,6 +9,67 @@ from util.azhReducibleBackgroundHelpers import \
     getRedBkgCutsAndWeights, getChannelSpecificFinalCuts, \
     getRedBkgShape
 import pyplotter.tdrstyle as tdr
+from util.ratioPlot import ratioPlot
+
+def makeRatioPlot( h1, h2, c1, sample, var, channel, saveName, decorateDoFinal=False ) :
+    c1.Clear()
+    smlPadSize = .25
+    pads = ratioPlot( c1, 1-smlPadSize )
+    pad1 = pads[0]
+    ratioPad = pads[1]
+    ratioPad.SetTopMargin(0.0)
+    ratioPad.SetBottomMargin(0.3)
+    pad1.SetBottomMargin(0.02)
+    ratioPad.SetGridy()
+    ratioHist = h1.Clone()
+    ratioHist.Divide( h2 )
+    ratioHist.SetLineColor( ROOT.kBlack )
+    ratioHist.SetMarkerColor( ROOT.kBlack )
+    ratioHist.GetYaxis().SetTitle( 'Ratio RB / Nom' )
+    ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize() / (1-smlPadSize) )
+    ratioHist.SetMaximum( 4. )
+    ratioHist.SetMinimum( 0. )
+    ratioHist.SetMarkerStyle( 21 )
+    ratioHist.SetMarkerSize( 0.5 )
+    ratioLine = ratioHist.Clone()
+    for b in range( 1, ratioHist.GetNbinsX()+1 ) :
+        ratioLine.SetBinContent( b, 1.0 )
+        ratioLine.SetBinError( b, 0.0 )
+
+    pad1.cd()
+    prepForPlot( var, h1, h2 )
+    h1.Draw('E1')
+    h1.GetXaxis().SetLabelSize( 0.0 )
+    h1.GetYaxis().SetLabelSize( h1.GetYaxis().GetLabelSize() / (1-smlPadSize) )
+    h2.Draw('E1 SAME')
+    #h1.Draw('E1')
+    #hComp.Draw('E1 SAME')
+    leg = buildLegend( [h1, h2], [sample+' RedBkg', sample+' MC'] ) 
+    leg.Draw('SAME')
+    decorate( pad1, channel, h1, h2, decorateDoFinal )
+
+
+    #line = ROOT.TLine( info[1], 1, info[2], 1 )
+    #line.SetLineColor(ROOT.kBlack)
+    #line.SetLineWidth( 1 )
+    #line.Draw()
+    #ratioHist.Draw('esamex0')
+    # X Axis!
+    ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
+    ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
+    ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
+    ratioHist.GetYaxis().SetNdivisions( 5, True )
+    ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
+    ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
+    
+    
+    ratioPad.cd()
+    ratioHist.Draw('same e1')
+    ratioLine.Draw('SAME HIST')
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSFv2/lots/%s_%s_%s.png' % (sample, channel, var) )
+    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSFv2/'+saveName+'.png' )
+    c1.Clear()
+    del pad1, ratioPad
 
 def decorate( p, channel, h1, h2, doFinal=False ) :
 
@@ -77,8 +138,8 @@ def getHistoDict( analysis ) :
         ##'pt_1' : [10, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'],
         ##'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
         #'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
-        #'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
-        'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
+        'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
+        #'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
         #'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
     }
     return genVarMap
@@ -100,7 +161,11 @@ def prepForPlot( var, h1, h2 ) :
     h1.GetXaxis().SetTitle("%s" % plotVars[var][ 4 ])
     h1.GetYaxis().SetTitle("Events / Bin Width")
     h1.SetLineColor( ROOT.kRed )
+    h1.SetMarkerColor( ROOT.kRed )
+    h1.SetMarkerStyle( 22 )
     h2.SetLineColor( ROOT.kBlue )
+    h2.SetMarkerColor( ROOT.kBlue )
+    h2.SetMarkerStyle( 21 )
 
 
 def makePlots( sample ) :
@@ -142,9 +207,9 @@ def makePlots( sample ) :
     
         var = 'pt_3'
         var = 'pt_4'
-        var = 'm_sv'
-        var = 'met'
-        var = 'gen_match_3'
+        #var = 'm_sv'
+        #var = 'met'
+        #var = 'gen_match_3'
         #var = 'gen_match_4'
     
         h1 = ROOT.TH1D(var+'_'+channel, var+'_'+channel, plotVars[var][0], plotVars[var][1], plotVars[var][2])
@@ -185,12 +250,8 @@ def makePlots( sample ) :
 
         prepForPlot( var, h1, hComp )
 
-        h1.Draw('E1')
-        hComp.Draw('E1 SAME')
-        leg = buildLegend( [h1, hComp], [sample+' RedBkg', sample+' MC'] ) 
-        leg.Draw('SAME')
-        decorate( p, channel, h1, hComp )
-        c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF/lots/%s_%s_%s.png' % (sample, channel, var) )
+        saveName = 'lots/%s_%s_%s' % (sample, channel, var)
+        makeRatioPlot( h1, hComp, c, sample, var, channel, saveName )
         h1.SetDirectory( 0 )
         hComp.SetDirectory( 0 )
 
@@ -206,10 +267,12 @@ def makePlots( sample ) :
             prepForPlot( var, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
             hists[var+' '+group+' RB'].Draw('E1')
             hists[var+' '+group+' MC'].Draw('E1 SAME')
-            leg = buildLegend( [hists[var+' '+group+' RB'], hists[var+' '+group+' MC']], [sample+' RedBkg', sample+' MC'] ) 
-            leg.Draw('SAME')
-            decorate( p, group, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
-            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF/%s/%s_%s_%s.png' % (group, sample, group, var) )
+            saveName = '%s/%s_%s_%s' % (group, sample, group, var)
+            makeRatioPlot( hists[var+' '+group+' RB'], hists[var+' '+group+' MC'], c, sample, var, group, saveName )
+            #leg = buildLegend( [hists[var+' '+group+' RB'], hists[var+' '+group+' MC']], [sample+' RedBkg', sample+' MC'] ) 
+            #leg.Draw('SAME')
+            #decorate( p, group, hists[var+' '+group+' RB'], hists[var+' '+group+' MC'] )
+            #c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSFv2/%s/%s_%s_%s.png' % (group, sample, group, var) )
     del c, p
     return combMapHists
 
@@ -284,12 +347,14 @@ if __name__ == '__main__' :
             print "h2 - int: %3.3f +/- %3.3f  nEntries %i" % (h2.Integral(), err2, h2.GetEntries())
 
             prepForPlot( var, h1, h2 )
-            h1.Draw('')
-            h2.Draw('SAME')
-            leg = buildLegend( [h1, h2], ['Total RedBkg', 'Total MC'] ) 
-            leg.Draw('SAME')
-            decorate( p, group, h1, h2, True )
-            c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF/%s/Total_%s_%s.png' % (group, group, var) )
+            saveName = '%s/Total_%s_%s' % (group, group, var)
+            makeRatioPlot( h1, h2, c, sample, var, group, saveName, True )
+            #h1.Draw('')
+            #h2.Draw('SAME')
+            #leg = buildLegend( [h1, h2], ['Total RedBkg', 'Total MC'] ) 
+            #leg.Draw('SAME')
+            #decorate( p, group, h1, h2, True )
+            #c.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSFv2/%s/Total_%s_%s.png' % (group, group, var) )
             
 
 
