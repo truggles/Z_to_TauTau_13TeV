@@ -8,7 +8,7 @@ import argparse
 import analysisPlots
 from util.splitCanvas import fixFontSize
 from array import array
-from analysisPlots import skipSystShapeVar
+from analysisPlots import skipSystShapeVar, skipDCPVar
 from util.helpers import checkDir, unroll2D, returnSortedDict, \
         dataCardGenMatchedSamples
 from analysis1BaselineCuts import skipChanDataCombo
@@ -278,6 +278,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
                 ''' Skip plotting unused shape systematics '''
                 if skipSystShapeVar( var, sample, channel ) : continue
+                if skipDCPVar( var, sample ) : continue
                 if '_topPt' in var : print "Top Pt still in Var: "+var+" sample: "+sample
     
                 # Skip looping over nonsense channel / sample combos

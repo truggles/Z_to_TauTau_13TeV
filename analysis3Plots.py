@@ -9,7 +9,7 @@ from util.splitCanvas import fixFontSize
 import os
 from array import array
 import math
-from analysisPlots import skipSystShapeVar
+from analysisPlots import skipSystShapeVar, skipDCPVar
 from copy import deepcopy
 from util.helpers import checkDir, returnSortedDict
 import subprocess
@@ -431,6 +431,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ''' Shape systematics are plotted with their 
                     unshifted counterparts '''
                 getVar = var
+                if skipDCPVar( var, sample ) : continue
                 if skipSystShapeVar( var, sample, channel ) :
                     breakUp = var.split('_')
                     if breakUp[-1] == 'ffSub' :
