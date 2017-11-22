@@ -20,14 +20,14 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 # Make a 2D histo
 def get2DVars( cutName ) :
-    if 'mjj' in cutName and 'm_sv' in cutName and 'KD_bsm_mlt' in cutName :
+    if 'mjj' in cutName and 'm_sv' in cutName and 'melaD0minus' in cutName :
         #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
         #xBins = array( 'd', [0,95,115,135,155,400] )
         #yBins = array( 'd', [0,300,700,1100,1500,10000] )
         #zBins = array( 'd', [0,.2,.4,.6,.8,1] )
-    elif 'mjj' in cutName and 'm_sv' in cutName and 'KD_int' in cutName :
+    elif 'mjj' in cutName and 'm_sv' in cutName and 'melaDCP' in cutName :
         #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
@@ -43,10 +43,12 @@ def get2DVars( cutName ) :
         xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
     elif 'Higgs_PtCor' in cutName and 'm_sv' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        xBins = array( 'd', [0,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,10000] )
     elif 'Higgs_PtCor' in cutName and 'm_visCor' in cutName :
-        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+        xBins = array( 'd', [0,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,10000] )
     elif 'mjj' in cutName and 'm_visCor' in cutName :
         #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
@@ -551,39 +553,39 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         xsec = '*(XSecLumiWeight)'
 
         # Add MELA cuts
-        if 'KD_int' in var :
-            if 'KD_int_DCP_neg1to0' in var :
-                additionalCutToUse += '*(KD_int <= 0)'
-            if 'KD_int_DCP_0to1' in var :
-                additionalCutToUse += '*(KD_int > 0)'
-        if 'KD_bsm_mlt' in var :
-            if 'KD_bsm_mlt_D0_0to0p2' in var : 
-                additionalCutToUse += '*(KD_bsm_mlt < .2)'
-            elif 'KD_bsm_mlt_D0_0p2to0p4' in var :
-                additionalCutToUse += '*(KD_bsm_mlt >= 0.2 && KD_bsm_mlt < .4)'
-            elif 'KD_bsm_mlt_D0_0p4to0p8' in var :
-                additionalCutToUse += '*(KD_bsm_mlt >= 0.4 && KD_bsm_mlt < .8)'
-            elif 'KD_bsm_mlt_D0_0p8to1' in var : 
-                additionalCutToUse += '*(KD_bsm_mlt >= 0.8)'
+        if 'melaDCP' in var :
+            if 'melaDCP_DCP_neg1to0' in var :
+                additionalCutToUse += '*(melaDCP <= 0)'
+            if 'melaDCP_DCP_0to1' in var :
+                additionalCutToUse += '*(melaDCP > 0)'
+        if 'melaD0minus' in var :
+            if 'melaD0minus_D0_0to0p2' in var : 
+                additionalCutToUse += '*(melaD0minus < .2)'
+            elif 'melaD0minus_D0_0p2to0p4' in var :
+                additionalCutToUse += '*(melaD0minus >= 0.2 && melaD0minus < .4)'
+            elif 'melaD0minus_D0_0p4to0p8' in var :
+                additionalCutToUse += '*(melaD0minus >= 0.4 && melaD0minus < .8)'
+            elif 'melaD0minus_D0_0p8to1' in var : 
+                additionalCutToUse += '*(melaD0minus >= 0.8)'
 
             # DCP portion
             if '_DCPp' in var :
-                additionalCutToUse += '*(KD_int >= 0.0)'
+                additionalCutToUse += '*(melaDCP >= 0.0)'
             elif '_DCPm' in var :
-                additionalCutToUse += '*(KD_int < 0.0)'
+                additionalCutToUse += '*(melaDCP < 0.0)'
 
             # For 1D MELA vars in slices of mjj
-            #elif 'KD_bsm_mlt_mjj0-300' in var : 
+            #elif 'melaD0minus_mjj0-300' in var : 
             #    additionalCutToUse += '*(mjj <= 300)'
-            #elif 'KD_bsm_mlt_mjj300-700' in var : 
+            #elif 'melaD0minus_mjj300-700' in var : 
             #    additionalCutToUse += '*(mjj > 300 && mjj <= 700)'
-            #elif 'KD_bsm_mlt_mjj700-1100' in var : 
+            #elif 'melaD0minus_mjj700-1100' in var : 
             #    additionalCutToUse += '*(mjj > 700 && mjj <= 1100)'
-            #elif 'KD_bsm_mlt_mjj1100-inf' in var : 
+            #elif 'melaD0minus_mjj1100-inf' in var : 
             #    additionalCutToUse += '*(mjj > 1100)'
-            #elif 'KD_bsm_mlt_mjj1100-1500' in var : 
+            #elif 'melaD0minus_mjj1100-1500' in var : 
             #    additionalCutToUse += '*(mjj > 1100 && mjj <= 1500)'
-            #elif 'KD_bsm_mlt_mjj1500-inf' in var : 
+            #elif 'melaD0minus_mjj1500-inf' in var : 
             #    additionalCutToUse += '*(mjj > 1500)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
@@ -597,12 +599,12 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         varBase = var.replace('_ffSub','')
         plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
         # MELA
-        plotVar = plotVar.replace( ':KD_int_DCP_neg1to0', '' )
-        plotVar = plotVar.replace( ':KD_int_DCP_0to1', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0to0p2', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p2to0p4', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p4to0p8', '' )
-        plotVar = plotVar.replace( ':KD_bsm_mlt_D0_0p8to1', '' )
+        plotVar = plotVar.replace( ':melaDCP_DCP_neg1to0', '' )
+        plotVar = plotVar.replace( ':melaDCP_DCP_0to1', '' )
+        plotVar = plotVar.replace( ':melaD0minus_D0_0to0p2', '' )
+        plotVar = plotVar.replace( ':melaD0minus_D0_0p2to0p4', '' )
+        plotVar = plotVar.replace( ':melaD0minus_D0_0p4to0p8', '' )
+        plotVar = plotVar.replace( ':melaD0minus_D0_0p8to1', '' )
         plotVar = plotVar.replace( '_DCPp', '' )
         plotVar = plotVar.replace( '_DCPm', '' )
         #plotVar = plotVar.replace( '_mjj0-300', '' )
@@ -828,32 +830,32 @@ def getHistoDict( analysis, channel ) :
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 
-            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0to0p2' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p8to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
 
-            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPp' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPp', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
 
-            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
-            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'KD_bsm_mlt_DCPm', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
 
-            #'mjj:m_sv:KD_int' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_int_DCP_neg1to0' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-            'mjj:m_sv:KD_int_DCP_0to1' : [300, 0, 300, 10, 'KD_bsm_mlt', ' GeV'],
-#            'KD_int' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
-#            'KD_bsm_mlt' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
-#            'KD_bsm_mlt_mjj0-300' : [140, -0.2, 1.2, 20, 'D0- (mjj [0,300])', ' GeV'],
-#            'KD_bsm_mlt_mjj300-700' : [140, -0.2, 1.2, 20, 'D0- (mjj [300,700])', ' GeV'],
-#            'KD_bsm_mlt_mjj700-1100' : [140, -0.2, 1.2, 20, 'D0- (mjj [700,1100])', ' GeV'],
-#            'KD_bsm_mlt_mjj1100-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,inf])', ' GeV'],
-#            'KD_bsm_mlt_mjj1100-1500' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,1500])', ' GeV'],
-#            'KD_bsm_mlt_mjj1500-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1500,inf])', ' GeV'],
+            #'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+#            'melaDCP' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
+#            'melaD0minus' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
+#            'melaD0minus_mjj0-300' : [140, -0.2, 1.2, 20, 'D0- (mjj [0,300])', ' GeV'],
+#            'melaD0minus_mjj300-700' : [140, -0.2, 1.2, 20, 'D0- (mjj [300,700])', ' GeV'],
+#            'melaD0minus_mjj700-1100' : [140, -0.2, 1.2, 20, 'D0- (mjj [700,1100])', ' GeV'],
+#            'melaD0minus_mjj1100-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,inf])', ' GeV'],
+#            'melaD0minus_mjj1100-1500' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,1500])', ' GeV'],
+#            'melaD0minus_mjj1500-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1500,inf])', ' GeV'],
         }
 
         ''' added shape systematics '''
@@ -866,23 +868,23 @@ def getHistoDict( analysis, channel ) :
             'm_sv',
             'Higgs_PtCor:m_sv',
 
-            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
+            'mjj:m_sv:melaD0minus_D0_0to0p2',
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4',
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8',
+            'mjj:m_sv:melaD0minus_D0_0p8to1',
 
-            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPp',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPp',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPp',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
 
-            'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPm',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPm',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPm',
-            'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
 
-            'mjj:m_sv:KD_int_DCP_neg1to0',
-            'mjj:m_sv:KD_int_DCP_0to1',
+            'mjj:m_sv:melaDCP_DCP_neg1to0',
+            'mjj:m_sv:melaDCP_DCP_0to1',
         ] # All aHTT Shapes
         varsForShapeSyst = []
         for item in toAdd :

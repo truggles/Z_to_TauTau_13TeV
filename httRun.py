@@ -49,7 +49,8 @@ anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125'
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'dataTT-G', 'dataTT-H']
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
 
-for mass in [110, 120, 125, 130, 140] :
+#for mass in [110, 120, 125, 130, 140] :
+for mass in [125,] :
     SamplesDataCards.append('ggHtoTauTau%i' % mass)
     SamplesDataCards.append('VBFHtoTauTau%i' % mass)
     SamplesDataCards.append('WMinusHTauTau%i' % mass)
@@ -64,9 +65,9 @@ for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
     SamplesDataCards.append( 'W'+aHiggs )
     SamplesDataCards.append( 'Z'+aHiggs )
-SamplesDataCards.append('ggH125-maxmix')
-SamplesDataCards.append('ggH125-pseudoscalar')
-SamplesDataCards.append('ggH125-sm')
+#SamplesDataCards.append('ggH125-maxmix')
+#SamplesDataCards.append('ggH125-pseudoscalar')
+#SamplesDataCards.append('ggH125-sm')
     
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     SamplesDataCards.append('dataTT-%s' % era)
@@ -134,7 +135,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -142,7 +143,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -270,23 +271,23 @@ for isoVal in isoVals :
         'm_sv',
         '%s:m_sv' % higgsPt,
         'mjj:m_sv',
-        'mjj:m_sv:KD_int_DCP_neg1to0',
-        'mjj:m_sv:KD_int_DCP_0to1',
+        'mjj:m_sv:melaDCP_DCP_neg1to0',
+        'mjj:m_sv:melaDCP_DCP_0to1',
 
-        'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',
+        'mjj:m_sv:melaD0minus_D0_0to0p2',
+        'mjj:m_sv:melaD0minus_D0_0p2to0p4',
+        'mjj:m_sv:melaD0minus_D0_0p4to0p8',
+        'mjj:m_sv:melaD0minus_D0_0p8to1',
 
-        'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPp',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPp',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPp',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
 
-        'mjj:m_sv:KD_bsm_mlt_D0_0to0p2_DCPm',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4_DCPm',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p8_DCPm',
-        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
         ]
         for cat in cats :
             for var in vars :
@@ -299,7 +300,7 @@ for isoVal in isoVals :
                 if cat == 'vbf' :
                     if var == 'mjj:m_sv' : finalCat = cat
                     else :
-                        finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('KD_bsm_mlt_','').replace('KD_int_','')
+                        finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('melaD0minus_','').replace('melaDCP_','')
                 else : finalCat = cat
 
                 if doFF :

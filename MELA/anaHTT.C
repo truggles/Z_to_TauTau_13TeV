@@ -44,7 +44,8 @@ void anaHTT(TString InFile, TString OutFile)
 //  TFile *finput = new TFile("all1234tmpOut2.root");
   TTree *tree = (TTree*) finput->Get("Ntuple");
   
-  float ME_sm, ME_bsm, ME_bsm_mlt, KD_sm, KD_bsm, KD_bsm_mlt, ME_int, KD_int;
+  float ME_sm, ME_bsm, ME_bsm_mlt, KD_sm, KD_bsm, melaD0minus, ME_int, melaDCP,
+        melaD0hplus, melaDint, melaDL1, melaDL1int, melaDL1Zg, melaDL1Zgint;
   
   Float_t         m_sv;
   Float_t         pt_sv;
@@ -119,9 +120,15 @@ void anaHTT(TString InFile, TString OutFile)
 //  newtree->Branch("ME_bsm", &ME_bsm);
 //  newtree->Branch("KD_bsm", &KD_bsm);
 //  newtree->Branch("ME_bsm_mlt", &ME_bsm_mlt);
-  newtree->Branch("KD_bsm_mlt", &KD_bsm_mlt);
+  newtree->Branch("melaD0minus", &melaD0minus);
 //  newtree->Branch("ME_int", &ME_int);
-  newtree->Branch("KD_int", &KD_int);
+  newtree->Branch("melaDCP", &melaDCP);
+  newtree->Branch("melaD0hplus", &melaD0hplus);
+  newtree->Branch("melaDint", &melaDint);
+  newtree->Branch("melaDL1", &melaDL1);
+  newtree->Branch("melaDL1int", &melaDL1int);
+  newtree->Branch("melaDL1Zg", &melaDL1Zg);
+  newtree->Branch("melaDL1Zgint", &melaDL1Zgint);
 
 
   //  mela.setCandidateDecayMode(TVar::CandidateDecay_ff);
@@ -137,6 +144,14 @@ void anaHTT(TString InFile, TString OutFile)
     nb = tree->GetEntry(jentry);   nbytes += nb;
     
     tree->GetEntry(jentry);
+    melaD0hplus = -9;
+    melaDint = -9;
+    melaDL1 = -9;
+    melaDL1int = -9;
+    melaDL1Zg = -9;
+    melaDL1Zgint = -9;
+    melaD0minus = -9;
+    melaDCP = -9;
     
     if (njets>=2){
       TLorentzVector jet1(0, 0, 1e-3, 1e-3), jet2(0, 0, 1e-3, 1e-3), higgs(0, 0, 0, 0);
@@ -170,7 +185,7 @@ void anaHTT(TString InFile, TString OutFile)
       ME_bsm_mlt = ME_bsm*pow(0.297979, 2);
       //compute D_BSM (eq.5 of HIG-17-011)
       KD_bsm = ME_sm / (ME_sm + ME_bsm);
-      KD_bsm_mlt = ME_sm / (ME_sm + ME_bsm_mlt);
+      melaD0minus = ME_sm / (ME_sm + ME_bsm_mlt);
 
         
       mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJVBF);
@@ -179,14 +194,51 @@ void anaHTT(TString InFile, TString OutFile)
       mela.computeProdP(ME_int, false);
 
       //define D_CP
-      KD_int = (0.297979*(ME_int-(ME_sm + ME_bsm)))/(ME_sm + (pow(0.297979, 2)*ME_bsm));
+      melaDCP = (0.297979*(ME_int-(ME_sm + ME_bsm)))/(ME_sm + (pow(0.297979, 2)*ME_bsm));
       
+      // New from Heshy: 22, Nov 2017
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJVBF);
+      mela.selfDHzzcoupl[0][gHIGGS_VV_2][0]=1;
+      mela.computeProdP(ME_bsm, false);
+      ME_bsm_mlt = ME_bsm*pow(0.271899, 2);
+      melaD0hplus = ME_sm / (ME_sm + ME_bsm_mlt);
+
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJVBF);
+      mela.selfDHzzcoupl[0][gHIGGS_VV_2][0]=1;
+      mela.selfDHzzcoupl[0][gHIGGS_VV_1][0]=1;
+      mela.computeProdP(ME_int, false);
+      melaDint = (0.271899*(ME_int-(ME_sm + ME_bsm)))/(ME_sm + (pow(0.271899, 2)*ME_bsm));
+
+
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJVBF);
+      mela.selfDHzzcoupl[0][gHIGGS_VV_1_PRIME2][0]=1;
+      mela.computeProdP(ME_bsm, false);
+      ME_bsm_mlt = ME_bsm*pow(2156.43, 2);
+      melaDL1 = ME_sm / (ME_sm + ME_bsm_mlt);
+
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJVBF);
+      mela.selfDHzzcoupl[0][gHIGGS_VV_1_PRIME2][0]=1;
+      mela.selfDHzzcoupl[0][gHIGGS_VV_1][0]=1;
+      mela.computeProdP(ME_int, false);
+      melaDL1int = (2156.43*(ME_int-(ME_sm + ME_bsm)))/(ME_sm + (pow(2156.43, 2)*ME_bsm));
+
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJVBF);
+      mela.selfDHzzcoupl[0][gHIGGS_ZA_1_PRIME2][0]=1;
+      mela.computeProdP(ME_bsm, false);
+      ME_bsm_mlt = ME_bsm*pow(4091.0, 2);
+      melaDL1Zg = ME_sm / (ME_sm + ME_bsm_mlt);
+
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJVBF);
+      mela.selfDHzzcoupl[0][gHIGGS_ZA_1_PRIME2][0]=1;
+      mela.selfDHzzcoupl[0][gHIGGS_VV_1][0]=1;
+      mela.computeProdP(ME_int, false);
+      melaDL1Zgint = (4091.0*(ME_int-(ME_sm + ME_bsm)))/(ME_sm + (pow(4091.0, 2)*ME_bsm));
  
-      newtree->Fill();
-      recorded++;
-      mela.resetInputEvent();
       // if (Cut(ientry) < 0) continue;
     }
+    newtree->Fill();
+    recorded++;
+    mela.resetInputEvent();
   }
 //  foutput->Write();
   foutput->WriteTObject(newtree);
@@ -198,219 +250,9 @@ void anaHTT(TString InFile, TString OutFile)
 
 void runAll() {
  std::vector<std::string> files;
- files.push_back("DYJets1Low_0_tt");
- files.push_back("DYJets1_0_tt");
- files.push_back("DYJets1_1_tt");
- files.push_back("DYJets1_2_tt");
- files.push_back("DYJets1_3_tt");
- files.push_back("DYJets1_4_tt");
- files.push_back("DYJets1_5_tt");
- files.push_back("DYJets1_6_tt");
- files.push_back("DYJets2Low_0_tt");
- files.push_back("DYJets2_0_tt");
- files.push_back("DYJets2_1_tt");
- files.push_back("DYJets2_2_tt");
- files.push_back("DYJets3_0_tt");
- files.push_back("DYJets4_0_tt");
- files.push_back("DYJetsLow_0_tt");
- files.push_back("DYJets_0_tt");
- files.push_back("DYJets_10_tt");
- files.push_back("DYJets_11_tt");
- files.push_back("DYJets_1_tt");
- files.push_back("DYJets_2_tt");
- files.push_back("DYJets_3_tt");
- files.push_back("DYJets_4_tt");
- files.push_back("DYJets_5_tt");
- files.push_back("DYJets_6_tt");
- files.push_back("DYJets_7_tt");
- files.push_back("DYJets_8_tt");
- files.push_back("DYJets_9_tt");
- files.push_back("EWKWMinus_0_tt");
- files.push_back("EWKWPlus_0_tt");
- files.push_back("EWKZ2l_0_tt");
- files.push_back("EWKZ2nu_0_tt");
- files.push_back("HtoWW2l2nu125_0_tt");
- files.push_back("T-tW_0_tt");
- files.push_back("T-tchan_0_tt");
- files.push_back("T-tchan_1_tt");
- files.push_back("TT_0_tt");
- files.push_back("TT_1_tt");
- files.push_back("TT_2_tt");
- files.push_back("TT_3_tt");
- files.push_back("TT_4_tt");
- files.push_back("Tbar-tW_0_tt");
- files.push_back("Tbar-tchan_0_tt");
- files.push_back("VBFHtoTauTau110_0_tt");
- files.push_back("VBFHtoTauTau110_1_tt");
- files.push_back("VBFHtoTauTau120_0_tt");
- files.push_back("VBFHtoTauTau120_1_tt");
+ //files.push_back("");
  files.push_back("VBFHtoTauTau125_0_tt");
- files.push_back("VBFHtoTauTau125_1_tt");
- files.push_back("VBFHtoTauTau125_2_tt");
- files.push_back("VBFHtoTauTau130_0_tt");
- files.push_back("VBFHtoTauTau130_1_tt");
- files.push_back("VBFHtoTauTau140_0_tt");
- files.push_back("VBFHtoTauTau140_1_tt");
- files.push_back("VBFHtoTauTau140_2_tt");
- files.push_back("VBFHtoWW2l2nu125_0_tt");
- files.push_back("VV_0_tt");
- files.push_back("VV_1_tt");
- files.push_back("WJets1_0_tt");
- files.push_back("WJets2_0_tt");
- files.push_back("WJets2_1_tt");
- files.push_back("WJets3_0_tt");
- files.push_back("WJets3_1_tt");
- files.push_back("WJets3_2_tt");
- files.push_back("WJets4_0_tt");
- files.push_back("WJets4_1_tt");
- files.push_back("WJets_0_tt");
- files.push_back("WJets_1_tt");
- files.push_back("WMinusHTauTau110_0_tt");
- files.push_back("WMinusHTauTau120_0_tt");
- files.push_back("WMinusHTauTau125_0_tt");
- files.push_back("WMinusHTauTau130_0_tt");
- files.push_back("WMinusHTauTau140_0_tt");
- files.push_back("WMinusHTauTau140_1_tt");
- files.push_back("WPlusHTauTau110_0_tt");
- files.push_back("WPlusHTauTau120_0_tt");
- files.push_back("WPlusHTauTau125_0_tt");
- files.push_back("WPlusHTauTau130_0_tt");
- files.push_back("WPlusHTauTau140_0_tt");
- files.push_back("WPlusHTauTau140_1_tt");
- files.push_back("WW1l1nu2q_0_tt");
- files.push_back("WWW_0_tt");
- files.push_back("WZ1l1nu2q_0_tt");
- files.push_back("WZ1l1nu2q_1_tt");
- files.push_back("WZ1l3nu_0_tt");
- files.push_back("WZ2l2q_0_tt");
- files.push_back("WZ2l2q_1_tt");
- files.push_back("WZ2l2q_2_tt");
- files.push_back("WZ2l2q_3_tt");
- files.push_back("WZ2l2q_4_tt");
- files.push_back("WZ3l1nu_0_tt");
- files.push_back("ZHTauTau110_0_tt");
- files.push_back("ZHTauTau110_1_tt");
- files.push_back("ZHTauTau120_0_tt");
- files.push_back("ZHTauTau125_0_tt");
- files.push_back("ZHTauTau130_0_tt");
- files.push_back("ZHTauTau140_0_tt");
- files.push_back("ZHTauTau140_1_tt");
- files.push_back("ZZ2l2q_0_tt");
- files.push_back("ZZ2l2q_1_tt");
- files.push_back("ZZ2l2q_2_tt");
- files.push_back("ZZ2l2q_3_tt");
- files.push_back("ZZ4l_0_tt");
- files.push_back("ZZ4l_1_tt");
- files.push_back("dataTT-B_0_tt");
- files.push_back("dataTT-B_10_tt");
- files.push_back("dataTT-B_11_tt");
- files.push_back("dataTT-B_12_tt");
- files.push_back("dataTT-B_13_tt");
- files.push_back("dataTT-B_14_tt");
- files.push_back("dataTT-B_15_tt");
- files.push_back("dataTT-B_1_tt");
- files.push_back("dataTT-B_2_tt");
- files.push_back("dataTT-B_3_tt");
- files.push_back("dataTT-B_4_tt");
- files.push_back("dataTT-B_5_tt");
- files.push_back("dataTT-B_6_tt");
- files.push_back("dataTT-B_7_tt");
- files.push_back("dataTT-B_8_tt");
- files.push_back("dataTT-B_9_tt");
- files.push_back("dataTT-C_0_tt");
- files.push_back("dataTT-C_1_tt");
- files.push_back("dataTT-C_2_tt");
- files.push_back("dataTT-C_3_tt");
- files.push_back("dataTT-C_4_tt");
- files.push_back("dataTT-C_5_tt");
- files.push_back("dataTT-C_6_tt");
- files.push_back("dataTT-C_7_tt");
- files.push_back("dataTT-D_0_tt");
- files.push_back("dataTT-D_10_tt");
- files.push_back("dataTT-D_11_tt");
- files.push_back("dataTT-D_12_tt");
- files.push_back("dataTT-D_13_tt");
- files.push_back("dataTT-D_1_tt");
- files.push_back("dataTT-D_2_tt");
- files.push_back("dataTT-D_3_tt");
- files.push_back("dataTT-D_4_tt");
- files.push_back("dataTT-D_5_tt");
- files.push_back("dataTT-D_6_tt");
- files.push_back("dataTT-D_7_tt");
- files.push_back("dataTT-D_8_tt");
- files.push_back("dataTT-D_9_tt");
- files.push_back("dataTT-E_0_tt");
- files.push_back("dataTT-E_10_tt");
- files.push_back("dataTT-E_11_tt");
- files.push_back("dataTT-E_12_tt");
- files.push_back("dataTT-E_1_tt");
- files.push_back("dataTT-E_2_tt");
- files.push_back("dataTT-E_3_tt");
- files.push_back("dataTT-E_4_tt");
- files.push_back("dataTT-E_5_tt");
- files.push_back("dataTT-E_6_tt");
- files.push_back("dataTT-E_7_tt");
- files.push_back("dataTT-E_8_tt");
- files.push_back("dataTT-E_9_tt");
- files.push_back("dataTT-F_0_tt");
- files.push_back("dataTT-F_1_tt");
- files.push_back("dataTT-F_2_tt");
- files.push_back("dataTT-F_3_tt");
- files.push_back("dataTT-F_4_tt");
- files.push_back("dataTT-F_5_tt");
- files.push_back("dataTT-F_6_tt");
- files.push_back("dataTT-F_7_tt");
- files.push_back("dataTT-F_8_tt");
- files.push_back("dataTT-F_9_tt");
- files.push_back("dataTT-G_0_tt");
- files.push_back("dataTT-G_10_tt");
- files.push_back("dataTT-G_11_tt");
- files.push_back("dataTT-G_12_tt");
- files.push_back("dataTT-G_13_tt");
- files.push_back("dataTT-G_14_tt");
- files.push_back("dataTT-G_15_tt");
- files.push_back("dataTT-G_16_tt");
- files.push_back("dataTT-G_17_tt");
- files.push_back("dataTT-G_18_tt");
- files.push_back("dataTT-G_19_tt");
- files.push_back("dataTT-G_1_tt");
- files.push_back("dataTT-G_20_tt");
- files.push_back("dataTT-G_21_tt");
- files.push_back("dataTT-G_2_tt");
- files.push_back("dataTT-G_3_tt");
- files.push_back("dataTT-G_4_tt");
- files.push_back("dataTT-G_5_tt");
- files.push_back("dataTT-G_6_tt");
- files.push_back("dataTT-G_7_tt");
- files.push_back("dataTT-G_8_tt");
- files.push_back("dataTT-G_9_tt");
- files.push_back("dataTT-H_0_tt");
- files.push_back("dataTT-H_10_tt");
- files.push_back("dataTT-H_11_tt");
- files.push_back("dataTT-H_12_tt");
- files.push_back("dataTT-H_13_tt");
- files.push_back("dataTT-H_14_tt");
- files.push_back("dataTT-H_15_tt");
- files.push_back("dataTT-H_16_tt");
- files.push_back("dataTT-H_17_tt");
- files.push_back("dataTT-H_18_tt");
- files.push_back("dataTT-H_19_tt");
- files.push_back("dataTT-H_1_tt");
- files.push_back("dataTT-H_2_tt");
- files.push_back("dataTT-H_3_tt");
- files.push_back("dataTT-H_4_tt");
- files.push_back("dataTT-H_5_tt");
- files.push_back("dataTT-H_6_tt");
- files.push_back("dataTT-H_7_tt");
- files.push_back("dataTT-H_8_tt");
- files.push_back("dataTT-H_9_tt");
- files.push_back("ggHtoTauTau110_0_tt");
- files.push_back("ggHtoTauTau120_0_tt");
- files.push_back("ggHtoTauTau125_0_tt");
- files.push_back("ggHtoTauTau125_1_tt");
- files.push_back("ggHtoTauTau130_0_tt");
- files.push_back("ggHtoTauTau140_0_tt");
- std::string base = "/afs/cern.ch/work/t/truggles/Z_to_tautau/CMSSW_8_0_25/src/Z_to_TauTau_13TeV/htt2May31withTopMassForGGH/";
+ std::string base = "/afs/cern.ch/work/t/truggles/Z_to_tautau/RT/CMSSW_8_0_26_patch1/src/ZZMatrixElement/MELA/test/";
 
  for(auto file : files ){
     std::cout << file << std::endl;
