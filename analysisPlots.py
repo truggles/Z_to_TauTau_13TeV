@@ -574,19 +574,20 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             elif '_DCPm' in var :
                 additionalCutToUse += '*(melaDCP < 0.0)'
 
-            # For 1D MELA vars in slices of mjj
-            #elif 'melaD0minus_mjj0-300' in var : 
-            #    additionalCutToUse += '*(mjj <= 300)'
-            #elif 'melaD0minus_mjj300-700' in var : 
-            #    additionalCutToUse += '*(mjj > 300 && mjj <= 700)'
-            #elif 'melaD0minus_mjj700-1100' in var : 
-            #    additionalCutToUse += '*(mjj > 700 && mjj <= 1100)'
-            #elif 'melaD0minus_mjj1100-inf' in var : 
-            #    additionalCutToUse += '*(mjj > 1100)'
-            #elif 'melaD0minus_mjj1100-1500' in var : 
-            #    additionalCutToUse += '*(mjj > 1100 && mjj <= 1500)'
-            #elif 'melaD0minus_mjj1500-inf' in var : 
-            #    additionalCutToUse += '*(mjj > 1500)'
+        # For 1D MELA vars in slices of mjj
+        #if 'mela' in var and '_' in var :
+        #    melaSplit = var.split('_')
+        #    melaVars = ['melaD0hplus', 'melaDint', 'melaDL1', 'melaDL1int', 'melaDL1Zg', 'melaDL1Zgint', 'melaD0minus']
+        #    mjjRange = ['mjj0-300', 'mjj300-500', 'mjj500-800', 'mjj800-inf']
+        #    if melaSplit[0] in melaVars and melaSplit[1] in mjjRange :
+        #        if 'mjj0-300' in var : 
+        #            additionalCutToUse += '*(mjj <= 300)'
+        #        elif 'mjj300-500' in var : 
+        #            additionalCutToUse += '*(mjj > 300 && mjj <= 500)'
+        #        elif 'mjj500-800' in var : 
+        #            additionalCutToUse += '*(mjj > 500 && mjj <= 800)'
+        #        elif 'mjj800-inf' in var : 
+        #            additionalCutToUse += '*(mjj > 800)'
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
@@ -608,11 +609,9 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         plotVar = plotVar.replace( '_DCPp', '' )
         plotVar = plotVar.replace( '_DCPm', '' )
         #plotVar = plotVar.replace( '_mjj0-300', '' )
-        #plotVar = plotVar.replace( '_mjj300-700', '' )
-        #plotVar = plotVar.replace( '_mjj700-1100', '' )
-        #plotVar = plotVar.replace( '_mjj1100-1500', '' )
-        #plotVar = plotVar.replace( '_mjj1500-inf', '' )
-        #plotVar = plotVar.replace( '_mjj1100-inf', '' )
+        #plotVar = plotVar.replace( '_mjj300-500', '' )
+        #plotVar = plotVar.replace( '_mjj500-800', '' )
+        #plotVar = plotVar.replace( '_mjj800-inf', '' )
         if 'Up' in var or 'Down' in var :
             tmp = varBase.split('_')
             shapeName = tmp.pop()
@@ -848,14 +847,43 @@ def getHistoDict( analysis, channel ) :
             #'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
             'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
             'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#            'melaDCP' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
-#            'melaD0minus' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
-#            'melaD0minus_mjj0-300' : [140, -0.2, 1.2, 20, 'D0- (mjj [0,300])', ' GeV'],
-#            'melaD0minus_mjj300-700' : [140, -0.2, 1.2, 20, 'D0- (mjj [300,700])', ' GeV'],
-#            'melaD0minus_mjj700-1100' : [140, -0.2, 1.2, 20, 'D0- (mjj [700,1100])', ' GeV'],
-#            'melaD0minus_mjj1100-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,inf])', ' GeV'],
-#            'melaD0minus_mjj1100-1500' : [140, -0.2, 1.2, 20, 'D0- (mjj [1100,1500])', ' GeV'],
-#            'melaD0minus_mjj1500-inf' : [140, -0.2, 1.2, 20, 'D0- (mjj [1500,inf])', ' GeV'],
+
+            #'melaDCP' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
+            #'melaD0minus' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
+            #'melaD0hplus' : [120, -0.1, 1.1, 10, 'D0hplus', ' GeV'],
+            #'melaDint' : [220, -1.1, 1.1, 10, 'Dint', ' GeV'],
+            #'melaDL1' : [120, -0.1, 1.1, 10, 'DL1', ' GeV'],
+            #'melaDL1int' : [220, -1.1, 1.1, 10, 'DL1int', ' GeV'],
+            #'melaDL1Zg' : [120, -0.1, 1.1, 10, 'DL1Zg', ' GeV'],
+            #'melaDL1Zgint' : [120, -0.1, 1.1, 10, 'DL1Zgint', ' GeV'],
+            #'melaD0minus_mjj0-300' :   [120, -0.1, 1.1, 10, 'D0- (mjj [0,300])', ' GeV'],
+            #'melaD0minus_mjj300-500' : [120, -0.1, 1.1, 10, 'D0- (mjj [300,500])', ' GeV'],
+            #'melaD0minus_mjj500-800' : [120, -0.1, 1.1, 10, 'D0- (mjj [500,800])', ' GeV'],
+            #'melaD0minus_mjj800-inf' : [120, -0.1, 1.1, 10, 'D0- (mjj [800,inf])', ' GeV'],
+            #'melaD0hplus_mjj0-300' :   [120, -0.1, 1.1, 10, 'D0hplus (mjj [0,300])', ' GeV'],
+            #'melaD0hplus_mjj300-500' : [120, -0.1, 1.1, 10, 'D0hplus (mjj [300,500])', ' GeV'],
+            #'melaD0hplus_mjj500-800' : [120, -0.1, 1.1, 10, 'D0hplus (mjj [500,800])', ' GeV'],
+            #'melaD0hplus_mjj800-inf' : [120, -0.1, 1.1, 10, 'D0hplus (mjj [800,inf])', ' GeV'],
+            #'melaDint_mjj0-300' :   [240, -1.2, 1.2, 10, 'Dint (mjj [0,300])', ' GeV'],
+            #'melaDint_mjj300-500' : [240, -1.2, 1.2, 10, 'Dint (mjj [300,500])', ' GeV'],
+            #'melaDint_mjj500-800' : [240, -1.2, 1.2, 10, 'Dint (mjj [500,800])', ' GeV'],
+            #'melaDint_mjj800-inf' : [240, -1.2, 1.2, 10, 'Dint (mjj [800,inf])', ' GeV'],
+            #'melaDL1_mjj0-300' :   [120, -0.1, 1.1, 10, 'DL1 (mjj [0,300])', ' GeV'],
+            #'melaDL1_mjj300-500' : [120, -0.1, 1.1, 10, 'DL1 (mjj [300,500])', ' GeV'],
+            #'melaDL1_mjj500-800' : [120, -0.1, 1.1, 10, 'DL1 (mjj [500,800])', ' GeV'],
+            #'melaDL1_mjj800-inf' : [120, -0.1, 1.1, 10, 'DL1 (mjj [800,inf])', ' GeV'],
+            #'melaDL1int_mjj0-300' :   [240, -1.2, 1.2, 10, 'DL1int (mjj [0,300])', ' GeV'],
+            #'melaDL1int_mjj300-500' : [240, -1.2, 1.2, 10, 'DL1int (mjj [300,500])', ' GeV'],
+            #'melaDL1int_mjj500-800' : [240, -1.2, 1.2, 10, 'DL1int (mjj [500,800])', ' GeV'],
+            #'melaDL1int_mjj800-inf' : [240, -1.2, 1.2, 10, 'DL1int (mjj [800,inf])', ' GeV'],
+            #'melaDL1Zg_mjj0-300' :   [120, -0.1, 1.1, 10, 'DL1Zg (mjj [0,300])', ' GeV'],
+            #'melaDL1Zg_mjj300-500' : [120, -0.1, 1.1, 10, 'DL1Zg (mjj [300,500])', ' GeV'],
+            #'melaDL1Zg_mjj500-800' : [120, -0.1, 1.1, 10, 'DL1Zg (mjj [500,800])', ' GeV'],
+            #'melaDL1Zg_mjj800-inf' : [120, -0.1, 1.1, 10, 'DL1Zg (mjj [800,inf])', ' GeV'],
+            #'melaDL1Zgint_mjj0-300' :   [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [0,300])', ' GeV'],
+            #'melaDL1Zgint_mjj300-500' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [300,500])', ' GeV'],
+            #'melaDL1Zgint_mjj500-800' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [500,800])', ' GeV'],
+            #'melaDL1Zgint_mjj800-inf' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [800,inf])', ' GeV'],
         }
 
         ''' added shape systematics '''
