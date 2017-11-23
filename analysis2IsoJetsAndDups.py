@@ -1610,6 +1610,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 A_Mass[0] = get_A_mass( zMass, zPt, zEta, zPhi, \
                         hMass, hPt, hEta, hPhi)
 
+                if hasattr( row, l3+'ZTTGenMatching' ) :
+                    gen_match_3[0] = getattr( row, l3+'ZTTGenMatching' )
+                if hasattr( row, l4+'ZTTGenMatching' ) :
+                    gen_match_4[0] = getattr( row, l4+'ZTTGenMatching' )
+
 
             # Data specific vars
             if 'data' in sample :
@@ -1638,11 +1643,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if 'ZZ4l' in sample :
                         qqZZ4lWeight[0] = qqZZ4l_nnlo_weight( row.genM, \
                                 row.isZee, row.isZmumu, row.isZtautau )
-
-                    if hasattr( row, l3+'ZTTGenMatching' ) :
-                        gen_match_3[0] = getattr( row, l3+'ZTTGenMatching' )
-                    if hasattr( row, l4+'ZTTGenMatching' ) :
-                        gen_match_4[0] = getattr( row, l4+'ZTTGenMatching' )
 
                     nvtx = row.nvtx
                     # Currently using PFIDLoose and Loose RelIso for all muons
