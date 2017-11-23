@@ -84,7 +84,7 @@ void anaHTT(TString InFile, TString OutFile)
   TBranch        *b_eta_1;   //!
   TBranch        *b_m_1;   //!
   
-  tree->SetBranchAddress("njetspt20", &njets, &b_njets);
+  tree->SetBranchAddress("jetVeto30", &njets, &b_njets);
   tree->SetBranchAddress("jpt_1", &jpt_1, &b_jpt_1);
   tree->SetBranchAddress("jeta_1", &jeta_1, &b_jeta_1);
   tree->SetBranchAddress("jphi_1", &jphi_1, &b_jphi_1);
@@ -251,8 +251,7 @@ void anaHTT(TString InFile, TString OutFile)
 void runAll() {
  std::vector<std::string> files;
  //files.push_back("");
- files.push_back("VBFHtoTauTau125_0_tt");
- std::string base = "/afs/cern.ch/work/t/truggles/Z_to_tautau/RT/CMSSW_8_0_26_patch1/src/ZZMatrixElement/MELA/test/";
+ std::string base = "/afs/cern.ch/work/t/truggles/Z_to_tautau/CMSSW_8_0_25/src/Z_to_TauTau_13TeV/htt2June29mela/";
 
  for(auto file : files ){
     std::cout << file << std::endl;
