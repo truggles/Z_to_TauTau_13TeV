@@ -53,6 +53,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     # Allow pure SM and pure BSM through
     anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
         'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125']
+    vbfAnomalousToDelete = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125',
+        'HtoTauTau0Mf05ph0125']
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :
@@ -87,6 +89,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 samples[ sample ]['group'] = 'qqH_aHTT_SM'
             if sample == 'VBFHtoTauTau0M125' :
                 samples[ sample ]['group'] = 'qqH_aHTT_BSM'
+            if sample == 'VBFHtoTauTau0PH125' :
+                samples[ sample ]['group'] = 'qqH_aHTT_BSM'
+            if sample == 'VBFHtoTauTau0L1125' :
+                samples[ sample ]['group'] = 'qqH_aHTT_BSM'
 
         # Clean the samples list
         if analysis == 'htt' and 'TT' in samples.keys() :
@@ -99,12 +105,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 del samples[ vvSamp ]
         # Skip aHTT for now
         for aHTT in anomalous :
-            if 'VBF'+aHTT in samples.keys() :
-                del samples[ 'VBF'+aHTT ]
             if 'W'+aHTT in samples.keys() :
                 del samples[ 'W'+aHTT ]
             if 'Z'+aHTT in samples.keys() :
                 del samples[ 'Z'+aHTT ]
+        for aHTT in vbfAnomalousToDelete :
+            if 'VBF'+aHTT in samples.keys() :
+                del samples[ 'VBF'+aHTT ]
         if 'WHtoTauTau0PM125' in samples.keys() :
             del samples[ 'WHtoTauTau0PM125' ]
         if 'WHtoTauTau0M125' in samples.keys() :
@@ -575,7 +582,36 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #print "sample %s    # bins, %i   range %i %i" % (sample, nBins, hist.GetBinLowEdge( 1 ), hist.GetBinLowEdge( nBins+1 ))
     
     
-                sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                # Make sure we are plotting the desired Anomalous
+                # VBF Higgs sample
+                if 'mela' in var :
+                    if 'VBFHtoTauTau' not in sample :
+                        sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                    elif sample == 'VBFHtoTauTau0PM125' :
+                        sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                    elif sample in ['VBFHtoTauTau0M125','VBFHtoTauTau0PH125','VBFHtoTauTau0L1125'] :
+                        if sample == 'VBFHtoTauTau0M125' and ('melaD0minus' in var or 'melaDCP' in var \
+                                or 'melaDL1Zg' in var or 'melaDL1Zgint' in var) :
+                            print "\nAdding 0M125 for var: %s\n" % var
+                            sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                        elif sample == 'VBFHtoTauTau0PH125' and ('melaD0hplus' in var or 'melaDint' in var) :
+                            print "\nAdding 0PH125 for var: %s\n" % var
+                            sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                        elif sample == 'VBFHtoTauTau0L1125' and ('melaDL1' in var or 'melaDL1int' in var) \
+                                and 'DL1Zg' not in var :
+                            print "\nAdding 0L1 125 for var: %s\n" % var
+                            sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                        elif 'mela' not in var and sample == 'VBFHtoTauTau0M125' :
+                            print "\nDEFAULT: Adding 0M125 for var: %s\n" % var
+                            # it's a different mela var we don't have a signal for
+                            # only plot original signal for consistency VBFHtoTauTau0M125
+                            sampHistos[ samples[ sample ]['group'] ].Add( hist )
+                    else :
+                        print "\n\nSHouldn't get here, wrong handling of sample names"
+                        return
+                else : # go normallys
+                    sampHistos[ samples[ sample ]['group'] ].Add( hist )
+
                 #if samples[ sample ]['group'] == 'jetFakes' :
                 #    print "jetFakes Stack yield: %f" % hist.Integral()
                 #    print "%s int: %.2f" % (sample, sampHistos[ samples[ sample ]['group'] ].Integral() )
@@ -849,7 +885,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 legend.AddEntry( sampHistos[signalVH], sampHistos[signalVH].GetTitle(), 'l')
                 legend.AddEntry( sampHistos[signalggH], sampHistos[signalggH].GetTitle(), 'l')
                 legend.AddEntry( sampHistos[signalqqH], sampHistos[signalqqH].GetTitle(), 'l')
-                legend.AddEntry( sampHistos[signalqqH_bsm], sampHistos[signalqqH_bsm].GetTitle(), 'l')
+                print "\nVAR: %s   SAMP: %s" % (var, sample)
+                if ('melaD0minus' in var or 'melaDCP' in var) :
+                    legend.AddEntry( sampHistos[signalqqH_bsm], "qqH, BSM-M(125) x %.1f" % higgsSF, 'l')
+                elif ('melaD0hplus' in var or 'melaDint' in var) :
+                    legend.AddEntry( sampHistos[signalqqH_bsm], "qqH, BSM-PH(125) x %.1f" % higgsSF, 'l')
+                elif ('melaDL1' in var or 'melaDL1int' in var) :
+                    legend.AddEntry( sampHistos[signalqqH_bsm], "qqH, BSM-L1(125) x %.1f" % higgsSF, 'l')
+                else : # original
+                    legend.AddEntry( sampHistos[signalqqH_bsm], "qqH, BSM-M(125) x %.1f" % higgsSF, 'l')
             legend.Draw()
     
 
