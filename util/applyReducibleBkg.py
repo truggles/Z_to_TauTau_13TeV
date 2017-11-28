@@ -59,20 +59,20 @@ class ReducibleBkgWeights :
         # Set Leg4 FR graphs
         if self.channel in ['eeet','emmt','eemt','mmmt',] :
             # DM0
-            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_fit' )
             # DM1
-            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_fit' )
             # DM10
-            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
-            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphBarrelL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitBarrelL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_fit' )
+            self.frGraphEndcapL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitEndcapL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt',] :
             # DM0
             self.frGraphBarrelL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
