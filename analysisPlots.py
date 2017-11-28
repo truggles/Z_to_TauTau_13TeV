@@ -20,7 +20,8 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 # Make a 2D histo
 def get2DVars( cutName ) :
-    if 'mjj' in cutName and 'm_sv' in cutName and 'melaD0minus' in cutName :
+    #if 'mjj' in cutName and 'm_sv' in cutName and 'melaD0minus' in cutName :
+    if 'mjj' in cutName and 'm_sv' in cutName and 'mela' in cutName :
         #xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         xBins = array( 'd', [0,70,80,90,100,120,150,250] )
         yBins = array( 'd', [0,300,500,800,10000] )
@@ -553,12 +554,13 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         xsec = '*(XSecLumiWeight)'
 
         # Add MELA cuts
+        # Primary variables first
         if 'melaDCP' in var :
             if 'melaDCP_DCP_neg1to0' in var :
                 additionalCutToUse += '*(melaDCP <= 0)'
             if 'melaDCP_DCP_0to1' in var :
                 additionalCutToUse += '*(melaDCP > 0)'
-        if 'melaD0minus' in var :
+        elif 'melaD0minus' in var :
             if 'melaD0minus_D0_0to0p2' in var : 
                 additionalCutToUse += '*(melaD0minus < .2)'
             elif 'melaD0minus_D0_0p2to0p4' in var :
@@ -567,12 +569,40 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 additionalCutToUse += '*(melaD0minus >= 0.4 && melaD0minus < .8)'
             elif 'melaD0minus_D0_0p8to1' in var : 
                 additionalCutToUse += '*(melaD0minus >= 0.8)'
+        elif 'melaD0hplus' in var :
+            if 'melaD0hplus_D0hplus_0to0p2' in var : 
+                additionalCutToUse += '*(melaD0hplus < .2)'
+            elif 'melaD0hplus_D0hplus_0p2to0p4' in var :
+                additionalCutToUse += '*(melaD0hplus >= 0.2 && melaD0hplus < .4)'
+            elif 'melaD0hplus_D0hplus_0p4to0p8' in var :
+                additionalCutToUse += '*(melaD0hplus >= 0.4 && melaD0hplus < .8)'
+            elif 'melaD0hplus_D0hplus_0p8to1' in var : 
+                additionalCutToUse += '*(melaD0hplus >= 0.8)'
+        elif 'melaDL1Zg' in var :
+            if 'melaDL1Zg_DL1Zg_0to0p2' in var : 
+                additionalCutToUse += '*(melaDL1Zg < .2)'
+            elif 'melaDL1Zg_DL1Zg_0p2to0p4' in var :
+                additionalCutToUse += '*(melaDL1Zg >= 0.2 && melaDL1Zg < .4)'
+            elif 'melaDL1Zg_DL1Zg_0p4to0p8' in var :
+                additionalCutToUse += '*(melaDL1Zg >= 0.4 && melaDL1Zg < .8)'
+            elif 'melaDL1Zg_DL1Zg_0p8to1' in var : 
+                additionalCutToUse += '*(melaDL1Zg >= 0.8)'
+        elif 'melaDL1' in var :
+            if 'melaDL1_DL1_0to0p2' in var : 
+                additionalCutToUse += '*(melaDL1 < .2)'
+            elif 'melaDL1_DL1_0p2to0p4' in var :
+                additionalCutToUse += '*(melaDL1 >= 0.2 && melaDL1 < .4)'
+            elif 'melaDL1_DL1_0p4to0p8' in var :
+                additionalCutToUse += '*(melaDL1 >= 0.4 && melaDL1 < .8)'
+            elif 'melaDL1_DL1_0p8to1' in var : 
+                additionalCutToUse += '*(melaDL1 >= 0.8)'
 
-            # DCP portion
-            if '_DCPp' in var :
-                additionalCutToUse += '*(melaDCP >= 0.0)'
-            elif '_DCPm' in var :
-                additionalCutToUse += '*(melaDCP < 0.0)'
+        # Add MELA cuts
+        # Secondary variables second: DCP portion
+        if '_DCPp' in var :
+            additionalCutToUse += '*(melaDCP >= 0.0)'
+        elif '_DCPm' in var :
+            additionalCutToUse += '*(melaDCP < 0.0)'
 
         # For 1D MELA vars in slices of mjj
         #if 'mela' in var and '_' in var :
@@ -599,13 +629,24 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # don't crash on systematics based variables
         varBase = var.replace('_ffSub','')
         plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
-        # MELA
         plotVar = plotVar.replace( ':melaDCP_DCP_neg1to0', '' )
         plotVar = plotVar.replace( ':melaDCP_DCP_0to1', '' )
         plotVar = plotVar.replace( ':melaD0minus_D0_0to0p2', '' )
         plotVar = plotVar.replace( ':melaD0minus_D0_0p2to0p4', '' )
         plotVar = plotVar.replace( ':melaD0minus_D0_0p4to0p8', '' )
         plotVar = plotVar.replace( ':melaD0minus_D0_0p8to1', '' )
+        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0to0p2', '' )
+        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p2to0p4', '' )
+        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p4to0p8', '' )
+        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p8to1', '' )
+        plotVar = plotVar.replace( ':melaDL1_DL1_0to0p2', '' )
+        plotVar = plotVar.replace( ':melaDL1_DL1_0p2to0p4', '' )
+        plotVar = plotVar.replace( ':melaDL1_DL1_0p4to0p8', '' )
+        plotVar = plotVar.replace( ':melaDL1_DL1_0p8to1', '' )
+        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0to0p2', '' )
+        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p2to0p4', '' )
+        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p4to0p8', '' )
+        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p8to1', '' )
         plotVar = plotVar.replace( '_DCPp', '' )
         plotVar = plotVar.replace( '_DCPm', '' )
         #plotVar = plotVar.replace( '_mjj0-300', '' )
@@ -845,8 +886,24 @@ def getHistoDict( analysis, channel ) :
             'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
 
             #'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            #'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            #'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+
+            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+
+            'mjj:m_sv:melaDL1_DL1_0to0p2' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            'mjj:m_sv:melaDL1_DL1_0p2to0p4' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            'mjj:m_sv:melaDL1_DL1_0p4to0p8' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            'mjj:m_sv:melaDL1_DL1_0p8to1' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+
 
             #'melaDCP' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
             #'melaD0minus' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
@@ -911,8 +968,23 @@ def getHistoDict( analysis, channel ) :
             'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
             'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
 
-            'mjj:m_sv:melaDCP_DCP_neg1to0',
-            'mjj:m_sv:melaDCP_DCP_0to1',
+            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
+            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
+            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
+            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
+
+            'mjj:m_sv:melaDL1_DL1_0to0p2',
+            'mjj:m_sv:melaDL1_DL1_0p2to0p4',
+            'mjj:m_sv:melaDL1_DL1_0p4to0p8',
+            'mjj:m_sv:melaDL1_DL1_0p8to1',
+
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+
+            #'mjj:m_sv:melaDCP_DCP_neg1to0',
+            #'mjj:m_sv:melaDCP_DCP_0to1',
         ] # All aHTT Shapes
         varsForShapeSyst = []
         for item in toAdd :

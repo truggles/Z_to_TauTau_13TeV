@@ -271,8 +271,8 @@ for isoVal in isoVals :
         'm_sv',
         '%s:m_sv' % higgsPt,
         'mjj:m_sv',
-        'mjj:m_sv:melaDCP_DCP_neg1to0',
-        'mjj:m_sv:melaDCP_DCP_0to1',
+        #'mjj:m_sv:melaDCP_DCP_neg1to0',
+        #'mjj:m_sv:melaDCP_DCP_0to1',
 
         'mjj:m_sv:melaD0minus_D0_0to0p2',
         'mjj:m_sv:melaD0minus_D0_0p2to0p4',
@@ -288,6 +288,21 @@ for isoVal in isoVals :
         'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
         'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
         'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
+
+        'mjj:m_sv:melaDL1_DL1_0to0p2',
+        'mjj:m_sv:melaDL1_DL1_0p2to0p4',
+        'mjj:m_sv:melaDL1_DL1_0p4to0p8',
+        'mjj:m_sv:melaDL1_DL1_0p8to1',
+
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+
+        'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
+        'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
+        'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
+        'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
         ]
         for cat in cats :
             for var in vars :
@@ -301,6 +316,7 @@ for isoVal in isoVals :
                     if var == 'mjj:m_sv' : finalCat = cat
                     else :
                         finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('melaD0minus_','').replace('melaDCP_','')
+                        finalCat = finalCat.replace('melaDL1_', '').replace('melaDL1Zg_', '').replace('melaD0hplus_', '')
                 else : finalCat = cat
 
                 if doFF :
