@@ -82,53 +82,66 @@ p.cd()
 bkgs = ['TT', 'DYJ', 'WZ', 'TriBoson', 'ZZ', 'ttZ']
 groups = ['LLET','LLMT','LLTT','LLEM']
 
-xBins = array( 'd', [0, 20, 40, 60, 100, 200] )
+xBins = array( 'd', [0, 20, 40, 60, 80, 100] )
 xNum = len( xBins ) - 1
+
+err = ROOT.Double(0)
 
 fileNames = ['OS_Not_Signal','OS_Signal_Relaxed','SS_Not_Signal','SS_Signal_Relaxed']
 for fileName in fileNames :
-    plotDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkgComp/Nov28/%s/' % fileName
+    plotDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkgComp/Nov29v2/%s/' % fileName
     for var in inVars.keys() :
         #var = 'pt_3'
-        iFile = ROOT.TFile('../shapes/azh/fr_%s/htt_zh.inputs-sm-13TeV_%s.root' % (fileName, var), 'r')
+        varApp = '_l3' if var == 'pt_3' else '_l4'
+        iFile = ROOT.TFile('../shapes/azh/fr_%s%s/htt_zh.inputs-sm-13TeV_%s.root' % (fileName, varApp, var), 'r')
             
         for group in groups :
             #group = 'LLMT'
-            print var, group
+            appName = fileName+var+group
+            print '\n',var, group, fileName
             
             tDir = iFile.Get( group+'_inclusive' )
             
-            tDir.ls()
-            
-            stack = ROOT.THStack("All Backgrounds stack", group + var )
-            fracStack = ROOT.THStack("All Backgrounds Frac stack", group + var + '_frac' )
+            stack = ROOT.THStack("All Backgrounds stack", appName )
+            stackRebinned = ROOT.THStack("All Backgrounds stack", appName+'_rebinned' )
+            fracStack = ROOT.THStack("All Backgrounds Frac stack", appName + '_frac' )
             
             fracHists = OrderedDict()
+            fracNomHists = OrderedDict()
             
             for bkg in bkgs :
-                fracHists[ bkg ] = ROOT.TH1D( bkg+'_frac'+var, bkg+'_frac'+var, xNum, xBins )
+                fracHists[ bkg ] = ROOT.TH1D( bkg+appName+'_frac', bkg+appName+'_frac', xNum, xBins )
                 hist = tDir.Get( bkg )
+                hist.IntegralAndError( 0, hist.GetNbinsX()+1, err )
+                print bkg, hist.Integral(), err
                 hist.SetFillColor( colors[ bkg ][0] )
                 hist.GetXaxis().SetTitle( inVars[var][0] )
                 stack.Add( hist ) #.Rebin( xNum, "rebinned", xBins ) )
+                stackRebinned.Add( hist.Rebin( xNum, "rebinned", xBins ) )
+                fracNomHists[ bkg ] = hist.Rebin( xNum, "rebinned", xBins )
             
             # With total yield known we can normalize per bin now
-            for b in range( 1, stack.GetStack().Last().GetNbinsX()+1 ) :
-                binTotal = stack.GetStack().Last().GetBinContent( b )
+            for b in range( 1, stackRebinned.GetStack().Last().GetNbinsX()+1 ) :
+                #binTotal = stackRebinned.GetStack().Last().GetBinContent( b )
+                binTotal = 0.
+                for bkg in bkgs :
+                    binTotal += tDir.Get( bkg ).GetBinContent( b )
+                    #binTotal += hist.GetBinContent( b )
+                #print b, "Total:", binTotal
                 if binTotal > 0. :
                     for bkg in bkgs :
                         hist = tDir.Get( bkg )
-                        #print b, binTotal
                         fracHists[ bkg ].SetBinContent( b, hist.GetBinContent( b ) / binTotal )
+                        #print b, bkg, hist.GetBinContent( b )
             
             for bkg in bkgs :
                 fracHists[ bkg ].SetFillColor( colors[ bkg ][0] )
                 fracHists[ bkg ].GetXaxis().SetTitle( inVars[var][0] )
-                print bkg, fracHists[ bkg ]
                 fracStack.Add( fracHists[ bkg ] )
             
             
             stack.Draw('HIST')
+            stack.GetXaxis().SetRangeUser( 0, 100 )
             stack.GetXaxis().SetTitle( inVars[var][0] )
             stack.GetYaxis().SetTitle( 'Events per 20 / GeV' )
             stack.SetMaximum( stack.GetMaximum() * 1.2 )
@@ -147,6 +160,6 @@ for fileName in fileNames :
             leg.Draw('SAME')
             c.SaveAs( plotDir + group + '_' + var + '_frac.png' )
     
-        del fracHists, stack
+            del fracHists, stack, fracStack
 
 
