@@ -269,6 +269,11 @@ def dataCardGenMatchedSamples( inSamples ) :
         if 'Z'+anom in inSamples :
             samples[ 'Z'+anom ] = 'ZH_htt_%s' % anom.replace('HtoTauTau','')
 
+    # New Scalar vs. PS ggH Samples
+    for newGGH in ['sm', 'maxmix', 'pseudoscalar'] :
+        if 'ggHtoTauTau-%s125' % newGGH in inSamples :
+            samples['ggHtoTauTau-%s125' % newGGH] = 'GGH2Jets_%s_M125' % newGGH
+
     return samples
 
 
