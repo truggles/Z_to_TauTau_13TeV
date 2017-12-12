@@ -280,6 +280,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if skipSystShapeVar( var, sample, channel ) : continue
                 if skipDCPVar( var, sample ) : continue
                 if '_topPt' in var : print "Top Pt still in Var: "+var+" sample: "+sample
+                if 'ggH' in var : print "ggH still in Var: "+var+" sample: "+sample+" name: "+samples[sample]
     
                 # Skip looping over nonsense channel / sample combos
                 if skipChanDataCombo( channel, sample, analysis ) : continue
@@ -422,7 +423,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #dataArray = []
                 bkgArray = [0] * numBins
                 for name in histos :
-                    if 'ggH_htt' in name or 'qqH_htt' in name or 'ZH_htt' in name or 'WH_htt' in name :
+                    if 'ggH_htt' in name or 'qqH_htt' in name or 'ZH_htt' in name or 'WH_htt' in name or 'GGH2Jets' in name :
                         continue # we don't care about signal here
                     elif name == 'data_obs' : continue # can use this later if need be
                     #    for bin_id in range( histos[ name ].GetNbinsX() ) :
@@ -518,8 +519,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if name == 'jetFakes' and not doFF : continue
                     if name == 'jetFakes' and not ('ffSyst' in var or 'ffStat' in var) : continue
                     if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
-                    if '_ggH' in var and not name in ['ggH_htt110', 'ggH_htt120','ggH_htt125','ggH_htt130', 'ggH_htt140'] : continue
-                    if '_topQuarkggH' in var and not name in ['ggH_htt110', 'ggH_htt120','ggH_htt125','ggH_htt130', 'ggH_htt140'] : continue
+                    if '_ggH' in var and not ( 'ggH_htt' in name or 'GGH2Jets' in name) : continue
+                    if '_topQuarkggH' in var and not ( 'ggH_htt' in name or 'GGH2Jets' in name) : continue
+                    #if '_ggH' in var and not name in ['ggH_htt110', 'ggH_htt120','ggH_htt125','ggH_htt130', 'ggH_htt140',
+                    #        'ggHtoTauTau-sm125', 'ggHtoTauTau-maxmix125','ggHtoTauTau-pseudoscalar125'] : continue
+                    #if '_topQuarkggH' in var and not name in ['ggH_htt110', 'ggH_htt120','ggH_htt125','ggH_htt130', 'ggH_htt140',
+                    #        'ggHtoTauTau-sm125', 'ggHtoTauTau-maxmix125','ggHtoTauTau-pseudoscalar125'] : continue
                     if '_JetToTau' in var and not name in ['W', 'TTJ', 'ZJ', 'VVJ',
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
                     if '_Zmumu' in var and name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] : continue
