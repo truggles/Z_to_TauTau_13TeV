@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include "../interface/Mela.h"
+#include "../interface/TUtil.hh"
 //#include "ZZMatrixElement/MELA/interface/Mela.h"
 #include "TMath.h"
 #include "TLorentzVector.h"
@@ -45,7 +46,12 @@ void anaHTT(TString InFile, TString OutFile)
   TTree *tree = (TTree*) finput->Get("Ntuple");
   
   float ME_sm, ME_bsm, ME_bsm_mlt, KD_sm, KD_bsm, melaD0minus, ME_int, melaDCP,
-        melaD0hplus, melaDint, melaDL1, melaDL1int, melaDL1Zg, melaDL1Zgint;
+        ME_sm_ggH, ME_bsm_ggH, ME_int_ggH,
+        melaD0hplus, melaDint, melaDL1, melaDL1int, melaDL1Zg, melaDL1Zgint,
+        melaD0minusggH, melaDCPggH,
+        dPhi_jj, dPhiUnsigned_jj, dEta_jj,
+        costhetastar, costheta1, costheta2, melaPhi, melaPhi1, Q2V1, Q2V2,
+        sqrtQ2V1, sqrtQ2V2, avgSqrtQ2V12;
   
   Float_t         m_sv;
   Float_t         pt_sv;
@@ -129,6 +135,22 @@ void anaHTT(TString InFile, TString OutFile)
   newtree->Branch("melaDL1int", &melaDL1int);
   newtree->Branch("melaDL1Zg", &melaDL1Zg);
   newtree->Branch("melaDL1Zgint", &melaDL1Zgint);
+  newtree->Branch("melaD0minusggH", &melaD0minusggH);
+  newtree->Branch("melaDCPggH", &melaDCPggH);
+  newtree->Branch("dPhi_jj", &dPhi_jj);
+  newtree->Branch("dPhiUnsigned_jj", &dPhiUnsigned_jj);
+  newtree->Branch("dEta_jj", &dEta_jj);
+  newtree->Branch("costhetastar", &costhetastar);
+  newtree->Branch("costheta1", &costheta1);
+  newtree->Branch("costheta2", &costheta2);
+  newtree->Branch("melaPhi", &melaPhi);
+  newtree->Branch("melaPhi1", &melaPhi1);
+  newtree->Branch("Q2V1", &Q2V1);
+  newtree->Branch("Q2V2", &Q2V2);
+  newtree->Branch("sqrtQ2V1", &sqrtQ2V1);
+  newtree->Branch("sqrtQ2V2", &sqrtQ2V2);
+  newtree->Branch("avgSqrtQ2V12", &avgSqrtQ2V12);
+
 
 
   //  mela.setCandidateDecayMode(TVar::CandidateDecay_ff);
@@ -152,9 +174,25 @@ void anaHTT(TString InFile, TString OutFile)
     melaDL1Zgint = -9;
     melaD0minus = -9;
     melaDCP = -9;
+    melaD0minusggH = -9;
+    melaDCPggH = -9;
+    dPhi_jj = -9;
+    dPhiUnsigned_jj = -9;
+    dEta_jj = -19;
+    costhetastar = -9;
+    costheta1 = -9;
+    costheta2 = -9;
+    melaPhi = -9;
+    melaPhi1 = -9;
+    Q2V1 = -9;
+    Q2V2 = -9;
+    sqrtQ2V1 = -9;
+    sqrtQ2V2 = -9;
+    avgSqrtQ2V12 = -9;
     
     if (njets>=2){
-      TLorentzVector jet1(0, 0, 1e-3, 1e-3), jet2(0, 0, 1e-3, 1e-3), higgs(0, 0, 0, 0);
+      TLorentzVector jet1(0, 0, 1e-3, 1e-3), jet2(0, 0, 1e-3, 1e-3), higgs(0, 0, 0, 0),
+        blank1(0, 0, 0, 0);
       jet1.SetPtEtaPhiM(jpt_1, jeta_1, jphi_1, 0);
       jet2.SetPtEtaPhiM(jpt_2, jeta_2, jphi_2, 0);
       higgs.SetPtEtaPhiM(pt_sv, eta_sv, phi_sv, m_sv);
@@ -234,7 +272,49 @@ void anaHTT(TString InFile, TString OutFile)
       mela.computeProdP(ME_int, false);
       melaDL1Zgint = (4091.0*(ME_int-(ME_sm + ME_bsm)))/(ME_sm + (pow(4091.0, 2)*ME_bsm));
  
-      // if (Cut(ientry) < 0) continue;
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJQCD);
+      mela.selfDHggcoupl[0][gHIGGS_GG_2][0]=1;
+      mela.computeProdP(ME_sm_ggH, false);
+      
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJQCD);
+      mela.selfDHggcoupl[0][gHIGGS_GG_4][0]=1;
+      mela.computeProdP(ME_bsm_ggH, false);
+      
+      melaD0minusggH = ME_sm_ggH / (ME_sm_ggH + ME_bsm_ggH);
+      
+      mela.setProcess(TVar::SelfDefine_spin0, TVar::JHUGen, TVar::JJQCD);
+      mela.selfDHggcoupl[0][gHIGGS_GG_2][0]=1;
+      mela.selfDHggcoupl[0][gHIGGS_GG_4][0]=1;
+      mela.computeProdP(ME_int_ggH, false);
+      
+      melaDCPggH = (ME_int_ggH-(ME_sm_ggH + ME_bsm_ggH))/(ME_sm_ggH + ME_bsm_ggH);
+
+      
+
+      if (jet1.Pz() <= jet2.Pz()) {
+        dPhi_jj = jet1.DeltaPhi(jet2);
+      }
+      else {
+        dPhi_jj = jet2.DeltaPhi(jet1);
+      }
+      dPhiUnsigned_jj = jet1.DeltaPhi(jet2);
+      dEta_jj = jet1.Eta()-jet2.Eta();
+
+      // See: https://github.com/usarica/HiggsAnalysis-ZZMatrixElement/blob/newVH/MELA/interface/TUtil.hh#L106-L122
+      TUtil::computeVBFangles( 
+        costhetastar, costheta1, costheta2, melaPhi, melaPhi1, Q2V1, Q2V2,
+        higgs, 25,
+        blank1, -9000,
+        blank1, -9000,
+        blank1, -9000,
+        jet1, 0,
+        jet2, 0
+      );
+
+      sqrtQ2V1 = TMath::Sqrt( Q2V1 );
+      sqrtQ2V2 = TMath::Sqrt( Q2V2 );
+      avgSqrtQ2V12 = (sqrtQ2V1 + sqrtQ2V2) / 2.;
+
     }
     newtree->Fill();
     recorded++;
@@ -251,6 +331,9 @@ void anaHTT(TString InFile, TString OutFile)
 void runAll() {
  std::vector<std::string> files;
  //files.push_back("");
+ files.push_back("ggHtoTauTau-sm125_0_tt");
+ files.push_back("ggHtoTauTau-maxmix125_0_tt");
+ files.push_back("ggHtoTauTau-pseudoscalar125_0_tt");
  std::string base = "/afs/cern.ch/work/t/truggles/Z_to_tautau/CMSSW_8_0_25/src/Z_to_TauTau_13TeV/htt2June29mela/";
 
  for(auto file : files ){
