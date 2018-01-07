@@ -123,6 +123,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         # Skip centrally produced VBF for now
         if 'VBFHtoTauTau125' in samples.keys() :
             del samples[ 'VBFHtoTauTau125' ]
+        newGGH = ['ggHtoTauTau-maxmix125', 'ggHtoTauTau-pseudoscalar125', 'ggHtoTauTau-sm125']
+        for ggHsamp in newGGH :
+            if ggHsamp in samples.keys() :
+                del samples[ ggHsamp ]
         if not doFF :
             samples[ 'QCD' ] = {'xsec' : 0.0, 'group' : 'qcd' }
                 
@@ -317,46 +321,48 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
 
             varBinned = True
-            if '_mssm' in var :
-                if 'ZTT' in folderDetails :
-                    print "Inclusive"
-                    xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-                elif 'NoBTL' in folderDetails :
-                    print "No-BTAGGING"
-                    xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-                elif 'NoBTL' not in folderDetails :
-                    print "BTAGGING"
-                    xBins = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #if '_mssm' in var :
+            #    if 'ZTT' in folderDetails :
+            #        print "Inclusive"
+            #        xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #    elif 'NoBTL' in folderDetails :
+            #        print "No-BTAGGING"
+            #        xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
+            #    elif 'NoBTL' not in folderDetails :
+            #        print "BTAGGING"
+            #        xBins = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
     
-            elif var == 'mt_tot' :
-                xBins = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
-                        80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
-                        170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
-                        350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
-                        1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
-                        3300.0,3500.0,3700.0,3900.0] )
-            elif var == 'm_visCor_mssm' :
-                #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
-                xBins = array( 'd', [] )
-                for i in range(0, 351 ) :
-                    xBins.append( i * 10 )
-            elif ops['sync'] and 'm_visCor' in var :
-                xBins = array( 'd', [] )
-                for i in range( 21 ) :
-                    xBins.append( i * 17.5 )
-            # This is the proposed binning for ZTT 2015 paper
-            elif doFF and ('m_sv' in var or 'm_visCor' in var) :
-                xBins = array( 'd', [i*10 for i in range( 31 )] )
-            elif 'm_sv' in var or 'm_visCor' in var :
-                if is1JetCat :
-                    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-                elif isVBFCat :
-                    xBins = array( 'd', [0,40,60,80,100,120,150,200,250] )
-                else :
-                    #xBins = array( 'd', [i*10 for i in range( 31 )] )
-                    xBins = array( 'd', [0,50,60,70,80,90,100,110,120,130,\
-                        140,150,160,170,180,190,200,210,220,230,240,250,\
-                        260,270,280,290,300] )
+            #elif var == 'mt_tot' :
+            #    xBins = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
+            #            80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
+            #            170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
+            #            350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
+            #            1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
+            #            3300.0,3500.0,3700.0,3900.0] )
+            #elif var == 'm_visCor_mssm' :
+            #    #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
+            #    xBins = array( 'd', [] )
+            #    for i in range(0, 351 ) :
+            #        xBins.append( i * 10 )
+            #elif ops['sync'] and 'm_visCor' in var :
+            #    xBins = array( 'd', [] )
+            #    for i in range( 21 ) :
+            #        xBins.append( i * 17.5 )
+            ## This is the proposed binning for ZTT 2015 paper
+            #elif doFF and ('m_sv' in var or 'm_visCor' in var) :
+            #    xBins = array( 'd', [i*10 for i in range( 31 )] )
+            #elif 'm_sv' in var or 'm_visCor' in var :
+            #    if is1JetCat :
+            #        xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
+            #    elif isVBFCat :
+            #        xBins = array( 'd', [0,40,60,80,100,120,150,200,250] )
+            #    else :
+            #        #xBins = array( 'd', [i*10 for i in range( 31 )] )
+            #        xBins = array( 'd', [0,50,60,70,80,90,100,110,120,130,\
+            #            140,150,160,170,180,190,200,210,220,230,240,250,\
+            #            260,270,280,290,300] )
+            if 'm_sv' in var or 'm_visCor' in var :
+                xBins = array( 'd', [i*20 for i in range( 11 )] )
             else :
                 varBinned = False
                 first = info[1] * 1.
@@ -959,33 +965,59 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             """ Blinding Data """
+            #if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
+            #    if (analysis == 'htt' and ('m_visCor' in var or 'm_sv' in var or 'mt_sv' in var\
+            #             or 'mt_tot' in var) ) or\
+            #             (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
+            #        if ops['mssm'] :
+            #            targetMass = 170
+            #            targetMassUp = 9999
+            #        elif analysis == 'htt' and 'm_sv' in var :
+            #            targetMassLow = 101
+            #            #if '1jet' in ops['targetDir'] : targetMassLow = 90
+            #            #elif 'vbf' in ops['targetDir'] : targetMassLow = 100
+            #            #elif 'vbf_low' in ops['targetDir'] : targetMassLow = 100
+            #            #elif 'vbf_high' in ops['targetDir'] : targetMassLow = 80
+            #            #else : targetMassLow = 80
+            #            targetMassUp = 149
+            #        elif analysis == 'htt' and 'm_visCor' in var :
+            #            targetMassLow = 81
+            #            targetMassUp = 149
+            #        else :
+            #            targetMassLow = 81
+            #            targetMassUp = 149
+            #        nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+            #        for k in range( 1, nBins+1 ) :
+            #            binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
+            #                    sampHistos['obs'].GetXaxis().GetBinWidth(k)
+            #            binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
+            #            if binHigh>targetMassLow and binLow<=targetMassUp :
+            #                sampHistos['obs'].SetBinContent(k, 0.)
+            #                sampHistos['obs'].SetBinError(k, 0.)
+            #                if ops['ratio'] and not ":" in var :
+            #                    ratioHist.SetBinContent(k, 0.)
+            #                    ratioHist.SetBinError(k, 0.)
+            #        if ops['ratio'] and not ":" in var : 
+            #            ratioPad.cd()
+            #            ratioHist.Draw('esamex0')
+            #        pad1.cd()
+            totScalar = sampHistos['qqH_aHTT_SM'].Integral()
+            totPseudoscalar = sampHistos['qqH_aHTT_BSM'].Integral()
+            smOverBSM = totScalar / totPseudoscalar
+            blindEpsilon = 0.09
+            print "BSM / SM = %s" % (totPseudoscalar/totScalar)
             if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
-                if (analysis == 'htt' and ('m_visCor' in var or 'm_sv' in var or 'mt_sv' in var\
-                         or 'mt_tot' in var) ) or\
-                         (analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
-                    if ops['mssm'] :
-                        targetMass = 170
-                        targetMassUp = 9999
-                    elif analysis == 'htt' and 'm_sv' in var :
-                        targetMassLow = 101
-                        #if '1jet' in ops['targetDir'] : targetMassLow = 90
-                        #elif 'vbf' in ops['targetDir'] : targetMassLow = 100
-                        #elif 'vbf_low' in ops['targetDir'] : targetMassLow = 100
-                        #elif 'vbf_high' in ops['targetDir'] : targetMassLow = 80
-                        #else : targetMassLow = 80
-                        targetMassUp = 149
-                    elif analysis == 'htt' and 'm_visCor' in var :
-                        targetMassLow = 81
-                        targetMassUp = 149
-                    else :
-                        targetMassLow = 81
-                        targetMassUp = 149
+                if (analysis == 'htt') and not (var == 'm_sv' or var == 'm_visCor') :
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( 1, nBins+1 ) :
-                        binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
-                                sampHistos['obs'].GetXaxis().GetBinWidth(k)
-                        binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
-                        if binHigh>targetMassLow and binLow<=targetMassUp :
+                        # Take max of pure SM OR pure Pseudoscalar with PS normalized to SM yield
+                        maxSig = max( sampHistos['qqH_aHTT_SM'].GetBinContent( k ), sampHistos['qqH_aHTT_BSM'].GetBinContent( k )*smOverBSM )
+                        # Get Estimated bkg
+                        totBkg = max(stack.GetStack().Last().GetBinContent( k ), 1.e-30)
+                        # Check if we blind based on HTT 2016  twiki base 
+                        # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
+                        #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
+                        if ( 0.5 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] and not ":" in var :
@@ -995,6 +1027,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         ratioPad.cd()
                         ratioHist.Draw('esamex0')
                     pad1.cd()
+                    sampHistos['obs'].Draw('esamex0')
             if not ops['fullBlind'] :
                 sampHistos['obs'].Draw('esamex0')
                 
