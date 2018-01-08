@@ -596,6 +596,15 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 additionalCutToUse += '*(melaDL1 >= 0.4 && melaDL1 < .8)'
             elif 'melaDL1_DL1_0p8to1' in var : 
                 additionalCutToUse += '*(melaDL1 >= 0.8)'
+        elif 'melaDPhijj' in var :
+            if 'melaDPhijj_DPhijj_neg4toNeg1p25' in var : 
+                additionalCutToUse += '*(melaDPhijj < -1.25)'
+            elif 'melaDPhijj_DPhijj_neg1p25to0' in var :
+                additionalCutToUse += '*(melaDPhijj >= -1.25 && melaDPhijj < 0.)'
+            elif 'melaDPhijj_DPhijj_0to1p25' in var :
+                additionalCutToUse += '*(melaDPhijj >= 0. && melaDPhijj < 1.25)'
+            elif 'melaDPhijj_DPhijj_1p25to4' in var : 
+                additionalCutToUse += '*(melaDPhijj >= 1.25)'
 
         # Add MELA cuts
         # Secondary variables second: DCP portion
@@ -629,26 +638,31 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # don't crash on systematics based variables
         varBase = var.replace('_ffSub','')
         plotVar = var.replace('_ffSub','') # remove the histo naming off the back of the plotting var
-        plotVar = plotVar.replace( ':melaDCP_DCP_neg1to0', '' )
-        plotVar = plotVar.replace( ':melaDCP_DCP_0to1', '' )
-        plotVar = plotVar.replace( ':melaD0minus_D0_0to0p2', '' )
-        plotVar = plotVar.replace( ':melaD0minus_D0_0p2to0p4', '' )
-        plotVar = plotVar.replace( ':melaD0minus_D0_0p4to0p8', '' )
-        plotVar = plotVar.replace( ':melaD0minus_D0_0p8to1', '' )
-        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0to0p2', '' )
-        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p2to0p4', '' )
-        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p4to0p8', '' )
-        plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p8to1', '' )
-        plotVar = plotVar.replace( ':melaDL1_DL1_0to0p2', '' )
-        plotVar = plotVar.replace( ':melaDL1_DL1_0p2to0p4', '' )
-        plotVar = plotVar.replace( ':melaDL1_DL1_0p4to0p8', '' )
-        plotVar = plotVar.replace( ':melaDL1_DL1_0p8to1', '' )
-        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0to0p2', '' )
-        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p2to0p4', '' )
-        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p4to0p8', '' )
-        plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p8to1', '' )
-        plotVar = plotVar.replace( '_DCPp', '' )
-        plotVar = plotVar.replace( '_DCPm', '' )
+        if 'mela' in plotVar : # No need to check all vars
+            plotVar = plotVar.replace( ':melaDCP_DCP_neg1to0', '' )
+            plotVar = plotVar.replace( ':melaDCP_DCP_0to1', '' )
+            plotVar = plotVar.replace( ':melaD0minus_D0_0to0p2', '' )
+            plotVar = plotVar.replace( ':melaD0minus_D0_0p2to0p4', '' )
+            plotVar = plotVar.replace( ':melaD0minus_D0_0p4to0p8', '' )
+            plotVar = plotVar.replace( ':melaD0minus_D0_0p8to1', '' )
+            plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0to0p2', '' )
+            plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p2to0p4', '' )
+            plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p4to0p8', '' )
+            plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p8to1', '' )
+            plotVar = plotVar.replace( ':melaDL1_DL1_0to0p2', '' )
+            plotVar = plotVar.replace( ':melaDL1_DL1_0p2to0p4', '' )
+            plotVar = plotVar.replace( ':melaDL1_DL1_0p4to0p8', '' )
+            plotVar = plotVar.replace( ':melaDL1_DL1_0p8to1', '' )
+            plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0to0p2', '' )
+            plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p2to0p4', '' )
+            plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p4to0p8', '' )
+            plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p8to1', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_neg4toNeg1p25', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_neg1p25to0', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_0to1p25', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_1p25to4', '' )
+            plotVar = plotVar.replace( '_DCPp', '' )
+            plotVar = plotVar.replace( '_DCPm', '' )
         #plotVar = plotVar.replace( '_mjj0-300', '' )
         #plotVar = plotVar.replace( '_mjj300-500', '' )
         #plotVar = plotVar.replace( '_mjj500-800', '' )
@@ -830,10 +844,10 @@ def getHistoDict( analysis, channel ) :
             'phi_2' : [70, -3.5, 3.5, 4, '#tau_{2} Phi', ' Phi'],
             #'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
             #'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
-            'm_1' : [60, 0, 3, 4, 't1 Mass', ' GeV'],
-            'm_2' : [60, 0, 3, 4, 't2 Mass', ' GeV'],
+            'm_1' : [60, 0, 3, 4, 't1 Mass [GeV]', ' GeV'],
+            'm_2' : [60, 0, 3, 4, 't2 Mass [GeV]', ' GeV'],
             #'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
-#XXX            'mjj' : [20, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'],
+            'mjj' : [20, 0, 1000, 1, 'M_{jj} [GeV]', ' GeV'],
 #FIXME            'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
 #            'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} Uncor [GeV]', ' GeV'],
 #            'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
@@ -861,11 +875,11 @@ def getHistoDict( analysis, channel ) :
 #FIXME#            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
 #FIXME#            #'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
 #FIXME#            #'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
-            'jpt_1' : [400, 0, 400, 20, 'Leading Jet Pt', ' GeV'],
+            'jpt_1' : [400, 0, 400, 20, 'Leading Jet Pt [GeV]', ' GeV'],
             #'jmass_1' : [400, 0, 200, 20, 'Leading Jet Mass', ' GeV'],
             'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
             'jphi_1' : [70, -3.5, 3.5, 10, 'Leading Jet Phi', ' Phi'],
-            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt', ' GeV'],
+            'jpt_2' : [400, 0, 200, 20, 'Second Jet Pt [GeV]', ' GeV'],
             #'jmass_2' : [400, 0, 200, 20, 'Leading Jet Mass', ' GeV'],
             'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
             'jphi_2' : [70, -3.5, 3.5, 10, 'Leading Jet Phi', ' Phi'],
@@ -920,6 +934,11 @@ def getHistoDict( analysis, channel ) :
 #            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
 #            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
 
+            'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            'mjj:m_sv:melaDPhijj_DPhijj_0to1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            'mjj:m_sv:melaDPhijj_DPhijj_1p25to4' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+
 
             'melaDCP' : [220, -1.1, 1.1, 10, 'DCP', ' GeV'],
             'melaD0minus' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
@@ -957,6 +976,16 @@ def getHistoDict( analysis, channel ) :
             #'melaDL1Zgint_mjj300-500' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [300,500])', ' GeV'],
             #'melaDL1Zgint_mjj500-800' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [500,800])', ' GeV'],
             #'melaDL1Zgint_mjj800-inf' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [800,inf])', ' GeV'],
+            'melaDPhiUnsignedjj' : [100, -4, 4, 5, 'Unsigned dPhi_jj', ' dPhi'],
+            'melaDPhijj' : [100, -4, 4, 5, 'dPhi_jj', ' dPhi'],
+            'melaDEtajj' : [100, -10, 10, 5, 'dEta_jj', ' dEta'],
+            'melaSqrtQ2V1' : [70, 0, 700, 5, 'Q_V1 [GeV]', ' GeV'],
+            'melaSqrtQ2V2' : [70, 0, 700, 5, 'Q_V2 [GeV]', ' GeV'],
+            'melaAvgSqrtQ2V12' : [70, 0, 700, 5, 'Avg(Q_V1,Q_V2) [GeV]', ' GeV'],
+            #'melaDPhijj_mjj0-300' :   [100, -4, 4, 5, 'dPhi_jj (mjj [0,300])', ' GeV'],
+            #'melaDPhijj_mjj300-500' : [100, -4, 4, 5, 'dPhi_jj (mjj [300,500])', ' GeV'],
+            #'melaDPhijj_mjj500-800' : [100, -4, 4, 5, 'dPhi_jj (mjj [500,800])', ' GeV'],
+            #'melaDPhijj_mjj800-inf' : [100, -4, 4, 5, 'dPhi_jj (mjj [800,inf])', ' GeV'],
         }
 
         ''' added shape systematics '''
@@ -969,35 +998,40 @@ def getHistoDict( analysis, channel ) :
             'm_sv',
             'Higgs_PtCor:m_sv',
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2',
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4',
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8',
-            'mjj:m_sv:melaD0minus_D0_0p8to1',
+            'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25',
+            'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0',
+            'mjj:m_sv:melaDPhijj_DPhijj_0to1p25',
+            'mjj:m_sv:melaDPhijj_DPhijj_1p25to4',
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
-            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
+            #'mjj:m_sv:melaD0minus_D0_0to0p2',
+            #'mjj:m_sv:melaD0minus_D0_0p2to0p4',
+            #'mjj:m_sv:melaD0minus_D0_0p4to0p8',
+            #'mjj:m_sv:melaD0minus_D0_0p8to1',
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
-            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
+            #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
+            #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
+            #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
+            #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
 
-            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
-            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
-            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
-            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
+            #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
+            #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
+            #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
+            #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
 
-            'mjj:m_sv:melaDL1_DL1_0to0p2',
-            'mjj:m_sv:melaDL1_DL1_0p2to0p4',
-            'mjj:m_sv:melaDL1_DL1_0p4to0p8',
-            'mjj:m_sv:melaDL1_DL1_0p8to1',
+            #'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
+            #'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
+            #'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
+            #'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
 
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+            #'mjj:m_sv:melaDL1_DL1_0to0p2',
+            #'mjj:m_sv:melaDL1_DL1_0p2to0p4',
+            #'mjj:m_sv:melaDL1_DL1_0p4to0p8',
+            #'mjj:m_sv:melaDL1_DL1_0p8to1',
+
+            #'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
+            #'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
+            #'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
+            #'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
 
             #'mjj:m_sv:melaDCP_DCP_neg1to0',
             #'mjj:m_sv:melaDCP_DCP_0to1',
