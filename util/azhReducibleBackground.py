@@ -55,9 +55,7 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
         'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
         'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
         'electron' : ['eeet', 'emmt'],
-       'muon' : ['eemt', 'mmmt'],
-        #'electron2' : ['eeem', 'emmm'],
-        #'muon2' : ['eeem', 'emmm'],
+        'muon' : ['eemt', 'mmmt'],
     }
 
     fakeRateMap = {}
@@ -104,14 +102,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
     xAxis = 'Lepton p_{T} [GeV]'
     jetCut = '(1.)'
     app = 'leptonPt'
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov22v2_ALLMC_mcRates_Linear_'+app
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov22v1_ALLMC_mcRates_'+app
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov23v1_ALLMC_mcRates_genFakes2_'+app
     saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Dec01v1_ALLMC_mcRates_genFakes_noBJets_'+app
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov23v2_ALLMC_mcRates_looseMT40_'+app
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov23v2_ALLMC_mcRates_nomMT30_'+app
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov23v2_ALLMC_mcRates_nomMT30_nobjet_'+app
-    #saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Nov23v2_ALLMC_mcRates_addEM_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -222,24 +213,10 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
             'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
 
         },
-        'electron2' : {
-            #'denom' : ['pfmt_3 < 30 && gen_match_Num == 6',], # to suppress real leptons from WZ and ZZ
-            #'denom' : ['pfmt_3 < 30', 'bjetCISVVeto20MediumZTT == 0'], # to suppress real leptons from WZ and ZZ
-            'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
-            #'denom' : ['pfmt_3 < 30','id_e_mva_nt_loose_Num > 0.5'], # to suppress real leptons from WZ and ZZ
-            'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
-
-        },
         'muon' : {
             'denom' : ['pfmt_3 < 30', 'gen_match_3 == 6'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30', 'bjetCISVVeto20MediumZTT == 0'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
-            'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
-        },
-        'muon2' : {
-            #'denom' : ['pfmt_3 < 30 && gen_match_Num == 6',], # to suppress real leptons from WZ and ZZ
-            #'denom' : ['pfmt_3 < 30', 'bjetCISVVeto20MediumZTT == 0'], # to suppress real leptons from WZ and ZZ
-            'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
             'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
         },
     } 
@@ -255,17 +232,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
             'Endcap' : 'abs( eta_Num ) > 1.5',
             #'AllEta' : '(1)',
         },
-        'electron2' : {
-            'Barrel' : 'abs( eta_Num ) <= 1.5',
-            'Endcap' : 'abs( eta_Num ) > 1.5',
-            #'AllEta' : '(1)',
-        },
         'muon' :{
-            'Barrel' : 'abs( eta_Num ) <= 1.4',
-            'Endcap' : 'abs( eta_Num ) > 1.4',
-            #'AllEta' : '(1)',
-        },
-        'muon2' :{
             'Barrel' : 'abs( eta_Num ) <= 1.4',
             'Endcap' : 'abs( eta_Num ) > 1.4',
             #'AllEta' : '(1)',
