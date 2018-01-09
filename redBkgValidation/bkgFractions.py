@@ -82,14 +82,14 @@ p.cd()
 bkgs = ['TT', 'DYJ', 'WZ', 'TriBoson', 'ZZ', 'ttZ']
 groups = ['LLET','LLMT','LLTT','LLEM']
 
-xBins = array( 'd', [0, 20, 40, 60, 80, 100] )
+xBins = array( 'd', [0, 20, 40, 60, 80, 100, 120, 140] )
 xNum = len( xBins ) - 1
 
 err = ROOT.Double(0)
 
 fileNames = ['OS_Not_Signal','OS_Signal_Relaxed','SS_Not_Signal','SS_Signal_Relaxed']
 for fileName in fileNames :
-    plotDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkgComp/Nov29v2/%s/' % fileName
+    plotDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkgComp/Nov29v3/%s/' % fileName
     for var in inVars.keys() :
         #var = 'pt_3'
         varApp = '_l3' if var == 'pt_3' else '_l4'
@@ -141,7 +141,7 @@ for fileName in fileNames :
             
             
             stack.Draw('HIST')
-            stack.GetXaxis().SetRangeUser( 0, 100 )
+            stack.GetXaxis().SetRangeUser( 0, 140 )
             stack.GetXaxis().SetTitle( inVars[var][0] )
             stack.GetYaxis().SetTitle( 'Events per 20 / GeV' )
             stack.SetMaximum( stack.GetMaximum() * 1.2 )
