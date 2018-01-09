@@ -1617,7 +1617,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
             # Data specific vars
-            if 'data' in sample :
+            if 'data' in sample and 'data' in xsecName :
                 # Have the btag numbers correspond to actual values not
                 # Promote/Demote values
                 if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
@@ -1957,7 +1957,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     #    zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
                     #else : # Not jet matched
                     #    zhFR1[0] = zhFRObjNoJetMatch.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
-                    zhFR1[0] = zhFRObj.getFRWeightL3( pt3, eta3, l3, row ) 
+                    if 'data' in sample and 'data' in xsecName :
+                        zhFR1[0] = zhFRObj.getFRWeightL3( pt3, eta3, l3, row ) 
+                    elif gen_match_3[0] == 6 : # is MC
+                        zhFR1[0] = zhFRObj.getFRWeightL3( pt3, eta3, l3, row ) 
+
                     if zhFR1[0] < 0. : zhFR1[0] = 0.
 
                     #if getattr( row, l4+'Pt' ) < getattr( row, l4+'JetPt' ) \
@@ -1965,7 +1969,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     #    zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
                     #else : # Not jet matched
                     #    zhFR2[0] = zhFRObjNoJetMatch.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
-                    zhFR2[0] = zhFRObj.getFRWeightL4( pt4, eta4, l4, row ) 
+                    if 'data' in sample and 'data' in xsecName :
+                        zhFR2[0] = zhFRObj.getFRWeightL4( pt4, eta4, l4, row ) 
+                    elif gen_match_4[0] == 6 : # is MC
+                        zhFR2[0] = zhFRObj.getFRWeightL4( pt4, eta4, l4, row ) 
+
                     if zhFR2[0] < 0. : zhFR2[0] = 0.
 
                     zhFR0[0] = zhFR1[0] * zhFR2[0]
