@@ -114,6 +114,14 @@ def getChannelSpecificFinalCuts( analysis, channel, cut, prodMap ) :
     muon = 'iso_NUM < 0.15 && CAND_PFIDLoose > 0.5'
     tau = 'byMediumIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
 
+    #elecF = '(!(iso_NUM < 0.15 && id_e_mva_nt_tight_NUM > 0.5))'
+    #muonF = '(!(iso_NUM < 0.15 && CAND_PFIDLoose > 0.5))'
+    #tauF = '(!(byMediumIsolationMVArun2v1DBoldDMwLT_NUM > 0.5))'
+
+    #elecNR = '(1.)'
+    #muonNR = '(1.)'
+    #tauNR = '(1.)'
+
     if analysis == 'azh' :
         if 'e' in prodMap[channel][2] :
             newCuts.append( elec.replace('NUM', '3').replace('CAND_', prodMap[channel][2] ) )
