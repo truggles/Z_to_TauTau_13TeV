@@ -2,6 +2,7 @@
 FourE4MandDY4=/data/truggles/azhHalloweenSkim_svFitPrep_Merged
 DATA=/data/truggles/zhSVFit_Nov05_newData_azh
 ALL=/data/truggles/zhSVFit_Nov05_MC_azh
+#NEWAZH=/data/truggles/ZH_sync_dec09_v1_files
 
 echo ""
 echo "For svFit optimization ignore eeee and mmmm channels"
@@ -30,6 +31,7 @@ for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm; do
     # AZH
     for MASS in 220 240 260 280 300 320 340 350 400; do
         ls ${ALL}/*azh${MASS}_*_${CHANNEL}.root > skimmed/azh${MASS}_${CHANNEL}.txt
+        #ls ${NEWAZH}/AToZh*${MASS}*/make*.root > skimmed/azh${MASS}_${CHANNEL}.txt
     done
 done
 
