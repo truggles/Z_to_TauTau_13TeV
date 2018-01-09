@@ -159,7 +159,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     mssmSF = 100
     higgsSF = 10
     if 'inclusive' in ops['targetDir'] : higgsSF = 30
-    if 'vbf' in ops['targetDir'] : higgsSF = 2.5
+    if 'vbf' in ops['targetDir'] : higgsSF = 5
     azhSF = .025
     
 
@@ -362,7 +362,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             #            140,150,160,170,180,190,200,210,220,230,240,250,\
             #            260,270,280,290,300] )
             if 'm_sv' in var or 'm_visCor' in var :
-                xBins = array( 'd', [i*20 for i in range( 11 )] )
+                """ svFit and mVisCor Rebinning!!! """
+                #xBins = array( 'd', [i*20 for i in range( 11 )] )
+                xBins = array( 'd', [0,50,60,70,80,90,100,110,120,130,\
+                    140,150,160,170,180,190,200,210,220,230,240,250,\
+                    260,270,280,290,300] )
             else :
                 varBinned = False
                 first = info[1] * 1.
@@ -597,24 +601,22 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         sampHistos[ samples[ sample ]['group'] ].Add( hist )
                     elif sample in ['VBFHtoTauTau0M125','VBFHtoTauTau0PH125','VBFHtoTauTau0L1125'] :
                         if sample == 'VBFHtoTauTau0M125' and ('melaD0minus' in var or 'melaDCP' in var \
-                                or 'melaDL1Zg' in var or 'melaDL1Zgint' in var) :
+                                or 'melaDL1Zg' in var or 'melaDL1Zgint' in var or 'melaDPhijj' in var \
+                                or 'melaDPhiUnsignedjj' in var or 'melaDEtajj' in var or 'melaSqrtQ2V1' in var \
+                                or 'melaSqrtQ2V2' in var or 'melaAvgSqrtQ2V12' in var ) :
                             print "\nAdding 0M125 for var: %s\n" % var
                             sampHistos[ samples[ sample ]['group'] ].Add( hist )
                         elif sample == 'VBFHtoTauTau0PH125' and ('melaD0hplus' in var or 'melaDint' in var) :
                             print "\nAdding 0PH125 for var: %s\n" % var
                             sampHistos[ samples[ sample ]['group'] ].Add( hist )
                         elif sample == 'VBFHtoTauTau0L1125' and ('melaDL1' in var or 'melaDL1int' in var) \
-                                and 'DL1Zg' not in var :
+                                and 'melaDL1Zg' not in var :
                             print "\nAdding 0L1 125 for var: %s\n" % var
-                            sampHistos[ samples[ sample ]['group'] ].Add( hist )
-                        elif 'mela' not in var and sample == 'VBFHtoTauTau0M125' :
-                            print "\nDEFAULT: Adding 0M125 for var: %s\n" % var
-                            # it's a different mela var we don't have a signal for
-                            # only plot original signal for consistency VBFHtoTauTau0M125
                             sampHistos[ samples[ sample ]['group'] ].Add( hist )
                     else :
                         print "\n\nSHouldn't get here, wrong handling of sample names"
                         return
+                elif sample in ['VBFHtoTauTau0PH125','VBFHtoTauTau0L1125'] : continue
                 else : # go normallys
                     sampHistos[ samples[ sample ]['group'] ].Add( hist )
 
@@ -1003,21 +1005,21 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             #        pad1.cd()
             totScalar = sampHistos['qqH_aHTT_SM'].Integral()
             totPseudoscalar = sampHistos['qqH_aHTT_BSM'].Integral()
-            smOverBSM = totScalar / totPseudoscalar
+            smOverBSM = totScalar / max( totPseudoscalar, 1e-30 )
             blindEpsilon = 0.09
-            print "BSM / SM = %s" % (totPseudoscalar/totScalar)
+            print "BSM / SM = %s" % (totPseudoscalar/ max( totScalar, 1e-30 ) )
             if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
                 if (analysis == 'htt') and not (var == 'm_sv' or var == 'm_visCor') :
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( 1, nBins+1 ) :
                         # Take max of pure SM OR pure Pseudoscalar with PS normalized to SM yield
-                        maxSig = max( sampHistos['qqH_aHTT_SM'].GetBinContent( k ), sampHistos['qqH_aHTT_BSM'].GetBinContent( k )*smOverBSM )
+                        maxSig = max( sampHistos['qqH_aHTT_SM'].GetBinContent( k ), sampHistos['qqH_aHTT_BSM'].GetBinContent( k )*smOverBSM ) / higgsSF
                         # Get Estimated bkg
                         totBkg = max(stack.GetStack().Last().GetBinContent( k ), 1.e-30)
                         # Check if we blind based on HTT 2016  twiki base 
                         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
                         #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
-                        if ( 0.5 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) :
+                        if ( 0.25 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] and not ":" in var :
