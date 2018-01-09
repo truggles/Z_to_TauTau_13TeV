@@ -67,9 +67,18 @@ def makeRatioPlot( h1, h2, c1, sample, var, channel, saveName, decorateDoFinal=F
     ratioHist.Draw('same e1')
     ratioLine.Draw('SAME HIST')
     #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSFv2/lots/%s_%s_%s.png' % (sample, channel, var) )
-    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSFv2/'+saveName+'.png' )
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSFv2/'+saveName+'.png' )
+
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF_nov23_tauALLLinear/'+saveName+'.png' )
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF_nov23_tauALLLandau/'+saveName+'.png' )
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF_nov23_tauFSLinear/'+saveName+'.png' )
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF_nov23_tauFSLandau/'+saveName+'.png' )
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF_dec01_genJets/'+saveName+'.png' )
+    #c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF_dec01_genJets_noBJets/'+saveName+'.png' )
+    c1.SaveAs('/afs/cern.ch/user/t/truggles/www/redBkgVal_mcSF_dec01_genJetsX_noBJets/'+saveName+'.png' )
+
     c1.Clear()
-    del pad1, ratioPad
+    del pad1, ratioPad, ratioHist, ratioLine
 
 def decorate( p, channel, h1, h2, doFinal=False ) :
 
@@ -141,6 +150,7 @@ def getHistoDict( analysis ) :
         'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
         #'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
         #'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
+        #'bjetCISVVeto20MediumZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
     }
     return genVarMap
 
@@ -198,9 +208,15 @@ def makePlots( sample ) :
     print combMapHists
     for channel in channels :
         print channel
-        ifile = ROOT.TFile('root_files/%s_%s.root' % (sample, channel), 'r' )
+        iDir = 'root_files_tauFinalStatesLandau'
+        iDir = 'root_files_tauFinalStatesLinear'
+        iDir = 'root_files_tauAllLandau'
+        iDir = 'root_files_tauAllLinear'
+        iDir = 'root_files'
+        ifile = ROOT.TFile(iDir+'/%s_%s.root' % (sample, channel), 'r' )
         itree = ifile.Get('Ntuple')
         #compfile = ROOT.TFile('../azh3Sept05OSLooseForRBVal/%s_%s.root' % (sample, channel), 'r' )
+        #compfile = ROOT.TFile('../azh3Nov13RedBkgMC_allFakes/%s_%s.root' % (sample, channel), 'r' )
         compfile = ROOT.TFile('../azh3Nov13RedBkgMC/%s_%s.root' % (sample, channel), 'r' )
         print ifile, itree.GetEntries()
         print compfile
@@ -211,6 +227,7 @@ def makePlots( sample ) :
         #var = 'met'
         #var = 'gen_match_3'
         #var = 'gen_match_4'
+        #var = 'bjetCISVVeto20MediumZTT'
     
         h1 = ROOT.TH1D(var+'_'+channel, var+'_'+channel, plotVars[var][0], plotVars[var][1], plotVars[var][2])
         hComp = compfile.Get('%s_Histos/%s' % (channel, var))
@@ -221,6 +238,7 @@ def makePlots( sample ) :
         #cutString += '(zhFR1 + zhFR2 - zhFR0)'
         cutString += '*(puweight*azhWeight)' 
         cutString += '*(XSecLumiWeight)'
+        cutString += '*(bjetCISVVeto20MediumZTT==0)'
         if channel in ['eeet','emmt'] :
             #cutString += '*(LT_higgs > 30)'
             cutString += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
@@ -348,7 +366,7 @@ if __name__ == '__main__' :
 
             prepForPlot( var, h1, h2 )
             saveName = '%s/Total_%s_%s' % (group, group, var)
-            makeRatioPlot( h1, h2, c, sample, var, group, saveName, True )
+            makeRatioPlot( h1, h2, c, 'Total', var, group, saveName, True )
             #h1.Draw('')
             #h2.Draw('SAME')
             #leg = buildLegend( [h1, h2], ['Total RedBkg', 'Total MC'] ) 
