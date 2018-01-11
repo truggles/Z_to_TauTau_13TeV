@@ -26,15 +26,17 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Only do Red Bkg method on data
     samples = {}
     for samp, val in inSamples.iteritems() :
-        if 'data' in samp : samples[samp] = val
+        #if 'data' in samp : samples[samp] = val
+        samples[samp] = val
     #print samples
 
-#    # Apply initial Reducible Bkg Cuts for inclusive selection
+    # Apply initial Reducible Bkg Cuts for inclusive selection
 #    analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #    # Order events and choose best interpretation
 #    analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 #
 #    # HADD each channel together so we can avoid different data runs
+#    # and pool all MC backgrounds together
 #    for channel in params['channels'] :
 #        print "HADD for",channel
 #        subprocess.call(["bash","./util/haddRedBkg.sh",dir2,channel])
@@ -43,28 +45,28 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
         'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-lltt' : ['eett', 'mmtt'],
-        'tau-DM0_lltt' : ['eett', 'mmtt'],
-        'tau-DM1_lltt' : ['eett', 'mmtt'],
-        'tau-DM10_lltt' : ['eett', 'mmtt'],
-        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+#        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau-lltt' : ['eett', 'mmtt'],
+#        'tau-DM0_lltt' : ['eett', 'mmtt'],
+#        'tau-DM1_lltt' : ['eett', 'mmtt'],
+#        'tau-DM10_lltt' : ['eett', 'mmtt'],
+#        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+#        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+#        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+#        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+###        'electron' : ['eeet', 'emmt','eeem','emmm'],
         'electron' : ['eeet', 'emmt'],
-        'muon' : ['eemt', 'mmmt'],
+#        'muon' : ['eemt', 'mmmt'],
     }
 
     fakeRateMap = {}
-    for matched in [True, False] :
-        app = 'jetMatch' if matched else 'noJetMatch'
-        for obj, chans in redBkgMap.iteritems() :
-            tmpMap = doRedBkgPlots( obj, chans, dir2, matched )
-            for name, info in tmpMap.iteritems() :
-                fakeRateMap[name+'_'+app] = info
+    app = 'leptonPt'
+    for obj, chans in redBkgMap.iteritems() :
+        tmpMap = doRedBkgPlots( obj, chans, dir2 )
+        for name, info in tmpMap.iteritems() :
+            fakeRateMap[name+'_'+app] = info
 
     # Save fits to out file
     outFile = ROOT.TFile('data/azhFakeRateFits.root', 'RECREATE')
@@ -80,7 +82,7 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     outFile.Close()
 
 
-def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
+def doRedBkgPlots( obj, channels, inputDir ) :
 
     cmsLumi = float(os.getenv('LUMI'))/1000
     print "Lumi = %.1f / fb" % cmsLumi
@@ -88,15 +90,9 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
     print channels
 
 
-    if jetMatched :
-        xAxis = 'Jet p_{T} [GeV]'
-        jetCut = 'cand_JetPt > pt_Num && cand_JetDR < 0.5'
-        app = 'jetMatch'
-    else :
-        xAxis = 'Lepton p_{T} [GeV]'
-        jetCut = '(cand_JetPt <= pt_Num || cand_JetDR >= 0.5)'
-        app = 'noJetMatch'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Sept17xxx_'+app
+    xAxis = 'Lepton p_{T} [GeV]'
+    app = 'leptonPt'
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan09_mcSub_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -106,34 +102,18 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
 
     yAxis2 = 'Fake Rate'
-    binInfo = [80, 0, 200]
+    binInfo = [1, 0, 140]
     yAxis1 = 'Events / %i GeV' % ( (binInfo[2] - binInfo[1]) / binInfo[0] )
-    useVariableBinning = True
+    useVariableBinning = False
     if not useVariableBinning :
         denomAll = ROOT.TH1D( obj+'_denom', obj+'_denom;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
         passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
     else :
-        xBins = array('d', [])
-        if jetMatched :
-            if obj == 'electron' :
-                for i in range( 0, 40, 1) :
-                    j = i * 5.0
-                    if j >= 40 : continue
-                    xBins.append( j )
-            else :
-                for i in range( 0, 40, 1) :
-                    j = i * 2.5
-                    if j >= 40 : continue
-                    xBins.append( j )
-            for i in range( 40, 60, 5) :
-                xBins.append( i )
-            for i in range( 60, 100, 10) :
-                xBins.append( i )
-        else :
-            for i in range( 10, 100, 30) :
-                xBins.append( i )
-        for i in range( 100, 250, 50) :
-            xBins.append( i )
+        xBins = array('d', [0,40,140])
+        #for i in range( 10, 100, 30) :
+        #    xBins.append( i )
+        #for i in range( 100, 250, 50) :
+        #    xBins.append( i )
         print xBins
         binInfo = ['x', xBins[0], xBins[-1]]
         yAxis1 = 'Events'
@@ -160,10 +140,11 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
     cuts = {
         'tau' : {
-            'denom' : ['(1)',],
+            'denom' : ['byVVLooseIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
             'pass' : ['byMediumIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
         },
         'electron' : {
+            #'denom' : ['pfmt_3 < 30','id_e_mva_nt_loose_Num > 0.5'], # to suppress real leptons from WZ and ZZ
             'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
             ####'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_tight_Num > 0.5'],
             'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
@@ -179,19 +160,19 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
     etaCuts = {
         'tau' : {
-            'Barrel' : 'abs( eta_Num ) <= 1.4',
-            'Endcap' : 'abs( eta_Num ) > 1.4',
+            #'Barrel' : 'abs( eta_Num ) <= 1.4',
+            #'Endcap' : 'abs( eta_Num ) > 1.4',
             'AllEta' : '(1)',
         },
         'electron' : {
             'Barrel' : 'abs( eta_Num ) <= 1.4',
             'Endcap' : 'abs( eta_Num ) > 1.4',
-            'AllEta' : '(1)',
+            #'AllEta' : '(1)',
         },
         'muon' :{
             'Barrel' : 'abs( eta_Num ) <= 1.4',
             'Endcap' : 'abs( eta_Num ) > 1.4',
-            'AllEta' : '(1)',
+            #'AllEta' : '(1)',
         },
     }
 
@@ -204,7 +185,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         denomCut = ' && '.join( cuts[obj.split('-')[0]]['denom'] )
         denomCut += ' && '+etaCut
-        denomCut += ' && '+jetCut
+        denomCut += ' && bjetCISVVeto20MediumZTT == 0'
 
         # If using tau decay modes:
         if 'tau-DM10' in obj : denomCut += ' && decayMode_Num == 10'
@@ -216,6 +197,13 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         totalDenomAll = 0.
         totalPassingAll = 0.
+
+        mcSamps = ['DYJets', 'TT', 'WZ3l1nu', 'ZZ4l', 'ggZZ', 'ttZ']
+        mcDenomTots = {}
+        mcPassingTots = {}
+        for sample in mcSamps :
+            mcDenomTots[ sample ] = 0.0
+            mcPassingTots[ sample ] = 0.0
 
         for channel in channels :
             print channel
@@ -232,8 +220,18 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                 passCut2 += ' && LT_higgs > 40'
                 denomCut2 += ' && LT_higgs > 40'
 
-            f = ROOT.TFile( inputDir+'/redBkg_'+channel+'.root', 'r' )
+            f = ROOT.TFile( '/data/truggles/'+inputDir+'/dataRedBkg_'+channel+'.root', 'r' )
             t = f.Get('Ntuple')
+            #mcIrrF = ROOT.TFile( '/data/truggles/'+inputDir+'/mc_Irreducible_'+channel+'.root', 'r' )
+            #mcIrrT = mcIrrF.Get('Ntuple')
+            #mcRedF = ROOT.TFile( '/data/truggles/'+inputDir+'/mc_Reducible_'+channel+'.root', 'r' )
+            #mcRedT = mcRedF.Get('Ntuple')
+            mcFiles = {}
+            mcTrees = {}
+            for sample in mcSamps :
+                mcFiles[ sample ] = ROOT.TFile( '/data/truggles/'+inputDir+'/mc_'+sample+'_'+channel+'.root', 'r' )
+                mcTrees[ sample ] = mcFiles[ sample ].Get('Ntuple')
+                
 
             # check if first letter of 'obj' in leg3 then leg4 and draw if so
             for i, leg in enumerate(prodMap[channel]) :
@@ -245,40 +243,90 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                 denomCutX = denomCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
                 passCutX = passCut2.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
                 passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
+                mcCut = 'gen_match_'+str(i+3)+' == 6)*(puweight*azhWeight*XSecLumiWeight)' # prompt sub
                 print "Denom Cut:",denomCutX
                 print "Passing Cut:",passCutX
+                print "MC Cut:",mcCut
 
                 # Denominator selection
+                denomMC = {}
                 if not useVariableBinning :
                     hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
+                    #mcIrr = ROOT.TH1D( 'mcIrr', 'mcIrr', binInfo[0], binInfo[1], binInfo[2] )
+                    #mcRed = ROOT.TH1D( 'mcRed', 'mcRed', binInfo[0], binInfo[1], binInfo[2] )
+                    for sample in mcSamps :
+                        denomMC[ sample ] = ROOT.TH1D( sample, sample, binInfo[0], binInfo[1], binInfo[2] )
                 else :
                     hTmp = ROOT.TH1D( 'hTmp', 'hTmp', len(xBins)-1, xBins )
+                    #mcIrr = ROOT.TH1D( 'mcIrr', 'mcIrr', len(xBins)-1, xBins )
+                    #mcRed = ROOT.TH1D( 'mcRed', 'mcRed', len(xBins)-1, xBins )
+                    for sample in mcSamps :
+                        denomMC[ sample ] = ROOT.TH1D( sample, sample, len(xBins)-1, xBins )
 
-                #t.Draw( 'pt_'+str(i+3)+' >> hTmp', denomCutX )
-                t.Draw( leg+'JetPt >> hTmp', denomCutX )
+                t.Draw( 'pt_'+str(i+3)+' >> hTmp', denomCutX )
+                #mcIrrT.Draw( 'pt_'+str(i+3)+' >> mcIrr', '('+denomCutX+' && '+mcCut )
+                #mcRedT.Draw( 'pt_'+str(i+3)+' >> mcRed', '('+denomCutX+' && '+mcCut )
+                for sample in mcSamps :
+                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample, '('+denomCutX+' && '+mcCut )
 
                 #print channel, leg, hTmp.Integral()
+                #print "Denom Data: ",hTmp.Integral()," Denom Prompt MC Irr: ",mcIrr.Integral()," Denom Prompt MC Red: ",mcRed.Integral()
                 denomAll.Add( hTmp )
                 print " -- denomAll Int:",denomAll.Integral()
+
+                print "Denom Data: ",hTmp.Integral()
+                for sample in mcSamps :
+                    print "Denom MC ",sample,": ",denomMC[ sample ].Integral()
+                    denomAll.Add( denomMC[ sample ] * -1. )
+                    mcDenomTots[ sample ] += denomMC[ sample ].Integral()
+
+                #denomAll.Add( mcIrr * -1. )
+                #denomAll.Add( mcRed * -1. )
+                print " -- denomAll Int MC sub:",denomAll.Integral()
                 totalDenomAll += hTmp.Integral()
 
                 # Passing selection
+                passingMC = {}
                 if not useVariableBinning :
                     hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', binInfo[0], binInfo[1], binInfo[2] )
+                    #mcIrrPass = ROOT.TH1D( 'mcIrrPass', 'mcIrrPass', binInfo[0], binInfo[1], binInfo[2] )
+                    #mcRedPass = ROOT.TH1D( 'mcRedPass', 'mcRedPass', binInfo[0], binInfo[1], binInfo[2] )
+                    for sample in mcSamps :
+                        passingMC[ sample ] = ROOT.TH1D( sample+'_pass', sample+'_pass', binInfo[0], binInfo[1], binInfo[2] )
                 else :
                     hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', len(xBins)-1, xBins )
+                    #mcIrrPass = ROOT.TH1D( 'mcIrrPass', 'mcIrrPass', len(xBins)-1, xBins )
+                    #mcRedPass = ROOT.TH1D( 'mcRedPass', 'mcRedPass', len(xBins)-1, xBins )
+                    for sample in mcSamps :
+                        passingMC[ sample ] = ROOT.TH1D( sample+'_pass', sample+'_pass', len(xBins)-1, xBins )
 
-                #t.Draw( 'pt_'+str(i+3)+' >> hTmpPass', passCutX )
-                t.Draw( leg+'JetPt >> hTmpPass', passCutX )
+                t.Draw( 'pt_'+str(i+3)+' >> hTmpPass', passCutX )
+                #mcIrrT.Draw( 'pt_'+str(i+3)+' >> mcIrrPass', '('+passCutX+' && '+mcCut )
+                #mcRedT.Draw( 'pt_'+str(i+3)+' >> mcRedPass', '('+passCutX+' && '+mcCut )
+                for sample in mcSamps :
+                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_pass', '('+passCutX+' && '+mcCut )
 
+                #print "Passing Data: ",hTmpPass.Integral()," Passing Prompt MC Irr: ",mcIrrPass.Integral()," Denom Prompt MC Red: ",mcRedPass.Integral()
+                print "Passing Data: ",hTmpPass.Integral()
                 passAll.Add( hTmpPass )
                 print " -- passAll Int:",passAll.Integral()
+                for sample in mcSamps :
+                    print "Passing MC ",sample,": ",passingMC[ sample ].Integral()
+                    passAll.Add( passingMC[ sample ] * -1. )
+                    mcPassingTots[ sample ] += passingMC[ sample ].Integral()
+
+                #passAll.Add( mcIrrPass * -1. )
+                #passAll.Add( mcRedPass * -1. )
+                print " -- passAll Int MC sub:",passAll.Integral()
                 totalPassingAll += hTmpPass.Integral()
-                del hTmp, hTmpPass
+                #del hTmp, mcIrr, mcRed, hTmpPass, mcIrrPass, mcRedPass
+                del hTmp, hTmpPass, denomMC, passingMC
 
 
         # Print totals for each plot
         print ' ---- '+obj+' '+etaRegion+'   denom: '+str(totalDenomAll)+'    passing: '+str(totalPassingAll)
+        for sample in mcSamps :
+            print ' - -       %10s    denom: %.2f    passing: %.2f' % (sample, mcDenomTots[ sample ], mcPassingTots[ sample ])
 
         #denomAll.SetMaximum( denomAll.GetMaximum() * 1.3 )
         #denomAll.Draw()
@@ -311,13 +359,13 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                 graph.SetMinimum( 0.0005 )
         if doLinear :
             if obj == 'muon' :
-                graph.SetMaximum( 1 )
+                graph.SetMaximum( .05 )
             #else :
             #    graph.SetMaximum( .15 )
             elif obj == 'electron' :
-                graph.SetMaximum( 1 )
+                graph.SetMaximum( .05 )
             else :
-                graph.SetMaximum( 1 )
+                graph.SetMaximum( .5 )
             graph.SetMinimum( 0 )
 
         graph.Draw("AP")
@@ -327,12 +375,8 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         # Set fit min for different objects
         if 'tau' in obj : fitMin = 20
-        if jetMatched :
-            if obj == 'electron' : fitMin = 15
-            if obj == 'muon' : fitMin = 12.5
-        else :
-            if obj == 'electron' : fitMin = 10
-            if obj == 'muon' : fitMin = 10
+        if obj == 'electron' : fitMin = 10
+        if obj == 'muon' : fitMin = 10
 
         useExp = True
         useExp = False
@@ -353,29 +397,20 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
             f1.SetParName( 3, "sigma param" )
             f1.SetParameter( 0, 0. )
             f1.SetParameter( 1, 1 )
-            if jetMatched :
-                if obj == 'electron' or obj == 'muon' :
-                    f1.SetParameter( 2, 20. )
-                else : # is tau
-                    f1.SetParameter( 2, 30. )
-                f1.SetParameter( 3, 5. )
-            else : # Not Jet Matched
-                if obj == 'electron' :
-                    f1.SetParameter( 2, 25. )
-                    f1.SetParameter( 3, 2.5 )
-                elif obj == 'muon' :
-                    f1.SetParameter( 2, 15. )
-                    f1.SetParameter( 3, 2.5 )
-                else : # is tau
-                    f1.SetParameter( 2, 45. )
-                    f1.SetParameter( 3, 15. )
+            if obj == 'electron' :
+                f1.SetParameter( 2, 25. )
+                f1.SetParameter( 3, 2.5 )
+            elif obj == 'muon' :
+                f1.SetParameter( 2, 15. )
+                f1.SetParameter( 3, 2.5 )
+            else : # is tau
+                f1.SetParameter( 2, 45. )
+                f1.SetParameter( 3, 15. )
 
         f1.SetParName( 0, "y rise" )
         f1.SetParName( 1, "scale" )
-        if jetMatched :
-            graph.Fit('f1', 'SR' )
-        else :
-            graph.Fit('f1', 'SRN' ) # N skips drawing
+        graph.Fit('f1', 'SR' )
+        #graph.Fit('f1', 'SRN' ) # N skips drawing
 
         if useExp :
             f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
@@ -385,9 +420,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         f2.SetParameter( 0, f1.GetParameter( 0 ) )
         f2.SetParameter( 1, f1.GetParameter( 1 ) )
         f2.SetParameter( 2, f1.GetParameter( 2 ) )
-        
-        if jetMatched :
-            f2.Draw('SAME R')
+        f2.Draw('SAME R')
 
         ROOT.gStyle.SetStatX(.95)
         ROOT.gStyle.SetStatY(0.8)
@@ -427,7 +460,7 @@ if '__main__' in __name__ :
     ROOT.gROOT.SetBatch(True)
     tdr.setTDRStyle()
     
-    dataSamples = []
+    dataSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WZ3l1nu', 'ZZ4l'] # removed tri-boson samples 
     for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
         dataSamples.append('dataEE-%s' % era)
         dataSamples.append('dataMM-%s' % era)
@@ -437,12 +470,12 @@ if '__main__' in __name__ :
         'debug' : 'false',
         'numCores' : 15,
         'numFilesPerCycle' : 1,
-        'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8
-        #'channels' : ['eeet',],
+        'channels' : ['eeet','eett','eemt','emmt','mmtt','mmmt',], # no eeem or mmme
+        'channels' : ['eeem','emmm',],
         'cutMapper' : 'RedBkg',
-        'mid1' : '1Sept03rb',
-        'mid2' : '2Sept03rb',
-        'mid3' : '3Sept03rb',
+        'mid1' : '1Jan09rb',
+        'mid2' : '2Jan09rb',
+        'mid3' : '3Jan09rb',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',
