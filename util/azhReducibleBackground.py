@@ -56,8 +56,8 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
     ratioHist.Sumw2()
     #ratioHist.Add( dataHist )
     ratioHist.Divide( mcStack.GetStack().Last() )
-    ratioHist.SetMaximum( 2. )
-    ratioHist.SetMinimum( 0. )
+    ratioHist.SetMaximum( 1.5 )
+    ratioHist.SetMinimum( 0.5 )
     ratioHist.SetMarkerStyle( 21 )
     ratioPad.cd()
     ratioHist.Draw('ex0')
@@ -79,7 +79,7 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
     mcStack.Draw('hist same')
     dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 1.3 )
 
-    legend = ROOT.TLegend(0.60, 0.5, 0.95, 0.93)
+    legend = ROOT.TLegend(0.65, 0.5, 0.95, 0.93)
     legend.SetMargin(0.3)
     legend.SetBorderSize(0)
     legend.AddEntry( dataHist, "Data", 'lep')
@@ -130,7 +130,7 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
-        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
@@ -176,7 +176,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     print channels
 
 
-    xAxis = 'Lepton p_{T} [GeV]'
+    #xAxis = 'Lepton p_{T} [GeV]'
+    xAxis = 'M_{T}( MET, Lepton) [GeV]'
     app = 'leptonPt'
     saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan09_mcSub_'+app
     checkDir( saveDir )
@@ -233,7 +234,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
             #'denom' : ['pfmt_3 < 30','id_e_mva_nt_loose_Num > 0.5'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30','byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30','iso_4 > -0.9'], # to suppress real leptons from WZ and ZZ
-            'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
+            'denom' : ['pfmt_3 < 300',], # to suppress real leptons from WZ and ZZ
             ####'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_tight_Num > 0.5'],
             #'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
             #'pass' : ['iso_Num < 0.1', 'id_e_mva_nt_tight_Num > 0.5'],
@@ -243,7 +244,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         'muon' : {
             #'denom' : ['pfmt_3 < 30','byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30','iso_4 > -0.9'], # to suppress real leptons from WZ and ZZ
-            'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
+            'denom' : ['pfmt_3 < 300',], # to suppress real leptons from WZ and ZZ
             #'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
             'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0.5'],
         },
@@ -359,8 +360,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 denomCutX = denomCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
                 passCutX = passCut2.replace( '_Num', '_%i' % (i+3) ) # i begins at 0, we being with leg3
                 passCutX = passCutX.replace( 'cand_', leg ) # For vars we didn't use in sync ntuple
-                mcCutPrompt = 'gen_match_'+str(i+3)+' != 6)*(puweight*azhWeight*XSecLumiWeight)' # prompt sub
-                mcCutRed = 'gen_match_'+str(i+3)+' == 6)*(puweight*azhWeight*XSecLumiWeight)' # prompt sub
+                mcCutPrompt = 'gen_match_'+str(i+3)+' != 6)*(puweight*azhWeight*XSecLumiWeight*GenWeight/abs(GenWeight))' # prompt sub
+                mcCutRed = 'gen_match_'+str(i+3)+' == 6)*(puweight*azhWeight*XSecLumiWeight*GenWeight/abs(GenWeight))' # prompt sub
                 print "Denom Cut:",denomCutX
                 print "Passing Cut:",passCutX
                 print "MC Cut Prompt:",mcCutPrompt
@@ -384,12 +385,10 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                         denomMCPrompt[ sample ] = ROOT.TH1D( sample, sample, len(xBins)-1, xBins )
                         denomMCRed[ sample ] = ROOT.TH1D( sample+'_red', sample+'_red', len(xBins)-1, xBins )
 
-                t.Draw( 'pt_'+str(i+3)+' >> hTmp', denomCutX )
-                #mcIrrT.Draw( 'pt_'+str(i+3)+' >> mcIrr', '('+denomCutX+' && '+mcCutPrompt )
-                #mcRedT.Draw( 'pt_'+str(i+3)+' >> mcRed', '('+denomCutX+' && '+mcCutPrompt )
+                t.Draw( 'pfmt_'+str(i+3)+' >> hTmp', denomCutX )
                 for sample in mcSamps :
-                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample, '('+denomCutX+' && '+mcCutPrompt )
-                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_red', '('+denomCutX+' && '+mcCutRed )
+                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample, '('+denomCutX+' && '+mcCutPrompt )
+                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample+'_red', '('+denomCutX+' && '+mcCutRed )
 
                 #print channel, leg, hTmp.Integral()
                 #print "Denom Data: ",hTmp.Integral()," Denom Prompt MC Irr: ",mcIrr.Integral()," Denom Prompt MC Red: ",mcRed.Integral()
@@ -428,12 +427,10 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                         passingMCPrompt[ sample ] = ROOT.TH1D( sample+'_pass', sample+'_pass', len(xBins)-1, xBins )
                         passingMCRed[ sample ] = ROOT.TH1D( sample+'_passRed', sample+'_passRed', len(xBins)-1, xBins )
 
-                t.Draw( 'pt_'+str(i+3)+' >> hTmpPass', passCutX )
-                #mcIrrT.Draw( 'pt_'+str(i+3)+' >> mcIrrPass', '('+passCutX+' && '+mcCutPrompt )
-                #mcRedT.Draw( 'pt_'+str(i+3)+' >> mcRedPass', '('+passCutX+' && '+mcCutPrompt )
+                t.Draw( 'pfmt_'+str(i+3)+' >> hTmpPass', passCutX )
                 for sample in mcSamps :
-                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_pass', '('+passCutX+' && '+mcCutPrompt )
-                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_passRed', '('+passCutX+' && '+mcCutRed )
+                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample+'_pass', '('+passCutX+' && '+mcCutPrompt )
+                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample+'_passRed', '('+passCutX+' && '+mcCutRed )
 
                 #print "Passing Data: ",hTmpPass.Integral()," Passing Prompt MC Irr: ",mcIrrPass.Integral()," Denom Prompt MC Red: ",mcRedPass.Integral()
                 print "Passing Data: ",hTmpPass.Integral()
@@ -479,8 +476,10 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         print ' - - Passing (Data - MC total) / Data = %.3f\n' % ((totalPassingAll - promptMCTotalPassing - redMCTotalPassing) / totalPassingAll)
 
 
-        plotDistributions( saveDir, obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
-        plotDistributions( saveDir, obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
+        plotDistributions( saveDir, 'transMassScaled_'+obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
+        plotDistributions( saveDir, 'transMassScaled_'+obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
+        #plotDistributions( saveDir, obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
+        #plotDistributions( saveDir, obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
 
         c1 = ROOT.TCanvas("c1","c1", 550, 550)
         pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
