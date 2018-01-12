@@ -12,6 +12,15 @@ from array import array
 from util.ratioPlot import ratioPlot
 
 
+
+def scaleTTandWZ( obj, hist ) :
+    if 'electron' in obj :
+        hist.Scale( 1.-.17 )
+    if 'muon' in obj :
+        hist.Scale( 1.-.21 )
+
+
+
 def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRedHists ) :
     c = ROOT.TCanvas("c","c", 550, 550)
 
@@ -48,7 +57,7 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
     pads = ratioPlot( c, 1-smlPadSize )
     pad1 = pads[0]
     ratioPad = pads[1]
-    ratioPad.SetTopMargin(0.0)
+    ratioPad.SetTopMargin(0.02)
     ratioPad.SetBottomMargin(0.3)
     pad1.SetBottomMargin(0.00)
     ratioPad.SetGridy()
@@ -77,7 +86,8 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
     dataHist.Draw('ex0')
     dataHist.SetMinimum( 1 )
     mcStack.Draw('hist same')
-    dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 1.3 )
+    #dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 1.3 )
+    dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 2. )
 
     legend = ROOT.TLegend(0.65, 0.5, 0.95, 0.93)
     legend.SetMargin(0.3)
@@ -89,13 +99,40 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
         legend.AddEntry( mcStack.GetStack()[ last - j ], name_str, 'f')
     legend.Draw()
     
+    logo = ROOT.TText(.2, .88,"CMS Preliminary")
+    logo.SetTextSize(0.04)
+    logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+
+    if 'electron_denom' in saveName : regionName = 'Electron Denominator'
+    if 'electron_pass' in saveName : regionName = 'Electron Passing'
+    if 'muon_denom' in saveName : regionName = 'Muon Denominator'
+    if 'muon_pass' in saveName : regionName = 'Muon Passing'
+    if 'tau_denom' in saveName : regionName = 'Tau Denominator'
+    if 'tau_pass' in saveName : regionName = 'Tau Passing'
+    if 'tau-DM0_lltt_denom' in saveName : regionName = 'Tau DM0 LLTT Denominator'
+    if 'tau-DM0_lltt_pass' in saveName : regionName = 'Tau DM0 LLTT Passing'
+    if 'tau-DM1_lltt_denom' in saveName : regionName = 'Tau DM1 LLTT Denominator'
+    if 'tau-DM1_lltt_pass' in saveName : regionName = 'Tau DM1 LLTT Passing'
+    if 'tau-DM10_lltt_denom' in saveName : regionName = 'Tau DM10 LLTT Denominator'
+    if 'tau-DM10_lltt_pass' in saveName : regionName = 'Tau DM10 LLTT Passing'
+    
+    chan = ROOT.TLatex(.2, .80,"x")
+    chan.SetTextSize(0.05)
+    chan.DrawLatexNDC(.2, .84,"Region: %s" % regionName )
+    
+    cmsLumi = 35.9
+    lumi = ROOT.TText(.7,1.05,"X fb^{-1} (13 TeV)")
+    lumi.SetTextSize(0.035)
+    lumi.DrawTextNDC(.7,.96,"%.1f / fb (13 TeV)" % cmsLumi )
 
     dataHist.Draw('esamex0')
     c.SaveAs( saveDir+'/'+saveName+'.png' )
+    c.SaveAs( saveDir+'/'+saveName+'.pdf' )
     
     pad1.SetLogy()
-    dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 5 )
+    dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 150 )
     c.SaveAs( saveDir+'/'+saveName+'_log.png' )
+    c.SaveAs( saveDir+'/'+saveName+'_log.pdf' )
 
 
 def buildRedBkgFakeFunctions( inSamples, **params ) :
@@ -130,21 +167,21 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
-#        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-lltt' : ['eett', 'mmtt'],
-#        'tau-DM0_lltt' : ['eett', 'mmtt'],
-#        'tau-DM1_lltt' : ['eett', 'mmtt'],
-#        'tau-DM10_lltt' : ['eett', 'mmtt'],
+        'tau-DM0_lltt' : ['eett', 'mmtt'],
+        'tau-DM1_lltt' : ['eett', 'mmtt'],
+        'tau-DM10_lltt' : ['eett', 'mmtt'],
 #        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 #        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 #        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 #        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 ###        'electron' : ['eeet', 'emmt','eeem','emmm'],
-        'electron' : ['eeet', 'emmt'],
-        'muon' : ['eemt', 'mmmt'],
+#        'electron' : ['eeet', 'emmt'],
+#        'muon' : ['eemt', 'mmmt'],
     }
 
     fakeRateMap = {}
@@ -176,10 +213,10 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     print channels
 
 
-    #xAxis = 'Lepton p_{T} [GeV]'
-    xAxis = 'M_{T}( MET, Lepton) [GeV]'
+    xAxis = 'Lepton p_{T} [GeV]'
+    #xAxis = 'M_{T}( MET, Lepton) [GeV]'
     app = 'leptonPt'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan09_mcSub_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan12a_mcSub_'+app
     checkDir( saveDir )
 
     #c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -189,14 +226,15 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
 
     yAxis2 = 'Fake Rate'
-    binInfo = [7, 0, 140]
+    binInfo = [20, 0, 200]
     yAxis1 = 'Events / %i GeV' % ( (binInfo[2] - binInfo[1]) / binInfo[0] )
-    useVariableBinning = False
+    useVariableBinning = True
     if not useVariableBinning :
         denomAll = ROOT.TH1D( obj+'_denom', obj+'_denom;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
         passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
     else :
-        xBins = array('d', [0,40,140])
+        #xBins = array('d', [0,10,15,20,30,40,100])
+        xBins = array('d', [0,10,15,20,25,30,40,50,70,100])
         #for i in range( 10, 100, 30) :
         #    xBins.append( i )
         #for i in range( 100, 250, 50) :
@@ -234,19 +272,19 @@ def doRedBkgPlots( obj, channels, inputDir ) :
             #'denom' : ['pfmt_3 < 30','id_e_mva_nt_loose_Num > 0.5'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30','byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30','iso_4 > -0.9'], # to suppress real leptons from WZ and ZZ
-            'denom' : ['pfmt_3 < 300',], # to suppress real leptons from WZ and ZZ
+            'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
             ####'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_tight_Num > 0.5'],
-            #'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
+            'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
             #'pass' : ['iso_Num < 0.1', 'id_e_mva_nt_tight_Num > 0.5'],
             #'pass' : ['id_e_mva_nt_tight_Num > 0.5'],
-            'pass' : ['id_e_mva_nt_loose_Num > 0.5'],
+            #'pass' : ['id_e_mva_nt_loose_Num > 0.5'],
         },
         'muon' : {
             #'denom' : ['pfmt_3 < 30','byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30','iso_4 > -0.9'], # to suppress real leptons from WZ and ZZ
-            'denom' : ['pfmt_3 < 300',], # to suppress real leptons from WZ and ZZ
-            #'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
-            'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0.5'],
+            'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
+            'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
+            #'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0.5'],
         },
     } 
 
@@ -385,10 +423,11 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                         denomMCPrompt[ sample ] = ROOT.TH1D( sample, sample, len(xBins)-1, xBins )
                         denomMCRed[ sample ] = ROOT.TH1D( sample+'_red', sample+'_red', len(xBins)-1, xBins )
 
-                t.Draw( 'pfmt_'+str(i+3)+' >> hTmp', denomCutX )
+                t.Draw( 'pt_'+str(i+3)+' >> hTmp', denomCutX )
                 for sample in mcSamps :
-                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample, '('+denomCutX+' && '+mcCutPrompt )
-                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample+'_red', '('+denomCutX+' && '+mcCutRed )
+                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample, '('+denomCutX+' && '+mcCutPrompt )
+                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_red', '('+denomCutX+' && '+mcCutRed )
+                        
 
                 #print channel, leg, hTmp.Integral()
                 #print "Denom Data: ",hTmp.Integral()," Denom Prompt MC Irr: ",mcIrr.Integral()," Denom Prompt MC Red: ",mcRed.Integral()
@@ -398,7 +437,10 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 print "Denom Data: ",hTmp.Integral()
                 for sample in mcSamps :
                     #print "Denom MC ",sample,": ",denomMCPrompt[ sample ].Integral()
-                    #denomAll.Add( denomMCPrompt[ sample ] * -1. )
+                    if sample in ['TT','WZ3l1nu'] :
+                        scaleTTandWZ( obj, denomMCPrompt[ sample ] )
+                        scaleTTandWZ( obj, denomMCRed[ sample ] )
+                    denomAll.Add( denomMCPrompt[ sample ] * -1. )
                     mcDenomPromptTots[ sample ] += denomMCPrompt[ sample ].Integral()
                     mcDenomRedTots[ sample ] += denomMCRed[ sample ].Integral()
                     hDenomMCPrompt[ sample ].Add( denomMCPrompt[ sample ] )
@@ -427,10 +469,10 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                         passingMCPrompt[ sample ] = ROOT.TH1D( sample+'_pass', sample+'_pass', len(xBins)-1, xBins )
                         passingMCRed[ sample ] = ROOT.TH1D( sample+'_passRed', sample+'_passRed', len(xBins)-1, xBins )
 
-                t.Draw( 'pfmt_'+str(i+3)+' >> hTmpPass', passCutX )
+                t.Draw( 'pt_'+str(i+3)+' >> hTmpPass', passCutX )
                 for sample in mcSamps :
-                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample+'_pass', '('+passCutX+' && '+mcCutPrompt )
-                    mcTrees[ sample ].Draw( 'pfmt_'+str(i+3)+' >> '+sample+'_passRed', '('+passCutX+' && '+mcCutRed )
+                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_pass', '('+passCutX+' && '+mcCutPrompt )
+                    mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_passRed', '('+passCutX+' && '+mcCutRed )
 
                 #print "Passing Data: ",hTmpPass.Integral()," Passing Prompt MC Irr: ",mcIrrPass.Integral()," Denom Prompt MC Red: ",mcRedPass.Integral()
                 print "Passing Data: ",hTmpPass.Integral()
@@ -438,7 +480,10 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 print " -- passAll Int:",passAll.Integral()
                 for sample in mcSamps :
                     #print "Passing MC ",sample,": ",passingMCPrompt[ sample ].Integral()
-                    #passAll.Add( passingMCPrompt[ sample ] * -1. )
+                    if sample in ['TT','WZ3l1nu'] :
+                        scaleTTandWZ( obj, passingMCPrompt[ sample ] )
+                        scaleTTandWZ( obj, passingMCRed[ sample ] )
+                    passAll.Add( passingMCPrompt[ sample ] * -1. )
                     mcPassingPromptTots[ sample ] += passingMCPrompt[ sample ].Integral()
                     mcPassingRedTots[ sample ] += passingMCRed[ sample ].Integral()
                     hPassingMCPrompt[ sample ].Add( passingMCPrompt[ sample ] )
@@ -476,8 +521,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         print ' - - Passing (Data - MC total) / Data = %.3f\n' % ((totalPassingAll - promptMCTotalPassing - redMCTotalPassing) / totalPassingAll)
 
 
-        plotDistributions( saveDir, 'transMassScaled_'+obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
-        plotDistributions( saveDir, 'transMassScaled_'+obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
+        plotDistributions( saveDir, 'lepPtScaledMTLs40_'+obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
+        plotDistributions( saveDir, 'lepPtScaledMTLs40_'+obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
         #plotDistributions( saveDir, obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
         #plotDistributions( saveDir, obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
 
@@ -531,56 +576,59 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         graph.Draw("AP")
 
         # do fit
-        #fitMin = binInfo[1] if binInfo[1] != 0 else 10
-
+        doFit = False
+        useExp = True
+        useExp = False
         # Set fit min for different objects
         if 'tau' in obj : fitMin = 20
         if obj == 'electron' : fitMin = 10
         if obj == 'muon' : fitMin = 10
+        if doFit :
+            #fitMin = binInfo[1] if binInfo[1] != 0 else 10
 
-        useExp = True
-        useExp = False
-        if useExp :
-            f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
-            f1.SetParName( 2, "decay" )
-            if obj == 'electron' or obj == 'muon' :
+
+            if useExp :
+                f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+                f1.SetParName( 2, "decay" )
+                if obj == 'electron' or obj == 'muon' :
+                    f1.SetParameter( 0, 0. )
+                    f1.SetParameter( 1, 1 )
+                    f1.SetParameter( 2, .05 )
+                else : # is tau
+                    f1.SetParameter( 0, 0. )
+                    f1.SetParameter( 1, 1 )
+                    f1.SetParameter( 2, .05 )
+            else : # No Exponential
+                f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+                f1.SetParName( 2, "approx. max" )
+                f1.SetParName( 3, "sigma param" )
                 f1.SetParameter( 0, 0. )
                 f1.SetParameter( 1, 1 )
-                f1.SetParameter( 2, .05 )
-            else : # is tau
-                f1.SetParameter( 0, 0. )
-                f1.SetParameter( 1, 1 )
-                f1.SetParameter( 2, .05 )
-        else : # No Exponential
-            f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
-            f1.SetParName( 2, "approx. max" )
-            f1.SetParName( 3, "sigma param" )
-            f1.SetParameter( 0, 0. )
-            f1.SetParameter( 1, 1 )
-            if obj == 'electron' :
-                f1.SetParameter( 2, 25. )
-                f1.SetParameter( 3, 2.5 )
-            elif obj == 'muon' :
-                f1.SetParameter( 2, 15. )
-                f1.SetParameter( 3, 2.5 )
-            else : # is tau
-                f1.SetParameter( 2, 45. )
-                f1.SetParameter( 3, 15. )
+                if obj == 'electron' :
+                    f1.SetParameter( 2, 25. )
+                    f1.SetParameter( 3, 2.5 )
+                elif obj == 'muon' :
+                    f1.SetParameter( 2, 15. )
+                    f1.SetParameter( 3, 2.5 )
+                else : # is tau
+                    f1.SetParameter( 2, 45. )
+                    f1.SetParameter( 3, 15. )
 
-        f1.SetParName( 0, "y rise" )
-        f1.SetParName( 1, "scale" )
-        graph.Fit('f1', 'SR' )
-        #graph.Fit('f1', 'SRN' ) # N skips drawing
+            f1.SetParName( 0, "y rise" )
+            f1.SetParName( 1, "scale" )
+            graph.Fit('f1', 'SR' )
+            #graph.Fit('f1', 'SRN' ) # N skips drawing
 
         if useExp :
             f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
         else :
             f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+        if doFit :
             f2.SetParameter( 3, f1.GetParameter( 3 ) )
-        f2.SetParameter( 0, f1.GetParameter( 0 ) )
-        f2.SetParameter( 1, f1.GetParameter( 1 ) )
-        f2.SetParameter( 2, f1.GetParameter( 2 ) )
-        f2.Draw('SAME R')
+            f2.SetParameter( 0, f1.GetParameter( 0 ) )
+            f2.SetParameter( 1, f1.GetParameter( 1 ) )
+            f2.SetParameter( 2, f1.GetParameter( 2 ) )
+            f2.Draw('SAME R')
 
         ROOT.gStyle.SetStatX(.95)
         ROOT.gStyle.SetStatY(0.8)
