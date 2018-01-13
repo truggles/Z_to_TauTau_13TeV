@@ -55,9 +55,9 @@ HSS = 'LEG3_LEG4_SS == 1'
 eeTrig = 'doubleE_23_12Pass > 0'
 mmTrig = 'doubleMuPass > 0'
 
-mmTrigFilters = 'm1Pt > 19 && m2Pt > 10 && ( ( (m1MatchesDoubleMuFilter1 || m1MatchesDoubleMuFilter2) && (m2MatchesDoubleMuFilter1 || m2MatchesDoubleMuFilter2) ) || ( m1Pt > 27 && (m1MatchesIsoMu24Filter || m1MatchesIsoTkMu24Filter) ) || ( m2Pt > 27 && (m2MatchesIsoMu24Filter || m2MatchesIsoTkMu24Filter) ) )'
+mmTrigFilters = 'm1Pt > 19 && m2Pt > 10 && ( ( (m1MatchesDoubleMuFilter1 > 0.5 || m1MatchesDoubleMuFilter2 > 0.5 ) && (m2MatchesDoubleMuFilter1 > 0.5 || m2MatchesDoubleMuFilter2 > 0.5 ) ) || ( m1Pt > 27 && (m1MatchesIsoMu24Filter > 0.5 || m1MatchesIsoTkMu24Filter > 0.5 ) ) || ( m2Pt > 27 && (m2MatchesIsoMu24Filter > 0.5 || m2MatchesIsoTkMu24Filter > 0.5 ) ) )'
 
-eeTrigFilters = 'e1Pt > 27.5 && e2Pt > 17.5 && ( (e1MatchesDoubleE23_12Filter && e2MatchesDoubleE23_12Filter) || ( e1Pt > 32 && e1MatchesSingleETight27Filter ) || ( e2Pt > 32 && e2MatchesSingleETight27Filter ) )'
+eeTrigFilters = 'e1Pt > 27.5 && e2Pt > 17.5 && ( (e1MatchesDoubleE23_12Filter > 0.5 && e2MatchesDoubleE23_12Filter > 0.5 ) || ( e1Pt > 32 && e1MatchesSingleETight27Filter > 0.5 ) || ( e2Pt > 32 && e2MatchesSingleETight27Filter > 0.5 ) )'
 
 
 eeetVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 == 0'
@@ -258,10 +258,10 @@ def getCut( analysis, sample, channel, cutName ) :
     if analysis == 'azh' :
         chans = ['eeem', 'eeet', 'eemt', 'eett', 'emmm', 'emmt', 'mmmt', 'mmtt', 'eeee', 'eemm', 'mmmm']
         for chan in chans :
-            l = copy.deepcopy(cutMap['azh'][chan]['Skim'])
+            l = copy.deepcopy(cutMap['azh'][chan]['SkimApplyNewTrig'])
             l.append( HSS )
             cutMap['azh'][chan]['RedBkg'] = l
-            l = copy.deepcopy(cutMap['azh'][chan]['Skim'])
+            l = copy.deepcopy(cutMap['azh'][chan]['SkimApplyNewTrig'])
             l.append( HOS )
             cutMap['azh'][chan]['SignalRegion'] = l
     
