@@ -167,21 +167,21 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
-        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-lltt' : ['eett', 'mmtt'],
-        'tau-DM0_lltt' : ['eett', 'mmtt'],
-        'tau-DM1_lltt' : ['eett', 'mmtt'],
-        'tau-DM10_lltt' : ['eett', 'mmtt'],
+#        'tau-DM0_lltt' : ['eett', 'mmtt'],
+#        'tau-DM1_lltt' : ['eett', 'mmtt'],
+#        'tau-DM10_lltt' : ['eett', 'mmtt'],
 #        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 #        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 #        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 #        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 ###        'electron' : ['eeet', 'emmt','eeem','emmm'],
-#        'electron' : ['eeet', 'emmt'],
-#        'muon' : ['eemt', 'mmmt'],
+        'electron' : ['eeet', 'emmt'],
+        'muon' : ['eemt', 'mmmt'],
     }
 
     fakeRateMap = {}
@@ -216,7 +216,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     xAxis = 'Lepton p_{T} [GeV]'
     #xAxis = 'M_{T}( MET, Lepton) [GeV]'
     app = 'leptonPt'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan12a_mcSub_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan13_mcSub_'+app
     checkDir( saveDir )
 
     #c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -232,21 +232,25 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     if not useVariableBinning :
         denomAll = ROOT.TH1D( obj+'_denom', obj+'_denom;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
         passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
+        denomPlotAll = ROOT.TH1D( obj+'_denomPlot', obj+'_denomPlot;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
+        passPlotAll = ROOT.TH1D( obj+'_passPlot', obj+'_passPlot;%s;%s'%(xAxis,yAxis1), binInfo[0], binInfo[1], binInfo[2] )
     else :
-        #xBins = array('d', [0,10,15,20,30,40,100])
-        xBins = array('d', [0,10,15,20,25,30,40,50,70,100])
-        #for i in range( 10, 100, 30) :
-        #    xBins.append( i )
-        #for i in range( 100, 250, 50) :
-        #    xBins.append( i )
+        if 'tau' in obj :
+            xBins = array('d', [0,10,15,20,25,30,40,50,70,100])
+        else :
+            xBins = array('d', [0,10,15,20,30,40,100])
         print xBins
         binInfo = ['x', xBins[0], xBins[-1]]
         yAxis1 = 'Events'
         denomAll = ROOT.TH1D( obj+'_denom', obj+'_denom;%s;%s'%(xAxis,yAxis1), len(xBins)-1, xBins )
         passAll = ROOT.TH1D( obj+'_pass', obj+'_pass;%s;%s'%(xAxis,yAxis1), len(xBins)-1, xBins )
+        denomPlotAll = ROOT.TH1D( obj+'_denomPlot', obj+'_denomPlot;%s;%s'%(xAxis,yAxis1), len(xBins)-1, xBins )
+        passPlotAll = ROOT.TH1D( obj+'_passPlot', obj+'_passPlot;%s;%s'%(xAxis,yAxis1), len(xBins)-1, xBins )
 
     denomAll.Sumw2()
     passAll.Sumw2()
+    denomPlotAll.Sumw2()
+    passPlotAll.Sumw2()
 
     # Channel leg map
     prodMap = {
@@ -269,22 +273,12 @@ def doRedBkgPlots( obj, channels, inputDir ) :
             'pass' : ['byMediumIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
         },
         'electron' : {
-            #'denom' : ['pfmt_3 < 30','id_e_mva_nt_loose_Num > 0.5'], # to suppress real leptons from WZ and ZZ
-            #'denom' : ['pfmt_3 < 30','byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5'], # to suppress real leptons from WZ and ZZ
-            #'denom' : ['pfmt_3 < 30','iso_4 > -0.9'], # to suppress real leptons from WZ and ZZ
             'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
-            ####'pass' : ['iso_Num < 0.3', 'id_e_mva_nt_tight_Num > 0.5'],
             'pass' : ['iso_Num < 0.15', 'id_e_mva_nt_tight_Num > 0.5'],
-            #'pass' : ['iso_Num < 0.1', 'id_e_mva_nt_tight_Num > 0.5'],
-            #'pass' : ['id_e_mva_nt_tight_Num > 0.5'],
-            #'pass' : ['id_e_mva_nt_loose_Num > 0.5'],
         },
         'muon' : {
-            #'denom' : ['pfmt_3 < 30','byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5'], # to suppress real leptons from WZ and ZZ
-            #'denom' : ['pfmt_3 < 30','iso_4 > -0.9'], # to suppress real leptons from WZ and ZZ
             'denom' : ['pfmt_3 < 40',], # to suppress real leptons from WZ and ZZ
             'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
-            #'pass' : ['iso_Num < 0.25', 'cand_PFIDLoose > 0.5'],
         },
     } 
 
@@ -377,10 +371,6 @@ def doRedBkgPlots( obj, channels, inputDir ) :
 
             f = ROOT.TFile( '/data/truggles/'+inputDir+'/dataRedBkg_'+channel+'.root', 'r' )
             t = f.Get('Ntuple')
-            #mcIrrF = ROOT.TFile( '/data/truggles/'+inputDir+'/mc_Irreducible_'+channel+'.root', 'r' )
-            #mcIrrT = mcIrrF.Get('Ntuple')
-            #mcRedF = ROOT.TFile( '/data/truggles/'+inputDir+'/mc_Reducible_'+channel+'.root', 'r' )
-            #mcRedT = mcRedF.Get('Ntuple')
             mcFiles = {}
             mcTrees = {}
             for sample in mcSamps :
@@ -410,15 +400,11 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 denomMCRed = {}
                 if not useVariableBinning :
                     hTmp = ROOT.TH1D( 'hTmp', 'hTmp', binInfo[0], binInfo[1], binInfo[2] )
-                    #mcIrr = ROOT.TH1D( 'mcIrr', 'mcIrr', binInfo[0], binInfo[1], binInfo[2] )
-                    #mcRed = ROOT.TH1D( 'mcRed', 'mcRed', binInfo[0], binInfo[1], binInfo[2] )
                     for sample in mcSamps :
                         denomMCPrompt[ sample ] = ROOT.TH1D( sample, sample, binInfo[0], binInfo[1], binInfo[2] )
                         denomMCRed[ sample ] = ROOT.TH1D( sample+'_red', sample+'_red', binInfo[0], binInfo[1], binInfo[2] )
                 else :
                     hTmp = ROOT.TH1D( 'hTmp', 'hTmp', len(xBins)-1, xBins )
-                    #mcIrr = ROOT.TH1D( 'mcIrr', 'mcIrr', len(xBins)-1, xBins )
-                    #mcRed = ROOT.TH1D( 'mcRed', 'mcRed', len(xBins)-1, xBins )
                     for sample in mcSamps :
                         denomMCPrompt[ sample ] = ROOT.TH1D( sample, sample, len(xBins)-1, xBins )
                         denomMCRed[ sample ] = ROOT.TH1D( sample+'_red', sample+'_red', len(xBins)-1, xBins )
@@ -429,9 +415,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                     mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_red', '('+denomCutX+' && '+mcCutRed )
                         
 
-                #print channel, leg, hTmp.Integral()
-                #print "Denom Data: ",hTmp.Integral()," Denom Prompt MC Irr: ",mcIrr.Integral()," Denom Prompt MC Red: ",mcRed.Integral()
                 denomAll.Add( hTmp )
+                denomPlotAll.Add( hTmp )
                 print " -- denomAll Int:",denomAll.Integral()
 
                 print "Denom Data: ",hTmp.Integral()
@@ -446,9 +431,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                     hDenomMCPrompt[ sample ].Add( denomMCPrompt[ sample ] )
                     hDenomMCRed[ sample ].Add( denomMCRed[ sample ] )
 
-                #denomAll.Add( mcIrr * -1. )
-                #denomAll.Add( mcRed * -1. )
-                print " -- denomAll Int MC sub:",denomAll.Integral()
+                #print " -- denomAll Int MC sub:",denomAll.Integral()
                 totalDenomAll += hTmp.Integral()
 
                 # Passing selection
@@ -456,15 +439,11 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 passingMCRed = {}
                 if not useVariableBinning :
                     hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', binInfo[0], binInfo[1], binInfo[2] )
-                    #mcIrrPass = ROOT.TH1D( 'mcIrrPass', 'mcIrrPass', binInfo[0], binInfo[1], binInfo[2] )
-                    #mcRedPass = ROOT.TH1D( 'mcRedPass', 'mcRedPass', binInfo[0], binInfo[1], binInfo[2] )
                     for sample in mcSamps :
                         passingMCPrompt[ sample ] = ROOT.TH1D( sample+'_pass', sample+'_pass', binInfo[0], binInfo[1], binInfo[2] )
                         passingMCRed[ sample ] = ROOT.TH1D( sample+'_passRed', sample+'_passRed', binInfo[0], binInfo[1], binInfo[2] )
                 else :
                     hTmpPass = ROOT.TH1D( 'hTmpPass', 'hTmpPass', len(xBins)-1, xBins )
-                    #mcIrrPass = ROOT.TH1D( 'mcIrrPass', 'mcIrrPass', len(xBins)-1, xBins )
-                    #mcRedPass = ROOT.TH1D( 'mcRedPass', 'mcRedPass', len(xBins)-1, xBins )
                     for sample in mcSamps :
                         passingMCPrompt[ sample ] = ROOT.TH1D( sample+'_pass', sample+'_pass', len(xBins)-1, xBins )
                         passingMCRed[ sample ] = ROOT.TH1D( sample+'_passRed', sample+'_passRed', len(xBins)-1, xBins )
@@ -474,9 +453,9 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                     mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_pass', '('+passCutX+' && '+mcCutPrompt )
                     mcTrees[ sample ].Draw( 'pt_'+str(i+3)+' >> '+sample+'_passRed', '('+passCutX+' && '+mcCutRed )
 
-                #print "Passing Data: ",hTmpPass.Integral()," Passing Prompt MC Irr: ",mcIrrPass.Integral()," Denom Prompt MC Red: ",mcRedPass.Integral()
                 print "Passing Data: ",hTmpPass.Integral()
                 passAll.Add( hTmpPass )
+                passPlotAll.Add( hTmpPass )
                 print " -- passAll Int:",passAll.Integral()
                 for sample in mcSamps :
                     #print "Passing MC ",sample,": ",passingMCPrompt[ sample ].Integral()
@@ -489,11 +468,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                     hPassingMCPrompt[ sample ].Add( passingMCPrompt[ sample ] )
                     hPassingMCRed[ sample ].Add( passingMCRed[ sample ] )
 
-                #passAll.Add( mcIrrPass * -1. )
-                #passAll.Add( mcRedPass * -1. )
                 print " -- passAll Int MC sub:",passAll.Integral()
                 totalPassingAll += hTmpPass.Integral()
-                #del hTmp, mcIrr, mcRed, hTmpPass, mcIrrPass, mcRedPass
                 del hTmp, hTmpPass, denomMCPrompt, passingMCPrompt, denomMCRed, passingMCRed
 
 
@@ -521,8 +497,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         print ' - - Passing (Data - MC total) / Data = %.3f\n' % ((totalPassingAll - promptMCTotalPassing - redMCTotalPassing) / totalPassingAll)
 
 
-        plotDistributions( saveDir, 'lepPtScaledMTLs40_'+obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
-        plotDistributions( saveDir, 'lepPtScaledMTLs40_'+obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
+        plotDistributions( saveDir, 'lepPtScaledMTLs40_'+obj+'_pass', passPlotAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
+        plotDistributions( saveDir, 'lepPtScaledMTLs40_'+obj+'_denom', denomPlotAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
         #plotDistributions( saveDir, obj+'_pass', passAll, mcSamps, hPassingMCPrompt, hPassingMCRed )
         #plotDistributions( saveDir, obj+'_denom', denomAll, mcSamps, hDenomMCPrompt, hDenomMCRed )
 
