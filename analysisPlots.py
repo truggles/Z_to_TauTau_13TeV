@@ -295,13 +295,17 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         # Add channel specific LT_higgs cuts from June Optimization
         if channel in ['eeet','emmt'] :
             additionalCut += '*(LT_higgs > 30)'
+            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
         elif channel in ['eemt','mmmt'] :
             additionalCut += '*(LT_higgs > 40)'
+            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
         elif channel in ['eeem','emmm'] :
             additionalCut += '*(LT_higgs > 20)'
         elif channel in ['eett','mmtt'] :
             additionalCut += '*(LT_higgs > 50)' # > 80 GeV is 10% better than 60,
             #additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
+            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
             # 60 is way more stats
 
         # bJet Veto Tests
@@ -834,14 +838,14 @@ def getHistoDict( analysis, channel ) :
 #####            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
 #####            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
 #####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
-#            'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
 ##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-#            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-#            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
-            'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
-            'LT_higgs' : [150, 0, 150, 10, 'LT_{higgs} [GeV]', ' GeV'],
+            #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
+            'LT_higgs' : [200, 0, 200, 20, 'LT_{higgs} [GeV]', ' GeV'],
 #            'H_PZeta' : [600, -200, 400, 20, 'PZeta_{higgs} [GeV]', ' GeV'],
 #            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
 #            'H_DZeta' : [600, -200, 400, 20, 'DZeta_{higgs} [GeV]', ' GeV'],
