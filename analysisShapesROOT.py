@@ -60,7 +60,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             if 'dataMM' in s : eras.append( s.split('-').pop() )
         samples['ZZ4l'] = 'ZZ'
         for era in eras :
-            samples['RedBkgShape-%s' % era] = 'RedBkg'
+            samples['RedBkgShapeSingleLep-%s' % era] = 'RedBkg'
+            samples['RedBkgShapeDoubleLep-%s' % era] = 'RedBkg'
         if ops['doZH'] : # then remove AZH samples
             for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
                 if 'azh%i' % mass in samples : del samples['azh%i' % mass]

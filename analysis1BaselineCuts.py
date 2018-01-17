@@ -497,6 +497,10 @@ def drawHistos(analysis, samples, **fargs ) :
         if fargs['skipSSQCDDetails'] :
             skipSSQCDDetails = True
 
+    genMapAZH = {
+        'NONJET' : '*(gen_match_3 != 6 && gen_match_4 != 6)',
+        'JETFAKE' : '*(gen_match_3 == 6 || gen_match_4 == 6)',
+    }
     genMap = {
         # sample : em , tt
         'ZTT' : {
@@ -515,8 +519,10 @@ def drawHistos(analysis, samples, **fargs ) :
                 'tt' : '*(gen_match_1 == 5 && gen_match_2 == 5)'},
         'VVJ' : {
                 'tt' : '*(gen_match_1 != 5 || gen_match_2 != 5)'},
-        'RedBkgYield' : {'xxxx' : '*(1.)'},
-        'RedBkgShape' : {'xxxx' : '*(1.)'},
+        'RedBkgYieldSingleLep' : {'xxxx' : '*(1.)'},
+        'RedBkgShapeSingleLep' : {'xxxx' : '*(1.)'},
+        'RedBkgYieldDoubleLep' : {'xxxx' : '*(1.)'},
+        'RedBkgShapeDoubleLep' : {'xxxx' : '*(1.)'},
     }
     channels = fargs['channels']
     ''' Start PROOF multiprocessing Draw '''
@@ -554,13 +560,24 @@ def drawHistos(analysis, samples, **fargs ) :
             genList = ['VVT', 'VVJ']
             loopList = genList
             #loopList.append( sample ) # don't keep full original
-        elif 'data' in sample and doFF :
+        elif 'data' in sample and doFF and analysis == 'htt' :
             loopList.append( sample )
             loopList.append( 'QCD-'+sample.split('-')[1] )
+        elif sample in ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2',
+                'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau',
+                'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ',
+                'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] and analysis == 'azh' :
+            genList = ['NONJET', 'JETFAKE']
+            loopList = genList
+            loopList.append( sample )
+        elif 'dataSingle' in sample and analysis == 'azh' :
+            loopList.append( sample )
+            loopList.append( 'RedBkgYieldSingleLep-'+sample.split('-')[1] )
+            loopList.append( 'RedBkgShapeSingleLep-'+sample.split('-')[1] )
         elif 'data' in sample and analysis == 'azh' :
             loopList.append( sample )
-            loopList.append( 'RedBkgYield-'+sample.split('-')[1] )
-            loopList.append( 'RedBkgShape-'+sample.split('-')[1] )
+            loopList.append( 'RedBkgYieldDoubleLep-'+sample.split('-')[1] )
+            loopList.append( 'RedBkgShapeDoubleLep-'+sample.split('-')[1] )
         else : loopList.append( sample )
 
     
@@ -605,8 +622,12 @@ def drawHistos(analysis, samples, **fargs ) :
                 else : isData = False
                 additionalCut = fargs['additionalCut']
                 if subName != sample and 'RedBkg' not in subName and 'QCD-' not in subName : 
-                    if genMap[subName][channel] == '' : continue
-                    if additionalCut == '' : additionalCut = genMap[subName][channel] 
+                    # Different, simpler genMap for ZH
+                    if analysis == 'azh' and subName in genMapAZH.keys() :
+                        if additionalCut == '' : additionalCut = genMapAZH[subName] 
+                        else : additionalCut += genMapAZH[subName]
+                    elif genMap[subName][channel] == '' : continue
+                    elif additionalCut == '' : additionalCut = genMap[subName][channel] 
                     else : additionalCut += genMap[subName][channel] 
                 #print "AdditionalCuts",additionalCut
 

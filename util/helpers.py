@@ -267,12 +267,18 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
         # Check for reducible bkg samples
         # if RedBkg present, skim DYJ and WZ later
         for era in eras :
-            if 'RedBkgYield-%s' % era in inSamples :
+            if 'RedBkgYieldSingleLep-%s' % era in inSamples :
                 useRedBkg = True
-                samples['RedBkgYield-%s' % era]  = 'RedBkg'
-            if 'RedBkgShape-%s' % era in inSamples :
+                samples['RedBkgYieldSingleLep-%s' % era]  = 'RedBkg'
+            elif 'RedBkgShapeSingleLep-%s' % era in inSamples :
                 useRedBkg = True
-                samples['RedBkgShape-%s' % era]  = 'RedBkg'
+                samples['RedBkgShapeSingleLep-%s' % era]  = 'RedBkg'
+            elif 'RedBkgYieldDoubleLep-%s' % era in inSamples :
+                useRedBkg = True
+                samples['RedBkgYieldDoubleLep-%s' % era]  = 'RedBkg'
+            elif 'RedBkgShapeDoubleLep-%s' % era in inSamples :
+                useRedBkg = True
+                samples['RedBkgShapeDoubleLep-%s' % era]  = 'RedBkg'
         if not useRedBkg :
             redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
             for rb in redBkgList :

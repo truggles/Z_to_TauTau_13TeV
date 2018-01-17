@@ -368,8 +368,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     if len(channel) > 3 : # either AZH or ZH analysis
         from util.applyReducibleBkg import ReducibleBkgWeights
-        zhFRObj = ReducibleBkgWeights( channel, True )
-        zhFRObjNoJetMatch = ReducibleBkgWeights( channel, False )
+        zhFRObj = ReducibleBkgWeights( channel )
 
     #cmssw_base = os.getenv('CMSSW_BASE')
     #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
@@ -1759,19 +1758,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Calculate our ZH fake rate values
                 # This uses the 1+2-0 method detailed in AN2014/109
                 if 'data' in sample :
-                    # If jet matched, use jet matched values, else noJetMatch values
-                    if getattr( row, l3+'Pt' ) < getattr( row, l3+'JetPt' ) \
-                            and getattr( row, l3+'JetDR' ) < 0.5 :
-                        zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
-                    else : # Not jet matched
-                        zhFR1[0] = zhFRObjNoJetMatch.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
+
+                    zhFR1[0] = zhFRObj.getFRWeightL3( pt3, eta3, l3, row ) 
                     if zhFR1[0] < 0. : zhFR1[0] = 0.
 
-                    if getattr( row, l4+'Pt' ) < getattr( row, l4+'JetPt' ) \
-                            and getattr( row, l4+'JetDR' ) < 0.5 :
-                        zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
-                    else : # Not jet matched
-                        zhFR2[0] = zhFRObjNoJetMatch.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
+                    zhFR2[0] = zhFRObj.getFRWeightL4( pt4, eta4, l4, row ) 
                     if zhFR2[0] < 0. : zhFR2[0] = 0.
 
                     zhFR0[0] = zhFR1[0] * zhFR2[0]

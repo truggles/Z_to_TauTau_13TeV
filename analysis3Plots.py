@@ -100,7 +100,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         if higgs in samples : del samples[ higgs ]
 
     for sample in samples :
-        print sample
+        print sample, samples[ sample ][ 'group' ]
 
 
     print "Running over %s samples" % analysis
@@ -168,7 +168,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'rare' : [ROOT.kOrange+7, 'Rare'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
-        'redBkg' : [ROOT.kCyan, 'Reducible Bkg.'],
+        'redBkg' : [ROOT.kCyan, 'Jet Fakes'],
         'higgs' : [ROOT.kRed-4, 'SM HZZ (125)'],
         'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
@@ -575,16 +575,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             # A to Zh stuff
             if analysis == 'azh' :
-                if ops['redBkg'] :
-                    stack.Add( sampHistos['redBkg'] )
-                else :
-                    stack.Add( sampHistos['top'] )
-                    stack.Add( sampHistos['dyj'] )
-                    stack.Add( sampHistos['wz'] )
+                stack.Add( sampHistos['top'] )
+                stack.Add( sampHistos['dyj'] )
+                stack.Add( sampHistos['wz'] )
                 stack.Add( sampHistos['rare'] )
                 stack.Add( sampHistos['ttZ'] )
                 stack.Add( sampHistos['zz'] )
                 stack.Add( sampHistos['higgs'] )
+                if ops['redBkg'] :
+                    stack.Add( sampHistos['redBkg'] )
     
             # Scale signal samples for viewing
             sampHistos[ signal ].Scale( signalSF )
@@ -858,74 +857,100 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             """ Blinding Data """
+            #if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
+            #    if (analysis == 'htt' and ('m_visCor' in var or 'm_sv' in var or 'mt_sv' in var\
+            #             or 'mt_tot' in var) ) : # or\
+            #             #(analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
+            #        if ops['mssm'] :
+            #            targetMass = 170
+            #            targetMassUp = 9999
+            #        elif analysis == 'htt' and 'm_sv' in var :
+            #            targetMassLow = 101
+            #            #if '1jet' in ops['targetDir'] : targetMassLow = 90
+            #            #elif 'vbf' in ops['targetDir'] : targetMassLow = 100
+            #            #elif 'vbf_low' in ops['targetDir'] : targetMassLow = 100
+            #            #elif 'vbf_high' in ops['targetDir'] : targetMassLow = 80
+            #            #else : targetMassLow = 80
+            #            targetMassUp = 149
+            #        elif analysis == 'htt' and 'm_visCor' in var :
+            #            targetMassLow = 81
+            #            targetMassUp = 149
+            #        else :
+            #            targetMassLow = 81
+            #            targetMassUp = 149
+            #        nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+            #        for k in range( 1, nBins+1 ) :
+            #            binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
+            #                    sampHistos['obs'].GetXaxis().GetBinWidth(k)
+            #            binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
+            #            if binHigh>targetMassLow and binLow<=targetMassUp :
+            #                sampHistos['obs'].SetBinContent(k, 0.)
+            #                sampHistos['obs'].SetBinError(k, 0.)
+            #                if ops['ratio'] and not ":" in var :
+            #                    ratioHist.SetBinContent(k, 0.)
+            #                    ratioHist.SetBinError(k, 0.)
+            #    # Do official sensitivity blinding
+            #    zhBlindVars = {
+            #        'LT_higgs' : [71,999],
+            #        'm_sv' : [101,149],
+            #        'H_vis' : [61,109],
+            #        'Mass' : [201,299],
+            #        'A_Mass' : [201,299],
+            #    }
+
+
+            #    if analysis == 'azh' and var in zhBlindVars.keys() :
+            #        #b_criteria = 1.
+            #        targetMassLow = zhBlindVars[var][0]
+            #        targetMassUp = zhBlindVars[var][1]
+            #        nBins = stack.GetStack().Last().GetXaxis().GetNbins()
+            #        for k in range( 1, nBins+1 ) :
+            #            binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
+            #                    sampHistos['obs'].GetXaxis().GetBinWidth(k)
+            #            binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
+            #            if binHigh>targetMassLow and binLow<=targetMassUp :
+            #            #b_tot = stack.GetStack().Last().GetBinContent(k)
+            #            #if b_tot > 0.0 :
+            #            #    criteria = ( (sampHistos[signal].GetBinContent(k)/signalSF) / \
+            #            #            math.sqrt( b_tot + (0.1*b_tot)**2 ) )
+            #            #    print "Bin ",k, "val: ", criteria
+            #            #    if criteria >= b_criteria :
+            #            #        print "Blinded!"
+            #                sampHistos['obs'].SetBinContent(k, 0.)
+            #                sampHistos['obs'].SetBinError(k, 0.)
+            #                if ops['ratio'] and not ":" in var :
+            #                    ratioHist.SetBinContent(k, 0.)
+            #                    ratioHist.SetBinError(k, 0.)
+            #    if ops['ratio'] and not ":" in var : 
+            #        ratioPad.cd()
+            #        ratioHist.Draw('esamex0')
+            #    pad1.cd()
+
             if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
-                if (analysis == 'htt' and ('m_visCor' in var or 'm_sv' in var or 'mt_sv' in var\
-                         or 'mt_tot' in var) ) : # or\
-                         #(analysis=='azh' and ('H_vis' in var or 'Mass' in var) ) :
-                    if ops['mssm'] :
-                        targetMass = 170
-                        targetMassUp = 9999
-                    elif analysis == 'htt' and 'm_sv' in var :
-                        targetMassLow = 101
-                        #if '1jet' in ops['targetDir'] : targetMassLow = 90
-                        #elif 'vbf' in ops['targetDir'] : targetMassLow = 100
-                        #elif 'vbf_low' in ops['targetDir'] : targetMassLow = 100
-                        #elif 'vbf_high' in ops['targetDir'] : targetMassLow = 80
-                        #else : targetMassLow = 80
-                        targetMassUp = 149
-                    elif analysis == 'htt' and 'm_visCor' in var :
-                        targetMassLow = 81
-                        targetMassUp = 149
-                    else :
-                        targetMassLow = 81
-                        targetMassUp = 149
+                blindEpsilon = 0.09
+                if analysis == 'azh' :
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( 1, nBins+1 ) :
-                        binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
-                                sampHistos['obs'].GetXaxis().GetBinWidth(k)
-                        binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
-                        if binHigh>targetMassLow and binLow<=targetMassUp :
+                        # Should take max of SM OR MSSM, FIXME
+                        maxSig = sampHistos['VH'].GetBinContent( k ) + sampHistos['higgs'].GetBinContent( k )
+                        # Get Estimated bkg
+                        totBkg = max(stack.GetStack().Last().GetBinContent( k ), 1.e-30)
+                        # Check if we blind based on HTT 2016  twiki base 
+                        # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
+                        #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
+                        if ( 0.25 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] and not ":" in var :
                                 ratioHist.SetBinContent(k, 0.)
                                 ratioHist.SetBinError(k, 0.)
-                # Do official sensitivity blinding
-                zhBlindVars = {
-                    'LT_higgs' : [71,999],
-                    'm_sv' : [101,149],
-                    'H_vis' : [61,109],
-                    'Mass' : [201,299],
-                    'A_Mass' : [201,299],
-                }
-
-
-                if analysis == 'azh' and var in zhBlindVars.keys() :
-                    #b_criteria = 1.
-                    targetMassLow = zhBlindVars[var][0]
-                    targetMassUp = zhBlindVars[var][1]
-                    nBins = stack.GetStack().Last().GetXaxis().GetNbins()
-                    for k in range( 1, nBins+1 ) :
-                        binHigh = sampHistos['obs'].GetXaxis().GetBinLowEdge(k) + \
-                                sampHistos['obs'].GetXaxis().GetBinWidth(k)
-                        binLow = sampHistos['obs'].GetXaxis().GetBinLowEdge(k)
-                        if binHigh>targetMassLow and binLow<=targetMassUp :
-                        #b_tot = stack.GetStack().Last().GetBinContent(k)
-                        #if b_tot > 0.0 :
-                        #    criteria = ( (sampHistos[signal].GetBinContent(k)/signalSF) / \
-                        #            math.sqrt( b_tot + (0.1*b_tot)**2 ) )
-                        #    print "Bin ",k, "val: ", criteria
-                        #    if criteria >= b_criteria :
-                        #        print "Blinded!"
-                            sampHistos['obs'].SetBinContent(k, 0.)
-                            sampHistos['obs'].SetBinError(k, 0.)
-                            if ops['ratio'] and not ":" in var :
-                                ratioHist.SetBinContent(k, 0.)
-                                ratioHist.SetBinError(k, 0.)
-                if ops['ratio'] and not ":" in var : 
-                    ratioPad.cd()
-                    ratioHist.Draw('esamex0')
-                pad1.cd()
+                    if ops['ratio'] and not ":" in var : 
+                        ratioPad.cd()
+                        ratioHist.Draw('esamex0')
+                    pad1.cd()
+                    sampHistos['obs'].Draw('esamex0')
+            #if not ops['fullBlind'] :
+            #    sampHistos['obs'].Draw('esamex0')
                     
             sampHistos['obs'].Draw('esamex0')
                 
