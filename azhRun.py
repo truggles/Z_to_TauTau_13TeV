@@ -39,7 +39,8 @@ os.chdir('..')
 ''' Preset samples '''
 azhSamples = ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
 
-for mass in [110, 120, 125, 130, 140] :
+#for mass in [110, 120, 125, 130, 140] :
+for mass in [125,] :
     azhSamples.append('ggHtoTauTau%i' % mass)
     azhSamples.append('VBFHtoTauTau%i' % mass)
     azhSamples.append('WMinusHTauTau%i' % mass)
@@ -49,15 +50,17 @@ for mass in [125,] :
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
 
-for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-    azhSamples.append('azh%i' % mass)
-
 #azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataEE-%s' % era)
     azhSamples.append('dataMM-%s' % era)
     azhSamples.append('dataSingleE-%s' % era)
     azhSamples.append('dataSingleM-%s' % era)
+
+#azhSamples = []
+#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+#    azhSamples.append('azh%i' % mass)
+
     
 #azhSamples = ['ZHWW125','HZZ125']
 #azhSamples = ['dataEE-B']
@@ -76,12 +79,12 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 8,
+    'numCores' : 12,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
-    'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
+    #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeee','mmmm'],
-    #'channels' : ['eeem',],
+    #'channels' : ['eett',],
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
@@ -97,22 +100,23 @@ params = {
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true', # Use for initial skim
 
-    ## Signal Sync
-    #'channels' : ['eemt','mmmt','emmt',],
-    #'channels' : ['eeet','eett','eeem','mmtt','emmm',],
+    ### Signal Sync
+    ##'channels' : ['eemt','mmmt','emmt',],
+    ##'channels' : ['eeet','eett','eeem','mmtt','emmm',],
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',], # 8
     ##'channels' : ['mmmt','mmtt'],
     ##'channels' : ['eeet',],
     ##'channels' : ['eeem','eeet',],
     ##'channels' : ['emmt','mmtt','mmmt','emmm'],
     ##'channels' : ['eeet','eeem','mmmt','emmm'],
-    #'channels' : ['mmmt',],
-    #'skimmed' : 'false',
+    ##'channels' : ['mmmt',],
+    ##'skimmed' : 'false',
+    #'skimmed' : 'true',
     #'skimHdfs' : 'false',
-    #'mid1' : '1Sept08ZHSync',
-    #'mid2' : '2Sept08ZHSync',
-    #'mid3' : '3Sept08ZHSync',
-    #'cutMapper' : 'Skim',
+    #'mid1' : '1Jan09NewTrigSync',
+    #'mid2' : '2Jan09NewTrigSync',
+    #'mid3' : '3Jan09NewTrigSync',
+    #'cutMapper' : 'SkimApplyNewTrig',
     ##'cutMapper' : 'SkimNoTrig',
     ##'cutMapper' : 'SkimNoVeto',
 
@@ -143,7 +147,7 @@ makeFinalPlots = True
 doDataCards = True
 
 
-#runPlots = False
+runPlots = False
 #doMerge = False
 #makeFinalPlots = False
 doDataCards = False
@@ -152,11 +156,13 @@ doDataCards = False
 doZH = True
 #doZH = False
 useRedBkg = True
-useRedBkg = False
+#useRedBkg = False
 
 if useRedBkg :
     params['doRedBkg'] = True
 else : params['doRedBkg'] = False
+
+params[ 'debug' ] = 'true'
 
 if runPlots :
     print params
@@ -164,19 +170,40 @@ if runPlots :
     params['additionalCut'] = '*ADD_CHANNEL_SPECIFIC_ISO_CUTS'
     analysis1BaselineCuts.drawHistos( analysis, samples, **params )
 
+samplesY = {}
 if useRedBkg :
     for sample in samples.keys() :
-        if 'data' in sample :
+        if 'dataSingle' in sample :
             era = sample.split('-')[1]
-            samples[ 'RedBkgYield-'+era ] = {'xsec' : 0.0, 'group' : 'redBkgYield'}
-            samples[ 'RedBkgShape-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
-    redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
-    for sample in samples.keys() :
-        if sample in redBkgList :
-            del samples[ sample ]
+            samplesY[ 'RedBkgYieldSingleLep-'+era ] = {'xsec' : 0.0, 'group' : 'redBkgYield'}
+            samplesY[ 'RedBkgShapeSingleLep-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
+            samplesY[ sample ] = copy.deepcopy(samples[ sample ])
+        elif 'data' in sample :
+            era = sample.split('-')[1]
+            samplesY[ 'RedBkgYieldDoubleLep-'+era ] = {'xsec' : 0.0, 'group' : 'redBkgYield'}
+            samplesY[ 'RedBkgShapeDoubleLep-'+era ] = {'xsec' : 0.0, 'group' : 'redBkg'}
+            samplesY[ sample ] = copy.deepcopy(samples[ sample ])
+        elif sample in ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2',
+                'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau',
+                'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ',
+                'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] :
+            samplesY[ sample+'-NONJET' ] = copy.deepcopy(samples[ sample ])
+            #samples[ sample+'-JETFAKE' ] = samples[ sample ]
+        else :
+            samplesY[ sample ] = copy.deepcopy(samples[ sample ])
+    #for sample in samplesY.keys() :
+    #    print sample, samplesY[ sample ]
+        #print sample
+    #redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
+    #for sample in samples.keys() :
+    #    if sample in redBkgList :
+    #        del samples[ sample ]
+else :
+    samplesY = samples
+    samplesY = copy.deepcopy(samples)
 
 ''' merge channels '''
-useMerge = False
+useMerge = True
 merge = []
 if len( params['channels'] ) > 3 :
     if 'eeet' in params['channels'] and 'eemt' in params['channels'] and 'eett' in params['channels'] and 'eeem' in params['channels'] :
@@ -200,36 +227,38 @@ if len( params['channels'] ) > 3 :
 if doMerge :
     if useMerge :        
         if 'ZEE' in merge :
-            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem'], 'ZEE' )
+            mergeChannels( analysis, params['mid3'], [s for s in samplesY.keys()], ['eeet','eett','eemt','eeem'], 'ZEE' )
         if 'ZMM' in merge :
-            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
+            mergeChannels( analysis, params['mid3'], [s for s in samplesY.keys()], ['emmt','mmtt','mmmt','emmm'], 'ZMM' )
         if 'ZXX' in merge :
-            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
+            mergeChannels( analysis, params['mid3'], [s for s in samplesY.keys()], ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], 'ZXX' )
         if 'LLET' in merge :
-            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeet','emmt'], 'LLET' )
+            mergeChannels( analysis, params['mid3'], [s for s in samplesY.keys()], ['eeet','emmt'], 'LLET' )
         if 'LLMT' in merge :
-            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eemt','mmmt'], 'LLMT' )
+            mergeChannels( analysis, params['mid3'], [s for s in samplesY.keys()], ['eemt','mmmt'], 'LLMT' )
         if 'LLTT' in merge :
-            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eett','mmtt'], 'LLTT' )
+            mergeChannels( analysis, params['mid3'], [s for s in samplesY.keys()], ['eett','mmtt'], 'LLTT' )
         if 'LLEM' in merge :
-            mergeChannels( analysis, params['mid3'], [s for s in samples.keys()], ['eeem','emmm'], 'LLEM' )
+            mergeChannels( analysis, params['mid3'], [s for s in samplesY.keys()], ['eeem','emmm'], 'LLEM' )
 
 # Remove WZ sample, we have WZ3l1nu
-if 'WZ' in samples :
-    del samples[ 'WZ' ]
+if 'WZ' in samplesY :
+    del samplesY[ 'WZ' ]
+if 'WZ-NONJET' in samplesY :
+    del samplesY[ 'WZ-NONJET' ]
 
 if makeFinalPlots :
-    samplesX = copy.deepcopy(samples)
+    samplesX = copy.deepcopy(samplesY)
     text=False
-    text=True
+    #text=True
     blind = True
-    #blind = False
+    blind = False
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
     print params
 
     if useRedBkg : # Delete the yield sample from samples, will be loaded
         # in analysis3Plot.py
-        for sample in samplesX :
+        for sample in samplesY :
             if 'RedBkgYield' in sample : del samplesX[ sample ]
 
     ''' Make the final plots
@@ -248,8 +277,8 @@ if doDataCards :
         if 'RedBkgYield' in sample : del samplesX[ sample ]
 
     # don't add eeee or mmmm
-    if 'eeee' in params['channels'] : params['channels'].remove( 'eeee' ) 
-    if 'mmmm' in params['channels'] : params['channels'].remove( 'mmmm' ) 
+    #if 'eeee' in params['channels'] : params['channels'].remove( 'eeee' ) 
+    #if 'mmmm' in params['channels'] : params['channels'].remove( 'mmmm' ) 
 
     ROOT.gROOT.Reset()
     from analysisShapesROOT import makeDataCards
