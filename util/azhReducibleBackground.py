@@ -19,10 +19,17 @@ def scaleTTandWZ( obj, hist ) :
     if 'muon' in obj :
         hist.Scale( 1.-.21 )
 
+def bbbYield( h, name ) :
+    toPrint = name 
+    for b in range( 1, h.GetNbinsX() + 1) :
+        toPrint += " %.2f" % h.GetBinContent( b )
+    print toPrint
 
 
 def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRedHists ) :
     c = ROOT.TCanvas("c","c", 550, 550)
+    fullBlind = True
+    #fullBlind = False
 
     infoMap = {
         'obs' : [ROOT.kBlack, 'Data'],
@@ -51,49 +58,59 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
         mcRedHists[ sample ].SetLineWidth( 1 )
         mcRedHists[ sample ].SetTitle( infoMap[sample][1]+' Fake' )
         mcStack.Add( mcPromptHists[ sample ] )
+        bbbYield( mcPromptHists[ sample ], sample+" Prompt" )
+    for sample in mcSamps :
         mcStack.Add( mcRedHists[ sample ] )
+        bbbYield( mcRedHists[ sample ], sample+" Fake" )
 
-    smlPadSize = .25
-    pads = ratioPlot( c, 1-smlPadSize )
-    pad1 = pads[0]
-    ratioPad = pads[1]
-    ratioPad.SetTopMargin(0.02)
-    ratioPad.SetBottomMargin(0.3)
-    pad1.SetBottomMargin(0.00)
-    ratioPad.SetGridy()
-    ratioHist = dataHist.Clone()
-    ratioHist.Sumw2()
-    #ratioHist.Add( dataHist )
-    ratioHist.Divide( mcStack.GetStack().Last() )
-    ratioHist.SetMaximum( 1.5 )
-    ratioHist.SetMinimum( 0.5 )
-    ratioHist.SetMarkerStyle( 21 )
-    ratioPad.cd()
-    #DATA ratioHist.Draw('ex0')
+    if fullBlind :
+        pad1 = ROOT.TPad('p', 'p', 0, 0, 1, 1)
+        pad1.Draw()
+        for b in range( 1, dataHist.GetNbinsX() + 1) :
+            dataHist.SetBinContent( b, 0 )
+            dataHist.SetBinError( b, 0 )
+    else :
+        bbbYield( dataHist, "Data" )
+        smlPadSize = .25
+        pads = ratioPlot( c, 1-smlPadSize )
+        pad1 = pads[0]
+        pad1.SetBottomMargin(0.00)
+        ratioPad = pads[1]
+        ratioPad.SetTopMargin(0.02)
+        ratioPad.SetBottomMargin(0.3)
+        ratioPad.SetGridy()
+        ratioHist = dataHist.Clone()
+        ratioHist.Divide( mcStack.GetStack().Last() )
+        ratioHist.SetMaximum( 1.5 )
+        ratioHist.SetMinimum( 0.5 )
+        ratioHist.SetMarkerStyle( 21 )
+        ratioPad.cd()
+        ratioHist.Draw('ex0')
 
-    # X Axis!
-    ratioHist.GetXaxis().SetTitle( dataHist.GetXaxis().GetTitle() )
-    ratioHist.GetYaxis().SetTitle("Data / MC")
-    ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
-    ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
-    ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
-    ratioHist.GetYaxis().SetNdivisions( 5, True )
-    ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
-    ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
+        # X Axis!
+        ratioHist.GetXaxis().SetTitle( dataHist.GetXaxis().GetTitle() )
+        ratioHist.GetYaxis().SetTitle("Data / MC")
+        ratioHist.GetYaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( (1-smlPadSize)/smlPadSize) )
+        ratioHist.GetYaxis().SetTitleOffset( smlPadSize*1.5 )
+        ratioHist.GetYaxis().SetLabelSize( ratioHist.GetYaxis().GetLabelSize()*( 1/smlPadSize) )
+        ratioHist.GetYaxis().SetNdivisions( 5, True )
+        ratioHist.GetXaxis().SetLabelSize( ratioHist.GetXaxis().GetLabelSize()*( 1/smlPadSize) )
+        ratioHist.GetXaxis().SetTitleSize( ratioHist.GetXaxis().GetTitleSize()*( 1/smlPadSize) )
+        ratioHist.Draw('ex0')
 
     pad1.cd()
 
-    #DATA dataHist.Draw('ex0')
+    dataHist.Draw('ex0')
     dataHist.SetMinimum( 1 )
-    #DATA mcStack.Draw('hist same')
-    mcStack.Draw('hist') #DATA
+    mcStack.Draw('hist same')
     #dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 1.3 )
-    dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 2. )
+    dataHist.SetMaximum( max( dataHist.GetMaximum(), mcStack.GetStack().Last().GetMaximum() ) * 2.2 )
 
     legend = ROOT.TLegend(0.65, 0.5, 0.95, 0.93)
     legend.SetMargin(0.3)
     legend.SetBorderSize(0)
-    #DATA legend.AddEntry( dataHist, "Data", 'lep')
+    if not fullBlind :
+        legend.AddEntry( dataHist, "Data", 'lep')
     for j in range(0, mcStack.GetStack().GetLast() + 1) :
         last = mcStack.GetStack().GetLast()
         name_str = mcStack.GetStack()[last - j ].GetTitle()
@@ -139,7 +156,8 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
     lumi.SetTextSize(0.035)
     lumi.DrawTextNDC(.7,.96,"%.1f / fb (13 TeV)" % cmsLumi )
 
-    #DATA dataHist.Draw('esamex0')
+    if not fullBlind :
+        dataHist.Draw('esamex0')
     c.SaveAs( saveDir+'/'+saveName+'.png' )
     c.SaveAs( saveDir+'/'+saveName+'.pdf' )
     
@@ -181,19 +199,19 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
-#        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-##        'tau-lltt' : ['eett', 'mmtt'],
-        'tau-DM0_lltt' : ['eett', 'mmtt'],
-        'tau-DM1_lltt' : ['eett', 'mmtt'],
-        'tau-DM10_lltt' : ['eett', 'mmtt'],
-#        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-###        'electron' : ['eeet', 'emmt','eeem','emmm'],
+##        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+#        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+###        'tau-lltt' : ['eett', 'mmtt'],
+#        'tau-DM0_lltt' : ['eett', 'mmtt'],
+#        'tau-DM1_lltt' : ['eett', 'mmtt'],
+#        'tau-DM10_lltt' : ['eett', 'mmtt'],
+##        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+#        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+#        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+#        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+####        'electron' : ['eeet', 'emmt','eeem','emmm'],
         'electron' : ['eeet', 'emmt'],
         'muon' : ['eemt', 'mmmt'],
     }
@@ -230,7 +248,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     xAxis = 'Lepton p_{T} [GeV]'
     #xAxis = 'M_{T}( MET, Lepton) [GeV]'
     app = 'leptonPt'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan16_mcSub_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan22_mcSub_OS_'+app
     checkDir( saveDir )
 
     #c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -686,14 +704,14 @@ if '__main__' in __name__ :
         'numFilesPerCycle' : 1,
         'channels' : ['eeet','eett','eemt','emmt','mmtt','mmmt',], # no eeem or mmme
         #'channels' : ['eeem','emmm',],
-        'cutMapper' : 'RedBkg',
-        'mid1' : '1Jan09rb',
-        'mid2' : '2Jan09rb',
-        'mid3' : '3Jan09rb',
-        #'cutMapper' : 'SignalRegion',
-        #'mid1' : '1Jan13rbOS',
-        #'mid2' : '2Jan13rbOS',
-        #'mid3' : '3Jan13rbOS',
+        #SS 'cutMapper' : 'RedBkg',
+        #SS 'mid1' : '1Jan09rb',
+        #SS 'mid2' : '2Jan09rb',
+        #SS 'mid3' : '3Jan09rb',
+        'cutMapper' : 'SignalRegion',
+        'mid1' : '1Jan13rbOS',
+        'mid2' : '2Jan13rbOS',
+        'mid3' : '3Jan13rbOS',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',
