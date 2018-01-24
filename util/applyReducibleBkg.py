@@ -44,14 +44,14 @@ class ReducibleBkgWeights :
         # Set Leg4 FR graphs
         if self.channel in ['eeet','emmt','eemt','mmmt',] :
             # DM0
-            self.frGraphAllEtaL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphAllEtaL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitAllEtaL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_fit' )
             # DM1
-            self.frGraphAllEtaL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphAllEtaL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitAllEtaL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_fit' )
             # DM10
-            self.frGraphAllEtaL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
+            self.frGraphAllEtaL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_graph' )
+            self.frFitAllEtaL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_fit' )
         elif self.channel in ['eett','mmtt',] :
             # DM0
             self.frGraphAllEtaL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
