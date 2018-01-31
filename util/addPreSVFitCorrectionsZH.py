@@ -5,14 +5,52 @@ import ROOT
 from ROOT import TMath
 import os, glob, subprocess
 import multiprocessing
-from util.helpers import getProdMap
 from array import array
 
+# Because we run this in the svFit area we need the function locally defined
+def getProdMap() :
+    prodMap = {
+        'em' : ('e', 'm'),
+        'et' : ('e', 't'),
+        'mt' : ('m', 't'),
+        'tt' : ('t1', 't2'),
+        'eeem' : ('e1', 'e2', 'e3', 'm'),
+        'eeet' : ('e1', 'e2', 'e3', 't'),
+        'eemt' : ('e1', 'e2', 'm', 't'),
+        'eett' : ('e1', 'e2', 't1', 't2'),
+        'emmm' : ('m1', 'm2', 'e', 'm3'),
+        'emmt' : ('m1', 'm2', 'e', 't'),
+        'mmmt' : ('m1', 'm2', 'm3', 't'),
+        'mmtt' : ('m1', 'm2', 't1', 't2'),
+        'eeee' : ('e1', 'e2', 'e3', 'e4'),
+        'eemm' : ('e1', 'e2', 'm1', 'm2'),
+        'mmmm' : ('m1', 'm2', 'm3', 'm4'),
+    }
+    return prodMap
 
 # Check if directory exists, make it if not
 def checkDir( dirName ) :
     if not os.path.exists( dirName ) : os.makedirs( dirName )
 
+def adjustMet(met, metPhi, dx3, dy3, dx4, dy4 ) :
+    # MET in x and y
+    met_x = met * TMath.Cos(metPhi)
+    met_y = met * TMath.Sin(metPhi)
+    #print row.evt, row.lumi
+    #print "Met x, y",met_x,met_y
+
+    # adjusted met x and y
+    met_x = met_x - dx3 - dx4
+    met_y = met_y - dy3 - dy4
+    #print "shifted MET x,y",met_x,met_y
+    
+    # shifted MET and METPhi
+    #print "Initial MET",met,metPhi
+    shiftedMET = TMath.Sqrt( met_x*met_x + met_y*met_y)
+    shiftedMETPhi = TMath.ATan2( met_y, met_x )
+    #print "Final MET",shiftedMET,shiftedMETPhi
+    #print "\n"
+    return shiftedMET, shiftedMETPhi
 
 def correctTauPt( lep, pt, gen_match, decay_mode ) :
     # if E or Mu return origianal pT
@@ -34,7 +72,7 @@ def correctTauPt( lep, pt, gen_match, decay_mode ) :
 
     return pt
 
-def mergeSample( sample, channel, ttreePath, inDir ) :
+def correctTausInTree( sample, channel, ttreePath, inDir ) :
     files = glob.glob(inDir+'/%s_*_%s.root' % (sample, channel) )
     checkDir( inDir )
     for file in files :
@@ -44,7 +82,7 @@ def mergeSample( sample, channel, ttreePath, inDir ) :
     # this is useful for all the many signal masses
     if len(files) == 0 : 
         print "\n\n"
-        print "No files of samples %s found in dir %s" % (sample, inDir)
+        print "No files of samples %s found in dir %s for channel %s" % (sample, inDir, channel)
         print "\n\n"
         return
 
@@ -73,10 +111,29 @@ def mergeSample( sample, channel, ttreePath, inDir ) :
         shiftedPt_3B = updateTree.Branch('shiftedPt_3', shiftedPt_3, 'shiftedPt_3/F')
         shiftedPt_4 = array('f', [ 0 ] )
         shiftedPt_4B = updateTree.Branch('shiftedPt_4', shiftedPt_4, 'shiftedPt_4/F')
+        # Nominal
         shiftedMET = array('f', [ 0 ] )
         shiftedMETB = updateTree.Branch('shiftedMET', shiftedMET, 'shiftedMET/F')
         shiftedMETPhi = array('f', [ 0 ] )
         shiftedMETPhiB = updateTree.Branch('shiftedMETPhi', shiftedMETPhi, 'shiftedMETPhi/F')
+        # Unclustered EN
+        shiftedUncMETUp = array('f', [ 0 ] )
+        shiftedUncMETUpB = updateTree.Branch('shiftedUncMETUp', shiftedUncMETUp, 'shiftedUncMETUp/F')
+        shiftedUncMETPhiUp = array('f', [ 0 ] )
+        shiftedUncMETPhiUpB = updateTree.Branch('shiftedUncMETPhiUp', shiftedUncMETPhiUp, 'shiftedUncMETPhiUp/F')
+        shiftedUncMETDown = array('f', [ 0 ] )
+        shiftedUncMETDownB = updateTree.Branch('shiftedUncMETDown', shiftedUncMETDown, 'shiftedUncMETDown/F')
+        shiftedUncMETPhiDown = array('f', [ 0 ] )
+        shiftedUncMETPhiDownB = updateTree.Branch('shiftedUncMETPhiDown', shiftedUncMETPhiDown, 'shiftedUncMETPhiDown/F')
+        # Clustered EN
+        shiftedClustMETUp = array('f', [ 0 ] )
+        shiftedClustMETUpB = updateTree.Branch('shiftedClustMETUp', shiftedClustMETUp, 'shiftedClustMETUp/F')
+        shiftedClustMETPhiUp = array('f', [ 0 ] )
+        shiftedClustMETPhiUpB = updateTree.Branch('shiftedClustMETPhiUp', shiftedClustMETPhiUp, 'shiftedClustMETPhiUp/F')
+        shiftedClustMETDown = array('f', [ 0 ] )
+        shiftedClustMETDownB = updateTree.Branch('shiftedClustMETDown', shiftedClustMETDown, 'shiftedClustMETDown/F')
+        shiftedClustMETPhiDown = array('f', [ 0 ] )
+        shiftedClustMETPhiDownB = updateTree.Branch('shiftedClustMETPhiDown', shiftedClustMETPhiDown, 'shiftedClustMETPhiDown/F')
 
         size = updateTree.GetEntries()
         print size,"   ",file_
@@ -94,28 +151,51 @@ def mergeSample( sample, channel, ttreePath, inDir ) :
             shiftedPt_4[0] = l4pt
             shiftedMET[0] = getattr( row, 'type1_pfMetEt' )
             shiftedMETPhi[0] = getattr( row, 'type1_pfMetPhi' )
+            shiftedUncMETUp[0] = getattr( row, 'type1_pfMet_shiftedPt_UnclusteredEnUp' )
+            shiftedUncMETPhiUp[0] = getattr( row, 'type1_pfMet_shiftedPhi_UnclusteredEnUp' )
+            shiftedUncMETDown[0] = getattr( row, 'type1_pfMet_shiftedPt_UnclusteredEnDown' )
+            shiftedUncMETPhiDown[0] = getattr( row, 'type1_pfMet_shiftedPhi_UnclusteredEnDown' )
+            shiftedClustMETUp[0] = getattr( row, 'type1_pfMet_shiftedPt_JetEnUp' )
+            shiftedClustMETPhiUp[0] = getattr( row, 'type1_pfMet_shiftedPhi_JetEnUp' )
+            shiftedClustMETDown[0] = getattr( row, 'type1_pfMet_shiftedPt_JetEnDown' )
+            shiftedClustMETPhiDown[0] = getattr( row, 'type1_pfMet_shiftedPhi_JetEnDown' )
 
+
+
+            # Don't even check this for data
+            if 'data' in sample :
+                shiftedPt_3B.Fill()
+                shiftedPt_4B.Fill()
+                shiftedMETB.Fill()
+                shiftedMETPhiB.Fill()
+                shiftedUncMETUpB.Fill()
+                shiftedUncMETPhiUpB.Fill()
+                shiftedUncMETDownB.Fill()
+                shiftedUncMETPhiDownB.Fill()
+                shiftedClustMETUpB.Fill()
+                shiftedClustMETPhiUpB.Fill()
+                shiftedClustMETDownB.Fill()
+                shiftedClustMETPhiDownB.Fill()
+                continue
+
+            # only MC at this point
             l3Shifted = False
             if 't' in l3 and getattr( row, '%sZTTGenMatching' % l3 ) != 6 :
                 #print "l3Pt:        ", l3pt," DM: ",getattr( row, '%sDecayMode' % l3 )," gen_match: ",getattr( row, '%sZTTGenMatching' % l3 )
                 #print " -- corr pt: ", correctTauPt( l3, l3pt, getattr( row, '%sZTTGenMatching' % l3 ), getattr( row, '%sDecayMode' % l3 ) )
                 shiftedPt_3[0] = correctTauPt( l3, l3pt, getattr( row, '%sZTTGenMatching' % l3 ), getattr( row, '%sDecayMode' % l3 ) )
-                l3Shifted = True
+                if shiftedPt_3[0] != l3pt :
+                    l3Shifted = True
             l4Shifted = False
             if 't' in l4 and getattr( row, '%sZTTGenMatching' % l4 ) != 6 :
                 #print "l4Pt:        ", l4pt," DM: ",getattr( row, '%sDecayMode' % l4 )," gen_match: ",getattr( row, '%sZTTGenMatching' % l4 )
                 #print " -- corr pt: ", correctTauPt( l4, l4pt, getattr( row, '%sZTTGenMatching' % l4 ), getattr( row, '%sDecayMode' % l4 ) )
                 shiftedPt_4[0] = correctTauPt( l4, l4pt, getattr( row, '%sZTTGenMatching' % l4 ), getattr( row, '%sDecayMode' % l4 ) )
-                l4Shifted = True
+                if shiftedPt_4[0] != l4pt :
+                    l4Shifted = True
 
             # only recompute if there were shifts applied
             if l3Shifted or l4Shifted :
-                # MET in x and y
-                met_x = shiftedMET[0] * TMath.Cos(shiftedMETPhi[0])
-                met_y = shiftedMET[0] * TMath.Sin(shiftedMETPhi[0])
-                #print row.evt, row.lumi
-                #print "Met x, y",met_x,met_y
-
                 # delta x, y shifts from corrections
                 dx3 = TMath.Cos( l3phi ) * (shiftedPt_3[0] - l3pt)
                 dy3 = TMath.Sin( l3phi ) * (shiftedPt_3[0] - l3pt)
@@ -123,24 +203,25 @@ def mergeSample( sample, channel, ttreePath, inDir ) :
                 dy4 = TMath.Sin( l4phi ) * (shiftedPt_4[0] - l4pt)
                 #print "dx3,dy3,dx4,dy4",dx3,dy3,dx4,dy4
                 
-                # adjusted met x and y
-                met_x = met_x - dx3 - dx4
-                met_y = met_y - dy3 - dy4
-                #print "shifted MET x,y",met_x,met_y
-                
-                # shifted MET and METPhi
-                #print "Initial MET",shiftedMET[0],shiftedMETPhi[0]
-                shiftedMET[0] = TMath.Sqrt( met_x*met_x + met_y*met_y)
-                shiftedMETPhi[0] = TMath.ATan2( met_y, met_x )
-                #print "Final MET",shiftedMET[0],shiftedMETPhi[0]
-                #print "\n"
-
+                shiftedMET[0], shiftedMETPhi[0] = adjustMet(shiftedMET[0], shiftedMETPhi[0], dx3, dy3, dx4, dy4 )
+                shiftedUncMETUp[0], shiftedUncMETPhiUp[0] = adjustMet(shiftedUncMETUp[0], shiftedUncMETPhiUp[0], dx3, dy3, dx4, dy4 )
+                shiftedUncMETDown[0], shiftedUncMETPhiDown[0] = adjustMet(shiftedUncMETDown[0], shiftedUncMETPhiDown[0], dx3, dy3, dx4, dy4 )
+                shiftedClustMETUp[0], shiftedClustMETPhiUp[0] = adjustMet(shiftedClustMETUp[0], shiftedClustMETPhiUp[0], dx3, dy3, dx4, dy4 )
+                shiftedClustMETDown[0], shiftedClustMETPhiDown[0] = adjustMet(shiftedClustMETDown[0], shiftedClustMETPhiDown[0], dx3, dy3, dx4, dy4 )
 
 
             shiftedPt_3B.Fill()
             shiftedPt_4B.Fill()
             shiftedMETB.Fill()
             shiftedMETPhiB.Fill()
+            shiftedUncMETUpB.Fill()
+            shiftedUncMETPhiUpB.Fill()
+            shiftedUncMETDownB.Fill()
+            shiftedUncMETPhiDownB.Fill()
+            shiftedClustMETUpB.Fill()
+            shiftedClustMETPhiUpB.Fill()
+            shiftedClustMETDownB.Fill()
+            shiftedClustMETPhiDownB.Fill()
 
 
         iDir.cd()
@@ -150,7 +231,7 @@ def mergeSample( sample, channel, ttreePath, inDir ) :
 
 if __name__ == '__main__' :
     ''' Start multiprocessing tests '''
-    pool = multiprocessing.Pool(processes = 12 )
+    pool = multiprocessing.Pool(processes = 7 )
     #pool = multiprocessing.Pool(processes = 1 )
     multiprocessingOutputs = []
     debug = False
@@ -186,21 +267,23 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleE-%s' % era)
             azhSamples.append('dataSingleM-%s' % era)
 
-        azhSamples = ['DYJets4',]
+        #azhSamples = ['DYJets1',]
 
-        name = 'svFitTmp'
-        inDir = '/data/truggles/'+name+'/'
+        name = 'azhJan26EnergyScales'
+        inDir = '/nfs_scratch/truggles/'+name+'_svFitPrep/'
+        #name = 'svFitTmp'
+        #inDir = '/data/truggles/'+name+'/'
         checkDir( inDir )
         jobId = ''
-        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',] # 8
-        channels = ['mmtt',]#'eett','eemt','eeem','emmt','mmtt','mmmt','emmm',] # 8
+        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 10
+        #channels = ['mmtt',] # 10
         for channel in channels :
             ttreePath = channel+'/final/Ntuple'
             for sample in azhSamples :
                 if debug:
-                    mergeSample( sample, channel, ttreePath, inDir )
+                    correctTausInTree( sample, channel, ttreePath, inDir )
                 else :
-                    multiprocessingOutputs.append( pool.apply_async(mergeSample, args=(
+                    multiprocessingOutputs.append( pool.apply_async(correctTausInTree, args=(
                         sample,
                         channel,
                         ttreePath,
