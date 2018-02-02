@@ -13,11 +13,14 @@ from util.ratioPlot import ratioPlot
 
 
 
-def scaleTTandWZ( obj, hist ) :
+def scaleTTandWZ( obj, hist, shift=0.0 ) :
     if 'electron' in obj :
-        hist.Scale( 1.-.17 )
+        hist.Scale( 1.-.17+shift )
     if 'muon' in obj :
-        hist.Scale( 1.-.21 )
+        hist.Scale( 1.-.21+shift )
+    if 'tau' in obj :
+        hist.Scale( 1.+shift )
+
 
 def bbbYield( h, name ) :
     toPrint = name 
@@ -29,7 +32,7 @@ def bbbYield( h, name ) :
 def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRedHists ) :
     c = ROOT.TCanvas("c","c", 550, 550)
     fullBlind = True
-    #fullBlind = False
+    fullBlind = False
 
     infoMap = {
         'obs' : [ROOT.kBlack, 'Data'],
@@ -168,6 +171,7 @@ def plotDistributions( saveDir, saveName, dataHist, mcSamps, mcPromptHists, mcRe
 
 
 def buildRedBkgFakeFunctions( inSamples, **params ) :
+    from util.helpers import getTH1FfromTGraphAsymmErrors
     analysis = 'azh'
     params['doRedBkg'] = True
     params['mid1'] = params['mid1']+'RedBkg'
@@ -204,13 +208,13 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
 #        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 #        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
 ###        'tau-lltt' : ['eett', 'mmtt'],
-#        'tau-DM0_lltt' : ['eett', 'mmtt'],
-#        'tau-DM1_lltt' : ['eett', 'mmtt'],
-#        'tau-DM10_lltt' : ['eett', 'mmtt'],
+        'tau-DM0_lltt' : ['eett', 'mmtt'],
+        'tau-DM1_lltt' : ['eett', 'mmtt'],
+        'tau-DM10_lltt' : ['eett', 'mmtt'],
 ##        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-#        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-#        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
-#        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+        'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+        'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+        'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
 ####        'electron' : ['eeet', 'emmt','eeem','emmm'],
         'electron' : ['eeet', 'emmt'],
         'muon' : ['eemt', 'mmmt'],
@@ -225,15 +229,18 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
 
     # Save fits to out file
     outFile = ROOT.TFile('data/azhFakeRateFits.root', 'RECREATE')
+    print "Output file: ",outFile
     for name, info in fakeRateMap.iteritems() :
-        func = info[0]
-        func.SetName( name+'_fit' )
-        func.SetTitle( 'Fake Rate Fit: '+name )
-        func.Write()
+        #func = info[0]
+        #func.SetName( name+'_fit' )
+        #func.SetTitle( 'Fake Rate Fit: '+name )
+        #func.Write()
         graph = info[1]
         graph.SetName( name+'_graph' )
-        graph.SetTitle( 'Fake Rate Fit: '+name )
+        graph.SetTitle( 'Fake Rate Graph: '+name )
         graph.Write()
+        hist = getTH1FfromTGraphAsymmErrors( graph, name+'_hist' )
+        hist.Write()
     outFile.Close()
 
 
@@ -248,7 +255,7 @@ def doRedBkgPlots( obj, channels, inputDir ) :
     xAxis = 'Lepton p_{T} [GeV]'
     #xAxis = 'M_{T}( MET, Lepton) [GeV]'
     app = 'leptonPt'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Jan22_mcSub_OS_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Feb01_mcSub_SS_'+app
     checkDir( saveDir )
 
     #c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -454,11 +461,14 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 #DATA print " -- denomAll Int:",denomAll.Integral()
 
                 #DATA print "Denom Data: ",hTmp.Integral()
+                #promptMC shift
+                shift = 0.0
+                #shift = +0.2
                 for sample in mcSamps :
                     #print "Denom MC ",sample,": ",denomMCPrompt[ sample ].Integral()
                     if sample in ['TT','WZ3l1nu'] :
-                        scaleTTandWZ( obj, denomMCPrompt[ sample ] )
-                        scaleTTandWZ( obj, denomMCRed[ sample ] )
+                        scaleTTandWZ( obj, denomMCPrompt[ sample ], shift )
+                        scaleTTandWZ( obj, denomMCRed[ sample ], shift )
                     denomAll.Add( denomMCPrompt[ sample ] * -1. )
                     mcDenomPromptTots[ sample ] += denomMCPrompt[ sample ].Integral()
                     mcDenomRedTots[ sample ] += denomMCRed[ sample ].Integral()
@@ -494,8 +504,8 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 for sample in mcSamps :
                     #print "Passing MC ",sample,": ",passingMCPrompt[ sample ].Integral()
                     if sample in ['TT','WZ3l1nu'] :
-                        scaleTTandWZ( obj, passingMCPrompt[ sample ] )
-                        scaleTTandWZ( obj, passingMCRed[ sample ] )
+                        scaleTTandWZ( obj, passingMCPrompt[ sample ], shift )
+                        scaleTTandWZ( obj, passingMCRed[ sample ], shift )
                     passAll.Add( passingMCPrompt[ sample ] * -1. )
                     mcPassingPromptTots[ sample ] += passingMCPrompt[ sample ].Integral()
                     mcPassingRedTots[ sample ] += passingMCRed[ sample ].Integral()
@@ -583,10 +593,21 @@ def doRedBkgPlots( obj, channels, inputDir ) :
                 graph.SetMaximum( .5 )
             graph.SetMinimum( 0 )
 
+        # Check if graph points are below y = 0
+        # Set their value to zero and keep their error
+        x = ROOT.Double(0)
+        y = ROOT.Double(0)
+        y_zero = ROOT.Double(0)
+        for point in range( graph.GetN() ) :
+            graph.GetPoint( point, x, y )
+            if y < 0.0 :
+                graph.SetPoint( point, x, y_zero )
+
+
         graph.Draw("AP")
 
         # do fit
-        doFit = True
+        doFit = False
         useExp = True
         useExp = False
         # Set fit min for different objects
@@ -635,11 +656,11 @@ def doRedBkgPlots( obj, channels, inputDir ) :
             graph.Fit('f1', 'SR' )
             #graph.Fit('f1', 'SRN' ) # N skips drawing
 
-        if useExp :
-            f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
-        else :
-            f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
-            f2 = ROOT.TF1( 'f2', '([0] + [1]*x)', fitMin, binInfo[2])
+            if useExp :
+                f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+            else :
+                f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+                f2 = ROOT.TF1( 'f2', '([0] + [1]*x)', fitMin, binInfo[2])
         if doFit :
             #f2.SetParameter( 3, f1.GetParameter( 3 ) )
             f2.SetParameter( 0, f1.GetParameter( 0 ) )
@@ -653,11 +674,14 @@ def doRedBkgPlots( obj, channels, inputDir ) :
         ROOT.gStyle.SetStatW(.2)
         setText( "Fake Rate: %s %s" % (obj, etaRegion), cmsLumi )
         c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.png' )
-        #c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.pdf' )
+        c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.pdf' )
         pad1.SetLogy(0)
 
         # Add FR fit to map
-        frMap[obj+'_'+etaRegion] = [f2, graph]
+        if doFit :
+            frMap[obj+'_'+etaRegion] = [f2, graph]
+        else :
+            frMap[obj+'_'+etaRegion] = [None, graph]
 
         del mcDenomPromptTots, mcDenomRedTots, mcPassingPromptTots, mcPassingRedTots
         for sample in mcSamps :
@@ -704,14 +728,14 @@ if '__main__' in __name__ :
         'numFilesPerCycle' : 1,
         'channels' : ['eeet','eett','eemt','emmt','mmtt','mmmt',], # no eeem or mmme
         #'channels' : ['eeem','emmm',],
-        #SS 'cutMapper' : 'RedBkg',
-        #SS 'mid1' : '1Jan09rb',
-        #SS 'mid2' : '2Jan09rb',
-        #SS 'mid3' : '3Jan09rb',
-        'cutMapper' : 'SignalRegion',
-        'mid1' : '1Jan13rbOS',
-        'mid2' : '2Jan13rbOS',
-        'mid3' : '3Jan13rbOS',
+        'cutMapper' : 'RedBkg',
+        'mid1' : '1Jan09rb',
+        'mid2' : '2Jan09rb',
+        'mid3' : '3Jan09rb',
+        #OS 'cutMapper' : 'SignalRegion',
+        #OS 'mid1' : '1Jan13rbOS',
+        #OS 'mid2' : '2Jan13rbOS',
+        #OS 'mid3' : '3Jan13rbOS',
         'additionalCut' : '',
         'svFitPost' : 'false',
         'svFitPrep' : 'false',

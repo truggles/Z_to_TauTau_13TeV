@@ -2,6 +2,7 @@ import os, glob, subprocess
 import ROOT
 from collections import OrderedDict
 from array import array
+from math import sqrt
 
 
 # Check if directory exists, make it if not
@@ -15,17 +16,24 @@ def getTH1FfromTGraphAsymmErrors( asym, name ) :
     # Holding vals for TH1F binning and y-vals
     xSpacing = array( 'd', [] )
     yVals = array( 'd', [] )
+    yErrors = array( 'd', [] )
 
     nVals = asym.GetN()
     x, y = ROOT.Double(0.), ROOT.Double(0.)
     xEPlus, xEMin = 0., 0.
+    yEPlus, yEMin = 0., 0.
 
     for n in range( nVals ) :
         asym.GetPoint( n, x, y )
         xEPlus = asym.GetErrorXhigh( n )
         xEMin = asym.GetErrorXlow( n )
+        yEPlus = asym.GetErrorYhigh( n )
+        yEMin = asym.GetErrorYlow( n )
         xSpacing.append( x-xEMin )
         yVals.append( y )
+        # To simplify, take asymm errors and got to Gaussian
+        # for TH1
+        yErrors.append( sqrt(yEPlus**2 + yEMin**2) )
 
     # Don't forget to add the high end of last bin
     xSpacing.append( x+xEPlus )
@@ -36,6 +44,7 @@ def getTH1FfromTGraphAsymmErrors( asym, name ) :
     outH = ROOT.TH1F( name, name, len(xSpacing)-1, xSpacing )
     for bin in range( 1, outH.GetNbinsX()+1 ) :
         outH.SetBinContent( bin, yVals[bin-1] )
+        outH.SetBinError( bin, yErrors[bin-1] )
     return outH
 
 
