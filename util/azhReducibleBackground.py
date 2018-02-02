@@ -42,15 +42,15 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Next try without drawHistos
     # Red Bkg Obj : Channels providing stats
     redBkgMap = {
-        'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
-        'tau-lltt' : ['eett', 'mmtt'],
+        #'tau' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        #'tau-DM0' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        #'tau-DM1' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        #'tau-DM10' : ['eeet', 'eett', 'eemt', 'emmt', 'mmtt', 'mmmt'],
+        #'tau-lltt' : ['eett', 'mmtt'],
         'tau-DM0_lltt' : ['eett', 'mmtt'],
         'tau-DM1_lltt' : ['eett', 'mmtt'],
         'tau-DM10_lltt' : ['eett', 'mmtt'],
-        'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
+        #'tau-lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
         'tau-DM0_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
         'tau-DM1_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
         'tau-DM10_lllt' : ['eeet', 'eemt', 'emmt', 'mmmt'],
@@ -71,10 +71,10 @@ def buildRedBkgFakeFunctions( inSamples, **params ) :
     # Save fits to out file
     outFile = ROOT.TFile('data/azhFakeRateFits.root', 'RECREATE')
     for name, info in fakeRateMap.iteritems() :
-        func = info[0]
-        func.SetName( name+'_fit' )
-        func.SetTitle( 'Fake Rate Fit: '+name )
-        func.Write()
+        #func = info[0]
+        #func.SetName( name+'_fit' )
+        #func.SetTitle( 'Fake Rate Fit: '+name )
+        #func.Write()
         graph = info[1]
         graph.SetName( name+'_graph' )
         graph.SetTitle( 'Fake Rate Fit: '+name )
@@ -102,7 +102,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
     xAxis = 'Lepton p_{T} [GeV]'
     jetCut = '(1.)'
     app = 'leptonPt'
-    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Dec01v1_ALLMC_mcRates_genFakes_noBJets_'+app
+    saveDir = '/afs/cern.ch/user/t/truggles/www/azhRedBkg/Feb02v2_ALLMC_mcRates_genFakes_noBJets_'+app
     checkDir( saveDir )
 
     c1 = ROOT.TCanvas("c1","c1", 550, 550)
@@ -112,7 +112,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
 
     yAxis2 = 'Fake Rate'
-    binInfo = [80, 0, 140]
+    binInfo = [80, 0, 100]
     #if 'electron' in obj :
     #    binInfo = [80, 0, 200]
     yAxis1 = 'Events / %i GeV' % ( (binInfo[2] - binInfo[1]) / binInfo[0] )
@@ -173,8 +173,8 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                     xBins.append( i )
             #for i in range( 120, 150, 30) :
             #    xBins.append( i )
-        for i in range( 100, 141, 40) :
-            xBins.append( i )
+        #for i in range( 100, 141, 40) :
+        #    xBins.append( i )
         print xBins
         binInfo = ['x', xBins[0], xBins[-1]]
         yAxis1 = 'Events'
@@ -206,7 +206,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
             'pass' : ['byMediumIsolationMVArun2v1DBoldDMwLT_Num > 0.5',],
         },
         'electron' : {
-            'denom' : ['pfmt_3 < 30', 'gen_match_3 == 6',], # to suppress real leptons from WZ and ZZ
+            'denom' : ['pfmt_3 < 40', 'gen_match_3 == 6',], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30', 'bjetCISVVeto20MediumZTT == 0'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30','id_e_mva_nt_loose_Num > 0.5'], # to suppress real leptons from WZ and ZZ
@@ -214,7 +214,7 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         },
         'muon' : {
-            'denom' : ['pfmt_3 < 30', 'gen_match_3 == 6'], # to suppress real leptons from WZ and ZZ
+            'denom' : ['pfmt_3 < 40', 'gen_match_3 == 6'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30', 'bjetCISVVeto20MediumZTT == 0'], # to suppress real leptons from WZ and ZZ
             #'denom' : ['pfmt_3 < 30',], # to suppress real leptons from WZ and ZZ
             'pass' : ['iso_Num < 0.15', 'cand_PFIDLoose > 0.5'],
@@ -228,14 +228,14 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
             'AllEta' : '(1)',
         },
         'electron' : {
-            'Barrel' : 'abs( eta_Num ) <= 1.5',
-            'Endcap' : 'abs( eta_Num ) > 1.5',
-            #'AllEta' : '(1)',
+            #'Barrel' : 'abs( eta_Num ) <= 1.5',
+            #'Endcap' : 'abs( eta_Num ) > 1.5',
+            'AllEta' : '(1)',
         },
         'muon' :{
-            'Barrel' : 'abs( eta_Num ) <= 1.4',
-            'Endcap' : 'abs( eta_Num ) > 1.4',
-            #'AllEta' : '(1)',
+            #'Barrel' : 'abs( eta_Num ) <= 1.4',
+            #'Endcap' : 'abs( eta_Num ) > 1.4',
+            'AllEta' : '(1)',
         },
     }
 
@@ -367,13 +367,13 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
                 graph.SetMinimum( 0.0005 )
         if doLinear :
             if 'muon' in obj  :
-                graph.SetMaximum( .1 )
+                graph.SetMaximum( .05 )
             #else :
             #    graph.SetMaximum( .15 )
             elif obj == 'electron' :
-                graph.SetMaximum( .1 )
+                graph.SetMaximum( .05 )
             else :
-                graph.SetMaximum( 1 )
+                graph.SetMaximum( 0.5 )
             graph.SetMinimum( 0 )
 
         graph.Draw("AP")
@@ -392,115 +392,115 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
 
         useExp = True
         useExp = False
-        if useExp :
-            f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
-            f1.SetParName( 2, "decay" )
-            if 'electron' in obj or 'muon' in obj :
-                f1.SetParameter( 0, 0. )
-                f1.SetParameter( 1, 1 )
-                f1.SetParameter( 2, .05 )
-            else : # is tau
-                f1.SetParameter( 0, 0. )
-                f1.SetParameter( 1, 1 )
-                f1.SetParameter( 2, .05 )
-        #if 'tau' in obj : # : # No Exponential
-        #    ### Try linear
-        if obj == 'electron' or obj == 'muon' :
-            f1 = ROOT.TF1( 'f1', '([0] + [1]*x)', fitMin, binInfo[2])
-        else :
-            f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
-            f1.SetParName( 2, "approx. max" )
-            f1.SetParName( 3, "sigma param" )
-            f1.SetParameter( 0, 0. )
-            f1.SetParameter( 1, 1 )
-            if jetMatched :
-                if 'electron' in obj :
-                    f1.SetParameter( 1, 0.2 )
-                    f1.SetParameter( 2, 15. )
-                    f1.SetParameter( 3, 2. )
-                elif 'muon' in obj :
-                    f1.SetParameter( 2, 20. )
-                    f1.SetParameter( 3, 5. )
-                elif 'tau-DM0' in obj :
-                    f1.SetParameter( 1, .1 )
-                    f1.SetParameter( 2, 20. )
-                    f1.SetParameter( 3, 3. )
-                else : # is tau
-                    f1.SetParameter( 2, 30. )
-                    f1.SetParameter( 3, 5. )
-            else : # Not Jet Matched
-                if 'electron' in obj :
-                    f1.SetParameter( 1, 0.2 )
-                    f1.SetParameter( 2, 100. )
-                    f1.SetParameter( 3, 50. )
-                elif 'muon' in obj :
-                    f1.SetParameter( 2, 100. )
-                    f1.SetParameter( 3, 50. )
-                elif 'tau-DM10' == obj :
-                    f1.SetParameter( 0, .1 )
-                    f1.SetParameter( 1, .1 )
-                    f1.SetParameter( 2, 35. )
-                    f1.SetParameter( 3, 3. )
-                elif 'tau-DM0' in obj :
-                    f1.SetParameter( 1, .1 )
-                    f1.SetParameter( 2, 20. )
-                    f1.SetParameter( 3, 3. )
-                elif 'tau-DM10_lllt' in obj :
-                    f1.SetParameter( 0, .1 )
-                    f1.SetParameter( 1, .05 )
-                    f1.SetParameter( 2, 50. )
-                    f1.SetParameter( 3, 20. )
-                elif 'tau-DM10_lltt' in obj :
-                    f1.SetParameter( 0, .13 )
-                    f1.SetParameter( 1, .3 )
-                    f1.SetParameter( 2, 40. )
-                    f1.SetParameter( 3, 4. )
-                else : # is tau
-                    f1.SetParameter( 2, 30. )
-                    f1.SetParameter( 3, 5. )
-               #if obj == 'electron' :
-               #    f1.SetParameter( 2, 18. )
-               #    f1.SetParameter( 3, 2.5 )
-               #elif obj == 'muon' :
-               #    f1.SetParameter( 2, 15. )
-               #    f1.SetParameter( 3, 2.5 )
-               #else : # is tau
-               #    f1.SetParameter( 2, 20. )
-               #    f1.SetParameter( 3, 3. )
-        #else : # No Exponential
-        #    #f1 = ROOT.TF1( 'f1', '([0] + [1]*x + [2]*(x+[3])*(x+[3]) + [4]*(x+[5])*(x+[5])*(x+[5]))', fitMin, binInfo[2])
-        #    f1 = ROOT.TF1( 'f1', '([0] + [1]*x + [2]*(x+[3])*(x+[3]))', fitMin, binInfo[2])
+        #if useExp :
+        #    f1 = ROOT.TF1( 'f1', '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+        #    f1.SetParName( 2, "decay" )
+        #    if 'electron' in obj or 'muon' in obj :
+        #        f1.SetParameter( 0, 0. )
+        #        f1.SetParameter( 1, 1 )
+        #        f1.SetParameter( 2, .05 )
+        #    else : # is tau
+        #        f1.SetParameter( 0, 0. )
+        #        f1.SetParameter( 1, 1 )
+        #        f1.SetParameter( 2, .05 )
+        ##if 'tau' in obj : # : # No Exponential
+        ##    ### Try linear
+        #if obj == 'electron' or obj == 'muon' :
+        #    f1 = ROOT.TF1( 'f1', '([0] + [1]*x)', fitMin, binInfo[2])
+        #else :
+        #    f1 = ROOT.TF1( 'f1', '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
         #    f1.SetParName( 2, "approx. max" )
         #    f1.SetParName( 3, "sigma param" )
         #    f1.SetParameter( 0, 0. )
         #    f1.SetParameter( 1, 1 )
+        #    if jetMatched :
+        #        if 'electron' in obj :
+        #            f1.SetParameter( 1, 0.2 )
+        #            f1.SetParameter( 2, 15. )
+        #            f1.SetParameter( 3, 2. )
+        #        elif 'muon' in obj :
+        #            f1.SetParameter( 2, 20. )
+        #            f1.SetParameter( 3, 5. )
+        #        elif 'tau-DM0' in obj :
+        #            f1.SetParameter( 1, .1 )
+        #            f1.SetParameter( 2, 20. )
+        #            f1.SetParameter( 3, 3. )
+        #        else : # is tau
+        #            f1.SetParameter( 2, 30. )
+        #            f1.SetParameter( 3, 5. )
+        #    else : # Not Jet Matched
+        #        if 'electron' in obj :
+        #            f1.SetParameter( 1, 0.2 )
+        #            f1.SetParameter( 2, 100. )
+        #            f1.SetParameter( 3, 50. )
+        #        elif 'muon' in obj :
+        #            f1.SetParameter( 2, 100. )
+        #            f1.SetParameter( 3, 50. )
+        #        elif 'tau-DM10' == obj :
+        #            f1.SetParameter( 0, .1 )
+        #            f1.SetParameter( 1, .1 )
+        #            f1.SetParameter( 2, 35. )
+        #            f1.SetParameter( 3, 3. )
+        #        elif 'tau-DM0' in obj :
+        #            f1.SetParameter( 1, .1 )
+        #            f1.SetParameter( 2, 20. )
+        #            f1.SetParameter( 3, 3. )
+        #        elif 'tau-DM10_lllt' in obj :
+        #            f1.SetParameter( 0, .1 )
+        #            f1.SetParameter( 1, .05 )
+        #            f1.SetParameter( 2, 50. )
+        #            f1.SetParameter( 3, 20. )
+        #        elif 'tau-DM10_lltt' in obj :
+        #            f1.SetParameter( 0, .13 )
+        #            f1.SetParameter( 1, .3 )
+        #            f1.SetParameter( 2, 40. )
+        #            f1.SetParameter( 3, 4. )
+        #        else : # is tau
+        #            f1.SetParameter( 2, 30. )
+        #            f1.SetParameter( 3, 5. )
+        #       #if obj == 'electron' :
+        #       #    f1.SetParameter( 2, 18. )
+        #       #    f1.SetParameter( 3, 2.5 )
+        #       #elif obj == 'muon' :
+        #       #    f1.SetParameter( 2, 15. )
+        #       #    f1.SetParameter( 3, 2.5 )
+        #       #else : # is tau
+        #       #    f1.SetParameter( 2, 20. )
+        #       #    f1.SetParameter( 3, 3. )
+        ##else : # No Exponential
+        ##    #f1 = ROOT.TF1( 'f1', '([0] + [1]*x + [2]*(x+[3])*(x+[3]) + [4]*(x+[5])*(x+[5])*(x+[5]))', fitMin, binInfo[2])
+        ##    f1 = ROOT.TF1( 'f1', '([0] + [1]*x + [2]*(x+[3])*(x+[3]))', fitMin, binInfo[2])
+        ##    f1.SetParName( 2, "approx. max" )
+        ##    f1.SetParName( 3, "sigma param" )
+        ##    f1.SetParameter( 0, 0. )
+        ##    f1.SetParameter( 1, 1 )
 
-        f1.SetParName( 0, "y rise" )
-        f1.SetParName( 1, "scale" )
-        #if jetMatched and 'electron' in obj :
-        #    graph.Fit('f1', 'SRN' ) # N skips drawing
-        #elif jetMatched :
-        #    graph.Fit('f1', 'SR' )
+        #f1.SetParName( 0, "y rise" )
+        #f1.SetParName( 1, "scale" )
+        ##if jetMatched and 'electron' in obj :
+        ##    graph.Fit('f1', 'SRN' ) # N skips drawing
+        ##elif jetMatched :
+        ##    graph.Fit('f1', 'SR' )
+        ##else :
+        ##    graph.Fit('f1', 'SRN' ) # N skips drawing
+        #graph.Fit('f1', 'SR' )
+
+        #if useExp :
+        #    f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
+        ##if 'tau' in obj :
+        #if obj == 'electron' or obj == 'muon' :
+        #    f2 = ROOT.TF1( 'f2', '([0] + [1]*x)', fitMin, binInfo[2])
         #else :
-        #    graph.Fit('f1', 'SRN' ) # N skips drawing
-        graph.Fit('f1', 'SR' )
-
-        if useExp :
-            f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*TMath::Exp(-[2]*x))', fitMin, binInfo[2]) # default one used on 2012 data
-        #if 'tau' in obj :
-        if obj == 'electron' or obj == 'muon' :
-            f2 = ROOT.TF1( 'f2', '([0] + [1]*x)', fitMin, binInfo[2])
-        else :
-            f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
-            #f2 = ROOT.TF1( 'f2', '([0] + [1]*x + [2]*x*x + [3]*x*x*x)', fitMin, binInfo[2])
-            #f2 = ROOT.TF1( 'f2', '([0] + [1]*x + [2]*(x+[3])*(x+[3]))', fitMin, binInfo[2])
-            f2.SetParameter( 3, f1.GetParameter( 3 ) )
-            f2.SetParameter( 2, f1.GetParameter( 2 ) )
-        f2.SetParameter( 0, f1.GetParameter( 0 ) )
-        f2.SetParameter( 1, f1.GetParameter( 1 ) )
-        
-        #if jetMatched and 'electron' not in obj :
-        f2.Draw('SAME R')
+        #    f2 = ROOT.TF1( 'f2 '+app, '([0] + [1]*(TMath::Landau(x,[2],[3],0)) )', fitMin, binInfo[2])
+        #    #f2 = ROOT.TF1( 'f2', '([0] + [1]*x + [2]*x*x + [3]*x*x*x)', fitMin, binInfo[2])
+        #    #f2 = ROOT.TF1( 'f2', '([0] + [1]*x + [2]*(x+[3])*(x+[3]))', fitMin, binInfo[2])
+        #    f2.SetParameter( 3, f1.GetParameter( 3 ) )
+        #    f2.SetParameter( 2, f1.GetParameter( 2 ) )
+        #f2.SetParameter( 0, f1.GetParameter( 0 ) )
+        #f2.SetParameter( 1, f1.GetParameter( 1 ) )
+        #
+        ##if jetMatched and 'electron' not in obj :
+        #f2.Draw('SAME R')
 
         ROOT.gStyle.SetStatX(.95)
         ROOT.gStyle.SetStatY(0.8)
@@ -509,11 +509,11 @@ def doRedBkgPlots( obj, channels, inputDir, jetMatched ) :
         setText( "Fake Rate: %s %s" % (obj, etaRegion), cmsLumi )
         ROOT.gPad.Update()
         c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.png' )
-        #c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.pdf' )
+        c1.SaveAs( saveDir+'/'+obj+'_'+etaRegion+'_FakeRate.pdf' )
         pad1.SetLogy(0)
 
         # Add FR fit to map
-        frMap[obj+'_'+etaRegion] = [f2, graph]
+        frMap[obj+'_'+etaRegion] = [None, graph]
 
     # Return map
     return frMap
