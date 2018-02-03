@@ -297,7 +297,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     xBins.append( i * 17.5 )
             # This is the proposed binning for ZTT 2015 paper
             elif analysis == 'azh' and 'm_sv' in var :
-                xBins = array( 'd', [i*20 for i in range( 16 )] )
+                #xBins = array( 'd', [i*20 for i in range( 16 )] )
+                xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
             elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 xBins = array( 'd', [i*10 for i in range( 31 )] )
             elif 'm_sv' in var or 'm_visCor' in var :
@@ -420,7 +421,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         continue
                 elif ops['redBkg'] and 'RedBkgShape' in sample :
                     tFileYield = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
-                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                    #tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
                 else :
                     #print "File: '%s%s/%s_%s.root'" % (analysis, folderDetails, sample, channel)
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
@@ -645,9 +647,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
                     if samp in ['obs', 'azh', 'VH'] : continue
-                    toRoot += (sampHistos[samp].GetBinContent(k)*\
-                        uncertNormMap[analysis][samp])**2
-                    #toRoot += sampHistos[samp].GetBinError(k)**2
+                    #toRoot += (sampHistos[samp].GetBinContent(k)*\
+                    #    uncertNormMap[analysis][samp])**2
+                    toRoot += sampHistos[samp].GetBinError(k)**2
 
                 binErrors.append( math.sqrt(toRoot) )
     
@@ -932,13 +934,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( 1, nBins+1 ) :
                         # Should take max of SM OR MSSM, FIXME
-                        maxSig = sampHistos['VH'].GetBinContent( k ) + sampHistos['higgs'].GetBinContent( k )
+                        maxSig = (sampHistos['VH'].GetBinContent( k )/signalSF) + sampHistos['higgs'].GetBinContent( k )
                         # Get Estimated bkg
                         totBkg = max(stack.GetStack().Last().GetBinContent( k ), 1.e-30)
                         # Check if we blind based on HTT 2016  twiki base 
                         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
                         #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
-                        if ( 0.25 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) :
+                        if ( 0.1 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] and not ":" in var :
