@@ -31,7 +31,7 @@ class ElectronSF :
         assert( wp in ['WP90', 'WP80', 'TrkOnly'] ), "Given WP (%s) is not supported" % wp
         #print wp
         # Make sure we stay on our histograms
-        if pt > 199 : pt = 199
+        if pt > 499 : pt = 499
         elif pt < 20 : pt = 20
         if eta > 2.5 : eta = 2.5
         elif eta < -2.5 : eta = -2.5
@@ -60,6 +60,8 @@ if __name__ == '__main__' :
     print eSF.getGSFAndWPScaleFactor( 'WP90', 25, .7 )
     print eSF.getGSFAndWPScaleFactor( 'TrkOnly', 25, .7 )
     print eSF.getGSFAndWPScaleFactor( 'TrkOnly', 25, .7 )
+    print eSF.getGSFAndWPScaleFactor( 'WP90', 555, .7 )
+    print eSF.getGSFAndWPScaleFactor( 'TrkOnly', 5555, .7 )
 
 
 
