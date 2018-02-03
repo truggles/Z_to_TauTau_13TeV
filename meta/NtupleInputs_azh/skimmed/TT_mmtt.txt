@@ -1,11 +1,3 @@
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_0_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_10_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_1_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_2_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_3_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_4_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_5_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_6_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_7_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_8_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_9_mmtt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_0_mmtt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_1_mmtt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_2_mmtt.root

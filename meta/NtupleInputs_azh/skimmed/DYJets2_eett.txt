@@ -1,4 +1,1 @@
-/data/truggles/zhSVFit_Nov05_MC_azh/DYJets2_0_eett.root
-/data/truggles/zhSVFit_Nov05_MC_azh/DYJets2_1_eett.root
-/data/truggles/zhSVFit_Nov05_MC_azh/DYJets2_2_eett.root
-/data/truggles/zhSVFit_Nov05_MC_azh/DYJets2_3_eett.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/DYJets2_0_eett.root

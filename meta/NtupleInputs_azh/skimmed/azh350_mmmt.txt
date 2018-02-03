@@ -1,3 +1,2 @@
-/data/truggles/zhSVFit_Nov05_MC_azh/azh350_0_mmmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/azh350_1_mmmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/azh350_2_mmmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/azh350_0_mmmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/azh350_1_mmmt.root

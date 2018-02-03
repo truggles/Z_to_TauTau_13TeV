@@ -1,4 +1,3 @@
-/data/truggles/zhSVFit_Nov05_MC_azh/azh340_0_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/azh340_1_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/azh340_2_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/azh340_3_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/azh340_0_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/azh340_1_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/azh340_2_emmt.root

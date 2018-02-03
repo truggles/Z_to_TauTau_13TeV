@@ -1,9 +1,5 @@
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_0_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_1_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_2_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_3_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_4_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_5_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_6_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_7_emmt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/TT_8_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_0_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_1_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_2_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_3_emmt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/TT_4_emmt.root

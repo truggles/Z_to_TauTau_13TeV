@@ -1,3 +1,2 @@
-/data/truggles/zhSVFit_Nov05_MC_azh/azh280_0_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/azh280_1_mmtt.root
-/data/truggles/zhSVFit_Nov05_MC_azh/azh280_2_mmtt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/azh280_0_mmtt.root
+/data/truggles/zh_jan31_svFit_vNew_Merged/azh280_1_mmtt.root
