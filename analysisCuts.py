@@ -86,19 +86,20 @@ eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 2'
 
 # Basic lepton definitions for ZH analysis
 def eBase( lep ) :
-    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
+    return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
 def eTight( lep ) :
-    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
+    return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
 
 def mBase( lep ) :
-    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.4 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
+    return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.4 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
 def mTight( lep ) :
-    return 'LEG_Pt > 10 && abs(LEG_Eta) < 2.4 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_IsoDB04 < 0.25 && LEG_PFIDLoose > 0.5'.replace('LEG_',lep)
+    return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.4 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_IsoDB04 < 0.25 && LEG_PFIDLoose > 0.5'.replace('LEG_',lep)
 
 def tBase( lep ) :
-    return 'LEG_Pt > 20 && abs(LEG_Eta) < 2.3 && LEG_DecayModeFinding == 1 && abs(LEG_PVDZ) < 0.2 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1'.replace('LEG_',lep)
+    #return 'LEG_Pt > 19 && abs(LEG_Eta) < 2.3 && LEG_DecayModeFinding == 1 && abs(LEG_PVDZ) < 0.2 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1'.replace('LEG_',lep)
+    return 'LEG_Pt > 19 && abs(LEG_Eta) < 2.3 && LEG_DecayModeFinding == 1 && abs(LEG_PVDZ) < 0.2 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1 && LEG_ByIsolationMVArun2v1DBoldDMwLTraw > -0.8'.replace('LEG_',lep)
 def tTight( lep ) :
-    return 'LEG_Pt > 20 && abs(LEG_Eta) < 2.3 && LEG_DecayModeFinding == 1 && abs(LEG_PVDZ) < 0.2 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1 && LEG_ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5'.replace('LEG_',lep)
+    return 'LEG_Pt > 19 && abs(LEG_Eta) < 2.3 && LEG_DecayModeFinding == 1 && abs(LEG_PVDZ) < 0.2 && LEG_AgainstElectronVLooseMVA6 == 1 && LEG_AgainstMuonLoose3 == 1 && abs( LEG_Charge ) == 1 && LEG_ByMediumIsolationMVArun2v1DBoldDMwLT > 0.5'.replace('LEG_',lep)
 def tAntiEV ( lep ) :
     return 'LEG_AgainstElectronTightMVA6 == 1'.replace('LEG_',lep)
 def tAntiMV ( lep ) :
@@ -160,9 +161,9 @@ def getCut( analysis, sample, channel, cutName ) :
     eeTrigSingleE = '(doubleE_23_12Pass < 0.5 && singleE27TightPass > 0)'
     eeTrigDoubleE = '(doubleE_23_12Pass > 0)'
     
-    mmTrigMC = '(doubleMuPass > 0 || doubleMuNoDZPass > 0 || singleIsoTkMu24Pass > 0 || singleIsoMu24Pass > 0)'
-    mmTrigSingleM = '( (doubleMuPass < 0.5 && doubleMuNoDZPass < 0.5) && (singleIsoTkMu24Pass > 0 || singleIsoMu24Pass > 0) )'
-    mmTrigDoubleM = '(doubleMuPass > 0 || doubleMuNoDZPass > 0)'
+    mmTrigMC = '(doubleMuPass > 0 || singleIsoTkMu24Pass > 0 || singleIsoMu24Pass > 0)'
+    mmTrigSingleM = '( (doubleMuPass < 0.5) && (singleIsoTkMu24Pass > 0 || singleIsoMu24Pass > 0) )'
+    mmTrigDoubleM = '(doubleMuPass > 0)'
 
     if 'data' in sample :
         if 'Single' in sample :
