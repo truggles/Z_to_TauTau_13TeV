@@ -64,6 +64,8 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
             # thus means fake factor 
             # method which is fully data driven
             if 'QCD-' in sample : return True
+            if 'RedBkg' in sample : return True
+            if 'RedBkg' in genCode : return True
 
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
         # do run for DYJetsLow as weight is set to 1
@@ -93,6 +95,8 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
             # method which is fully data driven
             if 'QCD-' in genCode : return True
             if 'QCD-' in sample : return True
+            if 'RedBkg' in genCode : return True
+            if 'RedBkg' in sample : return True
 
         # Jet to Tau Fake, no data
         elif '_JetToTau' in var :
@@ -129,25 +133,40 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
 def ESCuts( ESMap, sample, channel, var ) :
     tau2PtCut = 40.
     tau1PtCut = 50.
-    if len( channel ) == 4 : return '*(1.)'
-    if 'data' in sample :
+    if 'data' in sample or 'RedBkg' in sample :
         if channel == 'tt' :
             return '*(pt_1 > %s && pt_2 > %s)' % (tau1PtCut, tau2PtCut)
+        if len( channel ) == 4 :
+            # list to force copy
+            # Data not shifted pT for taus
+            return str( ESMap['_NoShift'] ).replace('shiftedPt','pt')
 
     shiftDir = ''
     if 'Up' in var[-2:] : shiftDir = 'Up'
     elif 'Down' in var[-4:] : shiftDir = 'Down'
-    elif 'energyScale' not in var : return ESMap[ channel ]['_NoShift']
+    elif 'energyScale' not in var : return ESMap['_NoShift']
 
-    if '_energyScaleAll'+shiftDir in var : return ESMap[ channel ]['_energyScaleAll'+shiftDir]
-    if '_energyScaleDM0'+shiftDir in var : return ESMap[ channel ]['_energyScaleDM0'+shiftDir]
-    if '_energyScaleDM1'+shiftDir in var : return ESMap[ channel ]['_energyScaleDM1'+shiftDir]
-    if '_energyScaleDM10'+shiftDir in var : return ESMap[ channel ]['_energyScaleDM10'+shiftDir]
-    return ESMap[ channel ]['_NoShift']
+    if channel == 'tt' :
+        if '_energyScaleAll'+shiftDir in var : return ESMap['_energyScaleAll'+shiftDir]
+        if '_energyScaleDM0'+shiftDir in var : return ESMap['_energyScaleDM0'+shiftDir]
+        if '_energyScaleDM1'+shiftDir in var : return ESMap['_energyScaleDM1'+shiftDir]
+        if '_energyScaleDM10'+shiftDir in var : return ESMap['_energyScaleDM10'+shiftDir]
+    if len( channel ) == 4 :
+        if channel in ['eeet','eemt','eett','eeem','eeee','emmt','emmm'] :
+            if '_energyScaleEES'+shiftDir in var : return ESMap['_energyScaleEES'+shiftDir]
+        if channel in ['eeet','eemt','eett','emmt','mmmt','mmtt'] :
+            if '_energyScaleAll'+shiftDir in var : return ESMap['_energyScaleAll'+shiftDir]
+            if '_energyScaleDM0'+shiftDir in var : return ESMap['_energyScaleDM0'+shiftDir]
+            if '_energyScaleDM1'+shiftDir in var : return ESMap['_energyScaleDM1'+shiftDir]
+            if '_energyScaleDM10'+shiftDir in var : return ESMap['_energyScaleDM10'+shiftDir]
+    return ESMap['_NoShift']
 
-def getESMap() :
+def getESMap( channel ) :
     tau2PtCut = 40.
     tau1PtCut = 50.
+    elecPtCut = 10.
+    muonPtCut = 10.
+    tauPtCut = 20.
     ESMap = {
         'tt' : { 
             '_energyScaleAllUp' : '*( pt_1_UP > %s && pt_2_UP > %s)' % (tau1PtCut, tau2PtCut),
@@ -158,9 +177,92 @@ def getESMap() :
             '_energyScaleDM1Down' : '*( pt_1_DM1_DOWN > %s && pt_2_DM1_DOWN > %s)' % (tau1PtCut, tau2PtCut),
             '_energyScaleDM10Up' : '*( pt_1_DM10_UP > %s && pt_2_DM10_UP > %s)' % (tau1PtCut, tau2PtCut),
             '_energyScaleDM10Down' : '*( pt_1_DM10_DOWN > %s && pt_2_DM10_DOWN > %s)' % (tau1PtCut, tau2PtCut),
-            '_NoShift' : '*(ptCor_1 > %s && ptCor_2 > %s)' % (tau1PtCut, tau2PtCut)},
-        }
-    return ESMap
+            '_NoShift' : '*(ptCor_1 > %s && ptCor_2 > %s)' % (tau1PtCut, tau2PtCut)
+        },
+
+        # ZH
+        'eeet' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Up > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleEESDown' : '*(leg1_EES_Down > %s && leg2_EES_Down > %s && leg3_EES_Down > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM0Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM0Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Down > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM1Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM1Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Down > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM10Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM10Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Down > %s)' % (elecPtCut, elecPtCut, elecPtCut, tauPtCut),
+        },
+        'eemt' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && pt_3 > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleEESDown' : '*(leg1_EES_Down > %s && leg2_EES_Down > %s && pt_3 > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM0Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Up > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM0Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Down > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM1Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Up > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM1Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Down > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM10Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Up > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM10Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Down > %s)' % (elecPtCut, elecPtCut, muonPtCut, tauPtCut),
+        },
+        'eett' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && shiftedPt_3 > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && shiftedPt_3 > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleEESDown' : '*(leg1_EES_Down > %s && leg2_EES_Down > %s && shiftedPt_3 > %s && shiftedPt_4 > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM0Up' : '*(pt_1 > %s && pt_2 > %s && leg3_DM0_Up > %s && leg4_DM0_Up > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM0Down' : '*(pt_1 > %s && pt_2 > %s && leg3_DM0_Down > %s && leg4_DM0_Down > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM1Up' : '*(pt_1 > %s && pt_2 > %s && leg3_DM1_Up > %s && leg4_DM1_Up > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM1Down' : '*(pt_1 > %s && pt_2 > %s && leg3_DM1_Down > %s && leg4_DM1_Down > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM10Up' : '*(pt_1 > %s && pt_2 > %s && leg3_DM10_Up > %s && leg4_DM10_Up > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM10Down' : '*(pt_1 > %s && pt_2 > %s && leg3_DM10_Down > %s && leg4_DM10_Down > %s)' % (elecPtCut, elecPtCut, tauPtCut, tauPtCut),
+        },
+        'eeem' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, muonPtCut),
+            '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Up > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, muonPtCut),
+            '_energyScaleEESDown' : '*(leg1_EES_Down > %s && leg2_EES_Down > %s && leg3_EES_Down > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, muonPtCut),
+        },
+        'emmt' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && shiftedPt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleEESUp' : '*(pt_1 > %s && pt_2 > %s && leg3_EES_Up > %s && shiftedPt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleEESDown' : '*(pt_1 > %s && pt_2 > %s && leg3_EES_Down > %s && shiftedPt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM0Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Up > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM0Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Down > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM1Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Up > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM1Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Down > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM10Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Up > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+            '_energyScaleDM10Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Down > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
+        },
+        'mmmt' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && shiftedPt_4 > %s)' % (muonPtCut, muonPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM0Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Up > %s)' % (muonPtCut, muonPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM0Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM0_Down > %s)' % (muonPtCut, muonPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM1Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Up > %s)' % (muonPtCut, muonPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM1Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM1_Down > %s)' % (muonPtCut, muonPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM10Up' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Up > %s)' % (muonPtCut, muonPtCut, muonPtCut, tauPtCut),
+            '_energyScaleDM10Down' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && leg4_DM10_Down > %s)' % (muonPtCut, muonPtCut, muonPtCut, tauPtCut),
+        },
+        'mmtt' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && shiftedPt_3 > %s && shiftedPt_4 > %s)' % (muonPtCut, muonPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM0Up' : '*(pt_1 > %s && pt_2 > %s && leg3_DM0_Up > %s && leg4_DM0_Up > %s)' % (muonPtCut, muonPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM0Down' : '*(pt_1 > %s && pt_2 > %s && leg3_DM0_Down > %s && leg4_DM0_Down > %s)' % (muonPtCut, muonPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM1Up' : '*(pt_1 > %s && pt_2 > %s && leg3_DM1_Up > %s && leg4_DM1_Up > %s)' % (muonPtCut, muonPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM1Down' : '*(pt_1 > %s && pt_2 > %s && leg3_DM1_Down > %s && leg4_DM1_Down > %s)' % (muonPtCut, muonPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM10Up' : '*(pt_1 > %s && pt_2 > %s && leg3_DM10_Up > %s && leg4_DM10_Up > %s)' % (muonPtCut, muonPtCut, tauPtCut, tauPtCut),
+            '_energyScaleDM10Down' : '*(pt_1 > %s && pt_2 > %s && leg3_DM10_Down > %s && leg4_DM10_Down > %s)' % (muonPtCut, muonPtCut, tauPtCut, tauPtCut),
+        },
+        'emmm' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, muonPtCut),
+            '_energyScaleEESUp' : '*(pt_1 > %s && pt_2 > %s && leg3_EES_Up > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, muonPtCut),
+            '_energyScaleEESDown' : '*(pt_1 > %s && pt_2 > %s && leg3_EES_Down > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, muonPtCut),
+        },
+        'eeee' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
+            '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Up > %s && leg4_EES_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
+            '_energyScaleEESDown' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Down > %s && leg4_EES_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
+        },
+        'mmmm' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, muonPtCut, muonPtCut),
+        },
+    }
+    return ESMap[ channel ]
 
 
 # Specific high pt tau reweighting for shape uncertainties
@@ -280,8 +382,8 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
     # Add in the ability to do Reducible Background estimations for
     # AZH / ZH analysis
     # Add channel specific cuts
+    prodMap = getProdMap()
     if 'ADD_CHANNEL_SPECIFIC_ISO_CUTS' in additionalCut :
-        prodMap = getProdMap()
         if analysis == 'azh' and 'RedBkgYield' in outFile.GetName() :
             additionalCut = getRedBkgCutsAndWeights(
                     analysis, channel, additionalCut, prodMap )
@@ -302,8 +404,8 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         elif channel in ['eeem','emmm'] :
             additionalCut += '*(LT_higgs > 20)'
         elif channel in ['eett','mmtt'] :
-            additionalCut += '*(LT_higgs > 50)' # > 80 GeV is 10% better than 60,
-            #additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            #additionalCut += '*(LT_higgs > 50)' # > 80 GeV is 10% better than 60,
+            additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
             # 60 is way more stats
@@ -322,7 +424,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
 
     ''' Get Energy Scale Map which is now confusing with
         decay mode specific shifts '''
-    esMap = getESMap()
+    esMap = getESMap( channel )
 
 
     ### Check if we intend to do Fake Factor based MC cuts
@@ -558,6 +660,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                     if 'DM1'  in var : plotVar = 'mjj:m_sv_DM1_%s' % shiftDir
                     if 'DM10' in var : plotVar = 'mjj:m_sv_DM10_%s' % shiftDir
                 elif 'm_sv' in var :
+                    if 'EES'  in var : plotVar = 'm_sv_EES_%s' % shiftDir
                     if 'All'  in var : plotVar = 'm_sv_%s' % shiftDir
                     if 'DM0'  in var : plotVar = 'm_sv_DM0_%s' % shiftDir
                     if 'DM1'  in var : plotVar = 'm_sv_DM1_%s' % shiftDir
@@ -840,12 +943,12 @@ def getHistoDict( analysis, channel ) :
 #####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
             'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
 ##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+            #'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+            #'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
-            'LT_higgs' : [200, 0, 200, 20, 'LT_{higgs} [GeV]', ' GeV'],
+# XXX            'LT_higgs' : [200, 0, 200, 20, 'LT_{higgs} [GeV]', ' GeV'],
 #            'H_PZeta' : [600, -200, 400, 20, 'PZeta_{higgs} [GeV]', ' GeV'],
 #            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
 #            'H_DZeta' : [600, -200, 400, 20, 'DZeta_{higgs} [GeV]', ' GeV'],
@@ -853,14 +956,14 @@ def getHistoDict( analysis, channel ) :
 ####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
 ####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
 ####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
-            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
-            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
-            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
-            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
-            'pfmt_3' : [200, 0, 200, 20, 'Leg3 M_{T} [GeV]', ' GeV'],
-            'pfmt_4' : [200, 0, 200, 20, 'Leg4 M_{T} [GeV]', ' GeV'],
-            'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
-            'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
+# XXX            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
+# XXX            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
+# XXX            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
+# XXX            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
+#            'pfmt_3' : [200, 0, 200, 20, 'Leg3 M_{T} [GeV]', ' GeV'],
+#            'pfmt_4' : [200, 0, 200, 20, 'Leg4 M_{T} [GeV]', ' GeV'],
+#            'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
+#            'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
 ####XXX            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
 ####XXX            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
 ####XXX            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
@@ -927,6 +1030,30 @@ def getHistoDict( analysis, channel ) :
         #if channel in ['eeet', 'eeem', 'emmt', 'emmm'] :
         #    for k, v in llexMap.iteritems() :
         #        genVarMap[k] = v
+
+
+        ''' added shape systematics '''
+        toAdd = ['m_sv', ] # No extra shapes
+        varsForShapeSyst = []
+        for item in toAdd :
+            varsForShapeSyst.append( item )
+        shapesToAdd = {
+                    'energyScaleEES':'Electron Energy Scale',
+                    'energyScaleDM0':'TES DM0',
+                    'energyScaleDM1':'TES DM1',
+                    'energyScaleDM10':'TES DM10',
+                    'metClustered':'Clustered MET',
+                    'metUnclustered':'Unclustered MET',
+                    }
+
+        for var in genVarMap.keys() :
+            if var in varsForShapeSyst :
+                for shape, app in shapesToAdd.iteritems() :
+                    genVarMap[ var+'_'+shape+'Up' ] = list(genVarMap[ var ])
+                    genVarMap[ var+'_'+shape+'Up' ][4] = genVarMap[ var+'_'+shape+'Up' ][4]+' '+app+' UP'
+                    genVarMap[ var+'_'+shape+'Down' ] = list(genVarMap[ var ])
+                    genVarMap[ var+'_'+shape+'Down' ][4] = genVarMap[ var+'_'+shape+'Down' ][4]+' '+app+' Down'
+
         return genVarMap
 
 
