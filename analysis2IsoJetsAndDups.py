@@ -1363,7 +1363,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             # with full TES and MET Shifts
             # m_sv main value is good, need to set others if neceesary
             if 'data' not in sample and hasattr( row, 'm_sv' ) :
-                m_svfit = getattr( row, 'm_sv' ) > 0.0
+                m_svfit = getattr( row, 'm_sv' )
                 if getattr( row, 'm_sv_UP' ) < 0.0 :               setattr( row, 'm_sv_UP', m_svfit )
                 if getattr( row, 'm_sv_DOWN' ) < 0.0 :             setattr( row, 'm_sv_DOWN', m_svfit )            
                 if getattr( row, 'm_sv_DM0_UP' ) < 0.0 :           setattr( row, 'm_sv_DM0_UP', m_svfit )
