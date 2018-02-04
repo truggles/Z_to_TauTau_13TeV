@@ -79,6 +79,14 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
     if 'data' in shortName : return 1.0
     return scalar1
 
+def eesUp( pt, eta ) :
+    if abs(eta) <= 1.479 : return pt * 1.01
+    else : return pt * 1.025
+
+def eesDown( pt, eta ) :
+    if abs(eta) <= 1.479 : return pt * .99
+    else : return pt * 0.975
+
 
 # Apply Tau Energy Scale corrections to a corrected PT variable
 def correctTauPt( pt, gen_match, decayMode ) :
@@ -886,84 +894,130 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ptCor_1B = tnew.Branch('ptCor_1', ptCor_1, 'ptCor_1/F')
     ptCor_2 = array('f', [ 0 ] )
     ptCor_2B = tnew.Branch('ptCor_2', ptCor_2, 'ptCor_2/F')
-    pt_1_UP = array('f', [ 0 ] )
-    pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
-    pt_1_DOWN = array('f', [ 0 ] )
-    pt_1_DOWNB = tnew.Branch('pt_1_DOWN', pt_1_DOWN, 'pt_1_DOWN/F')
-    pt_1_DM0_UP = array('f', [ 0 ] )
-    pt_1_DM0_UPB = tnew.Branch('pt_1_DM0_UP', pt_1_DM0_UP, 'pt_1_DM0_UP/F')
-    pt_1_DM0_DOWN = array('f', [ 0 ] )
-    pt_1_DM0_DOWNB = tnew.Branch('pt_1_DM0_DOWN', pt_1_DM0_DOWN, 'pt_1_DM0_DOWN/F')
-    pt_1_DM1_UP = array('f', [ 0 ] )
-    pt_1_DM1_UPB = tnew.Branch('pt_1_DM1_UP', pt_1_DM1_UP, 'pt_1_DM1_UP/F')
-    pt_1_DM1_DOWN = array('f', [ 0 ] )
-    pt_1_DM1_DOWNB = tnew.Branch('pt_1_DM1_DOWN', pt_1_DM1_DOWN, 'pt_1_DM1_DOWN/F')
-    pt_1_DM10_UP = array('f', [ 0 ] )
-    pt_1_DM10_UPB = tnew.Branch('pt_1_DM10_UP', pt_1_DM10_UP, 'pt_1_DM10_UP/F')
-    pt_1_DM10_DOWN = array('f', [ 0 ] )
-    pt_1_DM10_DOWNB = tnew.Branch('pt_1_DM10_DOWN', pt_1_DM10_DOWN, 'pt_1_DM10_DOWN/F')
-    pt_2_UP = array('f', [ 0 ] )
-    pt_2_UPB = tnew.Branch('pt_2_UP', pt_2_UP, 'pt_2_UP/F')
-    pt_2_DOWN = array('f', [ 0 ] )
-    pt_2_DOWNB = tnew.Branch('pt_2_DOWN', pt_2_DOWN, 'pt_2_DOWN/F')
-    pt_2_DM0_UP = array('f', [ 0 ] )
-    pt_2_DM0_UPB = tnew.Branch('pt_2_DM0_UP', pt_2_DM0_UP, 'pt_2_DM0_UP/F')
-    pt_2_DM0_DOWN = array('f', [ 0 ] )
-    pt_2_DM0_DOWNB = tnew.Branch('pt_2_DM0_DOWN', pt_2_DM0_DOWN, 'pt_2_DM0_DOWN/F')
-    pt_2_DM1_UP = array('f', [ 0 ] )
-    pt_2_DM1_UPB = tnew.Branch('pt_2_DM1_UP', pt_2_DM1_UP, 'pt_2_DM1_UP/F')
-    pt_2_DM1_DOWN = array('f', [ 0 ] )
-    pt_2_DM1_DOWNB = tnew.Branch('pt_2_DM1_DOWN', pt_2_DM1_DOWN, 'pt_2_DM1_DOWN/F')
-    pt_2_DM10_UP = array('f', [ 0 ] )
-    pt_2_DM10_UPB = tnew.Branch('pt_2_DM10_UP', pt_2_DM10_UP, 'pt_2_DM10_UP/F')
-    pt_2_DM10_DOWN = array('f', [ 0 ] )
-    pt_2_DM10_DOWNB = tnew.Branch('pt_2_DM10_DOWN', pt_2_DM10_DOWN, 'pt_2_DM10_DOWN/F')
-    Higgs_PtCor = array('f', [ 0 ] )
-    Higgs_PtCorB = tnew.Branch('Higgs_PtCor', Higgs_PtCor, 'Higgs_PtCor/F')
-    Higgs_PtCor_UP = array('f', [ 0 ] )
-    Higgs_PtCor_UPB = tnew.Branch('Higgs_PtCor_UP', Higgs_PtCor_UP, 'Higgs_PtCor_UP/F')
-    Higgs_PtCor_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DOWNB = tnew.Branch('Higgs_PtCor_DOWN', Higgs_PtCor_DOWN, 'Higgs_PtCor_DOWN/F')
-    Higgs_PtCor_DM0_UP = array('f', [ 0 ] )
-    Higgs_PtCor_DM0_UPB = tnew.Branch('Higgs_PtCor_DM0_UP', Higgs_PtCor_DM0_UP, 'Higgs_PtCor_DM0_UP/F')
-    Higgs_PtCor_DM0_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DM0_DOWNB = tnew.Branch('Higgs_PtCor_DM0_DOWN', Higgs_PtCor_DM0_DOWN, 'Higgs_PtCor_DM0_DOWN/F')
-    Higgs_PtCor_DM1_UP = array('f', [ 0 ] )
-    Higgs_PtCor_DM1_UPB = tnew.Branch('Higgs_PtCor_DM1_UP', Higgs_PtCor_DM1_UP, 'Higgs_PtCor_DM1_UP/F')
-    Higgs_PtCor_DM1_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DM1_DOWNB = tnew.Branch('Higgs_PtCor_DM1_DOWN', Higgs_PtCor_DM1_DOWN, 'Higgs_PtCor_DM1_DOWN/F')
-    Higgs_PtCor_DM10_UP = array('f', [ 0 ] )
-    Higgs_PtCor_DM10_UPB = tnew.Branch('Higgs_PtCor_DM10_UP', Higgs_PtCor_DM10_UP, 'Higgs_PtCor_DM10_UP/F')
-    Higgs_PtCor_DM10_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DM10_DOWNB = tnew.Branch('Higgs_PtCor_DM10_DOWN', Higgs_PtCor_DM10_DOWN, 'Higgs_PtCor_DM10_DOWN/F')
-    Higgs_PtCor_UncMet_UP = array('f', [ 0 ] )
-    Higgs_PtCor_UncMet_UPB = tnew.Branch('Higgs_PtCor_UncMet_UP', Higgs_PtCor_UncMet_UP, 'Higgs_PtCor_UncMet_UP/F')
-    Higgs_PtCor_UncMet_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_UncMet_DOWNB = tnew.Branch('Higgs_PtCor_UncMet_DOWN', Higgs_PtCor_UncMet_DOWN, 'Higgs_PtCor_UncMet_DOWN/F')
-    Higgs_PtCor_ClusteredMet_UP = array('f', [ 0 ] )
-    Higgs_PtCor_ClusteredMet_UPB = tnew.Branch('Higgs_PtCor_ClusteredMet_UP', Higgs_PtCor_ClusteredMet_UP, 'Higgs_PtCor_ClusteredMet_UP/F')
-    Higgs_PtCor_ClusteredMet_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_ClusteredMet_DOWNB = tnew.Branch('Higgs_PtCor_ClusteredMet_DOWN', Higgs_PtCor_ClusteredMet_DOWN, 'Higgs_PtCor_ClusteredMet_DOWN/F')
-    m_visCor = array('f', [ 0 ] )
-    m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
-    m_visCor_UP = array('f', [ 0 ] )
-    m_visCor_UPB = tnew.Branch('m_visCor_UP', m_visCor_UP, 'm_visCor_UP/F')
-    m_visCor_DM0_UP = array('f', [ 0 ] )
-    m_visCor_DM0_UPB = tnew.Branch('m_visCor_DM0_UP', m_visCor_DM0_UP, 'm_visCor_DM0_UP/F')
-    m_visCor_DM1_UP = array('f', [ 0 ] )
-    m_visCor_DM1_UPB = tnew.Branch('m_visCor_DM1_UP', m_visCor_DM1_UP, 'm_visCor_DM1_UP/F')
-    m_visCor_DM10_UP = array('f', [ 0 ] )
-    m_visCor_DM10_UPB = tnew.Branch('m_visCor_DM10_UP', m_visCor_DM10_UP, 'm_visCor_DM10_UP/F')
-    m_visCor_DOWN = array('f', [ 0 ] )
-    m_visCor_DOWNB = tnew.Branch('m_visCor_DOWN', m_visCor_DOWN, 'm_visCor_DOWN/F')
-    m_visCor_DM0_DOWN = array('f', [ 0 ] )
-    m_visCor_DM0_DOWNB = tnew.Branch('m_visCor_DM0_DOWN', m_visCor_DM0_DOWN, 'm_visCor_DM0_DOWN/F')
-    m_visCor_DM1_DOWN = array('f', [ 0 ] )
-    m_visCor_DM1_DOWNB = tnew.Branch('m_visCor_DM1_DOWN', m_visCor_DM1_DOWN, 'm_visCor_DM1_DOWN/F')
-    m_visCor_DM10_DOWN = array('f', [ 0 ] )
-    m_visCor_DM10_DOWNB = tnew.Branch('m_visCor_DM10_DOWN', m_visCor_DM10_DOWN, 'm_visCor_DM10_DOWN/F')
+    #pt_1_UP = array('f', [ 0 ] )
+    #pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
+    #pt_1_DOWN = array('f', [ 0 ] )
+    #pt_1_DOWNB = tnew.Branch('pt_1_DOWN', pt_1_DOWN, 'pt_1_DOWN/F')
+    #pt_1_DM0_UP = array('f', [ 0 ] )
+    #pt_1_DM0_UPB = tnew.Branch('pt_1_DM0_UP', pt_1_DM0_UP, 'pt_1_DM0_UP/F')
+    #pt_1_DM0_DOWN = array('f', [ 0 ] )
+    #pt_1_DM0_DOWNB = tnew.Branch('pt_1_DM0_DOWN', pt_1_DM0_DOWN, 'pt_1_DM0_DOWN/F')
+    #pt_1_DM1_UP = array('f', [ 0 ] )
+    #pt_1_DM1_UPB = tnew.Branch('pt_1_DM1_UP', pt_1_DM1_UP, 'pt_1_DM1_UP/F')
+    #pt_1_DM1_DOWN = array('f', [ 0 ] )
+    #pt_1_DM1_DOWNB = tnew.Branch('pt_1_DM1_DOWN', pt_1_DM1_DOWN, 'pt_1_DM1_DOWN/F')
+    #pt_1_DM10_UP = array('f', [ 0 ] )
+    #pt_1_DM10_UPB = tnew.Branch('pt_1_DM10_UP', pt_1_DM10_UP, 'pt_1_DM10_UP/F')
+    #pt_1_DM10_DOWN = array('f', [ 0 ] )
+    #pt_1_DM10_DOWNB = tnew.Branch('pt_1_DM10_DOWN', pt_1_DM10_DOWN, 'pt_1_DM10_DOWN/F')
+    #pt_2_UP = array('f', [ 0 ] )
+    #pt_2_UPB = tnew.Branch('pt_2_UP', pt_2_UP, 'pt_2_UP/F')
+    #pt_2_DOWN = array('f', [ 0 ] )
+    #pt_2_DOWNB = tnew.Branch('pt_2_DOWN', pt_2_DOWN, 'pt_2_DOWN/F')
+    #pt_2_DM0_UP = array('f', [ 0 ] )
+    #pt_2_DM0_UPB = tnew.Branch('pt_2_DM0_UP', pt_2_DM0_UP, 'pt_2_DM0_UP/F')
+    #pt_2_DM0_DOWN = array('f', [ 0 ] )
+    #pt_2_DM0_DOWNB = tnew.Branch('pt_2_DM0_DOWN', pt_2_DM0_DOWN, 'pt_2_DM0_DOWN/F')
+    #pt_2_DM1_UP = array('f', [ 0 ] )
+    #pt_2_DM1_UPB = tnew.Branch('pt_2_DM1_UP', pt_2_DM1_UP, 'pt_2_DM1_UP/F')
+    #pt_2_DM1_DOWN = array('f', [ 0 ] )
+    #pt_2_DM1_DOWNB = tnew.Branch('pt_2_DM1_DOWN', pt_2_DM1_DOWN, 'pt_2_DM1_DOWN/F')
+    #pt_2_DM10_UP = array('f', [ 0 ] )
+    #pt_2_DM10_UPB = tnew.Branch('pt_2_DM10_UP', pt_2_DM10_UP, 'pt_2_DM10_UP/F')
+    #pt_2_DM10_DOWN = array('f', [ 0 ] )
+    #pt_2_DM10_DOWNB = tnew.Branch('pt_2_DM10_DOWN', pt_2_DM10_DOWN, 'pt_2_DM10_DOWN/F')
+    #Higgs_PtCor = array('f', [ 0 ] )
+    #Higgs_PtCorB = tnew.Branch('Higgs_PtCor', Higgs_PtCor, 'Higgs_PtCor/F')
+    #Higgs_PtCor_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_UPB = tnew.Branch('Higgs_PtCor_UP', Higgs_PtCor_UP, 'Higgs_PtCor_UP/F')
+    #Higgs_PtCor_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DOWNB = tnew.Branch('Higgs_PtCor_DOWN', Higgs_PtCor_DOWN, 'Higgs_PtCor_DOWN/F')
+    #Higgs_PtCor_DM0_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_DM0_UPB = tnew.Branch('Higgs_PtCor_DM0_UP', Higgs_PtCor_DM0_UP, 'Higgs_PtCor_DM0_UP/F')
+    #Higgs_PtCor_DM0_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DM0_DOWNB = tnew.Branch('Higgs_PtCor_DM0_DOWN', Higgs_PtCor_DM0_DOWN, 'Higgs_PtCor_DM0_DOWN/F')
+    #Higgs_PtCor_DM1_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_DM1_UPB = tnew.Branch('Higgs_PtCor_DM1_UP', Higgs_PtCor_DM1_UP, 'Higgs_PtCor_DM1_UP/F')
+    #Higgs_PtCor_DM1_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DM1_DOWNB = tnew.Branch('Higgs_PtCor_DM1_DOWN', Higgs_PtCor_DM1_DOWN, 'Higgs_PtCor_DM1_DOWN/F')
+    #Higgs_PtCor_DM10_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_DM10_UPB = tnew.Branch('Higgs_PtCor_DM10_UP', Higgs_PtCor_DM10_UP, 'Higgs_PtCor_DM10_UP/F')
+    #Higgs_PtCor_DM10_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DM10_DOWNB = tnew.Branch('Higgs_PtCor_DM10_DOWN', Higgs_PtCor_DM10_DOWN, 'Higgs_PtCor_DM10_DOWN/F')
+    #Higgs_PtCor_UncMet_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_UncMet_UPB = tnew.Branch('Higgs_PtCor_UncMet_UP', Higgs_PtCor_UncMet_UP, 'Higgs_PtCor_UncMet_UP/F')
+    #Higgs_PtCor_UncMet_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_UncMet_DOWNB = tnew.Branch('Higgs_PtCor_UncMet_DOWN', Higgs_PtCor_UncMet_DOWN, 'Higgs_PtCor_UncMet_DOWN/F')
+    #Higgs_PtCor_ClusteredMet_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_ClusteredMet_UPB = tnew.Branch('Higgs_PtCor_ClusteredMet_UP', Higgs_PtCor_ClusteredMet_UP, 'Higgs_PtCor_ClusteredMet_UP/F')
+    #Higgs_PtCor_ClusteredMet_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_ClusteredMet_DOWNB = tnew.Branch('Higgs_PtCor_ClusteredMet_DOWN', Higgs_PtCor_ClusteredMet_DOWN, 'Higgs_PtCor_ClusteredMet_DOWN/F')
+    #m_visCor = array('f', [ 0 ] )
+    #m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
+    #m_visCor_UP = array('f', [ 0 ] )
+    #m_visCor_UPB = tnew.Branch('m_visCor_UP', m_visCor_UP, 'm_visCor_UP/F')
+    #m_visCor_DM0_UP = array('f', [ 0 ] )
+    #m_visCor_DM0_UPB = tnew.Branch('m_visCor_DM0_UP', m_visCor_DM0_UP, 'm_visCor_DM0_UP/F')
+    #m_visCor_DM1_UP = array('f', [ 0 ] )
+    #m_visCor_DM1_UPB = tnew.Branch('m_visCor_DM1_UP', m_visCor_DM1_UP, 'm_visCor_DM1_UP/F')
+    #m_visCor_DM10_UP = array('f', [ 0 ] )
+    #m_visCor_DM10_UPB = tnew.Branch('m_visCor_DM10_UP', m_visCor_DM10_UP, 'm_visCor_DM10_UP/F')
+    #m_visCor_DOWN = array('f', [ 0 ] )
+    #m_visCor_DOWNB = tnew.Branch('m_visCor_DOWN', m_visCor_DOWN, 'm_visCor_DOWN/F')
+    #m_visCor_DM0_DOWN = array('f', [ 0 ] )
+    #m_visCor_DM0_DOWNB = tnew.Branch('m_visCor_DM0_DOWN', m_visCor_DM0_DOWN, 'm_visCor_DM0_DOWN/F')
+    #m_visCor_DM1_DOWN = array('f', [ 0 ] )
+    #m_visCor_DM1_DOWNB = tnew.Branch('m_visCor_DM1_DOWN', m_visCor_DM1_DOWN, 'm_visCor_DM1_DOWN/F')
+    #m_visCor_DM10_DOWN = array('f', [ 0 ] )
+    #m_visCor_DM10_DOWNB = tnew.Branch('m_visCor_DM10_DOWN', m_visCor_DM10_DOWN, 'm_visCor_DM10_DOWN/F')
     A_Mass = array('f', [ 0 ] )
     A_MassB = tnew.Branch('A_Mass', A_Mass, 'A_Mass/F')
+
+    # For electron energy shifts in any position in eeee
+    leg1_EES_Up = array('f', [ 0 ] )
+    leg1_EES_UpB = tnew.Branch('leg1_EES_Up', leg1_EES_Up, 'leg1_EES_Up/F')
+    leg1_EES_Down = array('f', [ 0 ] )
+    leg1_EES_DownB = tnew.Branch('leg1_EES_Down', leg1_EES_Down, 'leg1_EES_Down/F')
+    leg2_EES_Up = array('f', [ 0 ] )
+    leg2_EES_UpB = tnew.Branch('leg2_EES_Up', leg2_EES_Up, 'leg2_EES_Up/F')
+    leg2_EES_Down = array('f', [ 0 ] )
+    leg2_EES_DownB = tnew.Branch('leg2_EES_Down', leg2_EES_Down, 'leg2_EES_Down/F')
+    leg3_EES_Up = array('f', [ 0 ] )
+    leg3_EES_UpB = tnew.Branch('leg3_EES_Up', leg3_EES_Up, 'leg3_EES_Up/F')
+    leg3_EES_Down = array('f', [ 0 ] )
+    leg3_EES_DownB = tnew.Branch('leg3_EES_Down', leg3_EES_Down, 'leg3_EES_Down/F')
+    leg4_EES_Up = array('f', [ 0 ] )
+    leg4_EES_UpB = tnew.Branch('leg4_EES_Up', leg4_EES_Up, 'leg4_EES_Up/F')
+    leg4_EES_Down = array('f', [ 0 ] )
+    leg4_EES_DownB = tnew.Branch('leg4_EES_Down', leg4_EES_Down, 'leg4_EES_Down/F')
+
+    # For TES shifts in LLTT
+    leg3_DM0_Up = array('f', [ 0 ] )
+    leg3_DM0_UpB = tnew.Branch('leg3_DM0_Up', leg3_DM0_Up, 'leg3_DM0_Up/F')
+    leg3_DM0_Down = array('f', [ 0 ] )
+    leg3_DM0_DownB = tnew.Branch('leg3_DM0_Down', leg3_DM0_Down, 'leg3_DM0_Down/F')
+    leg3_DM1_Up = array('f', [ 0 ] )
+    leg3_DM1_UpB = tnew.Branch('leg3_DM1_Up', leg3_DM1_Up, 'leg3_DM1_Up/F')
+    leg3_DM1_Down = array('f', [ 0 ] )
+    leg3_DM1_DownB = tnew.Branch('leg3_DM1_Down', leg3_DM1_Down, 'leg3_DM1_Down/F')
+    leg3_DM10_Up = array('f', [ 0 ] )
+    leg3_DM10_UpB = tnew.Branch('leg3_DM10_Up', leg3_DM10_Up, 'leg3_DM10_Up/F')
+    leg3_DM10_Down = array('f', [ 0 ] )
+    leg3_DM10_DownB = tnew.Branch('leg3_DM10_Down', leg3_DM10_Down, 'leg3_DM10_Down/F')
+
+    # For TES shifts in LLLT and LLTT
+    leg4_DM0_Up = array('f', [ 0 ] )
+    leg4_DM0_UpB = tnew.Branch('leg4_DM0_Up', leg4_DM0_Up, 'leg4_DM0_Up/F')
+    leg4_DM0_Down = array('f', [ 0 ] )
+    leg4_DM0_DownB = tnew.Branch('leg4_DM0_Down', leg4_DM0_Down, 'leg4_DM0_Down/F')
+    leg4_DM1_Up = array('f', [ 0 ] )
+    leg4_DM1_UpB = tnew.Branch('leg4_DM1_Up', leg4_DM1_Up, 'leg4_DM1_Up/F')
+    leg4_DM1_Down = array('f', [ 0 ] )
+    leg4_DM1_DownB = tnew.Branch('leg4_DM1_Down', leg4_DM1_Down, 'leg4_DM1_Down/F')
+    leg4_DM10_Up = array('f', [ 0 ] )
+    leg4_DM10_UpB = tnew.Branch('leg4_DM10_Up', leg4_DM10_Up, 'leg4_DM10_Up/F')
+    leg4_DM10_Down = array('f', [ 0 ] )
+    leg4_DM10_DownB = tnew.Branch('leg4_DM10_Down', leg4_DM10_Down, 'leg4_DM10_Down/F')
 
 
     ''' Set MvaMet base vars defaults in case we didn't fill that value '''
@@ -985,211 +1039,211 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     for row in told:
         if counter == 0 :
             counter += 1
-            # FIXME ugly kludge to handle that some TTrees are missing some
-            # branches.  This allows us to HADD the samples
-            # REMOVE THIS IN THE FUTURE!
-            try : print row[0].m_sv
-            except KeyError :
-                m_sv = array('f', [ 0 ] )
-                m_svB = tnew.Branch('m_sv', m_sv, 'm_sv/F')
-                pt_sv = array('f', [ 0 ] )
-                pt_svB = tnew.Branch('pt_sv', pt_sv, 'pt_sv/F')
-                eta_sv = array('f', [ 0 ] )
-                eta_svB = tnew.Branch('eta_sv', eta_sv, 'eta_sv/F')
-                phi_sv = array('f', [ 0 ] )
-                phi_svB = tnew.Branch('phi_sv', phi_sv, 'phi_sv/F')
-                
-            try : print row[0].type1_pfMet_shiftedPt_UnclusteredEnUp
-            except KeyError :
-                type1_pfMet_shiftedPhi_ElectronEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_ElectronEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_ElectronEnDown', type1_pfMet_shiftedPhi_ElectronEnDown, 'type1_pfMet_shiftedPhi_ElectronEnDown/F')
-                type1_pfMet_shiftedPhi_ElectronEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_ElectronEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_ElectronEnUp', type1_pfMet_shiftedPhi_ElectronEnUp, 'type1_pfMet_shiftedPhi_ElectronEnUp/F')
-                type1_pfMet_shiftedPhi_JetEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_JetEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_JetEnDown', type1_pfMet_shiftedPhi_JetEnDown, 'type1_pfMet_shiftedPhi_JetEnDown/F')
-                type1_pfMet_shiftedPhi_JetEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_JetEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_JetEnUp', type1_pfMet_shiftedPhi_JetEnUp, 'type1_pfMet_shiftedPhi_JetEnUp/F')
-                type1_pfMet_shiftedPhi_JetResDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_JetResDownB = tnew.Branch('type1_pfMet_shiftedPhi_JetResDown', type1_pfMet_shiftedPhi_JetResDown, 'type1_pfMet_shiftedPhi_JetResDown/F')
-                type1_pfMet_shiftedPhi_JetResUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_JetResUpB = tnew.Branch('type1_pfMet_shiftedPhi_JetResUp', type1_pfMet_shiftedPhi_JetResUp, 'type1_pfMet_shiftedPhi_JetResUp/F')
-                type1_pfMet_shiftedPhi_MuonEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_MuonEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_MuonEnUp', type1_pfMet_shiftedPhi_MuonEnUp, 'type1_pfMet_shiftedPhi_MuonEnUp/F')
-                type1_pfMet_shiftedPhi_MuonEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_MuonEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_MuonEnDown', type1_pfMet_shiftedPhi_MuonEnDown, 'type1_pfMet_shiftedPhi_MuonEnDown/F')
-                type1_pfMet_shiftedPhi_PhotonEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_PhotonEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_PhotonEnDown', type1_pfMet_shiftedPhi_PhotonEnDown, 'type1_pfMet_shiftedPhi_PhotonEnDown/F')
-                type1_pfMet_shiftedPhi_PhotonEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_PhotonEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_PhotonEnUp', type1_pfMet_shiftedPhi_PhotonEnUp, 'type1_pfMet_shiftedPhi_PhotonEnUp/F')
-                type1_pfMet_shiftedPhi_TauEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_TauEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_TauEnUp', type1_pfMet_shiftedPhi_TauEnUp, 'type1_pfMet_shiftedPhi_TauEnUp/F')
-                type1_pfMet_shiftedPhi_TauEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_TauEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_TauEnDown', type1_pfMet_shiftedPhi_TauEnDown, 'type1_pfMet_shiftedPhi_TauEnDown/F')
-                type1_pfMet_shiftedPhi_UnclusteredEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_UnclusteredEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_UnclusteredEnDown', type1_pfMet_shiftedPhi_UnclusteredEnDown, 'type1_pfMet_shiftedPhi_UnclusteredEnDown/F')
-                type1_pfMet_shiftedPhi_UnclusteredEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPhi_UnclusteredEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_UnclusteredEnUp', type1_pfMet_shiftedPhi_UnclusteredEnUp, 'type1_pfMet_shiftedPhi_UnclusteredEnUp/F')
-                type1_pfMet_shiftedPt_ElectronEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_ElectronEnDownB = tnew.Branch('type1_pfMet_shiftedPt_ElectronEnDown', type1_pfMet_shiftedPt_ElectronEnDown, 'type1_pfMet_shiftedPt_ElectronEnDown/F')
-                type1_pfMet_shiftedPt_ElectronEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_ElectronEnUpB = tnew.Branch('type1_pfMet_shiftedPt_ElectronEnUp', type1_pfMet_shiftedPt_ElectronEnUp, 'type1_pfMet_shiftedPt_ElectronEnUp/F')
-                type1_pfMet_shiftedPt_JetEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_JetEnDownB = tnew.Branch('type1_pfMet_shiftedPt_JetEnDown', type1_pfMet_shiftedPt_JetEnDown, 'type1_pfMet_shiftedPt_JetEnDown/F')
-                type1_pfMet_shiftedPt_JetEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_JetEnUpB = tnew.Branch('type1_pfMet_shiftedPt_JetEnUp', type1_pfMet_shiftedPt_JetEnUp, 'type1_pfMet_shiftedPt_JetEnUp/F')
-                type1_pfMet_shiftedPt_JetResDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_JetResDownB = tnew.Branch('type1_pfMet_shiftedPt_JetResDown', type1_pfMet_shiftedPt_JetResDown, 'type1_pfMet_shiftedPt_JetResDown/F')
-                type1_pfMet_shiftedPt_JetResUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_JetResUpB = tnew.Branch('type1_pfMet_shiftedPt_JetResUp', type1_pfMet_shiftedPt_JetResUp, 'type1_pfMet_shiftedPt_JetResUp/F')
-                type1_pfMet_shiftedPt_MuonEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_MuonEnUpB = tnew.Branch('type1_pfMet_shiftedPt_MuonEnUp', type1_pfMet_shiftedPt_MuonEnUp, 'type1_pfMet_shiftedPt_MuonEnUp/F')
-                type1_pfMet_shiftedPt_MuonEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_MuonEnDownB = tnew.Branch('type1_pfMet_shiftedPt_MuonEnDown', type1_pfMet_shiftedPt_MuonEnDown, 'type1_pfMet_shiftedPt_MuonEnDown/F')
-                type1_pfMet_shiftedPt_PhotonEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_PhotonEnDownB = tnew.Branch('type1_pfMet_shiftedPt_PhotonEnDown', type1_pfMet_shiftedPt_PhotonEnDown, 'type1_pfMet_shiftedPt_PhotonEnDown/F')
-                type1_pfMet_shiftedPt_PhotonEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_PhotonEnUpB = tnew.Branch('type1_pfMet_shiftedPt_PhotonEnUp', type1_pfMet_shiftedPt_PhotonEnUp, 'type1_pfMet_shiftedPt_PhotonEnUp/F')
-                type1_pfMet_shiftedPt_TauEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_TauEnUpB = tnew.Branch('type1_pfMet_shiftedPt_TauEnUp', type1_pfMet_shiftedPt_TauEnUp, 'type1_pfMet_shiftedPt_TauEnUp/F')
-                type1_pfMet_shiftedPt_TauEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_TauEnDownB = tnew.Branch('type1_pfMet_shiftedPt_TauEnDown', type1_pfMet_shiftedPt_TauEnDown, 'type1_pfMet_shiftedPt_TauEnDown/F')
-                type1_pfMet_shiftedPt_UnclusteredEnDown = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_UnclusteredEnDownB = tnew.Branch('type1_pfMet_shiftedPt_UnclusteredEnDown', type1_pfMet_shiftedPt_UnclusteredEnDown, 'type1_pfMet_shiftedPt_UnclusteredEnDown/F')
-                type1_pfMet_shiftedPt_UnclusteredEnUp = array('f', [ 0 ] )
-                type1_pfMet_shiftedPt_UnclusteredEnUpB = tnew.Branch('type1_pfMet_shiftedPt_UnclusteredEnUp', type1_pfMet_shiftedPt_UnclusteredEnUp, 'type1_pfMet_shiftedPt_UnclusteredEnUp/F')
+            ## FIXME ugly kludge to handle that some TTrees are missing some
+            ## branches.  This allows us to HADD the samples
+            ## REMOVE THIS IN THE FUTURE!
+            #try : print row[0].m_sv
+            #except KeyError :
+            #    m_sv = array('f', [ 0 ] )
+            #    m_svB = tnew.Branch('m_sv', m_sv, 'm_sv/F')
+            #    pt_sv = array('f', [ 0 ] )
+            #    pt_svB = tnew.Branch('pt_sv', pt_sv, 'pt_sv/F')
+            #    eta_sv = array('f', [ 0 ] )
+            #    eta_svB = tnew.Branch('eta_sv', eta_sv, 'eta_sv/F')
+            #    phi_sv = array('f', [ 0 ] )
+            #    phi_svB = tnew.Branch('phi_sv', phi_sv, 'phi_sv/F')
+            #    
+            #try : print row[0].type1_pfMet_shiftedPt_UnclusteredEnUp
+            #except KeyError :
+            #    type1_pfMet_shiftedPhi_ElectronEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_ElectronEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_ElectronEnDown', type1_pfMet_shiftedPhi_ElectronEnDown, 'type1_pfMet_shiftedPhi_ElectronEnDown/F')
+            #    type1_pfMet_shiftedPhi_ElectronEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_ElectronEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_ElectronEnUp', type1_pfMet_shiftedPhi_ElectronEnUp, 'type1_pfMet_shiftedPhi_ElectronEnUp/F')
+            #    type1_pfMet_shiftedPhi_JetEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_JetEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_JetEnDown', type1_pfMet_shiftedPhi_JetEnDown, 'type1_pfMet_shiftedPhi_JetEnDown/F')
+            #    type1_pfMet_shiftedPhi_JetEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_JetEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_JetEnUp', type1_pfMet_shiftedPhi_JetEnUp, 'type1_pfMet_shiftedPhi_JetEnUp/F')
+            #    type1_pfMet_shiftedPhi_JetResDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_JetResDownB = tnew.Branch('type1_pfMet_shiftedPhi_JetResDown', type1_pfMet_shiftedPhi_JetResDown, 'type1_pfMet_shiftedPhi_JetResDown/F')
+            #    type1_pfMet_shiftedPhi_JetResUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_JetResUpB = tnew.Branch('type1_pfMet_shiftedPhi_JetResUp', type1_pfMet_shiftedPhi_JetResUp, 'type1_pfMet_shiftedPhi_JetResUp/F')
+            #    type1_pfMet_shiftedPhi_MuonEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_MuonEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_MuonEnUp', type1_pfMet_shiftedPhi_MuonEnUp, 'type1_pfMet_shiftedPhi_MuonEnUp/F')
+            #    type1_pfMet_shiftedPhi_MuonEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_MuonEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_MuonEnDown', type1_pfMet_shiftedPhi_MuonEnDown, 'type1_pfMet_shiftedPhi_MuonEnDown/F')
+            #    type1_pfMet_shiftedPhi_PhotonEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_PhotonEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_PhotonEnDown', type1_pfMet_shiftedPhi_PhotonEnDown, 'type1_pfMet_shiftedPhi_PhotonEnDown/F')
+            #    type1_pfMet_shiftedPhi_PhotonEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_PhotonEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_PhotonEnUp', type1_pfMet_shiftedPhi_PhotonEnUp, 'type1_pfMet_shiftedPhi_PhotonEnUp/F')
+            #    type1_pfMet_shiftedPhi_TauEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_TauEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_TauEnUp', type1_pfMet_shiftedPhi_TauEnUp, 'type1_pfMet_shiftedPhi_TauEnUp/F')
+            #    type1_pfMet_shiftedPhi_TauEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_TauEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_TauEnDown', type1_pfMet_shiftedPhi_TauEnDown, 'type1_pfMet_shiftedPhi_TauEnDown/F')
+            #    type1_pfMet_shiftedPhi_UnclusteredEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_UnclusteredEnDownB = tnew.Branch('type1_pfMet_shiftedPhi_UnclusteredEnDown', type1_pfMet_shiftedPhi_UnclusteredEnDown, 'type1_pfMet_shiftedPhi_UnclusteredEnDown/F')
+            #    type1_pfMet_shiftedPhi_UnclusteredEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPhi_UnclusteredEnUpB = tnew.Branch('type1_pfMet_shiftedPhi_UnclusteredEnUp', type1_pfMet_shiftedPhi_UnclusteredEnUp, 'type1_pfMet_shiftedPhi_UnclusteredEnUp/F')
+            #    type1_pfMet_shiftedPt_ElectronEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_ElectronEnDownB = tnew.Branch('type1_pfMet_shiftedPt_ElectronEnDown', type1_pfMet_shiftedPt_ElectronEnDown, 'type1_pfMet_shiftedPt_ElectronEnDown/F')
+            #    type1_pfMet_shiftedPt_ElectronEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_ElectronEnUpB = tnew.Branch('type1_pfMet_shiftedPt_ElectronEnUp', type1_pfMet_shiftedPt_ElectronEnUp, 'type1_pfMet_shiftedPt_ElectronEnUp/F')
+            #    type1_pfMet_shiftedPt_JetEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_JetEnDownB = tnew.Branch('type1_pfMet_shiftedPt_JetEnDown', type1_pfMet_shiftedPt_JetEnDown, 'type1_pfMet_shiftedPt_JetEnDown/F')
+            #    type1_pfMet_shiftedPt_JetEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_JetEnUpB = tnew.Branch('type1_pfMet_shiftedPt_JetEnUp', type1_pfMet_shiftedPt_JetEnUp, 'type1_pfMet_shiftedPt_JetEnUp/F')
+            #    type1_pfMet_shiftedPt_JetResDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_JetResDownB = tnew.Branch('type1_pfMet_shiftedPt_JetResDown', type1_pfMet_shiftedPt_JetResDown, 'type1_pfMet_shiftedPt_JetResDown/F')
+            #    type1_pfMet_shiftedPt_JetResUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_JetResUpB = tnew.Branch('type1_pfMet_shiftedPt_JetResUp', type1_pfMet_shiftedPt_JetResUp, 'type1_pfMet_shiftedPt_JetResUp/F')
+            #    type1_pfMet_shiftedPt_MuonEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_MuonEnUpB = tnew.Branch('type1_pfMet_shiftedPt_MuonEnUp', type1_pfMet_shiftedPt_MuonEnUp, 'type1_pfMet_shiftedPt_MuonEnUp/F')
+            #    type1_pfMet_shiftedPt_MuonEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_MuonEnDownB = tnew.Branch('type1_pfMet_shiftedPt_MuonEnDown', type1_pfMet_shiftedPt_MuonEnDown, 'type1_pfMet_shiftedPt_MuonEnDown/F')
+            #    type1_pfMet_shiftedPt_PhotonEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_PhotonEnDownB = tnew.Branch('type1_pfMet_shiftedPt_PhotonEnDown', type1_pfMet_shiftedPt_PhotonEnDown, 'type1_pfMet_shiftedPt_PhotonEnDown/F')
+            #    type1_pfMet_shiftedPt_PhotonEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_PhotonEnUpB = tnew.Branch('type1_pfMet_shiftedPt_PhotonEnUp', type1_pfMet_shiftedPt_PhotonEnUp, 'type1_pfMet_shiftedPt_PhotonEnUp/F')
+            #    type1_pfMet_shiftedPt_TauEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_TauEnUpB = tnew.Branch('type1_pfMet_shiftedPt_TauEnUp', type1_pfMet_shiftedPt_TauEnUp, 'type1_pfMet_shiftedPt_TauEnUp/F')
+            #    type1_pfMet_shiftedPt_TauEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_TauEnDownB = tnew.Branch('type1_pfMet_shiftedPt_TauEnDown', type1_pfMet_shiftedPt_TauEnDown, 'type1_pfMet_shiftedPt_TauEnDown/F')
+            #    type1_pfMet_shiftedPt_UnclusteredEnDown = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_UnclusteredEnDownB = tnew.Branch('type1_pfMet_shiftedPt_UnclusteredEnDown', type1_pfMet_shiftedPt_UnclusteredEnDown, 'type1_pfMet_shiftedPt_UnclusteredEnDown/F')
+            #    type1_pfMet_shiftedPt_UnclusteredEnUp = array('f', [ 0 ] )
+            #    type1_pfMet_shiftedPt_UnclusteredEnUpB = tnew.Branch('type1_pfMet_shiftedPt_UnclusteredEnUp', type1_pfMet_shiftedPt_UnclusteredEnUp, 'type1_pfMet_shiftedPt_UnclusteredEnUp/F')
         
-                t1DPhiToPfMet_ElectronEnDown = array('f', [ 0 ] )
-                t1DPhiToPfMet_ElectronEnDownB = tnew.Branch('t1DPhiToPfMet_ElectronEnDown', t1DPhiToPfMet_ElectronEnDown, 't1DPhiToPfMet_ElectronEnDown/F')
-                t1DPhiToPfMet_ElectronEnUp = array('f', [ 0 ] )
-                t1DPhiToPfMet_ElectronEnUpB = tnew.Branch('t1DPhiToPfMet_ElectronEnUp', t1DPhiToPfMet_ElectronEnUp, 't1DPhiToPfMet_ElectronEnUp/F')
-                t1DPhiToPfMet_JetEnDown = array('f', [ 0 ] )
-                t1DPhiToPfMet_JetEnDownB = tnew.Branch('t1DPhiToPfMet_JetEnDown', t1DPhiToPfMet_JetEnDown, 't1DPhiToPfMet_JetEnDown/F')
-                t1DPhiToPfMet_JetEnUp = array('f', [ 0 ] )
-                t1DPhiToPfMet_JetEnUpB = tnew.Branch('t1DPhiToPfMet_JetEnUp', t1DPhiToPfMet_JetEnUp, 't1DPhiToPfMet_JetEnUp/F')
-                t1DPhiToPfMet_JetResDown = array('f', [ 0 ] )
-                t1DPhiToPfMet_JetResDownB = tnew.Branch('t1DPhiToPfMet_JetResDown', t1DPhiToPfMet_JetResDown, 't1DPhiToPfMet_JetResDown/F')
-                t1DPhiToPfMet_JetResUp = array('f', [ 0 ] )
-                t1DPhiToPfMet_JetResUpB = tnew.Branch('t1DPhiToPfMet_JetResUp', t1DPhiToPfMet_JetResUp, 't1DPhiToPfMet_JetResUp/F')
-                t1DPhiToPfMet_MuonEnUp = array('f', [ 0 ] )
-                t1DPhiToPfMet_MuonEnUpB = tnew.Branch('t1DPhiToPfMet_MuonEnUp', t1DPhiToPfMet_MuonEnUp, 't1DPhiToPfMet_MuonEnUp/F')
-                t1DPhiToPfMet_MuonEnDown = array('f', [ 0 ] )
-                t1DPhiToPfMet_MuonEnDownB = tnew.Branch('t1DPhiToPfMet_MuonEnDown', t1DPhiToPfMet_MuonEnDown, 't1DPhiToPfMet_MuonEnDown/F')
-                t1DPhiToPfMet_PhotonEnDown = array('f', [ 0 ] )
-                t1DPhiToPfMet_PhotonEnDownB = tnew.Branch('t1DPhiToPfMet_PhotonEnDown', t1DPhiToPfMet_PhotonEnDown, 't1DPhiToPfMet_PhotonEnDown/F')
-                t1DPhiToPfMet_PhotonEnUp = array('f', [ 0 ] )
-                t1DPhiToPfMet_PhotonEnUpB = tnew.Branch('t1DPhiToPfMet_PhotonEnUp', t1DPhiToPfMet_PhotonEnUp, 't1DPhiToPfMet_PhotonEnUp/F')
-                t1DPhiToPfMet_TauEnUp = array('f', [ 0 ] )
-                t1DPhiToPfMet_TauEnUpB = tnew.Branch('t1DPhiToPfMet_TauEnUp', t1DPhiToPfMet_TauEnUp, 't1DPhiToPfMet_TauEnUp/F')
-                t1DPhiToPfMet_TauEnDown = array('f', [ 0 ] )
-                t1DPhiToPfMet_TauEnDownB = tnew.Branch('t1DPhiToPfMet_TauEnDown', t1DPhiToPfMet_TauEnDown, 't1DPhiToPfMet_TauEnDown/F')
-                t1DPhiToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
-                t1DPhiToPfMet_UnclusteredEnDownB = tnew.Branch('t1DPhiToPfMet_UnclusteredEnDown', t1DPhiToPfMet_UnclusteredEnDown, 't1DPhiToPfMet_UnclusteredEnDown/F')
-                t1DPhiToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
-                t1DPhiToPfMet_UnclusteredEnUpB = tnew.Branch('t1DPhiToPfMet_UnclusteredEnUp', t1DPhiToPfMet_UnclusteredEnUp, 't1DPhiToPfMet_UnclusteredEnUp/F')
-                t2DPhiToPfMet_ElectronEnDown = array('f', [ 0 ] )
-                t2DPhiToPfMet_ElectronEnDownB = tnew.Branch('t2DPhiToPfMet_ElectronEnDown', t2DPhiToPfMet_ElectronEnDown, 't2DPhiToPfMet_ElectronEnDown/F')
-                t2DPhiToPfMet_ElectronEnUp = array('f', [ 0 ] )
-                t2DPhiToPfMet_ElectronEnUpB = tnew.Branch('t2DPhiToPfMet_ElectronEnUp', t2DPhiToPfMet_ElectronEnUp, 't2DPhiToPfMet_ElectronEnUp/F')
-                t2DPhiToPfMet_JetEnDown = array('f', [ 0 ] )
-                t2DPhiToPfMet_JetEnDownB = tnew.Branch('t2DPhiToPfMet_JetEnDown', t2DPhiToPfMet_JetEnDown, 't2DPhiToPfMet_JetEnDown/F')
-                t2DPhiToPfMet_JetEnUp = array('f', [ 0 ] )
-                t2DPhiToPfMet_JetEnUpB = tnew.Branch('t2DPhiToPfMet_JetEnUp', t2DPhiToPfMet_JetEnUp, 't2DPhiToPfMet_JetEnUp/F')
-                t2DPhiToPfMet_JetResDown = array('f', [ 0 ] )
-                t2DPhiToPfMet_JetResDownB = tnew.Branch('t2DPhiToPfMet_JetResDown', t2DPhiToPfMet_JetResDown, 't2DPhiToPfMet_JetResDown/F')
-                t2DPhiToPfMet_JetResUp = array('f', [ 0 ] )
-                t2DPhiToPfMet_JetResUpB = tnew.Branch('t2DPhiToPfMet_JetResUp', t2DPhiToPfMet_JetResUp, 't2DPhiToPfMet_JetResUp/F')
-                t2DPhiToPfMet_MuonEnUp = array('f', [ 0 ] )
-                t2DPhiToPfMet_MuonEnUpB = tnew.Branch('t2DPhiToPfMet_MuonEnUp', t2DPhiToPfMet_MuonEnUp, 't2DPhiToPfMet_MuonEnUp/F')
-                t2DPhiToPfMet_MuonEnDown = array('f', [ 0 ] )
-                t2DPhiToPfMet_MuonEnDownB = tnew.Branch('t2DPhiToPfMet_MuonEnDown', t2DPhiToPfMet_MuonEnDown, 't2DPhiToPfMet_MuonEnDown/F')
-                t2DPhiToPfMet_PhotonEnDown = array('f', [ 0 ] )
-                t2DPhiToPfMet_PhotonEnDownB = tnew.Branch('t2DPhiToPfMet_PhotonEnDown', t2DPhiToPfMet_PhotonEnDown, 't2DPhiToPfMet_PhotonEnDown/F')
-                t2DPhiToPfMet_PhotonEnUp = array('f', [ 0 ] )
-                t2DPhiToPfMet_PhotonEnUpB = tnew.Branch('t2DPhiToPfMet_PhotonEnUp', t2DPhiToPfMet_PhotonEnUp, 't2DPhiToPfMet_PhotonEnUp/F')
-                t2DPhiToPfMet_TauEnUp = array('f', [ 0 ] )
-                t2DPhiToPfMet_TauEnUpB = tnew.Branch('t2DPhiToPfMet_TauEnUp', t2DPhiToPfMet_TauEnUp, 't2DPhiToPfMet_TauEnUp/F')
-                t2DPhiToPfMet_TauEnDown = array('f', [ 0 ] )
-                t2DPhiToPfMet_TauEnDownB = tnew.Branch('t2DPhiToPfMet_TauEnDown', t2DPhiToPfMet_TauEnDown, 't2DPhiToPfMet_TauEnDown/F')
-                t2DPhiToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
-                t2DPhiToPfMet_UnclusteredEnDownB = tnew.Branch('t2DPhiToPfMet_UnclusteredEnDown', t2DPhiToPfMet_UnclusteredEnDown, 't2DPhiToPfMet_UnclusteredEnDown/F')
-                t2DPhiToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
-                t2DPhiToPfMet_UnclusteredEnUpB = tnew.Branch('t2DPhiToPfMet_UnclusteredEnUp', t2DPhiToPfMet_UnclusteredEnUp, 't2DPhiToPfMet_UnclusteredEnUp/F')
-                t2DPhiToPfMet_Raw = array('f', [ 0 ] )
-                t2DPhiToPfMet_RawB = tnew.Branch('t2DPhiToPfMet_Raw', t2DPhiToPfMet_Raw, 't2DPhiToPfMet_Raw/F')
-                t1DPhiToPfMet_Raw = array('f', [ 0 ] )
-                t1DPhiToPfMet_RawB = tnew.Branch('t1DPhiToPfMet_Raw', t1DPhiToPfMet_Raw, 't1DPhiToPfMet_Raw/F')
+            #    t1DPhiToPfMet_ElectronEnDown = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_ElectronEnDownB = tnew.Branch('t1DPhiToPfMet_ElectronEnDown', t1DPhiToPfMet_ElectronEnDown, 't1DPhiToPfMet_ElectronEnDown/F')
+            #    t1DPhiToPfMet_ElectronEnUp = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_ElectronEnUpB = tnew.Branch('t1DPhiToPfMet_ElectronEnUp', t1DPhiToPfMet_ElectronEnUp, 't1DPhiToPfMet_ElectronEnUp/F')
+            #    t1DPhiToPfMet_JetEnDown = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_JetEnDownB = tnew.Branch('t1DPhiToPfMet_JetEnDown', t1DPhiToPfMet_JetEnDown, 't1DPhiToPfMet_JetEnDown/F')
+            #    t1DPhiToPfMet_JetEnUp = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_JetEnUpB = tnew.Branch('t1DPhiToPfMet_JetEnUp', t1DPhiToPfMet_JetEnUp, 't1DPhiToPfMet_JetEnUp/F')
+            #    t1DPhiToPfMet_JetResDown = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_JetResDownB = tnew.Branch('t1DPhiToPfMet_JetResDown', t1DPhiToPfMet_JetResDown, 't1DPhiToPfMet_JetResDown/F')
+            #    t1DPhiToPfMet_JetResUp = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_JetResUpB = tnew.Branch('t1DPhiToPfMet_JetResUp', t1DPhiToPfMet_JetResUp, 't1DPhiToPfMet_JetResUp/F')
+            #    t1DPhiToPfMet_MuonEnUp = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_MuonEnUpB = tnew.Branch('t1DPhiToPfMet_MuonEnUp', t1DPhiToPfMet_MuonEnUp, 't1DPhiToPfMet_MuonEnUp/F')
+            #    t1DPhiToPfMet_MuonEnDown = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_MuonEnDownB = tnew.Branch('t1DPhiToPfMet_MuonEnDown', t1DPhiToPfMet_MuonEnDown, 't1DPhiToPfMet_MuonEnDown/F')
+            #    t1DPhiToPfMet_PhotonEnDown = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_PhotonEnDownB = tnew.Branch('t1DPhiToPfMet_PhotonEnDown', t1DPhiToPfMet_PhotonEnDown, 't1DPhiToPfMet_PhotonEnDown/F')
+            #    t1DPhiToPfMet_PhotonEnUp = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_PhotonEnUpB = tnew.Branch('t1DPhiToPfMet_PhotonEnUp', t1DPhiToPfMet_PhotonEnUp, 't1DPhiToPfMet_PhotonEnUp/F')
+            #    t1DPhiToPfMet_TauEnUp = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_TauEnUpB = tnew.Branch('t1DPhiToPfMet_TauEnUp', t1DPhiToPfMet_TauEnUp, 't1DPhiToPfMet_TauEnUp/F')
+            #    t1DPhiToPfMet_TauEnDown = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_TauEnDownB = tnew.Branch('t1DPhiToPfMet_TauEnDown', t1DPhiToPfMet_TauEnDown, 't1DPhiToPfMet_TauEnDown/F')
+            #    t1DPhiToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_UnclusteredEnDownB = tnew.Branch('t1DPhiToPfMet_UnclusteredEnDown', t1DPhiToPfMet_UnclusteredEnDown, 't1DPhiToPfMet_UnclusteredEnDown/F')
+            #    t1DPhiToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_UnclusteredEnUpB = tnew.Branch('t1DPhiToPfMet_UnclusteredEnUp', t1DPhiToPfMet_UnclusteredEnUp, 't1DPhiToPfMet_UnclusteredEnUp/F')
+            #    t2DPhiToPfMet_ElectronEnDown = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_ElectronEnDownB = tnew.Branch('t2DPhiToPfMet_ElectronEnDown', t2DPhiToPfMet_ElectronEnDown, 't2DPhiToPfMet_ElectronEnDown/F')
+            #    t2DPhiToPfMet_ElectronEnUp = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_ElectronEnUpB = tnew.Branch('t2DPhiToPfMet_ElectronEnUp', t2DPhiToPfMet_ElectronEnUp, 't2DPhiToPfMet_ElectronEnUp/F')
+            #    t2DPhiToPfMet_JetEnDown = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_JetEnDownB = tnew.Branch('t2DPhiToPfMet_JetEnDown', t2DPhiToPfMet_JetEnDown, 't2DPhiToPfMet_JetEnDown/F')
+            #    t2DPhiToPfMet_JetEnUp = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_JetEnUpB = tnew.Branch('t2DPhiToPfMet_JetEnUp', t2DPhiToPfMet_JetEnUp, 't2DPhiToPfMet_JetEnUp/F')
+            #    t2DPhiToPfMet_JetResDown = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_JetResDownB = tnew.Branch('t2DPhiToPfMet_JetResDown', t2DPhiToPfMet_JetResDown, 't2DPhiToPfMet_JetResDown/F')
+            #    t2DPhiToPfMet_JetResUp = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_JetResUpB = tnew.Branch('t2DPhiToPfMet_JetResUp', t2DPhiToPfMet_JetResUp, 't2DPhiToPfMet_JetResUp/F')
+            #    t2DPhiToPfMet_MuonEnUp = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_MuonEnUpB = tnew.Branch('t2DPhiToPfMet_MuonEnUp', t2DPhiToPfMet_MuonEnUp, 't2DPhiToPfMet_MuonEnUp/F')
+            #    t2DPhiToPfMet_MuonEnDown = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_MuonEnDownB = tnew.Branch('t2DPhiToPfMet_MuonEnDown', t2DPhiToPfMet_MuonEnDown, 't2DPhiToPfMet_MuonEnDown/F')
+            #    t2DPhiToPfMet_PhotonEnDown = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_PhotonEnDownB = tnew.Branch('t2DPhiToPfMet_PhotonEnDown', t2DPhiToPfMet_PhotonEnDown, 't2DPhiToPfMet_PhotonEnDown/F')
+            #    t2DPhiToPfMet_PhotonEnUp = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_PhotonEnUpB = tnew.Branch('t2DPhiToPfMet_PhotonEnUp', t2DPhiToPfMet_PhotonEnUp, 't2DPhiToPfMet_PhotonEnUp/F')
+            #    t2DPhiToPfMet_TauEnUp = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_TauEnUpB = tnew.Branch('t2DPhiToPfMet_TauEnUp', t2DPhiToPfMet_TauEnUp, 't2DPhiToPfMet_TauEnUp/F')
+            #    t2DPhiToPfMet_TauEnDown = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_TauEnDownB = tnew.Branch('t2DPhiToPfMet_TauEnDown', t2DPhiToPfMet_TauEnDown, 't2DPhiToPfMet_TauEnDown/F')
+            #    t2DPhiToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_UnclusteredEnDownB = tnew.Branch('t2DPhiToPfMet_UnclusteredEnDown', t2DPhiToPfMet_UnclusteredEnDown, 't2DPhiToPfMet_UnclusteredEnDown/F')
+            #    t2DPhiToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_UnclusteredEnUpB = tnew.Branch('t2DPhiToPfMet_UnclusteredEnUp', t2DPhiToPfMet_UnclusteredEnUp, 't2DPhiToPfMet_UnclusteredEnUp/F')
+            #    t2DPhiToPfMet_Raw = array('f', [ 0 ] )
+            #    t2DPhiToPfMet_RawB = tnew.Branch('t2DPhiToPfMet_Raw', t2DPhiToPfMet_Raw, 't2DPhiToPfMet_Raw/F')
+            #    t1DPhiToPfMet_Raw = array('f', [ 0 ] )
+            #    t1DPhiToPfMet_RawB = tnew.Branch('t1DPhiToPfMet_Raw', t1DPhiToPfMet_Raw, 't1DPhiToPfMet_Raw/F')
         
-                t1MtToPfMet_ElectronEnDown = array('f', [ 0 ] )
-                t1MtToPfMet_ElectronEnDownB = tnew.Branch('t1MtToPfMet_ElectronEnDown', t1MtToPfMet_ElectronEnDown, 't1MtToPfMet_ElectronEnDown/F')
-                t1MtToPfMet_ElectronEnUp = array('f', [ 0 ] )
-                t1MtToPfMet_ElectronEnUpB = tnew.Branch('t1MtToPfMet_ElectronEnUp', t1MtToPfMet_ElectronEnUp, 't1MtToPfMet_ElectronEnUp/F')
-                t1MtToPfMet_JetEnDown = array('f', [ 0 ] )
-                t1MtToPfMet_JetEnDownB = tnew.Branch('t1MtToPfMet_JetEnDown', t1MtToPfMet_JetEnDown, 't1MtToPfMet_JetEnDown/F')
-                t1MtToPfMet_JetEnUp = array('f', [ 0 ] )
-                t1MtToPfMet_JetEnUpB = tnew.Branch('t1MtToPfMet_JetEnUp', t1MtToPfMet_JetEnUp, 't1MtToPfMet_JetEnUp/F')
-                t1MtToPfMet_JetResDown = array('f', [ 0 ] )
-                t1MtToPfMet_JetResDownB = tnew.Branch('t1MtToPfMet_JetResDown', t1MtToPfMet_JetResDown, 't1MtToPfMet_JetResDown/F')
-                t1MtToPfMet_JetResUp = array('f', [ 0 ] )
-                t1MtToPfMet_JetResUpB = tnew.Branch('t1MtToPfMet_JetResUp', t1MtToPfMet_JetResUp, 't1MtToPfMet_JetResUp/F')
-                t1MtToPfMet_MuonEnUp = array('f', [ 0 ] )
-                t1MtToPfMet_MuonEnUpB = tnew.Branch('t1MtToPfMet_MuonEnUp', t1MtToPfMet_MuonEnUp, 't1MtToPfMet_MuonEnUp/F')
-                t1MtToPfMet_MuonEnDown = array('f', [ 0 ] )
-                t1MtToPfMet_MuonEnDownB = tnew.Branch('t1MtToPfMet_MuonEnDown', t1MtToPfMet_MuonEnDown, 't1MtToPfMet_MuonEnDown/F')
-                t1MtToPfMet_PhotonEnDown = array('f', [ 0 ] )
-                t1MtToPfMet_PhotonEnDownB = tnew.Branch('t1MtToPfMet_PhotonEnDown', t1MtToPfMet_PhotonEnDown, 't1MtToPfMet_PhotonEnDown/F')
-                t1MtToPfMet_PhotonEnUp = array('f', [ 0 ] )
-                t1MtToPfMet_PhotonEnUpB = tnew.Branch('t1MtToPfMet_PhotonEnUp', t1MtToPfMet_PhotonEnUp, 't1MtToPfMet_PhotonEnUp/F')
-                t1MtToPfMet_TauEnUp = array('f', [ 0 ] )
-                t1MtToPfMet_TauEnUpB = tnew.Branch('t1MtToPfMet_TauEnUp', t1MtToPfMet_TauEnUp, 't1MtToPfMet_TauEnUp/F')
-                t1MtToPfMet_TauEnDown = array('f', [ 0 ] )
-                t1MtToPfMet_TauEnDownB = tnew.Branch('t1MtToPfMet_TauEnDown', t1MtToPfMet_TauEnDown, 't1MtToPfMet_TauEnDown/F')
-                t1MtToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
-                t1MtToPfMet_UnclusteredEnDownB = tnew.Branch('t1MtToPfMet_UnclusteredEnDown', t1MtToPfMet_UnclusteredEnDown, 't1MtToPfMet_UnclusteredEnDown/F')
-                t1MtToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
-                t1MtToPfMet_UnclusteredEnUpB = tnew.Branch('t1MtToPfMet_UnclusteredEnUp', t1MtToPfMet_UnclusteredEnUp, 't1MtToPfMet_UnclusteredEnUp/F')
-                t2MtToPfMet_ElectronEnDown = array('f', [ 0 ] )
-                t2MtToPfMet_ElectronEnDownB = tnew.Branch('t2MtToPfMet_ElectronEnDown', t2MtToPfMet_ElectronEnDown, 't2MtToPfMet_ElectronEnDown/F')
-                t2MtToPfMet_ElectronEnUp = array('f', [ 0 ] )
-                t2MtToPfMet_ElectronEnUpB = tnew.Branch('t2MtToPfMet_ElectronEnUp', t2MtToPfMet_ElectronEnUp, 't2MtToPfMet_ElectronEnUp/F')
-                t2MtToPfMet_JetEnDown = array('f', [ 0 ] )
-                t2MtToPfMet_JetEnDownB = tnew.Branch('t2MtToPfMet_JetEnDown', t2MtToPfMet_JetEnDown, 't2MtToPfMet_JetEnDown/F')
-                t2MtToPfMet_JetEnUp = array('f', [ 0 ] )
-                t2MtToPfMet_JetEnUpB = tnew.Branch('t2MtToPfMet_JetEnUp', t2MtToPfMet_JetEnUp, 't2MtToPfMet_JetEnUp/F')
-                t2MtToPfMet_JetResDown = array('f', [ 0 ] )
-                t2MtToPfMet_JetResDownB = tnew.Branch('t2MtToPfMet_JetResDown', t2MtToPfMet_JetResDown, 't2MtToPfMet_JetResDown/F')
-                t2MtToPfMet_JetResUp = array('f', [ 0 ] )
-                t2MtToPfMet_JetResUpB = tnew.Branch('t2MtToPfMet_JetResUp', t2MtToPfMet_JetResUp, 't2MtToPfMet_JetResUp/F')
-                t2MtToPfMet_MuonEnUp = array('f', [ 0 ] )
-                t2MtToPfMet_MuonEnUpB = tnew.Branch('t2MtToPfMet_MuonEnUp', t2MtToPfMet_MuonEnUp, 't2MtToPfMet_MuonEnUp/F')
-                t2MtToPfMet_MuonEnDown = array('f', [ 0 ] )
-                t2MtToPfMet_MuonEnDownB = tnew.Branch('t2MtToPfMet_MuonEnDown', t2MtToPfMet_MuonEnDown, 't2MtToPfMet_MuonEnDown/F')
-                t2MtToPfMet_PhotonEnDown = array('f', [ 0 ] )
-                t2MtToPfMet_PhotonEnDownB = tnew.Branch('t2MtToPfMet_PhotonEnDown', t2MtToPfMet_PhotonEnDown, 't2MtToPfMet_PhotonEnDown/F')
-                t2MtToPfMet_PhotonEnUp = array('f', [ 0 ] )
-                t2MtToPfMet_PhotonEnUpB = tnew.Branch('t2MtToPfMet_PhotonEnUp', t2MtToPfMet_PhotonEnUp, 't2MtToPfMet_PhotonEnUp/F')
-                t2MtToPfMet_TauEnUp = array('f', [ 0 ] )
-                t2MtToPfMet_TauEnUpB = tnew.Branch('t2MtToPfMet_TauEnUp', t2MtToPfMet_TauEnUp, 't2MtToPfMet_TauEnUp/F')
-                t2MtToPfMet_TauEnDown = array('f', [ 0 ] )
-                t2MtToPfMet_TauEnDownB = tnew.Branch('t2MtToPfMet_TauEnDown', t2MtToPfMet_TauEnDown, 't2MtToPfMet_TauEnDown/F')
-                t2MtToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
-                t2MtToPfMet_UnclusteredEnDownB = tnew.Branch('t2MtToPfMet_UnclusteredEnDown', t2MtToPfMet_UnclusteredEnDown, 't2MtToPfMet_UnclusteredEnDown/F')
-                t2MtToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
-                t2MtToPfMet_UnclusteredEnUpB = tnew.Branch('t2MtToPfMet_UnclusteredEnUp', t2MtToPfMet_UnclusteredEnUp, 't2MtToPfMet_UnclusteredEnUp/F')
-                t2MtToPfMet_type1 = array('f', [ 0 ] )
-                t2MtToPfMet_type1B = tnew.Branch('t2MtToPfMet_type1', t2MtToPfMet_type1, 't2MtToPfMet_type1/F')
-                t1MtToPfMet_type1 = array('f', [ 0 ] )
-                t1MtToPfMet_type1B = tnew.Branch('t1MtToPfMet_type1', t1MtToPfMet_type1, 't1MtToPfMet_type1/F')
+            #    t1MtToPfMet_ElectronEnDown = array('f', [ 0 ] )
+            #    t1MtToPfMet_ElectronEnDownB = tnew.Branch('t1MtToPfMet_ElectronEnDown', t1MtToPfMet_ElectronEnDown, 't1MtToPfMet_ElectronEnDown/F')
+            #    t1MtToPfMet_ElectronEnUp = array('f', [ 0 ] )
+            #    t1MtToPfMet_ElectronEnUpB = tnew.Branch('t1MtToPfMet_ElectronEnUp', t1MtToPfMet_ElectronEnUp, 't1MtToPfMet_ElectronEnUp/F')
+            #    t1MtToPfMet_JetEnDown = array('f', [ 0 ] )
+            #    t1MtToPfMet_JetEnDownB = tnew.Branch('t1MtToPfMet_JetEnDown', t1MtToPfMet_JetEnDown, 't1MtToPfMet_JetEnDown/F')
+            #    t1MtToPfMet_JetEnUp = array('f', [ 0 ] )
+            #    t1MtToPfMet_JetEnUpB = tnew.Branch('t1MtToPfMet_JetEnUp', t1MtToPfMet_JetEnUp, 't1MtToPfMet_JetEnUp/F')
+            #    t1MtToPfMet_JetResDown = array('f', [ 0 ] )
+            #    t1MtToPfMet_JetResDownB = tnew.Branch('t1MtToPfMet_JetResDown', t1MtToPfMet_JetResDown, 't1MtToPfMet_JetResDown/F')
+            #    t1MtToPfMet_JetResUp = array('f', [ 0 ] )
+            #    t1MtToPfMet_JetResUpB = tnew.Branch('t1MtToPfMet_JetResUp', t1MtToPfMet_JetResUp, 't1MtToPfMet_JetResUp/F')
+            #    t1MtToPfMet_MuonEnUp = array('f', [ 0 ] )
+            #    t1MtToPfMet_MuonEnUpB = tnew.Branch('t1MtToPfMet_MuonEnUp', t1MtToPfMet_MuonEnUp, 't1MtToPfMet_MuonEnUp/F')
+            #    t1MtToPfMet_MuonEnDown = array('f', [ 0 ] )
+            #    t1MtToPfMet_MuonEnDownB = tnew.Branch('t1MtToPfMet_MuonEnDown', t1MtToPfMet_MuonEnDown, 't1MtToPfMet_MuonEnDown/F')
+            #    t1MtToPfMet_PhotonEnDown = array('f', [ 0 ] )
+            #    t1MtToPfMet_PhotonEnDownB = tnew.Branch('t1MtToPfMet_PhotonEnDown', t1MtToPfMet_PhotonEnDown, 't1MtToPfMet_PhotonEnDown/F')
+            #    t1MtToPfMet_PhotonEnUp = array('f', [ 0 ] )
+            #    t1MtToPfMet_PhotonEnUpB = tnew.Branch('t1MtToPfMet_PhotonEnUp', t1MtToPfMet_PhotonEnUp, 't1MtToPfMet_PhotonEnUp/F')
+            #    t1MtToPfMet_TauEnUp = array('f', [ 0 ] )
+            #    t1MtToPfMet_TauEnUpB = tnew.Branch('t1MtToPfMet_TauEnUp', t1MtToPfMet_TauEnUp, 't1MtToPfMet_TauEnUp/F')
+            #    t1MtToPfMet_TauEnDown = array('f', [ 0 ] )
+            #    t1MtToPfMet_TauEnDownB = tnew.Branch('t1MtToPfMet_TauEnDown', t1MtToPfMet_TauEnDown, 't1MtToPfMet_TauEnDown/F')
+            #    t1MtToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
+            #    t1MtToPfMet_UnclusteredEnDownB = tnew.Branch('t1MtToPfMet_UnclusteredEnDown', t1MtToPfMet_UnclusteredEnDown, 't1MtToPfMet_UnclusteredEnDown/F')
+            #    t1MtToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
+            #    t1MtToPfMet_UnclusteredEnUpB = tnew.Branch('t1MtToPfMet_UnclusteredEnUp', t1MtToPfMet_UnclusteredEnUp, 't1MtToPfMet_UnclusteredEnUp/F')
+            #    t2MtToPfMet_ElectronEnDown = array('f', [ 0 ] )
+            #    t2MtToPfMet_ElectronEnDownB = tnew.Branch('t2MtToPfMet_ElectronEnDown', t2MtToPfMet_ElectronEnDown, 't2MtToPfMet_ElectronEnDown/F')
+            #    t2MtToPfMet_ElectronEnUp = array('f', [ 0 ] )
+            #    t2MtToPfMet_ElectronEnUpB = tnew.Branch('t2MtToPfMet_ElectronEnUp', t2MtToPfMet_ElectronEnUp, 't2MtToPfMet_ElectronEnUp/F')
+            #    t2MtToPfMet_JetEnDown = array('f', [ 0 ] )
+            #    t2MtToPfMet_JetEnDownB = tnew.Branch('t2MtToPfMet_JetEnDown', t2MtToPfMet_JetEnDown, 't2MtToPfMet_JetEnDown/F')
+            #    t2MtToPfMet_JetEnUp = array('f', [ 0 ] )
+            #    t2MtToPfMet_JetEnUpB = tnew.Branch('t2MtToPfMet_JetEnUp', t2MtToPfMet_JetEnUp, 't2MtToPfMet_JetEnUp/F')
+            #    t2MtToPfMet_JetResDown = array('f', [ 0 ] )
+            #    t2MtToPfMet_JetResDownB = tnew.Branch('t2MtToPfMet_JetResDown', t2MtToPfMet_JetResDown, 't2MtToPfMet_JetResDown/F')
+            #    t2MtToPfMet_JetResUp = array('f', [ 0 ] )
+            #    t2MtToPfMet_JetResUpB = tnew.Branch('t2MtToPfMet_JetResUp', t2MtToPfMet_JetResUp, 't2MtToPfMet_JetResUp/F')
+            #    t2MtToPfMet_MuonEnUp = array('f', [ 0 ] )
+            #    t2MtToPfMet_MuonEnUpB = tnew.Branch('t2MtToPfMet_MuonEnUp', t2MtToPfMet_MuonEnUp, 't2MtToPfMet_MuonEnUp/F')
+            #    t2MtToPfMet_MuonEnDown = array('f', [ 0 ] )
+            #    t2MtToPfMet_MuonEnDownB = tnew.Branch('t2MtToPfMet_MuonEnDown', t2MtToPfMet_MuonEnDown, 't2MtToPfMet_MuonEnDown/F')
+            #    t2MtToPfMet_PhotonEnDown = array('f', [ 0 ] )
+            #    t2MtToPfMet_PhotonEnDownB = tnew.Branch('t2MtToPfMet_PhotonEnDown', t2MtToPfMet_PhotonEnDown, 't2MtToPfMet_PhotonEnDown/F')
+            #    t2MtToPfMet_PhotonEnUp = array('f', [ 0 ] )
+            #    t2MtToPfMet_PhotonEnUpB = tnew.Branch('t2MtToPfMet_PhotonEnUp', t2MtToPfMet_PhotonEnUp, 't2MtToPfMet_PhotonEnUp/F')
+            #    t2MtToPfMet_TauEnUp = array('f', [ 0 ] )
+            #    t2MtToPfMet_TauEnUpB = tnew.Branch('t2MtToPfMet_TauEnUp', t2MtToPfMet_TauEnUp, 't2MtToPfMet_TauEnUp/F')
+            #    t2MtToPfMet_TauEnDown = array('f', [ 0 ] )
+            #    t2MtToPfMet_TauEnDownB = tnew.Branch('t2MtToPfMet_TauEnDown', t2MtToPfMet_TauEnDown, 't2MtToPfMet_TauEnDown/F')
+            #    t2MtToPfMet_UnclusteredEnDown = array('f', [ 0 ] )
+            #    t2MtToPfMet_UnclusteredEnDownB = tnew.Branch('t2MtToPfMet_UnclusteredEnDown', t2MtToPfMet_UnclusteredEnDown, 't2MtToPfMet_UnclusteredEnDown/F')
+            #    t2MtToPfMet_UnclusteredEnUp = array('f', [ 0 ] )
+            #    t2MtToPfMet_UnclusteredEnUpB = tnew.Branch('t2MtToPfMet_UnclusteredEnUp', t2MtToPfMet_UnclusteredEnUp, 't2MtToPfMet_UnclusteredEnUp/F')
+            #    t2MtToPfMet_type1 = array('f', [ 0 ] )
+            #    t2MtToPfMet_type1B = tnew.Branch('t2MtToPfMet_type1', t2MtToPfMet_type1, 't2MtToPfMet_type1/F')
+            #    t1MtToPfMet_type1 = array('f', [ 0 ] )
+            #    t1MtToPfMet_type1B = tnew.Branch('t1MtToPfMet_type1', t1MtToPfMet_type1, 't1MtToPfMet_type1/F')
         
-                t1MatchesEle24Tau20L1Filter = array('f', [ 0 ] )
-                t1MatchesEle24Tau20L1FilterB = tnew.Branch('t1MatchesEle24Tau20L1Filter', t1MatchesEle24Tau20L1Filter, 't1MatchesEle24Tau20L1Filter/F')
-                t2MatchesEle24Tau20L1Filter = array('f', [ 0 ] )
-                t2MatchesEle24Tau20L1FilterB = tnew.Branch('t2MatchesEle24Tau20L1Filter', t2MatchesEle24Tau20L1Filter, 't2MatchesEle24Tau20L1Filter/F')
+            #    t1MatchesEle24Tau20L1Filter = array('f', [ 0 ] )
+            #    t1MatchesEle24Tau20L1FilterB = tnew.Branch('t1MatchesEle24Tau20L1Filter', t1MatchesEle24Tau20L1Filter, 't1MatchesEle24Tau20L1Filter/F')
+            #    t2MatchesEle24Tau20L1Filter = array('f', [ 0 ] )
+            #    t2MatchesEle24Tau20L1FilterB = tnew.Branch('t2MatchesEle24Tau20L1Filter', t2MatchesEle24Tau20L1Filter, 't2MatchesEle24Tau20L1Filter/F')
         
-                
-                raw_pfMetEt = array('f', [ 0 ] )
-                raw_pfMetEtB = tnew.Branch('raw_pfMetEt', raw_pfMetEt, 'raw_pfMetEt/F')
-                raw_pfMetPhi = array('f', [ 0 ] )
-                raw_pfMetPhiB = tnew.Branch('raw_pfMetPhi', raw_pfMetPhi, 'raw_pfMetPhi/F')
+            #    
+            #    raw_pfMetEt = array('f', [ 0 ] )
+            #    raw_pfMetEtB = tnew.Branch('raw_pfMetEt', raw_pfMetEt, 'raw_pfMetEt/F')
+            #    raw_pfMetPhi = array('f', [ 0 ] )
+            #    raw_pfMetPhiB = tnew.Branch('raw_pfMetPhi', raw_pfMetPhi, 'raw_pfMetPhi/F')
         run = int( row.run )
         lumi = int( row.lumi )
         evt = int( row.evt )
@@ -1239,23 +1293,23 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             Z_DEta[0] = (eta1 - eta2)
 
 
-            # Channel specific vetoes
-            if channel == 'tt' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
-                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
-                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
-            if channel == 'em' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
-                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
-                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
-            if channel == 'et' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
-            if channel == 'mt' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+            ## Channel specific vetoes
+            #if channel == 'tt' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+            #    if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+            #    if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
+            #if channel == 'em' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+            #    if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+            #    if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
+            #if channel == 'et' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+            #if channel == 'mt' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
 
 
             
@@ -1304,6 +1358,28 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
 
+            # Check all m_sv values to make sure they are filled
+            # This is needed because 41 files are too long to process in 48 hours
+            # with full TES and MET Shifts
+            # m_sv main value is good, need to set others if neceesary
+            if 'data' not in sample and hasattr( row, 'm_sv' ) :
+                m_svfit = getattr( row, 'm_sv' ) > 0.0
+                if getattr( row, 'm_sv_UP' ) < 0.0 :               setattr( row, 'm_sv_UP', m_svfit )
+                if getattr( row, 'm_sv_DOWN' ) < 0.0 :             setattr( row, 'm_sv_DOWN', m_svfit )            
+                if getattr( row, 'm_sv_DM0_UP' ) < 0.0 :           setattr( row, 'm_sv_DM0_UP', m_svfit )
+                if getattr( row, 'm_sv_DM0_DOWN' ) < 0.0 :           setattr( row, 'm_sv_DM0_DOWN', m_svfit )
+                if getattr( row, 'm_sv_DM1_UP' ) < 0.0 :           setattr( row, 'm_sv_DM1_UP', m_svfit )
+                if getattr( row, 'm_sv_DM1_DOWN' ) < 0.0 :           setattr( row, 'm_sv_DM1_DOWN', m_svfit )
+                if getattr( row, 'm_sv_DM10_UP' ) < 0.0 :          setattr( row, 'm_sv_DM10_UP', m_svfit )
+                if getattr( row, 'm_sv_DM10_DOWN' ) < 0.0 :          setattr( row, 'm_sv_DM10_DOWN', m_svfit )
+                if getattr( row, 'm_sv_UncMet_UP' ) < 0.0 :        setattr( row, 'm_sv_UncMet_UP', m_svfit )
+                if getattr( row, 'm_sv_UncMet_DOWN' ) < 0.0 :        setattr( row, 'm_sv_UncMet_DOWN', m_svfit )
+                if getattr( row, 'm_sv_ClusteredMet_UP' ) < 0.0 :  setattr( row, 'm_sv_ClusteredMet_UP', m_svfit )
+                if getattr( row, 'm_sv_ClusteredMet_DOWN' ) < 0.0 :  setattr( row, 'm_sv_ClusteredMet_DOWN', m_svfit )
+                if getattr( row, 'm_sv_EES_UP' ) < 0.0 :           setattr( row, 'm_sv_EES_UP', m_svfit )
+                if getattr( row, 'm_sv_EES_DOWN' ) < 0.0 :           setattr( row, 'm_sv_EES_DOWN', m_svfit )
+
+
 
             muonSF_1[0] = 1
             muonSF_2[0] = 1
@@ -1350,51 +1426,81 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = -1
             isoCode1[0] = -1
             isoCode2[0] = -1
-            pt_1_UP[0] = pt1
-            pt_1_DOWN[0] = pt1
-            pt_1_DM0_UP[0] = pt1
-            pt_1_DM0_DOWN[0] = pt1
-            pt_1_DM1_UP[0] = pt1
-            pt_1_DM1_DOWN[0] = pt1
-            pt_1_DM10_UP[0] = pt1
-            pt_1_DM10_DOWN[0] = pt1
-            pt_2_UP[0] = pt2
-            pt_2_DOWN[0] = pt2
-            pt_2_DM0_UP[0] = pt2
-            pt_2_DM0_DOWN[0] = pt2
-            pt_2_DM1_UP[0] = pt2
-            pt_2_DM1_DOWN[0] = pt2
-            pt_2_DM10_UP[0] = pt2
-            pt_2_DM10_DOWN[0] = pt2
-            ptCor_1[0] = pt1
-            ptCor_2[0] = pt2
-            Higgs_PtCor[0] = Higgs_Pt[0]
-            Higgs_PtCor_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM0_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM1_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM10_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_UncMet_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_ClusteredMet_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM0_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM1_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM10_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_UncMet_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_ClusteredMet_DOWN[0] = Higgs_Pt[0]
-            m_visCor[0] = getattr( row, l1+'_'+l2+'_Mass' )
-            m_visCor_UP[0] = m_visCor[0]
-            m_visCor_DM0_UP[0] = m_visCor[0]
-            m_visCor_DM1_UP[0] = m_visCor[0]
-            m_visCor_DM10_UP[0] = m_visCor[0]
-            m_visCor_DOWN[0] = m_visCor[0]
-            m_visCor_DM0_DOWN[0] = m_visCor[0]
-            m_visCor_DM1_DOWN[0] = m_visCor[0]
-            m_visCor_DM10_DOWN[0] = m_visCor[0]
+            #pt_1_UP[0] = pt1
+            #pt_1_DOWN[0] = pt1
+            #pt_1_DM0_UP[0] = pt1
+            #pt_1_DM0_DOWN[0] = pt1
+            #pt_1_DM1_UP[0] = pt1
+            #pt_1_DM1_DOWN[0] = pt1
+            #pt_1_DM10_UP[0] = pt1
+            #pt_1_DM10_DOWN[0] = pt1
+            #pt_2_UP[0] = pt2
+            #pt_2_DOWN[0] = pt2
+            #pt_2_DM0_UP[0] = pt2
+            #pt_2_DM0_DOWN[0] = pt2
+            #pt_2_DM1_UP[0] = pt2
+            #pt_2_DM1_DOWN[0] = pt2
+            #pt_2_DM10_UP[0] = pt2
+            #pt_2_DM10_DOWN[0] = pt2
+            #ptCor_1[0] = pt1
+            #ptCor_2[0] = pt2
+            #Higgs_PtCor[0] = Higgs_Pt[0]
+            #Higgs_PtCor_UP[0] = Higgs_Pt[0]
+            #Higgs_PtCor_DM0_UP[0] = Higgs_Pt[0]
+            #Higgs_PtCor_DM1_UP[0] = Higgs_Pt[0]
+            #Higgs_PtCor_DM10_UP[0] = Higgs_Pt[0]
+            #Higgs_PtCor_UncMet_UP[0] = Higgs_Pt[0]
+            #Higgs_PtCor_ClusteredMet_UP[0] = Higgs_Pt[0]
+            #Higgs_PtCor_DOWN[0] = Higgs_Pt[0]
+            #Higgs_PtCor_DM0_DOWN[0] = Higgs_Pt[0]
+            #Higgs_PtCor_DM1_DOWN[0] = Higgs_Pt[0]
+            #Higgs_PtCor_DM10_DOWN[0] = Higgs_Pt[0]
+            #Higgs_PtCor_UncMet_DOWN[0] = Higgs_Pt[0]
+            #Higgs_PtCor_ClusteredMet_DOWN[0] = Higgs_Pt[0]
+            #m_visCor[0] = getattr( row, l1+'_'+l2+'_Mass' )
+            #m_visCor_UP[0] = m_visCor[0]
+            #m_visCor_DM0_UP[0] = m_visCor[0]
+            #m_visCor_DM1_UP[0] = m_visCor[0]
+            #m_visCor_DM10_UP[0] = m_visCor[0]
+            #m_visCor_DOWN[0] = m_visCor[0]
+            #m_visCor_DM0_DOWN[0] = m_visCor[0]
+            #m_visCor_DM1_DOWN[0] = m_visCor[0]
+            #m_visCor_DM10_DOWN[0] = m_visCor[0]
             zhFR0[0] = 0
             zhFR1[0] = 0
             zhFR2[0] = 0
             LT_higgs[0] = 0
             A_Mass[0] = 0
+
+            leg1_EES_Up[0] = pt1
+            leg1_EES_Down[0] = pt1
+            leg2_EES_Up[0] = pt2
+            leg2_EES_Down[0] = pt2
+            leg3_EES_Up[0] = pt3
+            leg3_EES_Down[0] = pt3
+            leg4_EES_Up[0] = pt4
+            leg4_EES_Down[0] = pt4
+
+            if hasattr( row, 'shiftedPt_3' ) :
+                shiftedPt3 = getattr( row, 'shiftedPt_3' )
+                shiftedPt4 = getattr( row, 'shiftedPt_4' )
+            else :
+                shiftedPt3 = pt3
+                shiftedPt4 = pt4
+                print "shiftedPt_3 not in TTree"
+            leg3_DM0_Up[0] = shiftedPt3
+            leg3_DM0_Down[0] = shiftedPt3
+            leg3_DM1_Up[0] = shiftedPt3
+            leg3_DM1_Down[0] = shiftedPt3
+            leg3_DM10_Up[0] = shiftedPt3
+            leg3_DM10_Down[0] = shiftedPt3
+            leg4_DM0_Up[0] = shiftedPt4
+            leg4_DM0_Down[0] = shiftedPt4
+            leg4_DM1_Up[0] = shiftedPt4
+            leg4_DM1_Down[0] = shiftedPt4
+            leg4_DM10_Up[0] = shiftedPt4
+            leg4_DM10_Down[0] = shiftedPt4
+
 
 
             if analysis == 'azh' :
@@ -1427,6 +1533,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     zhTrigWeight[0] = zhSF.getZHTriggerSF( row.nvtx, pt1, eta1, pt2, eta2 )
                     #zhTrigDataEff[0] = zhSF.getZHTriggerDataEff( row.nvtx, pt1, eta1, pt2, eta2 )
                     #zhTrigMCEff[0] = zhSF.getZHTriggerMCEff( row.nvtx, pt1, eta1, pt2, eta2 )
+
 
 
             # Data specific vars
@@ -1489,16 +1596,54 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # Available input WPs: WP90, WP80, TrkOnly - for no mva WP SF included
                     if 'e' in l1 :
                         electronSF_1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
+                        leg1_EES_Up[0] = eesUp( pt1, eta1 )
+                        leg1_EES_Down[0] = eesDown( pt1, eta1 )
                     if 'e' in l2 :
                         electronSF_2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
+                        leg2_EES_Up[0] = eesUp( pt2, eta2 )
+                        leg2_EES_Down[0] = eesDown( pt2, eta2 )
                     if 'e' in l3 :
                         #electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'WP80', pt3, eta3 )
                         electronSF_3[0] = electronSF.getGSFAndWPScaleFactor( 'TrkOnly', pt3, eta3 )
                         electronSF_3[0] *= electronSFhtt.getIDAndIsoScaleFactor( pt3, eta3 )
+                        leg3_EES_Up[0] = eesUp( pt3, eta3 )
+                        leg3_EES_Down[0] = eesDown( pt3, eta3 )
                     if 'e' in l4 :
                         #electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'WP80', pt4, eta4 )
                         electronSF_4[0] = electronSF.getGSFAndWPScaleFactor( 'TrkOnly', pt4, eta4 )
                         electronSF_4[0] *= electronSFhtt.getIDAndIsoScaleFactor( pt4, eta4 )
+                        leg4_EES_Up[0] = eesUp( pt4, eta4 )
+                        leg4_EES_Down[0] = eesDown( pt4, eta4 )
+
+                    # TES section
+                    tesUp = 1.012
+                    tesDown = 0.988
+                    if 't' in l3 :
+                        if gen_match_3[0] == 5 :
+                            # For the combinatorics
+                            dm3 = getattr( row, '%sDecayMode' % l3 )
+                            if dm3 == 0 :
+                                leg3_DM0_Up[0] = shiftedPt3 * tesUp
+                                leg3_DM0_Down[0] = shiftedPt3 * tesDown
+                            elif dm3 == 1 :
+                                leg3_DM1_Up[0] = shiftedPt3 * tesUp
+                                leg3_DM1_Down[0] = shiftedPt3 * tesDown
+                            elif dm3 == 10 :
+                                leg3_DM10_Up[0] = shiftedPt3 * tesUp
+                                leg3_DM10_Down[0] = shiftedPt3 * tesDown
+                    if 't' in l4 :
+                        if gen_match_4[0] == 5 :
+                            # For the combinatorics
+                            dm4 = getattr( row, '%sDecayMode' % l4 )
+                            if dm4 == 0 :
+                                leg4_DM0_Up[0] = shiftedPt4 * tesUp
+                                leg4_DM0_Down[0] = shiftedPt4 * tesDown
+                            elif dm4 == 1 :
+                                leg4_DM1_Up[0] = shiftedPt4 * tesUp
+                                leg4_DM1_Down[0] = shiftedPt4 * tesDown
+                            elif dm4 == 10 :
+                                leg4_DM10_Up[0] = shiftedPt4 * tesUp
+                                leg4_DM10_Down[0] = shiftedPt4 * tesDown
 
 
                 # Isolation / ID weights
@@ -1547,102 +1692,102 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                     # Tau Energy Correction
                     # also propagated to Higgs_Pt and m_vis
-                    ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], dm1 )
-                    ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], dm2 )
-                    pt_1_UP[0] = ptCor_1[0]
-                    pt_1_DOWN[0] = ptCor_1[0]
-                    pt_1_DM0_UP[0] = ptCor_1[0]
-                    pt_1_DM0_DOWN[0] = ptCor_1[0]
-                    pt_1_DM1_UP[0] = ptCor_1[0]
-                    pt_1_DM1_DOWN[0] = ptCor_1[0]
-                    pt_1_DM10_UP[0] = ptCor_1[0]
-                    pt_1_DM10_DOWN[0] = ptCor_1[0]
-                    pt_2_UP[0] = ptCor_2[0]
-                    pt_2_DOWN[0] = ptCor_2[0]
-                    pt_2_DM0_UP[0] = ptCor_2[0]
-                    pt_2_DM0_DOWN[0] = ptCor_2[0]
-                    pt_2_DM1_UP[0] = ptCor_2[0]
-                    pt_2_DM1_DOWN[0] = ptCor_2[0]
-                    pt_2_DM10_UP[0] = ptCor_2[0]
-                    pt_2_DM10_DOWN[0] = ptCor_2[0]
+                    #ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], dm1 )
+                    #ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], dm2 )
+                    #pt_1_UP[0] = ptCor_1[0]
+                    #pt_1_DOWN[0] = ptCor_1[0]
+                    #pt_1_DM0_UP[0] = ptCor_1[0]
+                    #pt_1_DM0_DOWN[0] = ptCor_1[0]
+                    #pt_1_DM1_UP[0] = ptCor_1[0]
+                    #pt_1_DM1_DOWN[0] = ptCor_1[0]
+                    #pt_1_DM10_UP[0] = ptCor_1[0]
+                    #pt_1_DM10_DOWN[0] = ptCor_1[0]
+                    #pt_2_UP[0] = ptCor_2[0]
+                    #pt_2_DOWN[0] = ptCor_2[0]
+                    #pt_2_DM0_UP[0] = ptCor_2[0]
+                    #pt_2_DM0_DOWN[0] = ptCor_2[0]
+                    #pt_2_DM1_UP[0] = ptCor_2[0]
+                    #pt_2_DM1_DOWN[0] = ptCor_2[0]
+                    #pt_2_DM10_UP[0] = ptCor_2[0]
+                    #pt_2_DM10_DOWN[0] = ptCor_2[0]
                     # Tau Energy Scale Saved
                     # 15 Feb 2017, TES uncertainty == 0.6%
                     # TES used to be 3% with no central shift
-                    tesUp = 1.012
-                    tesDown = 0.988
-                    if gen_match_1[0] == 5 :
-                        tauIDweight_1[0] = 0.95 # 06 Feb 2017
-                        pt_1_UP[0] = ptCor_1[0] * tesUp
-                        pt_1_DOWN[0] = ptCor_1[0] * tesDown
-                        # For the combinatorics
-                        if dm1 == 0 :
-                            pt_1_DM0_UP[0] = ptCor_1[0] * tesUp
-                            pt_1_DM0_DOWN[0] = ptCor_1[0] * tesDown
-                        if dm1 == 1 :
-                            pt_1_DM1_UP[0] = ptCor_1[0] * tesUp
-                            pt_1_DM1_DOWN[0] = ptCor_1[0] * tesDown
-                        if dm1 == 10 :
-                            pt_1_DM10_UP[0] = ptCor_1[0] * tesUp
-                            pt_1_DM10_DOWN[0] = ptCor_1[0] * tesDown
-                    if gen_match_2[0] == 5 :
-                        tauIDweight_2[0] = 0.95 # 06 Feb 2017
-                        pt_2_UP[0] = ptCor_2[0] * tesUp
-                        pt_2_DOWN[0] = ptCor_2[0] * tesDown
-                        if dm2 == 0 :
-                            pt_2_DM0_UP[0] = ptCor_2[0] * tesUp
-                            pt_2_DM0_DOWN[0] = ptCor_2[0] * tesDown
-                        if dm2 == 1 :
-                            pt_2_DM1_UP[0] = ptCor_2[0] * tesUp
-                            pt_2_DM1_DOWN[0] = ptCor_2[0] * tesDown
-                        if dm2 == 10 :
-                            pt_2_DM10_UP[0] = ptCor_2[0] * tesUp
-                            pt_2_DM10_DOWN[0] = ptCor_2[0] * tesDown
+                    #tesUp = 1.012
+                    #tesDown = 0.988
+                    #if gen_match_1[0] == 5 :
+                    #    tauIDweight_1[0] = 0.95 # 06 Feb 2017
+                    #    pt_1_UP[0] = ptCor_1[0] * tesUp
+                    #    pt_1_DOWN[0] = ptCor_1[0] * tesDown
+                    #    # For the combinatorics
+                    #    if dm1 == 0 :
+                    #        pt_1_DM0_UP[0] = ptCor_1[0] * tesUp
+                    #        pt_1_DM0_DOWN[0] = ptCor_1[0] * tesDown
+                    #    if dm1 == 1 :
+                    #        pt_1_DM1_UP[0] = ptCor_1[0] * tesUp
+                    #        pt_1_DM1_DOWN[0] = ptCor_1[0] * tesDown
+                    #    if dm1 == 10 :
+                    #        pt_1_DM10_UP[0] = ptCor_1[0] * tesUp
+                    #        pt_1_DM10_DOWN[0] = ptCor_1[0] * tesDown
+                    #if gen_match_2[0] == 5 :
+                    #    tauIDweight_2[0] = 0.95 # 06 Feb 2017
+                    #    pt_2_UP[0] = ptCor_2[0] * tesUp
+                    #    pt_2_DOWN[0] = ptCor_2[0] * tesDown
+                    #    if dm2 == 0 :
+                    #        pt_2_DM0_UP[0] = ptCor_2[0] * tesUp
+                    #        pt_2_DM0_DOWN[0] = ptCor_2[0] * tesDown
+                    #    if dm2 == 1 :
+                    #        pt_2_DM1_UP[0] = ptCor_2[0] * tesUp
+                    #        pt_2_DM1_DOWN[0] = ptCor_2[0] * tesDown
+                    #    if dm2 == 10 :
+                    #        pt_2_DM10_UP[0] = ptCor_2[0] * tesUp
+                    #        pt_2_DM10_DOWN[0] = ptCor_2[0] * tesDown
 
-                    # All shifts for Higgs_Pt with combinatorics
-                    # This should use recoil corrected, TEC MET from svFit if available
-                    if hasattr( row, 'metcor' ) : metTmp = row.metcor
-                    else : metTmp = row.type1_pfMetEt
-                    if hasattr( row, 'metcorphi' ) : metPhiTmp = row.metcorphi
-                    else : metPhiTmp = row.type1_pfMetPhi
-                    Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                        ptCor_2[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_UP[0] = getHiggsPt( pt_1_UP[0], eta1, phi1, m1,\
-                        pt_2_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM0_UP[0] = getHiggsPt( pt_1_DM0_UP[0], eta1, phi1, m1,\
-                        pt_2_DM0_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM1_UP[0] = getHiggsPt( pt_1_DM1_UP[0], eta1, phi1, m1,\
-                        pt_2_DM1_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM10_UP[0] = getHiggsPt( pt_1_DM10_UP[0], eta1, phi1, m1,\
-                        pt_2_DM10_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DOWN[0] = getHiggsPt( pt_1_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM0_DOWN[0] = getHiggsPt( pt_1_DM0_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM0_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM1_DOWN[0] = getHiggsPt( pt_1_DM1_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM1_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM10_DOWN[0] = getHiggsPt( pt_1_DM10_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM10_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    # For the met shifted Higgs Pt, check 1 hasattr
-                    if hasattr( row, 'metcorClusteredUp' ) :
-                        Higgs_PtCor_UncMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorUncUp, row.metcorphiUncUp)
-                        Higgs_PtCor_UncMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorUncDown, row.metcorphiUncDown)
-                        Higgs_PtCor_ClusteredMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorClusteredUp, row.metcorphiClusteredUp)
-                        Higgs_PtCor_ClusteredMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorClusteredDown, row.metcorphiClusteredDown)
+                    ## All shifts for Higgs_Pt with combinatorics
+                    ## This should use recoil corrected, TEC MET from svFit if available
+                    #if hasattr( row, 'metcor' ) : metTmp = row.metcor
+                    #else : metTmp = row.type1_pfMetEt
+                    #if hasattr( row, 'metcorphi' ) : metPhiTmp = row.metcorphi
+                    #else : metPhiTmp = row.type1_pfMetPhi
+                    #Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                    #    ptCor_2[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_UP[0] = getHiggsPt( pt_1_UP[0], eta1, phi1, m1,\
+                    #    pt_2_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_DM0_UP[0] = getHiggsPt( pt_1_DM0_UP[0], eta1, phi1, m1,\
+                    #    pt_2_DM0_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_DM1_UP[0] = getHiggsPt( pt_1_DM1_UP[0], eta1, phi1, m1,\
+                    #    pt_2_DM1_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_DM10_UP[0] = getHiggsPt( pt_1_DM10_UP[0], eta1, phi1, m1,\
+                    #    pt_2_DM10_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_DOWN[0] = getHiggsPt( pt_1_DOWN[0], eta1, phi1, m1,\
+                    #    pt_2_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_DM0_DOWN[0] = getHiggsPt( pt_1_DM0_DOWN[0], eta1, phi1, m1,\
+                    #    pt_2_DM0_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_DM1_DOWN[0] = getHiggsPt( pt_1_DM1_DOWN[0], eta1, phi1, m1,\
+                    #    pt_2_DM1_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    #Higgs_PtCor_DM10_DOWN[0] = getHiggsPt( pt_1_DM10_DOWN[0], eta1, phi1, m1,\
+                    #    pt_2_DM10_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+                    ## For the met shifted Higgs Pt, check 1 hasattr
+                    #if hasattr( row, 'metcorClusteredUp' ) :
+                    #    Higgs_PtCor_UncMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                    #        ptCor_2[0], eta2, phi2, m2, row.metcorUncUp, row.metcorphiUncUp)
+                    #    Higgs_PtCor_UncMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                    #        ptCor_2[0], eta2, phi2, m2, row.metcorUncDown, row.metcorphiUncDown)
+                    #    Higgs_PtCor_ClusteredMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                    #        ptCor_2[0], eta2, phi2, m2, row.metcorClusteredUp, row.metcorphiClusteredUp)
+                    #    Higgs_PtCor_ClusteredMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+                    #        ptCor_2[0], eta2, phi2, m2, row.metcorClusteredDown, row.metcorphiClusteredDown)
                     
 
-                    m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
-                    m_visCor_UP[0] = mVisTESCor( l1, l2, row, pt_1_UP[0], pt_2_UP[0] )
-                    m_visCor_DM0_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM0_UP[0], pt_2_DM0_UP[0] )
-                    m_visCor_DM1_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM1_UP[0], pt_2_DM1_UP[0] )
-                    m_visCor_DM10_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM10_UP[0], pt_2_DM10_UP[0] )
-                    m_visCor_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DOWN[0], pt_2_DOWN[0] )
-                    m_visCor_DM0_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM0_DOWN[0], pt_2_DM0_DOWN[0] )
-                    m_visCor_DM1_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM1_DOWN[0], pt_2_DM1_DOWN[0] )
-                    m_visCor_DM10_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM10_DOWN[0], pt_2_DM10_DOWN[0] )
+                    #m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
+                    #m_visCor_UP[0] = mVisTESCor( l1, l2, row, pt_1_UP[0], pt_2_UP[0] )
+                    #m_visCor_DM0_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM0_UP[0], pt_2_DM0_UP[0] )
+                    #m_visCor_DM1_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM1_UP[0], pt_2_DM1_UP[0] )
+                    #m_visCor_DM10_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM10_UP[0], pt_2_DM10_UP[0] )
+                    #m_visCor_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DOWN[0], pt_2_DOWN[0] )
+                    #m_visCor_DM0_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM0_DOWN[0], pt_2_DM0_DOWN[0] )
+                    #m_visCor_DM1_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM1_DOWN[0], pt_2_DM1_DOWN[0] )
+                    #m_visCor_DM10_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM10_DOWN[0], pt_2_DM10_DOWN[0] )
 
 
 
