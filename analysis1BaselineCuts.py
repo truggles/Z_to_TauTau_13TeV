@@ -567,7 +567,7 @@ def drawHistos(analysis, samples, **fargs ) :
                 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau',
                 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ',
                 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] and analysis == 'azh' :
-            genList = ['NONJET', 'JETFAKE']
+            genList = ['NONJET',] # 'JETFAKE']
             loopList = genList
             loopList.append( sample )
         elif 'dataSingle' in sample and analysis == 'azh' :
