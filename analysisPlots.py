@@ -167,6 +167,12 @@ def getESMap( channel ) :
     elecPtCut = 10.
     muonPtCut = 10.
     tauPtCut = 20.
+    # Copied from analysisCuts.py, this is for the ZEE events where extra events might pass trigger
+    # This will not work for now as the trigger filters are applied pre-svFit on the ZEE electrons
+    # Perhapse another svFit round will take care of this...
+    #eeTrigFilters = 'pt_1 > 27.5 && pt_2 > 17.5 && ( (e1MatchesDoubleE23_12Filter > 0.5 && e2MatchesDoubleE23_12Filter > 0.5 ) || ( pt_1 > 32 && e1MatchesSingleETight27Filter > 0.5 ) || ( pt_2 > 32 && e2MatchesSingleETight27Filter > 0.5 ) )'
+    #eeTrigFiltersUp = eeTrigFilters.replace('pt_1','leg1_EES_Up').replace('pt_2','leg2_EES_Up')
+    #eeTrigFiltersDown = eeTrigFilters.replace('pt_1','leg1_EES_Down').replace('pt_2','leg2_EES_Down')
     ESMap = {
         'tt' : { 
             '_energyScaleAllUp' : '*( pt_1_UP > %s && pt_2_UP > %s)' % (tau1PtCut, tau2PtCut),
@@ -219,6 +225,11 @@ def getESMap( channel ) :
             '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Up > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, muonPtCut),
             '_energyScaleEESDown' : '*(leg1_EES_Down > %s && leg2_EES_Down > %s && leg3_EES_Down > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, muonPtCut),
         },
+        'eeee' : { 
+            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
+            '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Up > %s && leg4_EES_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
+            '_energyScaleEESDown' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Down > %s && leg4_EES_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
+        },
         'emmt' : { 
             '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && shiftedPt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
             '_energyScaleEESUp' : '*(pt_1 > %s && pt_2 > %s && leg3_EES_Up > %s && shiftedPt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, tauPtCut),
@@ -252,11 +263,6 @@ def getESMap( channel ) :
             '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, muonPtCut),
             '_energyScaleEESUp' : '*(pt_1 > %s && pt_2 > %s && leg3_EES_Up > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, muonPtCut),
             '_energyScaleEESDown' : '*(pt_1 > %s && pt_2 > %s && leg3_EES_Down > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, elecPtCut, muonPtCut),
-        },
-        'eeee' : { 
-            '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
-            '_energyScaleEESUp' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Up > %s && leg4_EES_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
-            '_energyScaleEESDown' : '*(leg1_EES_Up > %s && leg2_EES_Up > %s && leg3_EES_Down > %s && leg4_EES_Up > %s)' % (elecPtCut, elecPtCut, elecPtCut, elecPtCut),
         },
         'mmmm' : { 
             '_NoShift' : '*(pt_1 > %s && pt_2 > %s && pt_3 > %s && pt_4 > %s)' % (muonPtCut, muonPtCut, muonPtCut, muonPtCut),
