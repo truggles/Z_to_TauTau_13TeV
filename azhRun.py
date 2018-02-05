@@ -39,8 +39,8 @@ os.chdir('..')
 ''' Preset samples '''
 azhSamples = ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
 
-#for mass in [110, 120, 125, 130, 140] :
-for mass in [125,] :
+for mass in [110, 120, 125, 130, 140] :
+#for mass in [125,] :
     azhSamples.append('ggHtoTauTau%i' % mass)
     azhSamples.append('VBFHtoTauTau%i' % mass)
     azhSamples.append('WMinusHTauTau%i' % mass)

@@ -231,7 +231,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 else : binArray = array( 'd', [i*10 for i in range( 31 )] )
             elif analysis == 'azh' and ops['doZH'] :
-                binArray = array( 'd', [i*10 for i in range( 31 )] )
+                binArray = array( 'd', [i*30 for i in range( 9 )] )
             elif analysis == 'azh' :
                 binArray = array( 'd', [i*40 for i in range( 16 )] )
             else :
@@ -503,7 +503,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     # Systematics naming removes CRs
                     category = ops['category'].strip('_qcd_cr')
 
-                    if name in ['data_obs','QCD'] : continue 
+                    if name in ['data_obs','QCD','RedBkg'] : continue 
                     if name == 'jetFakes' and not doFF : continue
                     if name == 'jetFakes' and not ('ffSyst' in var or 'ffStat' in var) : continue
                     if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
