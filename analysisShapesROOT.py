@@ -293,7 +293,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
                 elif ops['redBkg'] and 'RedBkgShape' in sample :
                     tFileYield = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
-                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
                 else :
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
     
