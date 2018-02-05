@@ -58,7 +58,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         eras =  []
         for s in samples :
             if 'dataMM' in s : eras.append( s.split('-').pop() )
-        samples['ZZ4l'] = 'ZZ'
         for era in eras :
             samples['RedBkgShapeSingleLep-%s' % era] = 'RedBkg'
             samples['RedBkgShapeDoubleLep-%s' % era] = 'RedBkg'
@@ -422,21 +421,23 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #assert( len(dataArray) == len(bkgArray) ), "Zero bin check is not working, are you missing data_obs?"
 
                 # Find problem bins
+                # ZH / AZh analysis has well populated background templates, skip this portion
                 problemBins = []
                 print "Checking for problem bins"
                 sampToCheck = ''
-                if analysis == 'htt' : sampToCheck = 'QCD'
-                if analysis == 'azh' : sampToCheck = 'RedBkg'
-                for bin_id in range( len(bkgArray) ) :
-                    #if dataArray[bin_id] > 0. and bkgArray[bin_id] == 0. :
-                    print bin_id+1, bkgArray[bin_id], " QCD/RedBkg val: ",histos[ sampToCheck ].GetBinContent( bin_id+1 )
-                    if bkgArray[bin_id] == 0. :
-                        problemBins.append( bin_id+1 ) # +1 here gets us to ROOT coords
+                #if analysis == 'azh' : sampToCheck = 'RedBkg'
+                if analysis == 'htt' :
+                    sampToCheck = 'QCD'
+                    for bin_id in range( len(bkgArray) ) :
+                        #if dataArray[bin_id] > 0. and bkgArray[bin_id] == 0. :
+                        print bin_id+1, bkgArray[bin_id], " QCD/RedBkg val: ",histos[ sampToCheck ].GetBinContent( bin_id+1 )
+                        if bkgArray[bin_id] == 0. :
+                            problemBins.append( bin_id+1 ) # +1 here gets us to ROOT coords
 
-                nEntries = histos[ sampToCheck ].GetEntries()
-                integral = histos[ sampToCheck ].Integral()
-                avgW = integral/nEntries
-                print "Simple method uncer on zero bin method - avg RedBkg entry weight:",avgW
+                    nEntries = histos[ sampToCheck ].GetEntries()
+                    integral = histos[ sampToCheck ].Integral()
+                    avgW = integral/nEntries
+                    print "Simple method uncer on zero bin method - avg RedBkg entry weight:",avgW
 
                 # Apply correction and set an empyt bin to QCD = 1e-5
                 if sampToCheck in histos.keys() :
@@ -482,6 +483,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetBinContent( bin_, setVal )
                         print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
                 if histos[ name ].Integral() != 0.0 :
+                    print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
+                else :
                     print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
                 #if not ops['mssm'] :
                 #    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
@@ -548,21 +551,24 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             histos[ name ].SetName( name.strip('_')+'_CMS_htt_ttbarShape_13TeV'+shiftDir )
                     #elif name in ['TTT','TTJ'] : continue # this is to catch TT when it's not wanted
                     elif '_energyScaleAll' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_'+channel+'_13TeV'+shiftDir )
-                        altName = histos[ name ].Clone( name.strip('_')+'_CMS_scale_'+lep+'_13TeV'+shiftDir )
-                        altName.SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_'+channel+'_13TeV'+shiftDir )
+                        altName = histos[ name ].Clone( name.strip('_')+'_CMS_scale_t_13TeV'+shiftDir )
+                        altName.SetTitle( name.strip('_')+'_CMS_scale_t_13TeV'+shiftDir )
                         altName.Write()
                         del altName
                     elif '_energyScaleDM0' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_1prong_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_1prong_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_1prong_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_1prong_13TeV'+shiftDir )
                     elif '_energyScaleDM10' in var : # Gotta do this one first to elif DM10 and DM1
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_3prong_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_3prong_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_3prong_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_3prong_13TeV'+shiftDir )
                     elif '_energyScaleDM1' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_'+lep+'_1prong1pizero_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_'+lep+'_1prong1pizero_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_t_1prong1pizero_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_t_1prong1pizero_13TeV'+shiftDir )
+                    elif '_energyScaleEES' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_e_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_e_13TeV'+shiftDir )
                     elif '_JES' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_j_'+jesUnc )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_j_'+jesUnc )
@@ -620,21 +626,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     
         print "\n Output shapes file: ", shapeFileName 
     
-if __name__ == '__main__' :
-    analysis = 'htt'
-    samples = ['x',]   
-    channels = ['tt',]
-    folderDetails = '2Aug25x5pt45b_OSl1ml2_Tight_ZTT' 
-    kwargs = {
-    'useQCDMakeName' : '2Aug25x5pt45b_OSl1ml2_Tight_LooseZTT',
-    'qcdSF' : 0.653408213966,
-    'mssm' : False,
-    'category' : 'inclusive',
-    'fitShape' : 'm_visCor',
-    }
-    makeDataCards( analysis, samples, channels, folderDetails, **kwargs )
-    
-
 
 
 

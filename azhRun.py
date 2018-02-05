@@ -58,8 +58,8 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataSingleM-%s' % era)
 
 #azhSamples = []
-#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-#    azhSamples.append('azh%i' % mass)
+for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+    azhSamples.append('azh%i' % mass)
 
     
 #azhSamples = ['ZHWW125','HZZ125']
@@ -84,13 +84,12 @@ params = {
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeee','mmmm'],
-    #'channels' : ['eett',],
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
-    'mid1' : '1Nov05newTrig',
-    'mid2' : '2Nov05newTrig',
-    'mid3' : '3Nov05newTrig',
+    'mid1' : '1Feb01svFitted',
+    'mid2' : '2Feb01svFitted',
+    'mid3' : '3Feb01svFitted',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -148,9 +147,9 @@ doDataCards = True
 
 
 runPlots = False
-#doMerge = False
-#makeFinalPlots = False
-doDataCards = False
+doMerge = False
+makeFinalPlots = False
+#doDataCards = False
 
 
 doZH = True
@@ -252,7 +251,7 @@ if makeFinalPlots :
     text=False
     #text=True
     blind = True
-    blind = False
+    #blind = False
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
     print params
 
@@ -270,11 +269,15 @@ if makeFinalPlots :
     
     
 if doDataCards :
-    samplesX = copy.deepcopy(samples)
+    #samplesX = copy.deepcopy(samples)
+    samplesX = copy.deepcopy(samplesY)
 
     # Remove RedBkgYield samples from list to run over 
-    for sample in  samplesX :
+    for sample in  samplesY :
         if 'RedBkgYield' in sample : del samplesX[ sample ]
+        if '-NONJET' in sample :
+            samplesX[ sample.replace('-NONJET','') ] = samplesX[ sample ]
+            del samplesX[ sample ]
 
     # don't add eeee or mmmm
     #if 'eeee' in params['channels'] : params['channels'].remove( 'eeee' ) 
@@ -291,7 +294,7 @@ if doDataCards :
         'doZH' : doZH,
         'category' : finalCat,
         'fitShape' : var,
-        'allShapes' : False,
+        'allShapes' : True,
         'redBkg' : useRedBkg, 
         }
         makeDataCards( analysis, samplesX, params['channels'], folderDetails, **kwargs )

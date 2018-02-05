@@ -3,6 +3,7 @@ import ROOT
 from collections import OrderedDict
 from array import array
 from math import sqrt
+import copy
 
 
 # Check if directory exists, make it if not
@@ -272,6 +273,7 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
         samples['QCD'] = 'QCD'
 
     if analysis == 'azh' :
+
         useRedBkg = False
         # Check for reducible bkg samples
         # if RedBkg present, skim DYJ and WZ later
@@ -296,16 +298,24 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
                     elif rb == 'WZ3l1nu' : samples['WZ3l1nu']  = 'WZ'
                     elif rb == 'WWW' : samples['WWW']  = 'TriBoson'
                     else : samples[rb]  = 'DYJ'
+        if useRedBkg :
+            redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
+            for rb in redBkgList :
+                if rb in inSamples :
+                    if rb == 'TT' : samples['TT-NONJET']  = 'TT'
+                    elif rb == 'WZ3l1nu' : samples['WZ3l1nu-NONJET']  = 'WZ'
+                    elif rb == 'WWW' : samples['WWW-NONJET']  = 'TriBoson'
+                    else : samples['%s-NONJET' % rb]  = 'DYJ'
 
         triBosons = ['WWZ', 'WZZ', 'ZZZ',] # WWW is reducible
         for tri in triBosons :
             if tri in inSamples :
-                samples[tri]  = 'TriBoson'
+                samples['%s-NONJET' % tri]  = 'TriBoson'
         ZZs = ['ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'ZZ4l',]
         for zz in ZZs :
             if zz in inSamples :
-                samples[zz]  = 'ZZ'
-        if 'ttZ' in inSamples : samples['ttZ'] = 'ttZ'
+                samples['%s-NONJET' % zz]  = 'ZZ'
+        if 'ttZ' in inSamples : samples['ttZ-NONJET'] = 'ttZ'
 
         for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
             if 'azh%i' % mass in inSamples :
