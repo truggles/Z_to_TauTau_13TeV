@@ -231,7 +231,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 else : binArray = array( 'd', [i*10 for i in range( 31 )] )
             elif analysis == 'azh' and ops['doZH'] :
-                binArray = array( 'd', [i*30 for i in range( 9 )] )
+                binArray = array( 'd', [i*20 for i in range( 12 )] )
             elif analysis == 'azh' :
                 binArray = array( 'd', [i*40 for i in range( 16 )] )
             else :
@@ -292,7 +292,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         print " \n\n ### SPECIFY A QCD SHAPE !!! ### \n\n"
                 elif ops['redBkg'] and 'RedBkgShape' in sample :
                     tFileYield = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
-                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                    #tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
                 else :
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
     

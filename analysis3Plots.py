@@ -297,8 +297,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     xBins.append( i * 17.5 )
             # This is the proposed binning for ZTT 2015 paper
             elif analysis == 'azh' and 'm_sv' in var :
-                #xBins = array( 'd', [i*20 for i in range( 16 )] )
-                xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
+                xBins = array( 'd', [i*20 for i in range( 12 )] )
+                #xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
             elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 xBins = array( 'd', [i*10 for i in range( 31 )] )
             elif 'm_sv' in var or 'm_visCor' in var :
@@ -421,8 +421,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         continue
                 elif ops['redBkg'] and 'RedBkgShape' in sample :
                     tFileYield = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
-                    #tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
-                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
+                    tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
+                    #tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample.replace('Shape','Yield'), channel), 'READ')
                 else :
                     #print "File: '%s%s/%s_%s.root'" % (analysis, folderDetails, sample, channel)
                     tFile = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folderDetails, sample, channel), 'READ')
@@ -646,10 +646,12 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
-                    if samp in ['obs', 'azh', 'VH'] : continue
+                    if samp in ['obs', 'azh', 'VH', 'higgs'] : continue
                     #toRoot += (sampHistos[samp].GetBinContent(k)*\
                     #    uncertNormMap[analysis][samp])**2
-                    toRoot += sampHistos[samp].GetBinError(k)**2
+                    toAdd = sampHistos[samp].GetBinError(k)**2
+                    if toAdd > 0.0 : toRoot += toAdd
+                    #toRoot += sampHistos[samp].GetBinError(k)**2
 
                 binErrors.append( math.sqrt(toRoot) )
     
