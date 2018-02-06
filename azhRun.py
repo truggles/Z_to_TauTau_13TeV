@@ -74,7 +74,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 16,
+    'numCores' : 12,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
@@ -82,9 +82,9 @@ params = {
     #'channels' : ['eeem',],
     'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
-    'mid1' : '1Sept05',
-    'mid2' : '2Sept05',
-    'mid3' : '3Sept05newZSelec',
+    'mid1' : '1Feb06svFitAug31',
+    'mid2' : '2Feb06svFitAug31',
+    'mid3' : '3Feb06svFitAug31',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -142,8 +142,8 @@ doDataCards = True
 
 runPlots = False
 doMerge = False
-makeFinalPlots = False
-doDataCards = False
+#makeFinalPlots = False
+oDataCards = False
 
 
 doZH = True
@@ -218,7 +218,7 @@ if 'WZ' in samples :
 if makeFinalPlots :
     samplesX = copy.deepcopy(samples)
     text=False
-    text=True
+    #text=True
     blind = True
     #blind = False
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }

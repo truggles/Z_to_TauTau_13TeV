@@ -44,7 +44,7 @@ def getTH1FfromTGraphAsymmErrors( asym, name ) :
 # certain bkg methods
 def setUpDirs( samples, params, analysis ) :
     
-    host = os.getenv('HOSTNAME', type=str)
+    host = os.getenv('HOSTNAME')
     if 'uwlogin' in host :
         if not os.path.exists( '/data/truggles/%s%s' % (analysis, params['mid1']) ) : os.makedirs( '/data/truggles/%s%s' % (analysis, params['mid1']) )
         if not os.path.exists( '/data/truggles/%s%s' % (analysis, params['mid2']) ) : os.makedirs( '/data/truggles/%s%s' % (analysis, params['mid2']) )
@@ -146,8 +146,9 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
             f = ROOT.TFile('%s%s/%s_%s.root' % (analysis, folder, sample, channel), 'r' )
             d = f.Get( channel+'_Histos' )
             for h in hists.keys() :
-                #print h
+                print h
                 htmp = d.Get( h )
+                print htmp
                 if h not in allChannelVarMap.keys() :
                     #print "Not in all chan var map ",h.GetName()
                     print "Not in all chan var map ",h
@@ -290,6 +291,7 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
         for zz in ZZs :
             if zz in inSamples :
                 samples[zz]  = 'ZZ'
+        if 'ttZ' in inSamples : samples['ttZ']  = 'ttZ'
 
         for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
             if 'azh%i' % mass in inSamples :
