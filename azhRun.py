@@ -39,7 +39,8 @@ os.chdir('..')
 ''' Preset samples '''
 azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
 
-for mass in [110, 120, 125, 130, 140] :
+#for mass in [110, 120, 125, 130, 140] :
+for mass in [125,] :
     azhSamples.append('ggHtoTauTau%i' % mass)
     azhSamples.append('VBFHtoTauTau%i' % mass)
     azhSamples.append('WMinusHTauTau%i' % mass)
@@ -49,13 +50,13 @@ for mass in [125,] :
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
 
-for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-    azhSamples.append('azh%i' % mass)
+#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+#    azhSamples.append('azh%i' % mass)
 
 #azhSamples = []
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-    azhSamples.append('dataEE-%s' % era)
-    azhSamples.append('dataMM-%s' % era)
+#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+#    azhSamples.append('dataEE-%s' % era)
+#    azhSamples.append('dataMM-%s' % era)
     
 #azhSamples = ['ZHWW125','HZZ125']
 #azhSamples = ['dataEE-B']
@@ -80,7 +81,7 @@ params = {
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eeee','mmmm'],
-    #'channels' : ['eeem',],
+    #'channels' : ['eemt',],
     'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'mid1' : '1Nov13RedBkgMC',
@@ -143,7 +144,7 @@ doDataCards = True
 
 
 #runPlots = False
-doMerge = False
+#doMerge = False
 makeFinalPlots = False
 doDataCards = False
 
@@ -151,7 +152,7 @@ doDataCards = False
 doZH = True
 #doZH = False
 useRedBkg = True
-#useRedBkg = False
+useRedBkg = False
 
 if useRedBkg :
     params['doRedBkg'] = True
@@ -220,7 +221,7 @@ if 'WZ' in samples :
 if makeFinalPlots :
     samplesX = copy.deepcopy(samples)
     text=False
-    text=True
+    #text=True
     blind = True
     #blind = False
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
@@ -252,7 +253,8 @@ if doDataCards :
 
     ROOT.gROOT.Reset()
     from analysisShapesROOT import makeDataCards
-    for var in ['m_sv', 'A_Mass', 'Mass'] :
+    #for var in ['m_sv', 'A_Mass', 'Mass'] :
+    for var in ['pt_3','pt_4'] :
         if var == 'A_Mass' : doZH = False
         if var == 'Mass' : doZH = False
         finalCat = 'inclusive'
@@ -263,6 +265,7 @@ if doDataCards :
         'fitShape' : var,
         'allShapes' : False,
         'redBkg' : useRedBkg, 
+        'sync' : True
         }
         makeDataCards( analysis, samplesX, params['channels'], folderDetails, **kwargs )
     extra = 'mssm'

@@ -296,19 +296,23 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         if channel in ['eeet','emmt'] :
             #additionalCut += '*(LT_higgs > 30)'
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+            #additionalCut += '*(pfmt_3 < 30)'
         elif channel in ['eemt','mmmt'] :
             #additionalCut += '*(LT_higgs > 40)'
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-        elif channel in ['eeem','emmm'] :
-            additionalCut += '*(LT_higgs > 20)'
+            #additionalCut += '*(pfmt_3 < 30)'
+        #elif channel in ['eeem','emmm'] :
+        #    #additionalCut += '*(LT_higgs > 20)'
         elif channel in ['eett','mmtt'] :
-            #additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            #additionalCut += '*(LT_higgs > 50)' # > 80 GeV is 10% better than 60,
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
             # 60 is way more stats
 
         ## bJet Veto Tests
-        #additionalCut += '*(bjetCISVVeto20MediumZTT == 0)'
+        additionalCut += '*(bjetCISVVeto20MediumZTT == 0)'
+        additionalCut += '*(gen_match_3 == 6 || gen_match_4==6)'
+        #additionalCut += '*(gen_match_4 == 6)'
 
 
     ''' Combine Gen and Chan specific into one fill section '''
@@ -820,41 +824,52 @@ def getHistoDict( analysis, channel ) :
             return genVarMap
     if analysis == 'azh' :
         genVarMap = {
+#XXX CLOSURE 'Z_Pt' : [10, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
+#XXX CLOSURE 'm_vis' : [7, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
+#XXX CLOSURE 'm_sv' : [15, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
+#XXX CLOSURE 'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
+#XXX CLOSURE 'pt_1' : [10, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'],
+#XXX CLOSURE 'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
+#XXX CLOSURE 'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
+#XXX CLOSURE 'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
+#XXX CLOSURE 'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
+#XXX CLOSURE 'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
 ####            #'genpT' : [40, 0, 400, 40, 'Gen Pt [GeV]', ' GeV'],
 ####            #'genMass' : [90, 100, 550, 40, 'Gen Mass [GeV]', ' GeV'],
 ####            #'Z_Phi' : [80, -4, 4, 80, 'Z Phi', ' Phi'],
 ####            #'Z_Eta' : [40, -5, 5, 10, 'Z Eta', ' Eta'],
-            'Z_Pt' : [10, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
-            'm_vis' : [7, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
-####            #'H_Phi' : [40, -4, 4, 80, 'H Phi', ' Phi'],
-####            #'H_Eta' : [40, -5, 5, 10, 'H Eta', ' Eta'],
-#            'H_Pt' : [300, 0, 300, 30, 'H p_{T} [GeV]', ' GeV'],
-#            'H_vis' : [300, 0, 300, 20, 'H Vis Mass [GeV]', ' GeV'],
-####            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
-####            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
-####            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
-####            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
-####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
-            'm_sv' : [15, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
-#XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-#            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-#            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
-#####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
-#####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
-#            'LT_higgs' : [150, 0, 150, 10, 'LT_{higgs} [GeV]', ' GeV'],
-#            'H_PZeta' : [600, -200, 400, 20, 'PZeta_{higgs} [GeV]', ' GeV'],
-#            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
-#            'H_DZeta' : [600, -200, 400, 20, 'DZeta_{higgs} [GeV]', ' GeV'],
-            'met' : [15, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
-#####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
-#####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
-#####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
-            'pt_1' : [10, 0, 200, 5, 'Leg1 p_{T} [GeV]', ' GeV'],
-            'pt_2' : [10, 0, 200, 5, 'Leg2 p_{T} [GeV]', ' GeV'],
-            'pt_3' : [10, 0, 200, 5, 'Leg3 p_{T} [GeV]', ' GeV'],
-            'pt_4' : [10, 0, 200, 5, 'Leg4 p_{T} [GeV]', ' GeV'],
+#            'Z_Pt' : [400, 0, 400, 40, 'Z p_{T} [GeV]', ' GeV'],
+#            'm_vis' : [70, 55, 125, 10, 'Z Mass [GeV]', ' GeV'],
+#####            #'H_Phi' : [40, -4, 4, 80, 'H Phi', ' Phi'],
+#####            #'H_Eta' : [40, -5, 5, 10, 'H Eta', ' Eta'],
+##            'H_Pt' : [300, 0, 300, 30, 'H p_{T} [GeV]', ' GeV'],
+##            'H_vis' : [300, 0, 300, 20, 'H Vis Mass [GeV]', ' GeV'],
+#####            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
+#####            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
+#####            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
+#####            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
+#####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
+#            'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
+##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
+##            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+##            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+######XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
+######XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
+##            'LT_higgs' : [150, 0, 150, 10, 'LT_{higgs} [GeV]', ' GeV'],
+##            'H_PZeta' : [600, -200, 400, 20, 'PZeta_{higgs} [GeV]', ' GeV'],
+##            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
+##            'H_DZeta' : [600, -200, 400, 20, 'DZeta_{higgs} [GeV]', ' GeV'],
+#            'met' : [300, 0, 300, 20, 'pfMet [GeV]', ' GeV'],
+#            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
+#            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
+#            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
+            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
+            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
+            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
+            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
             'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
             'gen_match_4' : [7, -0.5, 6.5, 1, 'Gen Match Leg 4', ''],
+            'pfmt_3' : [200, 0, 200, 10, 'Leg3 M_{T} [GeV]', ' GeV'],
 #####XXX            'eta_1' : [60, -3, 3, 10, 'Leg1 Eta', ' Eta'],
 #####XXX            'eta_2' : [60, -3, 3, 10, 'Leg2 Eta', ' Eta'],
 #####XXX            'eta_3' : [60, -3, 3, 10, 'Leg3 Eta', ' Eta'],
@@ -877,7 +892,7 @@ def getHistoDict( analysis, channel ) :
 #####            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
 #####            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
 #            'bjetCISVVeto20TightZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Tight', ''],
-#            'bjetCISVVeto20MediumZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
+            'bjetCISVVeto20MediumZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
 #            'bjetCISVVeto20LooseZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Loose', ''],
 ##XXX            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 ##XXX            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
