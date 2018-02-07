@@ -15,67 +15,47 @@ class ReducibleBkgWeights :
             'mmmt','emmm','eeee','mmmm']), "Channel: %s does not have a \
             Reducible Bkg component." % channel
         self.channel = channel
-        self.file = ROOT.TFile('data/azhFakeRateFits.root','READ')
-        self.tauFitCut = 20.
-        #self.electronFitCut = 15.
-        self.electronFitCut = 250.
-        self.muonFitCut = 12.5
-        self.useFit = False
+        self.file = ROOT.TFile('data/azhFakeRateFits_Nominal.root','READ')
         self.app = 'leptonPt'
 
-        # Set Leg3 FR graphs
+        # Set Leg3 FR hists
         if self.channel in ['eeet','eeem','emmt','emmm','eeee'] :
-            self.frGraphAllEtaL3 = self.file.Get( 'electron_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL3 = self.file.Get( 'electron_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL3 = self.file.Get( 'electron_AllEta_'+self.app+'_hist' )
         elif self.channel in ['eemm','eemt','mmmt','mmmm'] :
-            self.frGraphAllEtaL3 = self.file.Get( 'muon_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL3 = self.file.Get( 'muon_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL3 = self.file.Get( 'muon_AllEta_'+self.app+'_hist' )
         elif self.channel in ['eett','mmtt'] :
             # DM0
-            self.frGraphAllEtaL3dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL3dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL3dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_hist' )
             # DM1
-            self.frGraphAllEtaL3dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL3dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL3dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_hist' )
             # DM10
-            self.frGraphAllEtaL3dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL3dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL3dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_hist' )
 
-        # Set Leg4 FR graphs
+        # Set Leg4 FR hists
         if self.channel in ['eeet','emmt','eemt','mmmt',] :
             # DM0
-            self.frGraphAllEtaL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4dm0 = self.file.Get( 'tau-DM0_lllt_AllEta_'+self.app+'_hist' )
             # DM1
-            self.frGraphAllEtaL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4dm1 = self.file.Get( 'tau-DM1_lllt_AllEta_'+self.app+'_hist' )
             # DM10
-            self.frGraphAllEtaL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4dm10 = self.file.Get( 'tau-DM10_lllt_AllEta_'+self.app+'_hist' )
         elif self.channel in ['eett','mmtt',] :
             # DM0
-            self.frGraphAllEtaL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4dm0 = self.file.Get( 'tau-DM0_lltt_AllEta_'+self.app+'_hist' )
             # DM1
-            self.frGraphAllEtaL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4dm1 = self.file.Get( 'tau-DM1_lltt_AllEta_'+self.app+'_hist' )
             # DM10
-            self.frGraphAllEtaL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4dm10 = self.file.Get( 'tau-DM10_lltt_AllEta_'+self.app+'_hist' )
         elif self.channel in ['eeem','eemm','emmm','mmmm'] :
-            self.frGraphAllEtaL4 = self.file.Get( 'muon_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4 = self.file.Get( 'muon_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4 = self.file.Get( 'muon_AllEta_'+self.app+'_hist' )
         elif self.channel in ['eeee',] :
-            self.frGraphAllEtaL4 = self.file.Get( 'electron_AllEta_'+self.app+'_graph' )
-            self.frFitAllEtaL4 = self.file.Get( 'electron_AllEta_'+self.app+'_fit' )
+            self.frHistAllEtaL4 = self.file.Get( 'electron_AllEta_'+self.app+'_hist' )
 
 
     # Save some space with this
-    def evalWeight( self, pt, absEta, fit, graph ) :
-        if self.useFit :
-            return fit.Eval( pt ) / ( 1. - fit.Eval( pt ) )
-        else :
-            return graph.Eval( pt ) / ( 1. - graph.Eval( pt ) )
+    def evalWeight( self, pt, absEta, hist ) :
+        val = hist.GetBinContent( hist.FindBin( pt ) )
+        return val / ( 1. - val )
 
 
 
@@ -100,22 +80,18 @@ class ReducibleBkgWeights :
         # of the final bin
         if 'e' in lep :
             if pt <= 10 : pt = 10.1
-            if pt > 70 : pt = 70
         elif 'm' in lep :
             if pt <= 10 : pt = 10.1
-            if pt > 70 : pt = 70
-        elif 't' in lep :
-            if pt > 85 : pt = 85
 
         if not 't' in lep :
-            return self.evalWeight( pt, abs(eta), self.frFitAllEtaL3, self.frGraphAllEtaL3 )
+            return self.evalWeight( pt, abs(eta), self.frHistAllEtaL3 )
         if 't' in lep :
             if getattr( row, lep+'DecayMode' ) == 0 :
-                return self.evalWeight( pt, abs(eta), self.frFitAllEtaL3dm0, self.frGraphAllEtaL3dm0 )
+                return self.evalWeight( pt, abs(eta), self.frHistAllEtaL3dm0 )
             if getattr( row, lep+'DecayMode' ) == 1 :
-                return self.evalWeight( pt, abs(eta), self.frFitAllEtaL3dm1, self.frGraphAllEtaL3dm1 )
+                return self.evalWeight( pt, abs(eta), self.frHistAllEtaL3dm1 )
             if getattr( row, lep+'DecayMode' ) == 10 :
-                return self.evalWeight( pt, abs(eta), self.frFitAllEtaL3dm10, self.frGraphAllEtaL3dm10 )
+                return self.evalWeight( pt, abs(eta), self.frHistAllEtaL3dm10 )
         return 0. # Default
 
 
@@ -138,14 +114,14 @@ class ReducibleBkgWeights :
             if pt <= 10 : pt = 10.1
 
         if not 't' in lep :
-            return self.evalWeight( pt, abs(eta), self.frFitAllEtaL4, self.frGraphAllEtaL4 )
+            return self.evalWeight( pt, abs(eta), self.frHistAllEtaL4 )
         if 't' in lep :
             if getattr( row, lep+'DecayMode' ) == 0 :
-                return self.evalWeight( pt, abs(eta), self.frFitAllEtaL4dm0, self.frGraphAllEtaL4dm0 )
+                return self.evalWeight( pt, abs(eta), self.frHistAllEtaL4dm0 )
             if getattr( row, lep+'DecayMode' ) == 1 :
-                return self.evalWeight( pt, abs(eta), self.frFitAllEtaL4dm1, self.frGraphAllEtaL4dm1 )
+                return self.evalWeight( pt, abs(eta), self.frHistAllEtaL4dm1 )
             if getattr( row, lep+'DecayMode' ) == 10 :
-                return self.evalWeight( pt, abs(eta), self.frFitAllEtaL4dm10, self.frGraphAllEtaL4dm10 )
+                return self.evalWeight( pt, abs(eta), self.frHistAllEtaL4dm10 )
         return 0. # Default
 
  
