@@ -1,1 +1,2 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/WPlusHTauTau125_0_mmmt.root
+/data/truggles/zhSVFit_Nov05_MC_azh/WPlusHTauTau125_0_mmmt.root
+/data/truggles/zhSVFit_Nov05_MC_azh/WPlusHTauTau125_1_mmmt.root

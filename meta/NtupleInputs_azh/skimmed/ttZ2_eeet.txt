@@ -1,2 +1,0 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ2_0_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ2_1_eeet.root

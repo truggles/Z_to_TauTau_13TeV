@@ -1,3 +1,8 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/DYJets_0_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/DYJets_1_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/DYJets_2_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_0_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_1_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_2_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_3_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_4_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_5_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_6_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets_7_eeet.root

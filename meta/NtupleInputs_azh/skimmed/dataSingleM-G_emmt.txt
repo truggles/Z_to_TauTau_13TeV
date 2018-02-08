@@ -1,2 +1,2 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/dataSingleM-G_0_emmt.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/dataSingleM-G_1_emmt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-G_0_emmt.root
+/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-G_1_emmt.root

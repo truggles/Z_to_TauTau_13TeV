@@ -1,2 +1,2 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/WWZ_0_eeem.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/WZ_0_eeem.root
+/data/truggles/zhSVFit_Nov05_MC_azh/WWZ_0_eeem.root
+/data/truggles/zhSVFit_Nov05_MC_azh/WZ_0_eeem.root

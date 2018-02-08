@@ -1,2 +1,3 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/DYJets3_0_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/DYJets3_1_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets3_0_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets3_1_eeet.root
+/data/truggles/zhSVFit_Nov05_MC_azh/DYJets3_2_eeet.root

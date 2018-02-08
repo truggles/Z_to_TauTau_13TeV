@@ -1,3 +1,0 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ2_0_emmt.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ2_1_emmt.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ2_2_emmt.root

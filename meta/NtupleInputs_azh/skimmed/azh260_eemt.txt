@@ -1,2 +1,2 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/azh260_0_eemt.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/azh260_1_eemt.root
+/data/truggles/zhSVFit_Nov05_MC_azh/azh260_0_eemt.root
+/data/truggles/zhSVFit_Nov05_MC_azh/azh260_1_eemt.root
