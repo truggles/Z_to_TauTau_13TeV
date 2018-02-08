@@ -67,7 +67,7 @@ for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 #azhSamples = ['HZZ125',]
 #azhSamples = ['azh300',]
 #azhSamples = ['ZHTauTau125',]
-#azhSamples = ['ttZ',]
+#azhSamples = ['DYJets4',]
 
 samples = azhSamples
 
@@ -87,9 +87,9 @@ params = {
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
-    'mid1' : '1Feb01svFitted',
-    'mid2' : '2Feb01svFitted',
-    'mid3' : '3Feb01svFitted',
+    'mid1' : '1Feb07preRawSkimCheck',
+    'mid2' : '2Feb07preRawSkimCheck',
+    'mid3' : '3Feb07preRawSkimCheck',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -146,9 +146,9 @@ makeFinalPlots = True
 doDataCards = True
 
 
-runPlots = False
-doMerge = False
-makeFinalPlots = False
+#runPlots = False
+#doMerge = False
+#makeFinalPlots = False
 #doDataCards = False
 
 
@@ -249,9 +249,9 @@ if 'WZ-NONJET' in samplesY :
 if makeFinalPlots :
     samplesX = copy.deepcopy(samplesY)
     text=False
-    #text=True
+    text=True
     blind = True
-    #blind = False
+    blind = False
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
     print params
 

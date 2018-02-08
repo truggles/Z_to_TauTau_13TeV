@@ -417,7 +417,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             # 60 is way more stats
 
         # bJet Veto Tests
-        additionalCut += '*(bjetCISVVeto20MediumZTT == 0)'
+        additionalCut += '*(bjetCISVVeto20Medium == 0)'
         #additionalCut += '*(gen_match_3 == 6)'
         #additionalCut += '*(gen_match_4==6)'
         #additionalCut += '*(gen_match_3 == 6 && gen_match_4==6)'
@@ -538,7 +538,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         # this is not an "if" style shape b/c we need to apply
         # normal pt cuts if the shape syst is not called
         # so instead we appeand it to what ever else we have
-        shapeSyst += ESCuts( esMap, sample, channel, var )
+        shapeSyst += ESCuts( esMap, sample, channel, var ).replace('shiftedPt','pt')
         # Additionally, if we have Energy Scale, we also need
         # to change any Higgs_PtCor vars to Higgs_PtCor_UP/DOWN
         additionalCutToUse = additionalCut
@@ -754,7 +754,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             #if sample == 'DYJets' : print sample,"  Var:",var,"   VarBase:",varBase, "    VarPlot:",plotVar
             print "%20s  Var: %40s   VarBase: %30s    VarPlot: %s" % (sample, var, varBase, plotVar)
             if isData : # Data has no GenWeight and by def has puweight = 1
-                dataES = ESCuts( esMap, 'data', channel, var )
+                dataES = ESCuts( esMap, 'data', channel, var ).replace('shiftedPt','pt')
                 #print 'dataES',dataES
                 chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
@@ -949,8 +949,8 @@ def getHistoDict( analysis, channel ) :
 #####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
             'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
 ##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-            #'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-            #'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
@@ -962,10 +962,10 @@ def getHistoDict( analysis, channel ) :
 ####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
 ####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
 ####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
-# XXX            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
-# XXX            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
-# XXX            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
-# XXX            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
+            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
+            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
+            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
+            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
 #            'pfmt_3' : [200, 0, 200, 20, 'Leg3 M_{T} [GeV]', ' GeV'],
 #            'pfmt_4' : [200, 0, 200, 20, 'Leg4 M_{T} [GeV]', ' GeV'],
 #            'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
@@ -1044,12 +1044,12 @@ def getHistoDict( analysis, channel ) :
         for item in toAdd :
             varsForShapeSyst.append( item )
         shapesToAdd = {
-                    'energyScaleEES':'Electron Energy Scale',
-                    'energyScaleDM0':'TES DM0',
-                    'energyScaleDM1':'TES DM1',
-                    'energyScaleDM10':'TES DM10',
-                    'metClustered':'Clustered MET',
-                    'metUnclustered':'Unclustered MET',
+                    #'energyScaleEES':'Electron Energy Scale',
+                    #'energyScaleDM0':'TES DM0',
+                    #'energyScaleDM1':'TES DM1',
+                    #'energyScaleDM10':'TES DM10',
+                    #'metClustered':'Clustered MET',
+                    #'metUnclustered':'Unclustered MET',
                     }
 
         for var in genVarMap.keys() :
