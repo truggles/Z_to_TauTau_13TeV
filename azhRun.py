@@ -63,7 +63,7 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 
     
 #azhSamples = ['ZHWW125','HZZ125']
-#azhSamples = ['dataEE-B']
+azhSamples = ['dataEE-B',]
 #azhSamples = ['HZZ125',]
 #azhSamples = ['azh300',]
 #azhSamples = ['ZHTauTau125',]
@@ -79,11 +79,11 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 12,
+    'numCores' : 4,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
-    #'channels' : ['eeee','mmmm'],
+    #'channels' : ['eett','mmtt'],
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
@@ -108,7 +108,7 @@ params = {
     ##'channels' : ['eeem','eeet',],
     ##'channels' : ['emmt','mmtt','mmmt','emmm'],
     ##'channels' : ['eeet','eeem','mmmt','emmm'],
-    ##'channels' : ['mmmt',],
+    #'channels' : ['mmmt',],
     ##'skimmed' : 'false',
     #'skimmed' : 'true',
     #'skimHdfs' : 'false',
@@ -146,7 +146,7 @@ makeFinalPlots = True
 doDataCards = True
 
 
-runPlots = False
+#runPlots = False
 doMerge = False
 #makeFinalPlots = False
 doDataCards = False

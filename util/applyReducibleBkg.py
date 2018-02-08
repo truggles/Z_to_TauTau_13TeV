@@ -10,12 +10,15 @@ class ReducibleBkgWeights :
     AZH/ZH analysis"""
     
 
-    def __init__( self, channel ):
+    def __init__( self, channel, shift='Nominal' ):
         assert(channel in ['eemm','eeet','eett','eemt','eeem','emmt','mmtt',
             'mmmt','emmm','eeee','mmmm']), "Channel: %s does not have a \
             Reducible Bkg component." % channel
+        assert( shift in ['Nominal', 'UP', 'DOWN'] ), "Selected shift %s is not \
+            one of the supported shifts: Nominal, UP, DOWN" % shift
         self.channel = channel
-        self.file = ROOT.TFile('data/azhFakeRateFits_Nominal.root','READ')
+        self.shift = shift
+        self.file = ROOT.TFile('data/azhFakeRateFits_%s.root' % self.shift,'READ')
         self.app = 'leptonPt'
 
         # Set Leg3 FR hists

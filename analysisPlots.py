@@ -47,7 +47,7 @@ def make2DHisto( cutName ) :
     return hist
 
 
-def skipSystShapeVar( var, sample, channel, genCode='x' ) :
+def skipSystShapeVar( var, sample, channel, genCode='x', outFileName='x' ) :
         # Tau Pt Scale reweighting only applied to DYJets and signal
         #print "Skip Vars:",sample, var, genCode
         if '_tauPt' in var :
@@ -66,6 +66,10 @@ def skipSystShapeVar( var, sample, channel, genCode='x' ) :
             if 'QCD-' in sample : return True
             if 'RedBkg' in sample : return True
             if 'RedBkg' in genCode : return True
+
+        # prompt MC scaling for reducible background estimation in ZH
+        elif '_promptMC' in var :
+            if not ('RedBkg' in sample or 'RedBkg' in outFileName) : return True
 
         # z pt reweight only applied to LO DYJets samples, DYJetsLow in amc@nlo
         # do run for DYJetsLow as weight is set to 1
@@ -466,7 +470,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
 
 
         ''' Skip plotting unused shape systematics '''
-        if skipSystShapeVar( var, sample, channel, genCode ) : continue
+        if skipSystShapeVar( var, sample, channel, genCode, outFileName ) : continue
 
         ''' Define syst shape weights if applicable '''
         shapeSyst = ''
@@ -521,6 +525,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                 shapeSyst = '*(1./(1. + zmumuVBFWeight))'
 
 
+
         # Add the Zmumu CR normalizations from Cecile's studies
         # from Nov 18, 2016 SM-HTT
         # Update 2 Mar, 2017:
@@ -555,6 +560,18 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             additionalCutToUse = additionalCutToUse.replace('pt_sv','pt_sv%s%s' % (dm, shiftDir) )
             additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor%s%s' % (dm, shiftDir) )
 
+        # Adjust the additional cuts to grab appropriate FR yield
+        # weights
+        elif '_promptMC' in var :
+            if '_promptMCElecMu' in var :
+                if 'Up' in var[-2:] :
+                    additionalCutToUse = additionalCutToUse.replace('zhFR0','zhFR0ElecMuUp')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR1','zhFR1ElecMuUp')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR2','zhFR2ElecMuUp')
+                if 'Down' in var[-4:] :
+                    additionalCutToUse = additionalCutToUse.replace('zhFR0','zhFR0ElecMuDown')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR1','zhFR1ElecMuDown')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR2','zhFR2ElecMuDown')
 
         # Jet Energy Scale:
         # similar as TES above, edit the additionalCut
@@ -714,6 +731,12 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                         plotVar = plotVar.replace('m_sv','m_sv_UncMet_DOWN')
                         plotVar = plotVar.replace('pt_sv','pt_sv_UncMet_DOWN')
                         plotVar = plotVar.replace('Higgs_PtCor','Higgs_PtCor_UncMet_DOWN')
+            elif 'promptMC' in shapeName :
+                if 'm_sv' in var :
+                    if 'Up' in var[-2:] :
+                        plotVar = plotVar.replace('_promptMCUp','')
+                    if 'Down' in var[-4:] :
+                        plotVar = plotVar.replace('_promptMCDown','')
             elif 'JES' in shapeName :
                 if 'data' in sample :
                     plotVar = varBase
@@ -756,14 +779,16 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             if isData : # Data has no GenWeight and by def has puweight = 1
                 dataES = ESCuts( esMap, 'data', channel, var )
                 #print 'dataES',dataES
+                print "DATA CUT"
+                print '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst)
                 chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
                 #if var == 'm_visCor' or var == 'Mass' :
                 if var == 'm_sv' :
                     #print 'm_visCor'
-                    print ' --- XXX m_sv',sample,outFileName,channel,histos[ var ].Integral()
+                    #print ' --- XXX m_sv',sample,outFileName,channel,histos[ var ].Integral()
                     #print "Data Count:", histos[ var ].Integral()
-                    print "Cut: %s%s" % (additionalCutToUse, dataES)
+                    print "Cut: %s%s%s" % (additionalCutToUse, dataES, ffShapeSyst)
             else :
 
                 chain.Draw( '%s>>%s' % (plotVar, var), '%s' % totalCutAndWeightMC )
@@ -951,8 +976,8 @@ def getHistoDict( analysis, channel ) :
 #####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
             'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
 ##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-            #'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-            #'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
@@ -993,9 +1018,9 @@ def getHistoDict( analysis, channel ) :
 ####            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
 ####            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
 ####            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
-#            'bjetCISVVeto20TightZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Tight', ''],
-#            'bjetCISVVeto20MediumZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
-#            'bjetCISVVeto20LooseZTT' : [5, -0.5, 4.5, 1, 'nBTag_20Loose', ''],
+#            'bjetCISVVeto20Tight' : [5, -0.5, 4.5, 1, 'nBTag_20Tight', ''],
+#            'bjetCISVVeto20Medium' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
+#            'bjetCISVVeto20Loose' : [5, -0.5, 4.5, 1, 'nBTag_20Loose', ''],
 #XXX            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 #XXX            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
         }
@@ -1052,6 +1077,8 @@ def getHistoDict( analysis, channel ) :
                     'energyScaleDM10':'TES DM10',
                     'metClustered':'Clustered MET',
                     'metUnclustered':'Unclustered MET',
+                    'promptMCElecMu':'RedBkg Prompt MC Elec/Mu',
+                    'promptMCTau':'RedBkg Prompt MC Tau',
                     }
 
         for var in genVarMap.keys() :

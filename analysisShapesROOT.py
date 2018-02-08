@@ -213,7 +213,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if not (('_energyScale' in var) or ('_zPt' in var) or ('_topPt' in var) \
                         or ('_JES' in var) or ('_ggH' in var) or ('_JetToTau' in var) \
                         or ('_metUnclustered' in var) or ('_metClustered' in var) \
-                        or ('_Zmumu' in var) or ('_tauPt' in var) or (baseVar == var)) :
+                        or ('_Zmumu' in var) or ('_tauPt' in var) or ('_promptMC' in var) \
+                        or (baseVar == var)) :
                         print "Did we fail?"
                         continue
             else :
@@ -485,8 +486,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
                 if histos[ name ].Integral() != 0.0 :
                     print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
-                else :
-                    print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
+                #else :
+                #    print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
                 #if not ops['mssm'] :
                 #    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
 
@@ -498,13 +499,13 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Proper naming of output histos
                 if ops['allShapes'] and ('_energyScale' in var or '_tauPt' in var or '_zPt' in var \
                         or '_JES' in var or '_topPt' in var or '_ggH' in var or '_JetToTau' in var or '_Zmumu' in var \
-                        or '_metUnclustered' in var or '_metClustered' in var \
+                        or '_metUnclustered' in var or '_metClustered' in var or '_promptMC' in var \
                         or 'ffSyst' in var or 'ffStat' in var) :
 
                     # Systematics naming removes CRs
                     category = ops['category'].strip('_qcd_cr')
 
-                    if name in ['data_obs','QCD','RedBkg'] : continue 
+                    if name in ['data_obs','QCD'] : continue 
                     if name == 'jetFakes' and not doFF : continue
                     if name == 'jetFakes' and not ('ffSyst' in var or 'ffStat' in var) : continue
                     if ('ffSyst' in var or 'ffStat' in var) and name != 'jetFakes' : continue
@@ -513,6 +514,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
                     if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] or \
                             category != 'vbf') : continue # Shape only used in vbf category atm
+                    if 'RedBkg' in name and not '_promptMC' in var : continue
+                    if '_promptMC' in var and not 'RedBkg' in name : continue
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
@@ -591,6 +594,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     elif '_metUnclustered' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_met_unclustered_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_met_unclustered_13TeV'+shiftDir )
+                    elif '_promptMCElecMu' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_fake_rate_prompt_MC_EandM_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_fake_rate_prompt_MC_EandM_13TeV'+shiftDir )
+                    elif '_promptMCTau' in var :
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_fake_rate_prompt_MC_Tau_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_scale_fake_rate_prompt_MC_Tau_13TeV'+shiftDir )
                     ### For these Fake Factor shapes, we need 2 copies with slightly different names
                     elif 'ffSyst' in var :
                         if 'qcdffSyst' in var :

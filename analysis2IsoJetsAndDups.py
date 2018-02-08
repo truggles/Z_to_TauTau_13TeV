@@ -376,7 +376,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     if len(channel) > 3 : # either AZH or ZH analysis
         from util.applyReducibleBkg import ReducibleBkgWeights
-        zhFRObj = ReducibleBkgWeights( channel )
+        zhFRObj = ReducibleBkgWeights( channel, 'Nominal' )
+        zhFRObjUp = ReducibleBkgWeights( channel, 'UP' )
+        zhFRObjDown = ReducibleBkgWeights( channel, 'DOWN' )
 
     #cmssw_base = os.getenv('CMSSW_BASE')
     #ff_file = ROOT.TFile.Open(cmssw_base+'/src/HTTutilities/Jet2TauFakes/data/fakeFactors_20160425.root')
@@ -888,6 +890,30 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     zhFR1B = tnew.Branch('zhFR1', zhFR1, 'zhFR1/F')
     zhFR2 = array('f', [ 0 ] )
     zhFR2B = tnew.Branch('zhFR2', zhFR2, 'zhFR2/F')
+    zhFR0ElecMuUp = array('f', [ 0 ] )
+    zhFR0ElecMuUpB = tnew.Branch('zhFR0ElecMuUp', zhFR0ElecMuUp, 'zhFR0ElecMuUp/F')
+    zhFR1ElecMuUp = array('f', [ 0 ] )
+    zhFR1ElecMuUpB = tnew.Branch('zhFR1ElecMuUp', zhFR1ElecMuUp, 'zhFR1ElecMuUp/F')
+    zhFR2ElecMuUp = array('f', [ 0 ] )
+    zhFR2ElecMuUpB = tnew.Branch('zhFR2ElecMuUp', zhFR2ElecMuUp, 'zhFR2ElecMuUp/F')
+    zhFR0ElecMuDown = array('f', [ 0 ] )
+    zhFR0ElecMuDownB = tnew.Branch('zhFR0ElecMuDown', zhFR0ElecMuDown, 'zhFR0ElecMuDown/F')
+    zhFR1ElecMuDown = array('f', [ 0 ] )
+    zhFR1ElecMuDownB = tnew.Branch('zhFR1ElecMuDown', zhFR1ElecMuDown, 'zhFR1ElecMuDown/F')
+    zhFR2ElecMuDown = array('f', [ 0 ] )
+    zhFR2ElecMuDownB = tnew.Branch('zhFR2ElecMuDown', zhFR2ElecMuDown, 'zhFR2ElecMuDown/F')
+    zhFR0TauUp = array('f', [ 0 ] )
+    zhFR0TauUpB = tnew.Branch('zhFR0TauUp', zhFR0TauUp, 'zhFR0TauUp/F')
+    zhFR1TauUp = array('f', [ 0 ] )
+    zhFR1TauUpB = tnew.Branch('zhFR1TauUp', zhFR1TauUp, 'zhFR1TauUp/F')
+    zhFR2TauUp = array('f', [ 0 ] )
+    zhFR2TauUpB = tnew.Branch('zhFR2TauUp', zhFR2TauUp, 'zhFR2TauUp/F')
+    zhFR0TauDown = array('f', [ 0 ] )
+    zhFR0TauDownB = tnew.Branch('zhFR0TauDown', zhFR0TauDown, 'zhFR0TauDown/F')
+    zhFR1TauDown = array('f', [ 0 ] )
+    zhFR1TauDownB = tnew.Branch('zhFR1TauDown', zhFR1TauDown, 'zhFR1TauDown/F')
+    zhFR2TauDown = array('f', [ 0 ] )
+    zhFR2TauDownB = tnew.Branch('zhFR2TauDown', zhFR2TauDown, 'zhFR2TauDown/F')
     LT_higgs = array('f', [ 0 ] )
     LT_higgsB = tnew.Branch('LT_higgs', LT_higgs, 'LT_higgs/F')
     ptCor_1 = array('f', [ 0 ] )
@@ -1469,6 +1495,18 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             zhFR0[0] = 0
             zhFR1[0] = 0
             zhFR2[0] = 0
+            zhFR0ElecMuUp[0] = 0
+            zhFR1ElecMuUp[0] = 0
+            zhFR2ElecMuUp[0] = 0
+            zhFR0ElecMuDown[0] = 0
+            zhFR1ElecMuDown[0] = 0
+            zhFR2ElecMuDown[0] = 0
+            zhFR0TauUp[0] = 0
+            zhFR1TauUp[0] = 0
+            zhFR2TauUp[0] = 0
+            zhFR0TauDown[0] = 0
+            zhFR1TauDown[0] = 0
+            zhFR2TauDown[0] = 0
             LT_higgs[0] = 0
             A_Mass[0] = 0
 
@@ -1904,6 +1942,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # This uses the 1+2-0 method detailed in AN2014/109
                 if 'data' in sample :
 
+                    # Nominal
                     zhFR1[0] = zhFRObj.getFRWeightL3( pt3, eta3, l3, row ) 
                     if zhFR1[0] < 0. : zhFR1[0] = 0.
 
@@ -1911,6 +1950,62 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if zhFR2[0] < 0. : zhFR2[0] = 0.
 
                     zhFR0[0] = zhFR1[0] * zhFR2[0]
+
+                    # Set all these to nominal so they are correct unless
+                    # specifically reset by their channel combination
+                    zhFR0ElecMuUp[0] = zhFR0[0]
+                    zhFR1ElecMuUp[0] = zhFR1[0]
+                    zhFR2ElecMuUp[0] = zhFR2[0]
+                    zhFR0ElecMuDown[0] = zhFR0[0]
+                    zhFR1ElecMuDown[0] = zhFR1[0]
+                    zhFR2ElecMuDown[0] = zhFR2[0]
+                    zhFR0TauUp[0] = zhFR0[0]
+                    zhFR1TauUp[0] = zhFR1[0]
+                    zhFR2TauUp[0] = zhFR2[0]
+                    zhFR0TauDown[0] = zhFR0[0]
+                    zhFR1TauDown[0] = zhFR1[0]
+                    zhFR2TauDown[0] = zhFR2[0]
+
+                    # Need to get proper weights by channel
+                    if channel in ['eeem', 'emmm', 'eeee', 'mmmm'] :
+                        # LLEM, EEEE/MMMM both legs get ElecMu
+                        # No shift to Taus
+                        zhFR1ElecMuUp[0] = zhFRObjUp.getFRWeightL3( pt3, eta3, l3, row ) 
+                        if zhFR1ElecMuUp[0] < 0. : zhFR1ElecMuUp[0] = 0.
+                        zhFR2ElecMuUp[0] = zhFRObjUp.getFRWeightL4( pt4, eta4, l4, row ) 
+                        if zhFR2ElecMuUp[0] < 0. : zhFR2ElecMuUp[0] = 0.
+                        zhFR1ElecMuDown[0] = zhFRObjDown.getFRWeightL3( pt3, eta3, l3, row ) 
+                        if zhFR1ElecMuDown[0] < 0. : zhFR1ElecMuDown[0] = 0.
+                        zhFR2ElecMuDown[0] = zhFRObjDown.getFRWeightL4( pt4, eta4, l4, row ) 
+                        if zhFR2ElecMuDown[0] < 0. : zhFR2ElecMuDown[0] = 0.
+                        zhFR0ElecMuUp[0] = zhFR1ElecMuUp[0] * zhFR2ElecMuUp[0]
+                        zhFR0ElecMuDown[0] = zhFR1ElecMuDown[0] * zhFR2ElecMuDown[0]
+                    elif channel in ['eett', 'mmtt'] :
+                        # LLTT only shift Taus
+                        zhFR1TauUp[0] = zhFRObjUp.getFRWeightL3( pt3, eta3, l3, row ) 
+                        if zhFR1TauUp[0] < 0. : zhFR1TauUp[0] = 0.
+                        zhFR2TauUp[0] = zhFRObjUp.getFRWeightL4( pt4, eta4, l4, row ) 
+                        if zhFR2TauUp[0] < 0. : zhFR2TauUp[0] = 0.
+                        zhFR1TauDown[0] = zhFRObjDown.getFRWeightL3( pt3, eta3, l3, row ) 
+                        if zhFR1TauDown[0] < 0. : zhFR1TauDown[0] = 0.
+                        zhFR2TauDown[0] = zhFRObjDown.getFRWeightL4( pt4, eta4, l4, row ) 
+                        if zhFR2TauDown[0] < 0. : zhFR2TauDown[0] = 0.
+                        zhFR0TauUp[0] = zhFR1TauUp[0] * zhFR2TauUp[0]
+                        zhFR0TauDown[0] = zhFR1TauDown[0] * zhFR2TauDown[0]
+                    elif channel in ['eeet','eemt','emmt','mmmt'] :
+                    # Shift Elec and Tau both
+                        zhFR1ElecMuUp[0] = zhFRObjUp.getFRWeightL3( pt3, eta3, l3, row ) 
+                        if zhFR1ElecMuUp[0] < 0. : zhFR1ElecMuUp[0] = 0.
+                        zhFR1ElecMuDown[0] = zhFRObjDown.getFRWeightL3( pt3, eta3, l3, row ) 
+                        if zhFR1ElecMuDown[0] < 0. : zhFR1ElecMuDown[0] = 0.
+                        zhFR2TauUp[0] = zhFRObjUp.getFRWeightL4( pt4, eta4, l4, row ) 
+                        if zhFR2TauUp[0] < 0. : zhFR2TauUp[0] = 0.
+                        zhFR2TauDown[0] = zhFRObjDown.getFRWeightL4( pt4, eta4, l4, row ) 
+                        if zhFR2TauDown[0] < 0. : zhFR2TauDown[0] = 0.
+                        zhFR0ElecMuUp[0] = zhFR1ElecMuUp[0] * zhFR2[0] # zhFR2 is for taus
+                        zhFR0ElecMuDown[0] = zhFR1ElecMuDown[0] * zhFR2[0]
+                        zhFR0TauUp[0] = zhFR1[0] * zhFR2TauUp[0] # zhFR1 is for elec/mu
+                        zhFR0TauDown[0] = zhFR1[0] * zhFR2TauDown[0]
                 
                 # Define the LT varialbe we use in analysis (LT from FSA is all 4 objects)
                 LT_higgs[0] = pt3 + pt4
