@@ -417,7 +417,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             # 60 is way more stats
 
         # bJet Veto Tests
-        additionalCut += '*(bjetCISVVeto20MediumZTT == 0)'
+        additionalCut += '*(bjetCISVVeto20Medium == 0)'
         #additionalCut += '*(gen_match_3 == 6)'
         #additionalCut += '*(gen_match_4==6)'
         #additionalCut += '*(gen_match_3 == 6 && gen_match_4==6)'
@@ -758,8 +758,10 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                 #print 'dataES',dataES
                 chain.Draw( '%s>>%s' % (plotVar, var), '1%s%s%s' % (additionalCutToUse, dataES, ffShapeSyst) )
                 histos[ var ] = gPad.GetPrimitive( var )
-                if var == 'm_visCor' or var == 'Mass' :
-                    print 'm_visCor'
+                #if var == 'm_visCor' or var == 'Mass' :
+                if var == 'm_sv' :
+                    #print 'm_visCor'
+                    print ' --- XXX m_sv',sample,outFileName,channel,histos[ var ].Integral()
                     #print "Data Count:", histos[ var ].Integral()
                     print "Cut: %s%s" % (additionalCutToUse, dataES)
             else :
@@ -962,10 +964,10 @@ def getHistoDict( analysis, channel ) :
 ####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
 ####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
 ####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
-# XXX            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
-# XXX            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
-# XXX            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
-# XXX            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
+#            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
+#            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
+#            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
+#            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
 #            'pfmt_3' : [200, 0, 200, 20, 'Leg3 M_{T} [GeV]', ' GeV'],
 #            'pfmt_4' : [200, 0, 200, 20, 'Leg4 M_{T} [GeV]', ' GeV'],
 #            'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],

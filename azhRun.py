@@ -50,7 +50,7 @@ for mass in [125,] :
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
 
-#azhSamples = []
+azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataEE-%s' % era)
     azhSamples.append('dataMM-%s' % era)
@@ -58,8 +58,8 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataSingleM-%s' % era)
 
 #azhSamples = []
-for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-    azhSamples.append('azh%i' % mass)
+#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+#    azhSamples.append('azh%i' % mass)
 
     
 #azhSamples = ['ZHWW125','HZZ125']
@@ -104,7 +104,7 @@ params = {
     ##'channels' : ['eeet','eett','eeem','mmtt','emmm',],
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',], # 8
     ##'channels' : ['mmmt','mmtt'],
-    ##'channels' : ['eeet',],
+    ##'channels' : ['eett','mmtt'],
     ##'channels' : ['eeem','eeet',],
     ##'channels' : ['emmt','mmtt','mmmt','emmm'],
     ##'channels' : ['eeet','eeem','mmmt','emmm'],
@@ -148,8 +148,8 @@ doDataCards = True
 
 runPlots = False
 doMerge = False
-makeFinalPlots = False
-#doDataCards = False
+#makeFinalPlots = False
+doDataCards = False
 
 
 doZH = True
@@ -250,8 +250,8 @@ if makeFinalPlots :
     samplesX = copy.deepcopy(samplesY)
     text=False
     #text=True
-    blind = True
-    #blind = False
+    #blind = True
+    blind = False
     kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
     print params
 
