@@ -572,6 +572,15 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                     additionalCutToUse = additionalCutToUse.replace('zhFR0','zhFR0ElecMuDown')
                     additionalCutToUse = additionalCutToUse.replace('zhFR1','zhFR1ElecMuDown')
                     additionalCutToUse = additionalCutToUse.replace('zhFR2','zhFR2ElecMuDown')
+            if '_promptMCTau' in var :
+                if 'Up' in var[-2:] :
+                    additionalCutToUse = additionalCutToUse.replace('zhFR0','zhFR0TauUp')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR1','zhFR1TauUp')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR2','zhFR2TauUp')
+                if 'Down' in var[-4:] :
+                    additionalCutToUse = additionalCutToUse.replace('zhFR0','zhFR0TauDown')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR1','zhFR1TauDown')
+                    additionalCutToUse = additionalCutToUse.replace('zhFR2','zhFR2TauDown')
 
         # Jet Energy Scale:
         # similar as TES above, edit the additionalCut
@@ -734,9 +743,11 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             elif 'promptMC' in shapeName :
                 if 'm_sv' in var :
                     if 'Up' in var[-2:] :
-                        plotVar = plotVar.replace('_promptMCUp','')
+                        plotVar = plotVar.replace('_promptMCElecMuUp','')
+                        plotVar = plotVar.replace('_promptMCTauUp','')
                     if 'Down' in var[-4:] :
-                        plotVar = plotVar.replace('_promptMCDown','')
+                        plotVar = plotVar.replace('_promptMCElecMuDown','')
+                        plotVar = plotVar.replace('_promptMCTauDown','')
             elif 'JES' in shapeName :
                 if 'data' in sample :
                     plotVar = varBase
