@@ -577,6 +577,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             # A to Zh stuff
             if analysis == 'azh' :
+                if ops['redBkg'] :
+                    stack.Add( sampHistos['redBkg'] )
                 stack.Add( sampHistos['top'] )
                 stack.Add( sampHistos['dyj'] )
                 stack.Add( sampHistos['wz'] )
@@ -584,8 +586,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.Add( sampHistos['ttZ'] )
                 stack.Add( sampHistos['zz'] )
                 stack.Add( sampHistos['higgs'] )
-                if ops['redBkg'] :
-                    stack.Add( sampHistos['redBkg'] )
     
             # Scale signal samples for viewing
             sampHistos[ signal ].Scale( signalSF )
@@ -942,7 +942,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         # Check if we blind based on HTT 2016  twiki base 
                         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
                         #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
-                        if ( 0.1 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) :
+                        if ( 0.1 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) or (var == 'LT_higgs' and k > 5) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] and not ":" in var :
