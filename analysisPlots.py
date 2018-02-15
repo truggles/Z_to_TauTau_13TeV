@@ -811,14 +811,14 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                     print "tmpIntPost: %f" % integralPost
                     print "Cut: %s" % totalCutAndWeightMC
 
-        # When chain has entries, but the cut string leaves no drawn events
-        # ROOT makes a default TH1 with 100 bins which causes problems merging later
-        # so make our original binned histo
-        if histos[ var ].Integral() == 0.0 :
-            if ":" in var :
-    	        histos[ var ] = make2DHisto( var )
-            else :
-    	        histos[ var ] = makeHisto( var, info[0], info[1], info[2])
+            # When chain has entries, but the cut string leaves no drawn events
+            # ROOT makes a default TH1 with 100 bins which causes problems merging later
+            # so make our original binned histo
+            if histos[ var ].Integral() == 0.0 :
+                if ":" in var :
+    	            histos[ var ] = make2DHisto( var )
+                else :
+    	            histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
         # didn't have var in chain
         else : 
@@ -1038,9 +1038,9 @@ def getHistoDict( analysis, channel ) :
 ####            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
 ####            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
 ####            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
-#            'bjetCISVVeto20Tight' : [5, -0.5, 4.5, 1, 'nBTag_20Tight', ''],
-#            'bjetCISVVeto20Medium' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
-#            'bjetCISVVeto20Loose' : [5, -0.5, 4.5, 1, 'nBTag_20Loose', ''],
+            'bjetCISVVeto20Tight' : [5, -0.5, 4.5, 1, 'nBTag_20Tight', ''],
+            'bjetCISVVeto20Medium' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
+            'bjetCISVVeto20Loose' : [5, -0.5, 4.5, 1, 'nBTag_20Loose', ''],
 #XXX            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 #XXX            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
         }
