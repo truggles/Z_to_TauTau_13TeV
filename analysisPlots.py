@@ -811,6 +811,15 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                     print "tmpIntPost: %f" % integralPost
                     print "Cut: %s" % totalCutAndWeightMC
 
+        # When chain has entries, but the cut string leaves no drawn events
+        # ROOT makes a default TH1 with 100 bins which causes problems merging later
+        # so make our original binned histo
+        if histos[ var ].Integral() == 0.0 :
+            if ":" in var :
+    	        histos[ var ] = make2DHisto( var )
+            else :
+    	        histos[ var ] = makeHisto( var, info[0], info[1], info[2])
+
         # didn't have var in chain
         else : 
             del histos[ var ]
@@ -987,8 +996,8 @@ def getHistoDict( analysis, channel ) :
 #####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
             'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
 ##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+#            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+#            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
