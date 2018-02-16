@@ -315,10 +315,11 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
         for tri in triBosons :
             if tri in inSamples :
                 samples['%s-NONJET' % tri]  = 'TriBoson'
-        ZZs = ['ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'ZZ4l',]
-        for zz in ZZs :
+        ggZZs = ['ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau']
+        for zz in ggZZs :
             if zz in inSamples :
-                samples['%s-NONJET' % zz]  = 'ZZ'
+                samples['%s-NONJET' % zz]  = 'ggZZ'
+        if 'ZZ4l' in inSamples : samples['ZZ4l-NONJET'] = 'ZZ'
         if 'ttZ' in inSamples : samples['ttZ-NONJET'] = 'ttZ'
 
         for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
