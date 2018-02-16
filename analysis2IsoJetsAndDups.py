@@ -1525,7 +1525,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             else :
                 shiftedPt3 = pt3
                 shiftedPt4 = pt4
-                print "shiftedPt_3 not in TTree"
+                #print "shiftedPt_3 not in TTree"
             leg3_DM0_Up[0] = shiftedPt3
             leg3_DM0_Down[0] = shiftedPt3
             leg3_DM1_Up[0] = shiftedPt3
