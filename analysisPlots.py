@@ -145,10 +145,11 @@ def ESCuts( ESMap, sample, channel, var ) :
             # Data not shifted pT for taus
             return str( ESMap['_NoShift'] ).replace('shiftedPt','pt')
 
+    if 'energyScale' not in var : return ESMap['_NoShift']
+
     shiftDir = ''
     if 'Up' in var[-2:] : shiftDir = 'Up'
     elif 'Down' in var[-4:] : shiftDir = 'Down'
-    elif 'energyScale' not in var : return ESMap['_NoShift']
 
     if channel == 'tt' :
         if '_energyScaleAll'+shiftDir in var : return ESMap['_energyScaleAll'+shiftDir]
