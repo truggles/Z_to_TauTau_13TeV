@@ -158,11 +158,15 @@ def mergeChannels( analysis, folder, samples, channels, final ) :
             for h in hists.keys() :
                 #print h
                 htmp = d.Get( h )
+                if htmp == None :
+                    print "\n\n\nIn Merge HTMP == None\n%s %s %s" % ( channel, f, h )
+                    continue
                 if h not in allChannelVarMap.keys() :
                     #print "Not in all chan var map ",h.GetName()
                     print "Not in all chan var map ",h
                     continue
-                hists[h] += htmp
+                #hists[h] += htmp
+                hists[h].Add( htmp )
         # Write final output
         for h in hists.keys() :
             outDir.cd()
