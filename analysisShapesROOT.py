@@ -494,6 +494,16 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 # Scale AZh to 1 fb cross section, it is set at 1 pb in meta
                 if analysis == 'azh' and not ops['doZH'] and 'azh' in name :
                     histos[ name ].Scale( 1. / 1000. )
+
+                # There is additional ZEE scaling for EES in EEET, EEMT, EETT, EEEM channels
+                if '_energyScaleEES' in var :
+                    if name != 'data_obs' and 'RedBkg' not in name :
+                        if channel in ['eeee','eeet','eemt','eett','eeem'] :
+                            #print "    ----    EES - %20s pre yield: %3.3f" % (name, histos[ name ].Integral() )
+                            if var[-2:] == 'Up' : histos[ name ].Scale( 1.006 )
+                            if var[-4:] == 'Down' : histos[ name ].Scale( 1./1.006 )
+                            #print "    ----    EES - %20s post yield: %3.3f" % (name, histos[ name ].Integral() )
+                            
                 
     
                 # Proper naming of output histos
