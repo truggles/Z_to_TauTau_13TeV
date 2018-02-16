@@ -37,7 +37,7 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-azhSamples = ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
+azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # No ttZ2
 
 for mass in [110, 120, 125, 130, 140] :
 #for mass in [125,] :
@@ -67,7 +67,7 @@ for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 #azhSamples = ['HZZ125',]
 #azhSamples = ['azh300',]
 #azhSamples = ['ZHTauTau125',]
-#azhSamples = ['ttZ',]
+#azhSamples = ['ggHtoTauTau140',]
 
 samples = azhSamples
 
@@ -79,7 +79,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 12,
+    'numCores' : 20,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
@@ -90,6 +90,9 @@ params = {
     'mid1' : '1Feb01svFitted',
     'mid2' : '2Feb01svFitted',
     'mid3' : '3Feb01svFitted',
+    'mid1' : '1Feb15noRawCutData',
+    'mid2' : '2Feb15noRawCutData',
+    'mid3' : '3Feb15noRawCutData',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -148,7 +151,7 @@ doDataCards = True
 
 #runPlots = False
 #doMerge = False
-#makeFinalPlots = False
+makeFinalPlots = False
 doDataCards = False
 
 
@@ -187,7 +190,7 @@ if useRedBkg :
                 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ',
                 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] :
             samplesY[ sample+'-NONJET' ] = copy.deepcopy(samples[ sample ])
-            #samples[ sample+'-JETFAKE' ] = samples[ sample ]
+            samplesY[ sample+'-JETFAKE' ] = samples[ sample ]
         else :
             samplesY[ sample ] = copy.deepcopy(samples[ sample ])
     #for sample in samplesY.keys() :
