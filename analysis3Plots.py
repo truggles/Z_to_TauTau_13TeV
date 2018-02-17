@@ -297,7 +297,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     xBins.append( i * 17.5 )
             # This is the proposed binning for ZTT 2015 paper
             elif analysis == 'azh' and 'm_sv' in var :
-                xBins = array( 'd', [i*20 for i in range( 12 )] )
+                xBins = array( 'd', [i*20 for i in range( 1, 12 )] )
                 #xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
             elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 xBins = array( 'd', [i*10 for i in range( 31 )] )
