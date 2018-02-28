@@ -322,6 +322,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     from util.zPtReweight import ZPtReweighter
     zPtWeighter = ZPtReweighter()
+    from util.zMjjAndDEtaReweight import ZMjjAndDEtaReweighter
+    ZMjjAndDEtaWeighter = ZMjjAndDEtaReweighter()
     from util.extraTauMVArun2v1IsoWPs import IsoWPAdder
     isoWPAdder = IsoWPAdder()
 
@@ -1591,10 +1593,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # Change application method and add shape with nominal
                     # shift at 1/2 the initial value
                     # Update 2 Mar 2017, no more shape uncert, just weight correction
-                    if row.vbfMass <= 300   : zmumuVBFWeight[0] = 0.0
-                    elif row.vbfMass <= 500 : zmumuVBFWeight[0] = 0.02
-                    elif row.vbfMass <= 800 : zmumuVBFWeight[0] = 0.06
-                    else                    : zmumuVBFWeight[0] = 0.04 # > 800
+                    if row.jetVeto30 >= 2 :
+                        zmumuVBFWeight[0] = ZMjjAndDEtaWeighter.getZMjjAndDEtaReweight( row.vbfMass, row.j1eta - row.j2eta )
 
                 # Jet to Tau Fake weight
                 if not 'date' in sample :
