@@ -722,6 +722,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #zmumuBoostWeightB = tnew.Branch('zmumuBoostWeight', zmumuBoostWeight, 'zmumuBoostWeight/F')
     zmumuVBFWeight = array('f', [ 0 ] )
     zmumuVBFWeightB = tnew.Branch('zmumuVBFWeight', zmumuVBFWeight, 'zmumuVBFWeight/F')
+    zmumuVBFWeight2 = array('f', [ 0 ] )
+    zmumuVBFWeight2B = tnew.Branch('zmumuVBFWeight2', zmumuVBFWeight2, 'zmumuVBFWeight2/F')
     ggHWeight0Jet = array('f', [ 0 ] )
     ggHWeight0JetB = tnew.Branch('ggHWeight0Jet', ggHWeight0Jet, 'ggHWeight0Jet/F')
     ggHWeightBoost = array('f', [ 0 ] )
@@ -1254,6 +1256,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             zPtWeight[0] = 1
             #zmumuBoostWeight[0] = 1
             zmumuVBFWeight[0] = 1
+            zmumuVBFWeight2[0] = 1
             ggHWeight0Jet[0] = 1
             ggHWeightBoost[0] = 1
             ggHWeightVBF[0] = 1
@@ -1595,6 +1598,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # Update 2 Mar 2017, no more shape uncert, just weight correction
                     if row.jetVeto30 >= 2 :
                         zmumuVBFWeight[0] = ZMjjAndDEtaWeighter.getZMjjAndDEtaReweight( row.vbfMass, row.j1eta - row.j2eta )
+
+                    if row.vbfMass <= 300   : zmumuVBFWeight2[0] = 0.0
+                    elif row.vbfMass <= 500 : zmumuVBFWeight2[0] = 0.02
+                    elif row.vbfMass <= 800 : zmumuVBFWeight2[0] = 0.06
+                    else                    : zmumuVBFWeight2[0] = 0.04 # > 800
 
                 # Jet to Tau Fake weight
                 if not 'date' in sample :
