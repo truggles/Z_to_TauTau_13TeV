@@ -118,4 +118,14 @@ Other aHTT notes: To produce the interferance terms between SM and BSM, after ma
 python util/addInterferenceTermAnomHTT.py
 ```
 
+# Current Status
+Added MELA vars and anomalous higgs reweighting variables to samples in meta/..skimmed...
+
+Added .sh file to hadd aHTT signals and make 1 master file for plotting
+```
+source prep_reweighted_samples.sh DIRECTORY_FILES_IN
+```
+
+
+
 
