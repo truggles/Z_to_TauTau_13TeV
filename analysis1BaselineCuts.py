@@ -492,6 +492,10 @@ def drawHistos(analysis, samples, **fargs ) :
     pool = multiprocessing.Pool(processes= fargs[ 'numCores' ] )
     multiprocessingOutputs = []
 
+    anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
+        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125',
+        'HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
+
     for sample in samples :
     
         numFilesPerCycle = fargs['numFilesPerCycle']
@@ -542,7 +546,16 @@ def drawHistos(analysis, samples, **fargs ) :
                 # Check if we should skip running over data set
                 if skipChanDataCombo( channel, sample, analysis ) : continue
 
-                if fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
+                # Load special anomalous MASTER file for reweighted files
+                # if dealing with anom samples
+                anomSig = False
+                for anom in anomalous :
+                    if anom in sample : anomSig = True
+
+                print sample, anomSig
+                if anomSig :
+                    fileLen = 1
+                elif fargs['svFitPost'] == 'true' or fargs['skimmed'] == 'true' :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s%s_%s.txt' % (analysis, sampF, sample, channel) )
                 else :
                     fileLen = file_len( 'meta/NtupleInputs_%s/%s.txt' % (analysis, sample) )
@@ -555,10 +568,23 @@ def drawHistos(analysis, samples, **fargs ) :
                 print " ====>  Starting Plots For %s_%s_%s  <==== " % (analysis, saveName, channel)
     
                 chain = ROOT.TChain('Ntuple')
-                for i in range( numIters ) :
-                    #print "%s_%i" % ( sample, i)
-                    #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (analysis, fargs['mid2'], sample.split('_')[0], i, channel)
-                    chain.Add('%s%s/%s_%i_%s.root' % (analysis, fargs['mid2'], sample.split('_')[0], i, channel) )
+
+                # More anomalous HTT
+                if anomSig : 
+                    if 'VBF' in sample : 
+                        chain.Add('%s%s/VBFHtoTauTauMASTER125_0_tt.root' % (analysis, fargs['mid2']) )
+                    elif 'WH' in sample : 
+                        chain.Add('%s%s/WHtoTauTauMASTER125_0_tt.root' % (analysis, fargs['mid2']) )
+                    elif 'ZH' in sample : 
+                        chain.Add('%s%s/ZHtoTauTauMASTER125_0_tt.root' % (analysis, fargs['mid2']) )
+                    else :
+                        print "Problem in anomals signal selection"
+                        return
+                else : # load everything else normally
+                    for i in range( numIters ) :
+                        #print "%s_%i" % ( sample, i)
+                        #print " --- Adding to chain: %s%s/%s_%i_%s.root" % (analysis, fargs['mid2'], sample.split('_')[0], i, channel)
+                        chain.Add('%s%s/%s_%i_%s.root' % (analysis, fargs['mid2'], sample.split('_')[0], i, channel) )
                 print "ENTRIES: %s %i" % (sample, chain.GetEntries() )
                 if 'data' in sample : isData = True
                 else : isData = False

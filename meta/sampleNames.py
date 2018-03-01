@@ -557,7 +557,8 @@ def sampleDetails( analysis ) :
     # Adding anomalous couplings VBF, WH, ZH Higgs, these are normalized based on SM xsections
     # lazy and didn't add official DAS paths :-(
     anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125',
-        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125']
+        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125',
+        'HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
     for aHiggs in anomalous :
         sampleMap['SM-Higgs'][ 'VBF'+aHiggs ] = dict(sampleMap['SM-Higgs']['VBFHtoTauTau125'])
         sampleMap['SM-Higgs'][ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'

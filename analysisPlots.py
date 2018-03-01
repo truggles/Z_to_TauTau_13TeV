@@ -17,6 +17,32 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
     return hist
 
 
+# If the sample is an anomalous signal, then
+def getAnomalousSignalWeight( sample ) :
+
+    if not 'HtoTauTau' in sample :
+        return '*(1.)'
+    if 'HtoTauTau0PHf05ph0125' in sample :
+        return '*(jhuw_a2int)'
+    if 'HtoTauTau0L1f05ph0125' in sample :
+        return '*(jhuw_l1int)'
+    if 'HtoTauTau0L1125' in sample :
+        return '*(jhuw_l1)'
+    if 'HtoTauTau0PM125' in sample :
+        return '*(jhuw_a1)'
+    if 'HtoTauTau0Mf05ph0125' in sample :
+        return '*(jhuw_a3int)'
+    if 'HtoTauTau0PH125' in sample :
+        return '*(jhuw_a2)'
+    if 'HtoTauTau0M125' in sample :
+        return '*(jhuw_a3)'
+    if 'HtoTauTau0L1Zgf05ph0125' in sample :
+        return '*(jhuw_l1Zgint)'
+    if 'HtoTauTau0L1Zg125' in sample :
+        return '*(jhuw_l1Zg)'
+    else :
+        return '*(1.)'
+
 
 # Make a 2D histo
 def get2DVars( cutName ) :
@@ -359,6 +385,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
     doFullJES = getenv('doFullJES', type=bool)
     if doFullJES : jesUncerts = getUncerts()
 
+    # Check if sample is an anomalous HTT signal sample
+    # If so get the extra weight addition to normalize properly
+    anomWeight = getAnomalousSignalWeight( sample )
+
     for var, info in newVarMap.iteritems() :
         if skipSSQCDDetails and not (var == 'eta_1' or var == 'm_visCor')  : continue
 
@@ -434,6 +464,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # This shape will be skipped if not DYJets
         # Update - no shape uncert on boosted
         elif '_Zmumu' in var :
+            #if '_ZmumuUp' in var and 'ZTTvbf' in outFile.GetName() :
+            #    shapeSyst = '*(1. + zmumuVBFWeight2)'
+            #elif '_ZmumuDown' in var and 'ZTTvbf' in outFile.GetName() :
+            #    shapeSyst = '*(1./(1. + zmumuVBFWeight2))'
             if '_ZmumuUp' in var and 'ZTTvbf' in outFile.GetName() :
                 shapeSyst = '*(zmumuVBFWeight)'
             elif '_ZmumuDown' in var and 'ZTTvbf' in outFile.GetName() :
@@ -447,6 +481,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
         # Removed 2% global normalization adjustment, April 4, 2017
         if 'DYJets' in sample or 'EWKZ' in sample :
             if 'ZTTvbf' in outFile.GetName() :
+                #shapeSyst += '*(1 + zmumuVBFWeight2)'
                 shapeSyst += '*(zmumuVBFWeight)'
             else : # Applied to ALL categories
                 shapeSyst += '*(1.00)'
@@ -630,7 +665,7 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 
         #print "%s     High Pt Tau Weight: %s" % (var, tauW)
         #print var,shapeSyst
-        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst, ffShapeSyst) 
+        totalCutAndWeightMC = '(GenWeight/abs( GenWeight ))%s%s%s%s%s%s' % (additionalCutToUse, sfs, xsec, shapeSyst, ffShapeSyst, anomWeight) 
         #print totalCutAndWeightMC
 
 
@@ -836,118 +871,118 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
 def getHistoDict( analysis, channel ) :
     if analysis == 'htt' :
         genVarMap = {
-            'ptCor_1' : [200, 0, 200, 10, '#tau_{1} p_{T} [GeV]', ' GeV'],
-            'ptCor_2' : [200, 0, 200, 10, '#tau_{2} p_{T} [GeV]', ' GeV'],
-            'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
-            'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
-            'phi_1' : [70, -3.5, 3.5, 7, '#tau_{1} Phi', ' Phi'],
-            'phi_2' : [70, -3.5, 3.5, 7, '#tau_{2} Phi', ' Phi'],
-            ##'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
-            ##'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
-            'm_1' : [60, 0, 3, 4, 't1 Mass [GeV]', ' GeV'],
-            'm_2' : [60, 0, 3, 4, 't2 Mass [GeV]', ' GeV'],
-            ##'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
-            'mjj' : [20, 0, 1000, 2, 'M_{jj} [GeV]', ' GeV'],
-            #'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
-            #'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} Uncor [GeV]', ' GeV'],
-            #'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
-            'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
-            'eta_sv' : [60, -3, 3, 4, 'Higgs svFit Eta', ' Eta'],
-            'phi_sv' : [70, -3.5, 3.5, 4, 'Higgs svFit Phi', ' Phi'],
-            #'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
-            #'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
-            #'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
-            #'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
-            #'LT' : [600, 0, 300, 20, 'Total LT [GeV]', ' GeV'],
-            #'Mt' : [600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'],
-            #'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
-            #'t1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
-            #'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
-            #'mvamet' : [100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'],
-            #'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
-            #'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
-            #'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
-            #'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
-            #'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
-            #'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
-            ##'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
-            ##'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
-            #'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
-            ##'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
-            ##'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
-            'jpt_1' : [400, 0, 400, 40, 'Leading Jet Pt [GeV]', ' GeV'],
-            #'jmass_1' : [400, 0, 200, 20, 'Leading Jet Mass', ' GeV'],
-            'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
-            'jphi_1' : [70, -3.5, 3.5, 10, 'Leading Jet Phi', ' Phi'],
-            'jpt_2' : [400, 0, 200, 40, 'Second Jet Pt [GeV]', ' GeV'],
-            #'jmass_2' : [400, 0, 200, 20, 'Leading Jet Mass', ' GeV'],
-            'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
-            'jphi_2' : [70, -3.5, 3.5, 10, 'Leading Jet Phi', ' Phi'],
-            ##'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
-            #'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
-            ##'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
-            #'m_vis' : [30, 0, 300, 1, 'M_{vis} Uncor [GeV]', ' GeV'],
-            #'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            #'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            #'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
-            #'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
-            #'mt_tot' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
-            ##'pzetavis' : [300, 0, 300, 20, 'pZetaVis', ' GeV'],
-            ##'pfpzetamis' : [300, 0, 300, 20, 'pfpZetaMis', ' GeV'],
-            ##'pzetamiss' : [500, -200, 300, 20, 'pZetaMis', ' GeV'],
+            #'ptCor_1' : [200, 0, 200, 10, '#tau_{1} p_{T} [GeV]', ' GeV'],
+            #'ptCor_2' : [200, 0, 200, 10, '#tau_{2} p_{T} [GeV]', ' GeV'],
+            #'eta_1' : [60, -3, 3, 4, '#tau_{1} Eta', ' Eta'],
+            #'eta_2' : [60, -3, 3, 4, '#tau_{2} Eta', ' Eta'],
+            #'phi_1' : [70, -3.5, 3.5, 7, '#tau_{1} Phi', ' Phi'],
+            #'phi_2' : [70, -3.5, 3.5, 7, '#tau_{2} Phi', ' Phi'],
+            ###'decayMode_1' : [15, 0, 15, 1, 't1 Decay Mode', ''],
+            ###'decayMode_2' : [15, 0, 15, 1, 't2 Decay Mode', ''],
+            #'m_1' : [60, 0, 3, 4, 't1 Mass [GeV]', ' GeV'],
+            #'m_2' : [60, 0, 3, 4, 't2 Mass [GeV]', ' GeV'],
+            ###'Z_SS' : [20, -1, 1, 1, 'Z Same Sign', ''],
+            #'mjj' : [20, 0, 1000, 2, 'M_{jj} [GeV]', ' GeV'],
+            ##'Z_Pt' : [100, 0, 500, 5, 'Z p_{T} [GeV]', ' GeV'],
+            ##'Higgs_Pt' : [10, 0, 500, 1, 'Higgs p_{T} Uncor [GeV]', ' GeV'],
+            ##'Higgs_PtCor' : [10, 0, 500, 1, 'Higgs p_{T} [GeV]', ' GeV'],
+            #'pt_sv' : [10, 0, 500, 1, 'Higgs svFit p_{T} [GeV]', ' GeV'],
+            #'eta_sv' : [60, -3, 3, 4, 'Higgs svFit Eta', ' Eta'],
+            #'phi_sv' : [70, -3.5, 3.5, 4, 'Higgs svFit Phi', ' Phi'],
+            ##'jdeta' : [20, 0, 10, 1, 'VBF Jets dEta', ' dEta'],
+            ##'Z_DR' : [500, 0, 5, 20, 'Z dR', ' dR'],
+            ##'Z_DPhi' : [800, -4, 4, 40, 'Z dPhi', ' dPhi'],
+            ##'Z_DEta' : [1000, -5, 5, 40, 'Z dEta', ' dEta'],
+            ##'LT' : [600, 0, 300, 20, 'Total LT [GeV]', ' GeV'],
+            ##'Mt' : [600, 0, 400, 40, 'Total m_{T} [GeV]', ' GeV'],
+            ##'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
+            ##'t1_t2_MvaMet' : [250, 0, 250, 20, 't1 t2 MvaMet [GeV]', ' GeV'],
+            ##'metphi' : [80, -4, 4, 10, 'pfMetPhi', ''],
+            ##'mvamet' : [100, 0, 400, 2, 'mvaMetEt [GeV]', ' GeV'],
+            ##'mvametphi' : [100, -5, 5, 2, 'mvaMetPhi', ''],
+            ##'bjetCISVVeto20Medium' : [60, 0, 6, 5, 'nBTag_20Medium', ''],
+            ##'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
+            ##'njetspt20' : [100, 0, 10, 10, 'nJetPt20', ''],
+            ##'jetVeto30' : [100, 0, 10, 10, 'nJetPt30', ''],
+            ##'njetingap20' : [100, 0, 10, 10, 'njetingap20', ''],
+            ###'jetVeto40' : [100, 0, 10, 10, 'nJetPt40', ''],
+            ###'nbtag' : [6, 0, 6, 1, 'nBTag', ''],
+            ##'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
+            ###'extraelec_veto' : [20, 0, 2, 1, 'Extra Electron Veto', ''],
+            ###'extramuon_veto' : [20, 0, 2, 1, 'Extra Muon Veto', ''],
+            #'jpt_1' : [400, 0, 400, 40, 'Leading Jet Pt [GeV]', ' GeV'],
+            ##'jmass_1' : [400, 0, 200, 20, 'Leading Jet Mass', ' GeV'],
+            #'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
+            #'jphi_1' : [70, -3.5, 3.5, 10, 'Leading Jet Phi', ' Phi'],
+            #'jpt_2' : [400, 0, 200, 40, 'Second Jet Pt [GeV]', ' GeV'],
+            ##'jmass_2' : [400, 0, 200, 20, 'Second Jet Mass', ' GeV'],
+            #'jeta_2' : [100, -5, 5, 10, 'Second Jet Eta', ' Eta'],
+            #'jphi_2' : [70, -3.5, 3.5, 10, 'Second Jet Phi', ' Phi'],
+            ###'weight' : [60, -30, 30, 1, 'Gen Weight', ''],
+            ##'npv' : [40, 0, 40, 2, 'Number of Vertices', ''],
+            ###'npu' : [50, 1, 40, 2, 'Number of True PU Vertices', ''],
+            ##'m_vis' : [30, 0, 300, 1, 'M_{vis} Uncor [GeV]', ' GeV'],
+            ##'mjj:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            ##'Higgs_PtCor:m_visCor' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            ##'pt_sv:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
+            ##'mt_sv' : [350, 0, 350, 10, 'Total Transverse Mass [svFit] [GeV]', ' GeV'],
+            ##'mt_tot' : [3900, 0, 3900, 10, 'Total Transverse Mass [GeV]', ' GeV'],
+            ###'pzetavis' : [300, 0, 300, 20, 'pZetaVis', ' GeV'],
+            ###'pfpzetamis' : [300, 0, 300, 20, 'pfpZetaMis', ' GeV'],
+            ###'pzetamiss' : [500, -200, 300, 20, 'pZetaMis', ' GeV'],
             'm_visCor' : [30, 0, 300, 1, 'M_{vis} [GeV]', ' GeV'],
             'Higgs_PtCor:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #
-#            'mjj:m_sv:melaD0minus_D0_0to0p2' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p2to0p4' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p4to0p8' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p8to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#
-#            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
-#
-#            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
-#            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
-#
-#            #'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#            #'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#            #'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-#
-#            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
-#            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
-#            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
-#            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
-#
-#            'mjj:m_sv:melaDL1_DL1_0to0p2' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
-#            'mjj:m_sv:melaDL1_DL1_0p2to0p4' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
-#            'mjj:m_sv:melaDL1_DL1_0p4to0p8' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
-#            'mjj:m_sv:melaDL1_DL1_0p8to1' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
-#
-#            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
-#            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
-#            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
-#            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0to0p2' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p8to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
 
-#            'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
-#            'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
-#            'mjj:m_sv:melaDPhijj_DPhijj_0to1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
-#            'mjj:m_sv:melaDPhijj_DPhijj_1p25to4' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+
+            #'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            #'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            #'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+
+            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+
+            'mjj:m_sv:melaDL1_DL1_0to0p2' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            'mjj:m_sv:melaDL1_DL1_0p2to0p4' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            'mjj:m_sv:melaDL1_DL1_0p4to0p8' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            'mjj:m_sv:melaDL1_DL1_0p8to1' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+
+#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_0to1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_1p25to4' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
 
 
-            'melaDCP' : [220, -1.1, 1.1, 20, 'DCP', ' GeV'],
-            'melaD0minus' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
-            'melaD0hplus' : [120, -0.1, 1.1, 10, 'D0hplus', ' GeV'],
-            'melaDint' : [220, -1.1, 1.1, 20, 'Dint', ' GeV'],
-            'melaDL1' : [120, -0.1, 1.1, 10, 'DL1', ' GeV'],
-            'melaDL1int' : [220, -1.1, 1.1, 20, 'DL1int', ' GeV'],
-            'melaDL1Zg' : [120, -0.1, 1.1, 10, 'DL1Zg', ' GeV'],
-            'melaDL1Zgint' : [120, -0.1, 1.1, 10, 'DL1Zgint', ' GeV'],
+            #XXX'melaDCP' : [220, -1.1, 1.1, 20, 'DCP', ' GeV'],
+            #XXX'melaD0minus' : [120, -0.1, 1.1, 10, 'D0-', ' GeV'],
+            #XXX'melaD0hplus' : [120, -0.1, 1.1, 10, 'D0hplus', ' GeV'],
+            #XXX'melaDint' : [220, -1.1, 1.1, 20, 'Dint', ' GeV'],
+            #XXX'melaDL1' : [120, -0.1, 1.1, 10, 'DL1', ' GeV'],
+            #XXX'melaDL1int' : [220, -1.1, 1.1, 20, 'DL1int', ' GeV'],
+            #XXX'melaDL1Zg' : [120, -0.1, 1.1, 10, 'DL1Zg', ' GeV'],
+            #XXX'melaDL1Zgint' : [120, -0.1, 1.1, 10, 'DL1Zgint', ' GeV'],
             #'melaD0minus_mjj0-300' :   [120, -0.1, 1.1, 10, 'D0- (mjj [0,300])', ' GeV'],
             #'melaD0minus_mjj300-500' : [120, -0.1, 1.1, 10, 'D0- (mjj [300,500])', ' GeV'],
             #'melaD0minus_mjj500-800' : [120, -0.1, 1.1, 10, 'D0- (mjj [500,800])', ' GeV'],
@@ -977,11 +1012,11 @@ def getHistoDict( analysis, channel ) :
             #'melaDL1Zgint_mjj500-800' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [500,800])', ' GeV'],
             #'melaDL1Zgint_mjj800-inf' : [120, -0.1, 1.1, 10, 'DL1Zgint (mjj [800,inf])', ' GeV'],
             #'melaDPhiUnsignedjj' : [100, -4, 4, 5, 'Unsigned dPhi_jj', ' dPhi'],
-            'melaDPhijj' : [100, -4, 4, 10, 'dPhi_jj', ' dPhi'],
-            'melaDEtajj' : [100, -10, 10, 10, 'dEta_jj', ' dEta'],
-            'melaSqrtQ2V1' : [70, 0, 700, 5, 'Q_V1 [GeV]', ' GeV'],
-            'melaSqrtQ2V2' : [70, 0, 700, 5, 'Q_V2 [GeV]', ' GeV'],
-            'melaAvgSqrtQ2V12' : [70, 0, 700, 5, 'Avg(Q_V1,Q_V2) [GeV]', ' GeV'],
+            #XXX'melaDPhijj' : [100, -4, 4, 10, 'dPhi_jj', ' dPhi'],
+            #XXX'melaDEtajj' : [100, -10, 10, 10, 'dEta_jj', ' dEta'],
+            #XXX'melaSqrtQ2V1' : [70, 0, 700, 5, 'Q_V1 [GeV]', ' GeV'],
+            #XXX'melaSqrtQ2V2' : [70, 0, 700, 5, 'Q_V2 [GeV]', ' GeV'],
+            #XXX'melaAvgSqrtQ2V12' : [70, 0, 700, 5, 'Avg(Q_V1,Q_V2) [GeV]', ' GeV'],
             #'melaDPhijj_mjj0-300' :   [100, -4, 4, 5, 'dPhi_jj (mjj [0,300])', ' GeV'],
             #'melaDPhijj_mjj300-500' : [100, -4, 4, 5, 'dPhi_jj (mjj [300,500])', ' GeV'],
             #'melaDPhijj_mjj500-800' : [100, -4, 4, 5, 'dPhi_jj (mjj [500,800])', ' GeV'],
@@ -994,47 +1029,47 @@ def getHistoDict( analysis, channel ) :
         #toAdd = ['Higgs_PtCor:m_visCor', 'mjj:m_visCor', 'm_visCor'] # No extra shapes
         #toAdd = [] # No extra shapes
         toAdd = [
-            #'mjj:m_sv', 
-            #'m_sv',
-            #'Higgs_PtCor:m_sv',
+            'mjj:m_sv', 
+            'm_sv',
+            'Higgs_PtCor:m_sv',
 
-            #'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25',
-            #'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0',
-            #'mjj:m_sv:melaDPhijj_DPhijj_0to1p25',
-            #'mjj:m_sv:melaDPhijj_DPhijj_1p25to4',
+            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25',
+            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0',
+            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_0to1p25',
+            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_1p25to4',
 
-            #'mjj:m_sv:melaD0minus_D0_0to0p2',
-            #'mjj:m_sv:melaD0minus_D0_0p2to0p4',
-            #'mjj:m_sv:melaD0minus_D0_0p4to0p8',
-            #'mjj:m_sv:melaD0minus_D0_0p8to1',
+            'mjj:m_sv:melaD0minus_D0_0to0p2',
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4',
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8',
+            'mjj:m_sv:melaD0minus_D0_0p8to1',
 
-            #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
-            #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
-            #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
-            #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
 
-            #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
-            #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
-            #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
-            #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
+            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
 
-            #'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
-            #'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
-            #'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
-            #'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
+            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
+            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
+            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
+            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
 
-            #'mjj:m_sv:melaDL1_DL1_0to0p2',
-            #'mjj:m_sv:melaDL1_DL1_0p2to0p4',
-            #'mjj:m_sv:melaDL1_DL1_0p4to0p8',
-            #'mjj:m_sv:melaDL1_DL1_0p8to1',
+            'mjj:m_sv:melaDL1_DL1_0to0p2',
+            'mjj:m_sv:melaDL1_DL1_0p2to0p4',
+            'mjj:m_sv:melaDL1_DL1_0p4to0p8',
+            'mjj:m_sv:melaDL1_DL1_0p8to1',
 
-            #'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
-            #'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
-            #'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
-            #'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
+            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
 
-            #'mjj:m_sv:melaDCP_DCP_neg1to0',
-            #'mjj:m_sv:melaDCP_DCP_0to1',
+            'mjj:m_sv:melaDCP_DCP_neg1to0',
+            'mjj:m_sv:melaDCP_DCP_0to1',
         ] # All aHTT Shapes
         #toAdd = [] # No extra shapes
         varsForShapeSyst = []
@@ -1042,22 +1077,22 @@ def getHistoDict( analysis, channel ) :
             varsForShapeSyst.append( item )
         #shapesToAdd = ['energyScale', 'tauPt', 'topPt', 'zPt']
         shapesToAdd = {
-                    #'energyScaleAll':'TES All',
-                    #'energyScaleDM0':'TES DM0',
-                    #'energyScaleDM1':'TES DM1',
-                    #'energyScaleDM10':'TES DM10',
-                    #'zPt':'Z p_{T}/Mass Reweight',
-                    ##'metResponse':'Met Response',
-                    ##'metResolution':'Met Resolution',
-                    #'tauPt':'High P_{T} Tau',
-                    #'topPt':'Top P_{T} Reweight',
-                    #'JES' : 'Jet Energy Scale',
-                    #'JetToTau' : 'Jet to Tau Fake',
-                    #'ggH' : 'ggH Scale',
-                    #'topQuarkggH' : 'Top Quark Scale for ggH',
-                    #'Zmumu' : 'Z mumu DY Reweight',
-                    #'metClustered':'Clustered MET',
-                    #'metUnclustered':'Unclustered MET',
+                    'energyScaleAll':'TES All',
+                    'energyScaleDM0':'TES DM0',
+                    'energyScaleDM1':'TES DM1',
+                    'energyScaleDM10':'TES DM10',
+                    'zPt':'Z p_{T}/Mass Reweight',
+                    #'metResponse':'Met Response',
+                    #'metResolution':'Met Resolution',
+                    'tauPt':'High P_{T} Tau',
+                    'topPt':'Top P_{T} Reweight',
+                    'JES' : 'Jet Energy Scale',
+                    'JetToTau' : 'Jet to Tau Fake',
+                    'ggH' : 'ggH Scale',
+                    'topQuarkggH' : 'Top Quark Scale for ggH',
+                    'Zmumu' : 'Z mumu DY Reweight',
+                    'metClustered':'Clustered MET',
+                    'metUnclustered':'Unclustered MET',
                     }
 
         # Add FF shape systs if doFF

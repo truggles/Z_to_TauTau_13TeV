@@ -61,25 +61,26 @@ SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
 #SamplesDataCards = []
-for aHiggs in anomalous :
-    SamplesDataCards.append( 'VBF'+aHiggs )
-    SamplesDataCards.append( 'W'+aHiggs )
-    SamplesDataCards.append( 'Z'+aHiggs )
+#for aHiggs in anomalous :
+#    SamplesDataCards.append( 'VBF'+aHiggs )
+#    SamplesDataCards.append( 'W'+aHiggs )
+#    SamplesDataCards.append( 'Z'+aHiggs )
 #SamplesDataCards = []
 SamplesDataCards.append('ggHtoTauTau-maxmix125')
 SamplesDataCards.append('ggHtoTauTau-pseudoscalar125')
 SamplesDataCards.append('ggHtoTauTau-sm125')
     
-#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-#    SamplesDataCards.append('dataTT-%s' % era)
+for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
 #SamplesDataCards = [ 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets','dataTT-C','VBFHtoTauTau125'] 
 #SamplesDataCards = ['dataTT-C',] 
-#SamplesDataCards = ['VBFHtoTauTau125',]
+SamplesDataCards = ['VBFHtoTauTau125','WPlusHTauTau125','ZHTauTau125']
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
+#SamplesDataCards = ['VBFHtoTauTau0PM125',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -90,7 +91,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 10,
+    'numCores' : 14,
     'numFilesPerCycle' : 1,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
@@ -101,12 +102,9 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1June29mela',
-    'mid2' : '2June29mela',
-    'mid3' : '3June29mela',
-    #'mid1' : '1Nov12newGGH',
-    #'mid2' : '2Nov12newGGH',
-    #'mid3' : '3Nov12newGGH',
+    'mid1' : '1Jan07NewMela',
+    'mid2' : '2Jan07NewMela',
+    'mid3' : '3Jan07NewMela',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -136,7 +134,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-runPlots = False
+#runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -174,6 +172,15 @@ cats = ['0jet2D', 'boosted','vbf',]
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125', 'VBFHtoTauTau0PM-v5125']
 for remove in toRemove :
     if remove in samples.keys() : del samples[remove]
+
+# Add anom samples without actual MC samples
+# Only add if we have the SM VBF, WPlus and ZH samples there
+if 'VBFHtoTauTau125' in samples and 'WPlusHTauTau125' in samples and 'ZHTauTau125' in samples :
+    toAdd = ['HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
+    for aHiggs in toAdd :
+        samples[ 'VBF'+aHiggs ] = copy.deepcopy( samples['VBFHtoTauTau125'] )
+        samples[ 'W'+aHiggs ] = copy.deepcopy( samples['WPlusHTauTau125'] )
+        samples[ 'Z'+aHiggs ] = copy.deepcopy( samples['ZHTauTau125'] )
 
 for isoVal in isoVals :
     if isoVal == 'Tight' : lIso = 'Loose'
@@ -235,8 +242,8 @@ for isoVal in isoVals :
                 ROOT.gROOT.Reset()
                 tDir = cat if isoRegion == isoVal+'_' else cat+'_'+isoVal+'_'+lIso
                 blind = True
-                fullBlind = True
-                ratio = False
+                fullBlind = False
+                ratio = True
                 log = False
                 #log = True
                 #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
