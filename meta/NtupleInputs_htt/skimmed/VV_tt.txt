@@ -1,2 +1,1 @@
-/data/truggles/svFitApr01_SM-HTT_Merged/VV_0_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/VV_1_tt.root
+/data/truggles/aHTT_March01_Already_MELA_and_SigReweight/VV_0_tt.root

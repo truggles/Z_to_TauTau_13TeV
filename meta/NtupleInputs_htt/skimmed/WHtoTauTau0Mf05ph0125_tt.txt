@@ -1,2 +1,1 @@
-/data/truggles/svFitAug21_aHTT_officialSigs_Merged/WHtoTauTau0Mf05ph0125_0_tt.root
-/data/truggles/svFitAug21_aHTT_officialSigs_Merged/WHtoTauTau0Mf05ph0125_1_tt.root
+/data/truggles/aHTT_March01_Already_MELA_and_SigReweight/WHtoTauTau0Mf05ph0125_0_tt.root

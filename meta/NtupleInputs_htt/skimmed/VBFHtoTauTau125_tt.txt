@@ -1,3 +1,1 @@
-/data/truggles/svFitApr01_SM-HTT_Merged/VBFHtoTauTau125_0_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/VBFHtoTauTau125_1_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/VBFHtoTauTau125_2_tt.root
+/data/truggles/aHTT_March01_Already_MELA_and_SigReweight/VBFHtoTauTau125_0_tt.root

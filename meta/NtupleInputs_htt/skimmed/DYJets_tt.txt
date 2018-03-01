@@ -1,12 +1,1 @@
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_0_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_10_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_11_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_1_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_2_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_3_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_4_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_5_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_6_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_7_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_8_tt.root
-/data/truggles/svFitApr01_SM-HTT_Merged/DYJets_9_tt.root
+/data/truggles/aHTT_March01_Already_MELA_and_SigReweight/DYJets_0_tt.root
