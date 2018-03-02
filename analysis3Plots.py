@@ -52,9 +52,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
          'VV', 'WWW', 'ZZZ', 'T-tW', 'T-tchan', 'Tbar-tW', 'Tbar-tchan']
     # Allow pure SM and pure BSM through
     anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
-        'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125']
+        'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0L1Zg125', 'HtoTauTau0L1Zgf05ph0125']
     vbfAnomalousToDelete = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125',
-        'HtoTauTau0Mf05ph0125']
+        'HtoTauTau0Mf05ph0125', 'HtoTauTau0L1Zg125', 'HtoTauTau0L1Zgf05ph0125']
 
     """ Add in the gen matched DY catagorization """
     if analysis == 'htt' :

@@ -260,7 +260,8 @@ def dataCardGenMatchedSamples( inSamples ) :
             samples['ZHTauTau%s' % mass] = 'ZH_htt%s' % mass
     
     anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
-        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125']
+        'HtoTauTau0PM125', 'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0M125',
+        'HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
     for anom in anomalous :
         if 'VBF'+anom in inSamples :
             samples[ 'VBF'+anom ] = 'qqH_htt_%s' % anom.replace('HtoTauTau','')

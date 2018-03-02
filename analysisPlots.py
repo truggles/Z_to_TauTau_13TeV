@@ -951,8 +951,8 @@ def getHistoDict( analysis, channel ) :
             'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
 
             #'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            #'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            #'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
 
             'mjj:m_sv:melaD0hplus_D0hplus_0to0p2' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
             'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],

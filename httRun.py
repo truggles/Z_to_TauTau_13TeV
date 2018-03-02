@@ -61,24 +61,25 @@ SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
 #SamplesDataCards = []
-#for aHiggs in anomalous :
-#    SamplesDataCards.append( 'VBF'+aHiggs )
-#    SamplesDataCards.append( 'W'+aHiggs )
-#    SamplesDataCards.append( 'Z'+aHiggs )
-#SamplesDataCards = []
+for aHiggs in anomalous :
+    SamplesDataCards.append( 'VBF'+aHiggs )
+    SamplesDataCards.append( 'W'+aHiggs )
+    SamplesDataCards.append( 'Z'+aHiggs )
+SamplesDataCards = []
 SamplesDataCards.append('ggHtoTauTau-maxmix125')
 SamplesDataCards.append('ggHtoTauTau-pseudoscalar125')
 SamplesDataCards.append('ggHtoTauTau-sm125')
     
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-    SamplesDataCards.append('dataTT-%s' % era)
+#SamplesDataCards = []
+#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+#    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
 #SamplesDataCards = [ 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets','dataTT-C','VBFHtoTauTau125'] 
 #SamplesDataCards = ['dataTT-C',] 
-SamplesDataCards = ['VBFHtoTauTau125','WPlusHTauTau125','ZHTauTau125']
+#SamplesDataCards = ['VBFHtoTauTau125','WPlusHTauTau125','ZHTauTau125']
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
 #SamplesDataCards = ['VBFHtoTauTau0PM125',]
 samples = SamplesDataCards
@@ -168,10 +169,13 @@ higgsPt = 'Higgs_PtCor'
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 cats = ['0jet2D', 'boosted','vbf',]
 #cats = ['vbf',]
+cats = ['0jet2D', 'boosted',]
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125', 'VBFHtoTauTau0PM-v5125']
 for remove in toRemove :
     if remove in samples.keys() : del samples[remove]
+
+
 
 # Add anom samples without actual MC samples
 # Only add if we have the SM VBF, WPlus and ZH samples there
@@ -179,8 +183,13 @@ if 'VBFHtoTauTau125' in samples and 'WPlusHTauTau125' in samples and 'ZHTauTau12
     toAdd = ['HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
     for aHiggs in toAdd :
         samples[ 'VBF'+aHiggs ] = copy.deepcopy( samples['VBFHtoTauTau125'] )
+        samples[ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'
         samples[ 'W'+aHiggs ] = copy.deepcopy( samples['WPlusHTauTau125'] )
+        samples[ 'W'+aHiggs ]['group'] = 'WH_aHTT'
         samples[ 'Z'+aHiggs ] = copy.deepcopy( samples['ZHTauTau125'] )
+        samples[ 'Z'+aHiggs ]['group'] = 'ZH_aHTT'
+
+
 
 for isoVal in isoVals :
     if isoVal == 'Tight' : lIso = 'Loose'
