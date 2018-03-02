@@ -1540,7 +1540,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 #
                 # Also do top quark loop reweighting
                 # Based on: slides 10 https://indico.cern.ch/event/628660/contributions/2593406/attachments/1459912/2255407/May-16-HIG_Massironi.pdf
-                if shortName in ['ggHtoTauTau110','ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'ggHtoTauTau140'] :
+                if shortName in ['ggHtoTauTau110','ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'ggHtoTauTau140'
+                        'ggHtoTauTau0Mf05ph0125', 'ggHtoTauTau0M125', 'ggHtoTauTau0PM125'] :
 
                     ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
                     # 2 options for boosted category in case we haven't run svFit
