@@ -566,15 +566,15 @@ def sampleDetails( analysis ) :
         sampleMap['SM-Higgs'][ 'W'+aHiggs ]['group'] = 'WH_aHTT'
         sampleMap['SM-Higgs'][ 'Z'+aHiggs ] = dict(sampleMap['SM-Higgs']['ZHTauTau125'])
         sampleMap['SM-Higgs'][ 'Z'+aHiggs ]['group'] = 'ZH_aHTT'
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-maxmix125' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-maxmix125' ]['group'] = 'ggH_aHTT'
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-maxmix125' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_maxmix_JHU/%s-v1/MINIAODSIM'  % moriond17
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-pseudoscalar125' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-pseudoscalar125' ]['group'] = 'ggH_aHTT'
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-pseudoscalar125' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_pseudoscalar_JHU/%s-v1/MINIAODSIM'  % moriond17
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-sm125' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-sm125' ]['group'] = 'ggH_aHTT'
-    sampleMap['SM-Higgs'][ 'ggHtoTauTau-sm125' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_sm_JHU/%s-v1/MINIAODSIM' % moriond17
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0Mf05ph0125' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0Mf05ph0125' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0Mf05ph0125' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_maxmix_JHU/%s-v1/MINIAODSIM'  % moriond17
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0M125' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0M125' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0M125' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_pseudoscalar_JHU/%s-v1/MINIAODSIM'  % moriond17
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0PM125' ] = dict(sampleMap['SM-Higgs']['ggHtoTauTau125'])
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0PM125' ]['group'] = 'ggH_aHTT'
+    sampleMap['SM-Higgs'][ 'ggHtoTauTau0PM125' ]['DASPath'] = '/GluGluH2JetsToTauTau_M125_13TeV_CPmixing_sm_JHU/%s-v1/MINIAODSIM' % moriond17
 
 
     # Simplify tracking SM-Higgs and add to all returned maps

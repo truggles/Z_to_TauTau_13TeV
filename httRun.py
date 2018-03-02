@@ -66,9 +66,9 @@ for aHiggs in anomalous :
     SamplesDataCards.append( 'W'+aHiggs )
     SamplesDataCards.append( 'Z'+aHiggs )
 SamplesDataCards = []
-SamplesDataCards.append('ggHtoTauTau-maxmix125')
-SamplesDataCards.append('ggHtoTauTau-pseudoscalar125')
-SamplesDataCards.append('ggHtoTauTau-sm125')
+SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
+SamplesDataCards.append('ggHtoTauTau0M125')
+SamplesDataCards.append('ggHtoTauTau0PM125')
     
 #SamplesDataCards = []
 #for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
@@ -124,8 +124,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -169,7 +169,7 @@ higgsPt = 'Higgs_PtCor'
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 cats = ['0jet2D', 'boosted','vbf',]
 #cats = ['vbf',]
-cats = ['0jet2D', 'boosted',]
+#cats = ['0jet2D', 'boosted',]
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125', 'VBFHtoTauTau0PM-v5125']
 for remove in toRemove :

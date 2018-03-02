@@ -1259,7 +1259,7 @@
     "nNtupleFiles": 5, 
     "nlumis": 481156
   },
-  "ggHtoTauTau-pseudoscalar125": {
+  "ggHtoTauTau0M125": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
     "nEvents": 1478400, 
@@ -1273,7 +1273,7 @@
     "nNtupleFiles": 39, 
     "nlumis": 7392
   }, 
-  "ggHtoTauTau-maxmix125": {
+  "ggHtoTauTau0Mf05ph0125": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
     "nEvents": 1496800, 
@@ -1287,7 +1287,7 @@
     "nNtupleFiles": 35, 
     "nlumis": 7484
   }, 
-  "ggHtoTauTau-sm125": {
+  "ggHtoTauTau0PM125": {
     "STATUS": "Good to Go!", 
     "DAS status": "ok", 
     "nEvents": 1482400, 

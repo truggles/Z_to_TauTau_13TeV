@@ -53,6 +53,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     # Allow pure SM and pure BSM through
     anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125', 
         'HtoTauTau0Mf05ph0125', 'HtoTauTau0PH125', 'HtoTauTau0L1Zg125', 'HtoTauTau0L1Zgf05ph0125']
+    ggHAnomalousToDelete = ['HtoTauTau0Mf05ph0125', 'HtoTauTau0M125', 'HtoTauTau0PM125']
     vbfAnomalousToDelete = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125',
         'HtoTauTau0Mf05ph0125', 'HtoTauTau0L1Zg125', 'HtoTauTau0L1Zgf05ph0125']
 
@@ -112,6 +113,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         for aHTT in vbfAnomalousToDelete :
             if 'VBF'+aHTT in samples.keys() :
                 del samples[ 'VBF'+aHTT ]
+        for aHTT in ggHAnomalousToDelete :
+            if 'gg'+aHTT in samples.keys() :
+                del samples[ 'gg'+aHTT ]
         if 'WHtoTauTau0PM125' in samples.keys() :
             del samples[ 'WHtoTauTau0PM125' ]
         if 'WHtoTauTau0M125' in samples.keys() :

@@ -577,6 +577,8 @@ def drawHistos(analysis, samples, **fargs ) :
                         chain.Add('%s%s/WHtoTauTauMASTER125_0_tt.root' % (analysis, fargs['mid2']) )
                     elif 'ZH' in sample : 
                         chain.Add('%s%s/ZHtoTauTauMASTER125_0_tt.root' % (analysis, fargs['mid2']) )
+                    elif 'ggH' in sample : 
+                        chain.Add('%s%s/ggHtoTauTauMASTER125_0_tt.root' % (analysis, fargs['mid2']) )
                     else :
                         print "Problem in anomals signal selection"
                         return

@@ -50,9 +50,9 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
         currentDASSamples['htt'].append( 'W'+aHiggs )
         currentDASSamples['htt'].append( 'Z'+aHiggs )
     # New ggH test samples
-    currentDASSamples['htt'].append( 'ggHtoTauTau-sm125' )
-    currentDASSamples['htt'].append( 'ggHtoTauTau-pseudoscalar125' )
-    currentDASSamples['htt'].append( 'ggHtoTauTau-maxmix125' )
+    currentDASSamples['htt'].append( 'ggHtoTauTau0PM125' )
+    currentDASSamples['htt'].append( 'ggHtoTauTau0Mf05ph0125' )
+    currentDASSamples['htt'].append( 'ggHtoTauTau0M125' )
 
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 
