@@ -596,8 +596,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetTitle( name.strip('_')+'_TopMassTreatment_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_TopMassTreatment_13TeV'+shiftDir )
                     elif '_Zmumu' in var :
-                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_VBF_13TeV'+shiftDir )
-                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_VBF_13TeV'+shiftDir )
+                        histos[ name ].SetTitle( name.strip('_')+'_CMS_htt_zmumuShape_VBF_tt_13TeV'+shiftDir )
+                        histos[ name ].SetName( name.strip('_')+'_CMS_htt_zmumuShape_VBF_tt_13TeV'+shiftDir )
                     elif '_metClustered' in var :
                         histos[ name ].SetTitle( name.strip('_')+'_CMS_scale_met_clustered_13TeV'+shiftDir )
                         histos[ name ].SetName( name.strip('_')+'_CMS_scale_met_clustered_13TeV'+shiftDir )
