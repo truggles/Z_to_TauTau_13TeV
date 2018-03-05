@@ -546,7 +546,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             for samp in sampHistos.keys() :
                 if var == 'm_visCor' or var == 'A_Mass' or var == 'pt_1' :
-                    print "%s --- yield %f" % ( samp, sampHistos[samp].Integral() )
+                    err = ROOT.Double(0.)
+                    sampHistos[samp].IntegralAndError( 1, sampHistos[samp].GetNbinsX(), err )
+                    print "%s --- yield %.3f  %.3f" % ( samp, sampHistos[samp].Integral(), err )
             #    # With Variable binning, need to set bin content appropriately
             #    if not varBinned : continue
             #    if samp == "qcd" : continue
