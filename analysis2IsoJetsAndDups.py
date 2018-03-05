@@ -1611,9 +1611,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     # Currently using PFIDLoose and Loose RelIso for all muons
                     
                     if 't' in l3 :
-                        if gen_match_3[0] == 5 : tauSF_3[0] = 0.95
+                        if gen_match_3[0] == 5 : tauSF_3[0] = 0.97
                     if 't' in l4 :
-                        if gen_match_4[0] == 5 : tauSF_4[0] = 0.95
+                        if gen_match_4[0] == 5 : tauSF_4[0] = 0.97
                     if 'm' in l1 :
                         muonSF_1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
                         muonSF_1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
