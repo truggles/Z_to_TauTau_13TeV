@@ -264,16 +264,17 @@ def dataCardGenMatchedSamples( inSamples ) :
         'HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
     for anom in anomalous :
         if 'VBF'+anom in inSamples :
-            samples[ 'VBF'+anom ] = 'qqH_htt_%s' % anom.replace('HtoTauTau','')
+            samples[ 'VBF'+anom ] = 'reweighted_qqH_htt_%s' % anom.replace('HtoTauTau','')
         if 'W'+anom in inSamples :
-            samples[ 'W'+anom ] = 'WH_htt_%s' % anom.replace('HtoTauTau','')
+            samples[ 'W'+anom ] = 'reweighted_WH_htt_%s' % anom.replace('HtoTauTau','')
         if 'Z'+anom in inSamples :
-            samples[ 'Z'+anom ] = 'ZH_htt_%s' % anom.replace('HtoTauTau','')
+            samples[ 'Z'+anom ] = 'reweighted_ZH_htt_%s' % anom.replace('HtoTauTau','')
 
     # New Scalar vs. PS ggH Samples
-    for newGGH in ['sm', 'maxmix', 'pseudoscalar'] :
-        if 'ggHtoTauTau-%s125' % newGGH in inSamples :
-            samples['ggHtoTauTau-%s125' % newGGH] = 'GGH2Jets_%s_M125' % newGGH
+    ggHAnomalous = ['HtoTauTau0Mf05ph0125', 'HtoTauTau0M125', 'HtoTauTau0PM125']
+    for ggH in ggHAnomalous :
+        if 'gg%s' % ggH in inSamples :
+            samples['gg%s' % ggH] = 'reweighted_GGH2Jets_%s' % ggH.replace('HtoTauTau','')
 
     return samples
 

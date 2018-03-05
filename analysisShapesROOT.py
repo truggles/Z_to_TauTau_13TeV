@@ -501,7 +501,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                         histos[ name ].SetBinContent( bin_, setVal )
                         print "name: %s   Set bin %i to value: %f" % (name, bin_, setVal)
                 if histos[ name ].Integral() != 0.0 :
-                    print "DataCard Name: %10s Yield Post: %.2f" % (name, histos[ name ].Integral() )
+                    print "DataCard Name: %10s Yield Post: %f" % (name, histos[ name ].Integral() )
                 #if not ops['mssm'] :
                 #    histos[ name ].GetXaxis().SetRangeUser( 0, 350 )
                 

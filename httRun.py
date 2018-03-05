@@ -50,10 +50,11 @@ SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'data
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
 
 #for mass in [110, 120, 125, 130, 140] :
+#SamplesDataCards = []
 for mass in [125,] :
     SamplesDataCards.append('ggHtoTauTau%i' % mass)
-    SamplesDataCards.append('VBFHtoTauTau%i' % mass)
     SamplesDataCards.append('WMinusHTauTau%i' % mass)
+    SamplesDataCards.append('VBFHtoTauTau%i' % mass)
     SamplesDataCards.append('WPlusHTauTau%i' % mass)
     SamplesDataCards.append('ZHTauTau%i' % mass)
 SamplesDataCards.append('HtoWW2l2nu125')
@@ -65,14 +66,14 @@ for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
     SamplesDataCards.append( 'W'+aHiggs )
     SamplesDataCards.append( 'Z'+aHiggs )
-SamplesDataCards = []
+#SamplesDataCards = []
 SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
 SamplesDataCards.append('ggHtoTauTau0M125')
 SamplesDataCards.append('ggHtoTauTau0PM125')
     
 #SamplesDataCards = []
-#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-#    SamplesDataCards.append('dataTT-%s' % era)
+for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
@@ -124,8 +125,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -135,7 +136,7 @@ samples = returnSampleDetails( analysis, samples )
     
 
 runPlots = True
-#runPlots = False
+runPlots = False
 makeQCDBkg = True
 makeQCDBkg = False
 makeFinalPlots = True
@@ -143,7 +144,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -176,18 +177,21 @@ for remove in toRemove :
     if remove in samples.keys() : del samples[remove]
 
 
-
 # Add anom samples without actual MC samples
 # Only add if we have the SM VBF, WPlus and ZH samples there
-if 'VBFHtoTauTau125' in samples and 'WPlusHTauTau125' in samples and 'ZHTauTau125' in samples :
+if 'VBFHtoTauTau125' in samples.keys() and 'WPlusHTauTau125' in samples.keys() and 'ZHTauTau125' in samples.keys() :
     toAdd = ['HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
     for aHiggs in toAdd :
-        samples[ 'VBF'+aHiggs ] = copy.deepcopy( samples['VBFHtoTauTau125'] )
-        samples[ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'
+        #samples[ 'VBF'+aHiggs ] = copy.deepcopy( samples['VBFHtoTauTau125'] )
+        #samples[ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'
         samples[ 'W'+aHiggs ] = copy.deepcopy( samples['WPlusHTauTau125'] )
         samples[ 'W'+aHiggs ]['group'] = 'WH_aHTT'
         samples[ 'Z'+aHiggs ] = copy.deepcopy( samples['ZHTauTau125'] )
         samples[ 'Z'+aHiggs ]['group'] = 'ZH_aHTT'
+
+    #del samples['ZHTauTau125']
+    #del samples['VBFHtoTauTau125']
+    #del samples['WPlusHTauTau125']
 
 
 
@@ -288,8 +292,8 @@ for isoVal in isoVals :
         'm_sv',
         '%s:m_sv' % higgsPt,
         'mjj:m_sv',
-        #'mjj:m_sv:melaDCP_DCP_neg1to0',
-        #'mjj:m_sv:melaDCP_DCP_0to1',
+        'mjj:m_sv:melaDCP_DCP_neg1to0',
+        'mjj:m_sv:melaDCP_DCP_0to1',
 
         'mjj:m_sv:melaD0minus_D0_0to0p2',
         'mjj:m_sv:melaD0minus_D0_0p2to0p4',
