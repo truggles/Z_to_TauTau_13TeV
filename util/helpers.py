@@ -284,16 +284,16 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
         for era in eras :
             if 'RedBkgYieldSingleLep-%s' % era in inSamples :
                 useRedBkg = True
-                samples['RedBkgYieldSingleLep-%s' % era]  = 'RedBkg'
+                samples['RedBkgYieldSingleLep-%s' % era]  = 'allFakes'
             elif 'RedBkgShapeSingleLep-%s' % era in inSamples :
                 useRedBkg = True
-                samples['RedBkgShapeSingleLep-%s' % era]  = 'RedBkg'
+                samples['RedBkgShapeSingleLep-%s' % era]  = 'allFakes'
             elif 'RedBkgYieldDoubleLep-%s' % era in inSamples :
                 useRedBkg = True
-                samples['RedBkgYieldDoubleLep-%s' % era]  = 'RedBkg'
+                samples['RedBkgYieldDoubleLep-%s' % era]  = 'allFakes'
             elif 'RedBkgShapeDoubleLep-%s' % era in inSamples :
                 useRedBkg = True
-                samples['RedBkgShapeDoubleLep-%s' % era]  = 'RedBkg'
+                samples['RedBkgShapeDoubleLep-%s' % era]  = 'allFakes'
         if not useRedBkg :
             redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
             for rb in redBkgList :
@@ -301,7 +301,7 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
                     if rb == 'TT' : samples['TT']  = 'TT'
                     elif rb == 'WZ3l1nu' : samples['WZ3l1nu']  = 'WZ'
                     elif rb == 'WWW' : samples['WWW']  = 'TriBoson'
-                    else : samples[rb]  = 'DYJ'
+                    else : samples[rb]  = 'DY'
         if useRedBkg :
             redBkgList = ['TT', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'WZ3l1nu', 'WWW']
             for rb in redBkgList :
@@ -309,7 +309,7 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
                     if rb == 'TT' : samples['TT-NONJET']  = 'TT'
                     elif rb == 'WZ3l1nu' : samples['WZ3l1nu-NONJET']  = 'WZ'
                     elif rb == 'WWW' : samples['WWW-NONJET']  = 'TriBoson'
-                    else : samples['%s-NONJET' % rb]  = 'DYJ'
+                    else : samples['%s-NONJET' % rb]  = 'DY'
 
         triBosons = ['WWZ', 'WZZ', 'ZZZ',] # WWW is reducible
         for tri in triBosons :

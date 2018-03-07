@@ -59,8 +59,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
         for s in samples :
             if 'dataMM' in s : eras.append( s.split('-').pop() )
         for era in eras :
-            samples['RedBkgShapeSingleLep-%s' % era] = 'RedBkg'
-            samples['RedBkgShapeDoubleLep-%s' % era] = 'RedBkg'
+            samples['RedBkgShapeSingleLep-%s' % era] = 'allFakes'
+            samples['RedBkgShapeDoubleLep-%s' % era] = 'allFakes'
         if ops['doZH'] : # then remove AZH samples
             for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
                 if 'azh%i' % mass in samples : del samples['azh%i' % mass]
@@ -497,7 +497,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                 # There is additional ZEE scaling for EES in EEET, EEMT, EETT, EEEM channels
                 if '_energyScaleEES' in var :
-                    if name != 'data_obs' and 'RedBkg' not in name :
+                    if name != 'data_obs' and 'allFakes' not in name :
                         if channel in ['eeee','eeet','eemt','eett','eeem'] :
                             #print "    ----    EES - %20s pre yield: %3.3f" % (name, histos[ name ].Integral() )
                             if var[-2:] == 'Up' : histos[ name ].Scale( 1.006 )
@@ -524,8 +524,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             'VVJ_rest', 'W_rest', 'TTJ_rest', 'ZJ_rest'] : continue
                     if '_Zmumu' in var and (name not in ['ZTT', 'ZL', 'ZJ', 'ZJ_rest', 'EWKZ'] or \
                             category != 'vbf') : continue # Shape only used in vbf category atm
-                    if 'RedBkg' in name and not '_promptMC' in var : continue
-                    if '_promptMC' in var and not 'RedBkg' in name : continue
+                    if 'allFakes' in name and not '_promptMC' in var : continue
+                    if '_promptMC' in var and not 'allFakes' in name : continue
                     lep = 'x'
                     if channel == 'tt' : lep = 't'
                     if channel == 'em' : lep = 'e'
