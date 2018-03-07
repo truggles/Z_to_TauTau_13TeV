@@ -29,6 +29,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     'qcdSF' : 1.0,
     'ratio' : True,
     'blind' : True,
+    'fullBlind' : False,
     'text' : False,
     'mssm' : False,
     'log' : False,
@@ -932,6 +933,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             #        ratioHist.Draw('esamex0')
             #    pad1.cd()
 
+            inputThreshold = 0.25
+            if ops['fullBlind'] :
+                inputThreshold = 0.0
             if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
                 blindEpsilon = 0.09
                 if analysis == 'azh' :
@@ -944,7 +948,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         # Check if we blind based on HTT 2016  twiki base 
                         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
                         #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
-                        if ( 0.1 < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) or (var == 'LT_higgs' and k > 5) :
+                        if ( inputThreshold < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) or (var == 'LT_higgs' and k > 5) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] and not ":" in var :
