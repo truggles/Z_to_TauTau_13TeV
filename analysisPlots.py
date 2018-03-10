@@ -19,7 +19,19 @@ def makeHisto( cutName, varBins, varMin, varMax ) :
 
 
 # Make a 2D histo
-def get2DVars( cutName ) :
+def get2DVars( cutName, channel ) :
+    if 'LT_higgs' in cutName and 'm_sv' in cutName :
+        xBins = array( 'd', [i*20 for i in range( 1, 12 )] )
+        if channel in ['eeet','emmt'] :
+            yBins = array( 'd', [0,60,10000] )
+        elif channel in ['eemt','mmmt'] :
+            yBins = array( 'd', [0,60,10000] )
+        elif channel in ['eett','mmtt'] :
+            yBins = array( 'd', [0,75,10000] )
+        elif channel in ['eeem','emmm'] :
+            yBins = array( 'd', [0,50,10000] )
+        else :
+            yBins = array( 'd', [0,20,30,40,50,60,70,80,10000] )
     if 'pt_sv' in cutName and 'm_sv' in cutName :
         xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
         yBins = array( 'd', [0,100,170,300,10000] )
@@ -39,8 +51,8 @@ def get2DVars( cutName ) :
 
 
 # Make a 2D histo
-def make2DHisto( cutName ) :
-    info = get2DVars( cutName )
+def make2DHisto( cutName, channel ) :
+    info = get2DVars( cutName, channel )
     xBins = info[0]
     yBins = info[1]
     hist = ROOT.TH2D( cutName, cutName, len(xBins)-1, xBins, len(yBins)-1, yBins )
@@ -407,16 +419,17 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
 
         # Add channel specific LT_higgs cuts from June Optimization
         if channel in ['eeet','emmt'] :
-            additionalCut += '*(LT_higgs > 30)'
+            #additionalCut += '*(LT_higgs > 60)'
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
         elif channel in ['eemt','mmmt'] :
-            additionalCut += '*(LT_higgs > 40)'
+            #additionalCut += '*(LT_higgs > 60)'
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
         elif channel in ['eeem','emmm'] :
             additionalCut += '*(LT_higgs > 20)'
         elif channel in ['eett','mmtt'] :
             #additionalCut += '*(LT_higgs > 50)' # > 80 GeV is 10% better than 60,
-            additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            #additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            #additionalCut += '*(LT_higgs > 75)' # > 80 GeV is 10% better than 60,
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
             additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
             # 60 is way more stats
@@ -644,7 +657,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
 
 
         if ":" in var :
-    	    histos[ var ] = make2DHisto( var )
+    	    histos[ var ] = make2DHisto( var, channel )
         else :
     	    histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
@@ -677,7 +690,13 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             varBase = '_'.join(tmp)
             if 'energyScale' in shapeName :
                 shiftDir = 'UP' if 'Up' in var else 'DOWN'
-                if 'pt_sv:m_sv' in var :
+                if 'LT_higgs:m_sv' in var :
+                    if 'All'  in var : plotVar = 'LT_higgs:m_sv_%s' % shiftDir
+                    if 'DM0'  in var : plotVar = 'LT_higgs:m_sv_DM0_%s' % shiftDir
+                    if 'DM1'  in var : plotVar = 'LT_higgs:m_sv_DM1_%s' % shiftDir
+                    if 'DM10' in var : plotVar = 'LT_higgs:m_sv_DM10_%s' % shiftDir
+                    if 'EES' in var : plotVar = 'LT_higgs:m_sv_EES_%s' % shiftDir
+                elif 'pt_sv:m_sv' in var :
                     if 'All'  in var : plotVar = 'pt_sv_%s:m_sv_%s' % (shiftDir, shiftDir)
                     if 'DM0'  in var : plotVar = 'pt_sv_DM0_%s:m_sv_DM0_%s' % (shiftDir, shiftDir)
                     if 'DM1'  in var : plotVar = 'pt_sv_DM1_%s:m_sv_DM1_%s' % (shiftDir, shiftDir)
@@ -779,7 +798,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         if chain.GetEntries() == 0 :
             print " #### ENTRIES = 0 #### "
             if ":" in var :
-                histos[ var ] = make2DHisto( var )
+                histos[ var ] = make2DHisto( var, channel )
             else :
                 histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
@@ -817,7 +836,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             # so make our original binned histo
             if histos[ var ].Integral() == 0.0 :
                 if ":" in var :
-    	            histos[ var ] = make2DHisto( var )
+    	            histos[ var ] = make2DHisto( var, channel )
                 else :
     	            histos[ var ] = makeHisto( var, info[0], info[1], info[2])
 
@@ -1002,7 +1021,8 @@ def getHistoDict( analysis, channel ) :
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
-            'LT_higgs' : [200, 0, 200, 20, 'LT_{higgs} [GeV]', ' GeV'],
+            'LT_higgs' : [200, 0, 200, 5, 'LT_{higgs} [GeV]', ' GeV'],
+#            'LT_higgs:m_sv' : [200, 0, 200, 10, 'LT_{higgs} [GeV]', ' GeV'],
 #            'H_PZeta' : [600, -200, 400, 20, 'PZeta_{higgs} [GeV]', ' GeV'],
 #            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
 #            'H_DZeta' : [600, -200, 400, 20, 'DZeta_{higgs} [GeV]', ' GeV'],
@@ -1010,10 +1030,10 @@ def getHistoDict( analysis, channel ) :
 ####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
 ####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
 ####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
-            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
-            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
-            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
-            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
+#            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
+#            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
+#            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
+#            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
 #            'pfmt_3' : [200, 0, 200, 20, 'Leg3 M_{T} [GeV]', ' GeV'],
 #            'pfmt_4' : [200, 0, 200, 20, 'Leg4 M_{T} [GeV]', ' GeV'],
 #            'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
@@ -1039,9 +1059,9 @@ def getHistoDict( analysis, channel ) :
 ####            'eVetoZTTp001dxyz' : [6, -1, 5, 1, 'eVetoZTTp001dxyz', ''],
 ####            'muVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'muVetoZTTp001dxyzR0', ''],
 ####            'eVetoZTTp001dxyzR0' : [6, -1, 5, 1, 'eVetoZTTp001dxyzR0', ''],
-            'bjetCISVVeto20Tight' : [5, -0.5, 4.5, 1, 'nBTag_20Tight', ''],
-            'bjetCISVVeto20Medium' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
-            'bjetCISVVeto20Loose' : [5, -0.5, 4.5, 1, 'nBTag_20Loose', ''],
+#            'bjetCISVVeto20Tight' : [5, -0.5, 4.5, 1, 'nBTag_20Tight', ''],
+#            'bjetCISVVeto20Medium' : [5, -0.5, 4.5, 1, 'nBTag_20Medium', ''],
+#            'bjetCISVVeto20Loose' : [5, -0.5, 4.5, 1, 'nBTag_20Loose', ''],
 #XXX            'bjetCISVVeto30Medium' : [60, 0, 6, 5, 'nBTag_30Medium', ''],
 #XXX            'bjetCISVVeto30Tight' : [60, 0, 6, 5, 'nBTag_30Tight', ''],
         }
@@ -1087,7 +1107,8 @@ def getHistoDict( analysis, channel ) :
 
 
         ''' added shape systematics '''
-        toAdd = ['m_sv', ] # No extra shapes
+        #toAdd = ['m_sv','LT_higgs:m_sv' ] # No extra shapes
+        toAdd = ['LT_higgs:m_sv', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
             varsForShapeSyst.append( item )

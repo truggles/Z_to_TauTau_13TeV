@@ -162,6 +162,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'A_Mass' : 'AMass',
             'm_vis' : 'VisMass',
             'H_vis' : 'HVisMass',
+            'LT_higgs:m_sv' : 'svFitMass',
             }
         if analysis == 'azh' : appendMap['m_sv'] = 'svFitMass'
         #if '0jet2D' in ops['category'] : 
@@ -231,12 +232,15 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             elif doFF and ('m_sv' in var or 'm_visCor' in var) :
                 if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
                 else : binArray = array( 'd', [i*10 for i in range( 31 )] )
-            elif analysis == 'azh' and ops['doZH'] :
+            elif analysis == 'azh' and ops['doZH'] and ":" not in var :
                 binArray = array( 'd', [i*20 for i in range( 1, 12 )] )
-            elif analysis == 'azh' :
+            elif analysis == 'azh' and ops['doZH'] and ":" in var :
+                binArray = array( 'd', [i for i in range( 21 )] )
+            elif analysis == 'azh' : # For 4lMass and A_Mass
                 binArray = array( 'd', [i*40 for i in range( 16 )] )
             else :
-                if ":" in var : binArray = array( 'd', [i for i in range( 49 )] )
+                if ":" in var : 
+                    binArray = array( 'd', [i for i in range( 49 )] )
                 elif ops['category'] in ['1jet_low', '1jet_high'] :
                     binArray = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
                 elif 'vbf' in ops['category'] :
@@ -357,6 +361,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if ":" in var :
                     hNew = unroll2D( hist )
                     #print "nbinsX",hNew.GetNbinsX() ,hNew.GetBinLowEdge(1),hNew.GetBinLowEdge( hNew.GetNbinsX()+1 )
+                    #print binArray
                 else :
                     hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
 
