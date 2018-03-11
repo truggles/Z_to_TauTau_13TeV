@@ -183,7 +183,7 @@ def getQCDSF( fileName, category ) :
                 return float(info[1])
 
 
-def unroll2D( hist ) :
+def unroll2D( hist, name='' ) :
     nBinsX = hist.GetNbinsX()
     nBinsY = hist.GetNbinsY()
     nBins = nBinsX * nBinsY
@@ -195,7 +195,7 @@ def unroll2D( hist ) :
     # ROOT warning: "Attempt to add histograms with different bin limits"
     binArray = array( 'd', [i for i in range( nBins+1 )] )
     numBins = len( binArray ) - 1
-    hNew = ROOT.TH1D( hist.GetName(), hist.GetTitle(), numBins, binArray )
+    hNew = ROOT.TH1D( hist.GetName()+name, hist.GetTitle()+name, numBins, binArray )
     for i in range(1, nBinsY+1) :
         for j in range(1, nBinsX+1) :
             #print "i %i j %i set bin %i" % (i, j, j+(i-1)*nBinsX)

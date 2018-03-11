@@ -11,7 +11,7 @@ from array import array
 import math
 from analysisPlots import skipSystShapeVar
 from copy import deepcopy
-from util.helpers import checkDir, returnSortedDict
+from util.helpers import checkDir, unroll2D, returnSortedDict
 import subprocess
 from smart_getenv import getenv
 
@@ -238,13 +238,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
             # speed up 2D plotting
             if ":" in var :
-                # Skip 1 bin plot of 2D vars
-                if 'plotMe' in ops['qcdMakeDM'] : continue
-                elif 'vbf' in ops['qcdMakeDM'] :
-                    if not ('mjj' in var or 'vbfMass' in var) : continue
-                elif 'boosted' in ops['qcdMakeDM'] :
-                    if not ('pt_sv' in var or 'Higgs_Pt' in var) : continue
-                else : continue
+                ## Skip 1 bin plot of 2D vars
+                #if 'plotMe' in ops['qcdMakeDM'] : continue
+                #elif 'vbf' in ops['qcdMakeDM'] :
+                #    if not ('mjj' in var or 'vbfMass' in var) : continue
+                #elif 'boosted' in ops['qcdMakeDM'] :
+                #    if not ('pt_sv' in var or 'Higgs_Pt' in var) : continue
+                #else : continue
+                ### Skip plotting systematic shifts
+                if 'Up' in var : continue
+                if 'Down' in var : continue
 
 
 
@@ -269,49 +272,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
 
             varBinned = True
-            if '_mssm' in var :
-                if 'ZTT' in folderDetails :
-                    print "Inclusive"
-                    xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-                elif 'NoBTL' in folderDetails :
-                    print "No-BTAGGING"
-                    xBins = array( 'd', [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-                elif 'NoBTL' not in folderDetails :
-                    print "BTAGGING"
-                    xBins = array( 'd', [0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,700,900,1100,1300,1500,1700,1900,2100,2300,2500,2700,2900,3100,3300,3500,3700,3900] )
-    
-            elif var == 'mt_tot' :
-                xBins = array( 'd', [0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,\
-                        80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0,160.0,\
-                        170.0,180.0,190.0,200.0,225.0,250.0,275.0,300.0,325.0,\
-                        350.0,400.0,500.0,700.0,900.0, 1100.0,1300.0,1500.0,\
-                        1700.0,1900.0,2100.0,2300.0,2500.0,2700.0,2900.0,3100.0,\
-                        3300.0,3500.0,3700.0,3900.0] )
-            elif var == 'm_visCor_mssm' :
-                #xBins = array( 'd', [0,20,40,60,80,100,150,200,250,350,600,1000,1500,2000,2500,3500] )
-                xBins = array( 'd', [] )
-                for i in range(0, 351 ) :
-                    xBins.append( i * 10 )
-            elif ops['sync'] and 'm_visCor' in var :
-                xBins = array( 'd', [] )
-                for i in range( 21 ) :
-                    xBins.append( i * 17.5 )
-            # This is the proposed binning for ZTT 2015 paper
-            elif analysis == 'azh' and 'm_sv' in var :
+            if analysis == 'azh' and 'm_sv' in var and 'LT_higgs' in var :
+                xBins = array( 'd', [i for i in range( 0, 21 )] )
+            elif analysis == 'azh' and 'm_sv' in var and 'LT_higgs' not in var :
                 xBins = array( 'd', [i*20 for i in range( 1, 12 )] )
                 #xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
-            elif doFF and ('m_sv' in var or 'm_visCor' in var) :
-                xBins = array( 'd', [i*10 for i in range( 31 )] )
-            elif 'm_sv' in var or 'm_visCor' in var :
-                if is1JetCat :
-                    xBins = array( 'd', [0,40,60,70,80,90,100,110,120,130,150,200,250] )
-                elif isVBFCat :
-                    xBins = array( 'd', [0,40,60,80,100,120,150,200,250] )
-                else :
-                    #xBins = array( 'd', [i*10 for i in range( 31 )] )
-                    xBins = array( 'd', [0,50,60,70,80,90,100,110,120,130,\
-                        140,150,160,170,180,190,200,210,220,230,240,250,\
-                        260,270,280,290,300] )
             else :
                 varBinned = False
                 first = info[1] * 1.
@@ -331,7 +296,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 xBins = array( 'd', [xBins[0], xBins[-1]] )
 
             xNum = len( xBins ) - 1
+
+            # Set info values to evenly spaced xBins if not varBinned for ease later
+            if varBinned :
+                info[0] = xNum
+                info[1] = xBins[0]
+                info[2] = xBins[-1]
             #print "Binning scheme: ",xBins
+            #print "Binning Summary"
+            #print xBins, xNum
+            #print info
+            #print "VarBinned",varBinned
                 
     
     
@@ -360,17 +335,29 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 sampHistos[ signal ].SetLineStyle( 7 )
                 sampHistos[ signal ].SetMarkerStyle( 0 )
             else :
-                twoDVars = analysisPlots.get2DVars( var )
+                twoDVars = analysisPlots.get2DVars( var, channel )
                 for samp in sampInfo[analysis].keys() :
                     # Skip some DY gen based combos
                     if analysis == 'htt' and channel == 'em' :
                         if samp in ['zl', 'zj'] : continue
                     if analysis == 'htt' and channel == 'tt' :
                         if samp == 'zll' : continue
-                    sampHistos[samp] = ROOT.TH2D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')),
-                            samp, len(twoDVars[0])-1, twoDVars[0], len(twoDVars[1])-1, twoDVars[1] )
+                    # For ZH analysis we want TH1s unrolled, not 2D
+                    #sampHistos[samp] = ROOT.TH2D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')),
+                    #        samp, len(twoDVars[0])-1, twoDVars[0], len(twoDVars[1])-1, twoDVars[1] )
+                    length = ( len(twoDVars[0]) - 1) * ( len(twoDVars[1]) - 1)
+                    sampHistos[samp] = ROOT.TH1D("All Backgrounds %s %s %s" % (samp, append, ops['targetDir'].strip('/')),
+                            samp, length, 0, length )
                     sampHistos[samp].Sumw2()
+                    sampHistos[samp].SetFillColor( sampInfo[analysis][samp][0] )
+                    sampHistos[samp].SetLineColor( ROOT.kBlack )
+                    sampHistos[samp].SetLineWidth( 2 )
+                    sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
                     sampHistos[samp].SetDirectory( 0 )
+                sampHistos[ signal ].SetLineColor( ROOT.kMagenta+2 )
+                sampHistos[ signal ].SetLineWidth( 4 )
+                sampHistos[ signal ].SetLineStyle( 7 )
+                sampHistos[ signal ].SetMarkerStyle( 0 )
                 
     
             for sample in samples.keys() :
@@ -466,10 +453,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                             ffSubHist = dic.Get( getVar+'_ffSub' )
                             #print sample," FF Sub int",ffSubHist.Integral()
                             ffSubHist2 = ffSubHist.Rebin( xNum, "rebinned", xBins )
-                            if varBinned :
-                                ffSubHist2.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
-                            else :
-                                ffSubHist2.GetXaxis().SetRangeUser( info[1], info[2] )
+                            ffSubHist2.GetXaxis().SetRangeUser( info[1], info[2] )
                             #if "DYJets" in sample and "ZTT" in sample :
                             #    ffSubHist2.Scale( zttScaleTable[dirCode] )
                             sampHistos[ 'jetFakes' ].Add( ffSubHist2, -1.0 )
@@ -493,7 +477,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     #print "REd BKG Yield:",redBkgYield
                     if preHist.Integral() != 0 :
                         preHist.Scale( redBkgYield / preHist.Integral() )
-                    hist = ROOT.TH1D( preHist )
+                    #if ":" in var :
+                    #    #histX = preHist.Rebin2D( 1, 1, "rebinned" )
+                    #    hist = unroll2D( preHist, sample )
+                    #else :
+                    #    hist = ROOT.TH1D( preHist )
     
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
                     #print "Using QCD SCALE FACTOR <<<< NEW >>>>"
@@ -505,7 +493,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         histX = ROOT.TH2D( preHist )
                 else :
                     if ":" in var :
-                        histX = preHist.Rebin2D( 1, 1, "rebinned" )
+                        #histX = preHist.Rebin2D( 1, 1, "rebinned" )
+                        histX = unroll2D( preHist, sample )
+                        #print sample, histX.Integral()
                     else : 
                         histX = preHist.Rebin( xNum, "rebinned", xBins )
 
@@ -525,6 +515,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
                 #print sample, samples[ sample ]['group']
+                #print sampHistos[ samples[ sample ]['group'] ], hist
                 sampHistos[ samples[ sample ]['group'] ].Add( hist )
                 #if samples[ sample ]['group'] == 'jetFakes' :
                 #    print "jetFakes Stack yield: %f" % hist.Integral()
@@ -672,10 +663,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.Add( qcdVar ) 
                 if var == 'm_visCor_mssm' :
                     print "M_VIS_MSSM plot details: %f %f" % (info[1], info[2])
-                if varBinned :
-                    qcdVar.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
-                else :
-                    qcdVar.GetXaxis().SetRangeUser( info[1], info[2] )
+                qcdVar.GetXaxis().SetRangeUser( info[1], info[2] )
                 print "qcdVar: %f   mean %f" % (qcdVar.Integral(), qcdVar.GetMean() )
                 if var == 'm_visCor' :
                     finalQCDYield = qcdVar.Integral()
@@ -686,7 +674,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Maybe make ratio hist
             c1 = ROOT.TCanvas("c1","Z -> #tau#tau, %s, %s" % (channel, var), 550, 550)
     
-            if not ops['ratio'] or ":" in var :
+            if not ops['ratio'] :
                 pad1 = ROOT.TPad("pad1", "", 0, 0, 1, 1)
                 pad1.Draw()
                 pad1.cd()
@@ -704,7 +692,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ratioPad = pads[1]
                 ratioPad.SetTopMargin(0.0)
                 ratioPad.SetBottomMargin(0.3)
-                pad1.SetBottomMargin(0.00)
+                pad1.SetBottomMargin(0.03)
                 ratioPad.SetGridy()
                 ratioHist = ROOT.TH1D('ratio %s' % append, 'ratio', xNum, xBins )
                 ratioHist.Sumw2()
@@ -722,10 +710,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 """ Add uncertainty bands on ratio """
                 er = ROOT.TH1D("er %s" % append, "er", xNum, xBins )
                 er.Sumw2()
-                if varBinned :
-                    er.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
-                else :
-                    er.GetXaxis().SetRangeUser( info[1], info[2] )
+                er.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( er.GetNbinsX()+1 ) :
                     er.SetBinContent( k, 1. )
                     if stack.GetStack().Last().GetBinContent(k) > 0. : 
@@ -773,6 +758,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 else :
                     width = stack.GetStack().Last().GetBinWidth(1)
                     stack.GetYaxis().SetTitle("Events / %.1f%s" % (width, info[ 5 ])  )
+            else :
+                stack.GetYaxis().SetTitle("Events / Bin Width")
     
 
             # Set axis and viewing area
@@ -830,27 +817,19 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     
             pad1.Update()
-            if varBinned :
-                stack.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
-            else :
+            if ":" not in var :
                 stack.GetXaxis().SetRangeUser( info[1], info[2] )
-            if ops['ratio'] and not ":" in var :
-                if varBinned :
-                    ratioHist.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
-                else :
-                    ratioHist.GetXaxis().SetRangeUser( info[1], info[2] )
+            if ops['ratio'] :
+                ratioHist.GetXaxis().SetRangeUser( info[1], info[2] )
     
     
             """
             Add uncertainty bands on background stack
             """
-            if ops['addUncert'] and not ":" in var :
+            if ops['addUncert'] :
                 e1 = ROOT.TH1D("e1 %s" % append, "e1", xNum, xBins )
                 e1.Sumw2()
-                if varBinned :
-                    e1.GetXaxis().SetRangeUser( xBins[0], xBins[-1] )
-                else :
-                    e1.GetXaxis().SetRangeUser( info[1], info[2] )
+                e1.GetXaxis().SetRangeUser( info[1], info[2] )
                 for k in range( e1.GetNbinsX()+1 ) :
                     e1.SetBinContent( k, stack.GetStack().Last().GetBinContent( k ) )
                     e1.SetBinError(k, binErrors[k] )
@@ -971,7 +950,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 c1.SaveAs(plotDir+'%s.png' % var )
                 c1.SaveAs(plotDir+'%s.pdf' % var )
                 #c1.SaveAs(plotDir+'%s.root' % var )
-                c1.SaveAs(plotDir+'%s.C' % var )
+                #c1.SaveAs(plotDir+'%s.C' % var )
 
                 # To speed up, just copy the new png/pdfs to other dir
                 # this will help with 2D plots
