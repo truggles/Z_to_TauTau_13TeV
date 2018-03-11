@@ -49,6 +49,14 @@ for mass in [110, 120, 125, 130, 140] :
 for mass in [125,] :
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
+    azhSamples.append('ZHWW%i' % mass)
+    azhSamples.append('VBFHtoWW2l2nu%i' % mass)
+    azhSamples.append('WPlusHHWW%i' % mass)
+    azhSamples.append('WMinusHHWW%i' % mass)
+    azhSamples.append('HtoWW2l2nu%i' % mass)
+    azhSamples.append('ttHTauTau%i' % mass)
+    azhSamples.append('ttHJNonBB%i' % mass)
+    azhSamples.append('ttHNonBB%i' % mass)
 
 #azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
