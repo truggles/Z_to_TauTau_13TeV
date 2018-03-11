@@ -530,6 +530,15 @@ def sampleDetails( analysis ) :
                 'xsec' : 0.3940 * hBR140,
                 'group' : 'VH'},
 
+            'WPlusHHWW125' : {
+                'DASPath' : '/HWplusJ_HToWW_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.8400 * 0.2137,
+                'group' : 'VH'},
+            'WMinusHHWW125' : {
+                'DASPath' : '/HWminusJ_HToWW_M125_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.5328 * 0.2137,
+                'group' : 'VH'},
+
             'ZHTauTau110' : {
                 'DASPath' : '/ZHToTauTau_M110_13TeV_powheg_pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 1.309 * hBR110,
@@ -562,6 +571,14 @@ def sampleDetails( analysis ) :
             'ttHTauTau125' : {
                 'DASPath' : '/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/%s_ext4-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.507 * 0.0632,
+                'group' : 'VH'},
+            'ttHNonBB125' : {
+                'DASPath' : '/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/%s-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.507 * (1. - 0.5824), # subtract HBB BR
+                'group' : 'VH'},
+            'ttHJNonBB125' : {
+                'DASPath' : '/ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix/%s_ext1-v1/MINIAODSIM' % moriond17,
+                'xsec' : 0.507 * (1. - 0.5824), # subtract HBB BR
                 'group' : 'VH'},
             #'ttHTauTau130' : {
             #    'DASPath' : '/ttHJetToTT_M130_13TeV_amcatnloFXFX_madspin_pythia8/%s-v1/MINIAODSIM' % moriond17,

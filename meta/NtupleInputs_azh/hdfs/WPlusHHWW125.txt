@@ -1,0 +1,6 @@
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-025156FE-12B7-E611-AB64-002590A82B8E.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-06ED85C2-10B7-E611-8BCB-001E67E6F85F.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-267D3686-0FB7-E611-BA59-001E67792644.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-A050447F-2EB7-E611-A5DB-002590D9D896.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-C0130180-2EB7-E611-934B-848F69FD28E3.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_v6-v1/make_ntuples_cfg-F07F6877-2EB7-E611-84A0-001E677927A2.root

@@ -1,0 +1,10 @@
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-0A97FA9E-F2E9-E611-906F-7845C4FB82F2.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-20A2DFA0-EAE9-E611-9322-44A842240F8D.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-3A20E823-DBE9-E611-88F3-44A84225CDA4.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-6A02A39E-F2E9-E611-8633-0025904C7A54.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-846CBB7A-F2E9-E611-9AE3-00266CFFBF68.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-B216B42A-DBE9-E611-9EEB-00259073E36C.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-BCAF346D-F2E9-E611-9040-0025907B4F24.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-D6AAA7E0-BAE9-E611-9AC2-90B11C282313.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-DCC51192-BAE9-E611-BE7B-44A84223FF3C.root
+/hdfs/store/user/truggles/ZH_mar06_RivetAndLHE/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext4-v1/make_ntuples_cfg-F855F4DF-BAE9-E611-AB5E-00259029ED16.root

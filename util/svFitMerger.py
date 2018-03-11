@@ -80,13 +80,16 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleE-%s' % era)
             azhSamples.append('dataSingleM-%s' % era)
 
-        name = 'azhHalloweenSkim_svFitPrep'
-        originalDir = '/data/truggles/'+name+'/'
-        targetDir = '/data/truggles/'+name+'_Merged'
+        azhSamples = ['ZZ4l',]
+
+        name = 'azhMar10LowerTrig'
+        originalDir = '/nfs_scratch/truggles/'+name+'/'
+        targetDir = '/nfs_scratch/truggles/'+name+'_Merged3'
         checkDir( targetDir )
         jobId = 'TauTau_13*'
         jobId = ''
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
+        channels = ['eeet',] # 8 + eeee + mmmm + eemm
         for channel in channels :
             for sample in azhSamples :
                 if debug:
