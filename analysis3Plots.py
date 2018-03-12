@@ -912,11 +912,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             #        ratioHist.Draw('esamex0')
             #    pad1.cd()
 
-            inputThreshold = 0.25
+            inputThreshold = 0.1
             if ops['fullBlind'] :
                 inputThreshold = 0.0
             if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
-                blindEpsilon = 0.09
+                blindEpsilon = 0.01
                 if analysis == 'azh' :
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( 1, nBins+1 ) :
@@ -927,10 +927,10 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         # Check if we blind based on HTT 2016  twiki base 
                         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
                         #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
-                        if ( inputThreshold < ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) or (var == 'LT_higgs' and k > 5) :
+                        if ( inputThreshold <= ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) or (var == 'LT_higgs' and k > 5) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
-                            if ops['ratio'] and not ":" in var :
+                            if ops['ratio'] :
                                 ratioHist.SetBinContent(k, 0.)
                                 ratioHist.SetBinError(k, 0.)
                     if ops['ratio'] and not ":" in var : 
@@ -947,8 +947,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
             if ops['qcdMakeDM'] == 'x' or 'plotMe' in ops['qcdMakeDM'] :
                 plotDir = '/afs/cern.ch/user/t/truggles/www/%sPlots/%s%s/' % (analysis, channel, ops['targetDir'] )
-                c1.SaveAs(plotDir+'%s.png' % var )
-                c1.SaveAs(plotDir+'%s.pdf' % var )
+                c1.SaveAs(plotDir+'%s.png' % var.replace(":","_") )
+                c1.SaveAs(plotDir+'%s.pdf' % var.replace(":","_") )
                 #c1.SaveAs(plotDir+'%s.root' % var )
                 #c1.SaveAs(plotDir+'%s.C' % var )
 
@@ -958,7 +958,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 subprocess.call(['cp',plotDir+'%s.png' % var, newPlotDir+'%s.png' % var])
                 subprocess.call(['cp',plotDir+'%s.pdf' % var, newPlotDir+'%s.pdf' % var])
                 #subprocess.call(['cp',plotDir+'%s.root' % var, newPlotDir+'%s.root' % var])
-                subprocess.call(['cp',plotDir+'%s.C' % var, newPlotDir+'%s.C' % var])
+                #subprocess.call(['cp',plotDir+'%s.C' % var, newPlotDir+'%s.C' % var])
     
     
             """ Additional views for Visible Mass """
