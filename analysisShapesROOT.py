@@ -127,6 +127,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
     checkDir( 'shapes/%s' % analysis )
     
     for channel in channels :
+
+        # not sure why the ZH conglomerates are still here
+        if channel in ['ZEE', 'ZMM', 'ZXX', 'LLET', 'LLMT', 'LLTT', 'LLEM'] : continue
     
         if channel == 'tt' :
             for sample in samples.keys() :
@@ -423,40 +426,53 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     else : # All backgrounds
                         for bin_id in range( histos[ name ].GetNbinsX() ) :
                             bkgArray[bin_id] = bkgArray[bin_id] + histos[ name ].GetBinContent( bin_id+1 )
-                #print dataArray
-                #print bkgArray
-                #assert( len(dataArray) == len(bkgArray) ), "Zero bin check is not working, are you missing data_obs?"
 
-                # Find problem bins
-                # ZH / AZh analysis has well populated background templates, skip this portion
-                problemBins = []
-                print "Checking for problem bins"
-                sampToCheck = ''
-                #if analysis == 'azh' : sampToCheck = 'RedBkg'
-                if analysis == 'htt' :
-                    sampToCheck = 'QCD'
+
+                if 'Up' not in var and 'Down' not in var :
+                    print "\n --- Bkg Yields By Bin: ",channel,var
+                    # Choose data_obs because it should always be here
+                    for bin_id in range( histos[ 'data_obs' ].GetNbinsX() ) :
+                        print "  --- %i %3.4f" % ( bin_id+1, bkgArray[bin_id] )
+                    #print dataArray
+                    #print bkgArray
+                    #assert( len(dataArray) == len(bkgArray) ), "Zero bin check is not working, are you missing data_obs?"
+
+                    # Find problem bins
+                    # ZH / AZh analysis has well populated background templates, skip this portion
+                    problemBins = []
+                    print "Checking for problem bins"
+                    sampToCheck = ''
+                    if analysis == 'azh' : sampToCheck = 'allFakes'
+                    if analysis == 'htt' : sampToCheck = 'QCD'
+
                     for bin_id in range( len(bkgArray) ) :
                         #if dataArray[bin_id] > 0. and bkgArray[bin_id] == 0. :
-                        print bin_id+1, bkgArray[bin_id], " QCD/RedBkg val: ",histos[ sampToCheck ].GetBinContent( bin_id+1 )
+                        print bin_id+1, bkgArray[bin_id], " QCD/allFakes val: ",histos[ sampToCheck ].GetBinContent( bin_id+1 )
                         if bkgArray[bin_id] == 0. :
                             problemBins.append( bin_id+1 ) # +1 here gets us to ROOT coords
 
                     nEntries = histos[ sampToCheck ].GetEntries()
+                    assert (nEntries > 0), "\nFailing to make a DC because you have no irreducible bkg"
                     integral = histos[ sampToCheck ].Integral()
                     avgW = integral/nEntries
-                    print "Simple method uncer on zero bin method - avg RedBkg entry weight:",avgW
-
-                # Apply correction and set an empyt bin to QCD = 1e-5
-                if sampToCheck in histos.keys() :
-                    for problemBin in problemBins :
-                        print "Setting QCD bin_id %i to %s" % (problemBin, setVal)
-                        histos[ sampToCheck ].SetBinContent( problemBin, setVal )
-                        # Poissonian error for 0
-                        histos[ sampToCheck ].SetBinError( problemBin, avgW*1.8 )
-                elif len(problemBins) > 0 : 
-                    print "\nQCD Bkg not included so zero bins are not being corrected properly"
+                    print "Simple method uncer on zero bin method - avg allFakes entry #entries %i, weight: %3.4f" % (nEntries, avgW)
                     print problemBins
-                    print "\n\n\n"
+                    """ To reduce confusion with 2D unrolled, I am taking a yield slightly larger
+                        than the average for RedBkg, 0.06 as the uncertainty to apply for empty
+                        bins. """
+                    avgW = 0.06
+
+                    # Apply correction and set an empyt bin to QCD = 1e-5
+                    if sampToCheck in histos.keys() :
+                        for problemBin in problemBins :
+                            print "Setting QCD bin_id %i to %s" % (problemBin, setVal)
+                            histos[ sampToCheck ].SetBinContent( problemBin, setVal )
+                            # Poissonian error for 0
+                            histos[ sampToCheck ].SetBinError( problemBin, avgW*1.8 )
+                    elif len(problemBins) > 0 : 
+                        print "\nQCD Bkg not included so zero bins are not being corrected properly"
+                        print problemBins
+                        print "\n\n\n"
 
 
                 # Check QCD 

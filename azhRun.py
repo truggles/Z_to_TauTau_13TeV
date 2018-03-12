@@ -66,8 +66,8 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataSingleM-%s' % era)
 
 #azhSamples = []
-for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-    azhSamples.append('azh%i' % mass)
+#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+#    azhSamples.append('azh%i' % mass)
 
     
 #azhSamples = ['ZHWW125','HZZ125']
@@ -76,6 +76,7 @@ for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 #azhSamples = ['azh300',]
 #azhSamples = ['ZHTauTau125',]
 #azhSamples = ['ggHtoTauTau140',]
+#azhSamples = ['ZZ4l',]
 
 samples = azhSamples
 
@@ -87,11 +88,13 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 20,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eett','mmtt'],
+    #'channels' : ['eeet','mmmt'],
+    #'channels' : ['eeet',],
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
@@ -111,33 +114,13 @@ params = {
     #'skimHdfs' : 'true', # Use for initial skim
 
     ### Signal Sync
-    ##'channels' : ['eemt','mmmt','emmt',],
-    ##'channels' : ['eeet','eett','eeem','mmtt','emmm',],
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',], # 8
-    ##'channels' : ['mmmt','mmtt'],
-    ##'channels' : ['eett','mmtt'],
-    ##'channels' : ['eeem','eeet',],
-    ##'channels' : ['emmt','mmtt','mmmt','emmm'],
-    ##'channels' : ['eeet','eeem','mmmt','emmm'],
-    #'channels' : ['mmmt',],
     ##'skimmed' : 'false',
     #'skimmed' : 'true',
     #'skimHdfs' : 'false',
     #'mid1' : '1Jan09NewTrigSync',
     #'mid2' : '2Jan09NewTrigSync',
     #'mid3' : '3Jan09NewTrigSync',
-    #'cutMapper' : 'SkimApplyNewTrig',
-    ##'cutMapper' : 'SkimNoTrig',
-    ##'cutMapper' : 'SkimNoVeto',
-
-    ## RedBkg Sync
-    #'channels' : ['eeem',],
-    #'mid1' : '1Aug09RBSync',
-    #'mid2' : '2Aug09RBSync',
-    #'mid3' : '3Aug09RBSync',
-    #'skimmed' : 'true', # Use at uwlogin
-    #'skimHdfs' : 'false',
-    #'cutMapper' : 'Skim',
 }
 
 """ Get samples with map of attributes """
@@ -157,10 +140,10 @@ makeFinalPlots = True
 doDataCards = True
 
 
-#runPlots = False
-#doMerge = False
+runPlots = False
+doMerge = False
 makeFinalPlots = False
-doDataCards = False
+#doDataCards = False
 
 
 doZH = True
@@ -198,7 +181,7 @@ if useRedBkg :
                 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ',
                 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] :
             samplesY[ sample+'-NONJET' ] = copy.deepcopy(samples[ sample ])
-            samplesY[ sample+'-JETFAKE' ] = samples[ sample ]
+            #samplesY[ sample+'-JETFAKE' ] = samples[ sample ]
         else :
             samplesY[ sample ] = copy.deepcopy(samples[ sample ])
     #for sample in samplesY.keys() :
@@ -263,7 +246,9 @@ if makeFinalPlots :
     #text=True
     blind = True
     #blind = False
-    kwargs = { 'text':text, 'blind':blind, 'redBkg':useRedBkg }
+    fullBlind = True
+    #fullBlind = False
+    kwargs = { 'text':text, 'blind':blind, 'fullBlind' : fullBlind, 'redBkg':useRedBkg }
     print params
 
     if useRedBkg : # Delete the yield sample from samples, will be loaded
@@ -296,10 +281,19 @@ if doDataCards :
 
     ROOT.gROOT.Reset()
     from analysisShapesROOT import makeDataCards
-    for var in ['m_sv', 'A_Mass', 'Mass'] :
+    useChannels = []
+    for channel in params['channels'] :
+        if channel not in ['ZEE', 'ZMM', 'ZXX', 'LLET', 'LLMT', 'LLTT', 'LLEM'] :
+            useChannels.append( channel )
+            
+    #for var in ['m_sv', 'A_Mass', 'Mass'] :
+    #for var in ['m_sv','LT_higgs:m_sv'] :# 'A_Mass', 'Mass'] :
+    for var in ['LT_higgs:m_sv',] :# 'A_Mass', 'Mass'] :
         if var == 'A_Mass' : doZH = False
         if var == 'Mass' : doZH = False
         finalCat = 'inclusive'
+        if var == 'LT_higgs:m_sv' :
+            finalCat = 'LT2D'
         folderDetails = params['mid3']
         kwargs = {
         'doZH' : doZH,
@@ -308,13 +302,13 @@ if doDataCards :
         'allShapes' : True,
         'redBkg' : useRedBkg, 
         }
-        makeDataCards( analysis, samplesX, params['channels'], folderDetails, **kwargs )
+        makeDataCards( analysis, samplesX, useChannels, folderDetails, **kwargs )
     extra = 'mssm'
-    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
-    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
+    #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
+    #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
     subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass.root", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"] )
-    print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
-    print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
+    #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
+    #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
     print "moved to : shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"
 
 
