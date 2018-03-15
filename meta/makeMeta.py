@@ -6,6 +6,7 @@
 import os
 from getMeta import getDBSInfo, getNumberOfFiles, getEventCount, printJson, getSummedWeights
 from sampleNames import returnSampleDetails
+from analysis1BaselineCuts import skipChanDataCombo
 
 
 
@@ -72,42 +73,57 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
         # Because of using a single channel skim to find all our events
         # and some data sets don't do other channels well, we have 
         # to be able to override the channel
-        chanToUse = channel
-        if 'dataMM' in k or 'dataSingleM' in k : chanToUse = 'mmmt'
+        ''' today try getting info for all channels '''
+        if analysis == 'azh' : channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] # 8 Normal
+        else : channels = ['tt',]
+        
+        chanMap = {}
+        for channel in channels :
+            if skipChanDataCombo( channel, k, analysis ) :
+                chanInfoNtup = [-9, -9, -9, -9, 'N/A']
+            else :
 
-        # Get the Ntuple info that FSA created
-        eventCount = 0
-        summedWeights = 0
-        summedWeightsNorm = 0
-        if skimmed :
-            fileName = 'NtupleInputs_%s/skimmed/%s_%s.txt' % (analysis, k, chanToUse)
-        else :
-            fileName = 'NtupleInputs_%s/%s.txt' % (analysis, k)
-        inFiles = open( fileName, 'r')
-        numFiles = getNumberOfFiles( fileName )
-        try :
-            for fileName in inFiles :
-                eventCount += getEventCount( fileName.strip(), chanToUse )
-                w = getSummedWeights( fileName.strip(), chanToUse )
-                summedWeights += w[0]
-                summedWeightsNorm += w[1]
-        except AttributeError :
-            print "\nAttributeError, maybe channel is wrong: %s\n" % chanToUse
-            continue
-            inFiles.close()
-        inFiles.close()
+                # Get the Ntuple info that FSA created
+                eventCount = 0
+                summedWeights = 0
+                summedWeightsNorm = 0
+                if skimmed :
+                    fileName = 'NtupleInputs_%s/skimmed/%s_%s.txt' % (analysis, k, channel)
+                else :
+                    fileName = 'NtupleInputs_%s/%s.txt' % (analysis, k)
+                inFiles = open( fileName, 'r')
+                numFiles = getNumberOfFiles( fileName )
+                try :
+                    for fileName in inFiles :
+                        eventCount += getEventCount( fileName.strip(), channel )
+                        w = getSummedWeights( fileName.strip(), channel )
+                        summedWeights += w[0]
+                        summedWeightsNorm += w[1]
+                except AttributeError :
+                    print "\nAttributeError, maybe channel is wrong: %s\n" % channel
+                    chanInfoNtup = [-9, -9, -9, -9, 'N/A']
+                inFiles.close()
     
-        # Check that DAS and FSA events and file numbers match
-        status = "Error"
-        if infoDAS[0] == numFiles : status = "Files Match"
-        if infoDAS[2] == eventCount :
-            status = "Good to Go!"
-    
-        infoNtup = [numFiles, int(eventCount), summedWeights, summedWeightsNorm, status]
-        print infoNtup
+                # Check that DAS and FSA events and file numbers match
+                status = "Error"
+                if infoDAS[0] == numFiles : status = "Files Match"
+                if infoDAS[2] == eventCount :
+                    status = "Good to Go!"
+            
+            infoNtupMap = {
+                'nNtupleFiles' : numFiles,
+                'nEvents' : int(eventCount),
+                'summedWeights' : summedWeights,
+                'summedWeightsNorm' : summedWeightsNorm,
+                'STATUS' : status
+            }
+            print channel, infoNtupMap
+            chanMap[ channel ] = infoNtupMap
     
         # Append each samples info to our dictionary jDict
-        jDict[ k ] = {'DAS Path' : v['DASPath'], 'nfiles' : infoDAS[0], 'nblocks' : infoDAS[1], 'nevents' : infoDAS[2], 'nlumis' : infoDAS[3], 'DAS status' : infoDAS[4], 'nNtupleFiles' : infoNtup[0], 'nEvents' : infoNtup[1], 'summedWeights' : infoNtup[2], 'summedWeightsNorm' : infoNtup[3], 'STATUS' : infoNtup[4], 'Cross Section (pb)' : v['xsec'] }
+        jDict[ k ] = {'DAS Path' : v['DASPath'], 'nDASFiles' : infoDAS[0], 'nDASEvents' : infoDAS[2], 'nDASLumis' : infoDAS[3], 'DAS Status' : infoDAS[4], 'Cross Section (pb)' : v['xsec'] }
+        for channel in channels :
+            jDict[ k ][ channel ] = chanMap[ channel ]
     
     # Print the dictionary to a JSON file
     printJson( jDict, analysis )

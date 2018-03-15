@@ -22,23 +22,23 @@ print "Lumi = %i" % cmsLumi
 prodMap = getProdMap()
 
 #XXX XXX XXX FIXME so that this does N Jet binned correct once we have ReHLT
-def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
+def getXSec( analysis, shortName, sampDict, channel, numGenJets=0 ) :
     #print "Short Name: ",shortName," mini Name: ",shortName[:6]#shortName[:-7]
     assert( shortName in sampDict.keys() ), "Sample %s not in your meta samples.json" % shortName
     if shortName in ['DYJetsAMCNLO', 'DYJetsAMCNLOReHLT', 'DYJetsOld', 'DYJetsLow'] : # or shortName == 'DYJets' : # Uncomment last part to study relations between all 4
-        return cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+        return cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ][ channel ]['summedWeightsNorm'] )
     if 'data' in shortName : return 1.0 #XXX#
     jetBins = ['1', '2', '3', '4']
     try :
         if 'DYJets' == shortName or shortName[:6] == 'DYJets' :
         #if 'DYJets' in shortName :
-            scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ]['summedWeightsNorm'] # removing LO small DYJets
+            scalar1 = cmsLumi * sampDict[ 'DYJets' ]['Cross Section (pb)'] / sampDict[ 'DYJets' ][ channel ]['summedWeightsNorm'] # removing LO small DYJets
             #return scalar1 # FIXME
             #print "DYJets in shortName, scalar1 =",scalar1
         elif 'WJets' in shortName :
-            scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ]['summedWeightsNorm'] )
+            scalar1 = cmsLumi * ( sampDict[ 'WJets' ]['Cross Section (pb)'] / sampDict[ 'WJets' ][ channel ]['summedWeightsNorm'] )
         else :
-            scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+            scalar1 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ][ channel ]['summedWeightsNorm'] )
             #print "DYJets not in shortName, scalar1 =",scalar1
 
     except KeyError :
@@ -65,12 +65,12 @@ def getXSec( analysis, shortName, sampDict, numGenJets=0 ) :
         else :
             return scalar1
 
-        scalar2 = cmsLumi * sampDict[ shortName+binPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+binPartner ]['summedWeightsNorm'] )
+        scalar2 = cmsLumi * sampDict[ shortName+binPartner ]['Cross Section (pb)'] / ( sampDict[ shortName+binPartner ][ channel ]['summedWeightsNorm'] )
         return (1.0/( (1./scalar1) + (1./scalar2) ))
 
     # If exclusive sample
     if (('DYJets' in shortName) or ('WJets' in shortName)) and shortName[-1:] in jetBins :
-        scalar2 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ]['summedWeightsNorm'] )
+        scalar2 = cmsLumi * sampDict[ shortName ]['Cross Section (pb)'] / ( sampDict[ shortName ][ channel ]['summedWeightsNorm'] )
         #print "Scalar2 ",scalar2
         return (1.0/( (1./scalar1) + (1./scalar2) ))
         
@@ -342,7 +342,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     shortName = sample.split('_')[0]
 
-    xsec = getXSec( analysis, shortName, sampDict )
+    xsec = getXSec( analysis, shortName, sampDict, channel )
     print "\n Sampe: %s    shortName: %s    xsec: %f" % (sample, shortName, xsec)
 
     l1 = prodMap[channel][0]
@@ -1904,7 +1904,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                 # Special weighting for WJets and DYJets
                 if shortName in ['DYJets', 'WJets'] :
-                    xsec = getXSec( analysis, shortName, sampDict, row.numGenJets )
+                    xsec = getXSec( analysis, shortName, sampDict, channel, row.numGenJets )
                     if xsec not in xsecList : xsecList.append( xsec )
                     #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
                 # If not WJets or DYJets fill from xsec defined before
