@@ -1,3 +1,2 @@
-/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-D_0_emmt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-D_1_emmt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-D_2_emmt.root
+/data/truggles/zh_mar11v3_Merged/dataMM-D_0_emmt.root
+/data/truggles/zh_mar11v3_Merged/dataMM-D_1_emmt.root

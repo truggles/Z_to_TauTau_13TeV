@@ -1,4 +1,3 @@
-/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-B_0_mmtt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-B_1_mmtt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-B_2_mmtt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataMM-B_3_mmtt.root
+/data/truggles/zh_mar11v3_Merged/dataMM-B_0_mmtt.root
+/data/truggles/zh_mar11v3_Merged/dataMM-B_1_mmtt.root
+/data/truggles/zh_mar11v3_Merged/dataMM-B_2_mmtt.root

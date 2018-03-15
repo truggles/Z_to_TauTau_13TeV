@@ -1,5 +1,7 @@
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ_0_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ_1_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ_2_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ_3_eeet.root
-/data/truggles/zh_jan31_svFit_vNew_Merged/ttZ_4_eeet.root
+/data/truggles/zh_mar11v3_Merged/ttZ_0_eeet.root
+/data/truggles/zh_mar11v3_Merged/ttZ_1_eeet.root
+/data/truggles/zh_mar11v3_Merged/ttZ_2_eeet.root
+/data/truggles/zh_mar11v3_Merged/ttZ_3_eeet.root
+/data/truggles/zh_mar11v3_Merged/ttZ_4_eeet.root
+/data/truggles/zh_mar11v3_Merged/ttZ_5_eeet.root
+/data/truggles/zh_mar11v3_Merged/ttZ_6_eeet.root

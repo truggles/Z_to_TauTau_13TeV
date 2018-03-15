@@ -1,6 +1,1 @@
-/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_0_emmt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_1_emmt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_2_emmt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_3_emmt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_4_emmt.root
-/data/truggles/zhSVFit_Nov05_newData_azh/dataSingleM-H_5_emmt.root
+/data/truggles/zh_mar11v3_Merged/dataSingleM-H_0_emmt.root

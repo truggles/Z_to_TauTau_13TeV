@@ -1,0 +1,4 @@
+/data/truggles/zh_mar11v3_Merged/ttHJNonBB125_0_eett.root
+/data/truggles/zh_mar11v3_Merged/ttHJNonBB125_1_eett.root
+/data/truggles/zh_mar11v3_Merged/ttHJNonBB125_2_eett.root
+/data/truggles/zh_mar11v3_Merged/ttHJNonBB125_3_eett.root

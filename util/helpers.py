@@ -340,6 +340,7 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
             samples['dataSingleM-%s' % era]  = 'data_obs'
 
     for mass in ['110', '120', '125', '130', '140'] :
+        # *_htt
         if 'VBFHtoTauTau%s' % mass in inSamples :
             samples['VBFHtoTauTau%s' % mass] = 'qqH_htt%s' % mass
         if 'ggHtoTauTau%s' % mass in inSamples :
@@ -350,11 +351,31 @@ def dataCardGenMatchedSamples( analysis, inSamples ) :
             samples['WPlusHTauTau%s' % mass] = 'WH_htt%s' % mass
         if 'ZHTauTau%s' % mass in inSamples :
             samples['ZHTauTau%s' % mass] = 'ZH_htt%s' % mass
+
+        # *_hww
         if 'ZHWW%s' % mass in inSamples :
             samples['ZHWW%s' % mass] = 'ZH_hww%s' % mass
+        if 'WPlusHHWW%s' % mass in inSamples :
+            samples['WPlusHHWW%s' % mass] = 'WH_hww%s' % mass
+        if 'WMinusHHWW%s' % mass in inSamples :
+            samples['WMinusHHWW%s' % mass] = 'WH_hww%s' % mass
+        if 'VBFHtoWW2l2nu%s' % mass in inSamples :
+            samples['VBFHtoWW2l2nu%s' % mass] = 'qqH_hww%s' % mass
+        if 'HtoWW2l2nu%s' % mass in inSamples :
+            samples['HtoWW2l2nu%s' % mass] = 'ggH_hww%s' % mass
+
+        # *_hzz
         if 'HZZ%s' % mass in inSamples :
             samples['HZZ%s' % mass] = 'ggH_hzz%s' % mass
-    
+
+        # ttH production
+        if 'ttHTauTau%s' % mass in inSamples :
+            samples['ttHTauTau%s' % mass] = 'ttH_htt%s' % mass
+        if 'ttHNonBB%s' % mass in inSamples :
+            samples['ttHNonBB%s' % mass] = 'ttH_other%s' % mass
+        if 'ttHJNonBB%s' % mass in inSamples :
+            samples['ttHJNonBB%s' % mass] = 'ttH_otherJ%s' % mass
+
 
     return samples
 

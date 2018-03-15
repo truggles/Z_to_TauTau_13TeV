@@ -1,0 +1,2 @@
+/data/truggles/zh_mar11v3_Merged/HtoWW2l2nu125_0_mmtt.root
+/data/truggles/zh_mar11v3_Merged/VBFHtoWW2l2nu125_0_mmtt.root

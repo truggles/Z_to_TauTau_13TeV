@@ -19,7 +19,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
         print size, " KB ", file_
         runningSize += size
         toMerge.append( file_ )
-        if runningSize > 15000 : # 7.5 MB is reasonal for doing duplicate removal later
+        if runningSize > 30000 : # 7.5 MB is reasonal for doing duplicate removal later
             runningSize = 0
             mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
             for f in toMerge :
@@ -49,7 +49,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
 
 if __name__ == '__main__' :
     ''' Start multiprocessing tests '''
-    pool = multiprocessing.Pool(processes = 6 )
+    pool = multiprocessing.Pool(processes = 8 )
     multiprocessingOutputs = []
     debug = False
     doAZH = True
@@ -66,10 +66,17 @@ if __name__ == '__main__' :
             azhSamples.append('WMinusHTauTau%i' % mass)
             azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHTauTau%i' % mass)
-            #azhSamples.append('ttHTauTau%i' % mass)
         for mass in [125,] :
             azhSamples.append('ZHWW%i' % mass)
             azhSamples.append('HZZ%i' % mass)
+            azhSamples.append('ZHWW%i' % mass)
+            azhSamples.append('VBFHtoWW2l2nu%i' % mass)
+            azhSamples.append('WPlusHHWW%i' % mass)
+            azhSamples.append('WMinusHHWW%i' % mass)
+            azhSamples.append('HtoWW2l2nu%i' % mass)
+            azhSamples.append('ttHTauTau%i' % mass)
+            azhSamples.append('ttHJNonBB%i' % mass)
+            azhSamples.append('ttHNonBB%i' % mass)
         
         for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
             azhSamples.append('azh%i' % mass)
@@ -80,16 +87,19 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleE-%s' % era)
             azhSamples.append('dataSingleM-%s' % era)
 
-        azhSamples = ['ZZ4l',]
+        #azhSamples = ['DYJets',]
 
-        name = 'azhMar10LowerTrig'
+        name = 'zh_mar11v3'
         originalDir = '/nfs_scratch/truggles/'+name+'/'
         targetDir = '/nfs_scratch/truggles/'+name+'_Merged3'
+        jobId = ''
+        originalDir = '/data/truggles/'+name+'/'+name+'*/'
+        targetDir = '/data/truggles/'+name+'_Merged'
         checkDir( targetDir )
         jobId = 'TauTau_13*'
-        jobId = ''
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
-        channels = ['eeet',] # 8 + eeee + mmmm + eemm
+        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] # 8
+        #channels = ['eeet',] # 8 + eeee + mmmm + eemm
         for channel in channels :
             for sample in azhSamples :
                 if debug:

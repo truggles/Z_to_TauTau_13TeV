@@ -2,6 +2,7 @@
 ALL=/data/truggles/zh_jan31_svFit_v1_Merged
 ALL=/data/truggles/zh_jan31_svFit_vNew_Merged
 DATA=/data/truggles/zhSVFit_Nov05_newData_azh
+ALL=/data/truggles/zh_mar11v3_Merged
 
 echo ""
 echo "For svFit optimization ignore eeee and mmmm channels"
@@ -22,7 +23,7 @@ for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm; do
         done
     done
     for MASS in 125; do
-        for SAMPLE in ZHWW HZZ; do
+        for SAMPLE in ZHWW HZZ ZHWW VBFHtoWW2l2nu WPlusHHWW WMinusHHWW HtoWW2l2nu ttHTauTau ttHJNonBB ttHNonBB; do
             ls ${ALL}/*${SAMPLE}${MASS}_*_${CHANNEL}.root > skimmed/${SAMPLE}${MASS}_${CHANNEL}.txt
         done
     done
@@ -38,19 +39,19 @@ done
 #for CHANNEL in eeet eett eemt eeem eeee; do
 for CHANNEL in eeet eett eemt eeem; do
     for SAMPLE in dataEE-B dataEE-C dataEE-D dataEE-E dataEE-F dataEE-G dataEE-H; do
-        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
     for SAMPLE in dataSingleE-B dataSingleE-C dataSingleE-D dataSingleE-E dataSingleE-F dataSingleE-G dataSingleE-H; do
-        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 done
 #for CHANNEL in emmt mmtt mmmt emmm mmmm; do
 for CHANNEL in emmt mmtt mmmt emmm; do
     for SAMPLE in dataMM-B dataMM-C dataMM-D dataMM-E dataMM-F dataMM-G dataMM-H; do
-        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
     for SAMPLE in dataSingleM-B dataSingleM-C dataSingleM-D dataSingleM-E dataSingleM-F dataSingleM-G dataSingleM-H; do
-        ls ${DATA}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+        ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done
 done
 
