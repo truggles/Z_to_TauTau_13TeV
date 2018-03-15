@@ -56,8 +56,10 @@ eeTrig = 'doubleE_23_12Pass > 0'
 mmTrig = 'doubleMuPass > 0'
 
 mmTrigFilters = 'm1Pt > 18 && ( ( m2Pt > 10 && (m1MatchesDoubleMuFilter1 > 0.5 || m1MatchesDoubleMuFilter2 > 0.5 ) && (m2MatchesDoubleMuFilter1 > 0.5 || m2MatchesDoubleMuFilter2 > 0.5 ) ) || ( m1Pt > 25 && (m1MatchesIsoMu24Filter > 0.5 || m1MatchesIsoTkMu24Filter > 0.5 ) ) || ( m2Pt > 25 && (m2MatchesIsoMu24Filter > 0.5 || m2MatchesIsoTkMu24Filter > 0.5 ) ) )'
+#mmTrigFilters = 'm1Pt > 19 && ( ( m2Pt > 10 && (m1MatchesDoubleMuFilter1 > 0.5 || m1MatchesDoubleMuFilter2 > 0.5 ) && (m2MatchesDoubleMuFilter1 > 0.5 || m2MatchesDoubleMuFilter2 > 0.5 ) ) || ( m1Pt > 27 && (m1MatchesIsoMu24Filter > 0.5 || m1MatchesIsoTkMu24Filter > 0.5 ) ) || ( m2Pt > 27 && (m2MatchesIsoMu24Filter > 0.5 || m2MatchesIsoTkMu24Filter > 0.5 ) ) )'
 
 eeTrigFilters = 'e1Pt > 24 && ( (e2Pt > 13 && e1MatchesDoubleE23_12Filter > 0.5 && e2MatchesDoubleE23_12Filter > 0.5 ) || ( e1Pt > 28 && e1MatchesSingleETight27Filter > 0.5 ) || ( e2Pt > 28 && e2MatchesSingleETight27Filter > 0.5 ) )'
+#eeTrigFilters = 'e1Pt > 27.5 && e2Pt > 17.5 &&  ( (e1MatchesDoubleE23_12Filter > 0.5 && e2MatchesDoubleE23_12Filter > 0.5 ) || ( e1Pt > 32 && e1MatchesSingleETight27Filter > 0.5 ) || ( e2Pt > 32 && e2MatchesSingleETight27Filter > 0.5 ) )'
 
 
 eeetVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 == 0'

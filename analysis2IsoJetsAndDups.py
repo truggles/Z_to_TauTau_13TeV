@@ -776,10 +776,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     weightB = tnew.Branch('weight', weight, 'weight/F')
     zhTrigWeight = array('f', [ 0 ] )
     zhTrigWeightB = tnew.Branch('zhTrigWeight', zhTrigWeight, 'zhTrigWeight/F')
-    #zhTrigDataEff = array('f', [ 0 ] )
-    #zhTrigDataEffB = tnew.Branch('zhTrigDataEff', zhTrigDataEff, 'zhTrigDataEff/F')
-    #zhTrigMCEff = array('f', [ 0 ] )
-    #zhTrigMCEffB = tnew.Branch('zhTrigMCEff', zhTrigMCEff, 'zhTrigMCEff/F')
+    zhTrigDataEff = array('f', [ 0 ] )
+    zhTrigDataEffB = tnew.Branch('zhTrigDataEff', zhTrigDataEff, 'zhTrigDataEff/F')
+    zhTrigMCEff = array('f', [ 0 ] )
+    zhTrigMCEffB = tnew.Branch('zhTrigMCEff', zhTrigMCEff, 'zhTrigMCEff/F')
     azhWeight = array('f', [ 0 ] )
     azhWeightB = tnew.Branch('azhWeight', azhWeight, 'azhWeight/F')
     puweight = array('f', [ 0 ] )
@@ -1419,8 +1419,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             tauSF_4[0] = 1
             azhWeight[0] = 1
             zhTrigWeight[0] = 1
-            #zhTrigDataEff[0] = 1
-            #zhTrigMCEff[0] = 1
+            zhTrigDataEff[0] = 1
+            zhTrigMCEff[0] = 1
             puweight[0] = 1
             qqZZ4lWeight[0] = 1
             tauPtWeightUp[0] = 1
@@ -1569,8 +1569,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                 if 'data' not in sample :
                     zhTrigWeight[0] = zhSF.getZHTriggerSF( row.nvtx, pt1, eta1, pt2, eta2 )
-                    #zhTrigDataEff[0] = zhSF.getZHTriggerDataEff( row.nvtx, pt1, eta1, pt2, eta2 )
-                    #zhTrigMCEff[0] = zhSF.getZHTriggerMCEff( row.nvtx, pt1, eta1, pt2, eta2 )
+                    zhTrigDataEff[0] = zhSF.getZHTriggerDataEff( row.nvtx, pt1, eta1, pt2, eta2 )
+                    zhTrigMCEff[0] = zhSF.getZHTriggerMCEff( row.nvtx, pt1, eta1, pt2, eta2 )
 
 
 
