@@ -674,10 +674,13 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.Add( sampHistos['zz'] )
     
             # Scale signal samples for viewing
+            # Hardcoded originaly scaling where we scale the reweighted SM
+            # process to the default Powheg qqH sample
+            qqH_Scale = 22.9353 / 2.53718e-05
             sampHistos[ signalVH ].Scale( signalSF )
-            sampHistos[ signalqqH ].Scale( signalSF )
+            sampHistos[ signalqqH ].Scale( signalSF * qqH_Scale )
             sampHistos[ signalggH ].Scale( signalSF )
-            sampHistos[ signalqqH_bsm ].Scale( signalSF )
+            sampHistos[ signalqqH_bsm ].Scale( signalSF * qqH_Scale )
     
             ''' Print out yields for a given distribution '''
             #sensitivityVars = ['Higgs_Pt', 'pt_1', 'pt_2', 'mjj', 'jdeta', 'pt_sv']

@@ -144,7 +144,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -155,8 +155,6 @@ pt = '5040'
 sync = False
 #cleanPlots = False
 cleanPlots = True
-#isoVals = ['Tight', 'Medium', 'Loose',]
-#isoVals = ['Tight', 'Loose',]
 isoVals = ['Tight',]
 doFF = getenv('doFF', type=bool)
 
@@ -182,8 +180,8 @@ for remove in toRemove :
 if 'VBFHtoTauTau125' in samples.keys() and 'WPlusHTauTau125' in samples.keys() and 'ZHTauTau125' in samples.keys() :
     toAdd = ['HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
     for aHiggs in toAdd :
-        #samples[ 'VBF'+aHiggs ] = copy.deepcopy( samples['VBFHtoTauTau125'] )
-        #samples[ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'
+        samples[ 'VBF'+aHiggs ] = copy.deepcopy( samples['VBFHtoTauTau125'] )
+        samples[ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'
         samples[ 'W'+aHiggs ] = copy.deepcopy( samples['WPlusHTauTau125'] )
         samples[ 'W'+aHiggs ]['group'] = 'WH_aHTT'
         samples[ 'Z'+aHiggs ] = copy.deepcopy( samples['ZHTauTau125'] )
@@ -197,8 +195,7 @@ if 'VBFHtoTauTau125' in samples.keys() and 'WPlusHTauTau125' in samples.keys() a
 
 for isoVal in isoVals :
     if isoVal == 'Tight' : lIso = 'Loose'
-    #if isoVal == 'Medium' : lIso = 'Loose'
-    #if isoVal == 'Loose' : lIso = 'VLoose'
+    if isoVal == 'Medium' : lIso = 'Loose'
     samplesX = copy.deepcopy(samples)
     if runPlots :
         skipSSQCDDetails=True
