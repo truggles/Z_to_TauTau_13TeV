@@ -104,6 +104,12 @@ Fake Factors additions:
 Fake factors have been derived to estimate QCD, WJets and TTJets from data, initially for the MuTau channel, but are being tested in double hadronic channel.  Find documentations here: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
 
 # MELA Stuff
+This relies on CMS package ZZMatrixElement, for checkout instructions see:<BR>
+`https://twiki.cern.ch/twiki/bin/viewauth/CMS/MELAProject`<BR>
+and, other random MELA notes from Kansas State team:<BR>
+`https://twiki.cern.ch/twiki/bin/view/Main/AHVVforHTT#NTuples_with_all_the_FSA_variabl`
+
+For adding the MELA variables to the FSA Ntuples in the tautau channel see below<BR>
 You will need to update the file list in `MELA/anaHTT.C` to newest working files then:<BR>
 1 - `cp MELA/anaHTT.C ../ZZMatrixElement/MELA/test/anaHTT.C`<BR>
 2 - `cd ../ZZMatrixElement/MELA/test/`<BR>
