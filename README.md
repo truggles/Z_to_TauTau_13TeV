@@ -104,19 +104,20 @@ Fake Factors additions:
 Fake factors have been derived to estimate QCD, WJets and TTJets from data, initially for the MuTau channel, but are being tested in double hadronic channel.  Find documentations here: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauJet2TauFakes
 
 # MELA Stuff
-You will need to update the file list in MELA/anaHTT.C to newest working files
-cp MELA/anaHTT.C ../ZZMatrixElement/MELA/test/anaHTT.C
-cd ../ZZMatrixElement/MELA/test/
-mkdir mela
-root -l loadMELA.C
-IN ROOT CINT: root [1] .L anaHTT.C+
-IN ROOT CINT: root [2] runAll()
+You will need to update the file list in `MELA/anaHTT.C` to newest working files then:
+1 - `cp MELA/anaHTT.C ../ZZMatrixElement/MELA/test/anaHTT.C`<BR>
+2 - `cd ../ZZMatrixElement/MELA/test/`<BR>
+3 - `mkdir mela`<BR>
+4 - `root -l loadMELA.C`<BR>
+5 - IN ROOT CINT: root [1] `.L anaHTT.C+`<BR>
+6 - IN ROOT CINT: root [2] `runAll()`<BR>
 
 
 Other aHTT notes: To produce the interferance terms between SM and BSM, after making DCs, you need to run:
 ```
 python util/addInterferenceTermAnomHTT.py
 ```
+As of 18, Mar 2018, Senka has been adding the interferance terms so this part is not needed.
 
 # Current Status
 Added MELA vars and anomalous higgs reweighting variables to samples in meta/..skimmed...
