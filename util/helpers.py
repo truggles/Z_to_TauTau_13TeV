@@ -12,7 +12,7 @@ def checkDir( dirName ) :
 
 
 # Function to create TH1Fs from TGraphAsymmErrors
-def getTH1FfromTGraphAsymmErrors( asym, name ) :
+def getTH1FfromTGraphAsymmErrors( asym, name='new_asym' ) :
 
     # Holding vals for TH1F binning and y-vals
     xSpacing = array( 'd', [] )
@@ -196,6 +196,7 @@ def unroll2D( hist, name='' ) :
     binArray = array( 'd', [i for i in range( nBins+1 )] )
     numBins = len( binArray ) - 1
     hNew = ROOT.TH1D( hist.GetName()+name, hist.GetTitle()+name, numBins, binArray )
+    hNew.Sumw2()
     for i in range(1, nBinsY+1) :
         for j in range(1, nBinsX+1) :
             #print "i %i j %i set bin %i" % (i, j, j+(i-1)*nBinsX)
