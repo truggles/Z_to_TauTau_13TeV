@@ -331,13 +331,6 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #print "Hist yield before scaling ",hist.Integral()
     
 
-                """ Scale reducible bkg shape by yield estimate """
-                if ops['redBkg'] and 'RedBkgShape' in sample :
-                    redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, var)).Integral()
-                    if hist.Integral() != 0 :
-                        hist.Scale( redBkgYield / hist.Integral() )
-    
-    
                 ''' Scale Histo based on cross section ( 1000 is for 1 fb^-1 of data ),
                 QCD gets special scaling from bkg estimation, see qcdYield[channel] above for details '''
                 #print "PRE Sample: %s      Int: %f" % (sample, hist.Integral() )
@@ -367,6 +360,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     #print binArray
                 else :
                     hNew = hist.Rebin( numBins, "new%s" % sample, binArray )
+
+                """ Scale reducible bkg shape by yield estimate """
+                if ops['redBkg'] and 'RedBkgShape' in sample :
+                    redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, var)).Integral()
+                    if hNew.Integral() != 0 :
+                        hNew.Scale( redBkgYield / hNew.Integral() )
 
                 # If using the qcd CR, we want a single bin for all
                 if '_qcd_cr' in ops['category'] :
@@ -464,11 +463,17 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                     # Apply correction and set an empyt bin to QCD = 1e-5
                     if sampToCheck in histos.keys() :
-                        for problemBin in problemBins :
-                            print "Setting QCD bin_id %i to %s" % (problemBin, setVal)
-                            histos[ sampToCheck ].SetBinContent( problemBin, setVal )
-                            # Poissonian error for 0
-                            histos[ sampToCheck ].SetBinError( problemBin, avgW*1.8 )
+                        #for problemBin in problemBins :
+                        #    print "Setting QCD bin_id %i to %s" % (problemBin, setVal)
+                        #    histos[ sampToCheck ].SetBinContent( problemBin, setVal )
+                        #    # Poissonian error for 0
+                        #    histos[ sampToCheck ].SetBinError( problemBin, avgW*1.8 )
+                        for bin_id in range( 1, histos[ 'data_obs' ].GetNbinsX()+1 ) :
+                            if histos[ sampToCheck ].GetBinContent( bin_id ) <= 0.0 :
+                                print "Setting allFakes bin_id %i to %s" % (bin_id, setVal)
+                                histos[ sampToCheck ].SetBinContent( bin_id, setVal )
+                                # Poissonian error for 0
+                                histos[ sampToCheck ].SetBinError( bin_id, avgW*1.8 )
                     elif len(problemBins) > 0 : 
                         print "\nQCD Bkg not included so zero bins are not being corrected properly"
                         print problemBins
