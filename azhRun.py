@@ -88,22 +88,22 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 10,
+    'numCores' : 16,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eett','mmtt'],
     #'channels' : ['eeet','mmmt'],
-    #'channels' : ['eeet',],
+    #'channels' : ['eeem',],
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
     'mid1' : '1Feb01svFitted',
     'mid2' : '2Feb01svFitted',
     'mid3' : '3Feb01svFitted',
-    'mid1' : '1Feb15noRawCutData',
-    'mid2' : '2Feb15noRawCutData',
-    'mid3' : '3Feb15noRawCutData',
+    'mid1' : '1March15newTrig2',
+    'mid2' : '2March15newTrig2',
+    'mid3' : '3March15newTrig2',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -142,8 +142,8 @@ doDataCards = True
 
 runPlots = False
 doMerge = False
-makeFinalPlots = False
-#doDataCards = False
+#makeFinalPlots = False
+doDataCards = False
 
 
 doZH = True
@@ -245,9 +245,9 @@ if makeFinalPlots :
     text=False
     #text=True
     blind = True
-    #blind = False
+    blind = False
     fullBlind = True
-    #fullBlind = False
+    fullBlind = False
     kwargs = { 'text':text, 'blind':blind, 'fullBlind' : fullBlind, 'redBkg':useRedBkg }
     print params
 

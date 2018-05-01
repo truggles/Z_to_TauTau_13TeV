@@ -1021,7 +1021,7 @@ def getHistoDict( analysis, channel ) :
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
-            'LT_higgs' : [200, 0, 200, 5, 'LT_{higgs} [GeV]', ' GeV'],
+            'LT_higgs' : [200, 0, 200, 10, 'LT_{higgs} [GeV]', ' GeV'],
             'LT_higgs:m_sv' : [20, 0, 20, 1, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'H_PZeta' : [600, -200, 400, 20, 'PZeta_{higgs} [GeV]', ' GeV'],
 #            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
