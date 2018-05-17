@@ -117,7 +117,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     mssmSF = 100
     higgsSF = 10.0
     if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
-    azhSF = .025
+    azhSF = .005
     
 
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
@@ -172,7 +172,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'redBkg' : [ROOT.kCyan, 'Jet Fakes'],
         'higgs' : [ROOT.kRed-4, 'SM HZZ (125)'],
         'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
-        'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3fpb' % (azhMass, azhSF)],
+        'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3ffb' % (azhMass, azhSF*1000)],
         } # azh
     } # sampInfo
     if not ops['mssm'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %.1f" % higgsSF
@@ -183,11 +183,11 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         signal = 'higgs'
         signalSF = higgsSF
     if analysis == 'azh' : 
-        #signal = 'azh'
-        #signalSF = azhSF
-        signal = 'VH'
-        signalSF = higgsSF
-        sampInfo['azh']['VH'][1] = "SM VHiggs(125) x %.1f" % higgsSF
+        signal = 'azh'
+        signalSF = azhSF
+        #signal = 'VH'
+        #signalSF = higgsSF
+        #sampInfo['azh']['VH'][1] = "SM VHiggs(125) x %.1f" % higgsSF
     if doFF :
         sampInfo['htt']['jetFakes'] = [ROOT.TColor.GetColor(250,202,255), 'jetFakes'] #kMagenta-10
         del sampInfo['htt']['qcd']
@@ -330,7 +330,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
                     sampHistos[samp].SetDirectory( 0 )
                 #sampHistos[ signal ].SetLineColor( ROOT.kPink )
-                sampHistos[ signal ].SetLineColor( ROOT.kMagenta+2 )
+                #sampHistos[ signal ].SetLineColor( ROOT.kMagenta+2 )
+                sampHistos[ signal ].SetLineColor( ROOT.kRed )
                 sampHistos[ signal ].SetLineWidth( 4 )
                 sampHistos[ signal ].SetLineStyle( 7 )
                 sampHistos[ signal ].SetMarkerStyle( 0 )
@@ -354,7 +355,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     sampHistos[samp].SetLineWidth( 2 )
                     sampHistos[samp].SetTitle( sampInfo[analysis][samp][1] )
                     sampHistos[samp].SetDirectory( 0 )
-                sampHistos[ signal ].SetLineColor( ROOT.kMagenta+2 )
+                #sampHistos[ signal ].SetLineColor( ROOT.kMagenta+2 )
+                sampHistos[ signal ].SetLineColor( ROOT.kRed )
                 sampHistos[ signal ].SetLineWidth( 4 )
                 sampHistos[ signal ].SetLineStyle( 7 )
                 sampHistos[ signal ].SetMarkerStyle( 0 )
@@ -792,7 +794,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Set CMS Styles Stuff
             logo = ROOT.TText(.2, .88,"CMS Preliminary")
             logo.SetTextSize(0.03)
-            logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+            #logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+            logo.DrawTextNDC(.2, .89,"Ruggles Thesis")
     
             chan = ROOT.TLatex(.2, .80,"x")
             chan.SetTextSize(0.05)
@@ -918,6 +921,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['blind'] and not 'plotMe' in ops['qcdMakeDM'] :
                 blindEpsilon = 0.01
                 if analysis == 'azh' :
+                    if 'Mass' in var : inputThreshold = 0.0
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( 1, nBins+1 ) :
                         # Should take max of SM OR MSSM, FIXME

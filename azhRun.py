@@ -39,8 +39,8 @@ os.chdir('..')
 ''' Preset samples '''
 azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # No ttZ2
 
-for mass in [110, 120, 125, 130, 140] :
-#for mass in [125,] :
+#for mass in [110, 120, 125, 130, 140] :
+for mass in [125,] :
     azhSamples.append('ggHtoTauTau%i' % mass)
     azhSamples.append('VBFHtoTauTau%i' % mass)
     azhSamples.append('WMinusHTauTau%i' % mass)
@@ -66,8 +66,9 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
     azhSamples.append('dataSingleM-%s' % era)
 
 #azhSamples = []
-#for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-#    azhSamples.append('azh%i' % mass)
+for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+#for mass in [300,] :
+    azhSamples.append('azh%i' % mass)
 
     
 #azhSamples = ['ZHWW125','HZZ125']
@@ -98,9 +99,6 @@ params = {
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
-    'mid1' : '1Feb01svFitted',
-    'mid2' : '2Feb01svFitted',
-    'mid3' : '3Feb01svFitted',
     'mid1' : '1March15newTrig2',
     'mid2' : '2March15newTrig2',
     'mid3' : '3March15newTrig2',
@@ -140,14 +138,14 @@ makeFinalPlots = True
 doDataCards = True
 
 
-runPlots = False
-doMerge = False
-#makeFinalPlots = False
-doDataCards = False
+#runPlots = False
+#doMerge = False
+makeFinalPlots = False
+#doDataCards = False
 
 
 doZH = True
-#doZH = False
+doZH = False
 useRedBkg = True
 #useRedBkg = False
 
@@ -288,7 +286,10 @@ if doDataCards :
             
     #for var in ['m_sv', 'A_Mass', 'Mass'] :
     #for var in ['m_sv','LT_higgs:m_sv'] :# 'A_Mass', 'Mass'] :
-    for var in ['LT_higgs:m_sv',] :# 'A_Mass', 'Mass'] :
+    #for var in ['LT_higgs:m_sv',] :# 'A_Mass', 'Mass'] :
+    if doZH : dcVars = ['LT_higgs:m_sv',]
+    else : dcVars = ['Mass',] # 'A_Mass',]
+    for var in dcVars :
         if var == 'A_Mass' : doZH = False
         if var == 'Mass' : doZH = False
         finalCat = 'inclusive'
@@ -304,12 +305,14 @@ if doDataCards :
         }
         makeDataCards( analysis, samplesX, useChannels, folderDetails, **kwargs )
     extra = 'mssm'
-    #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
-    #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
-    subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass.root", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"] )
-    #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
-    #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
-    print "moved to : shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"
+    if doZH :
+        subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass.root", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"] )
+        print "moved to : shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"
+    else :
+        subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
+        print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
+        #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
+        #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
 
 
 
