@@ -37,12 +37,13 @@ os.chdir('..')
 
 
 ''' Preset samples '''
-azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # No ttZ2
+#azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # No ttZ2
+azhSamples = ['ttZ', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'ZZ4l', 'ZZZ',] # No ttZ2
 
 #for mass in [110, 120, 125, 130, 140] :
 for mass in [125,] :
-    azhSamples.append('ggHtoTauTau%i' % mass)
-    azhSamples.append('VBFHtoTauTau%i' % mass)
+    #azhSamples.append('ggHtoTauTau%i' % mass)
+    #azhSamples.append('VBFHtoTauTau%i' % mass)
     azhSamples.append('WMinusHTauTau%i' % mass)
     azhSamples.append('WPlusHTauTau%i' % mass)
     azhSamples.append('ZHTauTau%i' % mass)
@@ -54,9 +55,9 @@ for mass in [125,] :
     azhSamples.append('WPlusHHWW%i' % mass)
     azhSamples.append('WMinusHHWW%i' % mass)
     azhSamples.append('HtoWW2l2nu%i' % mass)
-    azhSamples.append('ttHTauTau%i' % mass)
-    azhSamples.append('ttHJNonBB%i' % mass)
-    azhSamples.append('ttHNonBB%i' % mass)
+    #azhSamples.append('ttHTauTau%i' % mass)
+    #azhSamples.append('ttHJNonBB%i' % mass)
+    #azhSamples.append('ttHNonBB%i' % mass)
 
 #azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
@@ -288,7 +289,7 @@ if doDataCards :
     #for var in ['m_sv','LT_higgs:m_sv'] :# 'A_Mass', 'Mass'] :
     #for var in ['LT_higgs:m_sv',] :# 'A_Mass', 'Mass'] :
     if doZH : dcVars = ['LT_higgs:m_sv',]
-    else : dcVars = ['Mass',] # 'A_Mass',]
+    else : dcVars = ['Mass', 'A_Mass',]
     for var in dcVars :
         if var == 'A_Mass' : doZH = False
         if var == 'Mass' : doZH = False
@@ -311,8 +312,8 @@ if doDataCards :
     else :
         subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
         print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
-        #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
-        #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
+        subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
+        print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
 
 
 
