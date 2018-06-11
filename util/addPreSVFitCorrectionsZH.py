@@ -57,9 +57,9 @@ def correctTauPt( lep, pt, gen_match, decay_mode ) :
     if 't' not in lep : return pt
     
     if gen_match == 5 : # Real Tau, use 2016 shift measurements
-        if decay_mode == 0 : return pt * (1. - 0.018)
-        if decay_mode == 1 : return pt * (1. + 0.010)
-        if decay_mode == 10 : return pt * (1. + 0.004)
+        if decay_mode == 0 : return pt * (1. - 0.005)
+        if decay_mode == 1 : return pt * (1. + 0.011)
+        if decay_mode == 10 : return pt * (1. + 0.006)
         return pt
 
     if gen_match == 2 or gen_match == 4 :
