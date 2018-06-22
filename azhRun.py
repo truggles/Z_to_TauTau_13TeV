@@ -27,13 +27,13 @@ print "zHome: ",zHome
 
 
 ''' Uncomment to make out starting JSON file of meta data! '''
-from meta.makeMeta import makeMetaJSON
-os.chdir('meta')
+#from meta.makeMeta import makeMetaJSON
+#os.chdir('meta')
 ### General samples.json file from /data/truggles files
 #makeMetaJSON( analysis, 'eeet' )
 ### samples.json for post /hdfs skim -> uwlogin samples
 #makeMetaJSON( analysis, 'eeet', skimmed=True )
-os.chdir('..')
+#os.chdir('..')
 
 
 ''' Preset samples '''
@@ -55,9 +55,9 @@ for mass in [125,] :
     azhSamples.append('WPlusHHWW%i' % mass)
     azhSamples.append('WMinusHHWW%i' % mass)
     azhSamples.append('HtoWW2l2nu%i' % mass)
-    #azhSamples.append('ttHTauTau%i' % mass)
-    #azhSamples.append('ttHJNonBB%i' % mass)
-    #azhSamples.append('ttHNonBB%i' % mass)
+    azhSamples.append('ttHTauTau%i' % mass)
+    azhSamples.append('ttHJNonBB%i' % mass)
+    azhSamples.append('ttHNonBB%i' % mass)
 
 #azhSamples = []
 for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
@@ -90,7 +90,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 16,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
@@ -100,17 +100,17 @@ params = {
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
-    'mid1' : '1March15newTrig2',
-    'mid2' : '2March15newTrig2',
-    'mid3' : '3March15newTrig2',
+    'mid1' : '1June19AZH',
+    'mid2' : '2June19AZH',
+    'mid3' : '3June19AZH',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimmed' : 'false',
-    'skimmed' : 'true', # Use at uwlogin
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true', # Use for initial skim
+    'skimmed' : 'false',
+    #'skimmed' : 'true', # Use at uwlogin
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true', # Use for initial skim
 
     ### Signal Sync
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',], # 8
@@ -139,10 +139,10 @@ makeFinalPlots = True
 doDataCards = True
 
 
-#runPlots = False
-#doMerge = False
+runPlots = False
+doMerge = False
 makeFinalPlots = False
-#doDataCards = False
+doDataCards = False
 
 
 doZH = True

@@ -267,15 +267,16 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleE-%s' % era)
             azhSamples.append('dataSingleM-%s' % era)
 
-        #azhSamples = ['DYJets1',]
+        azhSamples = ['azh300',]
 
-        name = 'azhJan26EnergyScales'
-        inDir = '/nfs_scratch/truggles/'+name+'_svFitPrep/'
+        name = 'azhJune19AZH_test'
+        #inDir = '/nfs_scratch/truggles/'+name+'_svFitPrep/'
+        inDir = '/nfs_scratch/truggles/'+name+'/'
         #name = 'svFitTmp'
         #inDir = '/data/truggles/'+name+'/'
         checkDir( inDir )
         jobId = ''
-        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 10
+        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',] # 8
         #channels = ['mmtt',] # 10
         for channel in channels :
             ttreePath = channel+'/final/Ntuple'
