@@ -61,19 +61,19 @@ SamplesDataCards.append('HtoWW2l2nu125')
 SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
-#SamplesDataCards = []
+SamplesDataCards = []
 for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
     SamplesDataCards.append( 'W'+aHiggs )
     SamplesDataCards.append( 'Z'+aHiggs )
-#SamplesDataCards = []
-SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
-SamplesDataCards.append('ggHtoTauTau0M125')
-SamplesDataCards.append('ggHtoTauTau0PM125')
-    
-#SamplesDataCards = []
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-    SamplesDataCards.append('dataTT-%s' % era)
+##SamplesDataCards = []
+#SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
+#SamplesDataCards.append('ggHtoTauTau0M125')
+#SamplesDataCards.append('ggHtoTauTau0PM125')
+#    
+##SamplesDataCards = []
+#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+#    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
@@ -104,19 +104,19 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1Jan07NewMela',
-    'mid2' : '2Jan07NewMela',
-    'mid3' : '3Jan07NewMela',
+    'mid1' : '1June22aHTTSigs',
+    'mid2' : '2June22aHTTSigs',
+    'mid3' : '3June22aHTTSigs',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true', # This means "do the hdfs skim"
-    #'skimmed' : 'false',
-    'skimmed' : 'true',
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true', # This means "do the hdfs skim"
+    'skimmed' : 'false',
+    #'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -125,7 +125,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 

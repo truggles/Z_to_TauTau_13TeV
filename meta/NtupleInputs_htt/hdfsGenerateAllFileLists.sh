@@ -3,7 +3,7 @@ DATA=/hdfs/store/user/caillol/SMHTT_reminiaod_feb14
 ALL=/hdfs/store/user/caillol/SMHTT_mc_feb13
 SIGNALS=/hdfs/store/user/truggles/SMHTT_signals_may30
 #aHTT=/hdfs/store/user/truggles/aHTT_signals_july11_v3
-aHTT=/hdfs/store/user/truggles/aHTT_signals_aug16
+aHTT=/hdfs/store/user/truggles/aHTT_signals_sept04
 aHTT_ggH=/hdfs/store/user/truggles/aHTT_signals_ggH_nov11
 
 #ls ${DATA}/data_Tau_Run2016B*/*.root                                            		 > hdfs/dataTT-B.txt 
