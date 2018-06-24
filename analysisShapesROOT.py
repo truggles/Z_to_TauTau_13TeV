@@ -279,8 +279,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 ''' Skip plotting unused shape systematics '''
                 if skipSystShapeVar( var, sample, channel ) : continue
                 if skipDCPVar( var, sample ) : continue
-                if '_topPt' in var : print "Top Pt still in Var: "+var+" sample: "+sample
-                if 'ggH' in var : print "ggH still in Var: "+var+" sample: "+sample+" name: "+samples[sample]
+                #if '_topPt' in var : print "Top Pt still in Var: "+var+" sample: "+sample
+                #if 'ggH' in var : print "ggH still in Var: "+var+" sample: "+sample+" name: "+samples[sample]
     
                 # Skip looping over nonsense channel / sample combos
                 if skipChanDataCombo( channel, sample, analysis ) : continue
