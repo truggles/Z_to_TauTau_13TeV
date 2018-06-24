@@ -144,7 +144,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-makeDataCards = False
+#makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -289,38 +289,51 @@ for isoVal in isoVals :
         'm_sv',
         '%s:m_sv' % higgsPt,
         'mjj:m_sv',
-        'mjj:m_sv:melaDCP_DCP_neg1to0',
-        'mjj:m_sv:melaDCP_DCP_0to1',
 
-        'mjj:m_sv:melaD0minus_D0_0to0p2',
-        'mjj:m_sv:melaD0minus_D0_0p2to0p4',
-        'mjj:m_sv:melaD0minus_D0_0p4to0p8',
-        'mjj:m_sv:melaD0minus_D0_0p8to1',
+        # For ggH study only
+        'mjj:m_sv:melaDPhijj_DPhijj_0toPiOver4',
+        'mjj:m_sv:melaDPhijj_DPhijj_piOver4toPiOver2',
+        'mjj:m_sv:melaDPhijj_DPhijj_piOver2to3PiOver4',
+        'mjj:m_sv:melaDPhijj_DPhijj_3PiOver4toPi',
 
-        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
-        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
-        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
-        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
+        # For ggH study only
+        'mjj:m_sv:melaD0minusggH_D0_0to0p25',
+        'mjj:m_sv:melaD0minusggH_D0_0p25to0p5',
+        'mjj:m_sv:melaD0minusggH_D0_0p5to0p75',
+        'mjj:m_sv:melaD0minusggH_D0_0p75to1',
 
-        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
-        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
-        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
-        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
+        #'mjj:m_sv:melaDCP_DCP_neg1to0',
+        #'mjj:m_sv:melaDCP_DCP_0to1',
 
-        'mjj:m_sv:melaDL1_DL1_0to0p2',
-        'mjj:m_sv:melaDL1_DL1_0p2to0p4',
-        'mjj:m_sv:melaDL1_DL1_0p4to0p8',
-        'mjj:m_sv:melaDL1_DL1_0p8to1',
+        #'mjj:m_sv:melaD0minus_D0_0to0p2',
+        #'mjj:m_sv:melaD0minus_D0_0p2to0p4',
+        #'mjj:m_sv:melaD0minus_D0_0p4to0p8',
+        #'mjj:m_sv:melaD0minus_D0_0p8to1',
 
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+        #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
+        #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
+        #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
+        #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
 
-        'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
-        'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
-        'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
-        'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
+        #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
+        #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
+        #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
+        #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
+
+        #'mjj:m_sv:melaDL1_DL1_0to0p2',
+        #'mjj:m_sv:melaDL1_DL1_0p2to0p4',
+        #'mjj:m_sv:melaDL1_DL1_0p4to0p8',
+        #'mjj:m_sv:melaDL1_DL1_0p8to1',
+
+        #'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
+        #'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
+        #'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
+        #'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+
+        #'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
+        #'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
+        #'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
+        #'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
         ]
         for cat in cats :
             for var in vars :

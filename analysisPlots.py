@@ -595,6 +595,15 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
                 additionalCutToUse += '*(melaDCP <= 0)'
             if 'melaDCP_DCP_0to1' in var :
                 additionalCutToUse += '*(melaDCP > 0)'
+        elif 'melaD0minusggH' in var :
+            if 'melaD0minusggH_D0_0to0p25' in var : 
+                additionalCutToUse += '*(melaD0minusggH < .25)'
+            elif 'melaD0minusggH_D0_0p25to0p5' in var :
+                additionalCutToUse += '*(melaD0minusggH >= 0.25 && melaD0minusggH < .5)'
+            elif 'melaD0minusggH_D0_0p5to0p75' in var :
+                additionalCutToUse += '*(melaD0minusggH >= 0.5 && melaD0minusggH < .75)'
+            elif 'melaD0minusggH_D0_0p75to1' in var : 
+                additionalCutToUse += '*(melaD0minusggH >= 0.75)'
         elif 'melaD0minus' in var :
             if 'melaD0minus_D0_0to0p2' in var : 
                 additionalCutToUse += '*(melaD0minus < .2)'
@@ -632,14 +641,14 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             elif 'melaDL1_DL1_0p8to1' in var : 
                 additionalCutToUse += '*(melaDL1 >= 0.8)'
         elif 'melaDPhijj' in var :
-            if 'melaDPhijj_DPhijj_neg4toNeg1p25' in var : 
-                additionalCutToUse += '*(melaDPhijj < -1.25)'
-            elif 'melaDPhijj_DPhijj_neg1p25to0' in var :
-                additionalCutToUse += '*(melaDPhijj >= -1.25 && melaDPhijj < 0.)'
-            elif 'melaDPhijj_DPhijj_0to1p25' in var :
-                additionalCutToUse += '*(melaDPhijj >= 0. && melaDPhijj < 1.25)'
-            elif 'melaDPhijj_DPhijj_1p25to4' in var : 
-                additionalCutToUse += '*(melaDPhijj >= 1.25)'
+            if 'melaDPhijj_DPhijj_0toPiOver4' in var : 
+                additionalCutToUse += '*(abs(melaDPhijj) < TMath::PiOver4())'
+            elif 'melaDPhijj_DPhijj_piOver4toPiOver2' in var :
+                additionalCutToUse += '*(abs(melaDPhijj) >= TMath::PiOver4() && abs(melaDPhijj) < TMath::PiOver2())'
+            elif 'melaDPhijj_DPhijj_piOver2to3PiOver4' in var :
+                additionalCutToUse += '*(abs(melaDPhijj) >= TMath::PiOver2() && abs(melaDPhijj) < (3*TMath::PiOver4()) )'
+            elif 'melaDPhijj_DPhijj_3PiOver4toPi' in var : 
+                additionalCutToUse += '*(abs(melaDPhijj) >= (3*TMath::PiOver4()) )'
 
         # Add MELA cuts
         # Secondary variables second: DCP portion
@@ -680,6 +689,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             plotVar = plotVar.replace( ':melaD0minus_D0_0p2to0p4', '' )
             plotVar = plotVar.replace( ':melaD0minus_D0_0p4to0p8', '' )
             plotVar = plotVar.replace( ':melaD0minus_D0_0p8to1', '' )
+            plotVar = plotVar.replace( ':melaD0minusggH_D0_0to0p25', '' )
+            plotVar = plotVar.replace( ':melaD0minusggH_D0_0p25to0p5', '' )
+            plotVar = plotVar.replace( ':melaD0minusggH_D0_0p5to0p75', '' )
+            plotVar = plotVar.replace( ':melaD0minusggH_D0_0p75to1', '' )
             plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0to0p2', '' )
             plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p2to0p4', '' )
             plotVar = plotVar.replace( ':melaD0hplus_D0hplus_0p4to0p8', '' )
@@ -692,10 +705,10 @@ def plotHistosProof( analysis, outFile, chain, sample, channel, isData, addition
             plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p2to0p4', '' )
             plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p4to0p8', '' )
             plotVar = plotVar.replace( ':melaDL1Zg_DL1Zg_0p8to1', '' )
-            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_neg4toNeg1p25', '' )
-            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_neg1p25to0', '' )
-            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_0to1p25', '' )
-            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_1p25to4', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_0toPiOver4', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_piOver4toPiOver2', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_piOver2to3PiOver4', '' )
+            plotVar = plotVar.replace( ':melaDPhijj_DPhijj_3PiOver4toPi', '' )
             plotVar = plotVar.replace( '_DCPp', '' )
             plotVar = plotVar.replace( '_DCPm', '' )
         #plotVar = plotVar.replace( '_mjj0-300', '' )
@@ -935,44 +948,50 @@ def getHistoDict( analysis, channel ) :
             'm_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'mjj:m_sv' : [300, 0, 300, 10, 'M_{#tau#tau} [GeV]', ' GeV'],
 #
-            'mjj:m_sv:melaD0minus_D0_0to0p2' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p8to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0to0p2' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p2to0p4' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p4to0p8' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p8to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp' : [300, 0, 300, 10, 'melaD0minus_DCPp', ' GeV'],
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
-            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
+            ###'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm' : [300, 0, 300, 10, 'melaD0minus_DCPm', ' GeV'],
 
-            #'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
-            'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            ####'mjj:m_sv:melaDCP' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            ###'mjj:m_sv:melaDCP_DCP_neg1to0' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
+            ###'mjj:m_sv:melaDCP_DCP_0to1' : [300, 0, 300, 10, 'melaD0minus', ' GeV'],
 
-            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
-            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
-            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
-            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0to0p2' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0p8to1' : [300, 0, 300, 10, 'melaD0hplus', ' GeV'],
 
-            'mjj:m_sv:melaDL1_DL1_0to0p2' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
-            'mjj:m_sv:melaDL1_DL1_0p2to0p4' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
-            'mjj:m_sv:melaDL1_DL1_0p4to0p8' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
-            'mjj:m_sv:melaDL1_DL1_0p8to1' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            ###'mjj:m_sv:melaDL1_DL1_0to0p2' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            ###'mjj:m_sv:melaDL1_DL1_0p2to0p4' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            ###'mjj:m_sv:melaDL1_DL1_0p4to0p8' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
+            ###'mjj:m_sv:melaDL1_DL1_0p8to1' : [300, 0, 300, 10, 'melaDL1', ' GeV'],
 
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1' : [300, 0, 300, 10, 'melaDL1Zg', ' GeV'],
 
-#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
-#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
-#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_0to1p25' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
-#            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_1p25to4' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            # For ggH studies
+            'mjj:m_sv:melaDPhijj_DPhijj_0toPiOver4' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            'mjj:m_sv:melaDPhijj_DPhijj_piOver4toPiOver2' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            'mjj:m_sv:melaDPhijj_DPhijj_piOver2to3PiOver4' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+            'mjj:m_sv:melaDPhijj_DPhijj_3PiOver4toPi' : [300, 0, 300, 10, 'melaDPhijj', ' GeV'],
+
+            'mjj:m_sv:melaD0minusggH_D0_0to0p25' : [300, 0, 300, 10, 'melaD0minusggH', ' GeV'],
+            'mjj:m_sv:melaD0minusggH_D0_0p25to0p5' : [300, 0, 300, 10, 'melaD0minusggH', ' GeV'],
+            'mjj:m_sv:melaD0minusggH_D0_0p5to0p75' : [300, 0, 300, 10, 'melaD0minusggH', ' GeV'],
+            'mjj:m_sv:melaD0minusggH_D0_0p75to1' : [300, 0, 300, 10, 'melaD0minusggH', ' GeV'],
 
 
             #XXX'melaDCP' : [220, -1.1, 1.1, 20, 'DCP', ' GeV'],
@@ -1033,43 +1052,48 @@ def getHistoDict( analysis, channel ) :
             'm_sv',
             'Higgs_PtCor:m_sv',
 
-            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg4toNeg1p25',
-            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_neg1p25to0',
-            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_0to1p25',
-            #XXX#'mjj:m_sv:melaDPhijj_DPhijj_1p25to4',
+            'mjj:m_sv:melaDPhijj_DPhijj_0toPiOver4',
+            'mjj:m_sv:melaDPhijj_DPhijj_piOver4toPiOver2',
+            'mjj:m_sv:melaDPhijj_DPhijj_piOver2to3PiOver4',
+            'mjj:m_sv:melaDPhijj_DPhijj_3PiOver4toPi',
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2',
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4',
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8',
-            'mjj:m_sv:melaD0minus_D0_0p8to1',
+            'mjj:m_sv:melaD0minusggH_D0_0to0p25',
+            'mjj:m_sv:melaD0minusggH_D0_0p25to0p5',
+            'mjj:m_sv:melaD0minusggH_D0_0p5to0p75',
+            'mjj:m_sv:melaD0minusggH_D0_0p75to1',
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
-            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
+            ###'mjj:m_sv:melaD0minus_D0_0to0p2',
+            ###'mjj:m_sv:melaD0minus_D0_0p2to0p4',
+            ###'mjj:m_sv:melaD0minus_D0_0p4to0p8',
+            ###'mjj:m_sv:melaD0minus_D0_0p8to1',
 
-            'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
-            'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
-            'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
-            'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
+            ###'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
+            ###'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
+            ###'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
+            ###'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
 
-            'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
-            'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
-            'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
-            'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
+            ###'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
+            ###'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
+            ###'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
+            ###'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
 
-            'mjj:m_sv:melaDL1_DL1_0to0p2',
-            'mjj:m_sv:melaDL1_DL1_0p2to0p4',
-            'mjj:m_sv:melaDL1_DL1_0p4to0p8',
-            'mjj:m_sv:melaDL1_DL1_0p8to1',
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
+            ###'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
 
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
-            'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+            ###'mjj:m_sv:melaDL1_DL1_0to0p2',
+            ###'mjj:m_sv:melaDL1_DL1_0p2to0p4',
+            ###'mjj:m_sv:melaDL1_DL1_0p4to0p8',
+            ###'mjj:m_sv:melaDL1_DL1_0p8to1',
 
-            'mjj:m_sv:melaDCP_DCP_neg1to0',
-            'mjj:m_sv:melaDCP_DCP_0to1',
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
+            ###'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+
+            ###'mjj:m_sv:melaDCP_DCP_neg1to0',
+            ###'mjj:m_sv:melaDCP_DCP_0to1',
         ] # All aHTT Shapes
         #toAdd = [] # No extra shapes
         varsForShapeSyst = []
