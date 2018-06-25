@@ -133,6 +133,18 @@ Added .sh file to hadd aHTT signals and make 1 master file for plotting
 source prep_reweighted_samples.sh DIRECTORY_FILES_IN
 ```
 
+# Make MASTER JHU anomalous file
+The JHU gen files can all be reweighted to represent the other signal samples as in the above section.
+After this the JHU samples need to be HADDed together based on how the code is currently set up.
 
+For example, for all VBF files (WH and ZH too):
+
+```
+cd htt2MyMELADir
+hadd VBFHtoTauTauMASTER125_0_tt.root VBFHtoTauTau0*_tt.root
+```
+
+For the anomalous files, the code in analysis1BaselineCuts.py picks up this file for plotting.  In analysisPlots.py getAnomalousSignalWeight provides the desired
+weighting for the samples.
 
 

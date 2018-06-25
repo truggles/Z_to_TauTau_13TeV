@@ -61,19 +61,19 @@ SamplesDataCards.append('HtoWW2l2nu125')
 SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
-SamplesDataCards = []
+#SamplesDataCards = []
 for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
     SamplesDataCards.append( 'W'+aHiggs )
     SamplesDataCards.append( 'Z'+aHiggs )
 ##SamplesDataCards = []
-#SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
-#SamplesDataCards.append('ggHtoTauTau0M125')
-#SamplesDataCards.append('ggHtoTauTau0PM125')
-#    
-##SamplesDataCards = []
-#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-#    SamplesDataCards.append('dataTT-%s' % era)
+SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
+SamplesDataCards.append('ggHtoTauTau0M125')
+SamplesDataCards.append('ggHtoTauTau0PM125')
+    
+#SamplesDataCards = []
+for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
@@ -93,7 +93,7 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 14,
+    'numCores' : 25,
     'numFilesPerCycle' : 1,
     'channels' : ['tt',],
     #'cutMapper' : 'syncCutsDC',
@@ -104,19 +104,19 @@ params = {
     #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
     'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
     #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1June22aHTTSigs',
-    'mid2' : '2June22aHTTSigs',
-    'mid3' : '3June22aHTTSigs',
+    'mid1' : '1Jan07NewMelax',
+    'mid2' : '2Jan07NewMelax',
+    'mid3' : '3Jan07NewMelax',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true', # This means "do the hdfs skim"
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # This means "do the hdfs skim"
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -125,7 +125,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -290,50 +290,50 @@ for isoVal in isoVals :
         '%s:m_sv' % higgsPt,
         'mjj:m_sv',
 
-        # For ggH study only
-        'mjj:m_sv:melaDPhijj_DPhijj_0toPiOver4',
-        'mjj:m_sv:melaDPhijj_DPhijj_piOver4toPiOver2',
-        'mjj:m_sv:melaDPhijj_DPhijj_piOver2to3PiOver4',
-        'mjj:m_sv:melaDPhijj_DPhijj_3PiOver4toPi',
+        ## For ggH study only
+        #'mjj:m_sv:melaDPhijj_DPhijj_0toPiOver4',
+        #'mjj:m_sv:melaDPhijj_DPhijj_piOver4toPiOver2',
+        #'mjj:m_sv:melaDPhijj_DPhijj_piOver2to3PiOver4',
+        #'mjj:m_sv:melaDPhijj_DPhijj_3PiOver4toPi',
 
-        # For ggH study only
-        'mjj:m_sv:melaD0minusggH_D0_0to0p25',
-        'mjj:m_sv:melaD0minusggH_D0_0p25to0p5',
-        'mjj:m_sv:melaD0minusggH_D0_0p5to0p75',
-        'mjj:m_sv:melaD0minusggH_D0_0p75to1',
+        ## For ggH study only
+        #'mjj:m_sv:melaD0minusggH_D0_0to0p25',
+        #'mjj:m_sv:melaD0minusggH_D0_0p25to0p5',
+        #'mjj:m_sv:melaD0minusggH_D0_0p5to0p75',
+        #'mjj:m_sv:melaD0minusggH_D0_0p75to1',
 
-        #'mjj:m_sv:melaDCP_DCP_neg1to0',
-        #'mjj:m_sv:melaDCP_DCP_0to1',
+        'mjj:m_sv:melaDCP_DCP_neg1to0',
+        'mjj:m_sv:melaDCP_DCP_0to1',
 
-        #'mjj:m_sv:melaD0minus_D0_0to0p2',
-        #'mjj:m_sv:melaD0minus_D0_0p2to0p4',
-        #'mjj:m_sv:melaD0minus_D0_0p4to0p8',
-        #'mjj:m_sv:melaD0minus_D0_0p8to1',
+        'mjj:m_sv:melaD0minus_D0_0to0p2',
+        'mjj:m_sv:melaD0minus_D0_0p2to0p4',
+        'mjj:m_sv:melaD0minus_D0_0p4to0p8',
+        'mjj:m_sv:melaD0minus_D0_0p8to1',
 
-        #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
-        #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
-        #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
-        #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
+        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
 
-        #'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
-        #'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
-        #'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
-        #'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
+        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
 
-        #'mjj:m_sv:melaDL1_DL1_0to0p2',
-        #'mjj:m_sv:melaDL1_DL1_0p2to0p4',
-        #'mjj:m_sv:melaDL1_DL1_0p4to0p8',
-        #'mjj:m_sv:melaDL1_DL1_0p8to1',
+        'mjj:m_sv:melaDL1_DL1_0to0p2',
+        'mjj:m_sv:melaDL1_DL1_0p2to0p4',
+        'mjj:m_sv:melaDL1_DL1_0p4to0p8',
+        'mjj:m_sv:melaDL1_DL1_0p8to1',
 
-        #'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
-        #'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
-        #'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
-        #'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
+        'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
 
-        #'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
-        #'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
-        #'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
-        #'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
+        'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
+        'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
+        'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
+        'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
         ]
         for cat in cats :
             for var in vars :
