@@ -256,8 +256,8 @@ def getCurrentEvt( analysis, channel, row ) :
     elif analysis == 'azh' :
         l3 = prodMap[channel][2]
         l4 = prodMap[channel][3]
-        leg3Pt = getattr(row, l3+'Pt')
-        leg4Pt = getattr(row, l4+'Pt')
+        leg3Pt = getattr(row, 'shiftedPt_3')
+        leg4Pt = getattr(row, 'shiftedPt_4')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.1876 )
         bestZ = 0.
         if channel in ['eeet','eeem','eemt','eett' ] :
@@ -916,10 +916,14 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     zhFR2TauDownB = tnew.Branch('zhFR2TauDown', zhFR2TauDown, 'zhFR2TauDown/F')
     LT_higgs = array('f', [ 0 ] )
     LT_higgsB = tnew.Branch('LT_higgs', LT_higgs, 'LT_higgs/F')
-    ptCor_1 = array('f', [ 0 ] )
-    ptCor_1B = tnew.Branch('ptCor_1', ptCor_1, 'ptCor_1/F')
-    ptCor_2 = array('f', [ 0 ] )
-    ptCor_2B = tnew.Branch('ptCor_2', ptCor_2, 'ptCor_2/F')
+    met_pt = array('f', [ 0 ] )
+    met_ptB = tnew.Branch('met_pt', met_pt, 'met_pt/F')
+    met_phi = array('f', [ 0 ] )
+    met_phiB = tnew.Branch('met_phi', met_phi, 'met_phi/F')
+    #ptCor_1 = array('f', [ 0 ] )
+    #ptCor_1B = tnew.Branch('ptCor_1', ptCor_1, 'ptCor_1/F')
+    #ptCor_2 = array('f', [ 0 ] )
+    #ptCor_2B = tnew.Branch('ptCor_2', ptCor_2, 'ptCor_2/F')
     #pt_1_UP = array('f', [ 0 ] )
     #pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
     #pt_1_DOWN = array('f', [ 0 ] )
@@ -1068,16 +1072,16 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             ## FIXME ugly kludge to handle that some TTrees are missing some
             ## branches.  This allows us to HADD the samples
             ## REMOVE THIS IN THE FUTURE!
-            #try : print row[0].m_sv
-            #except KeyError :
-            #    m_sv = array('f', [ 0 ] )
-            #    m_svB = tnew.Branch('m_sv', m_sv, 'm_sv/F')
-            #    pt_sv = array('f', [ 0 ] )
-            #    pt_svB = tnew.Branch('pt_sv', pt_sv, 'pt_sv/F')
-            #    eta_sv = array('f', [ 0 ] )
-            #    eta_svB = tnew.Branch('eta_sv', eta_sv, 'eta_sv/F')
-            #    phi_sv = array('f', [ 0 ] )
-            #    phi_svB = tnew.Branch('phi_sv', phi_sv, 'phi_sv/F')
+            try : print row[0].m_sv
+            except KeyError :
+                m_sv = array('f', [ 0 ] )
+                m_svB = tnew.Branch('m_sv', m_sv, 'm_sv/F')
+                pt_sv = array('f', [ 0 ] )
+                pt_svB = tnew.Branch('pt_sv', pt_sv, 'pt_sv/F')
+                eta_sv = array('f', [ 0 ] )
+                eta_svB = tnew.Branch('eta_sv', eta_sv, 'eta_sv/F')
+                phi_sv = array('f', [ 0 ] )
+                phi_svB = tnew.Branch('phi_sv', phi_sv, 'phi_sv/F')
             #    
             #try : print row[0].type1_pfMet_shiftedPt_UnclusteredEnUp
             #except KeyError :
@@ -1900,6 +1904,13 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 azhWeight[0] *= electronSF_1[0] * electronSF_2[0] * electronSF_3[0] * electronSF_4[0]
                 azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0] * zhTrigWeight[0]
 
+                # FIXME FIXME TMP
+                met_pt[0] = row.shiftedMET
+                met_phi[0] = row.shiftedMETPhi
+                setattr( row, "metcov00", row.metcov00_DESYlike )
+                setattr( row, "metcov10", row.metcov10_DESYlike )
+                setattr( row, "metcov01", row.metcov01_DESYlike )
+                setattr( row, "metcov11", row.metcov11_DESYlike )
 
 
                 # Special weighting for WJets and DYJets
@@ -2008,7 +2019,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         zhFR0TauDown[0] = zhFR1[0] * zhFR2TauDown[0]
                 
                 # Define the LT varialbe we use in analysis (LT from FSA is all 4 objects)
-                LT_higgs[0] = pt3 + pt4
+                LT_higgs[0] = row.shiftedPt_3 + row.shiftedPt_4
 
                 # Add VVL for leg3 and leg4
                 if 't' in l3 :
