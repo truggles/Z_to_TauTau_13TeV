@@ -52,25 +52,29 @@ def adjustMet(met, metPhi, dx3, dy3, dx4, dy4 ) :
     #print "\n"
     return shiftedMET, shiftedMETPhi
 
-def correctTauPt( lep, pt, gen_match, decay_mode ) :
+def correctTauPt( lep, p4, gen_match, decay_mode ) :
     # if E or Mu return origianal pT
-    if 't' not in lep : return pt
+    if 't' not in lep : return p4
     
     if gen_match == 5 : # Real Tau, use 2016 shift measurements
-        if decay_mode == 0 : return pt * (1. - 0.005)
-        if decay_mode == 1 : return pt * (1. + 0.011)
-        if decay_mode == 10 : return pt * (1. + 0.006)
-        return pt
+        # DM 0 needs to keep pion mass
+        if decay_mode == 0 : 
+            p4new = p4 * (1. - 0.005)
+            p4new.SetPtEtaPhiM( p4new.Pt(), p4new.Eta(), p4new.Phi(), 0.1395699 )
+            return p4new
+        if decay_mode == 1 : return p4 * (1. + 0.011)
+        if decay_mode == 10 : return p4 * (1. + 0.006)
+        return p4
 
     if gen_match == 2 or gen_match == 4 :
-        if decay_mode == 1 : return pt * (1. + 0.015)
-        return pt
+        if decay_mode == 1 : return p4 * (1. + 0.015)
+        return p4
         
     if gen_match == 1 or gen_match == 3 :
-        if decay_mode == 1 : return pt * (1. + 0.095)
-        return pt
+        if decay_mode == 1 : return p4 * (1. + 0.095)
+        return p4
 
-    return pt
+    return p4
 
 def correctTausInTree( sample, channel, ttreePath, inDir ) :
     files = glob.glob(inDir+'/%s_*_%s.root' % (sample, channel) )
@@ -111,6 +115,10 @@ def correctTausInTree( sample, channel, ttreePath, inDir ) :
         shiftedPt_3B = updateTree.Branch('shiftedPt_3', shiftedPt_3, 'shiftedPt_3/F')
         shiftedPt_4 = array('f', [ 0 ] )
         shiftedPt_4B = updateTree.Branch('shiftedPt_4', shiftedPt_4, 'shiftedPt_4/F')
+        shiftedMass_3 = array('f', [ 0 ] )
+        shiftedMass_3B = updateTree.Branch('shiftedMass_3', shiftedMass_3, 'shiftedMass_3/F')
+        shiftedMass_4 = array('f', [ 0 ] )
+        shiftedMass_4B = updateTree.Branch('shiftedMass_4', shiftedMass_4, 'shiftedMass_4/F')
         # Nominal
         shiftedMET = array('f', [ 0 ] )
         shiftedMETB = updateTree.Branch('shiftedMET', shiftedMET, 'shiftedMET/F')
@@ -143,12 +151,22 @@ def correctTausInTree( sample, channel, ttreePath, inDir ) :
             #if cnt > 100 : break
 
             l3pt = getattr( row, '%sPt' % l3 )
+            l3eta = getattr( row, '%sEta' % l3 )
             l3phi = getattr( row, '%sPhi' % l3 )
+            l3mass = getattr( row, '%sMass' % l3 )
+            l3p4 = ROOT.TLorentzVector()
+            l3p4.SetPtEtaPhiM( l3pt, l3eta, l3phi, l3mass )
             l4pt = getattr( row, '%sPt' % l4 )
+            l4eta = getattr( row, '%sEta' % l4 )
             l4phi = getattr( row, '%sPhi' % l4 )
+            l4mass = getattr( row, '%sMass' % l4 )
+            l4p4 = ROOT.TLorentzVector()
+            l4p4.SetPtEtaPhiM( l4pt, l4eta, l4phi, l4mass )
 
             shiftedPt_3[0] = l3pt
             shiftedPt_4[0] = l4pt
+            shiftedMass_3[0] = l3mass
+            shiftedMass_4[0] = l4mass
             shiftedMET[0] = getattr( row, 'type1_pfMetEt' )
             shiftedMETPhi[0] = getattr( row, 'type1_pfMetPhi' )
             shiftedUncMETUp[0] = getattr( row, 'type1_pfMet_shiftedPt_UnclusteredEnUp' )
@@ -166,6 +184,8 @@ def correctTausInTree( sample, channel, ttreePath, inDir ) :
             if 'data' in sample :
                 shiftedPt_3B.Fill()
                 shiftedPt_4B.Fill()
+                shiftedMass_3B.Fill()
+                shiftedMass_4B.Fill()
                 shiftedMETB.Fill()
                 shiftedMETPhiB.Fill()
                 shiftedUncMETUpB.Fill()
@@ -183,14 +203,18 @@ def correctTausInTree( sample, channel, ttreePath, inDir ) :
             if 't' in l3 and getattr( row, '%sZTTGenMatching' % l3 ) != 6 :
                 #print "l3Pt:        ", l3pt," DM: ",getattr( row, '%sDecayMode' % l3 )," gen_match: ",getattr( row, '%sZTTGenMatching' % l3 )
                 #print " -- corr pt: ", correctTauPt( l3, l3pt, getattr( row, '%sZTTGenMatching' % l3 ), getattr( row, '%sDecayMode' % l3 ) )
-                shiftedPt_3[0] = correctTauPt( l3, l3pt, getattr( row, '%sZTTGenMatching' % l3 ), getattr( row, '%sDecayMode' % l3 ) )
+                shiftedP4 = correctTauPt( l3, l3p4, getattr( row, '%sZTTGenMatching' % l3 ), getattr( row, '%sDecayMode' % l3 ) )
+                shiftedPt_3[0] = shiftedP4.Pt()
+                shiftedMass_3[0] = shiftedP4.M()
                 if shiftedPt_3[0] != l3pt :
                     l3Shifted = True
             l4Shifted = False
             if 't' in l4 and getattr( row, '%sZTTGenMatching' % l4 ) != 6 :
                 #print "l4Pt:        ", l4pt," DM: ",getattr( row, '%sDecayMode' % l4 )," gen_match: ",getattr( row, '%sZTTGenMatching' % l4 )
                 #print " -- corr pt: ", correctTauPt( l4, l4pt, getattr( row, '%sZTTGenMatching' % l4 ), getattr( row, '%sDecayMode' % l4 ) )
-                shiftedPt_4[0] = correctTauPt( l4, l4pt, getattr( row, '%sZTTGenMatching' % l4 ), getattr( row, '%sDecayMode' % l4 ) )
+                shiftedP4 = correctTauPt( l4, l4p4, getattr( row, '%sZTTGenMatching' % l4 ), getattr( row, '%sDecayMode' % l4 ) )
+                shiftedPt_4[0] = shiftedP4.Pt()
+                shiftedMass_4[0] = shiftedP4.M()
                 if shiftedPt_4[0] != l4pt :
                     l4Shifted = True
 
@@ -212,6 +236,8 @@ def correctTausInTree( sample, channel, ttreePath, inDir ) :
 
             shiftedPt_3B.Fill()
             shiftedPt_4B.Fill()
+            shiftedMass_3B.Fill()
+            shiftedMass_4B.Fill()
             shiftedMETB.Fill()
             shiftedMETPhiB.Fill()
             shiftedUncMETUpB.Fill()
@@ -267,15 +293,16 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleE-%s' % era)
             azhSamples.append('dataSingleM-%s' % era)
 
-        #azhSamples = ['DYJets1',]
+        azhSamples = ['azh300',]
 
         name = 'azhJan26EnergyScales'
-        inDir = '/nfs_scratch/truggles/'+name+'_svFitPrep/'
+        #inDir = '/nfs_scratch/truggles/'+name+'_svFitPrep/'
+        inDir = '/data/truggles/svFit944_test_files3/'
         #name = 'svFitTmp'
         #inDir = '/data/truggles/'+name+'/'
         checkDir( inDir )
         jobId = ''
-        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 10
+        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] # 10
         #channels = ['mmtt',] # 10
         for channel in channels :
             ttreePath = channel+'/final/Ntuple'
