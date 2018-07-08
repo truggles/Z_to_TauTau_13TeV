@@ -1,2 +1,9 @@
-/data/truggles/zh_mar11v3_Merged/azh300_0_mmmt.root
-/data/truggles/zh_mar11v3_Merged/azh300_1_mmmt.root
+/data/truggles/azh1June14sync/azh300_0_mmmt.root
+/data/truggles/azh1June14sync/azh300_1_mmmt.root
+/data/truggles/azh1June14sync/azh300_2_mmmt.root
+/data/truggles/azh1June14sync/azh300_3_mmmt.root
+/data/truggles/azh1June14sync/azh300_4_mmmt.root
+/data/truggles/azh1June14sync/azh300_5_mmmt.root
+/data/truggles/azh1June14sync/azh300_6_mmmt.root
+/data/truggles/azh1June14sync/azh300_7_mmmt.root
+/data/truggles/azh1June14sync/azh300_8_mmmt.root
