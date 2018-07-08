@@ -1,9 +1,1 @@
-/data/truggles/azh1June14sync/azh300_0_eett.root
-/data/truggles/azh1June14sync/azh300_1_eett.root
-/data/truggles/azh1June14sync/azh300_2_eett.root
-/data/truggles/azh1June14sync/azh300_3_eett.root
-/data/truggles/azh1June14sync/azh300_4_eett.root
-/data/truggles/azh1June14sync/azh300_5_eett.root
-/data/truggles/azh1June14sync/azh300_6_eett.root
-/data/truggles/azh1June14sync/azh300_7_eett.root
-/data/truggles/azh1June14sync/azh300_8_eett.root
+/data/truggles/svFit_AZH_July07_Merged/azh300_0_eett.root

@@ -1,3 +1,2 @@
-/data/truggles/zh_mar11v3_Merged/azh400_0_emmt.root
-/data/truggles/zh_mar11v3_Merged/azh400_1_emmt.root
-/data/truggles/zh_mar11v3_Merged/azh400_2_emmt.root
+/data/truggles/svFit_AZH_July07_Merged/azh400_0_emmt.root
+/data/truggles/svFit_AZH_July07_Merged/azh400_1_emmt.root

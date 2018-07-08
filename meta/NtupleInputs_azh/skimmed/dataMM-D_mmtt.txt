@@ -1,2 +1,1 @@
-/data/truggles/zh_mar11v3_Merged/dataMM-D_0_mmtt.root
-/data/truggles/zh_mar11v3_Merged/dataMM-D_1_mmtt.root
+/data/truggles/svFit_AZH_July07_Merged/dataMM-D_0_mmtt.root

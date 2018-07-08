@@ -1,3 +1,2 @@
-/data/truggles/zh_mar11v3_Merged/ttHJNonBB125_0_mmmt.root
-/data/truggles/zh_mar11v3_Merged/ttHJNonBB125_1_mmmt.root
-/data/truggles/zh_mar11v3_Merged/ttHJNonBB125_2_mmmt.root
+/data/truggles/svFit_AZH_July07_Merged/ttHJNonBB125_0_mmmt.root
+/data/truggles/svFit_AZH_July07_Merged/ttHJNonBB125_1_mmmt.root

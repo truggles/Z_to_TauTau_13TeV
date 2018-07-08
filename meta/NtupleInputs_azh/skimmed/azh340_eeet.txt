@@ -1,2 +1,1 @@
-/data/truggles/zh_mar11v3_Merged/azh340_0_eeet.root
-/data/truggles/zh_mar11v3_Merged/azh340_1_eeet.root
+/data/truggles/svFit_AZH_July07_Merged/azh340_0_eeet.root
