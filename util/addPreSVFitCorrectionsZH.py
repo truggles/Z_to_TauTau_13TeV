@@ -257,7 +257,7 @@ def correctTausInTree( sample, channel, ttreePath, inDir ) :
 
 if __name__ == '__main__' :
     ''' Start multiprocessing tests '''
-    pool = multiprocessing.Pool(processes = 7 )
+    pool = multiprocessing.Pool(processes = 14 )
     #pool = multiprocessing.Pool(processes = 1 )
     multiprocessingOutputs = []
     debug = False
@@ -293,28 +293,45 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleE-%s' % era)
             azhSamples.append('dataSingleM-%s' % era)
 
-        azhSamples = ['azh300',]
+        #azhSamples = ['azh300',]
 
-        name = 'azhJan26EnergyScales'
+        name = 'azhJune19AZH_test'
+        name = 'azhJune19AZH_azh_svFitPrep'
         #inDir = '/nfs_scratch/truggles/'+name+'_svFitPrep/'
-        inDir = '/data/truggles/svFit944_test_files3/'
+        inDir = '/nfs_scratch/truggles/'+name+'/'
+        dataDir = inDir+'data/'
+        recoilDir = inDir+'recoil/'
+        noRecoilDir = inDir+'noRecoil/'
+        checkDir( dataDir )
+        checkDir( recoilDir )
+        checkDir( noRecoilDir )
+        getsRecoil = ['DYJet', 'ggHtoTauTau', 'VBF', 'HZZ', 'HtoWW']
         #name = 'svFitTmp'
         #inDir = '/data/truggles/'+name+'/'
         checkDir( inDir )
         jobId = ''
-        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] # 10
+        channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',] # 8
         #channels = ['mmtt',] # 10
         for channel in channels :
             ttreePath = channel+'/final/Ntuple'
             for sample in azhSamples :
+
+                # Get proper sub-directory
+                targetDirNew = inDir
+                if 'data' in sample : targetDirNew = dataDir
+                for recoil in getsRecoil :
+                    if recoil in sample : targetDirNew = recoilDir
+                if targetDirNew == inDir : # didn't find a new dir yet
+                    targetDirNew = noRecoilDir
+
                 if debug:
-                    correctTausInTree( sample, channel, ttreePath, inDir )
+                    correctTausInTree( sample, channel, ttreePath, targetDirNew )
                 else :
                     multiprocessingOutputs.append( pool.apply_async(correctTausInTree, args=(
                         sample,
                         channel,
                         ttreePath,
-                        inDir )))
+                        targetDirNew )))
         if not debug :
             mpResults = [p.get() for p in multiprocessingOutputs]
 
