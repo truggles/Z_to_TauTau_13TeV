@@ -19,7 +19,7 @@ def mergeSample( jobId, sample, channel, originalDir, targetDir ) :
         print size, " KB ", file_
         runningSize += size
         toMerge.append( file_ )
-        if runningSize > 30000 : # 7.5 MB is reasonal for doing duplicate removal later
+        if runningSize > 60000 : # 7.5 MB is reasonal for doing duplicate removal later
             runningSize = 0
             mergeList = ["hadd", "-f", targetDir+"/%s_%i_%s.root" % (sample, rep, channel)]
             for f in toMerge :
@@ -59,10 +59,12 @@ if __name__ == '__main__' :
     if doAZH :
         # AZH June 01 Wisconsin -> uwlogin
         azhSamples = ['ttZ', 'ttZ2', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # May 31 samples, no ZZ->all, use ZZ4l
+        azhSamples = ['ZZ4l', 'ttZ', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'ZZZ',] # No ttZ2
         
-        for mass in [110, 120, 125, 130, 140] :
-            azhSamples.append('ggHtoTauTau%i' % mass)
-            azhSamples.append('VBFHtoTauTau%i' % mass)
+        #for mass in [110, 120, 125, 130, 140] :
+        for mass in [125,] :
+            #azhSamples.append('ggHtoTauTau%i' % mass)
+            #azhSamples.append('VBFHtoTauTau%i' % mass)
             azhSamples.append('WMinusHTauTau%i' % mass)
             azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHTauTau%i' % mass)
@@ -87,21 +89,22 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleE-%s' % era)
             azhSamples.append('dataSingleM-%s' % era)
 
-        #azhSamples = ['DYJets',]
+        #azhSamples = ['azh300',]
 
-        name = 'zh_mar11v3'
-        originalDir = '/nfs_scratch/truggles/'+name+'/'
-        targetDir = '/nfs_scratch/truggles/'+name+'_Merged3'
-        jobId = ''
-        originalDir = '/data/truggles/'+name+'/'+name+'*/'
-        targetDir = '/data/truggles/'+name+'_Merged'
+        name = 'svFitTest_massConst_azh_*_July07*/*/'
+        originalDir = '/hdfs/store/user/truggles/'+name+'/'
+        shortName = 'svFit_AZH_July07'
+        targetDir = '/nfs_scratch/truggles/'+shortName+'_Merged'
+        #jobId = ''
+        #originalDir = '/data/truggles/'+name+'/'+name+'*/'
+        #targetDir = '/data/truggles/'+name+'_Merged'
         checkDir( targetDir )
         jobId = 'TauTau_13*'
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'] # 8 + eeee + mmmm + eemm
         channels = ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'] # 8
         #channels = ['eeet',] # 8 + eeee + mmmm + eemm
-        for channel in channels :
-            for sample in azhSamples :
+        for sample in azhSamples :
+            for channel in channels :
                 if debug:
                     mergeSample( jobId, sample, channel, originalDir, targetDir )
                 else :
