@@ -277,10 +277,16 @@ if __name__ == '__main__' :
             azhSamples.append('WMinusHTauTau%i' % mass)
             azhSamples.append('WPlusHTauTau%i' % mass)
             azhSamples.append('ZHTauTau%i' % mass)
-            #azhSamples.append('ttHTauTau%i' % mass)
         for mass in [125,] :
             azhSamples.append('ZHWW%i' % mass)
             azhSamples.append('HZZ%i' % mass)
+            azhSamples.append('VBFHtoWW2l2nu%i' % mass)
+            azhSamples.append('WPlusHHWW%i' % mass)
+            azhSamples.append('WMinusHHWW%i' % mass)
+            azhSamples.append('HtoWW2l2nu%i' % mass)
+            azhSamples.append('ttHTauTau%i' % mass)
+            azhSamples.append('ttHJNonBB%i' % mass)
+            azhSamples.append('ttHNonBB%i' % mass)
 
         #azhSamples = ['ggZZ4m','ggZZ4e']
         for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
@@ -294,6 +300,7 @@ if __name__ == '__main__' :
             azhSamples.append('dataSingleM-%s' % era)
 
         #azhSamples = ['azh300',]
+
 
         name = 'azhJune19AZH_test'
         name = 'azhJune19AZH_azh_svFitPrep'
