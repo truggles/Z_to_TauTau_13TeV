@@ -1,2 +1,2 @@
-/data/truggles/svFit_AZH_July07_Merged/ttZ_0_eeem.root
-/data/truggles/svFit_AZH_July07_Merged/ttZ_1_eeem.root
+/data/truggles/svFit_AZH_July07_Merged2/ttZ_0_eeem.root
+/data/truggles/svFit_AZH_July07_Merged2/ttZ_1_eeem.root

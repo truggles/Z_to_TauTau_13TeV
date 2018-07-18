@@ -385,11 +385,11 @@
   }, 
   "azh340": {
     "eeet": {
-      "STATUS": "Error", 
-      "summedWeights": 427760.0, 
-      "nEvents": 427760, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 427760.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 491744.0, 
+      "nEvents": 491744, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 491744.0
     }, 
     "Cross Section (pb)": 1.0, 
     "emmm": {
@@ -403,7 +403,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 491744.0, 
       "nEvents": 491744, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 491744.0
     }, 
     "nDASFiles": 13, 
@@ -412,7 +412,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 491744.0, 
       "nEvents": 491744, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 491744.0
     }, 
     "DAS Status": "ok", 
@@ -420,21 +420,21 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 491744.0, 
       "nEvents": 491744, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 491744.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 437392.0, 
-      "nEvents": 437392, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 491744.0, 
+      "nEvents": 491744, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 437392.0
+      "summedWeightsNorm": 491744.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 491744.0, 
       "nEvents": 491744, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 491744.0
     }, 
     "eeem": {
@@ -465,19 +465,19 @@
     }, 
     "eemt": {
       "STATUS": "Error", 
-      "summedWeights": 158912.0, 
-      "nEvents": 156435, 
-      "nNtupleFiles": 1, 
-      "summedWeightsNorm": 46771.557573396814
+      "summedWeights": 0, 
+      "nEvents": 0, 
+      "nNtupleFiles": 0, 
+      "summedWeightsNorm": 0
     }, 
     "nDASFiles": 15, 
     "nDASLumis": 4604, 
     "eett": {
       "STATUS": "Error", 
-      "summedWeights": 158912.0, 
-      "nEvents": 156435, 
-      "nNtupleFiles": 1, 
-      "summedWeightsNorm": 46771.557573396814
+      "summedWeights": 0, 
+      "nEvents": 0, 
+      "nNtupleFiles": 0, 
+      "summedWeightsNorm": 0
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -644,7 +644,7 @@
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 7, 
+      "nNtupleFiles": 4, 
       "summedWeightsNorm": 5664168.0
     }, 
     "Cross Section (pb)": 0.616, 
@@ -652,14 +652,14 @@
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 5, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 5664168.0
     }, 
     "eemt": {
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 6, 
+      "nNtupleFiles": 3, 
       "summedWeightsNorm": 5664168.0
     }, 
     "nDASFiles": 208, 
@@ -668,7 +668,7 @@
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 7, 
+      "nNtupleFiles": 4, 
       "summedWeightsNorm": 5664168.0
     }, 
     "DAS Status": "ok", 
@@ -676,28 +676,28 @@
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 8, 
+      "nNtupleFiles": 5, 
       "summedWeightsNorm": 5664168.0
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 8, 
+      "nNtupleFiles": 4, 
       "summedWeightsNorm": 5664168.0
     }, 
     "mmmt": {
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 6, 
+      "nNtupleFiles": 4, 
       "summedWeightsNorm": 5664168.0
     }, 
     "eeem": {
       "STATUS": "Error", 
       "summedWeights": 5664168.0, 
       "nEvents": 5664168, 
-      "nNtupleFiles": 4, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 5664168.0
     }, 
     "DAS Path": "/ttZJets_13TeV_madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
@@ -900,7 +900,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 15791239.0, 
       "nEvents": 1930828, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 1197037.3941416983
     }, 
     "Cross Section (pb)": 4.708, 
@@ -915,7 +915,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 15791239.0, 
       "nEvents": 1930828, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 1197037.3941416983
     }, 
     "nDASFiles": 59, 
@@ -932,7 +932,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 15791239.0, 
       "nEvents": 1930828, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 1197037.3941416983
     }, 
     "mmtt": {
@@ -946,7 +946,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 15791239.0, 
       "nEvents": 1930828, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 1197037.3941416983
     }, 
     "eeem": {
@@ -964,7 +964,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 497392.0, 
       "nEvents": 497392, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 497392.0
     }, 
     "Cross Section (pb)": 1.0, 
@@ -985,32 +985,32 @@
     "nDASFiles": 12, 
     "nDASLumis": 3051, 
     "eett": {
-      "STATUS": "Error", 
-      "summedWeights": 411236.0, 
-      "nEvents": 411236, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 497392.0, 
+      "nEvents": 497392, 
       "nNtupleFiles": 1, 
-      "summedWeightsNorm": 411236.0
+      "summedWeightsNorm": 497392.0
     }, 
     "DAS Status": "ok", 
     "emmt": {
       "STATUS": "Error", 
-      "summedWeights": 411236.0, 
-      "nEvents": 411236, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 411236.0
+      "summedWeights": 420800.0, 
+      "nEvents": 420800, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 420800.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 375788.0, 
-      "nEvents": 375788, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 375788.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 497392.0, 
+      "nEvents": 497392, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 497392.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 497392.0, 
       "nEvents": 497392, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 497392.0
     }, 
     "eeem": {
@@ -1092,61 +1092,61 @@
       "STATUS": "Error", 
       "summedWeights": 5286584.0, 
       "nEvents": 5253338, 
-      "nNtupleFiles": 4, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 1555966.6225495772
     }, 
     "Cross Section (pb)": 0.2117232, 
     "emmm": {
       "STATUS": "Error", 
-      "summedWeights": 5286584.0, 
-      "nEvents": 5253338, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 1555966.6225495772
+      "summedWeights": 3759002.0, 
+      "nEvents": 3734445, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 1106363.1347004238
     }, 
     "eemt": {
       "STATUS": "Error", 
       "summedWeights": 5286584.0, 
       "nEvents": 5253338, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 1555966.6225495772
     }, 
     "nDASFiles": 269, 
     "nDASLumis": 52144, 
     "eett": {
       "STATUS": "Error", 
-      "summedWeights": 5286584.0, 
-      "nEvents": 5253338, 
-      "nNtupleFiles": 4, 
-      "summedWeightsNorm": 1555966.6225495772
+      "summedWeights": 4331294.0, 
+      "nEvents": 4304130, 
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 1274802.1967397565
     }, 
     "DAS Status": "ok", 
     "emmt": {
       "STATUS": "Error", 
-      "summedWeights": 5286584.0, 
-      "nEvents": 5253338, 
-      "nNtupleFiles": 4, 
-      "summedWeightsNorm": 1555966.6225495772
+      "summedWeights": 4952003.0, 
+      "nEvents": 4921196, 
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 1457491.52624178
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 5286584.0, 
       "nEvents": 5253338, 
-      "nNtupleFiles": 4, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 1555966.6225495772
     }, 
     "mmmt": {
       "STATUS": "Error", 
-      "summedWeights": 5286584.0, 
-      "nEvents": 5253338, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 1555966.6225495772
+      "summedWeights": 5249680.0, 
+      "nEvents": 5217107, 
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 1545104.9031030368
     }, 
     "eeem": {
       "STATUS": "Error", 
       "summedWeights": 5286584.0, 
       "nEvents": 5253338, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 1555966.6225495772
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 1555966.6225495774
     }, 
     "DAS Path": "/ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM", 
     "nDASEvents": 10045633
@@ -1156,7 +1156,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 474784.0, 
       "nEvents": 474784, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 474784.0
     }, 
     "Cross Section (pb)": 1.0, 
@@ -1180,7 +1180,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 474784.0, 
       "nEvents": 474784, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 474784.0
     }, 
     "DAS Status": "ok", 
@@ -1195,14 +1195,14 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 474784.0, 
       "nEvents": 474784, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 474784.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 474784.0, 
       "nEvents": 474784, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 474784.0
     }, 
     "eeem": {
@@ -1540,7 +1540,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 965000.0, 
       "nEvents": 965000, 
-      "nNtupleFiles": 4, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 965000.0
     }, 
     "Cross Section (pb)": 0.002703, 
@@ -1730,25 +1730,25 @@
   "ttHNonBB125": {
     "eeet": {
       "STATUS": "Error", 
-      "summedWeights": 1823501.0, 
-      "nEvents": 3255034, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 3177949.3783837156
+      "summedWeights": 1622058.0, 
+      "nEvents": 2895468, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 2826879.838729089
     }, 
     "Cross Section (pb)": 0.2117232, 
     "emmm": {
       "STATUS": "Error", 
-      "summedWeights": 1823501.0, 
-      "nEvents": 3255034, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 3177949.3783837156
+      "summedWeights": 1411054.0, 
+      "nEvents": 2518431, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 2459147.6408106466
     }, 
     "eemt": {
       "STATUS": "Error", 
-      "summedWeights": 1823501.0, 
-      "nEvents": 3255034, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 3177949.3783837156
+      "summedWeights": 1575442.0, 
+      "nEvents": 2812174, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 2745638.7052047667
     }, 
     "nDASFiles": 108, 
     "nDASLumis": 28037, 
@@ -1756,37 +1756,37 @@
       "STATUS": "Error", 
       "summedWeights": 1823501.0, 
       "nEvents": 3255034, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 3177949.3783837156
     }, 
     "DAS Status": "ok", 
     "emmt": {
       "STATUS": "Error", 
-      "summedWeights": 1823501.0, 
-      "nEvents": 3255034, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 3177949.378383715
+      "summedWeights": 1655433.0, 
+      "nEvents": 2955199, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 2885044.9071900095
     }, 
     "mmtt": {
       "STATUS": "Error", 
-      "summedWeights": 1823501.0, 
-      "nEvents": 3255034, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 3177949.3783837156
+      "summedWeights": 1442357.0, 
+      "nEvents": 2574743, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 2513701.6823996264
     }, 
     "mmmt": {
       "STATUS": "Error", 
-      "summedWeights": 1823501.0, 
-      "nEvents": 3255034, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 3177949.3783837156
+      "summedWeights": 1562598.0, 
+      "nEvents": 2789482, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 2723254.521255342
     }, 
     "eeem": {
       "STATUS": "Error", 
-      "summedWeights": 1823501.0, 
-      "nEvents": 3255034, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 3177949.378383715
+      "summedWeights": 324966.0, 
+      "nEvents": 580151, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 566342.1614223642
     }, 
     "DAS Path": "/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
     "nDASEvents": 3981250
@@ -2308,7 +2308,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 500000.0, 
       "nEvents": 500000, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 500000.0
     }, 
     "Cross Section (pb)": 1.0, 
@@ -2332,29 +2332,29 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 500000.0, 
       "nEvents": 500000, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 500000.0
     }, 
     "DAS Status": "ok", 
     "emmt": {
-      "STATUS": "Error", 
-      "summedWeights": 382367.0, 
-      "nEvents": 382367, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 382367.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 500000.0, 
+      "nEvents": 500000, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 500000.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 436581.0, 
-      "nEvents": 436581, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 436581.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 500000.0, 
+      "nEvents": 500000, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 500000.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 500000.0, 
       "nEvents": 500000, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 500000.0
     }, 
     "eeem": {
@@ -2643,7 +2643,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 1469600.0, 
       "nEvents": 1469600, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 1469600.0
     }, 
     "nDASFiles": 49, 
@@ -2660,7 +2660,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 1469600.0, 
       "nEvents": 1469600, 
-      "nNtupleFiles": 4, 
+      "nNtupleFiles": 3, 
       "summedWeightsNorm": 1469600.0
     }, 
     "mmtt": {
@@ -2692,7 +2692,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499377.0, 
       "nEvents": 499377, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499377.0
     }, 
     "Cross Section (pb)": 1.0, 
@@ -2716,7 +2716,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499377.0, 
       "nEvents": 499377, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499377.0
     }, 
     "DAS Status": "ok", 
@@ -2724,21 +2724,21 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499377.0, 
       "nEvents": 499377, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499377.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 402943.0, 
-      "nEvents": 402943, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 402943.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 499377.0, 
+      "nEvents": 499377, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 499377.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 499377.0, 
       "nEvents": 499377, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499377.0
     }, 
     "eeem": {
@@ -3073,11 +3073,11 @@
   }, 
   "ggZZ2e2tau": {
     "eeet": {
-      "STATUS": "Error", 
-      "summedWeights": 438000.0, 
-      "nEvents": 438000, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 438000.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 500000.0, 
+      "nEvents": 500000, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 500000.0
     }, 
     "Cross Section (pb)": 0.005423, 
     "emmm": {
@@ -3088,20 +3088,20 @@
       "summedWeightsNorm": 500000.0
     }, 
     "eemt": {
-      "STATUS": "Good to Go!", 
-      "summedWeights": 500000.0, 
-      "nEvents": 500000, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 500000.0
+      "STATUS": "Error", 
+      "summedWeights": 373600.0, 
+      "nEvents": 373600, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 373600.0
     }, 
     "nDASFiles": 8, 
     "nDASLumis": 2500, 
     "eett": {
-      "STATUS": "Error", 
-      "summedWeights": 429600.0, 
-      "nEvents": 429600, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 429600.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 500000.0, 
+      "nEvents": 500000, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 500000.0
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -3201,11 +3201,11 @@
   }, 
   "azh400": {
     "eeet": {
-      "STATUS": "Error", 
-      "summedWeights": 437534.0, 
-      "nEvents": 437534, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 437534.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 495692.0, 
+      "nEvents": 495692, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 495692.0
     }, 
     "Cross Section (pb)": 1.0, 
     "emmm": {
@@ -3219,38 +3219,38 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 495692.0, 
       "nEvents": 495692, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 495692.0
     }, 
     "nDASFiles": 14, 
     "nDASLumis": 2762, 
     "eett": {
-      "STATUS": "Error", 
-      "summedWeights": 438252.0, 
-      "nEvents": 438252, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 438252.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 495692.0, 
+      "nEvents": 495692, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 495692.0
     }, 
     "DAS Status": "ok", 
     "emmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 495692.0, 
       "nEvents": 495692, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 495692.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 389428.0, 
-      "nEvents": 389428, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 495692.0, 
+      "nEvents": 495692, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 389428.0
+      "summedWeightsNorm": 495692.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 495692.0, 
       "nEvents": 495692, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 495692.0
     }, 
     "eeem": {
@@ -3269,7 +3269,7 @@
       "summedWeights": 4132857.0, 
       "nEvents": 1472493, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 1103775.849300569
+      "summedWeightsNorm": 2801354.9679126446
     }, 
     "Cross Section (pb)": 1.1014820306, 
     "emmm": {
@@ -3277,14 +3277,14 @@
       "summedWeights": 4132857.0, 
       "nEvents": 1472493, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 1103775.849300569
+      "summedWeightsNorm": 2801354.9679126446
     }, 
     "eemt": {
       "STATUS": "Error", 
       "summedWeights": 4132857.0, 
       "nEvents": 1472493, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 1103775.849300569
+      "summedWeightsNorm": 2801354.9679126446
     }, 
     "nDASFiles": 6, 
     "nDASLumis": 5005, 
@@ -3293,7 +3293,7 @@
       "summedWeights": 4132857.0, 
       "nEvents": 1472493, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 1103775.849300569
+      "summedWeightsNorm": 2801354.9679126446
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -3301,7 +3301,7 @@
       "summedWeights": 4132857.0, 
       "nEvents": 1472493, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 1103775.849300569
+      "summedWeightsNorm": 2801354.9679126446
     }, 
     "mmtt": {
       "STATUS": "Error", 
@@ -3315,7 +3315,7 @@
       "summedWeights": 4132857.0, 
       "nEvents": 1472493, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 1103775.849300569
+      "summedWeightsNorm": 2801354.9679126446
     }, 
     "eeem": {
       "STATUS": "Error", 
@@ -3396,7 +3396,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499387.0, 
       "nEvents": 499387, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499387.0
     }, 
     "Cross Section (pb)": 1.0, 
@@ -3428,14 +3428,14 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499387.0, 
       "nEvents": 499387, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499387.0
     }, 
     "mmtt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 499387.0, 
       "nEvents": 499387, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499387.0
     }, 
     "mmmt": {
@@ -3457,11 +3457,11 @@
   }, 
   "azh350": {
     "eeet": {
-      "STATUS": "Error", 
-      "summedWeights": 378236.0, 
-      "nEvents": 378236, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 378236.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 495745.0, 
+      "nEvents": 495745, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 495745.0
     }, 
     "Cross Section (pb)": 1.0, 
     "emmm": {
@@ -3475,38 +3475,38 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 495745.0, 
       "nEvents": 495745, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 495745.0
     }, 
     "nDASFiles": 17, 
     "nDASLumis": 2913, 
     "eett": {
-      "STATUS": "Error", 
-      "summedWeights": 403045.0, 
-      "nEvents": 403045, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 403045.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 495745.0, 
+      "nEvents": 495745, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 495745.0
     }, 
     "DAS Status": "ok", 
     "emmt": {
-      "STATUS": "Error", 
-      "summedWeights": 340844.0, 
-      "nEvents": 340844, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 495745.0, 
+      "nEvents": 495745, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 340844.0
+      "summedWeightsNorm": 495745.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 371527.0, 
-      "nEvents": 371527, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 495745.0, 
+      "nEvents": 495745, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 371527.0
+      "summedWeightsNorm": 495745.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 495745.0, 
       "nEvents": 495745, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 495745.0
     }, 
     "eeem": {
@@ -3780,7 +3780,7 @@
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 4915926.894247417
     }, 
     "Cross Section (pb)": 0.055426800000000005, 
@@ -3788,15 +3788,15 @@
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 4915926.894247418
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 4915926.894247417
     }, 
     "eemt": {
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 4915926.894247418
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 4915926.894247417
     }, 
     "nDASFiles": 27, 
     "nDASLumis": 5774, 
@@ -3804,37 +3804,37 @@
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 4915926.894247418
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 4915926.894247417
     }, 
     "DAS Status": "ok", 
     "emmt": {
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 4915926.894247418
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 4915926.894247417
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 4915926.894247418
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 4915926.894247417
     }, 
     "mmmt": {
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": 4915926.894247417
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 4915926.894247418
     }, 
     "eeem": {
       "STATUS": "Error", 
       "summedWeights": 3942544.0, 
       "nEvents": 5261865, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 4915926.894247418
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 4915926.894247417
     }, 
     "DAS Path": "/ZHToTauTau_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
     "nDASEvents": 571597
@@ -4164,8 +4164,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 240044046, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "Cross Section (pb)": 999.0, 
     "emmm": {
@@ -4188,8 +4188,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 240044046, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -4356,8 +4356,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 82569062, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "Cross Section (pb)": 999.0, 
     "emmm": {
@@ -4371,8 +4371,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 82569062, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "nDASFiles": 1144, 
     "nDASLumis": 51329, 
@@ -4380,8 +4380,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 82569062, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": -1998
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -4484,8 +4484,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 136667457, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "Cross Section (pb)": 999.0, 
     "emmm": {
@@ -4499,8 +4499,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 136667457, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "nDASFiles": 1180, 
     "nDASLumis": 59819, 
@@ -4508,8 +4508,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 136667457, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": -1998
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -4572,8 +4572,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 47328841, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -4612,8 +4612,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 52423951, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "Cross Section (pb)": 999.0, 
     "emmm": {
@@ -4636,8 +4636,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 52423951, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -4676,8 +4676,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 76538905, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "Cross Section (pb)": 999.0, 
     "emmm": {
@@ -4691,8 +4691,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 76538905, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "nDASFiles": 823, 
     "nDASLumis": 46288, 
@@ -4700,8 +4700,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 76538905, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": -1998
     }, 
     "DAS Status": "ok", 
     "emmt": {
@@ -4802,25 +4802,25 @@
   "ZZ4l": {
     "eeet": {
       "STATUS": "Error", 
-      "summedWeights": 103251098.0, 
-      "nEvents": 103251098, 
-      "nNtupleFiles": 29, 
-      "summedWeightsNorm": 103251098.0
+      "summedWeights": 102393406.0, 
+      "nEvents": 102393406, 
+      "nNtupleFiles": 15, 
+      "summedWeightsNorm": 102393406.0
     }, 
     "Cross Section (pb)": 1.256, 
     "emmm": {
       "STATUS": "Error", 
       "summedWeights": 103251098.0, 
       "nEvents": 103251098, 
-      "nNtupleFiles": 21, 
+      "nNtupleFiles": 10, 
       "summedWeightsNorm": 103251098.0
     }, 
     "eemt": {
       "STATUS": "Error", 
-      "summedWeights": 103251098.0, 
-      "nEvents": 103251098, 
-      "nNtupleFiles": 23, 
-      "summedWeightsNorm": 103251098.0
+      "summedWeights": 100983511.0, 
+      "nEvents": 100983511, 
+      "nNtupleFiles": 11, 
+      "summedWeightsNorm": 100983511.0
     }, 
     "nDASFiles": 96, 
     "nDASLumis": 34502, 
@@ -4828,7 +4828,7 @@
       "STATUS": "Error", 
       "summedWeights": 103251098.0, 
       "nEvents": 103251098, 
-      "nNtupleFiles": 19, 
+      "nNtupleFiles": 9, 
       "summedWeightsNorm": 103251098.0
     }, 
     "DAS Status": "ok", 
@@ -4836,28 +4836,28 @@
       "STATUS": "Error", 
       "summedWeights": 103251098.0, 
       "nEvents": 103251098, 
-      "nNtupleFiles": 35, 
+      "nNtupleFiles": 18, 
       "summedWeightsNorm": 103251098.0
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 103251098.0, 
       "nEvents": 103251098, 
-      "nNtupleFiles": 23, 
+      "nNtupleFiles": 11, 
       "summedWeightsNorm": 103251098.0
     }, 
     "mmmt": {
       "STATUS": "Error", 
       "summedWeights": 103251098.0, 
       "nEvents": 103251098, 
-      "nNtupleFiles": 29, 
+      "nNtupleFiles": 14, 
       "summedWeightsNorm": 103251098.0
     }, 
     "eeem": {
       "STATUS": "Error", 
       "summedWeights": 103251098.0, 
       "nEvents": 103251098, 
-      "nNtupleFiles": 17, 
+      "nNtupleFiles": 8, 
       "summedWeightsNorm": 103251098.0
     }, 
     "DAS Path": "/ZZTo4L_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
@@ -4873,11 +4873,11 @@
     }, 
     "Cross Section (pb)": 0.005423, 
     "emmm": {
-      "STATUS": "Error", 
-      "summedWeights": 390400.0, 
-      "nEvents": 390400, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 499800.0, 
+      "nEvents": 499800, 
       "nNtupleFiles": 1, 
-      "summedWeightsNorm": 390400.0
+      "summedWeightsNorm": 499800.0
     }, 
     "eemt": {
       "STATUS": "Good to Go!", 
@@ -4900,21 +4900,21 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499800.0, 
       "nEvents": 499800, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 499800.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 341200.0, 
-      "nEvents": 341200, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 499800.0, 
+      "nEvents": 499800, 
       "nNtupleFiles": 2, 
-      "summedWeightsNorm": 341200.0
+      "summedWeightsNorm": 499800.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 499800.0, 
       "nEvents": 499800, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499800.0
     }, 
     "eeem": {
@@ -5028,22 +5028,22 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 48028641, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": -1998
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 48028641, 
-      "nNtupleFiles": 4, 
-      "summedWeightsNorm": -3996
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": -1998
     }, 
     "mmmt": {
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 48028641, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "eeem": {
       "STATUS": "Error", 
@@ -5060,7 +5060,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499246.0, 
       "nEvents": 499246, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499246.0
     }, 
     "Cross Section (pb)": 1.0, 
@@ -5084,30 +5084,30 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 499246.0, 
       "nEvents": 499246, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 499246.0
     }, 
     "DAS Status": "ok", 
     "emmt": {
-      "STATUS": "Error", 
-      "summedWeights": 408012.0, 
-      "nEvents": 408012, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": 408012.0
+      "STATUS": "Good to Go!", 
+      "summedWeights": 499246.0, 
+      "nEvents": 499246, 
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": 499246.0
     }, 
     "mmtt": {
-      "STATUS": "Error", 
-      "summedWeights": 236100.0, 
-      "nEvents": 236100, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 499246.0, 
+      "nEvents": 499246, 
       "nNtupleFiles": 1, 
-      "summedWeightsNorm": 236100.0
+      "summedWeightsNorm": 499246.0
     }, 
     "mmmt": {
-      "STATUS": "Error", 
-      "summedWeights": 398210.0, 
-      "nEvents": 398210, 
+      "STATUS": "Good to Go!", 
+      "summedWeights": 499246.0, 
+      "nEvents": 499246, 
       "nNtupleFiles": 1, 
-      "summedWeightsNorm": 398210.0
+      "summedWeightsNorm": 499246.0
     }, 
     "eeem": {
       "STATUS": "Good to Go!", 
@@ -5220,15 +5220,15 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 78550935, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 78550935, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "mmmt": {
       "STATUS": "Error", 
@@ -5291,8 +5291,8 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 27025933, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "mmmt": {
       "STATUS": "Error", 
@@ -5348,15 +5348,15 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 33279413, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 33279413, 
-      "nNtupleFiles": 2, 
-      "summedWeightsNorm": -1998
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "mmmt": {
       "STATUS": "Error", 
@@ -5412,15 +5412,15 @@
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 44581284, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 1, 
+      "summedWeightsNorm": -999
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 0.0, 
       "nEvents": 44581284, 
-      "nNtupleFiles": 3, 
-      "summedWeightsNorm": -2997
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": -1998
     }, 
     "mmmt": {
       "STATUS": "Error", 

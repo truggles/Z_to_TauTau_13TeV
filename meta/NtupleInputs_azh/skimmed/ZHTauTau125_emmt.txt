@@ -1,2 +1,2 @@
-/data/truggles/svFit_AZH_July07_Merged/ZHTauTau125_0_emmt.root
-/data/truggles/svFit_AZH_July07_Merged/ZHTauTau125_1_emmt.root
+/data/truggles/svFit_AZH_July07_Merged2/ZHTauTau125_0_emmt.root
+/data/truggles/svFit_AZH_July07_Merged2/ZHTauTau125_1_emmt.root

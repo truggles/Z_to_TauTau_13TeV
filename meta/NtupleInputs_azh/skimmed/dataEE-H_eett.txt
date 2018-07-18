@@ -1,2 +1,2 @@
-/data/truggles/svFit_AZH_July07_Merged/dataEE-H_0_eett.root
-/data/truggles/svFit_AZH_July07_Merged/dataEE-H_1_eett.root
+/data/truggles/svFit_AZH_July07_Merged2/dataEE-H_0_eett.root
+/data/truggles/svFit_AZH_July07_Merged2/dataEE-H_1_eett.root

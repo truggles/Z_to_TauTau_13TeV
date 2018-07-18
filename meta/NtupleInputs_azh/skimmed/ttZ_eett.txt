@@ -1,4 +1,4 @@
-/data/truggles/svFit_AZH_July07_Merged/ttZ_0_eett.root
-/data/truggles/svFit_AZH_July07_Merged/ttZ_1_eett.root
-/data/truggles/svFit_AZH_July07_Merged/ttZ_2_eett.root
-/data/truggles/svFit_AZH_July07_Merged/ttZ_3_eett.root
+/data/truggles/svFit_AZH_July07_Merged2/ttZ_0_eett.root
+/data/truggles/svFit_AZH_July07_Merged2/ttZ_1_eett.root
+/data/truggles/svFit_AZH_July07_Merged2/ttZ_2_eett.root
+/data/truggles/svFit_AZH_July07_Merged2/ttZ_3_eett.root
