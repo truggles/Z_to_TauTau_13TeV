@@ -272,9 +272,9 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
 
             varBinned = True
-            if analysis == 'azh' and 'm_sv' in var and 'LT_higgs' in var :
+            if analysis == 'azh' and 'm_sv' in var and 'LT_higgs' in var and 'const_' not in var :
                 xBins = array( 'd', [i for i in range( 0, 21 )] )
-            elif analysis == 'azh' and 'm_sv' in var and 'LT_higgs' not in var :
+            elif analysis == 'azh' and 'm_sv' in var and 'LT_higgs' not in var and 'const_' not in var :
                 xBins = array( 'd', [i*20 for i in range( 1, 12 )] )
                 #xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
             else :

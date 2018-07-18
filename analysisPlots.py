@@ -1013,6 +1013,7 @@ def getHistoDict( analysis, channel ) :
 #####            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
 #####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
             'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
+            'const_m_sv' : [170, -20, 150, 1, 'M_{#tau#tau} Constrained [GeV]', ' GeV'],
 ##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
             'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
             'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
