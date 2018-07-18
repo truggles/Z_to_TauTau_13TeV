@@ -1904,13 +1904,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 azhWeight[0] *= electronSF_1[0] * electronSF_2[0] * electronSF_3[0] * electronSF_4[0]
                 azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0] * zhTrigWeight[0]
 
-                # FIXME FIXME TMP
                 met_pt[0] = row.shiftedMET
                 met_phi[0] = row.shiftedMETPhi
-                setattr( row, "metcov00", row.metcov00_DESYlike )
-                setattr( row, "metcov10", row.metcov10_DESYlike )
-                setattr( row, "metcov01", row.metcov01_DESYlike )
-                setattr( row, "metcov11", row.metcov11_DESYlike )
 
 
                 # Special weighting for WJets and DYJets
