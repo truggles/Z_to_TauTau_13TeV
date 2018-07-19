@@ -226,6 +226,22 @@ def get_A_mass( zMass, zPt, zEta, zPhi, hMass, hPt, hEta, hPhi) :
 
 
 
+def get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, shift ) :
+    if not hasattr( row, 'const_m_sv'+shift ) : return -99
+    if getattr( row, 'const_m_sv'+shift ) < 0 : return -9
+    hMass = getattr( row, 'const_m_sv'+shift )
+    hPt = getattr( row, 'const_pt_sv'+shift )
+    hEta = getattr( row, 'const_eta_sv'+shift )
+    hPhi = getattr( row, 'const_phi_sv'+shift )
+    lorentz1 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz1.SetPtEtaPhiM( zPt, zEta, zPhi, zMass )
+    lorentz2 = ROOT.TLorentzVector( 0.,0.,0.,0. )
+    lorentz2.SetPtEtaPhiM( hPt, hEta, hPhi, hMass )
+    A_vect = lorentz1 + lorentz2
+    return A_vect.M()
+
+
+
 def getIso( cand, row ) :
     if 'e' in cand :
         return getattr(row, cand+'RelPFIsoDB')
@@ -956,32 +972,32 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     #pt_2_DM10_UPB = tnew.Branch('pt_2_DM10_UP', pt_2_DM10_UP, 'pt_2_DM10_UP/F')
     #pt_2_DM10_DOWN = array('f', [ 0 ] )
     #pt_2_DM10_DOWNB = tnew.Branch('pt_2_DM10_DOWN', pt_2_DM10_DOWN, 'pt_2_DM10_DOWN/F')
-    #Higgs_PtCor = array('f', [ 0 ] )
-    #Higgs_PtCorB = tnew.Branch('Higgs_PtCor', Higgs_PtCor, 'Higgs_PtCor/F')
-    #Higgs_PtCor_UP = array('f', [ 0 ] )
-    #Higgs_PtCor_UPB = tnew.Branch('Higgs_PtCor_UP', Higgs_PtCor_UP, 'Higgs_PtCor_UP/F')
-    #Higgs_PtCor_DOWN = array('f', [ 0 ] )
-    #Higgs_PtCor_DOWNB = tnew.Branch('Higgs_PtCor_DOWN', Higgs_PtCor_DOWN, 'Higgs_PtCor_DOWN/F')
-    #Higgs_PtCor_DM0_UP = array('f', [ 0 ] )
-    #Higgs_PtCor_DM0_UPB = tnew.Branch('Higgs_PtCor_DM0_UP', Higgs_PtCor_DM0_UP, 'Higgs_PtCor_DM0_UP/F')
-    #Higgs_PtCor_DM0_DOWN = array('f', [ 0 ] )
-    #Higgs_PtCor_DM0_DOWNB = tnew.Branch('Higgs_PtCor_DM0_DOWN', Higgs_PtCor_DM0_DOWN, 'Higgs_PtCor_DM0_DOWN/F')
-    #Higgs_PtCor_DM1_UP = array('f', [ 0 ] )
-    #Higgs_PtCor_DM1_UPB = tnew.Branch('Higgs_PtCor_DM1_UP', Higgs_PtCor_DM1_UP, 'Higgs_PtCor_DM1_UP/F')
-    #Higgs_PtCor_DM1_DOWN = array('f', [ 0 ] )
-    #Higgs_PtCor_DM1_DOWNB = tnew.Branch('Higgs_PtCor_DM1_DOWN', Higgs_PtCor_DM1_DOWN, 'Higgs_PtCor_DM1_DOWN/F')
-    #Higgs_PtCor_DM10_UP = array('f', [ 0 ] )
-    #Higgs_PtCor_DM10_UPB = tnew.Branch('Higgs_PtCor_DM10_UP', Higgs_PtCor_DM10_UP, 'Higgs_PtCor_DM10_UP/F')
-    #Higgs_PtCor_DM10_DOWN = array('f', [ 0 ] )
-    #Higgs_PtCor_DM10_DOWNB = tnew.Branch('Higgs_PtCor_DM10_DOWN', Higgs_PtCor_DM10_DOWN, 'Higgs_PtCor_DM10_DOWN/F')
-    #Higgs_PtCor_UncMet_UP = array('f', [ 0 ] )
-    #Higgs_PtCor_UncMet_UPB = tnew.Branch('Higgs_PtCor_UncMet_UP', Higgs_PtCor_UncMet_UP, 'Higgs_PtCor_UncMet_UP/F')
-    #Higgs_PtCor_UncMet_DOWN = array('f', [ 0 ] )
-    #Higgs_PtCor_UncMet_DOWNB = tnew.Branch('Higgs_PtCor_UncMet_DOWN', Higgs_PtCor_UncMet_DOWN, 'Higgs_PtCor_UncMet_DOWN/F')
-    #Higgs_PtCor_ClusteredMet_UP = array('f', [ 0 ] )
-    #Higgs_PtCor_ClusteredMet_UPB = tnew.Branch('Higgs_PtCor_ClusteredMet_UP', Higgs_PtCor_ClusteredMet_UP, 'Higgs_PtCor_ClusteredMet_UP/F')
-    #Higgs_PtCor_ClusteredMet_DOWN = array('f', [ 0 ] )
-    #Higgs_PtCor_ClusteredMet_DOWNB = tnew.Branch('Higgs_PtCor_ClusteredMet_DOWN', Higgs_PtCor_ClusteredMet_DOWN, 'Higgs_PtCor_ClusteredMet_DOWN/F')
+    AMassConst = array('f', [ 0 ] )
+    AMassConstB = tnew.Branch('AMassConst', AMassConst, 'AMassConst/F')
+    AMassConst_DM0_UP = array('f', [ 0 ] )
+    AMassConst_DM0_UPB = tnew.Branch('AMassConst_DM0_UP', AMassConst_DM0_UP, 'AMassConst_DM0_UP/F')
+    AMassConst_DM0_DOWN = array('f', [ 0 ] )
+    AMassConst_DM0_DOWNB = tnew.Branch('AMassConst_DM0_DOWN', AMassConst_DM0_DOWN, 'AMassConst_DM0_DOWN/F')
+    AMassConst_DM1_UP = array('f', [ 0 ] )
+    AMassConst_DM1_UPB = tnew.Branch('AMassConst_DM1_UP', AMassConst_DM1_UP, 'AMassConst_DM1_UP/F')
+    AMassConst_DM1_DOWN = array('f', [ 0 ] )
+    AMassConst_DM1_DOWNB = tnew.Branch('AMassConst_DM1_DOWN', AMassConst_DM1_DOWN, 'AMassConst_DM1_DOWN/F')
+    AMassConst_DM10_UP = array('f', [ 0 ] )
+    AMassConst_DM10_UPB = tnew.Branch('AMassConst_DM10_UP', AMassConst_DM10_UP, 'AMassConst_DM10_UP/F')
+    AMassConst_DM10_DOWN = array('f', [ 0 ] )
+    AMassConst_DM10_DOWNB = tnew.Branch('AMassConst_DM10_DOWN', AMassConst_DM10_DOWN, 'AMassConst_DM10_DOWN/F')
+    AMassConst_EES_UP = array('f', [ 0 ] )
+    AMassConst_EES_UPB = tnew.Branch('AMassConst_EES_UP', AMassConst_EES_UP, 'AMassConst_EES_UP/F')
+    AMassConst_EES_DOWN = array('f', [ 0 ] )
+    AMassConst_EES_DOWNB = tnew.Branch('AMassConst_EES_DOWN', AMassConst_EES_DOWN, 'AMassConst_EES_DOWN/F')
+    AMassConst_UncMet_UP = array('f', [ 0 ] )
+    AMassConst_UncMet_UPB = tnew.Branch('AMassConst_UncMet_UP', AMassConst_UncMet_UP, 'AMassConst_UncMet_UP/F')
+    AMassConst_UncMet_DOWN = array('f', [ 0 ] )
+    AMassConst_UncMet_DOWNB = tnew.Branch('AMassConst_UncMet_DOWN', AMassConst_UncMet_DOWN, 'AMassConst_UncMet_DOWN/F')
+    AMassConst_ClusteredMet_UP = array('f', [ 0 ] )
+    AMassConst_ClusteredMet_UPB = tnew.Branch('AMassConst_ClusteredMet_UP', AMassConst_ClusteredMet_UP, 'AMassConst_ClusteredMet_UP/F')
+    AMassConst_ClusteredMet_DOWN = array('f', [ 0 ] )
+    AMassConst_ClusteredMet_DOWNB = tnew.Branch('AMassConst_ClusteredMet_DOWN', AMassConst_ClusteredMet_DOWN, 'AMassConst_ClusteredMet_DOWN/F')
     #m_visCor = array('f', [ 0 ] )
     #m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
     #m_visCor_UP = array('f', [ 0 ] )
@@ -1513,6 +1529,19 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             zhFR2TauDown[0] = 0
             LT_higgs[0] = 0
             A_Mass[0] = 0
+            AMassConst[0] = 0
+            AMassConst_DM0_UP[0] = 0
+            AMassConst_DM0_DOWN[0] = 0
+            AMassConst_DM1_UP[0] = 0
+            AMassConst_DM1_DOWN[0] = 0
+            AMassConst_DM10_UP[0] = 0
+            AMassConst_DM10_DOWN[0] = 0
+            AMassConst_EES_UP[0] = 0
+            AMassConst_EES_DOWN[0] = 0
+            AMassConst_UncMet_UP[0] = 0
+            AMassConst_UncMet_DOWN[0] = 0
+            AMassConst_ClusteredMet_UP[0] = 0
+            AMassConst_ClusteredMet_DOWN[0] = 0
 
             leg1_EES_Up[0] = pt1
             leg1_EES_Down[0] = pt1
@@ -1570,6 +1599,28 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     phi_sv[0] = getattr( row, l3+"_"+l4+"_Phi" )
                 A_Mass[0] = get_A_mass( zMass, zPt, zEta, zPhi, \
                         hMass, hPt, hEta, hPhi)
+
+                # Rebuild svFit constrained A mass and its shifted versions
+                AMassConst[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '' )
+                AMassConst_DM0_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM0_UP' )
+                AMassConst_DM0_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM0_DOWN' )
+                AMassConst_DM1_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM1_UP' )
+                AMassConst_DM1_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM1_DOWN' )
+                AMassConst_DM10_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM10_UP' )
+                AMassConst_DM10_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM10_DOWN' )
+                AMassConst_UncMet_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_UncMet_UP' )
+                AMassConst_UncMet_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_UncMet_DOWN' )
+                AMassConst_ClusteredMet_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_ClusteredMet_UP' )
+                AMassConst_ClusteredMet_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_ClusteredMet_DOWN' )
+                # EES is special b/c we skip computation of it in svFit for EETT and EEMT, but we need the shape for
+                # shape systematics later based on Z->EE acceptance.  If EETT or EEMT, default fill with nominal
+                # AMassConst
+                if channel == 'eett' or channel == 'eemt' :
+                    AMassConst_EES_UP[0] = AMassConst[0]
+                    AMassConst_EES_DOWN[0] = AMassConst[0]
+                else :
+                    AMassConst_EES_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_EES_UP' )
+                    AMassConst_EES_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_EES_DOWN' )
 
                 if 'data' not in sample :
                     zhTrigWeight[0] = zhSF.getZHTriggerSF( row.nvtx, pt1, eta1, pt2, eta2 )

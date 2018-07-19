@@ -161,6 +161,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
             'Higgs_PtCor:m_sv' : 'svFitMass2D',
             'Higgs_PtCor:m_visCor' : 'visMass2D',
             'mjj:m_visCor' : 'visMass2D',
+            'AMassConst' : 'AMassConst',
             'Mass' : '4LMass',
             'A_Mass' : 'AMass',
             'm_vis' : 'VisMass',
@@ -363,6 +364,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
 
                 """ Scale reducible bkg shape by yield estimate """
                 if ops['redBkg'] and 'RedBkgShape' in sample :
+                    hNew.Sumw2()
                     redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, var)).Integral()
                     if hNew.Integral() != 0 :
                         hNew.Scale( redBkgYield / hNew.Integral() )
@@ -427,7 +429,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                             bkgArray[bin_id] = bkgArray[bin_id] + histos[ name ].GetBinContent( bin_id+1 )
 
 
-                if 'Up' not in var and 'Down' not in var :
+                if ('Up' not in var and 'Down' not in var) or 'promptMC' in var : # promptMC for allFake shape uncert
                     print "\n --- Bkg Yields By Bin: ",channel,var
                     # Choose data_obs because it should always be here
                     for bin_id in range( histos[ 'data_obs' ].GetNbinsX() ) :

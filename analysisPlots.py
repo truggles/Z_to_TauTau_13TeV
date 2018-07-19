@@ -59,6 +59,31 @@ def make2DHisto( cutName, channel ) :
     return hist
 
 
+
+# Get the mass window cuts for AZH
+# it was shown that cutting on m_sv mass window increases significance.
+# Mass window cut depends on systematic shifts too
+def getMassWindowCut( var, sample, genCode, outFileName ) :
+    
+    if 'data' in sample or 'RedBkg' in genCode or 'RedBkg' in outFileName :
+        return '*(90 < m_sv && m_sv < 180)'
+
+    if '_DM0_UP'            in var : return '*(90 < m_sv_DM0_UP && m_sv_DM0_UP < 180)'
+    if '_DM0_DOWN'          in var : return '*(90 < m_sv_DM0_DOWN && m_sv_DM0_DOWN < 180)'
+    if '_DM1_UP'            in var : return '*(90 < m_sv_DM1_UP && m_sv_DM1_UP < 180)'
+    if '_DM1_DOWN'          in var : return '*(90 < m_sv_DM1_DOWN && m_sv_DM1_DOWN < 180)'
+    if '_DM10_UP'           in var : return '*(90 < m_sv_DM10_UP && m_sv_DM10_UP < 180)'
+    if '_DM10_DOWN'         in var : return '*(90 < m_sv_DM10_DOWN && m_sv_DM10_DOWN < 180)'
+    if '_EES_UP'            in var : return '*(90 < m_sv_EES_UP && m_sv_EES_UP < 180)'
+    if '_EES_DOWN'          in var : return '*(90 < m_sv_EES_DOWN && m_sv_EES_DOWN < 180)'
+    if '_UncMet_UP'         in var : return '*(90 < m_sv_UncMet_UP && m_sv_UncMet_UP < 180)'
+    if '_UncMet_DOWN'       in var : return '*(90 < m_sv_UncMet_DOWN && m_sv_UncMet_DOWN < 180)'
+    if '_ClusteredMet_UP'   in var : return '*(90 < m_sv_ClusteredMet_UP && m_sv_ClusteredMet_UP < 180)'
+    if '_ClusteredMet_DOWN' in var : return '*(90 < m_sv_ClusteredMet_DOWN && m_sv_ClusteredMet_DOWN < 180)'
+    else : return '*(90 < m_sv && m_sv < 180)'
+
+
+
 def skipSystShapeVar( var, sample, channel, genCode='x', outFileName='x' ) :
         # Tau Pt Scale reweighting only applied to DYJets and signal
         #print "Skip Vars:",sample, var, genCode
@@ -644,6 +669,12 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                 additionalCutToUse = additionalCutToUse.replace('Higgs_PtCor','Higgs_PtCor_UncMet_DOWN')
 
 
+        # Add the m_sv mass window cut for AZH analysis
+        doMassCutForAllVars = True
+        if analysis == 'azh' and ('AMassConst' in var or doMassCutForAllVars) :
+            additionalCutToUse += getMassWindowCut( var, sample, genCode, outFileName )
+
+
         # This addes the Fake Factor shape systematics weights
         # And add the variable specific Fake Factor cut
         # (isolation and gen match change per variable def)
@@ -730,6 +761,12 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                     if 'DM0'  in var : plotVar = 'm_visCor_DM0_%s' % shiftDir
                     if 'DM1'  in var : plotVar = 'm_visCor_DM1_%s' % shiftDir
                     if 'DM10' in var : plotVar = 'm_visCor_DM10_%s' % shiftDir
+                elif 'AMassConst' in var :
+                    if 'All'  in var : plotVar = 'AMassConst_%s' % shiftDir
+                    if 'DM0'  in var : plotVar = 'AMassConst_DM0_%s' % shiftDir
+                    if 'DM1'  in var : plotVar = 'AMassConst_DM1_%s' % shiftDir
+                    if 'DM10' in var : plotVar = 'AMassConst_DM10_%s' % shiftDir
+                    if 'EES' in var : plotVar = 'AMassConst_EES_%s' % shiftDir
                 elif 'Up' in var :
                     plotVar = varBase + '_UP'
                 elif 'Down' in var :
@@ -746,6 +783,13 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                         plotVar = plotVar.replace('m_sv','m_sv_ClusteredMet_DOWN')
                         plotVar = plotVar.replace('pt_sv','pt_sv_ClusteredMet_DOWN')
                         plotVar = plotVar.replace('Higgs_PtCor','Higgs_PtCor_ClusteredMet_DOWN')
+                if 'AMassConst' in var :
+                    if 'Up' in var[-2:] :
+                        plotVar = plotVar.replace('_metClusteredUp','')
+                        plotVar = plotVar.replace('AMassConst','AMassConst_ClusteredMet_UP')
+                    if 'Down' in var[-4:] :
+                        plotVar = plotVar.replace('_metClusteredDown','')
+                        plotVar = plotVar.replace('AMassConst','AMassConst_ClusteredMet_DOWN')
             elif 'metUnclustered' in shapeName :
                 if 'm_sv' in var :
                     if 'Up' in var[-2:] :
@@ -758,8 +802,15 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                         plotVar = plotVar.replace('m_sv','m_sv_UncMet_DOWN')
                         plotVar = plotVar.replace('pt_sv','pt_sv_UncMet_DOWN')
                         plotVar = plotVar.replace('Higgs_PtCor','Higgs_PtCor_UncMet_DOWN')
+                if 'AMassConst' in var :
+                    if 'Up' in var[-2:] :
+                        plotVar = plotVar.replace('_metUnclusteredUp','')
+                        plotVar = plotVar.replace('AMassConst','AMassConst_UncMet_UP')
+                    if 'Down' in var[-4:] :
+                        plotVar = plotVar.replace('_metUnclusteredDown','')
+                        plotVar = plotVar.replace('AMassConst','AMassConst_UncMet_DOWN')
             elif 'promptMC' in shapeName :
-                if 'm_sv' in var :
+                if 'm_sv' in var or 'AMassConst' in var :
                     if 'Up' in var[-2:] :
                         plotVar = plotVar.replace('_promptMCElecMuUp','')
                         plotVar = plotVar.replace('_promptMCTauUp','')
@@ -789,7 +840,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                 plotVar = varBase
 
                 
-        #print "Var: %s   VarBase: %s" % (var, varBase)
+        #print "Var: %s   VarBase: %s   PlotVar: %s" % (var, varBase, plotVar)
 
         ### Make sure that if we have no events
         ### we still save a blank histo for use later
@@ -1017,6 +1068,7 @@ def getHistoDict( analysis, channel ) :
 ##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
             'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
             'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+            'AMassConst' : [600, 0, 600, 40, 'svFit(125) M_{ll#tau#tau} [GeV]', ' GeV'],
 #####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
 #####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
@@ -1109,19 +1161,19 @@ def getHistoDict( analysis, channel ) :
         #toAdd = ['m_sv','LT_higgs:m_sv' ] # No extra shapes
         #toAdd = ['LT_higgs:m_sv', ] # No extra shapes
         #toAdd = ['Mass','A_Mass' ] # No extra shapes
-        toAdd = ['Mass', ] # No extra shapes
+        toAdd = ['AMassConst', ] # No extra shapes
         varsForShapeSyst = []
         for item in toAdd :
             varsForShapeSyst.append( item )
         shapesToAdd = {
-                    #'energyScaleEES':'Electron Energy Scale',
-                    #'energyScaleDM0':'TES DM0',
-                    #'energyScaleDM1':'TES DM1',
-                    #'energyScaleDM10':'TES DM10',
-                    #'metClustered':'Clustered MET',
-                    #'metUnclustered':'Unclustered MET',
-                    #'promptMCElecMu':'RedBkg Prompt MC Elec/Mu',
-                    #'promptMCTau':'RedBkg Prompt MC Tau',
+                    'energyScaleEES':'Electron Energy Scale',
+                    'energyScaleDM0':'TES DM0',
+                    'energyScaleDM1':'TES DM1',
+                    'energyScaleDM10':'TES DM10',
+                    'metClustered':'Clustered MET',
+                    'metUnclustered':'Unclustered MET',
+                    'promptMCElecMu':'RedBkg Prompt MC Elec/Mu',
+                    'promptMCTau':'RedBkg Prompt MC Tau',
                     }
 
         for var in genVarMap.keys() :

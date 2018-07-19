@@ -30,7 +30,7 @@ print "zHome: ",zHome
 #from meta.makeMeta import makeMetaJSON
 #os.chdir('meta')
 ### General samples.json file from /data/truggles files
-#makeMetaJSON( analysis, 'eeet' )
+##makeMetaJSON( analysis, 'eeet' )
 ### samples.json for post /hdfs skim -> uwlogin samples
 #makeMetaJSON( analysis, 'eeet', skimmed=True )
 #os.chdir('..')
@@ -50,12 +50,11 @@ for mass in [125,] :
 for mass in [125,] :
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
-    azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('VBFHtoWW2l2nu%i' % mass)
     azhSamples.append('WPlusHHWW%i' % mass)
     azhSamples.append('WMinusHHWW%i' % mass)
     azhSamples.append('HtoWW2l2nu%i' % mass)
-    azhSamples.append('ttHTauTau%i' % mass)
+    ###azhSamples.append('ttHTauTau%i' % mass)
     azhSamples.append('ttHJNonBB%i' % mass)
     azhSamples.append('ttHNonBB%i' % mass)
 
@@ -68,7 +67,6 @@ for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
 
 #azhSamples = []
 for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
-#for mass in [300,] :
     azhSamples.append('azh%i' % mass)
 
     
@@ -90,27 +88,28 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 10,
+    'numCores' : 16,
     'numFilesPerCycle' : 1,
     'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm'], # 8 Normal
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm','eeee','mmmm'], # 8 + eeee + mmmm
     #'channels' : ['eett','mmtt'],
     #'channels' : ['eeet','mmmt'],
     #'channels' : ['eeem',],
+    #'channels' : ['eett','eemt'],
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
-    'mid1' : '1June19AZH',
-    'mid2' : '2June19AZH',
-    'mid3' : '3June19AZH',
+    'mid1' : '1July08AZH',
+    'mid2' : '2July08AZH',
+    'mid3' : '3July08AZH',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimmed' : 'false',
-    #'skimmed' : 'true', # Use at uwlogin
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true', # Use for initial skim
+    #'skimmed' : 'false',
+    'skimmed' : 'true', # Use at uwlogin
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # Use for initial skim
 
     ### Signal Sync
     #'channels' : ['eeet','eett','eemt','eeem','emmt','mmtt','mmmt','emmm',], # 8
@@ -140,9 +139,9 @@ doDataCards = True
 
 
 runPlots = False
-doMerge = False
-makeFinalPlots = False
-doDataCards = False
+#doMerge = False
+#makeFinalPlots = False
+#doDataCards = False
 
 
 doZH = True
@@ -289,10 +288,12 @@ if doDataCards :
     #for var in ['m_sv','LT_higgs:m_sv'] :# 'A_Mass', 'Mass'] :
     #for var in ['LT_higgs:m_sv',] :# 'A_Mass', 'Mass'] :
     if doZH : dcVars = ['LT_higgs:m_sv',]
-    else : dcVars = ['Mass', 'A_Mass',]
+    #else : dcVars = ['Mass', 'A_Mass',]
+    else : dcVars = ['AMassConst',]
     for var in dcVars :
         if var == 'A_Mass' : doZH = False
         if var == 'Mass' : doZH = False
+        if var == 'AMassConst' : doZH = False
         finalCat = 'inclusive'
         if var == 'LT_higgs:m_sv' :
             finalCat = 'LT2D'
@@ -310,10 +311,12 @@ if doDataCards :
         subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass.root", "shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"] )
         print "moved to : shapes/azh/htt_zh.inputs-sm-13TeV_svFitMass_new.root"
     else :
-        subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
-        print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
-        subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
-        print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
+        #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"] )
+        #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_4LMass_new.root"
+        #subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"] )
+        #print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMass_new.root"
+        subprocess.call( ["mv", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMassConst.root", "shapes/azh/htt_zh.inputs-mssm-13TeV_AMassConst_new.root"] )
+        print "moved to : shapes/azh/htt_zh.inputs-mssm-13TeV_AMassConst_new.root"
 
 
 
