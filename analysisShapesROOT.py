@@ -523,6 +523,12 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 if analysis == 'azh' and not ops['doZH'] and 'azh' in name :
                     histos[ name ].Scale( 1. / 1000. )
 
+                    # Additionally, scale azh220, 240, 260 because of the genMass cut applied to correct the shape
+                    if name == 'azh220' : histos[ name ].Scale( 1.40 )
+                    if name == 'azh240' : histos[ name ].Scale( 1.06 )
+                    if name == 'azh260' : histos[ name ].Scale( 1.03 )
+                    
+
                 # There is additional ZEE scaling for EES in EEET, EEMT, EETT, EEEM channels
                 if '_energyScaleEES' in var :
                     if name != 'data_obs' and 'allFakes' not in name :
