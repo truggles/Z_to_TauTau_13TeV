@@ -113,7 +113,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     print "Lumi = %.1f / fb" % cmsLumi
     
     mssmMass = 250
-    azhMass = 350
+    azhMass = 300
     mssmSF = 100
     higgsSF = 10.0
     if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
@@ -237,7 +237,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if ops['isSSQCD'] and not var == 'm_visCor' : continue
 
             # speed up 2D plotting
-            if ":" in var :
+            if ":" in var or "AMassConst" in var :
                 ## Skip 1 bin plot of 2D vars
                 #if 'plotMe' in ops['qcdMakeDM'] : continue
                 #elif 'vbf' in ops['qcdMakeDM'] :
@@ -248,7 +248,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 ### Skip plotting systematic shifts
                 if 'Up' in var : continue
                 if 'Down' in var : continue
-
 
 
             #if 'mt_sv' in var : continue
@@ -477,6 +476,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if ops['redBkg'] and 'RedBkgShape' in sample :
                     redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, getVar)).Integral()
                     #print "REd BKG Yield:",redBkgYield
+                    preHist.Sumw2()
                     if preHist.Integral() != 0 :
                         preHist.Scale( redBkgYield / preHist.Integral() )
                     #if ":" in var :
