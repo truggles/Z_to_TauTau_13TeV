@@ -99,6 +99,15 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         smHiggs.append('ZHTauTau%s' % mass)
     for higgs in smHiggs :
         if higgs in samples : del samples[ higgs ]
+    
+    # Define which azh sample to keep
+    azhMass = 300
+    for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
+        if mass != azhMass and 'azh'+str(mass) in samples : del samples[ 'azh'+str(mass) ]
+
+    higgsSF = 10.0
+    if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
+    azhSF = .005
 
     for sample in samples :
         print sample, samples[ sample ][ 'group' ]
@@ -111,13 +120,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
     cmsLumi = float(os.getenv('LUMI'))/1000
     print "Lumi = %.1f / fb" % cmsLumi
-    
-    mssmMass = 250
-    azhMass = 300
-    mssmSF = 100
-    higgsSF = 10.0
-    if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
-    azhSF = .005
     
 
     with open('meta/NtupleInputs_%s/samples.json' % analysis) as sampFile :
@@ -158,7 +160,6 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'wjets' : [ROOT.kAzure+6, 'WJets'],
         'higgs' : [ROOT.kBlue, 'SM Higgs(125)'],
         'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
-        #'mssm' : [ROOT.kPink, 'MSSM(%i) x %i' % (mssmMass, mssmSF)],
         'obs' : [ROOT.kBlack, 'Data'],
         }, # htt
             'azh' : {
