@@ -273,6 +273,7 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 histos[ name ].Sumw2()
     
     
+            redBkgYield = 0.0
             for sample in samples:
     
                 ''' Skip plotting unused shape systematics '''
@@ -365,9 +366,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 """ Scale reducible bkg shape by yield estimate """
                 if ops['redBkg'] and 'RedBkgShape' in sample :
                     hNew.Sumw2()
-                    redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, var)).Integral()
-                    if hNew.Integral() != 0 :
-                        hNew.Scale( redBkgYield / hNew.Integral() )
+                    redBkgYield += tFileYield.Get('%s_Histos/%s' % (channel, var)).Integral()
+                    #XXX if hNew.Integral() != 0 :
+                    #XXX     hNew.Scale( redBkgYield / hNew.Integral() )
 
                 # If using the qcd CR, we want a single bin for all
                 if '_qcd_cr' in ops['category'] :
@@ -392,6 +393,10 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 #hist2 = hist.Rebin( 18, 'rebinned', binArray )
                 #histos[ samples[ sample ] ].Add( hist2 )
                 tFile.Close()
+
+            # With all RB added together, now do normalization
+            if histos[ 'allFakes' ].Integral() != 0 :
+                histos[ 'allFakes' ].Scale( redBkgYield / histos[ 'allFakes' ].Integral() )
     
             # All files looped through, now renormalize jetFakes
             # background if doing Fake Factor method
@@ -459,9 +464,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     print "Simple method uncer on zero bin method - avg allFakes entry #entries %i, weight: %3.4f" % (nEntries, avgW)
                     print problemBins
                     """ To reduce confusion with 2D unrolled, I am taking a yield slightly larger
-                        than the average for RedBkg, 0.06 as the uncertainty to apply for empty
-                        bins. """
-                    avgW = 0.06
+                        than the average for RedBkg, 0.01 as the uncertainty to apply for empty
+                        bins. This was updated Aug 8, 2018 based on EETT weights """
+                    avgW = 0.01
 
                     # Apply correction and set an empyt bin to QCD = 1e-5
                     if sampToCheck in histos.keys() :

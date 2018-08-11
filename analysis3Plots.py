@@ -107,7 +107,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
     higgsSF = 10.0
     if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
-    azhSF = .005
+    azhSF = .010
 
     for sample in samples :
         print sample, samples[ sample ][ 'group' ]
@@ -362,6 +362,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 sampHistos[ signal ].SetMarkerStyle( 0 )
                 
     
+            redBkgYield = 0.0
             for sample in samples.keys() :
                 #print sample
                 #print samples[sample]
@@ -474,17 +475,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     preHist = dic.Get( getVar )
                 preHist.SetDirectory( 0 )
 
-                if ops['redBkg'] and 'RedBkgShape' in sample :
-                    redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, getVar)).Integral()
-                    #print "REd BKG Yield:",redBkgYield
-                    preHist.Sumw2()
-                    if preHist.Integral() != 0 :
-                        preHist.Scale( redBkgYield / preHist.Integral() )
-                    #if ":" in var :
-                    #    #histX = preHist.Rebin2D( 1, 1, "rebinned" )
-                    #    hist = unroll2D( preHist, sample )
-                    #else :
-                    #    hist = ROOT.TH1D( preHist )
+                #XXX if ops['redBkg'] and 'RedBkgShape' in sample :
+                #XXX     redBkgYield = tFileYield.Get('%s_Histos/%s' % (channel, getVar)).Integral()
+                #XXX     #print "REd BKG Yield:",redBkgYield
+                #XXX     preHist.Sumw2()
+                #XXX     if preHist.Integral() != 0 :
+                #XXX         preHist.Scale( redBkgYield / preHist.Integral() )
+                #XXX     #if ":" in var :
+                #XXX     #    #histX = preHist.Rebin2D( 1, 1, "rebinned" )
+                #XXX     #    hist = unroll2D( preHist, sample )
+                #XXX     #else :
+                #XXX     #    hist = ROOT.TH1D( preHist )
     
                 if sample == 'QCD' and ops['useQCDMakeName'] != 'x' :
                     #print "Using QCD SCALE FACTOR <<<< NEW >>>>"
@@ -523,7 +524,16 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #if samples[ sample ]['group'] == 'jetFakes' :
                 #    print "jetFakes Stack yield: %f" % hist.Integral()
                 #    print "%s int: %.2f" % (sample, sampHistos[ samples[ sample ]['group'] ].Integral() )
+
+                if ops['redBkg'] and 'RedBkgShape' in sample :
+                    redBkgYield += tFileYield.Get('%s_Histos/%s' % (channel, getVar)).Integral()
+
                 tFile.Close()
+    
+            # With all RB added together, now do normalization
+            if sampHistos['redBkg'].Integral() != 0 :
+                sampHistos['redBkg'].Scale( redBkgYield / sampHistos['redBkg'].Integral() )
+            
     
 
             ''' Change bin yield to make this make sense with variable binning
@@ -769,6 +779,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             stackMax = stack.GetStack().Last().GetMaximum()
             dataMax = sampHistos['obs'].GetMaximum()
             stack.SetMaximum( max(dataMax, stackMax) * 1.5 )
+            if ops['fullBlind'] :
+                stack.SetMaximum( stackMax * 1.5 )
             if ops['targetDir'] == '/vbf_low' :
                 stack.SetMaximum( max(dataMax, stackMax) * 1.8 )
             if ops['log'] :
