@@ -1,6 +1,7 @@
 
 ALL=/data/truggles/svFit_AZH_July07_Merged2
 V2=/data/truggles/svFit_AZH_July09_Merged
+RB=/data/truggles/svFit_AZH_Aug25_Merged
 
 echo ""
 echo "For svFit optimization ignore eeee and mmmm channels"
@@ -11,6 +12,9 @@ echo ""
 #for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm eeee mmmm; do
 for CHANNEL in eeet eett eemt eeem emmt mmtt mmmt emmm; do
     #for SAMPLE in ttZ ttZ2 DYJets DYJets1 DYJets2 DYJets3 DYJets4 ggZZ4m ggZZ2e2m ggZZ2e2tau ggZZ4e ggZZ2m2tau ggZZ4tau TT WWW WWZ WZ3l1nu WZZ WZ ZZ4l ZZZ; do
+    for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 TT; do
+        ls ${RB}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+    done
     for SAMPLE in ttZ ggZZ4m ggZZ2e2m ggZZ2e2tau ggZZ4e ggZZ2m2tau ggZZ4tau WWW WWZ WZ3l1nu WZZ ZZ4l ZZZ; do
         ls ${ALL}/*${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
     done

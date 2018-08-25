@@ -92,7 +92,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 19970551.0, 
       "nEvents": 19970551, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 19970551.0
     }, 
     "DAS Status": "ok", 
@@ -100,14 +100,14 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 19970551.0, 
       "nEvents": 19970551, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 19970551.0
     }, 
     "mmtt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 19970551.0, 
       "nEvents": 19970551, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 19970551.0
     }, 
     "mmmt": {
@@ -132,7 +132,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 5856110.0, 
       "nEvents": 5856110, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 5856110.0
     }, 
     "Cross Section (pb)": 118.47483999999999, 
@@ -156,7 +156,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 5856110.0, 
       "nEvents": 5856110, 
-      "nNtupleFiles": 4, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 5856110.0
     }, 
     "DAS Status": "ok", 
@@ -164,21 +164,21 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 5856110.0, 
       "nEvents": 5856110, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 5856110.0
     }, 
     "mmtt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 5856110.0, 
       "nEvents": 5856110, 
-      "nNtupleFiles": 4, 
+      "nNtupleFiles": 3, 
       "summedWeightsNorm": 5856110.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 5856110.0, 
       "nEvents": 5856110, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 5856110.0
     }, 
     "eeem": {
@@ -196,7 +196,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 4197868.0, 
       "nEvents": 4197868, 
-      "nNtupleFiles": 5, 
+      "nNtupleFiles": 3, 
       "summedWeightsNorm": 4197868.0
     }, 
     "Cross Section (pb)": 63.776239999999994, 
@@ -204,14 +204,14 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 4197868.0, 
       "nEvents": 4197868, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 4197868.0
     }, 
     "eemt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 4197868.0, 
       "nEvents": 4197868, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 4197868.0
     }, 
     "nDASFiles": 59, 
@@ -220,36 +220,36 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 4197868.0, 
       "nEvents": 4197868, 
-      "nNtupleFiles": 8, 
+      "nNtupleFiles": 5, 
       "summedWeightsNorm": 4197868.0
     }, 
     "DAS Status": "ok", 
     "emmt": {
-      "STATUS": "Good to Go!", 
-      "summedWeights": 4197868.0, 
-      "nEvents": 4197868, 
-      "nNtupleFiles": 7, 
-      "summedWeightsNorm": 4197868.0
+      "STATUS": "Error", 
+      "summedWeights": 4046268.0, 
+      "nEvents": 4046268, 
+      "nNtupleFiles": 4, 
+      "summedWeightsNorm": 4046268.0
     }, 
     "mmtt": {
-      "STATUS": "Good to Go!", 
-      "summedWeights": 4197868.0, 
-      "nEvents": 4197868, 
-      "nNtupleFiles": 10, 
-      "summedWeightsNorm": 4197868.0
+      "STATUS": "Error", 
+      "summedWeights": 4099127.0, 
+      "nEvents": 4099127, 
+      "nNtupleFiles": 6, 
+      "summedWeightsNorm": 4099127.0
     }, 
     "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 4197868.0, 
       "nEvents": 4197868, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 4197868.0
     }, 
     "eeem": {
       "STATUS": "Good to Go!", 
       "summedWeights": 4197868.0, 
       "nEvents": 4197868, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 4197868.0
     }, 
     "DAS Path": "/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
@@ -2564,7 +2564,7 @@
       "STATUS": "Error", 
       "summedWeights": 145803217.0, 
       "nEvents": 145803217, 
-      "nNtupleFiles": 5, 
+      "nNtupleFiles": 3, 
       "summedWeightsNorm": 145803217.0
     }, 
     "Cross Section (pb)": 5765.4652, 
@@ -2572,14 +2572,14 @@
       "STATUS": "Error", 
       "summedWeights": 145803217.0, 
       "nEvents": 145803217, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 145803217.0
     }, 
     "eemt": {
       "STATUS": "Error", 
       "summedWeights": 145803217.0, 
       "nEvents": 145803217, 
-      "nNtupleFiles": 2, 
+      "nNtupleFiles": 1, 
       "summedWeightsNorm": 145803217.0
     }, 
     "nDASFiles": 477, 
@@ -2588,7 +2588,7 @@
       "STATUS": "Error", 
       "summedWeights": 145803217.0, 
       "nEvents": 145803217, 
-      "nNtupleFiles": 6, 
+      "nNtupleFiles": 4, 
       "summedWeightsNorm": 145803217.0
     }, 
     "DAS Status": "ok", 
@@ -2596,21 +2596,21 @@
       "STATUS": "Error", 
       "summedWeights": 145803217.0, 
       "nEvents": 145803217, 
-      "nNtupleFiles": 6, 
+      "nNtupleFiles": 4, 
       "summedWeightsNorm": 145803217.0
     }, 
     "mmtt": {
       "STATUS": "Error", 
       "summedWeights": 145803217.0, 
       "nEvents": 145803217, 
-      "nNtupleFiles": 8, 
+      "nNtupleFiles": 5, 
       "summedWeightsNorm": 145803217.0
     }, 
     "mmmt": {
       "STATUS": "Error", 
       "summedWeights": 145803217.0, 
       "nEvents": 145803217, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 145803217.0
     }, 
     "eeem": {
@@ -4420,7 +4420,7 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 77081156.0, 
       "nEvents": 77081156, 
-      "nNtupleFiles": 6, 
+      "nNtupleFiles": 3, 
       "summedWeightsNorm": 77081156.0
     }, 
     "Cross Section (pb)": 831.76, 
@@ -4428,52 +4428,52 @@
       "STATUS": "Good to Go!", 
       "summedWeights": 77081156.0, 
       "nEvents": 77081156, 
-      "nNtupleFiles": 3, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 77081156.0
     }, 
     "eemt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 77081156.0, 
       "nEvents": 77081156, 
-      "nNtupleFiles": 5, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 77081156.0
     }, 
     "nDASFiles": 982, 
     "nDASLumis": 481156, 
     "eett": {
-      "STATUS": "Error", 
-      "summedWeights": 76473998.0, 
-      "nEvents": 76473998, 
-      "nNtupleFiles": 7, 
-      "summedWeightsNorm": 76473998.0
-    }, 
-    "DAS Status": "ok", 
-    "emmt": {
-      "STATUS": "Good to Go!", 
-      "summedWeights": 77081156.0, 
-      "nEvents": 77081156, 
-      "nNtupleFiles": 6, 
-      "summedWeightsNorm": 77081156.0
-    }, 
-    "mmtt": {
-      "STATUS": "Good to Go!", 
-      "summedWeights": 77081156.0, 
-      "nEvents": 77081156, 
-      "nNtupleFiles": 7, 
-      "summedWeightsNorm": 77081156.0
-    }, 
-    "mmmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 77081156.0, 
       "nEvents": 77081156, 
       "nNtupleFiles": 4, 
       "summedWeightsNorm": 77081156.0
     }, 
-    "eeem": {
+    "DAS Status": "ok", 
+    "emmt": {
       "STATUS": "Good to Go!", 
       "summedWeights": 77081156.0, 
       "nEvents": 77081156, 
       "nNtupleFiles": 3, 
+      "summedWeightsNorm": 77081156.0
+    }, 
+    "mmtt": {
+      "STATUS": "Good to Go!", 
+      "summedWeights": 77081156.0, 
+      "nEvents": 77081156, 
+      "nNtupleFiles": 4, 
+      "summedWeightsNorm": 77081156.0
+    }, 
+    "mmmt": {
+      "STATUS": "Good to Go!", 
+      "summedWeights": 77081156.0, 
+      "nEvents": 77081156, 
+      "nNtupleFiles": 2, 
+      "summedWeightsNorm": 77081156.0
+    }, 
+    "eeem": {
+      "STATUS": "Good to Go!", 
+      "summedWeights": 77081156.0, 
+      "nEvents": 77081156, 
+      "nNtupleFiles": 2, 
       "summedWeightsNorm": 77081156.0
     }, 
     "DAS Path": "/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM", 
