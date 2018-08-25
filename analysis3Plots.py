@@ -105,8 +105,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
         if mass != azhMass and 'azh'+str(mass) in samples : del samples[ 'azh'+str(mass) ]
 
-    higgsSF = 10.0
-    if 'vbf_high' in ops['targetDir'] : higgsSF = 2.5
+    higgsSF = 1.0
     azhSF = .010
 
     for sample in samples :
@@ -171,7 +170,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
         'redBkg' : [ROOT.kCyan, 'Jet Fakes'],
-        'higgs' : [ROOT.kRed-4, 'SM HZZ (125)'],
+        'higgs' : [ROOT.kRed-4, 'SM Higgs(125)'],
         'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
         'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3ffb' % (azhMass, azhSF*1000)],
         } # azh
@@ -586,10 +585,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             if analysis == 'azh' :
                 if ops['redBkg'] :
                     stack.Add( sampHistos['redBkg'] )
-                stack.Add( sampHistos['top'] )
-                stack.Add( sampHistos['dyj'] )
-                stack.Add( sampHistos['wz'] )
-                stack.Add( sampHistos['rare'] )
+                stack.Add( sampHistos['rare'] ) # TT, DYJets, WZ are all in rare now because only rarely do they both gen match true leptons
                 stack.Add( sampHistos['ttZ'] )
                 stack.Add( sampHistos['zz'] )
                 stack.Add( sampHistos['higgs'] )
@@ -807,8 +803,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
             # Set CMS Styles Stuff
             logo = ROOT.TText(.2, .88,"CMS Preliminary")
             logo.SetTextSize(0.03)
-            #logo.DrawTextNDC(.2, .89,"CMS Preliminary")
-            logo.DrawTextNDC(.2, .89,"Ruggles Thesis")
+            logo.DrawTextNDC(.2, .89,"CMS Preliminary")
     
             chan = ROOT.TLatex(.2, .80,"x")
             chan.SetTextSize(0.05)
@@ -937,8 +932,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                     if 'Mass' in var : inputThreshold = 0.0
                     nBins = stack.GetStack().Last().GetXaxis().GetNbins()
                     for k in range( 1, nBins+1 ) :
-                        # Should take max of SM OR MSSM, FIXME
-                        maxSig = (sampHistos['VH'].GetBinContent( k )/signalSF) + sampHistos['higgs'].GetBinContent( k )
+                        maxSig = sampHistos[ signal ].GetBinContent( k )
                         # Get Estimated bkg
                         totBkg = max(stack.GetStack().Last().GetBinContent( k ), 1.e-30)
                         # Check if we blind based on HTT 2016  twiki base 
