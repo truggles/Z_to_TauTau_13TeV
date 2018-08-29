@@ -188,11 +188,11 @@ def sampleDetails( analysis ) :
             'ttZ' : {
                 'DASPath' : '/ttZJets_13TeV_madgraphMLM-pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.616,
-                'group' : 'ttZ'},
+                'group' : 'rare'},
             'ttZ2' : {
                 'DASPath' : '/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/%s_ext3-v1/MINIAODSIM' % moriond17,
                 'xsec' : 0.616, # FIXME THIS IS WRONG!!! was copied from above inclusive version
-                'group' : 'ttZ'},
+                'group' : 'rare'},
         }, # end common
         'azh' : {
             # See H->ZZ samples: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016#MC
