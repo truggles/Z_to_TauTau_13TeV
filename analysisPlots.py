@@ -435,6 +435,14 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         if analysis == 'azh' and 'RedBkgYield' in outFile.GetName() :
             additionalCut = getRedBkgCutsAndWeights(
                     analysis, channel, additionalCut, prodMap )
+            # Add channel specific VVLoose cuts for Taus
+            if channel in ['eeet','emmt'] :
+                additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+            elif channel in ['eemt','mmmt'] :
+                additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+            elif channel in ['eett','mmtt'] :
+                additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
+                additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
         elif analysis == 'azh' and 'RedBkgShape' in outFile.GetName() :
             additionalCut = getRedBkgShape( 
                     analysis, channel, additionalCut, prodMap )
@@ -443,22 +451,22 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
                     analysis, channel, additionalCut, prodMap )
 
         # Add channel specific LT_higgs cuts from June Optimization
-        if channel in ['eeet','emmt'] :
-            #additionalCut += '*(LT_higgs > 30)'
-            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-        elif channel in ['eemt','mmmt'] :
-            additionalCut += '*(LT_higgs > 40)'
-            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-        elif channel in ['eeem','emmm'] :
-            additionalCut += '*(LT_higgs > 20)'
-        elif channel in ['eett','mmtt'] :
-            additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
-            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
-            additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+        #if channel in ['eeet','emmt'] :
+        #    additionalCut += '*(LT_higgs > 20)'
+        #    #additionalCut += '*(LT_higgs > 30)'
+        #elif channel in ['eemt','mmmt'] :
+        #    additionalCut += '*(LT_higgs > 20)'
+        #    #additionalCut += '*(LT_higgs > 40)'
+        #elif channel in ['eeem','emmm'] :
+        #    additionalCut += '*(LT_higgs > 20)'
+        if channel in ['eett','mmtt'] :
+            #additionalCut += '*(LT_higgs > 80)' # > 80 GeV is 10% better than 60,
+            additionalCut += '*(LT_higgs > 60)' # > 80 GeV is 10% better than 60,
             # 60 is way more stats
 
         # bJet Veto Tests
         additionalCut += '*(bjetCISVVeto20Medium == 0)'
+        additionalCut += '*(const_m_sv > 0 && AMassConst < 600)'
         #additionalCut += '*(gen_match_3 == 6)'
         #additionalCut += '*(gen_match_4==6)'
         #additionalCut += '*(gen_match_3 == 6 && gen_match_4==6)'
@@ -1069,16 +1077,19 @@ def getHistoDict( analysis, channel ) :
 #####            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
 #####            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
 #####            'jdeta' : [100, -5, 5, 10, 'VBF dEta', ' dEta'],
-            'm_sv' : [300, 0, 300, 20, 'M_{#tau#tau} [GeV]', ' GeV'],
-            'const_m_sv' : [170, -20, 150, 1, 'M_{#tau#tau} Constrained [GeV]', ' GeV'],
-##XXX            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
-            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
-            'A_Mass' : [600, 0, 600, 40, 'M_{ll#tau#tau} [GeV]', ' GeV'],
-            'AMassConst' : [600, 0, 600, 40, 'svFit(125) M_{ll#tau#tau} [GeV]', ' GeV'],
-#####XXX            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
-#####XXX            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
+            'm_sv' : [300, 0, 300, 20, 'm_{#tau#tau} [GeV]', ' GeV'],
+            #'const_m_sv' : [30, 110, 140, 1, 'm^{c}_{#tau#tau} [GeV]', ' GeV'],
+            'const_m_sv' : [170, -10, 160, 170, 'm^{c}_{#tau#tau} [GeV]', ' GeV'],
+#            'pt_sv' : [300, 0, 300, 20, 'PT_{#tau#tau} [GeV]', ' GeV'],
+#            'const_pt_sv' : [300, 0, 300, 20, 'PT^{c}_{#tau#tau} [GeV]', ' GeV'],
+##            'H_vis' : [200, 0, 200, 20, 'H Visible Mass [GeV]', ' GeV'],
+##            'Mass' : [600, 0, 600, 40, 'vis M_{ll#tau#tau} [GeV]', ' GeV'],
+#            'A_Mass' : [600, 0, 600, 20, 'M_{ll#tau#tau} [GeV]', ' GeV'],
+            'AMassConst' : [600, 0, 600, 20, 'M^{c}_{ll#tau#tau} [GeV]', ' GeV'],
+#            'LT' : [600, 0, 600, 40, 'Total LT [GeV]', ' GeV'],
+#            'Mt' : [600, 0, 600, 40, 'Total m_{T} [GeV]', ' GeV'],
             #'H_SS' : [20, -1, 1, 1, 'H Same Sign', ''],
-            'LT_higgs' : [200, 0, 200, 10, 'LT_{higgs} [GeV]', ' GeV'],
+#            'LT_higgs' : [200, 0, 200, 10, 'LT_{higgs} [GeV]', ' GeV'],
 # HIG-18-007            'LT_higgs:m_sv' : [20, 0, 20, 1, 'M_{#tau#tau} [GeV]', ' GeV'],
 #            'H_PZeta' : [600, -200, 400, 20, 'PZeta_{higgs} [GeV]', ' GeV'],
 #            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
@@ -1087,10 +1098,10 @@ def getHistoDict( analysis, channel ) :
 ####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
 ####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
 ####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
-            'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
-            'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
-            'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
-            'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
+        #    'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
+        #    'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
+        #    'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
+        #    'pt_4' : [200, 0, 200, 20, 'Leg4 p_{T} [GeV]', ' GeV'],
 #            'pfmt_3' : [200, 0, 200, 20, 'Leg3 M_{T} [GeV]', ' GeV'],
 #            'pfmt_4' : [200, 0, 200, 20, 'Leg4 M_{T} [GeV]', ' GeV'],
 #            'gen_match_3' : [7, -0.5, 6.5, 1, 'Gen Match Leg 3', ''],
@@ -1101,8 +1112,8 @@ def getHistoDict( analysis, channel ) :
 ####XXX            'eta_4' : [60, -3, 3, 10, 'Leg4 Eta', ' Eta'],
 ####            'iso_1' : [20, 0, 0.5, 1, 'Leg1 RelIsoDB03', ''],
 ####            'iso_2' : [20, 0, 0.5, 1, 'Leg2 RelIsoDB03', ''],
-####XXX            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
-####XXX            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
+#            'iso_3' : [20, 0, 1, 1, 'Leg3 Iso', ''],
+#            'iso_4' : [20, 0, 1, 1, 'Leg4 Iso', ''],
 ###            'jpt_1' : [200, 0, 200, 20, 'Leading Jet Pt', ' GeV'],
 ###            #'jeta_1' : [100, -5, 5, 10, 'Leading Jet Eta', ' Eta'],
 ###            'jpt_2' : [200, 0, 200, 20, 'Second Jet Pt', ' GeV'],
@@ -1172,14 +1183,14 @@ def getHistoDict( analysis, channel ) :
         for item in toAdd :
             varsForShapeSyst.append( item )
         shapesToAdd = {
-                    'energyScaleEES':'Electron Energy Scale',
-                    'energyScaleDM0':'TES DM0',
-                    'energyScaleDM1':'TES DM1',
-                    'energyScaleDM10':'TES DM10',
-                    'metClustered':'Clustered MET',
-                    'metUnclustered':'Unclustered MET',
-                    'promptMCElecMu':'RedBkg Prompt MC Elec/Mu',
-                    'promptMCTau':'RedBkg Prompt MC Tau',
+                    #'energyScaleEES':'Electron Energy Scale',
+                    #'energyScaleDM0':'TES DM0',
+                    #'energyScaleDM1':'TES DM1',
+                    #'energyScaleDM10':'TES DM10',
+                    #'metClustered':'Clustered MET',
+                    #'metUnclustered':'Unclustered MET',
+                    #'promptMCElecMu':'RedBkg Prompt MC Elec/Mu',
+                    #'promptMCTau':'RedBkg Prompt MC Tau',
                     }
 
         for var in genVarMap.keys() :
