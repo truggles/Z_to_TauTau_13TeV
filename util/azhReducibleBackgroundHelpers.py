@@ -59,12 +59,11 @@ def getRedBkgShape( analysis, channel, cut, prodMap ) :
         "The current channel %s is missing from \
         the Red Bkg process, you must define it" % channel
 
-    #elec = 'iso_NUM < 2 && id_e_mva_nt_loose_NUM > 0.5'
-    #muon = 'iso_NUM < 2 && CAND_PFIDLoose > 0.5'
-    #tau = 'byVVLooseIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
-    elec = 'id_e_mva_nt_loose_NUM > 0.5'
-    muon = 'iso_NUM < 5 && CAND_PFIDLoose > 0.5'
-    tau = 'iso_NUM > -0.8'
+    tau = 'byVVLooseIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
+    #elec = 'id_e_mva_nt_loose_NUM > 0.5'
+    elec = 'iso_NUM < 1.5'
+    #muon = 'iso_NUM < 5 && CAND_PFIDLoose > 0.5'
+    muon = 'iso_NUM < 5 && CAND_IsGlobal > 0.5'
 
 
     newCuts = []
@@ -101,8 +100,11 @@ def getChannelSpecificFinalCuts( analysis, channel, cut, prodMap ) :
     newCuts = []
     # Currently defined for ZH
     elec = 'iso_NUM < 0.15 && id_e_mva_nt_tight_NUM > 0.5'
+    #elec = 'id_e_mva_nt_loose_NUM > 0.5'
     muon = 'iso_NUM < 0.15 && CAND_PFIDLoose > 0.5'
+    #muon = 'iso_NUM < 2 && CAND_PFIDLoose > 0.5'
     tau = 'byMediumIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
+    #tau = 'byVLooseIsolationMVArun2v1DBoldDMwLT_NUM > 0.5'
 
     if analysis == 'azh' :
         if 'e' in prodMap[channel][2] :
