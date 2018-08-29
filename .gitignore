@@ -24,4 +24,5 @@ plotsOut.txt
 data/triggerSF/
 data/LeptonEfficiencies/
 *.swp
+redBkgShape/
 
