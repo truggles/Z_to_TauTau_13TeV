@@ -166,7 +166,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'zz' : [ROOT.kGreen-9, 'ZZ'],
         'ttZ' : [ROOT.kYellow-7, 'ttZ'],
         'wz' : [ROOT.kRed+1, 'WZ'],
-        'rare' : [ROOT.kOrange+7, 'Rare'],
+        #'rare' : [ROOT.kOrange+7, 'Other'],
+        'rare' : [ROOT.kYellow-7, 'Other'],
         'dyj' : [ROOT.TColor.GetColor(248,206,104), 'ZJets'],
         'top' : [ROOT.kBlue-8, 't#bar{t}'],
         'redBkg' : [ROOT.kCyan, 'Jet Fakes'],
@@ -519,6 +520,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
                 #print sample, samples[ sample ]['group']
                 #print sampHistos[ samples[ sample ]['group'] ], hist
+                #print "%s int: %.2f" % (sample, sampHistos[ samples[ sample ]['group'] ].Integral() )
                 sampHistos[ samples[ sample ]['group'] ].Add( hist )
                 #if samples[ sample ]['group'] == 'jetFakes' :
                 #    print "jetFakes Stack yield: %f" % hist.Integral()
@@ -586,7 +588,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 if ops['redBkg'] :
                     stack.Add( sampHistos['redBkg'] )
                 stack.Add( sampHistos['rare'] ) # TT, DYJets, WZ are all in rare now because only rarely do they both gen match true leptons
-                stack.Add( sampHistos['ttZ'] )
+                #stack.Add( sampHistos['ttZ'] )
                 stack.Add( sampHistos['zz'] )
                 stack.Add( sampHistos['higgs'] )
     
@@ -636,23 +638,31 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 'top' : .10,
                 'dyj' : .10,
                 'wz' : .10,
-                'rare' : .10,
-                'zz' : .10,
-                'ttZ' : .20,
-                'redBkg' : .20,
+                'rare' : .25,
+                'zz' : .05,
+                'ttZ' : .25,
+                'redBkg' : .40,
                 'azh' : .0,
                 'higgs' : .1,
                 'VH' : .0,
                 'obs' : .0,}
             }
+            if channel in ['eeem', 'emmm', 'LLEM'] :
+                uncertNormMap['azh']['redBkg'] = 1.00
+            if channel in ['eeet', 'emmt', 'LLET'] :
+                uncertNormMap['azh']['redBkg'] = 0.50
+            if channel in ['eemt', 'mmmt', 'LLMT'] :
+                uncertNormMap['azh']['redBkg'] = 0.25
+            if channel in ['eett', 'mmtt', 'LLTT'] :
+                uncertNormMap['azh']['redBkg'] = 0.40
             binErrors = []
             for k in range( stack.GetStack().Last().GetNbinsX()+1 ) :
                 toRoot = 0.
                 for samp in sampHistos.keys() :
                     if samp in ['obs', 'azh', 'VH', 'higgs'] : continue
-                    #toRoot += (sampHistos[samp].GetBinContent(k)*\
-                    #    uncertNormMap[analysis][samp])**2
-                    toAdd = sampHistos[samp].GetBinError(k)**2
+                    toAdd = (sampHistos[samp].GetBinContent(k)*\
+                        uncertNormMap[analysis][samp])**2
+                    toAdd += sampHistos[samp].GetBinError(k)**2
                     if toAdd > 0.0 : toRoot += toAdd
                     #toRoot += sampHistos[samp].GetBinError(k)**2
 
@@ -786,7 +796,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
 
             ''' Build the legend explicitly so we can specify marker styles '''
-            legend = ROOT.TLegend(0.60, 0.65, 0.95, 0.93)
+            legend = ROOT.TLegend(0.60, 0.55, 0.95, 0.93)
             legend.SetMargin(0.3)
             legend.SetBorderSize(0)
             legend.AddEntry( sampHistos['obs'], "Data", 'lep')
@@ -815,7 +825,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
 
             ''' Random print outs on plots '''
-            if ops['text'] and not varBinned :
+            if ops['text'] :# and not varBinned :
                 text1 = ROOT.TText(.4,.6,"Data Integral: %f" % sampHistos['obs'].GetMean() )
                 text1.SetTextSize(0.04)
                 text1.DrawTextNDC(.6,.6,"Data Integral: %s" % str( round( sampHistos['obs'].Integral(), 1) ) )
@@ -938,7 +948,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                         # Check if we blind based on HTT 2016  twiki base 
                         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Blinding
                         #print "bin: %s   maxSig: %s   tot bkg: %s     sensitivity: %s" % (k, maxSig, totBkg, maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ))
-                        if ( inputThreshold <= ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) or (var == 'LT_higgs' and k > 5) :
+                        if ( inputThreshold <= ( maxSig / math.sqrt( totBkg + (blindEpsilon * totBkg)**2 ) ) ) or (var == 'LT_higgs' and k > 5) \
+                                or (var == 'm_sv' and sampHistos[ signal ].GetBinCenter( k ) > 100 and sampHistos[ signal ].GetBinCenter( k ) < 160) :
                             sampHistos['obs'].SetBinContent(k, 0.)
                             sampHistos['obs'].SetBinError(k, 0.)
                             if ops['ratio'] :
