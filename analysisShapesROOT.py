@@ -240,6 +240,8 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                 binArray = array( 'd', [i*20 for i in range( 1, 12 )] )
             elif analysis == 'azh' and ops['doZH'] and ":" in var :
                 binArray = array( 'd', [i for i in range( 21 )] )
+            elif analysis == 'azh' and var == 'm_vis' :
+                binArray = array( 'd', [i*20 for i in range( 21 )] )
             elif analysis == 'azh' : # For 4lMass and A_Mass
                 binArray = array( 'd', [i*20 for i in range( 31 )] )
             else :

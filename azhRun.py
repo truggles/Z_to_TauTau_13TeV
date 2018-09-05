@@ -37,8 +37,8 @@ print "zHome: ",zHome
 
 
 ''' Preset samples '''
-#azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'WZ', 'ZZ4l', 'ZZZ',] # No ttZ2
-azhSamples = ['ttZ', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'ZZ4l', 'ZZZ',] # No ttZ2
+#azhSamples = ['ttZ', 'DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'TT', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'ZZ4l', 'ZZZ',] # No ttZ2 nor WZ
+azhSamples = ['ttZ', 'ggZZ4m', 'ggZZ2e2m', 'ggZZ2e2tau', 'ggZZ4e', 'ggZZ2m2tau', 'ggZZ4tau', 'WWW', 'WWZ', 'WZ3l1nu', 'WZZ', 'ZZ4l', 'ZZZ',] # No ttZ2 nor WZ
 
 #for mass in [110, 120, 125, 130, 140] :
 for mass in [125,] :
@@ -50,12 +50,12 @@ for mass in [125,] :
 for mass in [125,] :
     azhSamples.append('ZHWW%i' % mass)
     azhSamples.append('HZZ%i' % mass)
-    azhSamples.append('VBFHtoWW2l2nu%i' % mass)
-    azhSamples.append('WPlusHHWW%i' % mass)
-    azhSamples.append('WMinusHHWW%i' % mass)
-    azhSamples.append('HtoWW2l2nu%i' % mass)
+    #azhSamples.append('VBFHtoWW2l2nu%i' % mass)
+    #azhSamples.append('WPlusHHWW%i' % mass)
+    #azhSamples.append('WMinusHHWW%i' % mass)
+    #azhSamples.append('HtoWW2l2nu%i' % mass)
     ###azhSamples.append('ttHTauTau%i' % mass)
-    azhSamples.append('ttHJNonBB%i' % mass)
+    ###azhSamples.append('ttHJNonBB%i' % mass)
     azhSamples.append('ttHNonBB%i' % mass)
 
 #azhSamples = []
@@ -73,10 +73,13 @@ for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 #azhSamples = ['ZHWW125','HZZ125']
 #azhSamples = ['dataEE-B',]
 #azhSamples = ['HZZ125',]
-#azhSamples = ['azh300',]
+#azhSamples = ['azh220', 'azh240', 'azh260',]
 #azhSamples = ['ZHTauTau125',]
 #azhSamples = ['ggHtoTauTau140',]
 #azhSamples = ['ZZ4l',]
+#azhSamples = ['WZ3l1nu',]
+#azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'TT']
+#azhSamples = ['azh300',]
 
 samples = azhSamples
 
@@ -138,7 +141,7 @@ makeFinalPlots = True
 doDataCards = True
 
 
-runPlots = False
+#runPlots = False
 #doMerge = False
 #makeFinalPlots = False
 #doDataCards = False
@@ -243,9 +246,9 @@ if makeFinalPlots :
     text=False
     #text=True
     blind = True
-    blind = False
+    #blind = False
     fullBlind = True
-    fullBlind = False
+    #fullBlind = False
     kwargs = { 'text':text, 'blind':blind, 'fullBlind' : fullBlind, 'redBkg':useRedBkg }
     print params
 
@@ -290,10 +293,12 @@ if doDataCards :
     if doZH : dcVars = ['LT_higgs:m_sv',]
     #else : dcVars = ['Mass', 'A_Mass',]
     else : dcVars = ['AMassConst',]
+    #else : dcVars = ['m_vis',]
     for var in dcVars :
         if var == 'A_Mass' : doZH = False
         if var == 'Mass' : doZH = False
         if var == 'AMassConst' : doZH = False
+        if var == 'm_vis' : doZH = False
         finalCat = 'inclusive'
         if var == 'LT_higgs:m_sv' :
             finalCat = 'LT2D'
