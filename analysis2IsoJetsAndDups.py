@@ -117,6 +117,14 @@ def setIsoCode( row, lep, VVTight, VVLoose ) :
     else : return -1
 
 
+def electronMvaHZZ( mva_raw, eta ) :
+    if (abs(eta) < 0.8 and mva_raw > -0.870) : return 1.0
+    elif (abs(eta) >= 0.8 and abs(eta) < 1.479 and mva_raw > -0.838) : return 1.0
+    elif (abs(eta) >= 1.479 and mva_raw > -0.763) : return 1.0
+    else : return 0.0
+
+
+
 def getTauPtWeight( sample, channel, t1GenID, t2GenID, row, ptScaler ) :
     if channel != 'tt' : return 1
     if not ('ggH' in sample or 'bbH' in sample or 'DYJets' in sample or 'VBF' in sample or 'Sync' in sample) :
@@ -391,7 +399,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     from util.qqZZ4l_reweight import qqZZ4l_nnlo_weight
 
     if len(channel) > 3 : # either AZH or ZH analysis
+        from util.applyReducibleBkg3L import ReducibleBkgWeights3L
         from util.applyReducibleBkg import ReducibleBkgWeights
+        zh3LFRObj = ReducibleBkgWeights3L( channel, 'Nominal' )
         zhFRObj = ReducibleBkgWeights( channel, 'Nominal' )
         zhFRObjUp = ReducibleBkgWeights( channel, 'UP' )
         zhFRObjDown = ReducibleBkgWeights( channel, 'DOWN' )
@@ -896,10 +906,20 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     electronSF_3B = tnew.Branch('electronSF_3', electronSF_3, 'electronSF_3/F')
     electronSF_4 = array('f', [ 0 ] )
     electronSF_4B = tnew.Branch('electronSF_4', electronSF_4, 'electronSF_4/F')
+    electronMvaHZZ_3 = array('f', [ 0 ] )
+    electronMvaHZZ_3B = tnew.Branch('electronMvaHZZ_3', electronMvaHZZ_3, 'electronMvaHZZ_3/F')
+    electronMvaHZZ_4 = array('f', [ 0 ] )
+    electronMvaHZZ_4B = tnew.Branch('electronMvaHZZ_4', electronMvaHZZ_4, 'electronMvaHZZ_4/F')
     tauSF_3 = array('f', [ 0 ] )
     tauSF_3B = tnew.Branch('tauSF_3', tauSF_3, 'tauSF_3/F')
     tauSF_4 = array('f', [ 0 ] )
     tauSF_4B = tnew.Branch('tauSF_4', tauSF_4, 'tauSF_4/F')
+    zh3LFR0 = array('f', [ 0 ] )
+    zh3LFR0B = tnew.Branch('zh3LFR0', zh3LFR0, 'zh3LFR0/F')
+    zh3LFR1 = array('f', [ 0 ] )
+    zh3LFR1B = tnew.Branch('zh3LFR1', zh3LFR1, 'zh3LFR1/F')
+    zh3LFR2 = array('f', [ 0 ] )
+    zh3LFR2B = tnew.Branch('zh3LFR2', zh3LFR2, 'zh3LFR2/F')
     zhFR0 = array('f', [ 0 ] )
     zhFR0B = tnew.Branch('zhFR0', zhFR0, 'zhFR0/F')
     zhFR1 = array('f', [ 0 ] )
@@ -1435,6 +1455,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             electronSF_2[0] = 1
             electronSF_3[0] = 1
             electronSF_4[0] = 1
+            electronMvaHZZ_3[0] = 0
+            electronMvaHZZ_4[0] = 0
             tauSF_3[0] = 1
             tauSF_4[0] = 1
             azhWeight[0] = 1
@@ -1512,6 +1534,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #m_visCor_DM0_DOWN[0] = m_visCor[0]
             #m_visCor_DM1_DOWN[0] = m_visCor[0]
             #m_visCor_DM10_DOWN[0] = m_visCor[0]
+            zh3LFR0[0] = 0
+            zh3LFR1[0] = 0
+            zh3LFR2[0] = 0
             zhFR0[0] = 0
             zhFR1[0] = 0
             zhFR2[0] = 0
@@ -1628,6 +1653,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     zhTrigMCEff[0] = zhSF.getZHTriggerMCEff( row.nvtx, pt1, eta1, pt2, eta2 )
 
 
+            # Additional electron ID, HZZ 98% eff for AZh
+            if analysis == 'azh' :
+                if 'e' in l3 :
+                    electronMvaHZZ_3[0] = electronMvaHZZ( getattr( row, l3+'MVATrigID'), eta3 )
+                if 'e' in l4 :
+                    electronMvaHZZ_4[0] = electronMvaHZZ( getattr( row, l4+'MVATrigID'), eta4 )
 
             # Data specific vars
             if 'data' in sample :
@@ -1998,6 +2029,15 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Calculate our ZH fake rate values
                 # This uses the 1+2-0 method detailed in AN2014/109
                 if 'data' in sample :
+
+                    # Nominal 3L FRs
+                    zh3LFR1[0] = zh3LFRObj.getFRWeightL3( pt3, eta3, l3, row ) 
+                    if zh3LFR1[0] < 0. : zh3LFR1[0] = 0.
+
+                    zh3LFR2[0] = zh3LFRObj.getFRWeightL4( pt4, eta4, l4, row ) 
+                    if zh3LFR2[0] < 0. : zh3LFR2[0] = 0.
+
+                    zh3LFR0[0] = zh3LFR1[0] * zh3LFR2[0]
 
                     # Nominal
                     zhFR1[0] = zhFRObj.getFRWeightL3( pt3, eta3, l3, row ) 
