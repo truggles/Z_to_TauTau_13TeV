@@ -438,11 +438,16 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             # Add channel specific VVLoose cuts for Taus
             if channel in ['eeet','emmt'] :
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+                #additionalCut += '*(electronMvaHZZ_3 > 0.5 && iso_3 < 0.6)' ### For 3L FRs
             elif channel in ['eemt','mmmt'] :
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+                #additionalCut += '*(iso_3 < 1.0)' ### For 3L FRs
             elif channel in ['eett','mmtt'] :
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
+            #elif channel in ['eeem','emmm'] : ### For 3L FRs
+            #    additionalCut += '*(electronMvaHZZ_3 > 0.5 && iso_3 < 0.6)' ### For 3L FRs
+            #    additionalCut += '*(iso_4 < 1.0)' ### For 3L FRs
         elif analysis == 'azh' and 'RedBkgShape' in outFile.GetName() :
             additionalCut = getRedBkgShape( 
                     analysis, channel, additionalCut, prodMap )
@@ -1072,7 +1077,8 @@ def getHistoDict( analysis, channel ) :
 ####            #'H_Eta' : [40, -5, 5, 10, 'H Eta', ' Eta'],
 #            'H_Pt' : [300, 0, 300, 30, 'H p_{T} [GeV]', ' GeV'],
 #            'H_vis' : [300, 0, 300, 20, 'H Vis Mass [GeV]', ' GeV'],
-#####            'Z_DR' : [500, 0, 5, 50, 'Z dR', ' dR'],
+####            'Z_DR' : [500, 0, 5, 20, 'Z dR(l1,l2)', ' dR'],
+####            'H_DR' : [500, 0, 5, 20, 'H dR(l3,l4)', ' dR'],
 #####            'Z_DPhi' : [800, -4, 4, 80, 'Z dPhi', ' dPhi'],
 #####            'Z_DEta' : [100, -5, 5, 10, 'Z dEta', ' dEta'],
 #####            'mjj' : [40, 0, 800, 1, 'M_{jj}', ' [GeV]'],
@@ -1095,9 +1101,9 @@ def getHistoDict( analysis, channel ) :
 #            'H_PZetaVis' : [300, 0, 300, 20, 'PZetaVis_{higgs} [GeV]', ' GeV'],
 #            'H_DZeta' : [600, -200, 400, 20, 'DZeta_{higgs} [GeV]', ' GeV'],
 #            'met' : [250, 0, 250, 20, 'pfMet [GeV]', ' GeV'],
-####            'zhFR0' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 0', ''],
-####            'zhFR1' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 1', ''],
-####            'zhFR2' : [50, 0, 0.5, 2, 'ZH FakeRate Weight 2', ''],
+#            'zhFR0' : [500, 0.001, 0.5, 10, 'ZH FakeRate Weight 0', ''],
+#            'zhFR1' : [500, 0.001, 0.5, 10, 'ZH FakeRate Weight 1', ''],
+#            'zhFR2' : [500, 0.001, 0.5, 10, 'ZH FakeRate Weight 2', ''],
         #    'pt_1' : [200, 0, 200, 20, 'Leg1 p_{T} [GeV]', ' GeV'],
         #    'pt_2' : [200, 0, 200, 20, 'Leg2 p_{T} [GeV]', ' GeV'],
         #    'pt_3' : [200, 0, 200, 20, 'Leg3 p_{T} [GeV]', ' GeV'],
