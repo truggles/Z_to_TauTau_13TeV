@@ -311,7 +311,7 @@ def getCut( analysis, sample, channel, cutName ) :
 
 
 if __name__ == '__main__' :
-    cut = getCut( 'azh', 'eeet', 'Skim' )
+    cut = getCut( 'azh', 'ZZ4l', 'eeet', 'SkimApplyNewTrig' )
     print cut + "\n\n"
 
 
