@@ -19,7 +19,7 @@ class ReducibleBkgWeights3L :
             one of the supported shifts: Nominal, UP, DOWN" % shift
         self.channel = channel
         self.shift = shift
-        self.file = ROOT.TFile('data/azhFakeRateFits_3L_Feb27.root','READ')
+        self.file = ROOT.TFile('data/azhFakeRateFits_3L_Sep25.root','READ')
         self.app = 'leptonPt'
 
         # Set Leg3 FR hists
