@@ -438,16 +438,16 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
             # Add channel specific VVLoose cuts for Taus
             if channel in ['eeet','emmt'] :
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-                #additionalCut += '*(electronMvaHZZ_3 > 0.5 && iso_3 < 0.6)' ### For 3L FRs
+                additionalCut += '*(electronMvaHZZ_3 > 0.5 && iso_3 < 0.6)' ### For 3L FRs
             elif channel in ['eemt','mmmt'] :
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-                #additionalCut += '*(iso_3 < 1.0)' ### For 3L FRs
+                additionalCut += '*(iso_3 < 1.0)' ### For 3L FRs
             elif channel in ['eett','mmtt'] :
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_3 > 0.5)'
                 additionalCut += '*(byVVLooseIsolationMVArun2v1DBoldDMwLT_4 > 0.5)'
-            #elif channel in ['eeem','emmm'] : ### For 3L FRs
-            #    additionalCut += '*(electronMvaHZZ_3 > 0.5 && iso_3 < 0.6)' ### For 3L FRs
-            #    additionalCut += '*(iso_4 < 1.0)' ### For 3L FRs
+            elif channel in ['eeem','emmm'] : ### For 3L FRs
+                additionalCut += '*(electronMvaHZZ_3 > 0.5 && iso_3 < 0.6)' ### For 3L FRs
+                additionalCut += '*(iso_4 < 1.0)' ### For 3L FRs
         elif analysis == 'azh' and 'RedBkgShape' in outFile.GetName() :
             additionalCut = getRedBkgShape( 
                     analysis, channel, additionalCut, prodMap )

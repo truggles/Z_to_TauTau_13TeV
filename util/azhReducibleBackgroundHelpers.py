@@ -41,9 +41,12 @@ def getRedBkgCutsAndWeights( analysis, channel, cut, prodMap ) :
         leg4P = electronCutP.replace('NUM', '4').replace('CAND_', prodMap[channel][3] )
 
     # Add weight based on 1 + 2 - 0 method
-    redBkgCut = '(('+leg3F+'&&'+leg4P+')*zhFR1'
-    redBkgCut += ' + ('+leg3P+'&&'+leg4F+')*zhFR2'
-    redBkgCut += ' - ('+leg3F+'&&'+leg4F+')*zhFR0)'
+    #redBkgCut = '(('+leg3F+'&&'+leg4P+')*zhFR1'
+    #redBkgCut += ' + ('+leg3P+'&&'+leg4F+')*zhFR2'
+    #redBkgCut += ' - ('+leg3F+'&&'+leg4F+')*zhFR0)'
+    redBkgCut = '(('+leg3F+'&&'+leg4P+')*zh3LFR1'
+    redBkgCut += ' + ('+leg3P+'&&'+leg4F+')*zh3LFR2'
+    redBkgCut += ' - ('+leg3F+'&&'+leg4F+')*zh3LFR0)'
  
     cut = cut.replace('ADD_CHANNEL_SPECIFIC_ISO_CUTS', '('+redBkgCut+')')
 
