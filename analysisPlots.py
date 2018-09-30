@@ -482,6 +482,9 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         if sample == 'azh220' : additionalCut += '*(genMass < 300)'
         if sample == 'azh240' : additionalCut += '*(genMass < 310)'
         if sample == 'azh260' : additionalCut += '*(genMass < 320)'
+        #if sample == 'azh220' : additionalCut += '*(genMass > 219 && genMass < 221)'
+        #if sample == 'azh240' : additionalCut += '*(genMass > 239 && genMass < 241)'
+        #if sample == 'azh260' : additionalCut += '*(genMass > 259 && genMass < 261)'
             
 
     ''' Combine Gen and Chan specific into one fill section '''

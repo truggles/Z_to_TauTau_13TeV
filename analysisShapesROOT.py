@@ -534,6 +534,9 @@ def makeDataCards( analysis, inSamples, channels, folderDetails, **kwargs ) :
                     if name == 'azh220' : histos[ name ].Scale( 1.40 )
                     if name == 'azh240' : histos[ name ].Scale( 1.06 )
                     if name == 'azh260' : histos[ name ].Scale( 1.03 )
+                    #if name == 'azh220' : histos[ name ].Scale( 2.37 )
+                    #if name == 'azh240' : histos[ name ].Scale( 1.53 )
+                    #if name == 'azh260' : histos[ name ].Scale( 1.46 )
                     
 
                 # There is additional ZEE scaling for EES in EEET, EEMT, EETT, EEEM channels
