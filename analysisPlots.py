@@ -477,15 +477,7 @@ def plotHistosProof( analysis, outFileName, chain, sample, channel, isData, addi
         #additionalCut += '*(gen_match_3 == 6 && gen_match_4==6)'
         #additionalCut += '*(gen_match_3 == 6 || gen_match_4==6)'
 
-        # Add genMass cut for AZH 220, 240, 260 to remove poor modeling
-        # these samples are rescaled in analysisShapesROOT.py
-        if sample == 'azh220' : additionalCut += '*(genMass < 300)'
-        if sample == 'azh240' : additionalCut += '*(genMass < 310)'
-        if sample == 'azh260' : additionalCut += '*(genMass < 320)'
-        #if sample == 'azh220' : additionalCut += '*(genMass > 219 && genMass < 221)'
-        #if sample == 'azh240' : additionalCut += '*(genMass > 239 && genMass < 241)'
-        #if sample == 'azh260' : additionalCut += '*(genMass > 259 && genMass < 261)'
-            
+
 
     ''' Combine Gen and Chan specific into one fill section '''
     histos = {}

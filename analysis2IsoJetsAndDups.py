@@ -398,6 +398,10 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
     from util.qqZZ4l_reweight import qqZZ4l_nnlo_weight
 
+    if 'azh' in sample :
+        from util.genMassSF import GenMassSF
+        genMassSF = GenMassSF( sample )
+
     if len(channel) > 3 : # either AZH or ZH analysis
         from util.applyReducibleBkg3L import ReducibleBkgWeights3L
         from util.applyReducibleBkg import ReducibleBkgWeights
@@ -806,6 +810,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     zhTrigDataEffB = tnew.Branch('zhTrigDataEff', zhTrigDataEff, 'zhTrigDataEff/F')
     zhTrigMCEff = array('f', [ 0 ] )
     zhTrigMCEffB = tnew.Branch('zhTrigMCEff', zhTrigMCEff, 'zhTrigMCEff/F')
+    genMassWeight = array('f', [ 0 ] )
+    genMassWeightB = tnew.Branch('genMassWeight', genMassWeight, 'genMassWeight/F')
     azhWeight = array('f', [ 0 ] )
     azhWeightB = tnew.Branch('azhWeight', azhWeight, 'azhWeight/F')
     puweight = array('f', [ 0 ] )
@@ -1459,6 +1465,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             electronMvaHZZ_4[0] = 0
             tauSF_3[0] = 1
             tauSF_4[0] = 1
+            genMassWeight[0] = 1
             azhWeight[0] = 1
             zhTrigWeight[0] = 1
             zhTrigDataEff[0] = 1
@@ -1683,6 +1690,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
                 if analysis == 'azh' :
+
+                    if 'azh' in sample :
+                        genMassWeight[0] = genMassSF( sample, getattr( row, 'genMass' ) )
 
                     if 'ZZ4l' in sample :
                         qqZZ4lWeight[0] = qqZZ4l_nnlo_weight( row.genM, \
@@ -1993,7 +2003,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 # Below set to 1. for HTT
                 azhWeight[0] *= muonSF_1[0] * muonSF_2[0] * muonSF_3[0] * muonSF_4[0]
                 azhWeight[0] *= electronSF_1[0] * electronSF_2[0] * electronSF_3[0] * electronSF_4[0]
-                azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0] * zhTrigWeight[0]
+                azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0] * zhTrigWeight[0] * genMassWeight[0]
 
                 met_pt[0] = row.shiftedMET
                 met_phi[0] = row.shiftedMETPhi
