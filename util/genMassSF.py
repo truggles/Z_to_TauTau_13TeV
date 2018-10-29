@@ -26,44 +26,45 @@ class GenMassSF :
 
 
     def getGenMassSF( self, sample, genMass ) :
-        if sample == 'azh220' : 
+        if 'azh220' in sample : 
             if genMass < 219 : return 0.
             if genMass > 221 : return 0.
-            else return 2.37
-        if sample == 'azh240' : 
+            else : return 2.37
+        if 'azh240' in sample : 
             if genMass < 239 : return 0.
             if genMass > 241 : return 0.
-            else return 1.53
-        if sample == 'azh260' : 
+            else : return 1.53
+        if 'azh260' in sample : 
             if genMass < 259 : return 0.
             if genMass > 261 : return 0.
-            else return 1.46
-        if sample == 'azh280' : 
+            else : return 1.46
+        if 'azh280' in sample : 
             if genMass < 279 : return 0.
             if genMass > 281 : return 0.
-            else return 1.44
-        if sample == 'azh300' : 
+            else : return 1.44
+        if 'azh300' in sample : 
             if genMass < 299 : return 0.
             if genMass > 301 : return 0.
-            else return 1.44
-        if sample == 'azh320' : 
+            else : return 1.44
+        if 'azh320' in sample : 
             if genMass < 319 : return 0.
             if genMass > 321 : return 0.
-            else return 1.43
-        if sample == 'azh340' : 
+            else : return 1.43
+        if 'azh340' in sample : 
             if genMass < 339 : return 0.
             if genMass > 341 : return 0.
-            else return 1.44
-        if sample == 'azh350' : 
+            else : return 1.44
+        if 'azh350' in sample : 
             # Do flat line extension for +/- 10 GeV from peak
             if genMass < 340 : return self.mass350.getBinContent( 340.5 )
             if genMass > 359 : return self.mass350.getBinContent( 358.5 ) # Jaana chose this bin as the flat line extension
-            else return self.mass350.getBinContent( genMass )
-        if sample == 'azh400' : 
+            else : return self.mass350.getBinContent( genMass )
+        if 'azh400' in sample : 
             # Do flat line extension for +/- 10 GeV from peak
             if genMass < 390 : return self.mass400.getBinContent( 390.5 )
             if genMass > 410 : return self.mass400.getBinContent( 409.5 )
-            else return self.mass400.getBinContent( genMass )
+            else : return self.mass400.getBinContent( genMass )
+        assert( 2+2==5 ), "The sample didn't fit the standard AZh mass points: %s" % sample
 
 
 

@@ -1692,7 +1692,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 if analysis == 'azh' :
 
                     if 'azh' in sample :
-                        genMassWeight[0] = genMassSF( sample, getattr( row, 'genMass' ) )
+                        genMassWeight[0] = genMassSF.getGenMassSF( sample, getattr( row, 'genMass' ) )
 
                     if 'ZZ4l' in sample :
                         qqZZ4lWeight[0] = qqZZ4l_nnlo_weight( row.genM, \
