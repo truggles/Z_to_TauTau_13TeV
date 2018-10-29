@@ -61,9 +61,11 @@ class MuonSF :
 
 
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffsRun2#Tracking_efficiency_provided_by
-        self.muonTkFile = ROOT.TFile( 'data/2016MuonTracking_EfficienciesAndSF_BCDEFGH.root', 'r' )
-        self.Tk_eta = self.muonTkFile.Get( 'ratio_eff_eta3_dr030e030_corr' )
-        self.Tk_vtx = self.muonTkFile.Get( 'ratio_eff_vtx_dr030e030_corr' )
+        # It was further recommended to remove the Tracking SFs
+        # https://hypernews.cern.ch/HyperNews/CMS/get/muon/1425.html
+        #self.muonTkFile = ROOT.TFile( 'data/2016MuonTracking_EfficienciesAndSF_BCDEFGH.root', 'r' )
+        #self.Tk_eta = self.muonTkFile.Get( 'ratio_eff_eta3_dr030e030_corr' )
+        #self.Tk_vtx = self.muonTkFile.Get( 'ratio_eff_vtx_dr030e030_corr' )
         
         
 
@@ -130,17 +132,18 @@ class MuonSF :
             return SF
 
 
-    def getTkScaleFactor( self, eta, vtx ) :
-        #print "Tk",Tk
-        SF = 1.
-        # Make sure we stay on our histograms
-        if eta > 2.39 : eta = 2.39
-        elif eta < -2.39 : eta = -2.39
-        if vtx > 45 : vtx = 45
-        elif vtx < 1 : vtx = 1
-        SF = self.Tk_eta.Eval( eta )
-        SF *= self.Tk_vtx.Eval( vtx )
-        return SF
+    # Removed
+    #def getTkScaleFactor( self, eta, vtx ) :
+    #    #print "Tk",Tk
+    #    SF = 1.
+    #    # Make sure we stay on our histograms
+    #    if eta > 2.39 : eta = 2.39
+    #    elif eta < -2.39 : eta = -2.39
+    #    if vtx > 45 : vtx = 45
+    #    elif vtx < 1 : vtx = 1
+    #    SF = self.Tk_eta.Eval( eta )
+    #    SF *= self.Tk_vtx.Eval( vtx )
+    #    return SF
         
 
 if __name__ == '__main__' :
@@ -154,7 +157,7 @@ if __name__ == '__main__' :
     #print mSF.getRelIsoScaleFactor( 'Loose', 10.26, 2.13, 21.8 )
     print mSF.getIDScaleFactor( 'Loose', 27.69, 2.01, 33.66 )
     print mSF.getRelIsoScaleFactor( 'Loose', 27.69, 2.01, 33.66 )
-    print mSF.getTkScaleFactor( 1.8, 23 )
+    #print mSF.getTkScaleFactor( 1.8, 23 )
 
 
 

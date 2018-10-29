@@ -1700,22 +1700,31 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         if gen_match_3[0] == 5 : tauSF_3[0] = 0.97
                     if 't' in l4 :
                         if gen_match_4[0] == 5 : tauSF_4[0] = 0.97
+
+                    # It was recommended to remove the muon Tracking SFs
+                    # https://hypernews.cern.ch/HyperNews/CMS/get/muon/1425.html
+                    # Additionally, we add a 0.995 SF for dXY & dZ impact param cuts
+                    # which are not part of the "normal" muon ID SFs
                     if 'm' in l1 :
                         muonSF_1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
                         muonSF_1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
-                        muonSF_1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
+                        muonSF_1[0] *= 0.995
+                        #muonSF_1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
                     if 'm' in l2 :
                         muonSF_2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
                         muonSF_2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
-                        muonSF_2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
+                        muonSF_2[0] *= 0.995
+                        #muonSF_2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
                     if 'm' in l3 :
                         muonSF_3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
                         muonSF_3[0] *= muonSF.getRelIsoScaleFactor( 'Tight', pt3, eta3, nvtx )
-                        muonSF_3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
+                        muonSF_3[0] *= 0.995
+                        #muonSF_3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
                     if 'm' in l4 :
                         muonSF_4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
                         muonSF_4[0] *= muonSF.getRelIsoScaleFactor( 'Tight', pt4, eta4, nvtx )
-                        muonSF_4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
+                        muonSF_4[0] *= 0.995
+                        #muonSF_4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
                     # Currently using WP90 in all electrons
                     # Available input WPs: WP90, WP80, TrkOnly - for no mva WP SF included
                     if 'e' in l1 :
