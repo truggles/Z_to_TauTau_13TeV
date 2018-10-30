@@ -1691,9 +1691,6 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
                 if analysis == 'azh' :
 
-                    if 'azh' in sample :
-                        genMassWeight[0] = genMassSF.getGenMassSF( sample, getattr( row, 'genMass' ) )
-
                     if 'ZZ4l' in sample :
                         qqZZ4lWeight[0] = qqZZ4l_nnlo_weight( row.genM, \
                                 row.isZee, row.isZmumu, row.isZtautau )
@@ -1996,6 +1993,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     if w2 > .4 : w2 = .4
                     jetToTauFakeWeight[0] = 1. + w1 + w2
                     
+                genMassWeight[0] = 1
+                if 'azh' in sample :
+                    genMassWeight[0] = genMassSF.getGenMassSF( sample, getattr( row, 'genMass' ) )
+                    #print sample, getattr( row, 'genMass' ), genMassWeight[0]
+
 
                 weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
                 weight[0] *= trigweight_1[0] * trigweight_2[0]
