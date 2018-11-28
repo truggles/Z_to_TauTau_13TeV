@@ -49,12 +49,10 @@ anomalous = ['HtoTauTau0PHf05ph0125', 'HtoTauTau0L1f05ph0125', 'HtoTauTau0L1125'
 SamplesData = ['dataTT-B', 'dataTT-C', 'dataTT-D', 'dataTT-E', 'dataTT-F', 'dataTT-G', 'dataTT-H']
 SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'DYJetsLow', 'DYJets1Low', 'DYJets2Low', 'EWKWMinus', 'EWKWPlus', 'EWKZ2l', 'EWKZ2nu', 'T-tchan', 'Tbar-tchan', 'TT', 'Tbar-tW', 'T-tW', 'VV', 'WJets', 'WJets1', 'WJets2', 'WJets3', 'WJets4', 'WW1l1nu2q', 'WWW', 'WZ1l1nu2q', 'WZ1l3nu', 'WZ2l2q', 'WZ3l1nu', 'ZZ2l2q', 'ZZ4l'] # Feb17 for Moriond17 
 
-#for mass in [110, 120, 125, 130, 140] :
-#SamplesDataCards = []
-for mass in [125,] :
+for mass in [110, 120, 125, 130, 140] :
     SamplesDataCards.append('ggHtoTauTau%i' % mass)
-    SamplesDataCards.append('WMinusHTauTau%i' % mass)
     SamplesDataCards.append('VBFHtoTauTau%i' % mass)
+    SamplesDataCards.append('WMinusHTauTau%i' % mass)
     SamplesDataCards.append('WPlusHTauTau%i' % mass)
     SamplesDataCards.append('ZHTauTau%i' % mass)
 SamplesDataCards.append('HtoWW2l2nu125')
@@ -62,27 +60,23 @@ SamplesDataCards.append('ttHTauTau125')
 SamplesDataCards.append('VBFHtoWW2l2nu125')
 
 #SamplesDataCards = []
+SamplesDataCards = ['PStemp','Scalartemp']
 for aHiggs in anomalous :
     SamplesDataCards.append( 'VBF'+aHiggs )
-    SamplesDataCards.append( 'W'+aHiggs )
-    SamplesDataCards.append( 'Z'+aHiggs )
-##SamplesDataCards = []
-SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
-SamplesDataCards.append('ggHtoTauTau0M125')
-SamplesDataCards.append('ggHtoTauTau0PM125')
+    #SamplesDataCards.append( 'W'+aHiggs )
+    #SamplesDataCards.append( 'Z'+aHiggs )
     
-#SamplesDataCards = []
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-    SamplesDataCards.append('dataTT-%s' % era)
+#for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
+#    SamplesDataCards.append('dataTT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
 #SamplesDataCards = [ 'EWKZ2l', 'EWKZ2nu']
-#SamplesDataCards = ['DYJets','dataTT-C','VBFHtoTauTau125'] 
+#SamplesDataCards = ['DYJets',] 
 #SamplesDataCards = ['dataTT-C',] 
-#SamplesDataCards = ['VBFHtoTauTau125','WPlusHTauTau125','ZHTauTau125']
+#SamplesDataCards = ['VBFHtoTauTau125',]
 #SamplesDataCards = ['DYJets', 'VBFHtoTauTau125', 'ggHtoTauTau125',] # NO ZZ2L2Q FIXME No data E/F
-#SamplesDataCards = ['VBFHtoTauTau0PM125',]
+SamplesDataCards = ['VBFHtoTauTau125',]
 samples = SamplesDataCards
 
 ''' These parameters are fed into the 2 main function calls.
@@ -93,20 +87,13 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 25,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
-    'channels' : ['tt',],
-    #'cutMapper' : 'syncCutsDC',
-    #'cutMapper' : 'signalCuts',
-    #'cutMapper' : 'fakeFactorCutsTT',
-    #'cutMapper' : 'syncCutsDCqcdTES',
-    #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
-    #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
-    'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
-    #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1Jan07NewMelax',
-    'mid2' : '2Jan07NewMelax',
-    'mid3' : '3Jan07NewMelax',
+    'channels' : ['mt',],
+    'cutMapper' : 'syncCuts', # For trying to match KIT
+    'mid1' : '1Nov27',
+    'mid2' : '2Nov27',
+    'mid3' : '3Nov27',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
@@ -115,8 +102,8 @@ params = {
     'doFRMthd' : 'false',
     'skimHdfs' : 'false',
     #'skimHdfs' : 'true', # This means "do the hdfs skim"
-    #'skimmed' : 'false',
-    'skimmed' : 'true',
+    'skimmed' : 'false',
+    #'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -125,8 +112,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """
@@ -144,7 +131,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -155,7 +142,10 @@ pt = '5040'
 sync = False
 #cleanPlots = False
 cleanPlots = True
+#isoVals = ['Tight', 'Medium', 'Loose',]
+#isoVals = ['Tight', 'Loose',]
 isoVals = ['Tight',]
+isoVals = ['VLoose',]
 doFF = getenv('doFF', type=bool)
 
 # Make CR plots for AN
@@ -165,37 +155,18 @@ plotAntiIso = False
 higgsPt = 'Higgs_PtCor'
 
 # MELA
-#cats = ['inclusive', '0jet2D', 'boosted','vbf',]
-cats = ['0jet2D', 'boosted','vbf',]
+cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['vbf',]
-#cats = ['0jet2D', 'boosted',]
 
 toRemove = ['DYJets1Low', 'DYJets2Low', 'VBFHtoWW2l2nu125' ,'HtoWW2l2nu125', 'VBFHtoTauTau0PM-v5125']
 for remove in toRemove :
     if remove in samples.keys() : del samples[remove]
 
-
-# Add anom samples without actual MC samples
-# Only add if we have the SM VBF, WPlus and ZH samples there
-if 'VBFHtoTauTau125' in samples.keys() and 'WPlusHTauTau125' in samples.keys() and 'ZHTauTau125' in samples.keys() :
-    toAdd = ['HtoTauTau0L1Zg125','HtoTauTau0L1Zgf05ph0125']
-    for aHiggs in toAdd :
-        samples[ 'VBF'+aHiggs ] = copy.deepcopy( samples['VBFHtoTauTau125'] )
-        samples[ 'VBF'+aHiggs ]['group'] = 'qqH_aHTT'
-        samples[ 'W'+aHiggs ] = copy.deepcopy( samples['WPlusHTauTau125'] )
-        samples[ 'W'+aHiggs ]['group'] = 'WH_aHTT'
-        samples[ 'Z'+aHiggs ] = copy.deepcopy( samples['ZHTauTau125'] )
-        samples[ 'Z'+aHiggs ]['group'] = 'ZH_aHTT'
-
-    #del samples['ZHTauTau125']
-    #del samples['VBFHtoTauTau125']
-    #del samples['WPlusHTauTau125']
-
-
-
 for isoVal in isoVals :
     if isoVal == 'Tight' : lIso = 'Loose'
-    if isoVal == 'Medium' : lIso = 'Loose'
+    #if isoVal == 'Medium' : lIso = 'Loose'
+    if isoVal == 'Loose' : lIso = 'VLoose'
+    if isoVal == 'VLoose' : lIso = 'VLoose'
     samplesX = copy.deepcopy(samples)
     if runPlots :
         skipSSQCDDetails=True
@@ -252,8 +223,8 @@ for isoVal in isoVals :
                 ROOT.gROOT.Reset()
                 tDir = cat if isoRegion == isoVal+'_' else cat+'_'+isoVal+'_'+lIso
                 blind = True
-                fullBlind = False
-                ratio = True
+                fullBlind = True
+                ratio = False
                 log = False
                 #log = True
                 #if cat in ['inclusive', '0jet', '1jet', '0jet2D'] :
@@ -289,52 +260,13 @@ for isoVal in isoVals :
         'm_sv',
         '%s:m_sv' % higgsPt,
         'mjj:m_sv',
-
-        ## For ggH study only
-        #'mjj:m_sv:melaDPhijj_DPhijj_0toPiOver4',
-        #'mjj:m_sv:melaDPhijj_DPhijj_piOver4toPiOver2',
-        #'mjj:m_sv:melaDPhijj_DPhijj_piOver2to3PiOver4',
-        #'mjj:m_sv:melaDPhijj_DPhijj_3PiOver4toPi',
-
-        ## For ggH study only
-        #'mjj:m_sv:melaD0minusggH_D0_0to0p25',
-        #'mjj:m_sv:melaD0minusggH_D0_0p25to0p5',
-        #'mjj:m_sv:melaD0minusggH_D0_0p5to0p75',
-        #'mjj:m_sv:melaD0minusggH_D0_0p75to1',
-
-        'mjj:m_sv:melaDCP_DCP_neg1to0',
-        'mjj:m_sv:melaDCP_DCP_0to1',
-
-        'mjj:m_sv:melaD0minus_D0_0to0p2',
-        'mjj:m_sv:melaD0minus_D0_0p2to0p4',
-        'mjj:m_sv:melaD0minus_D0_0p4to0p8',
-        'mjj:m_sv:melaD0minus_D0_0p8to1',
-
-        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPp',
-        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPp',
-        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPp',
-        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPp',
-
-        'mjj:m_sv:melaD0minus_D0_0to0p2_DCPm',
-        'mjj:m_sv:melaD0minus_D0_0p2to0p4_DCPm',
-        'mjj:m_sv:melaD0minus_D0_0p4to0p8_DCPm',
-        'mjj:m_sv:melaD0minus_D0_0p8to1_DCPm',
-
-        'mjj:m_sv:melaDL1_DL1_0to0p2',
-        'mjj:m_sv:melaDL1_DL1_0p2to0p4',
-        'mjj:m_sv:melaDL1_DL1_0p4to0p8',
-        'mjj:m_sv:melaDL1_DL1_0p8to1',
-
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0to0p2',
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0p2to0p4',
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0p4to0p8',
-        'mjj:m_sv:melaDL1Zg_DL1Zg_0p8to1',
-
-        'mjj:m_sv:melaD0hplus_D0hplus_0to0p2',
-        'mjj:m_sv:melaD0hplus_D0hplus_0p2to0p4',
-        'mjj:m_sv:melaD0hplus_D0hplus_0p4to0p8',
-        'mjj:m_sv:melaD0hplus_D0hplus_0p8to1',
-        ]
+        'mjj:m_sv:KD_int_DCP_neg1to0',
+        'mjj:m_sv:KD_int_DCP_0to1',
+        'mjj:m_sv:KD_bsm_mlt_D0_0to0p2',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p2to0p4',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p4to0p6',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p6to0p8',
+        'mjj:m_sv:KD_bsm_mlt_D0_0p8to1',]
         for cat in cats :
             for var in vars :
                 # Get normal vars for normal cats
@@ -346,8 +278,7 @@ for isoVal in isoVals :
                 if cat == 'vbf' :
                     if var == 'mjj:m_sv' : finalCat = cat
                     else :
-                        finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('melaD0minus_','').replace('melaDCP_','')
-                        finalCat = finalCat.replace('melaDL1_', '').replace('melaDL1Zg_', '').replace('melaD0hplus_', '')
+                        finalCat = cat + '_' + var.replace('mjj:m_sv:','').replace('KD_bsm_mlt_','').replace('KD_int_','')
                 else : finalCat = cat
 
                 if doFF :

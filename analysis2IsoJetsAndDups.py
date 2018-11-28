@@ -214,7 +214,7 @@ def getIso( cand, row ) :
         return getattr(row, cand+'RelPFIsoDBDefault')
     if 't' in cand :
         #return getattr(row, cand+'ByCombinedIsolationDeltaBetaCorrRaw3Hits')
-        return getattr(row, cand+'ByIsolationMVArun2v1DBoldDMwLTraw' )
+        return getattr(row, cand+'RerunMVArun2v2DBoldDMwLTraw' )
                     
 
 def getCurrentEvt( analysis, channel, row ) :
@@ -369,11 +369,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
-        'vbfMass' : 'mjj',
-        'vbfDeta' : 'jdeta',
-        'vbfDphi' : 'jdphi',
-        'vbfJetVeto30' : 'njetingap',
-        'vbfJetVeto20' : 'njetingap20',
+        #'vbfMass' : 'mjj',
+        #'vbfDeta' : 'jdeta',
+        #'vbfDphi' : 'jdphi',
+        #'vbfJetVeto30' : 'njetingap',
+        #'vbfJetVeto20' : 'njetingap20',
         }
 
     if analysis != 'azh' : # Stupid fix for old ntuples
@@ -421,7 +421,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB04' : 'iso',
-        'cand_MtToPfMet_Raw' : 'pfmt',
+        #'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingTau = {
         'cand_Pt' : 'pt',
@@ -461,8 +461,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     for var in sameNameVars :
         branchMapping[ var ] = var
     # Generate our mapping for double candidate variables
-    for key in doubleProds :
-        branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
+    #for key in doubleProds :
+    #    branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
     if len( channel ) == 4 :
         for key in quadFSDoubleProds :
             branchMapping[ l3+'_'+l4+'_'+key ] = quadFSDoubleProds[ key ]
@@ -659,8 +659,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                     prevEvt = currentEvt
                 # pt_1 equal
                 elif currentEvt[ 1 ] == prevEvt[ 1 ] :
-                    # lowest iso_2
-                    if currentEvt[ 2 ] < prevEvt[ 2 ] :
+                    # lowest iso_2, this is Raw tau MVA so high value is isolated
+                    if currentEvt[ 2 ] > prevEvt[ 2 ] :
                         prevEvt = currentEvt
                     # iso_2 equal
                     elif currentEvt[ 2 ] == prevEvt[ 2 ] :
@@ -822,82 +822,82 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ptCor_1B = tnew.Branch('ptCor_1', ptCor_1, 'ptCor_1/F')
     ptCor_2 = array('f', [ 0 ] )
     ptCor_2B = tnew.Branch('ptCor_2', ptCor_2, 'ptCor_2/F')
-    pt_1_UP = array('f', [ 0 ] )
-    pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
-    pt_1_DOWN = array('f', [ 0 ] )
-    pt_1_DOWNB = tnew.Branch('pt_1_DOWN', pt_1_DOWN, 'pt_1_DOWN/F')
-    pt_1_DM0_UP = array('f', [ 0 ] )
-    pt_1_DM0_UPB = tnew.Branch('pt_1_DM0_UP', pt_1_DM0_UP, 'pt_1_DM0_UP/F')
-    pt_1_DM0_DOWN = array('f', [ 0 ] )
-    pt_1_DM0_DOWNB = tnew.Branch('pt_1_DM0_DOWN', pt_1_DM0_DOWN, 'pt_1_DM0_DOWN/F')
-    pt_1_DM1_UP = array('f', [ 0 ] )
-    pt_1_DM1_UPB = tnew.Branch('pt_1_DM1_UP', pt_1_DM1_UP, 'pt_1_DM1_UP/F')
-    pt_1_DM1_DOWN = array('f', [ 0 ] )
-    pt_1_DM1_DOWNB = tnew.Branch('pt_1_DM1_DOWN', pt_1_DM1_DOWN, 'pt_1_DM1_DOWN/F')
-    pt_1_DM10_UP = array('f', [ 0 ] )
-    pt_1_DM10_UPB = tnew.Branch('pt_1_DM10_UP', pt_1_DM10_UP, 'pt_1_DM10_UP/F')
-    pt_1_DM10_DOWN = array('f', [ 0 ] )
-    pt_1_DM10_DOWNB = tnew.Branch('pt_1_DM10_DOWN', pt_1_DM10_DOWN, 'pt_1_DM10_DOWN/F')
-    pt_2_UP = array('f', [ 0 ] )
-    pt_2_UPB = tnew.Branch('pt_2_UP', pt_2_UP, 'pt_2_UP/F')
-    pt_2_DOWN = array('f', [ 0 ] )
-    pt_2_DOWNB = tnew.Branch('pt_2_DOWN', pt_2_DOWN, 'pt_2_DOWN/F')
-    pt_2_DM0_UP = array('f', [ 0 ] )
-    pt_2_DM0_UPB = tnew.Branch('pt_2_DM0_UP', pt_2_DM0_UP, 'pt_2_DM0_UP/F')
-    pt_2_DM0_DOWN = array('f', [ 0 ] )
-    pt_2_DM0_DOWNB = tnew.Branch('pt_2_DM0_DOWN', pt_2_DM0_DOWN, 'pt_2_DM0_DOWN/F')
-    pt_2_DM1_UP = array('f', [ 0 ] )
-    pt_2_DM1_UPB = tnew.Branch('pt_2_DM1_UP', pt_2_DM1_UP, 'pt_2_DM1_UP/F')
-    pt_2_DM1_DOWN = array('f', [ 0 ] )
-    pt_2_DM1_DOWNB = tnew.Branch('pt_2_DM1_DOWN', pt_2_DM1_DOWN, 'pt_2_DM1_DOWN/F')
-    pt_2_DM10_UP = array('f', [ 0 ] )
-    pt_2_DM10_UPB = tnew.Branch('pt_2_DM10_UP', pt_2_DM10_UP, 'pt_2_DM10_UP/F')
-    pt_2_DM10_DOWN = array('f', [ 0 ] )
-    pt_2_DM10_DOWNB = tnew.Branch('pt_2_DM10_DOWN', pt_2_DM10_DOWN, 'pt_2_DM10_DOWN/F')
-    Higgs_PtCor = array('f', [ 0 ] )
-    Higgs_PtCorB = tnew.Branch('Higgs_PtCor', Higgs_PtCor, 'Higgs_PtCor/F')
-    Higgs_PtCor_UP = array('f', [ 0 ] )
-    Higgs_PtCor_UPB = tnew.Branch('Higgs_PtCor_UP', Higgs_PtCor_UP, 'Higgs_PtCor_UP/F')
-    Higgs_PtCor_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DOWNB = tnew.Branch('Higgs_PtCor_DOWN', Higgs_PtCor_DOWN, 'Higgs_PtCor_DOWN/F')
-    Higgs_PtCor_DM0_UP = array('f', [ 0 ] )
-    Higgs_PtCor_DM0_UPB = tnew.Branch('Higgs_PtCor_DM0_UP', Higgs_PtCor_DM0_UP, 'Higgs_PtCor_DM0_UP/F')
-    Higgs_PtCor_DM0_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DM0_DOWNB = tnew.Branch('Higgs_PtCor_DM0_DOWN', Higgs_PtCor_DM0_DOWN, 'Higgs_PtCor_DM0_DOWN/F')
-    Higgs_PtCor_DM1_UP = array('f', [ 0 ] )
-    Higgs_PtCor_DM1_UPB = tnew.Branch('Higgs_PtCor_DM1_UP', Higgs_PtCor_DM1_UP, 'Higgs_PtCor_DM1_UP/F')
-    Higgs_PtCor_DM1_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DM1_DOWNB = tnew.Branch('Higgs_PtCor_DM1_DOWN', Higgs_PtCor_DM1_DOWN, 'Higgs_PtCor_DM1_DOWN/F')
-    Higgs_PtCor_DM10_UP = array('f', [ 0 ] )
-    Higgs_PtCor_DM10_UPB = tnew.Branch('Higgs_PtCor_DM10_UP', Higgs_PtCor_DM10_UP, 'Higgs_PtCor_DM10_UP/F')
-    Higgs_PtCor_DM10_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_DM10_DOWNB = tnew.Branch('Higgs_PtCor_DM10_DOWN', Higgs_PtCor_DM10_DOWN, 'Higgs_PtCor_DM10_DOWN/F')
-    Higgs_PtCor_UncMet_UP = array('f', [ 0 ] )
-    Higgs_PtCor_UncMet_UPB = tnew.Branch('Higgs_PtCor_UncMet_UP', Higgs_PtCor_UncMet_UP, 'Higgs_PtCor_UncMet_UP/F')
-    Higgs_PtCor_UncMet_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_UncMet_DOWNB = tnew.Branch('Higgs_PtCor_UncMet_DOWN', Higgs_PtCor_UncMet_DOWN, 'Higgs_PtCor_UncMet_DOWN/F')
-    Higgs_PtCor_ClusteredMet_UP = array('f', [ 0 ] )
-    Higgs_PtCor_ClusteredMet_UPB = tnew.Branch('Higgs_PtCor_ClusteredMet_UP', Higgs_PtCor_ClusteredMet_UP, 'Higgs_PtCor_ClusteredMet_UP/F')
-    Higgs_PtCor_ClusteredMet_DOWN = array('f', [ 0 ] )
-    Higgs_PtCor_ClusteredMet_DOWNB = tnew.Branch('Higgs_PtCor_ClusteredMet_DOWN', Higgs_PtCor_ClusteredMet_DOWN, 'Higgs_PtCor_ClusteredMet_DOWN/F')
-    m_visCor = array('f', [ 0 ] )
-    m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
-    m_visCor_UP = array('f', [ 0 ] )
-    m_visCor_UPB = tnew.Branch('m_visCor_UP', m_visCor_UP, 'm_visCor_UP/F')
-    m_visCor_DM0_UP = array('f', [ 0 ] )
-    m_visCor_DM0_UPB = tnew.Branch('m_visCor_DM0_UP', m_visCor_DM0_UP, 'm_visCor_DM0_UP/F')
-    m_visCor_DM1_UP = array('f', [ 0 ] )
-    m_visCor_DM1_UPB = tnew.Branch('m_visCor_DM1_UP', m_visCor_DM1_UP, 'm_visCor_DM1_UP/F')
-    m_visCor_DM10_UP = array('f', [ 0 ] )
-    m_visCor_DM10_UPB = tnew.Branch('m_visCor_DM10_UP', m_visCor_DM10_UP, 'm_visCor_DM10_UP/F')
-    m_visCor_DOWN = array('f', [ 0 ] )
-    m_visCor_DOWNB = tnew.Branch('m_visCor_DOWN', m_visCor_DOWN, 'm_visCor_DOWN/F')
-    m_visCor_DM0_DOWN = array('f', [ 0 ] )
-    m_visCor_DM0_DOWNB = tnew.Branch('m_visCor_DM0_DOWN', m_visCor_DM0_DOWN, 'm_visCor_DM0_DOWN/F')
-    m_visCor_DM1_DOWN = array('f', [ 0 ] )
-    m_visCor_DM1_DOWNB = tnew.Branch('m_visCor_DM1_DOWN', m_visCor_DM1_DOWN, 'm_visCor_DM1_DOWN/F')
-    m_visCor_DM10_DOWN = array('f', [ 0 ] )
-    m_visCor_DM10_DOWNB = tnew.Branch('m_visCor_DM10_DOWN', m_visCor_DM10_DOWN, 'm_visCor_DM10_DOWN/F')
+    #pt_1_UP = array('f', [ 0 ] )
+    #pt_1_UPB = tnew.Branch('pt_1_UP', pt_1_UP, 'pt_1_UP/F')
+    #pt_1_DOWN = array('f', [ 0 ] )
+    #pt_1_DOWNB = tnew.Branch('pt_1_DOWN', pt_1_DOWN, 'pt_1_DOWN/F')
+    #pt_1_DM0_UP = array('f', [ 0 ] )
+    #pt_1_DM0_UPB = tnew.Branch('pt_1_DM0_UP', pt_1_DM0_UP, 'pt_1_DM0_UP/F')
+    #pt_1_DM0_DOWN = array('f', [ 0 ] )
+    #pt_1_DM0_DOWNB = tnew.Branch('pt_1_DM0_DOWN', pt_1_DM0_DOWN, 'pt_1_DM0_DOWN/F')
+    #pt_1_DM1_UP = array('f', [ 0 ] )
+    #pt_1_DM1_UPB = tnew.Branch('pt_1_DM1_UP', pt_1_DM1_UP, 'pt_1_DM1_UP/F')
+    #pt_1_DM1_DOWN = array('f', [ 0 ] )
+    #pt_1_DM1_DOWNB = tnew.Branch('pt_1_DM1_DOWN', pt_1_DM1_DOWN, 'pt_1_DM1_DOWN/F')
+    #pt_1_DM10_UP = array('f', [ 0 ] )
+    #pt_1_DM10_UPB = tnew.Branch('pt_1_DM10_UP', pt_1_DM10_UP, 'pt_1_DM10_UP/F')
+    #pt_1_DM10_DOWN = array('f', [ 0 ] )
+    #pt_1_DM10_DOWNB = tnew.Branch('pt_1_DM10_DOWN', pt_1_DM10_DOWN, 'pt_1_DM10_DOWN/F')
+    #pt_2_UP = array('f', [ 0 ] )
+    #pt_2_UPB = tnew.Branch('pt_2_UP', pt_2_UP, 'pt_2_UP/F')
+    #pt_2_DOWN = array('f', [ 0 ] )
+    #pt_2_DOWNB = tnew.Branch('pt_2_DOWN', pt_2_DOWN, 'pt_2_DOWN/F')
+    #pt_2_DM0_UP = array('f', [ 0 ] )
+    #pt_2_DM0_UPB = tnew.Branch('pt_2_DM0_UP', pt_2_DM0_UP, 'pt_2_DM0_UP/F')
+    #pt_2_DM0_DOWN = array('f', [ 0 ] )
+    #pt_2_DM0_DOWNB = tnew.Branch('pt_2_DM0_DOWN', pt_2_DM0_DOWN, 'pt_2_DM0_DOWN/F')
+    #pt_2_DM1_UP = array('f', [ 0 ] )
+    #pt_2_DM1_UPB = tnew.Branch('pt_2_DM1_UP', pt_2_DM1_UP, 'pt_2_DM1_UP/F')
+    #pt_2_DM1_DOWN = array('f', [ 0 ] )
+    #pt_2_DM1_DOWNB = tnew.Branch('pt_2_DM1_DOWN', pt_2_DM1_DOWN, 'pt_2_DM1_DOWN/F')
+    #pt_2_DM10_UP = array('f', [ 0 ] )
+    #pt_2_DM10_UPB = tnew.Branch('pt_2_DM10_UP', pt_2_DM10_UP, 'pt_2_DM10_UP/F')
+    #pt_2_DM10_DOWN = array('f', [ 0 ] )
+    #pt_2_DM10_DOWNB = tnew.Branch('pt_2_DM10_DOWN', pt_2_DM10_DOWN, 'pt_2_DM10_DOWN/F')
+    #Higgs_PtCor = array('f', [ 0 ] )
+    #Higgs_PtCorB = tnew.Branch('Higgs_PtCor', Higgs_PtCor, 'Higgs_PtCor/F')
+    #Higgs_PtCor_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_UPB = tnew.Branch('Higgs_PtCor_UP', Higgs_PtCor_UP, 'Higgs_PtCor_UP/F')
+    #Higgs_PtCor_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DOWNB = tnew.Branch('Higgs_PtCor_DOWN', Higgs_PtCor_DOWN, 'Higgs_PtCor_DOWN/F')
+    #Higgs_PtCor_DM0_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_DM0_UPB = tnew.Branch('Higgs_PtCor_DM0_UP', Higgs_PtCor_DM0_UP, 'Higgs_PtCor_DM0_UP/F')
+    #Higgs_PtCor_DM0_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DM0_DOWNB = tnew.Branch('Higgs_PtCor_DM0_DOWN', Higgs_PtCor_DM0_DOWN, 'Higgs_PtCor_DM0_DOWN/F')
+    #Higgs_PtCor_DM1_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_DM1_UPB = tnew.Branch('Higgs_PtCor_DM1_UP', Higgs_PtCor_DM1_UP, 'Higgs_PtCor_DM1_UP/F')
+    #Higgs_PtCor_DM1_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DM1_DOWNB = tnew.Branch('Higgs_PtCor_DM1_DOWN', Higgs_PtCor_DM1_DOWN, 'Higgs_PtCor_DM1_DOWN/F')
+    #Higgs_PtCor_DM10_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_DM10_UPB = tnew.Branch('Higgs_PtCor_DM10_UP', Higgs_PtCor_DM10_UP, 'Higgs_PtCor_DM10_UP/F')
+    #Higgs_PtCor_DM10_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_DM10_DOWNB = tnew.Branch('Higgs_PtCor_DM10_DOWN', Higgs_PtCor_DM10_DOWN, 'Higgs_PtCor_DM10_DOWN/F')
+    #Higgs_PtCor_UncMet_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_UncMet_UPB = tnew.Branch('Higgs_PtCor_UncMet_UP', Higgs_PtCor_UncMet_UP, 'Higgs_PtCor_UncMet_UP/F')
+    #Higgs_PtCor_UncMet_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_UncMet_DOWNB = tnew.Branch('Higgs_PtCor_UncMet_DOWN', Higgs_PtCor_UncMet_DOWN, 'Higgs_PtCor_UncMet_DOWN/F')
+    #Higgs_PtCor_ClusteredMet_UP = array('f', [ 0 ] )
+    #Higgs_PtCor_ClusteredMet_UPB = tnew.Branch('Higgs_PtCor_ClusteredMet_UP', Higgs_PtCor_ClusteredMet_UP, 'Higgs_PtCor_ClusteredMet_UP/F')
+    #Higgs_PtCor_ClusteredMet_DOWN = array('f', [ 0 ] )
+    #Higgs_PtCor_ClusteredMet_DOWNB = tnew.Branch('Higgs_PtCor_ClusteredMet_DOWN', Higgs_PtCor_ClusteredMet_DOWN, 'Higgs_PtCor_ClusteredMet_DOWN/F')
+    #m_visCor = array('f', [ 0 ] )
+    #m_visCorB = tnew.Branch('m_visCor', m_visCor, 'm_visCor/F')
+    #m_visCor_UP = array('f', [ 0 ] )
+    #m_visCor_UPB = tnew.Branch('m_visCor_UP', m_visCor_UP, 'm_visCor_UP/F')
+    #m_visCor_DM0_UP = array('f', [ 0 ] )
+    #m_visCor_DM0_UPB = tnew.Branch('m_visCor_DM0_UP', m_visCor_DM0_UP, 'm_visCor_DM0_UP/F')
+    #m_visCor_DM1_UP = array('f', [ 0 ] )
+    #m_visCor_DM1_UPB = tnew.Branch('m_visCor_DM1_UP', m_visCor_DM1_UP, 'm_visCor_DM1_UP/F')
+    #m_visCor_DM10_UP = array('f', [ 0 ] )
+    #m_visCor_DM10_UPB = tnew.Branch('m_visCor_DM10_UP', m_visCor_DM10_UP, 'm_visCor_DM10_UP/F')
+    #m_visCor_DOWN = array('f', [ 0 ] )
+    #m_visCor_DOWNB = tnew.Branch('m_visCor_DOWN', m_visCor_DOWN, 'm_visCor_DOWN/F')
+    #m_visCor_DM0_DOWN = array('f', [ 0 ] )
+    #m_visCor_DM0_DOWNB = tnew.Branch('m_visCor_DM0_DOWN', m_visCor_DM0_DOWN, 'm_visCor_DM0_DOWN/F')
+    #m_visCor_DM1_DOWN = array('f', [ 0 ] )
+    #m_visCor_DM1_DOWNB = tnew.Branch('m_visCor_DM1_DOWN', m_visCor_DM1_DOWN, 'm_visCor_DM1_DOWN/F')
+    #m_visCor_DM10_DOWN = array('f', [ 0 ] )
+    #m_visCor_DM10_DOWNB = tnew.Branch('m_visCor_DM10_DOWN', m_visCor_DM10_DOWN, 'm_visCor_DM10_DOWN/F')
     __WEIGHT__ = array('f', [ 0 ] )
     __WEIGHT__B = tnew.Branch('__WEIGHT__', __WEIGHT__, '__WEIGHT__/F')
     __ZWEIGHT__ = array('f', [ 0 ] )
@@ -1139,7 +1139,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #if channel == 'tt' : #and 'Sync-' in sample : 
             #    #print "### Iso Ordering %s ###" % sample
             #    isoOrder( channel, row )
-            vbfClean( row, analysis )
+            #vbfClean( row, analysis )
 
 
             # For easy use later
@@ -1165,527 +1165,527 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 eta4 = getattr( row, l4+'Eta' )
                 m4 = getattr( row, l4+'Mass' )
 
-            Z_DEta[0] = (eta1 - eta2)
+            #Z_DEta[0] = (eta1 - eta2)
 
 
-            # Channel specific vetoes
-            if channel == 'tt' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
-                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
-                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
-            if channel == 'em' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
-                if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
-                if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
-            if channel == 'et' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
-            if channel == 'mt' :
-                extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
-                extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+            ## Channel specific vetoes
+            #if channel == 'tt' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
+            #    if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+            #    if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
+            #if channel == 'em' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+            #    if extramuon_veto[0] > 1 : extramuon_veto[0] = 1
+            #    if extraelec_veto[0] > 1 : extraelec_veto[0] = 1
+            #if channel == 'et' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyzR0" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyz" )
+            #if channel == 'mt' :
+            #    extramuon_veto[0] = getattr( row, "muVetoZTTp001dxyz" )
+            #    extraelec_veto[0] = getattr( row, "eVetoZTTp001dxyzR0" )
 
 
-            
-            #if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
-            #    mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
-            #    mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
-            #    mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
-            #    mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
-            #    mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
-            #    mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
-            #    mt_1[0]= getTransMass( mvamet[0], mvametphi[0], pt1, phi1 )
-            #    mt_2[0]= getTransMass( mvamet[0], mvametphi[0], pt2, phi2 )
-            #    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
-            #    if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
-            #        pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
-            #    Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
-            #             pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
-            #else : # Not l1_l2_MvaMet
-            #mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
-            #mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
-            Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
-                    pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
-
-
-
-
-            # With calculated transverse mass variables, do Mt_Total for mssm search
-            #mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
-            # TES Shifted
-            if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
-                m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
-                m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
-                mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
-                mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
-            else :
-                m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-                m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
-                if hasattr( row, 'm_sv_UP' ) :
-                    setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
-                    setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
-                    setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
-                    setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
-                mt_tot_UP[0] = mt_tot[0]
-                mt_tot_DOWN[0] = mt_tot[0]
-            #print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
+            #
+            ##if hasattr( row, "%s_%s_MvaMet" % (l1, l2) ):
+            ##    mvacov00[0] = getattr( row, "%s_%s_MvaMetCovMatrix00" % (l1, l2) )
+            ##    mvacov01[0] = getattr( row, "%s_%s_MvaMetCovMatrix01" % (l1, l2) )
+            ##    mvacov10[0] = getattr( row, "%s_%s_MvaMetCovMatrix10" % (l1, l2) )
+            ##    mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
+            ##    mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
+            ##    mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
+            ##    mt_1[0]= getTransMass( mvamet[0], mvametphi[0], pt1, phi1 )
+            ##    mt_2[0]= getTransMass( mvamet[0], mvametphi[0], pt2, phi2 )
+            ##    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
+            ##    if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
+            ##        pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+            ##    Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+            ##             pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
+            ##else : # Not l1_l2_MvaMet
+            ##mt_1[0] = getattr( row, l1+'MtToPfMet_Raw' )
+            ##mt_2[0] = getattr( row, l2+'MtToPfMet_Raw' )
+            #Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
+            #        pt2, eta2, phi2, m2, row.type1_pfMetEt, row.type1_pfMetPhi)
 
 
 
 
-            muonSF1[0] = 1
-            muonSF2[0] = 1
-            muonSF3[0] = 1
-            muonSF4[0] = 1
-            electronSF1[0] = 1
-            electronSF2[0] = 1
-            electronSF3[0] = 1
-            electronSF4[0] = 1
-            azhWeight[0] = 1
-            puweight[0] = 1
-            tauPtWeightUp[0] = 1
-            tauPtWeightDown[0] = 1
-            trigweight_1[0] = 1
-            trigweight_2[0] = 1
-            idisoweight_1[0] = 1
-            idisoweight_2[0] = 1
-            tauIDweight_1[0] = 1
-            tauIDweight_2[0] = 1
-            topWeight[0] = 1
-            zPtWeight[0] = 1
-            #zmumuBoostWeight[0] = 1
-            zmumuVBFWeight[0] = 1
-            zmumuVBFWeight2[0] = 1
-            ggHWeight0Jet[0] = 1
-            ggHWeightBoost[0] = 1
-            ggHWeightVBF[0] = 1
-            ggHtopQuarkWeight[0] = 1
-            jetToTauFakeWeight[0] = 1
-            weight[0] = 1
-            XSecLumiWeight[0] = 1
-            gen_match_1[0] = -1
-            gen_match_2[0] = -1
-            gen_match_3[0] = -1
-            gen_match_4[0] = -1
-            byVVTightIsolationMVArun2v1DBoldDMwLT_1[0] = -1
-            byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = -1
-            byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = -1
-            byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = -1
-            byVVLooseIsolationMVArun2v1DBoldDMwLT_3[0] = -1
-            byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = -1
-            isoCode1[0] = -1
-            isoCode2[0] = -1
-            pt_1_UP[0] = pt1
-            pt_1_DOWN[0] = pt1
-            pt_1_DM0_UP[0] = pt1
-            pt_1_DM0_DOWN[0] = pt1
-            pt_1_DM1_UP[0] = pt1
-            pt_1_DM1_DOWN[0] = pt1
-            pt_1_DM10_UP[0] = pt1
-            pt_1_DM10_DOWN[0] = pt1
-            pt_2_UP[0] = pt2
-            pt_2_DOWN[0] = pt2
-            pt_2_DM0_UP[0] = pt2
-            pt_2_DM0_DOWN[0] = pt2
-            pt_2_DM1_UP[0] = pt2
-            pt_2_DM1_DOWN[0] = pt2
-            pt_2_DM10_UP[0] = pt2
-            pt_2_DM10_DOWN[0] = pt2
-            ptCor_1[0] = pt1
-            ptCor_2[0] = pt2
-            Higgs_PtCor[0] = Higgs_Pt[0]
-            Higgs_PtCor_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM0_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM1_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM10_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_UncMet_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_ClusteredMet_UP[0] = Higgs_Pt[0]
-            Higgs_PtCor_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM0_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM1_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_DM10_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_UncMet_DOWN[0] = Higgs_Pt[0]
-            Higgs_PtCor_ClusteredMet_DOWN[0] = Higgs_Pt[0]
-            m_visCor[0] = getattr( row, l1+'_'+l2+'_Mass' )
-            m_visCor_UP[0] = m_visCor[0]
-            m_visCor_DM0_UP[0] = m_visCor[0]
-            m_visCor_DM1_UP[0] = m_visCor[0]
-            m_visCor_DM10_UP[0] = m_visCor[0]
-            m_visCor_DOWN[0] = m_visCor[0]
-            m_visCor_DM0_DOWN[0] = m_visCor[0]
-            m_visCor_DM1_DOWN[0] = m_visCor[0]
-            m_visCor_DM10_DOWN[0] = m_visCor[0]
-            zhFR0[0] = 0
-            zhFR1[0] = 0
-            zhFR2[0] = 0
-            LT_higgs[0] = 0
-
-            # Data specific vars
-            if 'data' in sample :
-                # Have the btag numbers correspond to actual values not
-                # Promote/Demote values
-                if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
-                    setattr(row, 'NBTagPDM_idL_jVeto', getattr(row, 'bjetCISVVeto20MediumZTT'))
-                if hasattr(row, 'NBTagPDL_idL_jVeto' ) :
-                    setattr(row, 'NBTagPDL_idL_jVeto', getattr(row, 'bjetCISVVeto20LooseZTT'))
-
-
-                    
-            ### Not Data
-            else :
-                nTrPu = ( math.floor(row.nTruePU * 10))/10
-                puweight[0] = puDict[ nTrPu ]
-
-                if hasattr( row, l1+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                    gen_match_1[0] = getattr( row, l1+'ZTTGenMatching2' )
-                elif hasattr( row, l1+'ZTTGenMatching' ) :
-                    gen_match_1[0] = getattr( row, l1+'ZTTGenMatching' )
-                if hasattr( row, l2+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                    gen_match_2[0] = getattr( row, l2+'ZTTGenMatching2' )
-                elif hasattr( row, l2+'ZTTGenMatching' ) :
-                    gen_match_2[0] = getattr( row, l2+'ZTTGenMatching' )
-
-
-                if analysis == 'azh' :
-
-                    if hasattr( row, l3+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                        gen_match_3[0] = getattr( row, l3+'ZTTGenMatching2' )
-                    elif hasattr( row, l3+'ZTTGenMatching' ) :
-                        gen_match_3[0] = getattr( row, l3+'ZTTGenMatching' )
-                    if hasattr( row, l4+'ZTTGenMatching2' ) : # GenMatching2 is best var
-                        gen_match_4[0] = getattr( row, l4+'ZTTGenMatching2' )
-                    elif hasattr( row, l4+'ZTTGenMatching' ) :
-                        gen_match_4[0] = getattr( row, l4+'ZTTGenMatching' )
-
-                    nvtx = row.nvtx
-                    # Currently using PFIDLoose and Loose RelIso for all muons
-                    
-                    if 'm' in l1 :
-                        muonSF1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
-                        muonSF1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
-                        muonSF1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
-                    if 'm' in l2 :
-                        muonSF2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
-                        muonSF2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
-                        muonSF2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
-                    if 'm' in l3 :
-                        muonSF3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
-                        muonSF3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
-                        muonSF3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
-                    if 'm' in l4 :
-                        muonSF4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
-                        muonSF4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
-                        muonSF4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
-                    # Currently using WP90 in all electrons
-                    if 'e' in l1 :
-                        electronSF1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
-                    if 'e' in l2 :
-                        electronSF2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
-                    if 'e' in l3 :
-                        electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
-                    if 'e' in l4 :
-                        electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
-
-
-                # Isolation / ID weights
-                if 't' in l1 : idisoweight_1[0] = 1
-                #else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', pt1, eta1 )
-                if 't' in l2 : idisoweight_2[0] = 1
-                #else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', pt2, eta2 )
-
-                # Trigger Weights
-                #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
-                #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
-                #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( pt1, eta1, pt2, eta2 )
-                #elif channel == 'tt' :
-                if channel == 'tt' :
-
-                    # L1 trigger efficiency is dependent on tau isolation
-                    # and real / fake tau status
-                    # find tau iso and pass string for mapping appropriately
-                    tauIso = 'NoIso'
-                    if getattr( row, l1+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'VLooseIso'
-                    if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'LooseIso'
-                    if getattr( row, l1+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'MediumIso'
-                    if getattr( row, l1+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'TightIso'
-                    if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'VTightIso'
-                    if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0], dm1 )
-                    tauIso = 'NoIso'
-                    if getattr( row, l2+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'VLooseIso'
-                    if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'LooseIso'
-                    if getattr( row, l2+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'MediumIso'
-                    if getattr( row, l2+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'TightIso'
-                    if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
-                        tauIso = 'VTightIso'
-                    if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
-                    trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0], dm2 )
-
-
-                    # Tau Energy Correction
-                    # also propagated to Higgs_Pt and m_vis
-                    ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], dm1 )
-                    ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], dm2 )
-                    pt_1_UP[0] = ptCor_1[0]
-                    pt_1_DOWN[0] = ptCor_1[0]
-                    pt_1_DM0_UP[0] = ptCor_1[0]
-                    pt_1_DM0_DOWN[0] = ptCor_1[0]
-                    pt_1_DM1_UP[0] = ptCor_1[0]
-                    pt_1_DM1_DOWN[0] = ptCor_1[0]
-                    pt_1_DM10_UP[0] = ptCor_1[0]
-                    pt_1_DM10_DOWN[0] = ptCor_1[0]
-                    pt_2_UP[0] = ptCor_2[0]
-                    pt_2_DOWN[0] = ptCor_2[0]
-                    pt_2_DM0_UP[0] = ptCor_2[0]
-                    pt_2_DM0_DOWN[0] = ptCor_2[0]
-                    pt_2_DM1_UP[0] = ptCor_2[0]
-                    pt_2_DM1_DOWN[0] = ptCor_2[0]
-                    pt_2_DM10_UP[0] = ptCor_2[0]
-                    pt_2_DM10_DOWN[0] = ptCor_2[0]
-                    # Tau Energy Scale Saved
-                    # 15 Feb 2017, TES uncertainty == 0.6%
-                    # TES used to be 3% with no central shift
-                    tesUp = 1.012
-                    tesDown = 0.988
-                    if gen_match_1[0] == 5 :
-                        tauIDweight_1[0] = 0.95 # 06 Feb 2017
-                        pt_1_UP[0] = ptCor_1[0] * tesUp
-                        pt_1_DOWN[0] = ptCor_1[0] * tesDown
-                        # For the combinatorics
-                        if dm1 == 0 :
-                            pt_1_DM0_UP[0] = ptCor_1[0] * tesUp
-                            pt_1_DM0_DOWN[0] = ptCor_1[0] * tesDown
-                        if dm1 == 1 :
-                            pt_1_DM1_UP[0] = ptCor_1[0] * tesUp
-                            pt_1_DM1_DOWN[0] = ptCor_1[0] * tesDown
-                        if dm1 == 10 :
-                            pt_1_DM10_UP[0] = ptCor_1[0] * tesUp
-                            pt_1_DM10_DOWN[0] = ptCor_1[0] * tesDown
-                    if gen_match_2[0] == 5 :
-                        tauIDweight_2[0] = 0.95 # 06 Feb 2017
-                        pt_2_UP[0] = ptCor_2[0] * tesUp
-                        pt_2_DOWN[0] = ptCor_2[0] * tesDown
-                        if dm2 == 0 :
-                            pt_2_DM0_UP[0] = ptCor_2[0] * tesUp
-                            pt_2_DM0_DOWN[0] = ptCor_2[0] * tesDown
-                        if dm2 == 1 :
-                            pt_2_DM1_UP[0] = ptCor_2[0] * tesUp
-                            pt_2_DM1_DOWN[0] = ptCor_2[0] * tesDown
-                        if dm2 == 10 :
-                            pt_2_DM10_UP[0] = ptCor_2[0] * tesUp
-                            pt_2_DM10_DOWN[0] = ptCor_2[0] * tesDown
-
-                    # All shifts for Higgs_Pt with combinatorics
-                    # This should use recoil corrected, TEC MET from svFit if available
-                    if hasattr( row, 'metcor' ) : metTmp = row.metcor
-                    else : metTmp = row.type1_pfMetEt
-                    if hasattr( row, 'metcorphi' ) : metPhiTmp = row.metcorphi
-                    else : metPhiTmp = row.type1_pfMetPhi
-                    Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                        ptCor_2[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_UP[0] = getHiggsPt( pt_1_UP[0], eta1, phi1, m1,\
-                        pt_2_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM0_UP[0] = getHiggsPt( pt_1_DM0_UP[0], eta1, phi1, m1,\
-                        pt_2_DM0_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM1_UP[0] = getHiggsPt( pt_1_DM1_UP[0], eta1, phi1, m1,\
-                        pt_2_DM1_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM10_UP[0] = getHiggsPt( pt_1_DM10_UP[0], eta1, phi1, m1,\
-                        pt_2_DM10_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DOWN[0] = getHiggsPt( pt_1_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM0_DOWN[0] = getHiggsPt( pt_1_DM0_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM0_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM1_DOWN[0] = getHiggsPt( pt_1_DM1_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM1_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    Higgs_PtCor_DM10_DOWN[0] = getHiggsPt( pt_1_DM10_DOWN[0], eta1, phi1, m1,\
-                        pt_2_DM10_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
-                    # For the met shifted Higgs Pt, check 1 hasattr
-                    if hasattr( row, 'metcorClusteredUp' ) :
-                        Higgs_PtCor_UncMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorUncUp, row.metcorphiUncUp)
-                        Higgs_PtCor_UncMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorUncDown, row.metcorphiUncDown)
-                        Higgs_PtCor_ClusteredMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorClusteredUp, row.metcorphiClusteredUp)
-                        Higgs_PtCor_ClusteredMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
-                            ptCor_2[0], eta2, phi2, m2, row.metcorClusteredDown, row.metcorphiClusteredDown)
-                    
-
-                    m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
-                    m_visCor_UP[0] = mVisTESCor( l1, l2, row, pt_1_UP[0], pt_2_UP[0] )
-                    m_visCor_DM0_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM0_UP[0], pt_2_DM0_UP[0] )
-                    m_visCor_DM1_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM1_UP[0], pt_2_DM1_UP[0] )
-                    m_visCor_DM10_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM10_UP[0], pt_2_DM10_UP[0] )
-                    m_visCor_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DOWN[0], pt_2_DOWN[0] )
-                    m_visCor_DM0_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM0_DOWN[0], pt_2_DM0_DOWN[0] )
-                    m_visCor_DM1_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM1_DOWN[0], pt_2_DM1_DOWN[0] )
-                    m_visCor_DM10_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM10_DOWN[0], pt_2_DM10_DOWN[0] )
+            ## With calculated transverse mass variables, do Mt_Total for mssm search
+            ##mt_tot[0] = calcMTTotal( pt1, phi1, pt2, phi2, mt_1[0], mt_2[0] )
+            ## TES Shifted
+            #if 'DYJets' in sample or 'ggH' in sample or 'bbH' in sample or 'VBH' in sample or 'Sync' in sample :
+            #    m_vis_UP[0] = mVisTES( l1, l2, row, 0.03 )
+            #    m_vis_DOWN[0] = mVisTES( l1, l2, row, -0.03 )
+            #    mt_tot_UP[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, True )
+            #    mt_tot_DOWN[0] = getMTTotal( pt1, phi1, pt2, phi2, row, channel, False )
+            #else :
+            #    m_vis_UP[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+            #    m_vis_DOWN[0] = getattr( row, '%s_%s_Mass' % (l1, l2) )
+            #    if hasattr( row, 'm_sv_UP' ) :
+            #        setattr( row, 'm_sv_UP', getattr( row, 'm_sv' ) )
+            #        setattr( row, 'm_sv_DOWN', getattr( row, 'm_sv' ) )
+            #        setattr( row, 'mt_sv_UP', getattr( row, 'mt_sv' ) )
+            #        setattr( row, 'mt_sv_DOWN', getattr( row, 'mt_sv' ) )
+            #    mt_tot_UP[0] = mt_tot[0]
+            #    mt_tot_DOWN[0] = mt_tot[0]
+            ##print "Mt Tot: %f         Mt Tot Up: %f         Mt Tot Down: %f" % (mt_tot[0], mt_tot_UP[0], mt_tot_DOWN[0])
 
 
 
-                # ggH reweighting, only for ggH120,125,130
-                # estimated by Cecile, Nov 15, 2016
-                # See: https://indico.cern.ch/event/578552/contributions/2343738/attachments/1372271/2081852/systematics_SMH.pdf
-                # Slide 10 for tautau
-                #
-                # Also do top quark loop reweighting
-                # Based on: slides 10 https://indico.cern.ch/event/628660/contributions/2593406/attachments/1459912/2255407/May-16-HIG_Massironi.pdf
-                if shortName in ['ggHtoTauTau110','ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'ggHtoTauTau140'
-                        'ggHtoTauTau0Mf05ph0125', 'ggHtoTauTau0M125', 'ggHtoTauTau0PM125'] :
 
-                    ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
-                    # 2 options for boosted category in case we haven't run svFit
-                    # prefer the svFit option
-                    if hasattr( row, 'pt_sv' ) :
-                        ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
-                    elif Higgs_Pt[0] != 0.0 :
-                        ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
+            #muonSF1[0] = 1
+            #muonSF2[0] = 1
+            #muonSF3[0] = 1
+            #muonSF4[0] = 1
+            #electronSF1[0] = 1
+            #electronSF2[0] = 1
+            #electronSF3[0] = 1
+            #electronSF4[0] = 1
+            #azhWeight[0] = 1
+            #puweight[0] = 1
+            #tauPtWeightUp[0] = 1
+            #tauPtWeightDown[0] = 1
+            #trigweight_1[0] = 1
+            #trigweight_2[0] = 1
+            #idisoweight_1[0] = 1
+            #idisoweight_2[0] = 1
+            #tauIDweight_1[0] = 1
+            #tauIDweight_2[0] = 1
+            #topWeight[0] = 1
+            #zPtWeight[0] = 1
+            ##zmumuBoostWeight[0] = 1
+            #zmumuVBFWeight[0] = 1
+            #zmumuVBFWeight2[0] = 1
+            #ggHWeight0Jet[0] = 1
+            #ggHWeightBoost[0] = 1
+            #ggHWeightVBF[0] = 1
+            #ggHtopQuarkWeight[0] = 1
+            #jetToTauFakeWeight[0] = 1
+            #weight[0] = 1
+            #XSecLumiWeight[0] = 1
+            #gen_match_1[0] = -1
+            #gen_match_2[0] = -1
+            #gen_match_3[0] = -1
+            #gen_match_4[0] = -1
+            #byVVTightIsolationMVArun2v1DBoldDMwLT_1[0] = -1
+            #byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = -1
+            #byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = -1
+            #byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = -1
+            #byVVLooseIsolationMVArun2v1DBoldDMwLT_3[0] = -1
+            #byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = -1
+            #isoCode1[0] = -1
+            #isoCode2[0] = -1
+            ##pt_1_UP[0] = pt1
+            ##pt_1_DOWN[0] = pt1
+            ##pt_1_DM0_UP[0] = pt1
+            ##pt_1_DM0_DOWN[0] = pt1
+            ##pt_1_DM1_UP[0] = pt1
+            ##pt_1_DM1_DOWN[0] = pt1
+            ##pt_1_DM10_UP[0] = pt1
+            ##pt_1_DM10_DOWN[0] = pt1
+            ##pt_2_UP[0] = pt2
+            ##pt_2_DOWN[0] = pt2
+            ##pt_2_DM0_UP[0] = pt2
+            ##pt_2_DM0_DOWN[0] = pt2
+            ##pt_2_DM1_UP[0] = pt2
+            ##pt_2_DM1_DOWN[0] = pt2
+            ##pt_2_DM10_UP[0] = pt2
+            ##pt_2_DM10_DOWN[0] = pt2
+            ##ptCor_1[0] = pt1
+            ##ptCor_2[0] = pt2
+            ##Higgs_PtCor[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_UP[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_DM0_UP[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_DM1_UP[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_DM10_UP[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_UncMet_UP[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_ClusteredMet_UP[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_DOWN[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_DM0_DOWN[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_DM1_DOWN[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_DM10_DOWN[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_UncMet_DOWN[0] = Higgs_Pt[0]
+            ##Higgs_PtCor_ClusteredMet_DOWN[0] = Higgs_Pt[0]
+            ##m_visCor[0] = getattr( row, l1+'_'+l2+'_Mass' )
+            ##m_visCor_UP[0] = m_visCor[0]
+            ##m_visCor_DM0_UP[0] = m_visCor[0]
+            ##m_visCor_DM1_UP[0] = m_visCor[0]
+            ##m_visCor_DM10_UP[0] = m_visCor[0]
+            ##m_visCor_DOWN[0] = m_visCor[0]
+            ##m_visCor_DM0_DOWN[0] = m_visCor[0]
+            ##m_visCor_DM1_DOWN[0] = m_visCor[0]
+            ##m_visCor_DM10_DOWN[0] = m_visCor[0]
+            #zhFR0[0] = 0
+            #zhFR1[0] = 0
+            #zhFR2[0] = 0
+            #LT_higgs[0] = 0
 
-                    if hasattr( row, 'vbfMass' ) :
-                        ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
-
-                    # Also do top quark loop reweighting
-                    if hasattr( row, 'genpT' ) :
-                        if getattr( row, 'genpT' ) > 150. :
-                            ggHtopQuarkWeight[0] = 1. + 0.01*(0.114 * getattr( row, 'genpT' ) - 17.14)
-                        else : ggHtopQuarkWeight[0] = 1.
-                    
-
-                
-                # top pt reweighting, only for ttbar events
-                # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
-                if shortName == 'TT' and hasattr( row, 'topQuarkPt1' ) :
-                    top1Pt = row.topQuarkPt1 if row.topQuarkPt1 < 400 else 400
-                    top2Pt = row.topQuarkPt2 if row.topQuarkPt2 < 400 else 400
-                    topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
-                else : topWeight[0] = 1
-                #topWeight[0] = 1
-
-                # genMass is a default from FSA, that doesn't conform to HTT genMass
-                if hasattr( row, 'genMass' ) and hasattr( row, 'genM' ) :
-                    setattr( row, 'genMass', getattr( row, 'genM' ))
-
-                # Apply z Pt Reweighting to LO DYJets samples
-                # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
-                if 'DYJets' in sample and 'Low' not in sample :
-                    if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
-                        zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
-
-                # Reweighting 2D distributions based on Zmumu CR
-                if 'DYJets' in sample or 'EWKZ' in sample :
-
-                    # Boosted Category - XXX No longer needed with reminiAOD
-                    #boostPt = 0.
-                    #if hasattr( row, 'pt_sv' ) : boostPt = row.pt_sv
-                    #else : boostPt = Higgs_Pt[0]
-                    #if boostPt <= 100.   : zmumuBoostWeight[0] = (-1. + 0.973)
-                    #elif boostPt <= 170. : zmumuBoostWeight[0] = (-1. + 0.959)
-                    #elif boostPt <= 300. : zmumuBoostWeight[0] = (-1. + 0.934)
-                    #else                 : zmumuBoostWeight[0] = (-1. + 0.993) # > 300
-
-                    # VBF Category
-                    # Change application method and add shape with nominal
-                    # shift at 1/2 the initial value
-                    # Update 2 Mar 2017, no more shape uncert, just weight correction
-                    if row.jetVeto30 >= 2 :
-                        zmumuVBFWeight[0] = ZMjjAndDEtaWeighter.getZMjjAndDEtaReweight( row.vbfMass, row.j1eta - row.j2eta )
-
-                    if row.vbfMass <= 300   : zmumuVBFWeight2[0] = 0.0
-                    elif row.vbfMass <= 500 : zmumuVBFWeight2[0] = 0.02
-                    elif row.vbfMass <= 800 : zmumuVBFWeight2[0] = 0.06
-                    else                    : zmumuVBFWeight2[0] = 0.04 # > 800
-
-                # Jet to Tau Fake weight
-                if not 'date' in sample :
-                    w1 = 0.
-                    w2 = 0.
-                    if gen_match_1[0] == 6 :
-                        w1 = .2 * pt1 / 100.
-                    if gen_match_2[0] == 6 :
-                        w2 = .2 * pt2 / 100.
-                    if w1 > .4 : w1 = .4
-                    if w2 > .4 : w2 = .4
-                    jetToTauFakeWeight[0] = 1. + w1 + w2
-                    
-
-                weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
-                weight[0] *= trigweight_1[0] * trigweight_2[0]
-                weight[0] *= zPtWeight[0] * topWeight[0]
-                # Below set to 1. for HTT
-                azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
-                azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
-
-
-
-                # Special weighting for WJets and DYJets
-                if shortName in ['DYJets', 'WJets'] :
-                    xsec = getXSec( analysis, shortName, sampDict, row.numGenJets )
-                    if xsec not in xsecList : xsecList.append( xsec )
-                    #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
-                # If not WJets or DYJets fill from xsec defined before
-                XSecLumiWeight[0] = xsec
-
-            # Additional VVLoose and VVTight Iso WPs
-            if channel == 'tt' :
-                byVVTightIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVTight( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
-                byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVLoose( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
-                byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVTight( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
-                byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVLoose( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
-                isoCode1[0] = setIsoCode( row, l1, byVVTightIsolationMVArun2v1DBoldDMwLT_1[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0]) 
-                isoCode2[0] = setIsoCode( row, l2, byVVTightIsolationMVArun2v1DBoldDMwLT_2[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0]) 
-
-            # Tau Pt Weighting
-            if 'data' not in sample :
-                if channel == 'em' :
-                    tauPtWeightUp[0] = 1
-                    tauPtWeightDown[0] = 1
-                if channel == 'tt' :
-                    tauPtWeightUp[0] = getTauPtWeight( sample, channel,
-                        gen_match_1[0], gen_match_2[0], row, 0.2 )
-                    tauPtWeightDown[0] = getTauPtWeight( sample, channel, 
-                        gen_match_1[0], gen_match_2[0], row, -0.2 )
-
-            if len(channel) > 3 :
-                # Set LeptonJetPt to be equal to or greater than lepton Pt
-                # b/c the lepton should be a subset of the overlapping jet
-                # if jet pt < lepton pt, then we have the wrong jet
-                for lep in [l1, l2, l3, l4] :
-                    if getattr( row, lep+'Pt' ) > getattr( row, lep+'JetPt' ) :
-                        setattr( row, lep+'JetPt', getattr( row, lep+'Pt' ))
-
-                # Calculate our ZH fake rate values
-                # This uses the 1+2-0 method detailed in AN2014/109
-                if 'data' in sample :
-                    zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
-                    zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
-                    zhFR0[0] = zhFR1[0] * zhFR2[0]
-                
-                # Define the LT varialbe we use in analysis (LT from FSA is all 4 objects)
-                LT_higgs[0] = pt3 + pt4
-
-                # Add VVL for leg3 and leg4
-                if 't' in l3 :
-                    byVVLooseIsolationMVArun2v1DBoldDMwLT_3[0] = isoWPAdder.getVVLoose(
-                            getattr(row, l3+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt3 )
-                if 't' in l4 :
-                    byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = isoWPAdder.getVVLoose(
-                            getattr(row, l4+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt4 )
+            ## Data specific vars
+            #if 'data' in sample :
+            #    # Have the btag numbers correspond to actual values not
+            #    # Promote/Demote values
+            #    if hasattr(row, 'NBTagPDM_idL_jVeto' ) :
+            #        setattr(row, 'NBTagPDM_idL_jVeto', getattr(row, 'bjetCISVVeto20MediumZTT'))
+            #    if hasattr(row, 'NBTagPDL_idL_jVeto' ) :
+            #        setattr(row, 'NBTagPDL_idL_jVeto', getattr(row, 'bjetCISVVeto20LooseZTT'))
 
 
-            # Set branch for syncing with other groups:
-            __ZWEIGHT__[0] = zPtWeight[0]
-            __WEIGHT__[0] = XSecLumiWeight[0]
-            __CORR__[0] = trigweight_1[0] * trigweight_2[0]
+            #        
+            #### Not Data
+            #else :
+            #    nTrPu = ( math.floor(row.nTruePU * 10))/10
+            #    puweight[0] = puDict[ nTrPu ]
+
+            #    if hasattr( row, l1+'ZTTGenMatching2' ) : # GenMatching2 is best var
+            #        gen_match_1[0] = getattr( row, l1+'ZTTGenMatching2' )
+            #    elif hasattr( row, l1+'ZTTGenMatching' ) :
+            #        gen_match_1[0] = getattr( row, l1+'ZTTGenMatching' )
+            #    if hasattr( row, l2+'ZTTGenMatching2' ) : # GenMatching2 is best var
+            #        gen_match_2[0] = getattr( row, l2+'ZTTGenMatching2' )
+            #    elif hasattr( row, l2+'ZTTGenMatching' ) :
+            #        gen_match_2[0] = getattr( row, l2+'ZTTGenMatching' )
+
+
+            #    if analysis == 'azh' :
+
+            #        if hasattr( row, l3+'ZTTGenMatching2' ) : # GenMatching2 is best var
+            #            gen_match_3[0] = getattr( row, l3+'ZTTGenMatching2' )
+            #        elif hasattr( row, l3+'ZTTGenMatching' ) :
+            #            gen_match_3[0] = getattr( row, l3+'ZTTGenMatching' )
+            #        if hasattr( row, l4+'ZTTGenMatching2' ) : # GenMatching2 is best var
+            #            gen_match_4[0] = getattr( row, l4+'ZTTGenMatching2' )
+            #        elif hasattr( row, l4+'ZTTGenMatching' ) :
+            #            gen_match_4[0] = getattr( row, l4+'ZTTGenMatching' )
+
+            #        nvtx = row.nvtx
+            #        # Currently using PFIDLoose and Loose RelIso for all muons
+            #        
+            #        if 'm' in l1 :
+            #            muonSF1[0] = muonSF.getIDScaleFactor( 'Loose', pt1, eta1, nvtx )
+            #            muonSF1[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt1, eta1, nvtx )
+            #            muonSF1[0] *= muonSF.getTkScaleFactor( eta1, nvtx )
+            #        if 'm' in l2 :
+            #            muonSF2[0] = muonSF.getIDScaleFactor( 'Loose', pt2, eta2, nvtx )
+            #            muonSF2[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt2, eta2, nvtx )
+            #            muonSF2[0] *= muonSF.getTkScaleFactor( eta2, nvtx )
+            #        if 'm' in l3 :
+            #            muonSF3[0] = muonSF.getIDScaleFactor( 'Loose', pt3, eta3, nvtx )
+            #            muonSF3[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt3, eta3, nvtx )
+            #            muonSF3[0] *= muonSF.getTkScaleFactor( eta3, nvtx )
+            #        if 'm' in l4 :
+            #            muonSF4[0] = muonSF.getIDScaleFactor( 'Loose', pt4, eta4, nvtx )
+            #            muonSF4[0] *= muonSF.getRelIsoScaleFactor( 'Loose', pt4, eta4, nvtx )
+            #            muonSF4[0] *= muonSF.getTkScaleFactor( eta4, nvtx )
+            #        # Currently using WP90 in all electrons
+            #        if 'e' in l1 :
+            #            electronSF1[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt1, eta1 )
+            #        if 'e' in l2 :
+            #            electronSF2[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt2, eta2 )
+            #        if 'e' in l3 :
+            #            electronSF3[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt3, eta3 )
+            #        if 'e' in l4 :
+            #            electronSF4[0] = electronSF.getGSFAndWPScaleFactor( 'WP90', pt4, eta4 )
+
+
+            #    # Isolation / ID weights
+            #    if 't' in l1 : idisoweight_1[0] = 1
+            #    #else : idisoweight_1[0] = lepWeights.getWeight( l1, 'IdIso', pt1, eta1 )
+            #    if 't' in l2 : idisoweight_2[0] = 1
+            #    #else : idisoweight_2[0] = lepWeights.getWeight( l2, 'IdIso', pt2, eta2 )
+
+            #    # Trigger Weights
+            #    #if channel == 'et' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
+            #    #elif channel == 'mt' : trigweight_1[0] = lepWeights.getWeight( l1, 'Trig', pt1, eta1 )
+            #    #elif channel == 'em' : trigweight_1[0] = lepWeights.getEMTrigWeight( pt1, eta1, pt2, eta2 )
+            #    #elif channel == 'tt' :
+            #    if channel == 'tt' :
+
+            #        # L1 trigger efficiency is dependent on tau isolation
+            #        # and real / fake tau status
+            #        # find tau iso and pass string for mapping appropriately
+            #        tauIso = 'NoIso'
+            #        if getattr( row, l1+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'VLooseIso'
+            #        if getattr( row, l1+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'LooseIso'
+            #        if getattr( row, l1+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'MediumIso'
+            #        if getattr( row, l1+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'TightIso'
+            #        if getattr( row, l1+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'VTightIso'
+            #        if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
+            #        trigweight_1[0] = doublTau35.doubleTauTriggerEff( pt1, tauIso, gen_match_1[0], dm1 )
+            #        tauIso = 'NoIso'
+            #        if getattr( row, l2+'ByVLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'VLooseIso'
+            #        if getattr( row, l2+'ByLooseIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'LooseIso'
+            #        if getattr( row, l2+'ByMediumIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'MediumIso'
+            #        if getattr( row, l2+'ByTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'TightIso'
+            #        if getattr( row, l2+'ByVTightIsolationMVArun2v1DBoldDMwLT' ) > 0 :
+            #            tauIso = 'VTightIso'
+            #        if analysis == 'Sync' and 'DYJets' not in sample : tauIso == 'TightIso'
+            #        trigweight_2[0] = doublTau35.doubleTauTriggerEff( pt2, tauIso, gen_match_2[0], dm2 )
+
+
+            #        # Tau Energy Correction
+            #        # also propagated to Higgs_Pt and m_vis
+            #        ptCor_1[0] = correctTauPt( pt1, gen_match_1[0], dm1 )
+            #        ptCor_2[0] = correctTauPt( pt2, gen_match_2[0], dm2 )
+            #        #pt_1_UP[0] = ptCor_1[0]
+            #        #pt_1_DOWN[0] = ptCor_1[0]
+            #        #pt_1_DM0_UP[0] = ptCor_1[0]
+            #        #pt_1_DM0_DOWN[0] = ptCor_1[0]
+            #        #pt_1_DM1_UP[0] = ptCor_1[0]
+            #        #pt_1_DM1_DOWN[0] = ptCor_1[0]
+            #        #pt_1_DM10_UP[0] = ptCor_1[0]
+            #        #pt_1_DM10_DOWN[0] = ptCor_1[0]
+            #        #pt_2_UP[0] = ptCor_2[0]
+            #        #pt_2_DOWN[0] = ptCor_2[0]
+            #        #pt_2_DM0_UP[0] = ptCor_2[0]
+            #        #pt_2_DM0_DOWN[0] = ptCor_2[0]
+            #        #pt_2_DM1_UP[0] = ptCor_2[0]
+            #        #pt_2_DM1_DOWN[0] = ptCor_2[0]
+            #        #pt_2_DM10_UP[0] = ptCor_2[0]
+            #        #pt_2_DM10_DOWN[0] = ptCor_2[0]
+            #        # Tau Energy Scale Saved
+            #        # 15 Feb 2017, TES uncertainty == 0.6%
+            #        # TES used to be 3% with no central shift
+            #        tesUp = 1.012
+            #        tesDown = 0.988
+            #        #if gen_match_1[0] == 5 :
+            #        #    tauIDweight_1[0] = 0.95 # 06 Feb 2017
+            #        #    pt_1_UP[0] = ptCor_1[0] * tesUp
+            #        #    pt_1_DOWN[0] = ptCor_1[0] * tesDown
+            #        #    # For the combinatorics
+            #        #    if dm1 == 0 :
+            #        #        pt_1_DM0_UP[0] = ptCor_1[0] * tesUp
+            #        #        pt_1_DM0_DOWN[0] = ptCor_1[0] * tesDown
+            #        #    if dm1 == 1 :
+            #        #        pt_1_DM1_UP[0] = ptCor_1[0] * tesUp
+            #        #        pt_1_DM1_DOWN[0] = ptCor_1[0] * tesDown
+            #        #    if dm1 == 10 :
+            #        #        pt_1_DM10_UP[0] = ptCor_1[0] * tesUp
+            #        #        pt_1_DM10_DOWN[0] = ptCor_1[0] * tesDown
+            #        #if gen_match_2[0] == 5 :
+            #        #    tauIDweight_2[0] = 0.95 # 06 Feb 2017
+            #        #    pt_2_UP[0] = ptCor_2[0] * tesUp
+            #        #    pt_2_DOWN[0] = ptCor_2[0] * tesDown
+            #        #    if dm2 == 0 :
+            #        #        pt_2_DM0_UP[0] = ptCor_2[0] * tesUp
+            #        #        pt_2_DM0_DOWN[0] = ptCor_2[0] * tesDown
+            #        #    if dm2 == 1 :
+            #        #        pt_2_DM1_UP[0] = ptCor_2[0] * tesUp
+            #        #        pt_2_DM1_DOWN[0] = ptCor_2[0] * tesDown
+            #        #    if dm2 == 10 :
+            #        #        pt_2_DM10_UP[0] = ptCor_2[0] * tesUp
+            #        #        pt_2_DM10_DOWN[0] = ptCor_2[0] * tesDown
+
+            #        # All shifts for Higgs_Pt with combinatorics
+            #        # This should use recoil corrected, TEC MET from svFit if available
+            #        if hasattr( row, 'metcor' ) : metTmp = row.metcor
+            #        else : metTmp = row.type1_pfMetEt
+            #        if hasattr( row, 'metcorphi' ) : metPhiTmp = row.metcorphi
+            #        else : metPhiTmp = row.type1_pfMetPhi
+            #        #Higgs_PtCor[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+            #        #    ptCor_2[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_UP[0] = getHiggsPt( pt_1_UP[0], eta1, phi1, m1,\
+            #        #    pt_2_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_DM0_UP[0] = getHiggsPt( pt_1_DM0_UP[0], eta1, phi1, m1,\
+            #        #    pt_2_DM0_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_DM1_UP[0] = getHiggsPt( pt_1_DM1_UP[0], eta1, phi1, m1,\
+            #        #    pt_2_DM1_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_DM10_UP[0] = getHiggsPt( pt_1_DM10_UP[0], eta1, phi1, m1,\
+            #        #    pt_2_DM10_UP[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_DOWN[0] = getHiggsPt( pt_1_DOWN[0], eta1, phi1, m1,\
+            #        #    pt_2_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_DM0_DOWN[0] = getHiggsPt( pt_1_DM0_DOWN[0], eta1, phi1, m1,\
+            #        #    pt_2_DM0_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_DM1_DOWN[0] = getHiggsPt( pt_1_DM1_DOWN[0], eta1, phi1, m1,\
+            #        #    pt_2_DM1_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        #Higgs_PtCor_DM10_DOWN[0] = getHiggsPt( pt_1_DM10_DOWN[0], eta1, phi1, m1,\
+            #        #    pt_2_DM10_DOWN[0], eta2, phi2, m2, metTmp, metPhiTmp)
+            #        ## For the met shifted Higgs Pt, check 1 hasattr
+            #        #if hasattr( row, 'metcorClusteredUp' ) :
+            #        #    Higgs_PtCor_UncMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+            #        #        ptCor_2[0], eta2, phi2, m2, row.metcorUncUp, row.metcorphiUncUp)
+            #        #    Higgs_PtCor_UncMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+            #        #        ptCor_2[0], eta2, phi2, m2, row.metcorUncDown, row.metcorphiUncDown)
+            #        #    Higgs_PtCor_ClusteredMet_UP[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+            #        #        ptCor_2[0], eta2, phi2, m2, row.metcorClusteredUp, row.metcorphiClusteredUp)
+            #        #    Higgs_PtCor_ClusteredMet_DOWN[0] = getHiggsPt( ptCor_1[0], eta1, phi1, m1,\
+            #        #        ptCor_2[0], eta2, phi2, m2, row.metcorClusteredDown, row.metcorphiClusteredDown)
+            #        #
+
+            #        #m_visCor[0] = mVisTESCor( l1, l2, row, ptCor_1[0], ptCor_2[0] )
+            #        #m_visCor_UP[0] = mVisTESCor( l1, l2, row, pt_1_UP[0], pt_2_UP[0] )
+            #        #m_visCor_DM0_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM0_UP[0], pt_2_DM0_UP[0] )
+            #        #m_visCor_DM1_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM1_UP[0], pt_2_DM1_UP[0] )
+            #        #m_visCor_DM10_UP[0] = mVisTESCor( l1, l2, row, pt_1_DM10_UP[0], pt_2_DM10_UP[0] )
+            #        #m_visCor_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DOWN[0], pt_2_DOWN[0] )
+            #        #m_visCor_DM0_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM0_DOWN[0], pt_2_DM0_DOWN[0] )
+            #        #m_visCor_DM1_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM1_DOWN[0], pt_2_DM1_DOWN[0] )
+            #        #m_visCor_DM10_DOWN[0] = mVisTESCor( l1, l2, row, pt_1_DM10_DOWN[0], pt_2_DM10_DOWN[0] )
+
+
+
+            #    # ggH reweighting, only for ggH120,125,130
+            #    # estimated by Cecile, Nov 15, 2016
+            #    # See: https://indico.cern.ch/event/578552/contributions/2343738/attachments/1372271/2081852/systematics_SMH.pdf
+            #    # Slide 10 for tautau
+            #    #
+            #    # Also do top quark loop reweighting
+            #    # Based on: slides 10 https://indico.cern.ch/event/628660/contributions/2593406/attachments/1459912/2255407/May-16-HIG_Massironi.pdf
+            #    if shortName in ['ggHtoTauTau110','ggHtoTauTau120', 'ggHtoTauTau125', 'ggHtoTauTau130', 'ggHtoTauTau140'
+            #            'ggHtoTauTau0Mf05ph0125', 'ggHtoTauTau0M125', 'ggHtoTauTau0PM125'] :
+
+            #        ggHWeight0Jet[0] = 0.814 + 0.0027094 * row.t1Pt
+            #        # 2 options for boosted category in case we haven't run svFit
+            #        # prefer the svFit option
+            #        if hasattr( row, 'pt_sv' ) :
+            #            ggHWeightBoost[0] = 0.973 + 0.0008596 * row.pt_sv
+            #        elif Higgs_Pt[0] != 0.0 :
+            #            ggHWeightBoost[0] = 0.973 + 0.0008596 * Higgs_Pt[0]
+
+            #        if hasattr( row, 'vbfMass' ) :
+            #            ggHWeightVBF[0] = 1.094 + 0.0000545 * row.vbfMass
+
+            #        # Also do top quark loop reweighting
+            #        if hasattr( row, 'genpT' ) :
+            #            if getattr( row, 'genpT' ) > 150. :
+            #                ggHtopQuarkWeight[0] = 1. + 0.01*(0.114 * getattr( row, 'genpT' ) - 17.14)
+            #            else : ggHtopQuarkWeight[0] = 1.
+            #        
+
+            #    
+            #    # top pt reweighting, only for ttbar events
+            #    # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Top_quark_pT_reweighting
+            #    if shortName == 'TT' and hasattr( row, 'topQuarkPt1' ) :
+            #        top1Pt = row.topQuarkPt1 if row.topQuarkPt1 < 400 else 400
+            #        top2Pt = row.topQuarkPt2 if row.topQuarkPt2 < 400 else 400
+            #        topWeight[0] = math.sqrt(math.exp(0.156-0.00137*top1Pt)*math.exp(0.156-0.00137*top2Pt))
+            #    else : topWeight[0] = 1
+            #    #topWeight[0] = 1
+
+            #    # genMass is a default from FSA, that doesn't conform to HTT genMass
+            #    if hasattr( row, 'genMass' ) and hasattr( row, 'genM' ) :
+            #        setattr( row, 'genMass', getattr( row, 'genM' ))
+
+            #    # Apply z Pt Reweighting to LO DYJets samples
+            #    # https://twiki.cern.ch/twiki/bin/view/CMS/MSSMAHTauTauEarlyRun2#Z_reweighting
+            #    if 'DYJets' in sample and 'Low' not in sample :
+            #        if hasattr( row, 'genM' ) and hasattr( row, 'genpT' ) :
+            #            zPtWeight[0] = zPtWeighter.getZPtReweight( row.genM, row.genpT )
+
+            #    # Reweighting 2D distributions based on Zmumu CR
+            #    if 'DYJets' in sample or 'EWKZ' in sample :
+
+            #        # Boosted Category - XXX No longer needed with reminiAOD
+            #        #boostPt = 0.
+            #        #if hasattr( row, 'pt_sv' ) : boostPt = row.pt_sv
+            #        #else : boostPt = Higgs_Pt[0]
+            #        #if boostPt <= 100.   : zmumuBoostWeight[0] = (-1. + 0.973)
+            #        #elif boostPt <= 170. : zmumuBoostWeight[0] = (-1. + 0.959)
+            #        #elif boostPt <= 300. : zmumuBoostWeight[0] = (-1. + 0.934)
+            #        #else                 : zmumuBoostWeight[0] = (-1. + 0.993) # > 300
+
+            #        # VBF Category
+            #        # Change application method and add shape with nominal
+            #        # shift at 1/2 the initial value
+            #        # Update 2 Mar 2017, no more shape uncert, just weight correction
+            #        if row.jetVeto30 >= 2 :
+            #            zmumuVBFWeight[0] = ZMjjAndDEtaWeighter.getZMjjAndDEtaReweight( row.vbfMass, row.j1eta - row.j2eta )
+
+            #        if row.vbfMass <= 300   : zmumuVBFWeight2[0] = 0.0
+            #        elif row.vbfMass <= 500 : zmumuVBFWeight2[0] = 0.02
+            #        elif row.vbfMass <= 800 : zmumuVBFWeight2[0] = 0.06
+            #        else                    : zmumuVBFWeight2[0] = 0.04 # > 800
+
+            #    # Jet to Tau Fake weight
+            #    if not 'date' in sample :
+            #        w1 = 0.
+            #        w2 = 0.
+            #        if gen_match_1[0] == 6 :
+            #            w1 = .2 * pt1 / 100.
+            #        if gen_match_2[0] == 6 :
+            #            w2 = .2 * pt2 / 100.
+            #        if w1 > .4 : w1 = .4
+            #        if w2 > .4 : w2 = .4
+            #        jetToTauFakeWeight[0] = 1. + w1 + w2
+            #        
+
+            #    weight[0] = puweight[0] * idisoweight_1[0] * idisoweight_2[0]
+            #    weight[0] *= trigweight_1[0] * trigweight_2[0]
+            #    weight[0] *= zPtWeight[0] * topWeight[0]
+            #    # Below set to 1. for HTT
+            #    azhWeight[0] *= muonSF1[0] * muonSF2[0] * muonSF3[0] * muonSF4[0]
+            #    azhWeight[0] *= electronSF1[0] * electronSF2[0] * electronSF3[0] * electronSF4[0]
+
+
+
+            #    # Special weighting for WJets and DYJets
+            #    if shortName in ['DYJets', 'WJets'] :
+            #        xsec = getXSec( analysis, shortName, sampDict, row.numGenJets )
+            #        if xsec not in xsecList : xsecList.append( xsec )
+            #        #print "\n Sampe: %s    ShortNAme: %s    xsec: %f     numGenJets %i" % (sample, shortName, xsec, row.numGenJets)
+            #    # If not WJets or DYJets fill from xsec defined before
+            #    XSecLumiWeight[0] = xsec
+
+            ## Additional VVLoose and VVTight Iso WPs
+            #if channel == 'tt' :
+            #    byVVTightIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVTight( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
+            #    byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0] = isoWPAdder.getVVLoose( row.t1ByIsolationMVArun2v1DBoldDMwLTraw, pt1 )
+            #    byVVTightIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVTight( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
+            #    byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0] = isoWPAdder.getVVLoose( row.t2ByIsolationMVArun2v1DBoldDMwLTraw, pt2 )
+            #    isoCode1[0] = setIsoCode( row, l1, byVVTightIsolationMVArun2v1DBoldDMwLT_1[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_1[0]) 
+            #    isoCode2[0] = setIsoCode( row, l2, byVVTightIsolationMVArun2v1DBoldDMwLT_2[0], byVVLooseIsolationMVArun2v1DBoldDMwLT_2[0]) 
+
+            ## Tau Pt Weighting
+            #if 'data' not in sample :
+            #    if channel == 'em' :
+            #        tauPtWeightUp[0] = 1
+            #        tauPtWeightDown[0] = 1
+            #    if channel == 'tt' :
+            #        tauPtWeightUp[0] = getTauPtWeight( sample, channel,
+            #            gen_match_1[0], gen_match_2[0], row, 0.2 )
+            #        tauPtWeightDown[0] = getTauPtWeight( sample, channel, 
+            #            gen_match_1[0], gen_match_2[0], row, -0.2 )
+
+            #if len(channel) > 3 :
+            #    # Set LeptonJetPt to be equal to or greater than lepton Pt
+            #    # b/c the lepton should be a subset of the overlapping jet
+            #    # if jet pt < lepton pt, then we have the wrong jet
+            #    for lep in [l1, l2, l3, l4] :
+            #        if getattr( row, lep+'Pt' ) > getattr( row, lep+'JetPt' ) :
+            #            setattr( row, lep+'JetPt', getattr( row, lep+'Pt' ))
+
+            #    # Calculate our ZH fake rate values
+            #    # This uses the 1+2-0 method detailed in AN2014/109
+            #    if 'data' in sample :
+            #        zhFR1[0] = zhFRObj.getFRWeightL3( getattr( row, l3+'JetPt'), eta3, l3, row ) 
+            #        zhFR2[0] = zhFRObj.getFRWeightL4( getattr( row, l4+'JetPt'), eta4, l4, row ) 
+            #        zhFR0[0] = zhFR1[0] * zhFR2[0]
+            #    
+            #    # Define the LT varialbe we use in analysis (LT from FSA is all 4 objects)
+            #    LT_higgs[0] = pt3 + pt4
+
+            #    # Add VVL for leg3 and leg4
+            #    if 't' in l3 :
+            #        byVVLooseIsolationMVArun2v1DBoldDMwLT_3[0] = isoWPAdder.getVVLoose(
+            #                getattr(row, l3+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt3 )
+            #    if 't' in l4 :
+            #        byVVLooseIsolationMVArun2v1DBoldDMwLT_4[0] = isoWPAdder.getVVLoose(
+            #                getattr(row, l4+'ByIsolationMVArun2v1DBoldDMwLTraw'), pt4 )
+
+
+            ## Set branch for syncing with other groups:
+            #__ZWEIGHT__[0] = zPtWeight[0]
+            #__WEIGHT__[0] = XSecLumiWeight[0]
+            #__CORR__[0] = trigweight_1[0] * trigweight_2[0]
 
 
 

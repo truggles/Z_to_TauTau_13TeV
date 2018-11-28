@@ -5,6 +5,23 @@ def makeGenCut( inTree, cutString ) :
 	outTree = inTree.CopyTree( cutString )
 	return outTree
 
+#############################
+### HTT-TT Baseline MuTau ###
+#############################
+mtMuon = 'mPt > 21 && abs( mPVDZ) < 0.2 && abs(mEta) < 2.1 && abs(mPVDXY) < 0.045 && mPFIDMedium > 0.5'
+mtTau = 'tDecayModeFinding > 0.5 && tRerunMVArun2v2DBoldDMwLTVVLoose > 0.5 && abs( tPVDZ ) < 0.2 && abs(tEta) < 2.3 && abs( tCharge ) == 1'
+mtTauTEC = 'shiftedPt_2 > 23'
+#mtTauTEC = '((tZTTGenMatching == 5 && ((tDecayMode == 0 && (tPt * 1.007) > 23) || (tDecayMode == 1 && (tPt * 0.998) > 23) || (tDecayMode == 10 && (tPt * 1.001) > 23))) || (tZTTGenMatching != 5 && tPt > 23))'
+#mtTauTEC = '(
+#    ((tZTTGenMatching == 2 || tZTTGenMatching == 4 || tZTTGenMatching == 6) && tPt > 23) ||
+#    (tZTTGenMatching == 5 && ((tDecayMode == 0 && (tPt * 1.007) > 23) || (tDecayMode == 1 && (tPt * 0.998) > 23) || (tDecayMode == 10 && (tPt * 1.001) > 23))) || (tZTTGenMatching != 5 && tPt > 23) || ((tZTTGenMatching == 1 || tZTTGenMatching == 3)  && ((tDecayMode == 0 && (tPt * 1.003) > 23) || ((tDecayMode == 1 && (tPt * 1.036) > 23)) || ))'
+
+#mtDR = '(sqrt( (tEta - mEta)*(tEta - mEta) + abs(tPhi - mPhi)*abs(tPhi - mPhi) ) > 0.5)'
+mtDR = '(sqrt( (tEta - mEta)*(tEta - mEta) + ( (abs(tPhi - mPhi) < TMath::Pi()) * abs(tPhi - mPhi)*abs(tPhi - mPhi) ) + ( (abs(tPhi - mPhi) > TMath::Pi()) * (TMath::Pi() - abs(tPhi - mPhi))*(TMath::Pi() - abs(tPhi - mPhi)) ) ) > 0.5)'
+#mtDR = '( ( ( abs(tPhi - mPhi) < TMath::Pi()) && sqrt( (tEta - mEta)*(tEta - mEta) + abs(tPhi - mPhi)*abs(tPhi - mPhi) ) > 0.5) || ( ( abs(tPhi - mPhi) > TMath::Pi()) && sqrt( (tEta - mEta)*(tEta - mEta) + (abs(tPhi - mPhi) - TMath::Pi())*(abs(tPhi - mPhi) - TMath::Pi() ) ) > 0.5) )'
+mtDR = 'hDR > 0.5'
+
+mtAntiEMu = 'tAgainstElectronVLooseMVA6 > 0.5 && tAgainstMuonTight3 > 0.5'
 
 #######################
 ### HTT-TT Baseline ###
@@ -131,12 +148,17 @@ def llttDR( l1,l2,l3,l4 ) :
 
 
 def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
+    print analysis, channel, cutName, isData, hdfsSkim
     
-    triggers = [tt40, tt35,]
+    triggers = [tt40, tt35]
 
     cutMap = { 
         'htt' : # analysis
-        { 'tt' : {
+        { 'mt' : {
+            #'syncCuts' : [mtPt, mtRest, mtDR, mtAntiEMu],
+            'syncCuts' : [mtMuon, mtTau, mtTauTEC, mtDR],
+        }, # end mt
+         'tt' : {
             # A version which applies all cuts at once RunII
             'signalCuts' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode],
             'signalCuts5040' : [ttKin5040, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode],
@@ -224,19 +246,20 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
         'mmmm' : ('m1', 'm2', 'm3', 'm4'),
     }
 
-    cutString = ''
-    for item in cuts1 :
-        tmp = item.replace( 'LEG1', prodMap[channel][0] )
-        tmp = tmp.replace( 'LEG2', prodMap[channel][1] )
-        if analysis == 'azh' :
-            tmp = tmp.replace( 'LEG3', prodMap[channel][2] )
-            tmp = tmp.replace( 'LEG4', prodMap[channel][3] )
+    #cutString = ''
+    #for item in cuts1 :
+    #    tmp = item.replace( 'LEG1', prodMap[channel][0] )
+    #    tmp = tmp.replace( 'LEG2', prodMap[channel][1] )
+    #    if analysis == 'azh' :
+    #        tmp = tmp.replace( 'LEG3', prodMap[channel][2] )
+    #        tmp = tmp.replace( 'LEG4', prodMap[channel][3] )
 
-        if cutString != '' :
-            cutString += ' && '
-        cutString += tmp
-    cutString = '('+cutString+')'
+    #    if cutString != '' :
+    #        cutString += ' && '
+    #    cutString += tmp
+    #cutString = '('+cutString+')'
     #print cutString
+    cutString = '('+' && '.join(cuts1)+')'
     return cutString
 
 
