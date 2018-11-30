@@ -26,18 +26,18 @@ def getHtxsCutMapStage0() :
         'stage0VBF'          : ['qqH', '*(Rivet_stage0_cat == 21)']
     },
     'WMinusHTauTau' : {
-        'stage0VH2HQQ'       : ['VH_had', '*(Rivet_stage0_cat == 23)'],
+        'stage0VH2HQQ'       : ['WH_had', '*(Rivet_stage0_cat == 23)'],
         'stage0QQ2HLNU-FWDH' : ['WH_lep_fwd', '*(Rivet_stage0_cat == 30)'],
         'stage0QQ2HLNU'      : ['WH_lep', '*(Rivet_stage0_cat == 31)']
     },
     'WPlusHTauTau' : {
-        'stage0VH2HQQ'       : ['VH_had', '*(Rivet_stage0_cat == 23)'],
+        'stage0VH2HQQ'       : ['WH_had', '*(Rivet_stage0_cat == 23)'],
         'stage0QQ2HLNU-FWDH' : ['WH_lep_fwd', '*(Rivet_stage0_cat == 30)'],
         'stage0QQ2HLNU'      : ['WH_lep', '*(Rivet_stage0_cat == 31)']
     },
     'ZHTauTau' : {
-        'stage0VH2HQQ-FWDH'  : ['VH_had_fwd', '*(Rivet_stage0_cat == 22)'],
-        'stage0VH2HQQ'       : ['VH_had', '*(Rivet_stage0_cat == 23)'],
+        'stage0VH2HQQ-FWDH'  : ['ZH_had_fwd', '*(Rivet_stage0_cat == 22)'],
+        'stage0VH2HQQ'       : ['ZH_had', '*(Rivet_stage0_cat == 23)'],
         'stage0QQ2HLL-FWDH'  : ['ZH_lep_fwd', '*(Rivet_stage0_cat == 40)'],
         'stage0QQ2HLL'       : ['ZH_lep', '*(Rivet_stage0_cat == 41)']
     }}
@@ -82,11 +82,11 @@ def getHtxsCutMapStage1() :
         'stage1QQ2HQQ-PTJET1-GT200'      : ['qqH_PTJET1_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 205)'],
     },
     'WMinusHTauTau' : {
-        'stage1QQ2HQQ-VBFTOPO-JET3VETO'  : ['VH_had_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 201)'],
-        'stage1QQ2HQQ-VBFTOPO-JET3'      : ['VH_had_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 202)'],
-        'stage1QQ2HQQ-VH2JET'            : ['VH_had_VH2JET', '*(Rivet_stage1_cat_pTjet30GeV == 203)'],
-        'stage1QQ2HQQ-REST'              : ['VH_had_REST', '*(Rivet_stage1_cat_pTjet30GeV == 204)'],
-        'stage1QQ2HQQ-PTJET1-GT200'      : ['VH_had_PTJET1_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 205)'],
+        'stage1QQ2HQQ-VBFTOPO-JET3VETO'  : ['WH_had_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 201)'],
+        'stage1QQ2HQQ-VBFTOPO-JET3'      : ['WH_had_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 202)'],
+        'stage1QQ2HQQ-VH2JET'            : ['WH_had_VH2JET', '*(Rivet_stage1_cat_pTjet30GeV == 203)'],
+        'stage1QQ2HQQ-REST'              : ['WH_had_REST', '*(Rivet_stage1_cat_pTjet30GeV == 204)'],
+        'stage1QQ2HQQ-PTJET1-GT200'      : ['WH_had_PTJET1_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 205)'],
         'stage1QQ2HLNU-FWDH'             : ['WH_lep_FWDH', '*(Rivet_stage1_cat_pTjet30GeV == 300)'],
         'stage1QQ2HLNU-PTV-0-150'        : ['WH_lep_PTV_0_150', '*(Rivet_stage1_cat_pTjet30GeV == 301)'],
         'stage1QQ2HLNU-PTV-150-250-0J'   : ['WH_lep_PTV_150_250_0J', '*(Rivet_stage1_cat_pTjet30GeV == 302)'],
@@ -94,11 +94,11 @@ def getHtxsCutMapStage1() :
         'stage1QQ2HLNU-PTV-GT250'        : ['WH_lep_PTV_GT250', '*(Rivet_stage1_cat_pTjet30GeV == 304)'],
     },
     'WPlusHTauTau' : {
-        'stage1QQ2HQQ-VBFTOPO-JET3VETO'  : ['VH_had_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 201)'],
-        'stage1QQ2HQQ-VBFTOPO-JET3'      : ['VH_had_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 202)'],
-        'stage1QQ2HQQ-VH2JET'            : ['VH_had_VH2JET', '*(Rivet_stage1_cat_pTjet30GeV == 203)'],
-        'stage1QQ2HQQ-REST'              : ['VH_had_REST', '*(Rivet_stage1_cat_pTjet30GeV == 204)'],
-        'stage1QQ2HQQ-PTJET1-GT200'      : ['VH_had_PTJET1_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 205)'],
+        'stage1QQ2HQQ-VBFTOPO-JET3VETO'  : ['WH_had_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 201)'],
+        'stage1QQ2HQQ-VBFTOPO-JET3'      : ['WH_had_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 202)'],
+        'stage1QQ2HQQ-VH2JET'            : ['WH_had_VH2JET', '*(Rivet_stage1_cat_pTjet30GeV == 203)'],
+        'stage1QQ2HQQ-REST'              : ['WH_had_REST', '*(Rivet_stage1_cat_pTjet30GeV == 204)'],
+        'stage1QQ2HQQ-PTJET1-GT200'      : ['WH_had_PTJET1_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 205)'],
         'stage1QQ2HLNU-FWDH'             : ['WH_lep_FWDH', '*(Rivet_stage1_cat_pTjet30GeV == 300)'],
         'stage1QQ2HLNU-PTV-0-150'        : ['WH_lep_PTV_0_150', '*(Rivet_stage1_cat_pTjet30GeV == 301)'],
         'stage1QQ2HLNU-PTV-150-250-0J'   : ['WH_lep_PTV_150_250_0J', '*(Rivet_stage1_cat_pTjet30GeV == 302)'],
@@ -106,12 +106,12 @@ def getHtxsCutMapStage1() :
         'stage1QQ2HLNU-PTV-GT250'        : ['WH_lep_PTV_GT250', '*(Rivet_stage1_cat_pTjet30GeV == 304)'],
     },
     'ZHTauTau' : {
-        'stage1QQ2HQQ-FWDH'              : ['VH_had_FWDH', '*(Rivet_stage1_cat_pTjet30GeV == 200)'],
-        'stage1QQ2HQQ-VBFTOPO-JET3VETO'  : ['VH_had_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 201)'],
-        'stage1QQ2HQQ-VBFTOPO-JET3'      : ['VH_had_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 202)'],
-        'stage1QQ2HQQ-VH2JET'            : ['VH_had_VH2JET', '*(Rivet_stage1_cat_pTjet30GeV == 203)'],
-        'stage1QQ2HQQ-REST'              : ['VH_had_REST', '*(Rivet_stage1_cat_pTjet30GeV == 204)'],
-        'stage1QQ2HQQ-PTJET1-GT200'      : ['VH_had_PTJET1_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 205)'],
+        'stage1QQ2HQQ-FWDH'              : ['ZH_had_FWDH', '*(Rivet_stage1_cat_pTjet30GeV == 200)'],
+        'stage1QQ2HQQ-VBFTOPO-JET3VETO'  : ['ZH_had_VBFTOPO_JET3VETO', '*(Rivet_stage1_cat_pTjet30GeV == 201)'],
+        'stage1QQ2HQQ-VBFTOPO-JET3'      : ['ZH_had_VBFTOPO_JET3', '*(Rivet_stage1_cat_pTjet30GeV == 202)'],
+        'stage1QQ2HQQ-VH2JET'            : ['ZH_had_VH2JET', '*(Rivet_stage1_cat_pTjet30GeV == 203)'],
+        'stage1QQ2HQQ-REST'              : ['ZH_had_REST', '*(Rivet_stage1_cat_pTjet30GeV == 204)'],
+        'stage1QQ2HQQ-PTJET1-GT200'      : ['ZH_had_PTJET1_GT200', '*(Rivet_stage1_cat_pTjet30GeV == 205)'],
         'stage1QQ2HLL-FWDH'              : ['ZH_lep_FWDH', '*(Rivet_stage1_cat_pTjet30GeV == 400)'],
         'stage1QQ2HLL-PTV-0-150'         : ['ZH_lep_PTV_0_150', '*(Rivet_stage1_cat_pTjet30GeV == 401)'],
         'stage1QQ2HLL-PTV-150-250-0J'    : ['ZH_lep_PTV_150_250_0J', '*(Rivet_stage1_cat_pTjet30GeV == 402)'],
