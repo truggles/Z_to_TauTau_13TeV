@@ -19,7 +19,13 @@ from smart_getenv import getenv
 def getMergeMap( analysis ) :
     mergeMap = {
         'Sync' : {'x' : 999},
-        'htt' : {'x' : 999},
+        'htt' : {
+            'dataMT-B' : 3,
+            'dataMT-C' : 3,
+            'dataMT-D' : 3,
+            'dataMT-E' : 3,
+            'dataMT-F' : 3,
+            },
         'azh' : {
 	        #'x' : 999,
             'dataEE-B' : 10,

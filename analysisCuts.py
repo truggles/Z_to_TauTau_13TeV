@@ -9,8 +9,8 @@ def makeGenCut( inTree, cutString ) :
 ### Tau ID MuTau Baseline ###
 #############################
 mtTrig = 'IsoMu27Pass == 1'
-muKin = 'mPt > 30 && abs(mEta) < 2.4 && mPFIDMedium == 1 && mIsoDB03 < 0.15 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
-tauKin = 'tPt > 20 && abs(tEta) < 2.3 && abs(tPVDZ) < 0.2 && tRerunMVArun2v2DBoldDMwLTVVLoose == 1 && tAgainstElectronVLooseMVA6 == 1 && tAgainstMuonTight3 == 1'
+muKin = 'mPt > 30 && abs(mEta) < 2.4 && mPFIDMedium == 1 && mIsoDB04 < 0.15 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
+tauKin = 'tPt > 19 && abs(tEta) < 2.3 && abs(tPVDZ) < 0.2 && tRerunMVArun2v2DBoldDMwLTVVLoose == 1 && tAgainstElectronVLooseMVA6 == 1 && tAgainstMuonTight3 == 1'
 dr = 'm_t_DR > 0.5'
 sign = '( mCharge * tCharge < 0 )'
 
