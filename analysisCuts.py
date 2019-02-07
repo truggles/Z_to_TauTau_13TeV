@@ -5,6 +5,14 @@ def makeGenCut( inTree, cutString ) :
 	outTree = inTree.CopyTree( cutString )
 	return outTree
 
+#############################
+### Tau ID MuTau Baseline ###
+#############################
+mtTrig = 'IsoMu27Pass == 1'
+muKin = 'mPt > 30 && abs(mEta) < 2.4 && mPFIDMedium == 1 && mIsoDB03 < 0.15 && abs(mPVDZ) < 0.2 && abs(mPVDXY) < 0.045'
+tauKin = 'tPt > 20 && abs(tEta) < 2.3 && abs(tPVDZ) < 0.2 && tRerunMVArun2v2DBoldDMwLTVVLoose == 1 && tAgainstElectronVLooseMVA6 == 1 && tAgainstMuonTight3 == 1'
+dr = 'm_t_DR > 0.5'
+sign = '( mCharge * tCharge < 0 )'
 
 #######################
 ### HTT-TT Baseline ###
@@ -136,7 +144,11 @@ def getCut( analysis, channel, cutName, isData=False, hdfsSkim=False ) :
 
     cutMap = { 
         'htt' : # analysis
-        { 'tt' : {
+        { 
+        'mt' : {
+            'syncCuts' : [mtTrig, muKin, tauKin, dr, sign],
+            },
+        'tt' : {
             # A version which applies all cuts at once RunII
             'signalCuts' : [ttKin40, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode],
             'signalCuts5040' : [ttKin5040, ttCharge, ttDR, ttVtx, ttOS, ttIsoTight, ttDisc, extraVetoTT, tt35, DecayMode],

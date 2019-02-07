@@ -29,9 +29,9 @@ print "zHome: ",zHome
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
 ### General samples.json file from /data/truggles files
-#makeMetaJSON( analysis, channel='tt' )
+#makeMetaJSON( analysis, channel='mt' )
 ### samples.json for post /hdfs skim -> uwlogin samples
-#makeMetaJSON( analysis, channel='tt', skimmed=True )
+#makeMetaJSON( analysis, channel='mt', skimmed=True )
 os.chdir('..')
 
 
@@ -71,9 +71,9 @@ SamplesDataCards.append('ggHtoTauTau0Mf05ph0125')
 SamplesDataCards.append('ggHtoTauTau0M125')
 SamplesDataCards.append('ggHtoTauTau0PM125')
     
-#SamplesDataCards = []
-for era in ['B', 'C', 'D', 'E', 'F', 'G', 'H'] :
-    SamplesDataCards.append('dataTT-%s' % era)
+SamplesDataCards = []
+for era in ['B', 'C', 'D', 'E', 'F'] :
+    SamplesDataCards.append('dataMT-%s' % era)
     
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'EWKZ2l', 'EWKZ2nu']
 #SamplesDataCards = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4']
@@ -93,30 +93,23 @@ cut on any 'preselection' made in the initial stages '''
 params = {
     #'debug' : 'true',
     'debug' : 'false',
-    'numCores' : 25,
+    'numCores' : 10,
     'numFilesPerCycle' : 1,
-    'channels' : ['tt',],
-    #'cutMapper' : 'syncCutsDC',
-    #'cutMapper' : 'signalCuts',
-    #'cutMapper' : 'fakeFactorCutsTT',
-    #'cutMapper' : 'syncCutsDCqcdTES',
-    #'cutMapper' : 'syncCutsDCqcdTES5040VVLoose', # For VVL study
-    #'cutMapper' : 'syncCutsDCqcdTES5040', # For normal running
-    'cutMapper' : 'syncCutsDCqcdTES5040VL', # For QCD Mthd Check
-    #'cutMapper' : 'syncCutsDCqcdTES5040VL_HdfsSkim', # For svFit Skim keeping VLoose for new definition and both triggers
-    'mid1' : '1Jan07NewMelax',
-    'mid2' : '2Jan07NewMelax',
-    'mid3' : '3Jan07NewMelax',
+    'channels' : ['mt',],
+    'cutMapper' : 'syncCuts', # For Loose TauID selection
+    'mid1' : '1Feb05TauIDv1',
+    'mid2' : '2Feb05TauIDv1',
+    'mid3' : '3Feb05TauIDv1',
     'additionalCut' : '',
     #'svFitPost' : 'true',
     'svFitPost' : 'false',
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    'skimHdfs' : 'false',
-    #'skimHdfs' : 'true', # This means "do the hdfs skim"
-    #'skimmed' : 'false',
-    'skimmed' : 'true',
+    #'skimHdfs' : 'false',
+    'skimHdfs' : 'true', # This means "do the hdfs skim"
+    'skimmed' : 'false',
+    #'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -125,7 +118,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
@@ -144,7 +137,7 @@ makeFinalPlots = False # Use this with FF
 text=True
 text=False
 makeDataCards = True
-#makeDataCards = False
+makeDataCards = False
 
 #cats = ['inclusive', '0jet2D', 'boosted','vbf',]
 #cats = ['0jet2D', 'boosted','vbf',]
@@ -225,7 +218,7 @@ for isoVal in isoVals :
                     kwargs = { 'qcdMakeDM':sign+'l1ml2_'+name+'ZTT'+cat, 
                         'isSSQCD':skipSSQCDDetails,'sync':sync}
                     folder = params['mid2']+'_'+sign+'l1ml2_'+name+'ZTT'+cat
-                    qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], folder, **kwargs  )
+                    qcdYield = analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['mt',], folder, **kwargs  )
                     qcdYields[ sign+name+cat ] = qcdYield
         
         print qcdYields
@@ -273,7 +266,7 @@ for isoVal in isoVals :
                         kwargs['qcdSF'] = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                         kwargs['useQCDMake'] = True
                         kwargs['fullBlind'] = fullBlind
-                analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['tt',], 
+                analysis3Plots.makeLotsOfPlots( analysis, samplesX, ['mt',], 
                     params['mid2']+'_OSl1ml2_'+isoRegion+'ZTT'+cat, **kwargs  )
                 cpDir = "/afs/cern.ch/user/t/truggles/www/HTT_%s" % params['mid2'].strip('2')
                 checkDir( cpDir )
@@ -358,7 +351,7 @@ for isoVal in isoVals :
                     'allShapes' : True,
                     'sync' : sync,
                     }
-                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                    makeDataCards( analysis, samplesX, ['mt',], folderDetails, **kwargs )
                 else :
                     qcdSF = getQCDSF( 'httQCDYields_%s%s_%s.txt' % (pt, isoVal, params['mid2']), cat )
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_ZTT'+cat
@@ -371,7 +364,7 @@ for isoVal in isoVals :
                     'allShapes' : True,
                     'sync' : sync,
                     }
-                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                    makeDataCards( analysis, samplesX, ['mt',], folderDetails, **kwargs )
 
                     # Make OS Loose QCD CR
                     folderDetails = params['mid2']+'_OSl1ml2_'+isoVal+'_'+lIso+'ZTT'+cat
@@ -384,7 +377,7 @@ for isoVal in isoVals :
                     'allShapes' : True,
                     'sync' : sync,
                     }
-                    makeDataCards( analysis, samplesX, ['tt',], folderDetails, **kwargs )
+                    makeDataCards( analysis, samplesX, ['mt',], folderDetails, **kwargs )
 
         app = '-FF' if doFF else '-StdMthd'
         #subprocess.call( ["mv", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass.root", "httShapes/htt/htt_tt.inputs-sm-13TeV_svFitMass-%s-%s.root" % (pt, isoVal)] )
