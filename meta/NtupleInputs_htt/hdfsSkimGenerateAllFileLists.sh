@@ -2,10 +2,14 @@
 #ALL=/data/truggles/svFitApr01_SM-HTT_Merged
 #aHTT=/data/truggles/svFitAug21_aHTT_officialSigs_Merged
 #GGH=/data/truggles/svFitNov12_aHTT_GGH
-CHANNEL=tt
+CHANNEL=mt
 ALL=/data/truggles/aHTT_March01_Already_MELA_and_SigReweight
 aHTT=/data/truggles/svFitJune22_aHTT_samples3
 
+DATA=/data/truggles/httFeb05TauIDv
+for SAMPLE in dataMT-B dataMT-C dataMT-D dataMT-E dataMT-F; do
+    ls ${DATA}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
+done
 
 #for SAMPLE in DYJets DYJets1 DYJets2 DYJets3 DYJets4 DYJetsLow DYJets1Low DYJets2Low EWKWMinus EWKWPlus EWKZ2l EWKZ2nu Tbar-tchan T-tchan TT Tbar-tW T-tW VV WJets WJets1 WJets2 WJets3 WJets4 WW1l1nu2q WWW WZ1l1nu2q WZ1l3nu WZ2l2q WZ3l1nu ZZ2l2q ZZ4l; do
 #    ls ${ALL}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
@@ -28,11 +32,11 @@ aHTT=/data/truggles/svFitJune22_aHTT_samples3
 #    done
 #done
 
-for SAMPLE in VBF W Z; do
-    for MODE in HtoTauTau0PHf05ph0125 HtoTauTau0L1f05ph0125 HtoTauTau0L1125 HtoTauTau0PM125 HtoTauTau0Mf05ph0125 HtoTauTau0PH125 HtoTauTau0M125; do
-        ls ${aHTT}/${SAMPLE}${MODE}_${CHANNEL}.root > skimmed/${SAMPLE}${MODE}_${CHANNEL}.txt
-    done
-done
+#for SAMPLE in VBF W Z; do
+#    for MODE in HtoTauTau0PHf05ph0125 HtoTauTau0L1f05ph0125 HtoTauTau0L1125 HtoTauTau0PM125 HtoTauTau0Mf05ph0125 HtoTauTau0PH125 HtoTauTau0M125; do
+#        ls ${aHTT}/${SAMPLE}${MODE}_${CHANNEL}.root > skimmed/${SAMPLE}${MODE}_${CHANNEL}.txt
+#    done
+#done
 
 #for SAMPLE in ggH125-sm ggH125-maxmix ggH125-pseudoscalar; do
 #    #ls ${ALL}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt

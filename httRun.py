@@ -28,10 +28,10 @@ print "zHome: ",zHome
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
 os.chdir('meta')
-### General samples.json file from /data/truggles files
-#makeMetaJSON( analysis, channel='mt' )
-### samples.json for post /hdfs skim -> uwlogin samples
-#makeMetaJSON( analysis, channel='mt', skimmed=True )
+## General samples.json file from /data/truggles files
+##makeMetaJSON( analysis, channel='mt' )
+## samples.json for post /hdfs skim -> uwlogin samples
+makeMetaJSON( analysis, channel='mt', skimmed=True )
 os.chdir('..')
 
 
@@ -91,8 +91,8 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
-    #'debug' : 'true',
-    'debug' : 'false',
+    'debug' : 'true',
+    #'debug' : 'false',
     'numCores' : 10,
     'numFilesPerCycle' : 1,
     'channels' : ['mt',],
@@ -106,10 +106,10 @@ params = {
     #'svFitPrep' : 'true',
     'svFitPrep' : 'false',
     'doFRMthd' : 'false',
-    #'skimHdfs' : 'false',
-    'skimHdfs' : 'true', # This means "do the hdfs skim"
-    'skimmed' : 'false',
-    #'skimmed' : 'true',
+    'skimHdfs' : 'false',
+    #'skimHdfs' : 'true', # This means "do the hdfs skim"
+    #'skimmed' : 'false',
+    'skimmed' : 'true',
 }
 """ Get samples with map of attributes """
 setUpDirs( samples, params, analysis ) # Print config file and set up dirs
@@ -118,7 +118,7 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
 #analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 

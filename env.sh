@@ -2,10 +2,8 @@
 
 echo " "
 echo " "
-echo "BASED OFF OF CECILE'S Jan ZH and HTT samples B,C,D,E,F,G,H"
-###export LUMI=27916.0 # old lumi for sans H
-#export LUMI=27218.1 # adjusted down by 2.5% like whole lumi above
-export LUMI=35870.0
+echo "BASED OFF OF Andrew's 2017 Tau ID caption"
+export LUMI=41500.0
 
 echo "Set lumi = $LUMI"
 echo "Using Full 2016 Data!"
@@ -22,8 +20,8 @@ echo "Setting Fake Factor Method to: $doFF"
 echo " "
 echo " "
 
-#export doFullJES=false
-export doFullJES=true
+export doFullJES=false
+#export doFullJES=true
 echo " "
 echo "Setting Full JES Method to: $doFullJES"
 echo " "
