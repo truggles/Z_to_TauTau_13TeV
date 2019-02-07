@@ -27,12 +27,12 @@ print "zHome: ",zHome
 
 ''' Uncomment to make out starting JSON file of meta data! '''
 from meta.makeMeta import makeMetaJSON
-os.chdir('meta')
-## General samples.json file from /data/truggles files
-##makeMetaJSON( analysis, channel='mt' )
-## samples.json for post /hdfs skim -> uwlogin samples
-makeMetaJSON( analysis, channel='mt', skimmed=True )
-os.chdir('..')
+#os.chdir('meta')
+### General samples.json file from /data/truggles files
+###makeMetaJSON( analysis, channel='mt' )
+### samples.json for post /hdfs skim -> uwlogin samples
+#makeMetaJSON( analysis, channel='mt', skimmed=True )
+#os.chdir('..')
 
 
 ''' Uncomment to make pile up vertex templates! '''
@@ -91,9 +91,9 @@ multiprocessing, and the 'mid' params define the save location
 of your output files.  additionCut can be specified to further
 cut on any 'preselection' made in the initial stages '''
 params = {
-    'debug' : 'true',
-    #'debug' : 'false',
-    'numCores' : 10,
+    #'debug' : 'true',
+    'debug' : 'false',
+    'numCores' : 15,
     'numFilesPerCycle' : 1,
     'channels' : ['mt',],
     'cutMapper' : 'syncCuts', # For Loose TauID selection
@@ -118,8 +118,8 @@ from meta.sampleNames import returnSampleDetails
 samples = returnSampleDetails( analysis, samples )
 
 
-#analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 """ Get samples with map of attributes """

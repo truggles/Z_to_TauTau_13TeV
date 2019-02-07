@@ -6,7 +6,7 @@ CHANNEL=mt
 ALL=/data/truggles/aHTT_March01_Already_MELA_and_SigReweight
 aHTT=/data/truggles/svFitJune22_aHTT_samples3
 
-DATA=/data/truggles/httFeb05TauIDv
+DATA=/data/truggles/httFeb05TauIDv_fromUW
 for SAMPLE in dataMT-B dataMT-C dataMT-D dataMT-E dataMT-F; do
     ls ${DATA}/${SAMPLE}_*_${CHANNEL}.root > skimmed/${SAMPLE}_${CHANNEL}.txt
 done

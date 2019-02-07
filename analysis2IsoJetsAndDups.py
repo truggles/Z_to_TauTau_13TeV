@@ -214,7 +214,8 @@ def getIso( cand, row ) :
         return getattr(row, cand+'RelPFIsoDBDefault')
     if 't' in cand :
         #return getattr(row, cand+'ByCombinedIsolationDeltaBetaCorrRaw3Hits')
-        return getattr(row, cand+'ByIsolationMVArun2v1DBoldDMwLTraw' )
+        #return getattr(row, cand+'ByIsolationMVArun2v2DBoldDMwLTraw' )
+        return getattr(row, cand+'RerunMVArun2v2DBoldDMwLTraw' )
                     
 
 def getCurrentEvt( analysis, channel, row ) :
@@ -369,11 +370,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
-        'vbfMass' : 'mjj',
-        'vbfDeta' : 'jdeta',
-        'vbfDphi' : 'jdphi',
-        'vbfJetVeto30' : 'njetingap',
-        'vbfJetVeto20' : 'njetingap20',
+        #'vbfMass' : 'mjj',
+        #'vbfDeta' : 'jdeta',
+        #'vbfDphi' : 'jdphi',
+        #'vbfJetVeto30' : 'njetingap',
+        #'vbfJetVeto20' : 'njetingap20',
         }
 
     if analysis != 'azh' : # Stupid fix for old ntuples
@@ -410,7 +411,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB03' : 'iso',
         'cand_MVANonTrigWP90' : 'id_e_mva_nt_loose',
-        'cand_MtToPfMet_Raw' : 'pfmt',
+        #'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingMuon = {
         'cand_Pt' : 'pt',
@@ -421,7 +422,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB04' : 'iso',
-        'cand_MtToPfMet_Raw' : 'pfmt',
+        #'cand_MtToPfMet_Raw' : 'pfmt',
         }
     branchMappingTau = {
         'cand_Pt' : 'pt',
@@ -432,37 +433,37 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_Charge' : 'q',
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
-        'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
+        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
         #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
-        'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
-        #'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
-        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'iso',
-        'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
-        'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
-        'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
-        'cand_AgainstElectronVLooseMVA6' : 'againstElectronVLooseMVA6',
-        'cand_AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
-        'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
-        'cand_AgainstMuonTight3' : 'againstMuonTight3',
-        'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
-        'cand_ChargedIsoPtSumdR03' : 'chargedIsoPtSumdR03',
-        'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
-        'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
-        'cand_PuCorrPtSum' : 'puCorrPtSum',
-        #'cand_MtToPfMet_Raw' : 'pfmt',
-        'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
-        'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
-        'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
-        'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
-        'cand_ByVLooseIsolationMVArun2v1DBoldDMwLT' : 'byVLooseIsolationMVArun2v1DBoldDMwLT',
+        #'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
+        ##'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
+        #'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'iso',
+        #'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
+        #'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
+        #'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
+        #'cand_AgainstElectronVLooseMVA6' : 'againstElectronVLooseMVA6',
+        #'cand_AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
+        #'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
+        #'cand_AgainstMuonTight3' : 'againstMuonTight3',
+        #'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
+        #'cand_ChargedIsoPtSumdR03' : 'chargedIsoPtSumdR03',
+        #'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
+        #'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
+        #'cand_PuCorrPtSum' : 'puCorrPtSum',
+        ##'cand_MtToPfMet_Raw' : 'pfmt',
+        #'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
+        #'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
+        #'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
+        #'cand_ByLooseIsolationMVArun2v1DBoldDMwLT' : 'byLooseIsolationMVArun2v1DBoldDMwLT',
+        #'cand_ByVLooseIsolationMVArun2v1DBoldDMwLT' : 'byVLooseIsolationMVArun2v1DBoldDMwLT',
         }
 
     # Add in the vars which won't change names
     for var in sameNameVars :
         branchMapping[ var ] = var
     # Generate our mapping for double candidate variables
-    for key in doubleProds :
-        branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
+    #FIXME for key in doubleProds :
+    #FIXME     branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
     if len( channel ) == 4 :
         for key in quadFSDoubleProds :
             branchMapping[ l3+'_'+l4+'_'+key ] = quadFSDoubleProds[ key ]
@@ -648,6 +649,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             elif currentEvt[ 0 ] == prevEvt[ 0 ] :
                 if currentEvt[ 1 ] > prevEvt[ 1 ] :
                     prevEvt = currentEvt
+        elif analysis == 'htt' and channel == 'mt' :
+            # lowest iso_1
+            if currentEvt[ 0 ] < prevEvt[ 0 ] :
+                prevEvt = currentEvt
+            # iso_1 equal
+            elif currentEvt[ 0 ] == prevEvt[ 0 ] :
+                # highest pt_1
+                if currentEvt[ 1 ] > prevEvt[ 1 ] :
+                    prevEvt = currentEvt
+                # pt_1 equal
+                elif currentEvt[ 1 ] == prevEvt[ 1 ] :
+                    # lowest iso_2, but based on tau Raw iso, so go with max value
+                    if currentEvt[ 2 ] > prevEvt[ 2 ] :
+                        prevEvt = currentEvt
+                    # iso_2 equal
+                    elif currentEvt[ 2 ] == prevEvt[ 2 ] :
+                        # highest pt_2
+                        if currentEvt[ 3 ] > prevEvt[ 3 ] :
+                            prevEvt = currentEvt
         else :
             # lowest iso_1
             if currentEvt[ 0 ] < prevEvt[ 0 ] :
@@ -734,10 +754,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     ggHtopQuarkWeightB = tnew.Branch('ggHtopQuarkWeight', ggHtopQuarkWeight, 'ggHtopQuarkWeight/F')
     jetToTauFakeWeight = array('f', [ 0 ] )
     jetToTauFakeWeightB = tnew.Branch('jetToTauFakeWeight', jetToTauFakeWeight, 'jetToTauFakeWeight/F')
+    pzetavis = array('f', [ 0 ] )
+    pzetavisB = tnew.Branch('PZetaVis', pzetavis, 'PZetaVis/F')
     pzetamiss = array('f', [ 0 ] )
-    pzetamissB = tnew.Branch('pzetamiss', pzetamiss, 'pzetamiss/F')
+    pzetamissB = tnew.Branch('PZetaMiss', pzetamiss, 'PZetaMiss/F')
     pzeta = array('f', [ 0 ] )
-    pzetaB = tnew.Branch('pzeta', pzeta, 'pzeta/F')
+    pzetaB = tnew.Branch('PZeta', pzeta, 'PZeta/F')
     Higgs_Pt = array('f', [ 0 ] )
     Higgs_PtB = tnew.Branch('Higgs_Pt', Higgs_Pt, 'Higgs_Pt/F')
     Z_DEta = array('f', [ 0 ] )
@@ -753,7 +775,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     mt_tot_DOWN = array('f', [ 0 ] )
     mt_tot_DOWNB = tnew.Branch('mt_tot_DOWN', mt_tot_DOWN, 'mt_tot_DOWN/F')
     mt_1 = array('f', [ 0 ] )
-    mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
+    #FIXME mt_1B = tnew.Branch('mt_1', mt_1, 'mt_1/F')
+    mt_1B = tnew.Branch('TransverseMass', mt_1, 'TransverseMass/F')
     mt_2 = array('f', [ 0 ] )
     mt_2B = tnew.Branch('mt_2', mt_2, 'mt_2/F')
     XSecLumiWeight = array('f', [ 0 ] )
@@ -917,6 +940,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     mt_2[0] = -999
     pzeta[0] = -999
     pzetamiss[0] = -999
+    pzetavis[0] = -999
 
     ''' Now actually fill that instance of an evtFake'''
     count2 = 0
@@ -1139,7 +1163,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #if channel == 'tt' : #and 'Sync-' in sample : 
             #    #print "### Iso Ordering %s ###" % sample
             #    isoOrder( channel, row )
-            vbfClean( row, analysis )
+            #FIXME vbfClean( row, analysis )
 
 
             # For easy use later
@@ -1195,11 +1219,12 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #    mvacov11[0] = getattr( row, "%s_%s_MvaMetCovMatrix11" % (l1, l2) )
             #    mvamet[0] = getattr( row, "%s_%s_MvaMet" % (l1, l2) )
             #    mvametphi[0] = getattr( row, "%s_%s_MvaMetPhi" % (l1, l2) )
-            #    mt_1[0]= getTransMass( mvamet[0], mvametphi[0], pt1, phi1 )
-            #    mt_2[0]= getTransMass( mvamet[0], mvametphi[0], pt2, phi2 )
-            #    pzetamiss[0] = compZeta(pt1, phi1, pt2, phi2, mvamet[0], mvametphi[0])[1]
-            #    if hasattr( row, '%s_%s_PZetaVis' % (l1, l2) ) :
-            #        pzeta[0] = pzetamiss[0] - 0.85 * getattr( row, '%s_%s_PZetaVis' % (l1, l2) )
+            mt_1[0]= getTransMass( row.type1_pfMetEt, row.type1_pfMetPhi, pt1, phi1 )
+            mt_2[0]= getTransMass( row.type1_pfMetEt, row.type1_pfMetPhi, pt2, phi2 )
+            pZetaInfo = compZeta(pt1, phi1, pt2, phi2, row.type1_pfMetEt, row.type1_pfMetPhi)
+            pzetamiss[0] = pZetaInfo[1]
+            pzetavis[0] = pZetaInfo[0]
+            pzeta[0] = pzetamiss[0] - 0.85 * pzetavis[0]
             #    Higgs_Pt[0] = getHiggsPt( pt1, eta1, phi1, m1,\
             #             pt2, eta2, phi2, m2, mvamet[0], mvametphi[0])
             #else : # Not l1_l2_MvaMet

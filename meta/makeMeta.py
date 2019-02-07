@@ -54,6 +54,10 @@ def makeMetaJSON( analysis, channel = 'tt', skimmed=False ) :
     currentDASSamples['htt'].append( 'ggHtoTauTau0Mf05ph0125' )
     currentDASSamples['htt'].append( 'ggHtoTauTau0M125' )
 
+    # FIXME only MT data!
+    currentDASSamples[ 'htt' ] = []
+    for era in ['B', 'C', 'D', 'E', 'F'] :
+        currentDASSamples[ 'htt' ].append('dataMT-%s' % era)
     samples = returnSampleDetails( analysis, currentDASSamples[ analysis ] )
 
     
