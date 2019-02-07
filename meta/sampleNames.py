@@ -85,6 +85,26 @@ def sampleDetails( analysis ) :
                 'DASPath' : '/Tau/Run2016F-PromptReco-v1/MINIAOD',
                 'xsec' : 999.,
                 'group' : 'obs'},
+            'dataMT-B' : {
+                'DASPath' : '/SingleMuon/Run2017B-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMT-C' : {
+                'DASPath' : '/SingleMuon/Run2017C-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMT-D' : {
+                'DASPath' : '/SingleMuon/Run2017D-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMT-E' : {
+                'DASPath' : '/SingleMuon/Run2017E-PromptReco-v2/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
+            'dataMT-F' : {
+                'DASPath' : '/SingleMuon/Run2017F-PromptReco-v1/MINIAOD',
+                'xsec' : 999.,
+                'group' : 'obs'},
             'EWKWMinus' :   { 
                 'DASPath' : '/EWKWMinus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8/%s-v1/MINIAODSIM' % moriond17,
                 'xsec' : 20.25,
