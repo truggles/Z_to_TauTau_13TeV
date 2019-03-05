@@ -280,8 +280,8 @@ def getCurrentEvt( analysis, channel, row ) :
     elif analysis == 'azh' :
         l3 = prodMap[channel][2]
         l4 = prodMap[channel][3]
-        leg3Pt = getattr(row, 'shiftedPt_3')
-        leg4Pt = getattr(row, 'shiftedPt_4')
+        leg3Pt = getattr(row, l3+'Pt')
+        leg4Pt = getattr(row, l4+'Pt')
         closeZ = abs( getattr(row, l1+'_'+l2+'_Mass') - 91.1876 )
         bestZ = 0.
         if channel in ['eeet','eeem','eemt','eett' ] :
@@ -448,25 +448,25 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'type1_pfMetEt' : 'met',
         'type1_pfMetPhi' : 'metphi',
         #'GenWeight' : 'weight',
-        'vbfMass' : 'mjj',
-        'vbfDeta' : 'jdeta',
-        'vbfDphi' : 'jdphi',
-        'vbfJetVeto30' : 'njetingap',
-        'vbfJetVeto20' : 'njetingap20',
-        'puppiMetEt' : 'puppimet',
-        'puppiMetPhi' : 'puppimetphi',
+        #'vbfMass' : 'mjj',
+        #'vbfDeta' : 'jdeta',
+        #'vbfDphi' : 'jdphi',
+        #'vbfJetVeto30' : 'njetingap',
+        #'vbfJetVeto20' : 'njetingap20',
+        #'puppiMetEt' : 'puppimet',
+        #'puppiMetPhi' : 'puppimetphi',
         }
 
     doubleProds = {
-        'Mass' : 'm_vis',
-        'PZeta' : 'pfpzetamis',
-        'PZetaVis' : 'pzetavis',
-        'SS' : 'Z_SS',
-        'Pt' : 'Z_Pt',
-        'DR' : 'Z_DR',
-        'DPhi' : 'Z_DPhi',
-        'Eta' : 'Z_Eta',
-        'Phi' : 'Z_Phi',
+        #'Mass' : 'm_vis',
+        #'PZeta' : 'pfpzetamis',
+        #'PZetaVis' : 'pzetavis',
+        #'SS' : 'Z_SS',
+        #'Pt' : 'Z_Pt',
+        #'DR' : 'Z_DR',
+        #'DPhi' : 'Z_DPhi',
+        #'Eta' : 'Z_Eta',
+        #'Phi' : 'Z_Phi',
         }
     quadFSDoubleProds = {
         'Mass' : 'H_vis',
@@ -477,8 +477,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'Eta' : 'H_Eta',
         'Phi' : 'H_Phi',
         'PZeta' : 'H_PZeta',
-        'PZetaVis' : 'H_PZetaVis',
-        'PZetaLess0p85PZetaVis' : 'H_DZeta',
+        #'PZetaVis' : 'H_PZetaVis',
+        #'PZetaLess0p85PZetaVis' : 'H_DZeta',
         }
     branchMappingElec = {
         'cand_Pt' : 'pt', # rename ePt to pt_1
@@ -489,9 +489,9 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB03' : 'iso',
-        'cand_MVANonTrigWP80' : 'id_e_mva_nt_tight',
-        'cand_MVANonTrigWP90' : 'id_e_mva_nt_loose',
-        'cand_MtToPfMet_type1' : 'pfmt',
+        #'cand_MVANonTrigWP80' : 'id_e_mva_nt_tight',
+        #'cand_MVANonTrigWP90' : 'id_e_mva_nt_loose',
+        #'cand_MtToPfMet_type1' : 'pfmt',
         }
     branchMappingMuon = {
         'cand_Pt' : 'pt',
@@ -502,7 +502,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
         'cand_IsoDB04' : 'iso',
-        'cand_MtToPfMet_type1' : 'pfmt',
+        #'cand_MtToPfMet_type1' : 'pfmt',
         }
     branchMappingTau = {
         'cand_Pt' : 'pt',
@@ -513,24 +513,24 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
         'cand_Charge' : 'q',
         'cand_PVDXY' : 'd0',
         'cand_PVDZ' : 'dZ',
-        'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
-        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
-        'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
-        #'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
-        'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'iso',
-        'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
-        'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
-        'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
-        'cand_AgainstElectronVLooseMVA6' : 'againstElectronVLooseMVA6',
-        'cand_AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
-        'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
-        'cand_AgainstMuonTight3' : 'againstMuonTight3',
-        'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
-        'cand_ChargedIsoPtSumdR03' : 'chargedIsoPtSumdR03',
-        'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
-        'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
-        'cand_PuCorrPtSum' : 'puCorrPtSum',
-        'cand_MtToPfMet_type1' : 'pfmt',
+        #'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'byCombinedIsolationDeltaBetaCorrRaw3Hits',
+        ##'cand_ByCombinedIsolationDeltaBetaCorrRaw3Hits' : 'iso',
+        #'cand_ByIsolationMVArun2v1DBnewDMwLTraw' : 'byIsolationMVArun2v1DBnewDMwLTraw',
+        ##'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'byIsolationMVArun2v1DBoldDMwLTraw',
+        #'cand_ByIsolationMVArun2v1DBoldDMwLTraw' : 'iso',
+        #'cand_AgainstElectronLooseMVA6' : 'againstElectronLooseMVA6',
+        #'cand_AgainstElectronMediumMVA6' : 'againstElectronMediumMVA6',
+        #'cand_AgainstElectronTightMVA6' : 'againstElectronTightMVA6',
+        #'cand_AgainstElectronVLooseMVA6' : 'againstElectronVLooseMVA6',
+        #'cand_AgainstElectronVTightMVA6' : 'againstElectronVTightMVA6',
+        #'cand_AgainstMuonLoose3' : 'againstMuonLoose3',
+        #'cand_AgainstMuonTight3' : 'againstMuonTight3',
+        #'cand_ChargedIsoPtSum' : 'chargedIsoPtSum',
+        #'cand_ChargedIsoPtSumdR03' : 'chargedIsoPtSumdR03',
+        #'cand_DecayModeFinding' : 'decayModeFindingOldDMs',
+        #'cand_NeutralIsoPtSum' : 'neutralIsoPtSum',
+        #'cand_PuCorrPtSum' : 'puCorrPtSum',
+        #'cand_MtToPfMet_type1' : 'pfmt',
         'cand_ByVTightIsolationMVArun2v1DBoldDMwLT' : 'byVTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByTightIsolationMVArun2v1DBoldDMwLT' : 'byTightIsolationMVArun2v1DBoldDMwLT',
         'cand_ByMediumIsolationMVArun2v1DBoldDMwLT' : 'byMediumIsolationMVArun2v1DBoldDMwLT',
@@ -542,11 +542,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
     for var in sameNameVars :
         branchMapping[ var ] = var
     # Generate our mapping for double candidate variables
-    for key in doubleProds :
-        branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
-    if len( channel ) == 4 :
-        for key in quadFSDoubleProds :
-            branchMapping[ l3+'_'+l4+'_'+key ] = quadFSDoubleProds[ key ]
+    #for key in doubleProds :
+    #    branchMapping[ l1+'_'+l2+'_'+key ] = doubleProds[ key ]
+    #if len( channel ) == 4 :
+    #    for key in quadFSDoubleProds :
+    #        branchMapping[ l3+'_'+l4+'_'+key ] = quadFSDoubleProds[ key ]
     # Map all of the variables based on their FSA names to Sync names leg by leg
     if len( channel ) == 2 :
         if channel == 'em' :
@@ -1336,7 +1336,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             #if channel == 'tt' : #and 'Sync-' in sample : 
             #    #print "### Iso Ordering %s ###" % sample
             #    isoOrder( channel, row )
-            vbfClean( row, analysis )
+            #vbfClean( row, analysis )
 
 
             # For easy use later
@@ -1607,52 +1607,52 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
             if analysis == 'azh' :
-                # Build A mass for AZh analysis
-                # If sample didn't do svFit, take m_vis related vars
-                zMass = getattr( row, l1+"_"+l2+"_Mass" )
-                zPt = getattr( row, l1+"_"+l2+"_Pt" )
-                zEta = getattr( row, l1+"_"+l2+"_Eta" )
-                zPhi = getattr( row, l1+"_"+l2+"_Phi" )
-                if hasattr( row, "met_sv" ) : # Then svFit happened
-                    hMass = getattr( row, "m_sv" )
-                    hPt = getattr( row, "pt_sv" )
-                    hEta = getattr( row, "eta_sv" )
-                    hPhi = getattr( row, "phi_sv" )
-                else : # no svFit
-                    hMass = getattr( row, l3+"_"+l4+"_Mass" )
-                    hPt = getattr( row, l3+"_"+l4+"_Pt" )
-                    hEta = getattr( row, l3+"_"+l4+"_Eta" )
-                    hPhi = getattr( row, l3+"_"+l4+"_Phi" )
+                ## Build A mass for AZh analysis
+                ## If sample didn't do svFit, take m_vis related vars
+                ##zMass = getattr( row, l1+"_"+l2+"_Mass" )
+                ##zPt = getattr( row, l1+"_"+l2+"_Pt" )
+                ##zEta = getattr( row, l1+"_"+l2+"_Eta" )
+                ##zPhi = getattr( row, l1+"_"+l2+"_Phi" )
+                #if hasattr( row, "met_sv" ) : # Then svFit happened
+                #    hMass = getattr( row, "m_sv" )
+                #    hPt = getattr( row, "pt_sv" )
+                #    hEta = getattr( row, "eta_sv" )
+                #    hPhi = getattr( row, "phi_sv" )
+                #else : # no svFit
+                #    hMass = getattr( row, l3+"_"+l4+"_Mass" )
+                #    hPt = getattr( row, l3+"_"+l4+"_Pt" )
+                #    hEta = getattr( row, l3+"_"+l4+"_Eta" )
+                #    hPhi = getattr( row, l3+"_"+l4+"_Phi" )
 
-                    # While we're at it, fill svFit values with vis vals
-                    m_sv[0] = getattr( row, l3+"_"+l4+"_Mass" )
-                    pt_sv[0] = getattr( row, l3+"_"+l4+"_Pt" )
-                    eta_sv[0] = getattr( row, l3+"_"+l4+"_Eta" )
-                    phi_sv[0] = getattr( row, l3+"_"+l4+"_Phi" )
-                A_Mass[0] = get_A_mass( zMass, zPt, zEta, zPhi, \
-                        hMass, hPt, hEta, hPhi)
+                #    # While we're at it, fill svFit values with vis vals
+                #    m_sv[0] = getattr( row, l3+"_"+l4+"_Mass" )
+                #    pt_sv[0] = getattr( row, l3+"_"+l4+"_Pt" )
+                #    eta_sv[0] = getattr( row, l3+"_"+l4+"_Eta" )
+                #    phi_sv[0] = getattr( row, l3+"_"+l4+"_Phi" )
+                #A_Mass[0] = get_A_mass( zMass, zPt, zEta, zPhi, \
+                #        hMass, hPt, hEta, hPhi)
 
-                # Rebuild svFit constrained A mass and its shifted versions
-                AMassConst[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '' )
-                AMassConst_DM0_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM0_UP' )
-                AMassConst_DM0_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM0_DOWN' )
-                AMassConst_DM1_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM1_UP' )
-                AMassConst_DM1_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM1_DOWN' )
-                AMassConst_DM10_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM10_UP' )
-                AMassConst_DM10_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM10_DOWN' )
-                AMassConst_UncMet_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_UncMet_UP' )
-                AMassConst_UncMet_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_UncMet_DOWN' )
-                AMassConst_ClusteredMet_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_ClusteredMet_UP' )
-                AMassConst_ClusteredMet_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_ClusteredMet_DOWN' )
-                # EES is special b/c we skip computation of it in svFit for EETT and EEMT, but we need the shape for
-                # shape systematics later based on Z->EE acceptance.  If EETT or EEMT, default fill with nominal
-                # AMassConst
-                if channel == 'eett' or channel == 'eemt' :
-                    AMassConst_EES_UP[0] = AMassConst[0]
-                    AMassConst_EES_DOWN[0] = AMassConst[0]
-                else :
-                    AMassConst_EES_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_EES_UP' )
-                    AMassConst_EES_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_EES_DOWN' )
+                ## Rebuild svFit constrained A mass and its shifted versions
+                #AMassConst[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '' )
+                #AMassConst_DM0_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM0_UP' )
+                #AMassConst_DM0_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM0_DOWN' )
+                #AMassConst_DM1_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM1_UP' )
+                #AMassConst_DM1_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM1_DOWN' )
+                #AMassConst_DM10_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM10_UP' )
+                #AMassConst_DM10_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_DM10_DOWN' )
+                #AMassConst_UncMet_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_UncMet_UP' )
+                #AMassConst_UncMet_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_UncMet_DOWN' )
+                #AMassConst_ClusteredMet_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_ClusteredMet_UP' )
+                #AMassConst_ClusteredMet_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_ClusteredMet_DOWN' )
+                ## EES is special b/c we skip computation of it in svFit for EETT and EEMT, but we need the shape for
+                ## shape systematics later based on Z->EE acceptance.  If EETT or EEMT, default fill with nominal
+                ## AMassConst
+                #if channel == 'eett' or channel == 'eemt' :
+                #    AMassConst_EES_UP[0] = AMassConst[0]
+                #    AMassConst_EES_DOWN[0] = AMassConst[0]
+                #else :
+                #    AMassConst_EES_UP[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_EES_UP' )
+                #    AMassConst_EES_DOWN[0] = get_constrained_A_mass_with_shift( row, zMass, zPt, zEta, zPhi, '_EES_DOWN' )
 
                 if 'data' not in sample :
                     zhTrigWeight[0] = zhSF.getZHTriggerSF( row.nvtx, pt1, eta1, pt2, eta2 )
@@ -1661,11 +1661,11 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
 
 
             # Additional electron ID, HZZ 98% eff for AZh
-            if analysis == 'azh' :
-                if 'e' in l3 :
-                    electronMvaHZZ_3[0] = electronMvaHZZ( getattr( row, l3+'MVATrigID'), eta3 )
-                if 'e' in l4 :
-                    electronMvaHZZ_4[0] = electronMvaHZZ( getattr( row, l4+'MVATrigID'), eta4 )
+            #if analysis == 'azh' :
+                #if 'e' in l3 :
+                #    electronMvaHZZ_3[0] = electronMvaHZZ( getattr( row, l3+'MVATrigID'), eta3 )
+                #if 'e' in l4 :
+                #    electronMvaHZZ_4[0] = electronMvaHZZ( getattr( row, l4+'MVATrigID'), eta4 )
 
             # Data specific vars
             if 'data' in sample :
@@ -1681,6 +1681,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
             ### Not Data
             else :
                 nTrPu = ( math.floor(row.nTruePU * 10))/10
+                if nTrPu > 78 : nTrPu = 78
                 puweight[0] = puDict[ nTrPu ]
 
                 if hasattr( row, l1+'ZTTGenMatching' ) :
@@ -2007,8 +2008,8 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                 azhWeight[0] *= electronSF_1[0] * electronSF_2[0] * electronSF_3[0] * electronSF_4[0]
                 azhWeight[0] *= tauSF_3[0] * tauSF_4[0] * qqZZ4lWeight[0] * zhTrigWeight[0] * genMassWeight[0]
 
-                met_pt[0] = row.shiftedMET
-                met_phi[0] = row.shiftedMETPhi
+                #met_pt[0] = row.shiftedMET
+                #met_phi[0] = row.shiftedMETPhi
 
 
                 # Special weighting for WJets and DYJets
@@ -2126,7 +2127,7 @@ def renameBranches( analysis, mid1, mid2, sample, channel, count ) :
                         zhFR0TauDown[0] = zhFR1[0] * zhFR2TauDown[0]
                 
                 # Define the LT varialbe we use in analysis (LT from FSA is all 4 objects)
-                LT_higgs[0] = row.shiftedPt_3 + row.shiftedPt_4
+                LT_higgs[0] = shiftedPt3 + shiftedPt4
 
                 # Add VVL for leg3 and leg4
                 if 't' in l3 :

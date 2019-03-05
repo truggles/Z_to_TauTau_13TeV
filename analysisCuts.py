@@ -48,7 +48,7 @@ ttQCDPreIso = 't1ByCombinedIsolationDeltaBetaCorrRaw3Hits < 5.0 && t2ByCombinedI
 
 ########~~~~~~ LT_higgs cuts are in analysisPlots.py, search for LT_higgs ~~~~######
 ZMass = 'LEG1_LEG2_Mass > 60 && LEG1_LEG2_Mass < 120'
-ZOS = 'LEG1_LEG2_SS == 0'
+ZOS = '(LEG1Charge + LEG2Charge == 0)'
 HOS = 'LEG3_LEG4_SS == 0'
 HSS = 'LEG3_LEG4_SS == 1'
 
@@ -56,23 +56,35 @@ eeTrig = 'doubleE_23_12Pass > 0'
 mmTrig = 'doubleMuPass > 0'
 
 mmTrigFilters = 'm1Pt > 18 && ( ( m2Pt > 10 && (m1MatchesDoubleMuFilter1 > 0.5 || m1MatchesDoubleMuFilter2 > 0.5 ) && (m2MatchesDoubleMuFilter1 > 0.5 || m2MatchesDoubleMuFilter2 > 0.5 ) ) || ( m1Pt > 25 && (m1MatchesIsoMu24Filter > 0.5 || m1MatchesIsoTkMu24Filter > 0.5 ) ) || ( m2Pt > 25 && (m2MatchesIsoMu24Filter > 0.5 || m2MatchesIsoTkMu24Filter > 0.5 ) ) )'
-#mmTrigFilters = 'm1Pt > 19 && ( ( m2Pt > 10 && (m1MatchesDoubleMuFilter1 > 0.5 || m1MatchesDoubleMuFilter2 > 0.5 ) && (m2MatchesDoubleMuFilter1 > 0.5 || m2MatchesDoubleMuFilter2 > 0.5 ) ) || ( m1Pt > 27 && (m1MatchesIsoMu24Filter > 0.5 || m1MatchesIsoTkMu24Filter > 0.5 ) ) || ( m2Pt > 27 && (m2MatchesIsoMu24Filter > 0.5 || m2MatchesIsoTkMu24Filter > 0.5 ) ) )'
+mmTrigFilters = 'm1Pt > 28 && m2Pt > 10 && IsoMu27Pass > 0.5'
 
 eeTrigFilters = 'e1Pt > 24 && ( (e2Pt > 13 && e1MatchesDoubleE23_12Filter > 0.5 && e2MatchesDoubleE23_12Filter > 0.5 ) || ( e1Pt > 28 && e1MatchesSingleETight27Filter > 0.5 ) || ( e2Pt > 28 && e2MatchesSingleETight27Filter > 0.5 ) )'
-#eeTrigFilters = 'e1Pt > 27.5 && e2Pt > 17.5 &&  ( (e1MatchesDoubleE23_12Filter > 0.5 && e2MatchesDoubleE23_12Filter > 0.5 ) || ( e1Pt > 32 && e1MatchesSingleETight27Filter > 0.5 ) || ( e2Pt > 32 && e2MatchesSingleETight27Filter > 0.5 ) )'
+eeTrigFilters = 'e1Pt > 36 && e2Pt > 10 && Ele35WPTightPass > 0.5'
 
 
-eeetVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 == 0'
-mmetVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0 <= 2'
-eemtVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 1'
-mmmtVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 3'
-eettVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 == 0'
-mmttVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 2'
-eeemVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 <= 1'
-mmemVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0 <= 3'
-eeeeVetos = 'eVetoAZHdR0 <= 4 && muVetoAZHdR0 == 0'
-mmmmVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 4'
-eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 2'
+#eeetVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 == 0'
+#mmetVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0 <= 2'
+#eemtVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 1'
+#mmmtVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 3'
+#eettVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 == 0'
+#mmttVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 2'
+#eeemVetos = 'eVetoAZHdR0 <= 3 && muVetoAZHdR0 <= 1'
+#mmemVetos = 'eVetoAZHdR0 <= 1 && muVetoAZHdR0 <= 3'
+#eeeeVetos = 'eVetoAZHdR0 <= 4 && muVetoAZHdR0 == 0'
+#mmmmVetos = 'eVetoAZHdR0 == 0 && muVetoAZHdR0 <= 4'
+#eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 2'
+
+eeetVetos = '(1)'
+mmetVetos = '(1)'
+eemtVetos = '(1)'
+mmmtVetos = '(1)'
+eettVetos = '(1)'
+mmttVetos = '(1)'
+eeemVetos = '(1)'
+mmemVetos = '(1)'
+eeeeVetos = '(1)'
+mmmmVetos = '(1)'
+eemmVetos = '(1)'
 
 #eeetVetos = 'eVetoZTTp001dxyzR0 <= 3 && muVetoZTTp001dxyzR0 == 0'
 #mmetVetos = 'eVetoZTTp001dxyzR0 <= 1 && muVetoZTTp001dxyzR0 <= 2'
@@ -90,7 +102,7 @@ eemmVetos = 'eVetoAZHdR0 <= 2 && muVetoAZHdR0 <= 2'
 def eBase( lep ) :
     return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
 def eTight( lep ) :
-    return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_MVANonTrigWP90 > 0.5'.replace('LEG_',lep)
+    return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.5 && LEG_PassesConversionVeto > 0.5 && LEG_MissingHits < 2 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2 && LEG_MVAIsoWP90 > 0.5'.replace('LEG_',lep)
 
 def mBase( lep ) :
     return 'LEG_Pt > 9.5 && abs(LEG_Eta) < 2.4 && abs(LEG_PVDXY) < 0.045 && abs(LEG_PVDZ) < 0.2'.replace('LEG_',lep)
@@ -177,6 +189,9 @@ def getCut( analysis, sample, channel, cutName ) :
     else : # is MC
         eeTrigNew = eeTrigMC
         mmTrigNew = mmTrigMC
+
+    mmTrigNew = 'IsoMu27Pass > 0.5'
+    eeTrigNew = 'Ele35WPTightPass > 0.5'
 
     cutMap = { 
         'htt' : # analysis
@@ -311,7 +326,7 @@ def getCut( analysis, sample, channel, cutName ) :
 
 
 if __name__ == '__main__' :
-    cut = getCut( 'azh', 'ZZ4l', 'eeet', 'SkimApplyNewTrig' )
+    cut = getCut( 'azh', 'ZHTauTau125', 'eeet', 'SkimApplyNewTrig' )
     print cut + "\n\n"
 
 

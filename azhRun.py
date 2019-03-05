@@ -79,7 +79,7 @@ for mass in [220, 240, 260, 280, 300, 320, 340, 350, 400] :
 #azhSamples = ['ZZ4l',]
 #azhSamples = ['WZ3l1nu',]
 #azhSamples = ['DYJets', 'DYJets1', 'DYJets2', 'DYJets3', 'DYJets4', 'TT']
-#azhSamples = ['azh300',]
+azhSamples = ['ZHTauTau125',]
 
 samples = azhSamples
 
@@ -102,9 +102,9 @@ params = {
     #'cutMapper' : 'Skim',
     #'cutMapper' : 'SkimNoTrig',
     'cutMapper' : 'SkimApplyNewTrig',
-    'mid1' : '1July08AZH',
-    'mid2' : '2July08AZH',
-    'mid3' : '3July08AZH',
+    'mid1' : '1Mar05DanSync',
+    'mid2' : '2Mar05DanSync',
+    'mid3' : '3Mar05DanSync',
     'additionalCut' : '',
     'svFitPost' : 'false',
     'svFitPrep' : 'false',
@@ -132,7 +132,7 @@ samples = returnSampleDetails( analysis, samples )
 
 
 #analysis1BaselineCuts.doInitialCuts(analysis, samples, **params)
-#analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
+analysis1BaselineCuts.doInitialOrder(analysis, samples, **params)
 
 
 runPlots = True
@@ -141,10 +141,10 @@ makeFinalPlots = True
 doDataCards = True
 
 
-#runPlots = False
-#doMerge = False
-#makeFinalPlots = False
-#doDataCards = False
+runPlots = False
+doMerge = False
+makeFinalPlots = False
+doDataCards = False
 
 
 doZH = True
