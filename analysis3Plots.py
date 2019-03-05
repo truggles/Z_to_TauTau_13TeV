@@ -107,6 +107,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
     higgsSF = 1.0
     azhSF = .010
+    azhSF = .020
 
     for sample in samples :
         print sample, samples[ sample ][ 'group' ]
@@ -140,7 +141,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'mmmm' : '#mu#mu#mu#mu',
         'ZEE' : 'Z#rightarrowee',
         'ZMM' : 'Z#rightarrow#mu#mu',
-        'ZXX' : 'Z#rightarrowee/#mu#mu',
+        'ZXX' : 'll+#tau#tau',
         'LLET' : "ll'e#tau_{h}",
         'LLMT' : "ll'#mu#tau_{h}",
         'LLTT' : "ll'#tau_{h}#tau_{h}",
@@ -173,7 +174,7 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
         'redBkg' : [ROOT.kCyan, 'Jet Fakes'],
         'higgs' : [ROOT.kRed-4, 'SM Higgs(125)'],
         'VH' : [ROOT.kGreen, 'SM VHiggs(125)'],
-        'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigma=%.3ffb' % (azhMass, azhSF*1000)],
+        'azh' : [ROOT.kBlue, 'A#rightarrowZh M%s #sigmaBR=%ifb' % (azhMass, int(azhSF*1000))],
         } # azh
     } # sampInfo
     if not ops['mssm'] : sampInfo['htt']['higgs'][1] = "SM Higgs(125) x %.1f" % higgsSF
@@ -272,24 +273,24 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
 
 
             varBinned = True
-            if analysis == 'azh' and 'm_sv' in var and 'LT_higgs' in var and 'const_' not in var :
-                xBins = array( 'd', [i for i in range( 0, 21 )] )
-            elif analysis == 'azh' and 'm_sv' in var and 'LT_higgs' not in var and 'const_' not in var :
-                xBins = array( 'd', [i*20 for i in range( 1, 12 )] )
-                #xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
-            else :
-                varBinned = False
-                first = info[1] * 1.
-                last = info[2] * 1.
-                totBins = ( info[0] / info[3] ) * 1.
-                binWidth = (last - first)/totBins
-                #print first, last, totBins, binWidth
-                xBins = array('d', []) 
-                for i in range( 0, int(totBins)+1 ) :
-                    if 'iso' in var :
-                        xBins.append( round(i*binWidth+first,2) )
-                    else :
-                        xBins.append( round(i*binWidth+first,1) )
+            #if analysis == 'azh' and 'm_sv' in var and 'LT_higgs' in var and 'const_' not in var :
+            #    xBins = array( 'd', [i for i in range( 0, 21 )] )
+            #elif analysis == 'azh' and 'm_sv' in var and 'LT_higgs' not in var and 'const_' not in var :
+            #    xBins = array( 'd', [i*20 for i in range( 1, 12 )] )
+            #    #xBins = array( 'd', [0,30,60,90,120,150,180,210,240] )
+            #else :
+            varBinned = False
+            first = info[1] * 1.
+            last = info[2] * 1.
+            totBins = ( info[0] / info[3] ) * 1.
+            binWidth = (last - first)/totBins
+            #print first, last, totBins, binWidth
+            xBins = array('d', []) 
+            for i in range( 0, int(totBins)+1 ) :
+                if 'iso' in var :
+                    xBins.append( round(i*binWidth+first,2) )
+                else :
+                    xBins.append( round(i*binWidth+first,1) )
             
             # Make a single bin version for QCD CR plots
             if 'plotMe' in ops['qcdMakeDM'] :
@@ -332,8 +333,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 #sampHistos[ signal ].SetLineColor( ROOT.kPink )
                 #sampHistos[ signal ].SetLineColor( ROOT.kMagenta+2 )
                 sampHistos[ signal ].SetLineColor( ROOT.kRed )
-                sampHistos[ signal ].SetLineWidth( 4 )
-                sampHistos[ signal ].SetLineStyle( 7 )
+                sampHistos[ signal ].SetLineWidth( 6 )
+                sampHistos[ signal ].SetLineStyle( 1 )
                 sampHistos[ signal ].SetMarkerStyle( 0 )
             else :
                 twoDVars = analysisPlots.get2DVars( var, channel )
@@ -764,7 +765,8 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
                 stack.GetXaxis().SetLabelSize( 0.0 )
                 stack.GetYaxis().SetLabelSize( stack.GetYaxis().GetLabelSize() / (1-smlPadSize) )
                 if not 'plotMe' in ops['qcdMakeDM'] :
-                    sampHistos[signal].Draw('same')
+                    sampHistos[signal].SetFillStyle(0)
+                    sampHistos[signal].Draw('hist same')
                 sampHistos['obs'].Draw('esamex0')
     
     
@@ -811,16 +813,17 @@ def makeLotsOfPlots( analysis, samples, channels, folderDetails, **kwargs ) :
     
 
             # Set CMS Styles Stuff
-            logo = ROOT.TText(.2, .88,"CMS Preliminary")
-            logo.SetTextSize(0.03)
-            logo.DrawTextNDC(.2, .89,"CMS Preliminary")
+            logo = ROOT.TText(.2, .87,"CMS Preliminary")
+            logo.SetTextSize(0.05)
+            logo.DrawTextNDC(.2, .87,"CMS Preliminary")
     
-            chan = ROOT.TLatex(.2, .80,"x")
-            chan.SetTextSize(0.05)
-            chan.DrawLatexNDC(.2, .84,"Channel: %s" % chans[channel] )
+            chan = ROOT.TLatex(.2, .77,"x")
+            chan.SetTextSize(0.07)
+            #chan.DrawLatexNDC(.2, .84,"Channel: %s" % chans[channel] )
+            chan.DrawLatexNDC(.2, .80,"%s" % chans[channel] )
     
             lumi = ROOT.TText(.7,1.05,"X fb^{-1} (13 TeV)")
-            lumi.SetTextSize(0.03)
+            lumi.SetTextSize(0.05)
             lumi.DrawTextNDC(.7,.96,"%.1f / fb (13 TeV)" % cmsLumi )
     
 
